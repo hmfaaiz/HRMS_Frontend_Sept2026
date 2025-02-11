@@ -10,6 +10,8 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
  * @returns res
  */
 export async function getAllEmployeeRegisterSetup(body) {
+
+
   return axios.post(`${USERS_URL}/employee_register/read-all-registered-employees`, body);
 }
 
@@ -22,6 +24,12 @@ export async function getAllEmployeeRegisterSetup(body) {
  */
 export async function getAllEmployeeRegisterForPdf(body) {
   return axios.post(`${USERS_URL}/employee_register/read-all-registered-employees-pdf-data`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
+export async function generateExcel(body) {
+  return axios.post(`${USERS_URL}/employee_register/read-all-registered-employees-excel`, body,{
     responseType:'arraybuffer'
   });
 }
