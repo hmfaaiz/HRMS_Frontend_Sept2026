@@ -11,6 +11,7 @@ const { actions } = EmployeeRegisterSlice;
  * @returns 
  */
 export const fetchEmployeeRegister = (queryparm) => async (dispatch) => {
+ 
   dispatch(actions.startCall({ callType: callTypes.list }));
   return requestFromServer.getAllEmployeeRegisterSetup(queryparm)
     .then((response) => {
@@ -49,9 +50,44 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
       document.body.removeChild(link);
     })
     .catch((error) => {
-      error.clientMessage = "Can't generate PDF";
+      error.clientMessage = "Can't Generate PDF";
       dispatch(actions.catchError({ error, callType: callTypes.pdf }));
       toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+
+export const generateRegisterExcel = (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.registerExcel }));
+  return requestFromServer.generateExcel({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'employee_register.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.registerExcelFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Generate Excel";
+      const decodedData = new TextDecoder().decode(error?.response?.data);
+      const jsonData = JSON.parse(decodedData);
+      // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+      toast.error(error?.response?.status == 400 ? 'Please select filter to generate Excel' : error?.clientMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

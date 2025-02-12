@@ -11,7 +11,8 @@ const initialState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
-    pdfLoading: false
+    pdfLoading: false,
+    registerExcelLoading:false,
 };
 
 export const callTypes = {
@@ -32,6 +33,11 @@ export const EmployeeRegisterSlice = createSlice({
             else if(action.payload.callType === callTypes.pdf){
                 state.pdfLoading = false;
             }
+
+            else if(action.payload.callType === callTypes.xlsx){
+                state.registerExcelLoading = false;
+            }
+            
             else {
                 state.actionsLoading = false;
             }
@@ -43,12 +49,22 @@ export const EmployeeRegisterSlice = createSlice({
             } 
             else if(action.payload.callType === callTypes.pdf){
                 state.pdfLoading = true;
-            } else {
+
+
+            }
+               else if(action.payload.callType === callTypes.registerExcel){
+                            state.registerExcelLoading = true;
+                        }
+            else {
                 state.actionsLoading = true;
             }
         },
         pdfFetched: (state, action) => {
             state.pdfLoading = false;
+        },
+
+        registerExcelFetched: (state, action) => {
+            state.registerExcelLoading = false;
         },
         EmployeeRegisterFetched: (state, action) => {
             state.entities = null;

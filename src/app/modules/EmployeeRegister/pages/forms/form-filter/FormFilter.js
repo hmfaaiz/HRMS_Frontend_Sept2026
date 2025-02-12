@@ -27,7 +27,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, pdfLoading }) {
+export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading}) {
 
   const FormUIContext = useFormUIContext()
 
@@ -97,15 +97,45 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
       docToLabel: values?.docTo ? formatDates(values.docTo) : '',
       dobFromLabel: values?.dobFrom ? formatDates(values.dobFrom) : '',
       dobToLabel: values?.dobTo ? formatDates(values.dobTo) : '',
+      gratuity_memberLabel: values?.gratuity_member || '',
+      overtime_allowanceLabel: values?.overtime_allowance || '',
+      eobi_memberLabel: values?.eobi_member || '',
+      social_security_memberLabel: values?.social_security_member || '',
+      salary_typeLabel: salaryTypeOptions?.find(option => option.value === values.salary_type)?.label || '',
+      operatorLabel: operatorOptions?.find(option => option.value === values.operator)?.label || '',
+      amountLabel: values?.amount || '',
     }
   }
 
   //Trugger request to download PDF of data according to filters
   const getPdf = (values) => {
+
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
     const labels = getLabels(values);
     dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
   }
+
+
+  const getExcel = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.generateRegisterExcel(newQueryParams.filter, document, labels));
+  }
+
+
+  const salaryTypeOptions = [
+    { value: "0", label: "Gross Salary" },
+    { value: "1", label: "Basic Salary" },
+  ];
+
+
+  const operatorOptions = [
+    { value: "=", label: "Equal To" },
+    { value: ">", label: "Greater Than" },
+    { value: ">=", label: "Greater Than & Equal To" },
+    { value: "<", label: "Less Than" },
+    { value: "<=", label: "Less Than & Equal To" },
+  ];
 
   return (
     <>
@@ -122,358 +152,497 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
           handleSubmit,
           handleBlur,
           setFieldValue,
-          handleReset
+          handleReset,
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
                 <fieldset>
-                  <div className="from-group row">
 
-                    {/* Subsidiary Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="subsidiaryId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('subsidiaryId', value)
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          dispatch(fetchAllDept(value));
-                          setFieldValue('employeeId', '')
-                          setFieldValue('departmentId', '')
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Subsidiary
-                          </span>
-                        }
-                        value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
-                        autoComplete="off"
-                        options={allSubsidiaryList}
-                      />
-                    </div>
-                    {/* Subsidiary Field End */}
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6>Employee</h6>
+                    <div className="from-group row">
 
-                    {/* Deparment Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="departmentId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('departmentId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Department
-                          </span>
-                        }
-                        value={allDeptMap?.get(values?.departmentId || '') || ''}
-                        autoComplete="off"
-                        options={allDept}
-                      />
-                    </div>
-                    {/* Deparment Field End */}
+                      {/* Subsidiary Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="subsidiaryId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('subsidiaryId', value)
+                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                            dispatch(fetchAllDept(value));
+                            setFieldValue('employeeId', '')
+                            setFieldValue('departmentId', '')
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Subsidiary
+                            </span>
+                          }
+                          value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
+                          autoComplete="off"
+                          options={allSubsidiaryList}
+                        />
+                      </div>
+                      {/* Subsidiary Field End */}
 
-                    {/* Report To Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="reportTo"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('reportTo', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Report To
-                          </span>
-                        }
-                        value={allEmployeesMap?.get(values?.reportTo || '') || ''}
-                        autoComplete="off"
-                        options={allEmployees}
-                      />
-                    </div>
-                    {/* Report To Field End */}
+                      {/* Deparment Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="departmentId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('departmentId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Department
+                            </span>
+                          }
+                          value={allDeptMap?.get(values?.departmentId || '') || ''}
+                          autoComplete="off"
+                          options={allDept}
+                        />
+                      </div>
+                      {/* Deparment Field End */}
 
-                    {/* Grade Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="gradeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('gradeId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Grade
-                          </span>
-                        }
-                        value={allGradeMap?.get(values?.gradeId || '') || ''}
-                        autoComplete="off"
-                        options={allEmployeeGradeList}
-                      />
-                    </div>
-                    {/* Grade Field End */}
+                      {/* Report To Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="reportTo"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('reportTo', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Report To
+                            </span>
+                          }
+                          value={allEmployeesMap?.get(values?.reportTo || '') || ''}
+                          autoComplete="off"
+                          options={allEmployees}
+                        />
+                      </div>
+                      {/* Report To Field End */}
 
-                    {/* Designation Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="designationId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('designationId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Designation
-                          </span>
-                        }
-                        value={allDesignationsMap?.get(values?.designationId || '') || ''}
-                        autoComplete="off"
-                        options={allDesignations}
-                      />
-                    </div>
-                    {/* Designation Field End */}
+                      {/* Grade Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="gradeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('gradeId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Grade
+                            </span>
+                          }
+                          value={allGradeMap?.get(values?.gradeId || '') || ''}
+                          autoComplete="off"
+                          options={allEmployeeGradeList}
+                        />
+                      </div>
+                      {/* Grade Field End */}
 
-                    {/* Location Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="locationId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('locationId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Location
-                          </span>
-                        }
-                        value={allLocationMap?.get(values?.locationId || '') || ''}
-                        autoComplete="off"
-                        options={allLocationChildMenus}
-                      />
-                    </div>
-                    {/* Location Field End */}
+                      {/* Designation Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="designationId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('designationId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Designation
+                            </span>
+                          }
+                          value={allDesignationsMap?.get(values?.designationId || '') || ''}
+                          autoComplete="off"
+                          options={allDesignations}
+                        />
+                      </div>
+                      {/* Designation Field End */}
 
-
-
-                  </div>
-                  {/* 
-                  <div className="from-group row">
-                  
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="employeeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('employeeId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Employee
-                          </span>
-                        }
-                        value={allEmployeesMap?.get(values?.employeeId || '') || ''}
-                        autoComplete="off"
-                        options={allEmployees}
-                      />
-                    </div>
-                
-
-                  </div> */}
+                      {/* Location Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="locationId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('locationId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Location
+                            </span>
+                          }
+                          value={allLocationMap?.get(values?.locationId || '') || ''}
+                          autoComplete="off"
+                          options={allLocationChildMenus}
+                        />
+                      </div>
+                      {/* Location Field End */}
 
 
-
-
-                  <div className="from-group row">
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        Date Of Joining :
-
-
-                      </label>
 
                     </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="dojFrom"
-                        component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
-                        className="form-control"
-                        label={
-                          <span>
-                            {" "}
-                            Date From
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('dojFrom', date)
-                          setFieldValue('dojTo', date)
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="dojTo"
-                        component={DatePickerField}
-                        onBlur={handleBlur}
-                        className="form-control"
-                        dateFormat="dd/MM/yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date To
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('dojTo', date)
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-
 
                   </div>
 
 
 
-                  <div className="from-group row">
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6>  Date Of Joining</h6>
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        Date Of Confirmation :
+                    <div className="from-group row">
 
 
-                      </label>
+
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="dojFrom"
+                          component={DatePickerField}
+                          dateFormat="dd/MM/yyyy"
+                          className="form-control"
+                          label={
+                            <span>
+                              {" "}
+                              Date From
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('dojFrom', date)
+                            setFieldValue('dojTo', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
+
+
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="dojTo"
+                          component={DatePickerField}
+                          onBlur={handleBlur}
+                          className="form-control"
+                          dateFormat="dd/MM/yyyy"
+                          label={
+                            <span>
+                              {" "}
+                              Date To
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('dojTo', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
+
 
                     </div>
 
+                  </div>
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="docFrom"
-                        component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
-                        className="form-control"
-                        label={
-                          <span>
-                            {" "}
-                            Date From
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('docFrom', date)
-                          setFieldValue('docTo', date)
-                        }}
-                        autoComplete="off"
-                      />
+
+
+
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6> Date Of Confirmation </h6>
+
+                    <div className="from-group row">
+
+
+
+
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="docFrom"
+                          component={DatePickerField}
+                          dateFormat="dd/MM/yyyy"
+                          className="form-control"
+                          label={
+                            <span>
+                              {" "}
+                              Date From
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('docFrom', date)
+                            setFieldValue('docTo', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="docTo"
+                          component={DatePickerField}
+                          onBlur={handleBlur}
+                          className="form-control"
+                          dateFormat="dd/MM/yyyy"
+                          label={
+                            <span>
+                              {" "}
+                              Date To
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('docTo', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
 
 
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="docTo"
-                        component={DatePickerField}
-                        onBlur={handleBlur}
-                        className="form-control"
-                        dateFormat="dd/MM/yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date To
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('docTo', date)
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
 
 
                   </div>
 
-                  <div className="from-group row">
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        Date Of Birth :
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6> Date Of Birth </h6>
+
+                    <div className="from-group row">
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="dobFrom"
+                          component={DatePickerField}
+                          dateFormat="dd/MM/yyyy"
+                          className="form-control"
+                          label={
+                            <span>
+                              {" "}
+                              Date From
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('dobFrom', date)
+                            setFieldValue('dobTo', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
 
 
-                      </label>
-
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="dobTo"
+                          component={DatePickerField}
+                          onBlur={handleBlur}
+                          className="form-control"
+                          dateFormat="dd/MM/yyyy"
+                          label={
+                            <span>
+                              {" "}
+                              Date To
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('dobTo', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
 
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="dobFrom"
-                        component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
-                        className="form-control"
-                        label={
-                          <span>
-                            {" "}
-                            Date From
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('dobFrom', date)
-                          setFieldValue('dobTo', date)
-                        }}
-                        autoComplete="off"
-                      />
+
+
+                  </div>
+
+
+
+
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6>Entitlements</h6>
+
+                    <div className="from-group row">
+                      <div className="col-12 col-md-4 mt-12">
+                        <input
+                          type="checkbox"
+                          name="gratuity_member"
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            // Set 1 for checked, 0 for unchecked
+                            setFieldValue('gratuity_member', e.target.checked ? 1 : 0);
+                          }}
+                          checked={values.gratuity_member === 1} // Checked if the value is 1
+                        /> Gratuity Member
+                      </div>
+
+                      <div className="col-12 col-md-4 mt-12">
+                        <input
+                          name="overtime_allowance"
+                          type="checkbox"
+                          onBlur={handleBlur}
+
+                          onChange={(e) => {
+                            // Set 1 for checked, 0 for unchecked
+                            setFieldValue('overtime_allowance', e.target.checked ? 1 : 0);
+                          }}
+                          checked={values.overtime_allowance === 1} // Checked if the value is 1
+                        /> Over Time
+                      </div>
+
+
+                    </div>
+                    <br></br>
+                    <div className="from-group row">
+
+                      <div className="col-12 col-md-4 mt-12">
+                        <input
+                          name="eobi_member"
+                          type="checkbox"
+
+                          onBlur={handleBlur}
+
+                          onChange={(e) => {
+                            // Set 1 for checked, 0 for unchecked
+                            setFieldValue('eobi_member', e.target.checked ? 1 : 0);
+                          }}
+                          checked={values.eobi_member === 1}
+                        /> EOBI Member
+
+                      </div>
+                      <div className="col-12 col-md-4 mt-12">
+                        <input
+                          type="checkbox"
+                          name="social_security_member"
+
+                          onBlur={handleBlur}
+
+                          onChange={(e) => {
+                            // Set 1 for checked, 0 for unchecked
+                            setFieldValue('social_security_member', e.target.checked ? 1 : 0);
+                          }}
+                          checked={values.social_security_member === 1}
+                        /> Social Security Member
+
+                      </div>
+
+
+
+                    </div>
+                  </div>
+
+                  <br></br>
+
+
+
+
+
+
+
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "0px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6>Salary Filter</h6>
+
+                    <div className="from-group row ">
+                      <div className="col-12 col-md-4 mt-12">
+                        <label >
+                          Salary Type
+                        </label>
+                        <Field
+                          name="salary_type"
+                          as="select"
+                          className="form-control"
+
+                          onChange={(e) => {
+                            setFieldValue("salary_type", e.target.value); // Use the raw value
+                          }}
+                        >
+                          <option value="">Select </option>
+                          {salaryTypeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+
+
+                          ))}
+
+
+                        </Field>
+
+                      </div>
+
+                      <div className="col-12 col-md-4 mt-12">
+                        <label >
+                          Operator
+                        </label>
+                        <Field
+                          name="operator"
+                          as="select"
+                          className="form-control"
+
+                          onChange={(e) => {
+                            setFieldValue("operator", e.target.value); // Use the raw value
+                          }}
+                        >
+                          <option value="">Select </option>
+                          {operatorOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+
+
+                          ))}
+
+
+                        </Field>
+
+                      </div>
+
+
+
+                      <div className="col-12 col-md-4 mt-12">
+                        <label >
+                          Amount
+                        </label>
+                        <Field
+                          name="amount"
+                          as="input"
+                          className="form-control"
+
+                          onChange={(e) => {
+                            setFieldValue("amount", e.target.value); // Use the raw value
+                          }}
+                        >
+
+
+                        </Field>
+
+                      </div>
                     </div>
 
 
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="dobTo"
-                        component={DatePickerField}
-                        onBlur={handleBlur}
-                        className="form-control"
-                        dateFormat="dd/MM/yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date To
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('dobTo', date)
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
 
 
                   </div>
@@ -508,10 +677,24 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
               <button
                 onClick={() => { getPdf(values) }}
                 disabled={pdfLoading}
-                className="btn btn-secondary"
+                className="btn btn-primary btn-elevate"
               >
-                Generate Report
+                Generate Report (PDF)
                 {pdfLoading && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>
+
+
+
+              <button
+                onClick={() => { getExcel(values) }}
+                disabled={registerExcelLoading}
+                type="button"
+                className="btn btn-primary btn-elevate"
+              >
+                Generate Register (Excel)
+                {registerExcelLoading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
