@@ -101,7 +101,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
       overtime_allowanceLabel: values?.overtime_allowance || '',
       eobi_memberLabel: values?.eobi_member || '',
       social_security_memberLabel: values?.social_security_member || '',
-      salary_typeLabel: salaryTypeOptions?.find(option => option.value == values.salary_type)?.label || '',
+      salary_typeLabel: salaryTypeOptions?.find(option => option.value === values.salary_type)?.label || '',
       operatorLabel: operatorOptions?.find(option => option.value === values.operator)?.label || '',
       amountLabel: values?.amount || '',
     }
@@ -124,8 +124,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
 
   const salaryTypeOptions = [
-    { value: 0, label: "Gross Salary" },
-    { value: 1, label: "Basic Salary" },
+    { value: "0", label: "Gross Salary" },
+    { value: "1", label: "Basic Salary" },
   ];
 
 
@@ -677,9 +677,9 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
               <button
                 onClick={() => { getPdf(values) }}
                 disabled={pdfLoading}
-                className="btn btn-secondary"
+                className="btn btn-primary btn-elevate"
               >
-                Generate Report
+                Generate Report (PDF)
                 {pdfLoading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
