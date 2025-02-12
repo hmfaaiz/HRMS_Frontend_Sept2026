@@ -121,6 +121,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
     dispatch(actions.generateBankAdvice(newQueryParams.filter, document, labels));
   }
 
+  const getGDExcel = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.generateRegisterGDExcel(newQueryParams.filter, document, labels));
+  }
   return (
     <>
       <Formik
@@ -466,6 +471,31 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                     </div>
                   </div>
 
+
+                  <br></br>
+
+<div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+  <h6>GD Report (Excel)</h6>
+  <div className="from-group row">
+ 
+
+    <div className="col-12 col-md-6 mt-11">
+      <button
+        onClick={() => { getGDExcel(values) }}
+        disabled={registerExcelLoading}
+        type="button"
+        className="btn btn-primary btn-elevate"
+      >
+        Generate GD Report (Excel)
+        {registerExcelLoading && (
+          <span className="ml-3 mr-3 spinner spinner-white"></span>
+        )}
+      </button>
+    </div>
+  </div>
+</div>
+
+<br></br>
                 </fieldset>
               </Form>
             </Modal.Body>
