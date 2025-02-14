@@ -438,8 +438,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-11">
                         <button
-                        onClick={() => { getBankAdvice(values) }}
-                        disabled={adviceLoading}
+                          onClick={() => { getBankAdvice(values) }}
+                          disabled={adviceLoading}
                           className="btn btn-primary btn-elevate"
                         >
                           Generate Payment Advice
@@ -474,28 +474,66 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
 
                   <br></br>
 
-<div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-  <h6>GD Report (Excel)</h6>
-  <div className="from-group row">
- 
+                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                    <h6>JV Report (Excel)</h6>
+                    <div className="from-group row">
 
-    <div className="col-12 col-md-6 mt-11">
-      <button
-        onClick={() => { getGDExcel(values) }}
-        disabled={registerExcelLoading}
-        type="button"
-        className="btn btn-primary btn-elevate"
-      >
-        Generate GD Report (Excel)
-        {registerExcelLoading && (
-          <span className="ml-3 mr-3 spinner spinner-white"></span>
-        )}
-      </button>
-    </div>
-  </div>
-</div>
 
-<br></br>
+               
+
+                      <div className="col-2 col-md-2 mt-11">
+                        <input
+                          name="groupByDepartment"
+                          type="checkbox"
+                          // onChange={handleChange}
+                          onChange={() => setFieldValue("groupByDepartment", !values?.groupByDepartment)}
+                          onBlur={handleBlur}
+                          value={values.groupByDepartment}
+                          checked={values.groupByDepartment}
+                   
+                        />
+                        <label>Group By Department</label>
+
+
+
+                      </div>
+
+
+                      <div className="col-2 col-md-2 mt-11">
+                        <input
+                          name="groupByLocation"
+                          type="checkbox"
+                          // onChange={handleChange}
+                          onChange={() => setFieldValue("groupByLocation", !values?.groupByLocation)}
+                          onBlur={handleBlur}
+                         
+                          checked={values.groupByLocation}
+                          label="Approved for Payroll"
+                        />
+                        <label>Group By Location</label>
+
+
+
+                      </div>
+
+                      <div className="col-4 col-md-4 mt-11">
+                        <button
+                          onClick={() => { getGDExcel(values) }}
+                          disabled={registerExcelLoading}
+                          type="button"
+                          className="btn btn-primary btn-elevate"
+                        >
+                          Generate JV Report (Excel)
+                          {registerExcelLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <br></br>
                 </fieldset>
               </Form>
             </Modal.Body>

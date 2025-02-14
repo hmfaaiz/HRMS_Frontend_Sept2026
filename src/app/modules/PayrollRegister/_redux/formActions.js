@@ -203,14 +203,14 @@ export const generateRegisterGDExcel = (filter, document, labels = {}) => async 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'payroll_register_gd.xlsx');
+      link.setAttribute('download', 'payroll_register_jv.xlsx');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.registerGDExcelFetched({}));
       document.body.removeChild(link);
     })
     .catch((error) => {
-      error.clientMessage = "Can't Generate GD Report";
+      error.clientMessage = "Can't Generate JV Report";
       const decodedData = new TextDecoder().decode(error?.response.data);
       const jsonData = JSON.parse(decodedData);
       dispatch(actions.catchError({ error, callType: callTypes.registerGDExcel }));
