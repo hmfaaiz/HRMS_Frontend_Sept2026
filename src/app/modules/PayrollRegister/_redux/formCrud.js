@@ -64,3 +64,9 @@ export async function generateBankAdvice(body) {
     responseType:'arraybuffer'
   });
 }
+
+export async function generateGDExcel(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-gd-excel`, body,{
+    responseType:'arraybuffer'
+  });
+}

@@ -11,7 +11,9 @@ const initialState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
-    pdfLoading: false
+    pdfLoading: false,
+    registerGDExcelLoading:false,
+    registerExcelLoading:false,
 };
 
 export const callTypes = {
@@ -20,7 +22,8 @@ export const callTypes = {
     pdf: "pdf",
     register: 'register',
     registerExcel: 'registerExcel',
-    bankAdvice: 'advice'
+    bankAdvice: 'advice',
+    registerGDExcel: 'registerGDExcel',
 };
 
 export const PayrollRegisterSlice = createSlice({
@@ -44,6 +47,9 @@ export const PayrollRegisterSlice = createSlice({
             else if(action.payload.callType === callTypes.registerExcel){
                 state.registerExcelLoading = false;
             }
+            else if(action.payload.callType === callTypes.registerGDExcel){
+                state.registerGDExcelLoading = false;
+            }
             else {
                 state.actionsLoading = false;
             }
@@ -62,6 +68,9 @@ export const PayrollRegisterSlice = createSlice({
             else if(action.payload.callType === callTypes.registerExcel){
                 state.registerExcelLoading = true;
             }
+            else if(action.payload.callType === callTypes.registerGDExcel){
+                state.registerGDExcelLoading = true;
+            }
             else if(action.payload.callType === callTypes.bankAdvice){
                 state.adviceLoading = true;
             } else {
@@ -76,6 +85,9 @@ export const PayrollRegisterSlice = createSlice({
         },
         registerExcelFetched: (state, action) => {
             state.registerExcelLoading = false;
+        },
+        registerGDExcelFetched: (state, action) => {
+            state.registerGDExcelLoading = false;
         },
         adviceFetched: (state, action) => {
             state.adviceLoading = false;
