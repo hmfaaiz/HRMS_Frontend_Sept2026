@@ -65,8 +65,15 @@ export async function generateBankAdvice(body) {
   });
 }
 
-export async function generateGDExcel(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-gd-excel`, body,{
+export async function generateJVExcel(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-jv-excel`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
+
+export async function generateJVCreditExcel(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-jv-credit-excel`, body,{
     responseType:'arraybuffer'
   });
 }

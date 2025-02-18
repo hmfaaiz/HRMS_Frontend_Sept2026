@@ -121,10 +121,16 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
     dispatch(actions.generateBankAdvice(newQueryParams.filter, document, labels));
   }
 
-  const getGDExcel = (values) => {
+  const getJVExcel = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
-    dispatch(actions.generateRegisterGDExcel(newQueryParams.filter, document, labels));
+    dispatch(actions.generateRegisterJVExcel(newQueryParams.filter, document, labels));
+  }
+
+  const getJVCreditExcel = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.generateRegisterJVCreditExcel(newQueryParams.filter, document, labels));
   }
   return (
     <>
@@ -516,18 +522,38 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
 
                       </div>
 
-                      <div className="col-4 col-md-4 mt-11">
+                      <div className="col-12 col-md-6 mt-11 ">
                         <button
-                          onClick={() => { getGDExcel(values) }}
+                          onClick={() => { getJVExcel(values) }}
                           disabled={registerExcelLoading}
                           type="button"
                           className="btn btn-primary btn-elevate"
                         >
-                          Generate JV Report (Excel)
+                          Generate JV Report (Payables)
                           {registerExcelLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
                         </button>
+
+                        <button
+                          onClick={() => { getJVCreditExcel(values) }}
+                          disabled={registerExcelLoading}
+                          type="button"
+                          className="btn btn-primary btn-elevate ml-4"
+                        >
+                        Generate JV Report (Bank Transfer)
+                          {registerExcelLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+
+                        
+                      </div>
+
+                      <div className="col-4 col-md-4 mt-11">
+                       
+
+                        
                       </div>
 
                     </div>
