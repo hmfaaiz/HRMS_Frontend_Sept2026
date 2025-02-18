@@ -529,7 +529,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           type="button"
                           className="btn btn-primary btn-elevate"
                         >
-                          Generate JV Report (Excel)
+                          Generate JV Report (Payables)
                           {registerExcelLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -541,7 +541,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           type="button"
                           className="btn btn-primary btn-elevate ml-4"
                         >
-                          Generate JV Credit Report (Excel)
+                        Generate JV Report (Bank Transfer)
                           {registerExcelLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
