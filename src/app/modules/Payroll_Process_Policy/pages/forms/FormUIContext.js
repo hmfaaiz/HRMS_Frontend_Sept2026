@@ -78,7 +78,9 @@ export function FormUIProvider({ FormUIEvents, children }) {
     eobi_employee_value_in_percent :"",
 
     //-- Other
-
+    salaryApproverId:"",
+    loanApproverId:"",
+    payrollApproverId:""
     
   };
 
