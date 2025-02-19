@@ -569,3 +569,18 @@ export const downloadTemplateExcel = (document, type, fileName) => async (dispat
       });
     });
 };
+
+
+export const fetchPayrollConfigApproverPermission = (key) => async (dispatch) => {
+  return await requestFromServer
+    .getPayrollConfigApproverPermission()
+    .then((response) => {
+   
+      const entities = [...response.data?.data];
+      dispatch(actions.AllPayrollConfigApproverPermissionFetch({ entities, key }));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
+

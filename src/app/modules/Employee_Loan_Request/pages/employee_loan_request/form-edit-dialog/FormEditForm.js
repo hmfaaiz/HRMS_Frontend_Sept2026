@@ -21,7 +21,7 @@ import {
 } from "../../../../../utils/common";
 import {
   fetchAllFormsMenu,
-  fetchAllPayrollMonthYearList,
+  fetchPayrollConfigApproverPermission,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { updateApprovedStatus, fetchEmployeeLoanRequest } from "../../../_redux/redux-Actions";
@@ -67,10 +67,10 @@ export function FormEditForm({
   const minDate = new Date(2024, 10, 6);
   useEffect(() => {
     if (!user.Id) {
-      // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
-      // dispatch(fetchAllPayrollMonthYearList("allPayrollMonthYearList"));
+
       dispatch(actions.getAllLoanType());
       dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
+      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
     }
     //allPayrolGroupList
   }, [dispatch, user.Id]);
@@ -87,10 +87,15 @@ export function FormEditForm({
   const [startDatePolicy, setStartDatePolicy] = useState();
   const [startDateLimit, setStartDateLimit] = useState();
   const [subsidiaryid, setSubsidiaryid] = useState();
-  const { currentState, userAccess } = useSelector((state) => {
+  const [payrollConfigApproverPermission, setPayrollConfigApproverPermission] = useState(false);
+
+
+
+  const { currentState, userAccess, auth } = useSelector((state) => {
     return {
       currentState: state.employee_loan_request,
       userAccess: state?.auth?.userAccess["employee_loan_request"],
+      auth: state.auth.user
     };
   }, shallowEqual);
 
@@ -101,11 +106,12 @@ export function FormEditForm({
     setMonthlyInstallments(userForEdit?.monthly_installment);
     setChangeLoanType(userForEdit?.loan_typeId);
     setIsClear(false);
+    checkPermission()
   }, [userForEdit]);
 
   useEffect(() => {
     if (changeLoanType) {
-  
+
       setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
       let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
         (item) => item.loan_typeId === changeLoanType
@@ -163,15 +169,15 @@ export function FormEditForm({
       }
 
       //  if(!isClear){
-     
-      if(loandetails?.basis==null){
-      
+
+      if (loandetails?.basis == null) {
+
         setMaxAmountLimit(loandetails?.max_loan_amount);
-      }else{
-       
+      } else {
+
         setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount));
       }
-   
+
 
       setMaxMonthlyAmountSuggest(monthlySalarySuggest);
       //  }
@@ -236,50 +242,55 @@ export function FormEditForm({
     }
 
   }
-  //  const addMonthsToDate=(dateStr, months,payrollMonth) =>{
 
-  //     const date = new Date(dateStr);
-  //     date.setMonth(date.getMonth() + months);
-
-  //     setStartDateLimit(date)
-  //     return date;
-  //   }
 
   const addMonthsToDate = (dateStr, months) => {
-   
+
     const date = new Date(dateStr);
     date.setMonth(date.getMonth() + months);
-  
-    
-    date.setHours(0, 0, 0, 0);
-  
 
-    // const payrollDate = new Date(payrollMonth);
-    // payrollDate.setHours(0, 0, 0, 0); 
-  
-    
-    // if (payrollDate > date) {
-    //   date.setFullYear(payrollDate.getFullYear(), payrollDate.getMonth(), payrollDate.getDate());
-    //   date.setHours(0, 0, 0, 0); 
-    // }
-  
-    // Get today's date
+
+    date.setHours(0, 0, 0, 0);
+
+
+
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset time to midnight (00:00:00)
-  
+
     // Ensure the date is not in the past
     if (date < today) {
       // If the date is in the past, set it to today's date
       date.setFullYear(today.getFullYear(), today.getMonth(), today.getDate());
       date.setHours(0, 0, 0, 0); // Ensure time is reset to 00:00:00
     }
-  
+
 
     setStartDateLimit(date);
-  
+
     return date;
   };
-  
+
+
+
+  const checkPermission = () => {
+
+    const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
+      entity => entity.subsidiaryId === Number(userForEdit?.subsidiaryId)
+    );
+
+
+    if (filteredPermission?.length > 0) {
+      const permission = filteredPermission[0];
+      const roleId = String(auth?.roleId).trim();
+      const loanApproverIds = permission?.loanApproverId?.map(id => String(id).trim());
+
+      const isRoleLoanApprover = loanApproverIds?.includes(roleId);
+      setPayrollConfigApproverPermission(isRoleLoanApprover);
+     
+    }
+  }
+
+
 
   return (
     <Formik
@@ -306,7 +317,7 @@ export function FormEditForm({
           setMaxMonthlyAmountSuggest,
           setMaxAmountLimit,
           clearForm,
-          monthlyInstallmentsLimit,setMonthlyInstallmentsLimit,subsidiaryid,
+          monthlyInstallmentsLimit, setMonthlyInstallmentsLimit, subsidiaryid,
         );
       }}
     >
@@ -430,7 +441,7 @@ export function FormEditForm({
                       // minDate={new Date(values.applied_date) < new Date() ? new Date() : values.applied_date}
                       maxDate={startDateLimit}
                       // disabled={!payrollMonth || userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date}
-                      disabled={ userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date || !payrollMonth}
+                      disabled={userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date || !payrollMonth}
                     />
                   </div>
 
@@ -577,36 +588,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  {/* <div className="col-12 col-md-6 mt-3">
-                    <Field
-                      // name="approval_statusId"
-                      component={Input}
-                      placeholder=""
-                      label={<span>Approval Status</span>}
-                      type="text"
-                      value={""}
-                      disabled={true}
-                    />
-                  </div> */}
 
-                  {/* <div className="col-12 col-md-6 mt-3">
-                    <SearchSelect
-                      name="statusId"
-                      label={<span>Status</span>}
-                      onChange={(e) => {
-                        setFieldValue("statusId", e.value || null);
-                      }}
-                      value={
-                        statusOptions?.find(
-                          (option) => option.value === values.statusId
-                        ) || null
-                      }
-                      // options={dashboard.allPayrollMonthYearList}
-                      isDisabled={true}
-                      error={errors.statusId}
-                      touched={touched.statusId}
-                    />
-                  </div> */}
 
 
                 </div>
@@ -659,8 +641,9 @@ export function FormEditForm({
 
 
                 </button>
+                
 
-                {
+                {/* {
                   userForEdit?.approved_status === 2 ? (
                     <button
                       type="button"
@@ -691,8 +674,46 @@ export function FormEditForm({
                     >
                       Reject
                     </button></> : null
-                }
+                } */}
 
+{payrollConfigApproverPermission && (
+  userForEdit ? (
+    userForEdit?.approved_status === 2 ? (
+      <button
+        type="button"
+        className="btn btn-green"
+        onClick={() => UpdateApprovedStatus(user.Id, 1)}
+      >
+        Approve
+      </button>
+    ) : userForEdit?.approved_status === 1 ? (
+      <button
+        type="button"
+        className="btn btn-red"
+        onClick={() => UpdateApprovedStatus(user.Id, 2)}
+      >
+        Reject
+      </button>
+    ) : (
+      <>
+        <button
+          type="button"
+          className="btn btn-green"
+          onClick={() => UpdateApprovedStatus(user.Id, 1)}
+        >
+          Approve
+        </button>
+        <button
+          type="button"
+          className="btn btn-red"
+          onClick={() => UpdateApprovedStatus(user.Id, 2)}
+        >
+          Reject
+        </button>
+      </>
+    )
+  ) : null
+)}
 
 
 

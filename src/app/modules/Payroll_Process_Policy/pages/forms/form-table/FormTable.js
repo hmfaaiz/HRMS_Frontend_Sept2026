@@ -47,7 +47,7 @@ export function FormTable(user) {
 
         currentState: state.payroll_process_policy,
         userAccess: state?.auth?.userAccess["Payroll_Process_Policy"],
-        roles: state.users?.roles?.supervisedBy || []
+        roles: state.users?.roles?.allRoles || []
       }
     },
     shallowEqual
