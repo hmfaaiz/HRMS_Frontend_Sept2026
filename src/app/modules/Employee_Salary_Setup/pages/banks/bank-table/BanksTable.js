@@ -129,7 +129,7 @@ export function BanksTable() {
 
     {
       dataField: "approved",
-      text: "status",
+      text: "Salary status",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
