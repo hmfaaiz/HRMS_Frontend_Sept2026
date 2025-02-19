@@ -15,7 +15,8 @@ import {
   fetchAllEmpCompensationBenefitsForDDL,
   fetchAllBanks,
   fetchAllCompanyBanks,
-  fetchAllBankBranch
+  fetchAllBankBranch,
+  fetchPayrollConfigApproverPermission
 
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
@@ -249,6 +250,8 @@ export function BankEditForm({
   const [deferrors, setErrors] = useState({});
   const [dropdownData, setdropdownData] = useState(DEFAULT_CALCULATION_TYPE_DROPDOWN);
   const [currentSalaryMethod, setcurrentSalaryMethod] = useState('')
+  const [salaryApproverPermission, setSalaryApproverPermission] = useState(false);
+
 
   useEffect(() => {
     if (!user.Id) {
@@ -263,6 +266,7 @@ export function BankEditForm({
       dispatch(fetchAllBanks(1));
       dispatch(fetchAllCompanyBanks(1));
       // dispatch(fetchAllBankBranch(47));
+  dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
 
     }
 
@@ -275,7 +279,7 @@ export function BankEditForm({
       setGrauityDate(new Date(user.gratuity_startDate));
     }
   }, [user.gratuity_startDate]);
-
+console.log("user111",user)
   useEffect(() => {
     const emp_bankId = defBank?.value ? defBank.value : user.emp_bankId;
     setDefaultBanks(
@@ -632,6 +636,27 @@ export function BankEditForm({
 const fetchBranch=(bankId)=>{
   dispatch(fetchAllBankBranch(bankId));
 }
+
+
+useEffect(()=>{
+  
+
+
+  const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
+    entity => entity.subsidiaryId === Number(user.subsidiaryId)
+  );
+
+
+  if (filteredPermission?.length > 0) {
+    const permission = filteredPermission[0];
+    const roleId = String(auth?.user?.roleId).trim();
+    const salaryApproverIds = permission?.salaryApproverId?.map(id => String(id).trim());
+
+    const isRoleSalaryApprover = salaryApproverIds?.includes(roleId);
+    setSalaryApproverPermission(isRoleSalaryApprover);
+
+  }
+},[user.subsidiaryId])
 
   return (
     <>
@@ -1717,7 +1742,7 @@ const fetchBranch=(bankId)=>{
             </Modal.Body>
             <Modal.Footer>
 
-              {
+              {/* {
                 !isUserForRead && Boolean(id) && !Boolean(user.approved) &&
                 <button
                   type="button"
@@ -1729,7 +1754,21 @@ const fetchBranch=(bankId)=>{
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
                 </button>
-              }
+              } */}
+{salaryApproverPermission && (
+  !isUserForRead && Boolean(id) && !Boolean(user.approved) ? (
+    <button
+      type="button"
+      onClick={() => approveSalary(id)}
+      className="btn btn-green btn-elevate"
+    >
+      Approve
+      {approveLoading && (
+        <span className="ml-3 mr-3 spinner spinner-white"></span>
+      )}
+    </button>
+  ) : null
+)}
 
               {!isUserForRead ? (
                 <button

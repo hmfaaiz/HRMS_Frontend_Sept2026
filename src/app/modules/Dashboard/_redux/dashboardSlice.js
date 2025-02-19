@@ -227,7 +227,10 @@ export const dashboardSlice = createSlice({
     
       state.allEmployeesWithNoPermissionList = action.payload;
     },
-
+    AllPayrollConfigApproverPermissionFetch: (state, action) => {
+      state.allPayrollConfigApproverPermissionList = action.payload;
+ 
+    },
   },
 });
 

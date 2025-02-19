@@ -11,6 +11,7 @@ import {
   fetchAllFormsMenu,
   fetchAllPayrollMonthYearList,
   fetchAllSubsidiaryData,
+  fetchPayrollConfigApproverPermission,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getDateDiffInDays } from "../../../../../utils/common";
@@ -32,7 +33,7 @@ const payroll_processEditSchema = Yup.object().shape({
   // .required(VALIDATION_MESSAGES.required),
 
   payroll_monthId: Yup.string()
-  .nullable()
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
 
 
@@ -56,7 +57,7 @@ export function FormEditForm({
   const [isStopSalModalOpen, setIsStopSalModalOpen] = useState(false)
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedLoans, setSelectedLoans] = useState([]);
-
+  const [payrollConfigApproverPermission, setPayrollConfigApproverPermission] = useState(false);
 
 
   const [isStopLoanModalOpen, setIsStopLoanModalOpen] = useState(false)
@@ -66,17 +67,18 @@ export function FormEditForm({
 
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(127, "allPayrolGroupList"));
-
+  dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
 
 
     }
   }, [dispatch, user.Id]);
 
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess, auth } = useSelector((state) => {
     return {
       currentState: state.payroll_process,
       userAccess: state?.auth?.userAccess["payroll_process"],
+      auth: state.auth.user
     };
   }, shallowEqual);
 
@@ -84,7 +86,7 @@ export function FormEditForm({
 
 
   const payrollGroupDetails = async (subsidiaryId, payroll_groupId, payroll_monthId) => {
-    
+
     if (subsidiaryId && payroll_monthId) {
       // Dispatch action to fetch payroll group details
       let body = {
@@ -234,6 +236,23 @@ export function FormEditForm({
       currentState?.payroll_group_details?.stop_loan_employees_list);
   }, [currentState?.payroll_group_details]);
 
+  const checkPermission = (subsidiaryId) => {
+
+    const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
+      entity => entity.subsidiaryId === Number(subsidiaryId)
+    );
+
+
+    if (filteredPermission?.length > 0) {
+      const permission = filteredPermission[0];
+      const roleId = String(auth?.roleId).trim();
+      const payrollApproverIds = permission?.payrollApproverId?.map(id => String(id).trim());
+
+      const isRolePayrollApprover = payrollApproverIds?.includes(roleId);
+      setPayrollConfigApproverPermission(isRolePayrollApprover);
+
+    }
+  }
 
   return (
     <Formik
@@ -447,10 +466,11 @@ export function FormEditForm({
                           dispatch(actions.clearReduxData())
                           setFieldValue("subsidiaryId", e.value || null);
                           // payrollGroupDetails(e.value, values.payroll_groupId, values.payroll_monthId)
-                          setFieldValue("payroll_monthId",null);
+                          setFieldValue("payroll_monthId", null);
                           getPayroll(e.value)
                           checkPayroll_Employees(setFieldValue, e.value, values.payroll_groupId, values.payroll_monthId)
                           setIsAfterResult(false)
+                          checkPermission(e.value)
                         }}
                         value={
                           dashboard?.allSubsidiaryList?.find(
@@ -680,43 +700,44 @@ export function FormEditForm({
 
             {/* {checkPayroll_EmployeesExist?.length > 0 && ( */}
 
-              <>
+            <>
+              {payrollConfigApproverPermission && (<button
 
-                <button
+                onClick={() => {
+                  checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, false, true);
+                  setIds("");
+                  handleReset();
+                  dispatch(actions.clearReduxData())
+                }}
+                className="btn btn-green"
+                disabled={loading || !checkPayroll_EmployeesExist?.finalize}
+              >
+                Finalize
+                {loading && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>)}
 
-                  onClick={() => {
-                    checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, false, true);
-                    setIds("");
-                    handleReset();
-                    dispatch(actions.clearReduxData())
-                  }}
-                  className="btn btn-green"
-                  disabled={loading || !checkPayroll_EmployeesExist?.finalize}
-                >
-                  Finalize
-                  {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
 
-                <button
 
-                  onClick={() => {
-                    checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, true, false);
-                    setIds("");
-                    handleReset();
-                    dispatch(actions.clearReduxData())
-                  }}
-                  className="btn btn-red"
-                  disabled={loading  ||  !checkPayroll_EmployeesExist?.revert}
-                >
-                  Revert
-                  {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
+              <button
 
-              </>
+                onClick={() => {
+                  checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, true, false);
+                  setIds("");
+                  handleReset();
+                  dispatch(actions.clearReduxData())
+                }}
+                className="btn btn-red"
+                disabled={loading || !checkPayroll_EmployeesExist?.revert}
+              >
+                Revert
+                {loading && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>
+
+            </>
             {/* )} */}
 
             {!isUserForRead ? (

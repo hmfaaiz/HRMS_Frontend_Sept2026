@@ -47,7 +47,7 @@ export function FormTable(user) {
 
         currentState: state.payroll_process_policy,
         userAccess: state?.auth?.userAccess["Payroll_Process_Policy"],
-        roles: state.users?.roles?.supervisedBy || []
+        roles: state.users?.roles?.allRoles || []
       }
     },
     shallowEqual
@@ -72,6 +72,8 @@ export function FormTable(user) {
   const [defBank, setDefaultBanks] = useState({});
   const [otherErrors, setotherErrors] = useState({})
   const dispatch = useDispatch();
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+
 
   useEffect(() => {
     FormUIProps.setIds([]);
@@ -216,6 +218,8 @@ export function FormTable(user) {
     setChkAtt_Integration(event.target.checked);
   };
 
+
+
   const handleFieldChanged = (el) => {
     const index = el.target.id.split('-')[1];
     const key = el.target.id.split('-')[0];
@@ -282,12 +286,12 @@ export function FormTable(user) {
         .notRequired(),
       basicSalaryId: Yup.string()
         .required(VALIDATION_MESSAGES.required),
-      basic_pay_accountId: Yup.number()
-        .when('isEnableAccounting', {
-          is: true, // if select value is 2
-          then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.number().notRequired(),
-        }),
+      // basic_pay_accountId: Yup.number()
+      //   .when('isEnableAccounting', {
+      //     is: true, // if select value is 2
+      //     then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
+      //     otherwise: Yup.number().notRequired(),
+      //   }),
       payroll_payable_accountId: Yup.number()
         .when('isEnableAccounting', {
           is: true, // if select value is 2
@@ -345,7 +349,7 @@ export function FormTable(user) {
       eobi_basis: Yup.number()
         .when('isEnableEOBI', {
           is: true, // if select value is 2
-          then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).required(VALIDATION_MESSAGES.required).max(999999999, 'Max 9 Characters') ,
+          then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).required(VALIDATION_MESSAGES.required).max(999999999, 'Max 9 Characters'),
           otherwise: Yup.number().notRequired(),
         }),
       eobi_employeer_value_in_percent: Yup.number()
@@ -532,7 +536,13 @@ export function FormTable(user) {
         sessi_earningId: user.sessi_earningId,
         sessi_employeer_value_in_percent: user.sessi_employeer_value_in_percent,
         sessi_employee_value_in_percent: user.sessi_employee_value_in_percent,
+
+        salaryApproverId:user.salaryApproverId,
+    loanApproverId:user.loanApproverId,
+    payrollApproverId:user.payrollApproverId
+
       };
+     
 
       await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList));
       // await dispatch(actions.fetchUsers(usersUIProps.queryParams));
@@ -564,7 +574,7 @@ export function FormTable(user) {
       if (!objValidate.bankAccountNo) {
         newErrors[`bankAccountNo-${index}`] = VALIDATION_MESSAGES.required;
       }
-      else if(objValidate.bankAccountNo?.toString()?.trim()?.length > 20){
+      else if (objValidate.bankAccountNo?.toString()?.trim()?.length > 20) {
         newErrors[`bankAccountNo-${index}`] = `Max 20 Characters`
       }
 
@@ -576,6 +586,21 @@ export function FormTable(user) {
 
     return newErrors;
   };
+
+
+  const handleCheckboxForRoleChange = (value) => {
+
+    setSelectedEmployees((prev) => {
+      if (prev.includes(value)) {
+        // If the employee is already selected, remove it
+        return prev.filter((id) => id !== value);
+      } else {
+        // If the employee is not selected, add it
+        return [...prev, value];
+      }
+    });
+  };
+
 
   return (
     <>
@@ -624,17 +649,17 @@ export function FormTable(user) {
           if (Object.keys(validationErrors).length > 0) {
             setotherErrors(validationErrors);
           } else {
-          SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances);
+            SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances);
 
-          if (user.formid) {
-            dispatch(actions.fetchUser(null));
+            if (user.formid) {
+              dispatch(actions.fetchUser(null));
+            }
+            else {
+              dispatch(actions.fetchUser(''));
+            }
+            user.setid(0);
           }
-          else {
-            dispatch(actions.fetchUser(''));
-          }
-          user.setid(0);
-        }
-      }}
+        }}
       >
         {({
           handleSubmit,
@@ -664,8 +689,8 @@ export function FormTable(user) {
                         setFieldValue("subsidiaryId", e.value || null);
                         setDefualtSubsidiaryList(e);
                         dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes", e.value));
-                        dispatch(fetchAllDeductionList(2,  e.value, ''));
-                        dispatch(fetchAllEarningList(1,  e.value, ''));
+                        dispatch(fetchAllDeductionList(2, e.value, ''));
+                        dispatch(fetchAllEarningList(1, e.value, ''));
                         //handlePaymenModeChanged(e)
                       }}
 
@@ -738,7 +763,7 @@ export function FormTable(user) {
                     />
                   </div> */}
 
-                  <div className="col-12 col-md-4 mt-3">
+                  {/* <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       name="payroll_approverId"
                       label={<span>Payroll Approver</span>}
@@ -759,7 +784,7 @@ export function FormTable(user) {
                       options={roles}
                     />
 
-                  </div>
+                  </div> */}
 
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
@@ -778,13 +803,109 @@ export function FormTable(user) {
                 </div>
               </div>
               <br></br>
+
+              <h6>Approval Authoritise</h6>
+              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+
+                <div className="from-group row">
+              
+<div className="col-12 col-md-4 mt-3">
+Salary Setup Approver
+  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
+
+    <div className="multi-select">
+      <div className="dropdown-label"></div>
+      <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
+        {roles?.map((option) => (
+          <div key={option.Id} className="dropdown-option">
+            <input style={{ width: "25px" }}
+                                  name="salaryApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+            {option.label}
+          </div>
+        ))}
+        {/* {errors.employeeId && touched.employeeId && (
+        <div className="invalid-text">{errors.employeeId}</div>
+      )} */}
+      </div>
+    </div>
+  </div>
+</div>
+
+               
+
+
+<div className="col-12 col-md-4 mt-3">
+Loan Approver
+  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
+
+    <div className="multi-select">
+      <div className="dropdown-label"></div>
+      <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
+        {roles?.map((option) => (
+          <div key={option.Id} className="dropdown-option">
+                   <input style={{ width: "25px" }}
+                                  name="loanApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+            {option.label}
+          </div>
+        ))}
+        {/* {errors.employeeId && touched.employeeId && (
+        <div className="invalid-text">{errors.employeeId}</div>
+      )} */}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div className="col-12 col-md-4 mt-3">
+Payroll Approver
+  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
+
+    <div className="multi-select">
+      <div className="dropdown-label"></div>
+      <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
+        {roles?.map((option) => (
+          <div key={option.Id} className="dropdown-option">
+            <input style={{ width: "25px" }}
+                                  name="payrollApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+                    
+            {option.label}
+          </div>
+        ))}
+        {/* {errors.employeeId && touched.employeeId && (
+        <div className="invalid-text">{errors.employeeId}</div>
+      )} */}
+      </div>
+    </div>
+  </div>
+</div>
+
+                </div>
+              </div>
+              <br></br>
               <h6>Email Preferences</h6>
               <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
 
                 <div className="from-group row">
                   <div className="col-12 col-md-4 mt-3">
-                  <SearchSelect
+                    <SearchSelect
                       name="sender_emailId"
                       label={<span>Email Sender</span>}
                       onBlur={() => {
@@ -850,7 +971,7 @@ export function FormTable(user) {
                 </div>
 
                 <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
+                  {/* <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       name="basic_pay_accountId"
                       label={<span>Basic Pay Journal Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
@@ -868,7 +989,7 @@ export function FormTable(user) {
                       touched={touched.basic_pay_accountId}
                       options={dashboard.allPayrollAccounts}
                     />
-                  </div>
+                  </div> */}
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       name="payroll_payable_accountId"
@@ -1538,7 +1659,7 @@ export function FormTable(user) {
 
                         <td>
                           <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={handleFieldChanged} id={"bankAccountNo-" + rightindex}></input>
-                        
+
                           {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
                         </td>
                         <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
@@ -1551,11 +1672,11 @@ export function FormTable(user) {
                         />
                         </td>
 
-                        <td> 
+                        <td>
                           <input type="text" className="form-control" placeholder="Enter Bank Name" onChange={handleFieldChanged} value={obj.bankName} id={'bankName-' + rightindex}></input>
-                          
+
                           {otherErrors[`bankName-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankName-${rightindex}`]}</div>}
-                          </td>
+                        </td>
 
                       </tr>
                       </>

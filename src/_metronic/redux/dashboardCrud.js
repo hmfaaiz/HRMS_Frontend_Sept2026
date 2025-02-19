@@ -237,3 +237,10 @@ export async function downloadTemplate(body) {
     responseType:'arraybuffer'
   });
 }
+
+export const getPayrollConfigApproverPermission = async () => {
+  return await axios.get(
+    `${USERS_URL}/settings/get-approval-authoritise-permission`,
+    {}
+  );
+};
