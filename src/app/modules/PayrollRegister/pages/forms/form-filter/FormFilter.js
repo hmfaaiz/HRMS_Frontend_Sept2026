@@ -1,17 +1,18 @@
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Field, Formik } from "formik"
 import { isEqual } from "lodash"
 import * as Yup from "yup";
 import { useFormUIContext } from "../FormUIContext"
 import { Form, Modal } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector,shallowEqual } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { groupByOptions, initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList,fetchPayrollConfigApproverPermission } from "../../../../../../_metronic/redux/dashboardActions";
 import { Select } from "../../../../../../_metronic/_partials/controls";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -132,6 +133,30 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
     const labels = getLabels(values);
     dispatch(actions.generateRegisterJVCreditExcel(newQueryParams.filter, document, labels));
   }
+
+
+  const [payrollPayableAccountApproverPermission, setPayrollPayableAccountApproverPermission] = useState(false);
+  const { dashboard } = useSelector((state) => state);
+  useEffect(() => {
+      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
+
+  },[]);
+
+ 
+  const checkPermission = (value) => {
+
+    const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
+      entity => entity.subsidiaryId === Number(value)
+    );
+
+
+    if (filteredPermission?.length > 0) {
+      const permission = filteredPermission[0];
+      setPayrollPayableAccountApproverPermission(Boolean(permission?.payroll_payable_accountId));
+     
+    }
+  }
+
   return (
     <>
       <Formik
@@ -172,6 +197,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             setFieldValue('employeeId', '')
                             setFieldValue('monthId', '')
+                            checkPermission(value)
                           }}
                           label={
                             <span>
@@ -480,6 +506,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
 
                   <br></br>
 
+                  {payrollPayableAccountApproverPermission &&
+(
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                     <h6>JV Report (Excel)</h6>
                     <div className="from-group row">
@@ -557,8 +585,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                       </div>
 
                     </div>
-                  </div>
-
+                  </div>)
+                }
                   <br></br>
                 </fieldset>
               </Form>
