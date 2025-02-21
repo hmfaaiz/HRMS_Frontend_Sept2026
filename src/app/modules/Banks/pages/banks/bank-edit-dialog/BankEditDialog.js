@@ -104,7 +104,6 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
       //   return item.value === +user.status;
       // });
      
-      console.log("getUserStatus", user);
 
       const bankUpdatedFields = {
         Id: user.Id,
