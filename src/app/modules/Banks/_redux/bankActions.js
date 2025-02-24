@@ -10,7 +10,6 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
  
   if (queryparm.pdf) {
-    console.log("apihit111","pdf")
     dispatch(actions.startCall({ callType: callTypes.pdf }));
     return requestFromServer.getAllBanks(queryparm)
 
@@ -50,7 +49,7 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
   }
 
  else if (queryparm.csv) {
-  console.log("apihit111","csv")
+
     dispatch(actions.startCall({ callType: callTypes.csv }));
     return requestFromServer.getAllBanks(queryparm)
 
@@ -90,7 +89,7 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 
   else if (queryparm.excel) {
-    console.log("apihit111","excel")
+ 
     dispatch(actions.startCall({ callType: callTypes.xlsx }));
     return requestFromServer.getAllBanks(queryparm)
 

@@ -47,13 +47,13 @@ export const bankSlice = createSlice({
             }
         },
         startCall: (state, action) => {
-            console.log("callTypes111", callTypes)
+           
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
             }
             else if (action.payload.callType === callTypes.pdf) {
-                console.log("hitpdf")
+              
                 state.pdfLoading = true;
 
 
