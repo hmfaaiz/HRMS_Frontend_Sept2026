@@ -804,7 +804,7 @@ export function FormTable(user) {
               </div>
               <br></br>
 
-              <h6>Approval Authoritise</h6>
+              <h6>Approval Authorities</h6>
               <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
                 <div className="from-group row">
