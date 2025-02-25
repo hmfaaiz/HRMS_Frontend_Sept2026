@@ -108,6 +108,28 @@ export function BranchTable() {
       },
     },
     
+    {
+      dataField: "fullAddress",
+      text: "Address",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+  
+    {
+      dataField: "fullContactInfo",
+      text: "Contact Information",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    
    
        {
       dataField: "action",
