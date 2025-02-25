@@ -20,7 +20,7 @@ export const sizePerPageList = [
 //   // sortBy: "asc",
 //   // page: 1,
 //   // limit: 10,
-  
+
 //     sortOrder: "asc", // asc||desc
 //     // sortField: "id",
 //     pageNumber: 1,
@@ -32,9 +32,12 @@ export const initialFilter = {
 
     searchQuery: ""
 
-},
+  },
+  pdf: false,
+  csv: false,
+  excel: false,
 
-    sortOrder: "asc",
-    pageSize: 10,
-    pageNumber: 1
+  sortOrder: "asc",
+  pageSize: 10,
+  pageNumber: 1
 }

@@ -11,6 +11,10 @@ const initialDeptState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    pdfLoading: false, 
+    csvLoading: false, 
+    excelLoading: false
+
 };
 
 export const callTypes = {
@@ -26,7 +30,22 @@ export const deptSlice = createSlice({
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } else {
+            }
+            else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = false;
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = false;
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = false;
+            }
+
+
+            
+            
+            else {
                 state.actionsLoading = false;
             }
         },
@@ -34,7 +53,24 @@ export const deptSlice = createSlice({
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
-            } else {
+            } 
+            else if (action.payload.callType === callTypes.pdf) {
+              
+                state.pdfLoading = true;
+
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = true;
+
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = true;
+
+            }
+
+            
+            else {
                 state.actionsLoading = true;
             }
         },
@@ -49,6 +85,7 @@ export const deptSlice = createSlice({
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
+
         },
 
         //get User By ID
@@ -128,6 +165,18 @@ export const deptSlice = createSlice({
         MaxIdFetchForReceipt: (state, action) => {
             state.donationReportFetch = action.payload;
         },
+        pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
+        },
+
     },
 });
 
