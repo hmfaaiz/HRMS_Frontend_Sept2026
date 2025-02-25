@@ -332,8 +332,8 @@ export function BanksFilter({ listLoading, user, setCity,
     if (!isEqual(newQueryParams, banksUIProps.queryParams)) {
       newQueryParams.pageNumber = 1
       // update list by queryParams
-      console.log("update list by queryParams");
-      console.log(newQueryParams);
+    
+  
       banksUIProps.setQueryParams(newQueryParams)
     }
   }

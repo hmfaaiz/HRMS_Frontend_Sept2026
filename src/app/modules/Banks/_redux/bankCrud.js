@@ -9,13 +9,16 @@ export function createBank(body) {
 }
 // Read
 export function getAllBanks(body) {
-  console.log("body",body);
-  return axios.post(`${USERS_URL}/bank/read-all-banks`, body);
+  const config = {
+    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/bank/read-all-banks`, body, config);
 }
 
 
 export function getBankById(id) {
-   console.log(" bank id", id)
+ 
   return axios.post(`${USERS_URL}/bank/read-bank`, id);
 }
 

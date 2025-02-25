@@ -12,11 +12,20 @@ export function createBranch(body) {
 
 
 // Read
-export function getAllBranch(body) {
+// export function getAllBranch(body) {
 
-  return axios.post(`${USERS_URL}/branch/read-all-branch`, body);
-}
+//   return axios.post(`${USERS_URL}/branch/read-all-branch`, body);
+// }
  
+
+export function getAllBranch(body) {
+  const config = {
+    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/branch/read-all-branch`, body, config);
+}
+
 
 export function getBranchById(id) {
  

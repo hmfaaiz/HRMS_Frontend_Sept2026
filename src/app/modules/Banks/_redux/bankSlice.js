@@ -11,6 +11,9 @@ const initialBankState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    pdfLoading: false,
+    csvLoading: false,
+    excelLoading: false
 };
 
 export const callTypes = {
@@ -26,34 +29,67 @@ export const bankSlice = createSlice({
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } else {
+
+            }
+            else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = false;
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = false;
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = false;
+            }
+
+            else {
                 state.actionsLoading = false;
             }
         },
         startCall: (state, action) => {
+           
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
-            } else {
+            }
+            else if (action.payload.callType === callTypes.pdf) {
+              
+                state.pdfLoading = true;
+
+
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = true;
+
+
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = true;
+
+
+            }
+
+            else {
                 state.actionsLoading = true;
             }
         },
         bankFetched: (state, action) => {
             // 
-            
+
             const entities = action.payload.data?.data.rows;
             const totalResult = action.payload.data?.data.totalResults;
-            
+
             state.listLoading = false;
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
         },
 
-         //get User By ID
-         BankFetchedForEdit: (state, action) => {
-            
-            
+        //get User By ID
+        BankFetchedForEdit: (state, action) => {
+
+
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
@@ -61,8 +97,8 @@ export const bankSlice = createSlice({
 
         //get User By ID
         userFetched: (state, action) => {
-            
-            
+
+
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
@@ -71,26 +107,26 @@ export const bankSlice = createSlice({
 
             state.error = null;
             state.actionsLoading = false;
-            
-            
+
+
             state.entities = state.entities.filter(
                 (el) => el.Id !== action.payload.Id
             );
         },
         bankCreated: (state, action) => {
-             
+
             state.actionsLoading = false;
             state.error = null;
             state.entities.unshift(action.payload);
-            state.totalCount +=1;
+            state.totalCount += 1;
         },
         bankUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
-          
+
             state.entities = state.entities.map((entity) => {
-                
+
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
@@ -100,7 +136,7 @@ export const bankSlice = createSlice({
                 }
                 return entity;
             });
-           
+
         },
         RolesFetched: (state, action) => {
             const entities = action.payload;
@@ -125,6 +161,17 @@ export const bankSlice = createSlice({
         // },
         MaxIdFetchForReceipt: (state, action) => {
             state.donationReportFetch = action.payload;
+        },
+        pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
         },
     },
 });

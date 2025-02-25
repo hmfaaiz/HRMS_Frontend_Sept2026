@@ -33,11 +33,11 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
   const initUser = {
     Name: "",
     subsidiaryId: "",
-    companyId: "1"
+    companyId: ""
 
   };
 
-  console.log("bank ui events", BanksUIEvents);
+
 
   const value = {
     queryParams,

@@ -10,11 +10,19 @@ export function createDept(body) {
 
 
 // Read
-export function getAllDept(body) {
+// export function getAllDept(body) {
 
-  return axios.post(`${USERS_URL}/department/read-all-dept`, body);
-} 
+//   return axios.post(`${USERS_URL}/department/read-all-dept`, body);
+// } 
  
+
+export function getAllDept(body) {
+  const config = {
+    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/department/read-all-dept`, body, config);
+}
 
 export function getDeptById(id) {
 

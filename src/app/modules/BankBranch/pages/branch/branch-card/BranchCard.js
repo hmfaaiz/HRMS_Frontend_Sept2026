@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-
+import SVG from "react-inlinesvg";
 import {
   Card,
   CardBody,
@@ -9,8 +9,10 @@ import {
 import { BranchTable } from "../branch-table/BranchTable"
 import { useBranchUIContext } from "../BranchUIContext"
 import { BranchFilter } from "../branch-filter/BranchFIlter"
-import { useSelector, shallowEqual } from "react-redux"
+import { useSelector, shallowEqual,useDispatch } from "react-redux"
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
+import * as actions from "../../../_redux/branchActions";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers"
 
 export function BranchCard() {
   const BranchUIContext = useBranchUIContext()
@@ -19,11 +21,13 @@ export function BranchCard() {
     return {
       newBranchButtonClick: BranchUIContext.newBranchButtonClick,
       openEditBranchDialog: BranchUIContext.openEditBranchDialog,
+      queryParams: BranchUIContext.queryParams,
+      setQueryParams: BranchUIContext.setQueryParams,
     }
   }, [BranchUIContext])
 
 
-  const { userAccess } = useSelector(
+  const { userAccess ,pdfLoading, csvLoading, excelLoading} = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.Branch,
     }),
@@ -33,6 +37,37 @@ export function BranchCard() {
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateBranch"
   )
+const dispatch = useDispatch();
+ const print = async (value) => {
+
+    let updatedQueryParams = {
+      ...BranchUIProps.queryParams,
+      csv: false,
+      excel: false,
+      pdf: false,
+      [value]: true,
+    };
+
+    // Set the updated queryParams
+    BranchUIProps.setQueryParams(updatedQueryParams);
+
+
+    await dispatch(actions.fetchUsers(BranchUIProps.queryParams));
+    updatedQueryParams = {
+      ...BranchUIProps.queryParams,
+      csv: false,
+      excel: false,
+      pdf: false,
+      [value]: false,
+
+
+    };
+
+    BranchUIProps.setQueryParams(updatedQueryParams);
+
+  }
+
+
 
   return (
     <>
@@ -57,7 +92,7 @@ export function BranchCard() {
 
 
                 {accessUser && (
-
+<> 
                   <button
 
                     type="button"
@@ -72,6 +107,76 @@ export function BranchCard() {
 
                   </button>
 
+                       <button
+                  
+                                        type="button"
+                  
+                                        className="file-button"
+                                        disabled={pdfLoading}
+                                        onClick={() => { print("pdf") }}
+                  
+                                      >
+                  
+                                        {/* Print PDF */}
+                                        <span className="file-button">
+                                          <SVG
+                                          
+                                            src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")}
+                                          />
+                                        </span>
+                                        {/* {pdfLoading && (
+                                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                                        )} */}
+                                      </button>
+                  
+                                      <button
+                  
+                                        type="button"
+                  
+                                        className=" file-button"
+                                        disabled={csvLoading}
+                                        onClick={() => { print("csv") }}
+                  
+                                      >
+                  
+                                        {/* Print CSV
+                                         */}
+                  
+                                        <span className=" file-button">
+                                          <SVG
+                                            src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")}
+                                          />
+                                        </span>
+                                        {/* {csvLoading && (
+                                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                                        )} */}
+                                      </button>
+                  
+                  
+                  
+                                      <button
+                  
+                                        type="button"
+                  
+                                        className=" file-button"
+                                        disabled={excelLoading}
+                                        onClick={() => { print("excel") }}
+                  
+                                      >
+                  
+                                        {/* Print Excel 
+                                        */}
+                  
+                                        <span className="file-button">
+                                          <SVG
+                                            src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")}
+                                          />
+                                        </span>
+                                        {/* {excelLoading && (
+                                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                                        )} */}
+                                      </button>
+                                      </>
                 )}
 
 

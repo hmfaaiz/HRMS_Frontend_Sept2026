@@ -7,19 +7,142 @@ const { actions } = bankSlice;
 
 export const fetchUsers = (queryparm) => async (dispatch) => {
   // console.log("Receive QPsss", queryparm)
-  dispatch(actions.startCall({ callType: callTypes.list }));
 
-  return requestFromServer.getAllBanks(queryparm)
+ 
+  if (queryparm.pdf) {
+    dispatch(actions.startCall({ callType: callTypes.pdf }));
+    return requestFromServer.getAllBanks(queryparm)
+
+
+
+      .then((res) => {
+       
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_bank.pdf');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+
+
+      .catch((error) => {
+        console.log("error1", error)
+        error.clientMessage = "Can't Generate PDF";
+        dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+        toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+ else if (queryparm.csv) {
+
+    dispatch(actions.startCall({ callType: callTypes.csv }));
+    return requestFromServer.getAllBanks(queryparm)
+
+
+
+   .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
   
-    .then((response) => {
-      console.log("::::::A::",response);
-      dispatch(actions.bankFetched(response));
-    })
-    .catch((error) => {
-      //console.log("Can't find user", error)
-      error.clientMessage = "Can't find receipts";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
-    });
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_bank.csv');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't Generate CSV";
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+        toast.error( error?.clientMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+
+  else if (queryparm.excel) {
+ 
+    dispatch(actions.startCall({ callType: callTypes.xlsx }));
+    return requestFromServer.getAllBanks(queryparm)
+
+
+
+   .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_bank.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.excelFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't Generate Excel";
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+        toast.error( error?.clientMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+  else {
+   
+    dispatch(actions.startCall({ callType: callTypes.list }));
+    return requestFromServer.getAllBanks(queryparm)
+      .then((response) => {
+      
+        dispatch(actions.bankFetched(response));
+      })
+
+
+      .catch((error) => {
+        //console.log("Can't find user", error)
+        error.clientMessage = "Can't find receipts";
+        dispatch(actions.catchError({ error, callType: callTypes.list }));
+      });
+  }
 };
 
 export const fetchUser = (id) => (dispatch) => {
@@ -98,7 +221,7 @@ export const createBank = (bankForCreation, disbaleLoading, onHide) => (
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-    
+
       dispatch(actions.bankCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
@@ -132,7 +255,7 @@ export const updateBank = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
     .updateBank(user)
     .then((response) => {
-      console.log("my response",response?.config?.data);
+      console.log("my response", response?.config?.data);
       const updatedBank = response?.config?.data; // response.data?.data;
       console.log("bnkAction Res", response)
       dispatch(actions.bankUpdated({ updatedBank }));
@@ -148,7 +271,7 @@ export const updateBank = (user, disbaleLoading, onHide) => (dispatch) => {
         draggable: true,
         progress: undefined,
       });
-      
+
 
     })
     .catch((error) => {
