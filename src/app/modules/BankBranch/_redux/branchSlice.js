@@ -129,9 +129,9 @@ export const branchSlice = createSlice({
 
 
 
-                if (entity.Id === action.payload.updatedBank.Id) {
+                if (entity.Id === action.payload.updatedBranch.Id) {
 
-                    return action.payload.updatedBank;
+                    return action.payload.updatedBranch;
                 }
                 return entity;
             });
