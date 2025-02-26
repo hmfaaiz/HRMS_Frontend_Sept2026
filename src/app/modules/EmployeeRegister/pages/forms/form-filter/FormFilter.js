@@ -7,7 +7,7 @@ import { Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { DatePickerField, Select } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
+import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
@@ -16,9 +16,34 @@ import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../.
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date().optional(),
-  to: Yup.date().optional().min(Yup.ref('from'), 'Date to date cannot be before Date from date'),
-})
+   subsidiaryId: Yup.number()
+     .required(VALIDATION_MESSAGES.required),
+  dojFrom: Yup.date().optional(),
+  dojTo: Yup.date().optional().min(Yup.ref('dojFrom'), 'Date to date cannot be before Date from date'),
+  docFrom: Yup.date().optional(),
+  docTo: Yup.date().optional().min(Yup.ref('docFrom'), 'Date to date cannot be before Date from date'),
+  dobFrom: Yup.date().optional(),
+  dobTo: Yup.date().optional().min(Yup.ref('dobFrom'), 'Date to date cannot be before Date from date'),
+
+  alary_type: Yup.string().optional(),
+  operator: Yup.string().optional(),
+  amount: Yup.string().optional(),
+
+  // Custom test to ensure all three fields (salary_type, operator, amount) are selected together
+}).test('all-fields-required', 'All fields  must be selected together', function(value) {
+  const { salary_type, operator, amount } = value;
+
+  // Check if any of the fields is selected but the others are not
+  if ((salary_type || operator || amount) && !(salary_type && operator && amount)) {
+    return this.createError({
+      path: 'salary_type',  // The error will be associated with salary_type (you can choose any of the fields)
+      message: 'All fields must be selected together.',
+    });
+  }
+
+  return true;  // Validation passed
+});
+
 
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
@@ -148,7 +173,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
         }}
       >
         {({
-          values,
+          values,errors,touched,
           handleSubmit,
           handleBlur,
           setFieldValue,
@@ -165,7 +190,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
                       {/* Subsidiary Field Start */}
                       <div className="col-12 col-md-4 mt-3">
-                        <Field
+                        {/* <Field
                           name="subsidiaryId"
                           component={SearchSelect}
                           onBlur={handleBlur}
@@ -177,16 +202,45 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                             setFieldValue('employeeId', '')
                             setFieldValue('departmentId', '')
                           }}
+                      
                           label={
                             <span>
                               {" "}
-                              Subsidiary
+                              Subsidiary <span style={{ color: "red" }}>*</span>
                             </span>
                           }
                           value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
                           autoComplete="off"
                           options={allSubsidiaryList}
-                        />
+                          error={errors.subsidiaryId}
+                        /> */}
+
+
+                           <SearchSelect
+                                              name="subsidiaryId"
+                                              label={
+                                                <span>
+                                                  Subsidiary<span style={{ color: "red" }}>*</span>
+                                                </span>
+                                              }
+                                         
+                                              onChange={(e) => {
+                                                const value = e.value == '--Select--' ? '' : Number(e.value)
+                                                setFieldValue('subsidiaryId', value)
+                                                dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                                                dispatch(fetchAllDept(value));
+                                                setFieldValue('employeeId', '')
+                                                setFieldValue('departmentId', '')
+                                              }}
+                                              value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
+                                              autoComplete="off"
+                                              options={allSubsidiaryList}
+                                            
+                        
+                                      
+                                              error={errors.subsidiaryId}
+                                              touched={touched.subsidiaryId}
+                                            />
                       </div>
                       {/* Subsidiary Field End */}
 
@@ -589,6 +643,9 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
 
                         </Field>
+                        {errors.salary_type && touched.salary_type && (
+  <div className="error-message">{errors.salary_type}</div>
+)}
 
                       </div>
 
@@ -676,7 +733,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
               <button
                 onClick={() => { getPdf(values) }}
-                disabled={pdfLoading}
+                disabled={pdfLoading || !values?.subsidiaryId}
                 className="btn btn-primary btn-elevate"
               >
                 Generate Report (PDF)
@@ -689,7 +746,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
               <button
                 onClick={() => { getExcel(values) }}
-                disabled={registerExcelLoading}
+                disabled={registerExcelLoading || !values?.subsidiaryId}
                 type="button"
                 className="btn btn-primary btn-elevate"
               >
