@@ -26,6 +26,7 @@ export const initialFilter = {
     dobTo: "", gratuity_member: "", overtime_allowance: "", eobi_member: "", social_security_member: "",
     salary_type: "", operator: ""
     , amount: "",
+    
   },
   sortOrder: "asc",
   pageSize: 50,
