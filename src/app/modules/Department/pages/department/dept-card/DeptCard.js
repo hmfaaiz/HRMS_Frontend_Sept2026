@@ -32,9 +32,9 @@ export function DeptCard() {
     (state) =>
     ({
       userAccess: state.auth.userAccess.Department || [],
-      pdfLoading: state?.bank?.pdfLoading,
-      csvLoading: state?.bank?.csvLoading,
-      excelLoading: state?.bank?.excelLoading,
+      pdfLoading: state?.dept?.pdfLoading,
+      csvLoading: state?.dept?.csvLoading,
+      excelLoading: state?.dept?.excelLoading,
     }),
     shallowEqual
   )
