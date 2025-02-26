@@ -30,6 +30,9 @@ export function BranchCard() {
   const { userAccess ,pdfLoading, csvLoading, excelLoading} = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.Branch,
+      pdfLoading: state.branch.pdfLoading,
+      csvLoading: state.branch.csvLoading,
+      excelLoading: state.branch.excelLoading,
     }),
     shallowEqual
   )
