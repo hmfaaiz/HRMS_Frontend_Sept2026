@@ -10,9 +10,17 @@ export function createLoanType(body) {
 
 
 // Read
-export function getAll_LoanType(body) {
+// export function getAll_LoanType(body) {
 
-  return axios.post(`${USERS_URL}/loan_type/read-all-loan-type`, body);
+//   return axios.post(`${USERS_URL}/loan_type/read-all-loan-type`, body);
+// }
+
+export function getAll_LoanType(body) {
+  const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/loan_type/read-all-loan-type`, body, config);
 }
 
 
