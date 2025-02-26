@@ -30,6 +30,9 @@ export function BanksCard() {
   const { userAccess ,pdfLoading,csvLoading,excelLoading} = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.Earning,
+      pdfLoading: state?.earning?.pdfLoading,
+      csvLoading: state?.earning?.csvLoading,
+      excelLoading: state?.earning?.excelLoading,
     }),
     shallowEqual
   )
