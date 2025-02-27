@@ -104,7 +104,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         parentFormID: user.parentFormID
       };
       const parentId = user.parentFormID;
-  
+
       await dispatch(actions.updateForm(formUpdatedFields, disbaleLoading, onHide));
       dispatch(actions.customfetchFormDetail(parentId));
       // const parentId = user.parentFormID;

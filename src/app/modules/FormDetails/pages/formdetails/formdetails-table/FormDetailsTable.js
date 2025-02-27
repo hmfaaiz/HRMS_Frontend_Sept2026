@@ -62,8 +62,11 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      queryParams: formUIContext.queryParams,
+      setQueryParams: formUIContext.setQueryParams
     };
   }, [currentState]);
+  
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -169,6 +172,7 @@ export function FormTable() {
     sizePerPageList: uiHelpers.sizePerPageList,
     sizePerPage: formUIProps.queryParams.pageSize,
     page: formUIProps.queryParams.pageNumber,
+    parentId:formUIProps?.queryParams?.parentId
   };
   const [handleClickTriggered, setHandleClickTriggered] = useState(false);
 
@@ -178,7 +182,15 @@ export function FormTable() {
     setLoading(true);
     try {
 
-      dispatch(actions.customfetchFormDetail(parentId));
+let updatedQueryParams = {
+  ...formUIProps.queryParams,
+
+  parentId,
+};
+
+// Set the updated queryParams
+formUIProps.setQueryParams(updatedQueryParams);
+     dispatch(actions.customfetchFormDetail(parentId));
       setHeading(formName)
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -192,9 +204,12 @@ export function FormTable() {
   useEffect(() => {
     
     if (newdata) {
+
       const firstMatchingObj = newdata?.find(obj => obj?.Id);
-      if (firstMatchingObj) {
-        handleClick(firstMatchingObj?.Id, firstMatchingObj?.formName);
+
+      if (firstMatchingObj && !paginationOptions.parentId) {
+      
+        handleClick( firstMatchingObj?.Id, firstMatchingObj?.formName);
       }
       // newdata.filter(obj => obj?.Id == 45).forEach(obj => {
       //   handleClick(obj?.Id, obj?.formName);

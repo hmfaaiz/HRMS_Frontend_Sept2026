@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./formdetailsCrud";
 import { formDetailsSlice, callTypes } from "./formdetailsSlice";
 import { toast } from "react-toastify";
@@ -23,23 +24,153 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
     });
 };
 
+
+
+
+
+// export const customfetchFormDetail = (queryparm) => async (dispatch) => {
+
+//   dispatch(actions.startCall({ callType: callTypes.list }));
+ 
+//   return requestFromServer.getAllChildFormById(queryparm)
+    
+//     .then((response) => {
+    
+  
+//       dispatch(actions.customFetchedList(response));
+//     })
+//     .catch((error) => {
+  
+//       error.clientMessage = "Can't find form record";
+//       dispatch(actions.catchError({ error, callType: callTypes.list }));
+//     });
+// };
+
+
 export const customfetchFormDetail = (queryparm) => async (dispatch) => {
 
-  dispatch(actions.startCall({ callType: callTypes.list }));
+  if (queryparm?.pdf) {
+    dispatch(actions.startCall({ callType: callTypes.pdf }));
+    return requestFromServer.getAllChildFormById(queryparm)
+
+
+      .then((res) => {
+       
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_general_setup.pdf');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+
+      .catch((error) => {
+        dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+        toast.error( SERVER_MESSAGES.pdfFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+ else if (queryparm?.csv) {
+
+    dispatch(actions.startCall({ callType: callTypes.csv }));
+    return requestFromServer.getAllChildFormById(queryparm)
+
+
+   .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
  
-  return requestFromServer.getAllChildFormById(queryparm)
-    
-    .then((response) => {
-    
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_general_setup.csv');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+        toast.error( SERVER_MESSAGES?.csvFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+  else if (queryparm?.excel) {
+ 
+    dispatch(actions.startCall({ callType: callTypes.xlsx }));
+    return requestFromServer.getAllChildFormById(queryparm)
+
+   .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
   
-      dispatch(actions.customFetchedList(response));
-    })
-    .catch((error) => {
-  
-      error.clientMessage = "Can't find form record";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
-    });
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_general_setup.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.excelFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        toast.error(SERVER_MESSAGES.excelFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+  else {
+   
+    dispatch(actions.startCall({ callType: callTypes.list }));
+    return requestFromServer.getAllChildFormById(queryparm)
+      .then((response) => {
+      
+        dispatch(actions.customFetchedList(response));
+      })
+
+      .catch((error) => {
+        dispatch(actions.catchError({ error, callType: callTypes.list }));
+      });
+  }
 };
+
 
 export const fetchChildForms = (id) => async (dispatch) => {
   
