@@ -18,10 +18,21 @@ export function getAllForm(body) {
   return axios.post(`${USERS_URL}/formdetails/read-all-parent-forms`, body);
 }
 
-// Get Child By ParentId
-export function getAllChildFormById(id) {
 
-  return axios.post(`${USERS_URL}/formdetails/read-all-child-forms`, {id});
+
+// Get Child By ParentId
+// export function getAllChildFormById(id) {
+
+//   return axios.post(`${USERS_URL}/formdetails/read-all-child-forms`, {id});
+// }
+
+
+export function getAllChildFormById(id) {
+  const config = {
+    responseType: (id.pdf || id.excel  || id.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/formdetails/read-all-child-forms`, {id}, config);
 }
 
 
