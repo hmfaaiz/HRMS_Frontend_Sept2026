@@ -240,7 +240,7 @@ useEffect (()=>{
                           <div className="col-12 col-md-4 mt-3">
                             <SearchSelect
                               name="parentDept"
-                              label={<span> Parent Dept</span>}
+                              label={<span> Parent Department</span>}
                               isDisabled={isUserForRead && true}
                               onBlur={() => {
                                 // handleBlur({ target: { name: "countryId" } });

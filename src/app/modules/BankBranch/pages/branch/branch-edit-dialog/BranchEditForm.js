@@ -115,7 +115,7 @@ export function BranchEditForm({
 
   
     if (user.Id && user?.accOpeningDate) {
-
+console.log("hit11",user?.accOpeningDate)
       setAccountOpeningDate(new Date(user?.accOpeningDate));
     }
   }, [user.accOpeningDate]);
@@ -438,6 +438,7 @@ export function BranchEditForm({
 
                         maxDate={new Date()}
                         disabled={isUserForRead}
+                        value={values.accOpeningDate || ''}
                       />
                     </div>
 

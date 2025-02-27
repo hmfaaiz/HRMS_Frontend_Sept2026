@@ -14,9 +14,17 @@ export function createDeduction(body) {
 
 
 // Read
-export function getAllDeduction(body) {
+// export function getAllDeduction(body) {
 
-  return axios.post(`${USERS_URL}/deduction/read-all-deduction`, body);
+//   return axios.post(`${USERS_URL}/deduction/read-all-deduction`, body);
+// }
+
+export function getAllDeduction(body) {
+  const config = {
+    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/deduction/read-all-deduction`, body, config);
 }
 
 

@@ -33,6 +33,9 @@ export const initialFilter = {
     searchQuery: ""
 
 },
+pdf:false,
+csv:false,
+excel:false,
 
     sortOrder: "asc",
     pageSize: 10,

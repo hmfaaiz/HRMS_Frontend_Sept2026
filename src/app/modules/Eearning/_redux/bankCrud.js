@@ -14,11 +14,18 @@ export function createEarning(body) {
 
 
 // Read
+// export function getAllEarning(body) {
+
+//   return axios.post(`${USERS_URL}/earning/read-all-earning`, body);
+// }
+
 export function getAllEarning(body) {
+  const config = {
+    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+  };
 
-  return axios.post(`${USERS_URL}/earning/read-all-earning`, body);
+  return axios.post(`${USERS_URL}/earning/read-all-earning`, body, config);
 }
-
 
 
 export function getEarningById(id) {

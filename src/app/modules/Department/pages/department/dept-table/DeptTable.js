@@ -93,7 +93,7 @@ export function DeptTable() {
     },
     {
       dataField: "DepartmentTree",
-      text: "Department",
+      text: "Department Name",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -103,7 +103,7 @@ export function DeptTable() {
     },
     {
       dataField: "ParentDeptName",
-      text: "Parent Name",
+      text: "Parent Department",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
