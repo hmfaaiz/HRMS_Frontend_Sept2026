@@ -14,12 +14,19 @@ export function createExchangeRate(body) {
 
 
 // Read
+// export function getAllExchangeRate(body) {
+
+//   return axios.post(`${USERS_URL}/exchange/read-all-exchange-rate`, body);
+// }
+
+
 export function getAllExchangeRate(body) {
+  const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
 
-  return axios.post(`${USERS_URL}/exchange/read-all-exchange-rate`, body);
+  return axios.post(`${USERS_URL}/exchange/read-all-exchange-rate`, body, config);
 }
-
-
 
 export function getExchangeRateById(id) {
 

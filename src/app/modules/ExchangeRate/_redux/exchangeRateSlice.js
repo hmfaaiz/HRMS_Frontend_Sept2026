@@ -12,6 +12,10 @@ const initialStoppageAllowanceState = {
     lastError: null,
     userForRead: false,
     lastExchangeRateDate: undefined,
+    pdfLoading: false, 
+    csvLoading: false, 
+    excelLoading: false
+
 };
 
 export const callTypes = {
@@ -27,7 +31,20 @@ export const exchangeRateSlice = createSlice({
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } else {
+            } 
+            else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = false;
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = false;
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = false;
+            }
+
+
+            else {
                 state.actionsLoading = false;
             }
         },
@@ -35,7 +52,24 @@ export const exchangeRateSlice = createSlice({
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
-            } else {
+            }
+            else if (action.payload.callType === callTypes.pdf) {
+              
+                state.pdfLoading = true;
+
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = true;
+
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = true;
+
+            }
+
+            
+            else {
                 state.actionsLoading = true;
             }
         },
@@ -124,6 +158,20 @@ export const exchangeRateSlice = createSlice({
         MaxIdFetchForReceipt: (state, action) => {
             state.donationReportFetch = action.payload;
         },
+
+        pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
+        },
+
+
 
         lastExchangeRateFetched: (state, action) => {
             
