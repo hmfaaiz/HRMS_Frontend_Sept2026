@@ -137,7 +137,7 @@ export function BanksTable() {
     },
     {
       dataField: "linkedAttendance",
-      text: "Linked Attendance",
+      text: "Linked with Attendance",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

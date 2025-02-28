@@ -118,7 +118,16 @@ export function BanksTable() {
         minWidth: "160px",
       },
     },
-   
+     {
+         dataField: "linkedAttendance",
+         text: "Linked with Attendance",
+         sort: false,
+         sortCaret: sortCaret,
+         headerSortingClasses,
+         style: {
+           minWidth: "160px",
+         },
+       },
     
     {
       dataField: "action",
