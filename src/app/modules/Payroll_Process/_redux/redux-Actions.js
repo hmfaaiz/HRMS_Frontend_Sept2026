@@ -94,7 +94,7 @@ export const createPayrollProcess = (payrollProcessForCreation, disbaleLoading, 
         draggable: true,
         progress: undefined,
       });
-      onHide();
+      // onHide();
    
     })
     .catch((error) => {
