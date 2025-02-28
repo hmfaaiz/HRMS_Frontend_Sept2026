@@ -6,22 +6,145 @@ import { toast } from "react-toastify";
 const { actions } = policySlice;
 // const { roleActions } = getAllrolesSlice
 
+// export const fetchUsers = (queryparm) => async (dispatch) => {
+
+//   dispatch(actions.startCall({ callType: callTypes.list }));
+
+//   return requestFromServer.getAllpolicy(queryparm)
+    
+//     .then((response) => {
+    
+    
+//       dispatch(actions.policyFetched(response));
+//     })
+//     .catch((error) => {
+    
+//       error.clientMessage = "Can't find religion record";
+//       dispatch(actions.catchError({ error, callType: callTypes.list }));
+//     });
+// };
+
+
 export const fetchUsers = (queryparm) => async (dispatch) => {
 
-  dispatch(actions.startCall({ callType: callTypes.list }));
+  if (queryparm.pdf) {
+    dispatch(actions.startCall({ callType: callTypes.pdf }));
+    return requestFromServer.getAllpolicy(queryparm)
 
-  return requestFromServer.getAllpolicy(queryparm)
-    
-    .then((response) => {
-    
-    
-      dispatch(actions.policyFetched(response));
-    })
-    .catch((error) => {
-    
-      error.clientMessage = "Can't find religion record";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
-    });
+      .then((res) => {
+       
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_application_configuration.pdf');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+
+      .catch((error) => {
+        dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+        toast.error( SERVER_MESSAGES.pdfFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+ else if (queryparm.csv) {
+
+    dispatch(actions.startCall({ callType: callTypes.csv }));
+    return requestFromServer.getAllpolicy(queryparm)
+
+   .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_application_configuration.csv');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+        toast.error( SERVER_MESSAGES?.csvFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+  else if (queryparm.excel) {
+ 
+    dispatch(actions.startCall({ callType: callTypes.xlsx }));
+    return requestFromServer.getAllpolicy(queryparm)
+
+   .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        // Trigger file download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 't_application_configuration.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.excelFetched({}));
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        const decodedData = new TextDecoder().decode(error?.response?.data);
+        const jsonData = JSON.parse(decodedData);
+        toast.error(SERVER_MESSAGES.excelFail, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+
+  }
+
+  else {
+   
+    dispatch(actions.startCall({ callType: callTypes.list }));
+    return requestFromServer.getAllpolicy(queryparm)
+      .then((response) => {
+      
+        dispatch(actions.policyFetched(response));
+      })
+
+      .catch((error) => {
+        dispatch(actions.catchError({ error, callType: callTypes.list }));
+      });
+  }
 };
 
 export const fetchUser = (id) => (dispatch) => {

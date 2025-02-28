@@ -13,12 +13,19 @@ export function createpolicy(body) {
   
 }
 // Read
+// export function getAllpolicy(body) {
+
+//   return axios.post(`${USERS_URL}/policy/read-all-policy`, body);
+// }
+
+
 export function getAllpolicy(body) {
+  const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
 
-  return axios.post(`${USERS_URL}/policy/read-all-policy`, body);
+  return axios.post(`${USERS_URL}/policy/read-all-policy`, body, config);
 }
-
-
 
 export function getpolicyById(id) {
  

@@ -752,7 +752,7 @@ export function DesignationEditForm({
 
                     {
                       <div className="col-12 col-md-4 mt-3">
-                        <label htmlFor="empPictureIsMandatory">
+                        <label htmlFor="">
                           Contract Months <span style={{ color: "red" }}>*</span>
 
 

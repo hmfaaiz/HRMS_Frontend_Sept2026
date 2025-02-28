@@ -103,36 +103,36 @@ export function DesignationTable() {
       },
       formatter: (cell) => (cell === true? "Auto" : "Manual"),
     },
-    // {
-    //   dataField: "code",
-    //   text: "Code",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "retirementAgeMale",
-    //   text: "retirementAgeMale",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "retirementAgeFemale",
-    //   text: "Designation Code",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
+    {
+      dataField: "salaryMethod",
+      text: "Salary Method",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "probationPolicyInMonth",
+      text: "Confirmation in Months",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "contractualPolicyInMonth",
+      text: "Contract Months",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
        {
       dataField: "action",
       text: "Actions",
