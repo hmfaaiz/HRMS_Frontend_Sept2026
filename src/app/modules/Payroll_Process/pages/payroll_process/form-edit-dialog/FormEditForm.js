@@ -461,7 +461,7 @@ export function FormEditForm({
                             Subsidiary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        isDisabled={isUserForRead}
+                        isDisabled={isUserForRead || isAfterResult}
                         onChange={(e) => {
                           dispatch(actions.clearReduxData())
                           setFieldValue("subsidiaryId", e.value || null);
@@ -498,7 +498,7 @@ export function FormEditForm({
                           Payroll Group<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || isAfterResult}
                       onChange={(e) => {
                         setFieldValue("payroll_groupId", e.value || null);
                         payrollGroupDetails(values.subsidiaryId, e.value, values.payroll_monthId)
@@ -539,7 +539,7 @@ export function FormEditForm({
                         </span>
                       }
 
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || isAfterResult}
                       onChange={(e) => {
                         setFieldValue("payroll_monthId", e.value || null);
                         payrollGroupDetails(values.subsidiaryId, values.payroll_groupId, e.value)
@@ -571,7 +571,7 @@ export function FormEditForm({
                         type="button"
                         onClick={() => handleModalYes()}
                         className="m-3 btn btn-red"
-
+                        disabled={  isAfterResult}
                       >
                         Stop Salary
                         {loading && (
@@ -583,7 +583,7 @@ export function FormEditForm({
                         onClick={() => handleLoanModalYes()}
                         type="button"
                         className="m-3 btn btn-red"
-
+disabled={  isAfterResult}
                       >
                         Stop Loan
                         {loading && (
@@ -620,12 +620,12 @@ export function FormEditForm({
                   </div>
 
 
-                  {/* <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <label>
-                      Total Employee (Finalized): <span style={{ fontWeight: 'bold' }}>{0}</span>
+                    Stop Salary : <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
                     </label>
 
-                  </div> */}
+                  </div>
 
 
 
@@ -752,7 +752,9 @@ export function FormEditForm({
                   setIds("");
                   handleReset();
                   dispatch(actions.clearReduxData())
-
+         
+                    setIsAfterResult(false)
+            
 
                 }}
                 className="btn btn-light btn-elevate"
@@ -762,7 +764,12 @@ export function FormEditForm({
             ) : (
               <button
                 type="button"
-                onClick={onHide}
+                // onClick={onHide}
+                
+
+                onClick={()=>{ onHide(); 
+                  setIsAfterResult(false)
+                }}
                 className="btn btn-primary btn-elevate"
               >
                 Ok
@@ -770,23 +777,25 @@ export function FormEditForm({
             )}
 
             {/* Save Button */}
-            {!isUserForRead && (
-              <button
+            {/* {(!isUserForRead || !currentState?.payroll_group_details?.slary_setup_not_created>0 )&&( */}
+
+{/* { currentState?.payroll_group_details?.slary_setup_not_created > 0  && ( */}
+             { <button
                 type="submit"
                 onClick={() => {
                   handleSubmit();
-                  dispatch(actions.clearReduxData())
+                  // dispatch(actions.clearReduxData())
                   setIsAfterResult(true)
                 }}
                 className="btn btn-primary btn-elevate"
-                disabled={loading || resultAfterPayrollProcess}
+                disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0}
               >
                 Execute
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
-              </button>
-            )}
+              </button>}
+            {/* )} */}
 
 
 

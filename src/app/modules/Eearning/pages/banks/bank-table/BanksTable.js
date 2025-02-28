@@ -114,26 +114,7 @@ export function BanksTable() {
       },
     },
 
-    // {
-    //   dataField: "linkedAttendance",
-    //   text: "Linked Attendance",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "isTaxable",
-    //   text: "Taxable",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
+    
     // {
     //   dataField: "mappedAllowance",
     //   text: "Mapped Allowance",
@@ -147,6 +128,26 @@ export function BanksTable() {
     {
       dataField: "account",
       text: "Account No.",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "linkedAttendance",
+      text: "Linked with Attendance",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "isTaxable",
+      text: "Taxable",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
