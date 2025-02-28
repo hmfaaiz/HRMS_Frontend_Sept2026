@@ -300,14 +300,10 @@ export function FormEditForm({
       validationSchema={EmployeeLoanRequestSchema}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
-        //This clearForm function is created to clear form as well as clear any uploaded file as well.
-        //resetForm function doesn't clear file properly so we use this function
+
         const clearForm = () => {
           resetForm();
-          // if (totalLoanAmount) {
-          //   setTotalLoanAmount(" ");
-          //   // values.statusId=""
-          // }
+     
         };
         saveForm(
           values,
