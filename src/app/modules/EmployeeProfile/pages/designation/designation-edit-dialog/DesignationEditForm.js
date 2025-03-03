@@ -171,7 +171,7 @@ const profileValidation = Yup.object().shape(
       }),
     nic_no: Yup.string()
       .matches(/^\d{5}-\d{7}-\d{1}$/, 'ID Card No must be in the format 12345-6789012-3')
-      .required('Required'),
+      .required('Required*'),
 
     passportNo: Yup.string()
       .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
@@ -234,6 +234,10 @@ const profileValidation = Yup.object().shape(
     .nullable()
     .oneOf([true, false], 'Required*') , // Ensures the value is either true or false
     // .required('Required*'),
+
+
+    additional_summary: Yup.string()
+    .required("Required*"),
 
   },
 
@@ -1631,9 +1635,7 @@ export function DesignationEditForm({
 
 
 
-                    <div   className="from-group row" >
-
-                    </div>
+                  
                     <div ref={scrollRef} className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
@@ -1902,8 +1904,64 @@ export function DesignationEditForm({
                       </div>
 
 
+                      <div className="col-12 col-md-4 mt-3">
+                            <Select
+                              label={<span> Nationality</span>}
+                              name="nationality"
+                              value={values.nationality}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              style={{ display: "block" }}
+                            >
+                              <option value="-1" label="Select Nationality" />
+                              <option value="Pakistani" label="Pakistani" />
+                              <option value="Other" label="Other" />
 
+                            </Select>
+                            {errors.nationality && touched.nationality && (
+                              <div className="invalid-text">{errors.nationality}</div>
+                            )}
+                          </div>
 
+                          <div className="col-12 col-md-4 mt-3">
+                            <SearchSelect
+                              name="teamId"
+                              label={<span> Team</span>}
+                              isDisabled={isUserForRead && true}
+                              onBlur={() => {
+                                // handleBlur({ target: { name: "countryId" } });
+                              }}
+                              onChange={(e) => {
+                                setFieldValue("teamId", e.value || null);
+                                setDefaultChildTeamsMenus(e);
+                                // dispatch(fetchAllFormsMenu(e.value));
+                              }}
+                              value={(defchildTeamMenus || null)}
+                              error={errors.teamId}
+                              touched={touched.teamId}
+                              options={dashboard.allTeamsChildMenus}
+                            />
+                          </div>
+
+                          <div className="col-12 col-md-4 mt-3">
+                        <SearchSelect
+                          name="payrollGroupId"
+                          label={<span> Payroll Group<span style={{ color: 'red' }}>*</span></span>}
+                          isDisabled={isUserForRead && true}
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("payrollGroupId", e.value || null);
+                            setDefaultChildMenus(e);
+                            // dispatch(fetchAllFormsMenu(e.value));
+                          }}
+                          value={(defchildMenus || null)}
+                          error={errors.payrollGroupId}
+                          touched={touched.payrollGroupId}
+                          options={dashboard.allChildMenus}
+                        />
+                      </div>
 
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
@@ -2019,26 +2077,7 @@ export function DesignationEditForm({
                         />
                       </div>
 
-                      <div className="col-12 col-md-4 mt-3">
-                        <SearchSelect
-                          name="payrollGroupId"
-                          label={<span> Payroll Group<span style={{ color: 'red' }}>*</span></span>}
-                          isDisabled={isUserForRead && true}
-                          onBlur={() => {
-                            // handleBlur({ target: { name: "countryId" } });
-                          }}
-                          onChange={(e) => {
-                            setFieldValue("payrollGroupId", e.value || null);
-                            setDefaultChildMenus(e);
-                            // dispatch(fetchAllFormsMenu(e.value));
-                          }}
-                          value={(defchildMenus || null)}
-                          error={errors.payrollGroupId}
-                          touched={touched.payrollGroupId}
-                          options={dashboard.allChildMenus}
-                        />
-                      </div>
-
+                    
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
                           name="locationId"
@@ -2111,8 +2150,23 @@ export function DesignationEditForm({
                         />
                       </div>
 
+
+                   
+
                       <div className="col-12 col-md-4 mt-3">
-                        <label>Report To</label>
+                        <label className="mr-4">Report To</label>
+                        <input
+                              name="all_report_to"
+                              type="checkbox"
+                              // onChange={handleChange}
+                              onChange={() => setFieldValue("all_report_to", !values?.all_report_to)} 
+                              onBlur={handleBlur}
+                              value={values.all_report_to}
+                              checked={values.all_report_to}
+                              label="Show All"
+                            />
+                            <label className="ml-1">All</label>
+                            <ErrorMessage className="form-feedBack" name="all_report_to" component="div" />
                         <SearchSelect
                           name="reportTo"
 
@@ -2131,7 +2185,17 @@ export function DesignationEditForm({
                           // options={dashboard.allEmployees.filter(x => x.value != values.Id)}
                           options={[
                             { value: null, label: 'Select' }, // Adding "All" option with value empty string
-                            ...dashboard.allEmployeesWithNoPermissionList.filter(x => x.value != values.Id), // Spread the rest of the menu options
+                            // ...dashboard.allEmployeesWithNoPermissionList.filter(x => x.departmentId == values.departmentId && x.value != values.Id), // Spread the rest of the menu options
+                          
+                            ...dashboard.allEmployeesWithNoPermissionList.filter(x => {
+                              if (values?.all_report_to) {
+                                // If "All" is selected, do not filter by department and exclude current user
+                                return x.value !== values.Id;
+                              } else {
+                                // If "All" is not selected, filter based on departmentId and exclude current user
+                                return x.departmentId === values.departmentId && x.value !== values.Id;
+                              }
+                            })
                           ]}
                         />
 
@@ -2207,9 +2271,10 @@ export function DesignationEditForm({
                           options={dashboard.allReligionChildMenus}
                         />
                       </div>
-
-
-                      <div className="col-12 col-md-4 mt-3">
+                      </div>
+<div className="from-group row ">
+  {
+<div className="col-12 col-md-4 mt-3">
                         {<span> Date Of Birth<span style={{ color: 'red' }}>*</span></span>}
                         <DatePicker
                           className="form-control  mt-2"
@@ -2243,8 +2308,8 @@ export function DesignationEditForm({
                         />
                         <ErrorMessage className="form-feedBack" name="dateOfBirth" component="div" />
                       </div>
-
-
+                    }
+  {
                       <div className="col-12 col-md-4 mt-3">
                         <label>Date Of Joining<span style={{ color: 'red' }}>*</span></label>
                         <DatePicker
@@ -2296,7 +2361,8 @@ export function DesignationEditForm({
                         />
                         <ErrorMessage className="form-feedBack" name="dateOfJoining" component="div" />
                       </div>
-
+                    }
+                      {
                       <div className="col-12 col-md-4 mt-3">
                             <label>Date Of Confirmation</label>
                             <DatePicker
@@ -2320,7 +2386,10 @@ export function DesignationEditForm({
                             />
                             <ErrorMessage className="form-feedBack" name="dateOfConfirmation" component="div" />
                           </div>
-
+                            }
+</div>
+                
+<div className="from-group row ">
 
                           <div className="col-12 col-md-4 mt-3">
                             <label>Date Confirmation Due </label>
@@ -2409,10 +2478,10 @@ export function DesignationEditForm({
 
 
 
-
+                          </div>
                     <br></br>
 
-                  </div>
+               
 
                   <br></br>
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
@@ -2526,7 +2595,7 @@ export function DesignationEditForm({
                           name="additional_summary"
                           component={TextArea}
                           placeholder="Enter Address"
-                          label="Address"
+                          label={<span> Address<span style={{ color: 'red' }}>*</span></span>}
                           autoComplete="off"
                         />
                       </div>
@@ -2793,44 +2862,7 @@ export function DesignationEditForm({
 
                         <div className="from-group row">
 
-                          <div className="col-12 col-md-4 mt-3">
-                            <Select
-                              label={<span> Nationality</span>}
-                              name="nationality"
-                              value={values.nationality}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              style={{ display: "block" }}
-                            >
-                              <option value="-1" label="Select Nationality" />
-                              <option value="Pakistani" label="Pakistani" />
-                              <option value="Other" label="Other" />
-
-                            </Select>
-                            {errors.nationality && touched.nationality && (
-                              <div className="invalid-text">{errors.nationality}</div>
-                            )}
-                          </div>
-
-                          <div className="col-12 col-md-4 mt-3">
-                            <SearchSelect
-                              name="teamId"
-                              label={<span> Team</span>}
-                              isDisabled={isUserForRead && true}
-                              onBlur={() => {
-                                // handleBlur({ target: { name: "countryId" } });
-                              }}
-                              onChange={(e) => {
-                                setFieldValue("teamId", e.value || null);
-                                setDefaultChildTeamsMenus(e);
-                                // dispatch(fetchAllFormsMenu(e.value));
-                              }}
-                              value={(defchildTeamMenus || null)}
-                              error={errors.teamId}
-                              touched={touched.teamId}
-                              options={dashboard.allTeamsChildMenus}
-                            />
-                          </div>
+                        
 
                           <div className="col-12 col-md-4 mt-3">
                             <Select
