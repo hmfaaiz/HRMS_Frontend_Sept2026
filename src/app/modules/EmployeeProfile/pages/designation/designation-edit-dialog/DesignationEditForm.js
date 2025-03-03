@@ -2165,7 +2165,7 @@ export function DesignationEditForm({
                               checked={values.all_report_to}
                               label="Show All"
                             />
-                            <label className="ml-1">All</label>
+                            <label className="ml-1">Show All</label>
                             <ErrorMessage className="form-feedBack" name="all_report_to" component="div" />
                         <SearchSelect
                           name="reportTo"
