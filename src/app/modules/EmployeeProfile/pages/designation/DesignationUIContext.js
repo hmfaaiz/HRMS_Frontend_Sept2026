@@ -89,7 +89,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     codeAuto:"",
     approvedForPayroll:"",
     codePrefix:"",
-
+    additional_summary:"",
   };
 
  
