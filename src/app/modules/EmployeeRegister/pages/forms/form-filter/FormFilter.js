@@ -87,6 +87,9 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
   }, [allDesignations]);
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
 
+
+
+
   //Fetch Params from Context
   const formUIProps = useMemo(() => {
     return {
@@ -166,7 +169,11 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={initialFilter.filter}
+        // initialValues={initialFilter.filter}
+        initialValues={{
+          ...initialFilter.filter,
+          subsidiaryId: initialFilter.filter?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList.length > 0 ? allSubsidiaryList[0].value : '') // Set default subsidiaryId if it's not provided
+        }}
         validationSchema={formValidation}
         onSubmit={(values) => {
           applyFilter(values)
@@ -232,7 +239,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                                                 setFieldValue('employeeId', '')
                                                 setFieldValue('departmentId', '')
                                               }}
-                                              value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
+                                           
+                                              value={allSubsidiaryMap?.get(values?.subsidiaryId ||  (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
                                               autoComplete="off"
                                               options={allSubsidiaryList}
                                             

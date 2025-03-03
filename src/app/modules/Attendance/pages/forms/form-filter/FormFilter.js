@@ -87,7 +87,11 @@ export function FormFilter({ loading, dispatch, processLoading }) {
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={initialFilter.filter}
+        // initialValues={initialFilter.filter}
+                initialValues={{
+                  ...initialFilter.filter,
+                  subsidiaryId: initialFilter.filter?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList.length > 0 ? allSubsidiaryList[0].value : '') // Set default subsidiaryId if it's not provided
+                }}
         validationSchema={formValidation}
         onSubmit={(values) => {
           applyFilter(values)

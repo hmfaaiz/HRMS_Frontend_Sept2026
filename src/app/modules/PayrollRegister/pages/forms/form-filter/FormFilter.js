@@ -4,12 +4,12 @@ import { isEqual } from "lodash"
 import * as Yup from "yup";
 import { useFormUIContext } from "../FormUIContext"
 import { Form, Modal } from "react-bootstrap";
-import { useSelector,shallowEqual } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { groupByOptions, initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList,fetchPayrollConfigApproverPermission } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetchPayrollConfigApproverPermission } from "../../../../../../_metronic/redux/dashboardActions";
 import { Select } from "../../../../../../_metronic/_partials/controls";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 
@@ -138,11 +138,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
   const [payrollPayableAccountApproverPermission, setPayrollPayableAccountApproverPermission] = useState(false);
   const { dashboard } = useSelector((state) => state);
   useEffect(() => {
-      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
+    dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
 
-  },[]);
+  }, []);
 
- 
+
   const checkPermission = (value) => {
 
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
@@ -153,15 +153,32 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
     if (filteredPermission?.length > 0) {
       const permission = filteredPermission[0];
       setPayrollPayableAccountApproverPermission(Boolean(permission?.payroll_payable_accountId));
-     
+
     }
   }
+
+  useEffect(() => {
+    // Extract subsidiaryId logic
+    const subsidiaryId = (allSubsidiaryList && allSubsidiaryList.length > 0) 
+      ? allSubsidiaryList[0].value 
+      : null;
+  
+    // Dispatch actions
+    dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
+    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
+    checkPermission(subsidiaryId);
+  
+  }, [allSubsidiaryList]);
 
   return (
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={initialFilter.filter}
+        // initialValues={initialFilter.filter}
+        initialValues={{
+          ...initialFilter.filter,
+          subsidiaryId: initialFilter.filter?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList.length > 0 ? allSubsidiaryList[0].value : '') // Set default subsidiaryId if it's not provided
+        }}
         validationSchema={formValidation}
         onSubmit={(values) => {
           applyFilter(values)
@@ -208,6 +225,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
                           value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
+                          // value={allSubsidiaryMap?.get(values?.subsidiaryId ||  (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
                           autoComplete="off"
                           options={allSubsidiaryList}
                         />
@@ -507,86 +525,86 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                   <br></br>
 
                   {payrollPayableAccountApproverPermission &&
-(
-                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>JV Report (Excel)</h6>
-                    <div className="from-group row">
-
-
-               
-
-                      <div className="col-2 col-md-2 mt-11">
-                        <input
-                          name="groupByDepartment"
-                          type="checkbox"
-                          // onChange={handleChange}
-                          onChange={() => setFieldValue("groupByDepartment", !values?.groupByDepartment)}
-                          onBlur={handleBlur}
-                          value={values.groupByDepartment}
-                          checked={values.groupByDepartment}
-                   
-                        />
-                        <label>Group By Department</label>
+                    (
+                      <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                        <h6>JV Report (Excel)</h6>
+                        <div className="from-group row">
 
 
 
-                      </div>
 
+                          <div className="col-2 col-md-2 mt-11">
+                            <input
+                              name="groupByDepartment"
+                              type="checkbox"
+                              // onChange={handleChange}
+                              onChange={() => setFieldValue("groupByDepartment", !values?.groupByDepartment)}
+                              onBlur={handleBlur}
+                              value={values.groupByDepartment}
+                              checked={values.groupByDepartment}
 
-                      <div className="col-2 col-md-2 mt-11">
-                        <input
-                          name="groupByLocation"
-                          type="checkbox"
-                          // onChange={handleChange}
-                          onChange={() => setFieldValue("groupByLocation", !values?.groupByLocation)}
-                          onBlur={handleBlur}
-                         
-                          checked={values.groupByLocation}
-                          label="Approved for Payroll"
-                        />
-                        <label>Group By Location</label>
+                            />
+                            <label>Group By Department</label>
 
 
 
-                      </div>
+                          </div>
 
-                      <div className="col-12 col-md-6 mt-11 ">
-                        <button
-                          onClick={() => { getJVExcel(values) }}
-                          disabled={registerExcelLoading}
-                          type="button"
-                          className="btn btn-primary btn-elevate"
-                        >
-                          Generate JV Report (Payables)
-                          {registerExcelLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
-                        </button>
 
-                        <button
-                          onClick={() => { getJVCreditExcel(values) }}
-                          disabled={registerExcelLoading}
-                          type="button"
-                          className="btn btn-primary btn-elevate ml-4"
-                        >
-                        Generate JV Report (Bank Transfer)
-                          {registerExcelLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
-                        </button>
+                          <div className="col-2 col-md-2 mt-11">
+                            <input
+                              name="groupByLocation"
+                              type="checkbox"
+                              // onChange={handleChange}
+                              onChange={() => setFieldValue("groupByLocation", !values?.groupByLocation)}
+                              onBlur={handleBlur}
 
-                        
-                      </div>
+                              checked={values.groupByLocation}
+                              label="Approved for Payroll"
+                            />
+                            <label>Group By Location</label>
 
-                      <div className="col-4 col-md-4 mt-11">
-                       
 
-                        
-                      </div>
 
-                    </div>
-                  </div>)
-                }
+                          </div>
+
+                          <div className="col-12 col-md-6 mt-11 ">
+                            <button
+                              onClick={() => { getJVExcel(values) }}
+                              disabled={registerExcelLoading}
+                              type="button"
+                              className="btn btn-primary btn-elevate"
+                            >
+                              Generate JV Report (Payables)
+                              {registerExcelLoading && (
+                                <span className="ml-3 mr-3 spinner spinner-white"></span>
+                              )}
+                            </button>
+
+                            <button
+                              onClick={() => { getJVCreditExcel(values) }}
+                              disabled={registerExcelLoading}
+                              type="button"
+                              className="btn btn-primary btn-elevate ml-4"
+                            >
+                              Generate JV Report (Bank Transfer)
+                              {registerExcelLoading && (
+                                <span className="ml-3 mr-3 spinner spinner-white"></span>
+                              )}
+                            </button>
+
+
+                          </div>
+
+                          <div className="col-4 col-md-4 mt-11">
+
+
+
+                          </div>
+
+                        </div>
+                      </div>)
+                  }
                   <br></br>
                 </fieldset>
               </Form>
