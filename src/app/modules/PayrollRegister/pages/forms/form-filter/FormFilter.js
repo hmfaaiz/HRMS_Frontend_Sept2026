@@ -531,12 +531,28 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                         <div className="from-group row">
 
 
+                        <div className="col-2 col-md-2 mt-11">
+                            <input
+                              name="groupByEmployee"
+                              type="checkbox"
+                              // onChange={handleChange}
+                              onChange={() => setFieldValue("groupByEmployee", !values?.groupByEmployee)}
+                              onBlur={handleBlur}
+                              value={values.groupByEmployee}
+                              checked={values.groupByEmployee}
 
+                            />
+                            <label>Group By Employee</label>
+
+
+
+                          </div>
 
                           <div className="col-2 col-md-2 mt-11">
                             <input
                               name="groupByDepartment"
                               type="checkbox"
+                              disabled={values.groupByEmployee}
                               // onChange={handleChange}
                               onChange={() => setFieldValue("groupByDepartment", !values?.groupByDepartment)}
                               onBlur={handleBlur}
@@ -555,6 +571,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             <input
                               name="groupByLocation"
                               type="checkbox"
+                              disabled={values.groupByEmployee}
                               // onChange={handleChange}
                               onChange={() => setFieldValue("groupByLocation", !values?.groupByLocation)}
                               onBlur={handleBlur}

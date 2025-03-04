@@ -93,7 +93,7 @@ export function FormEditForm({
   
     if(formDetails.currentId!==45){
    
-      dispatch(getLatestTableId("t_form_menu", "formCode", "parentFormID =" + formDetails.currentId + " AND companyId="+2, setValue));
+      dispatch(getLatestTableId("t_form_menu", "formCode", "parentFormID =" + formDetails.currentId + " AND companyId="+auth?.user?.companyId, setValue));
     }
   
   
