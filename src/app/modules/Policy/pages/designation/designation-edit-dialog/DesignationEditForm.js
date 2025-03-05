@@ -455,7 +455,7 @@ export function DesignationEditForm({
                                             style={{ display: "block" }}
                                             autoComplete="off"
                                           >
-                                            <option value="-1" label="Select..." />
+                                            <option value="" label="Select..." />
                                             <option
                                               selected
                                               value="Gross to Basic"
@@ -491,7 +491,7 @@ export function DesignationEditForm({
                           }}
                           name="retirementAgeMale"
                           component={Input}
-                          placeholder="Enter retirement age"
+                          placeholder="60"
                         // label="Male"
                         //value="50"
                         />
@@ -511,7 +511,7 @@ export function DesignationEditForm({
                           }}
                           name="retirementAgeFemale"
                           component={Input}
-                          placeholder="Enter Retirement Age (Female)"
+                           placeholder="60"
                         // label="Female"
                         //  value="55"
                         />
@@ -690,7 +690,7 @@ export function DesignationEditForm({
 
                         <div className="col-12 col-md-4 mt-3">
                           <label htmlFor="empPictureIsMandatory">
-                            Picture Policy <span style={{ color: "red" }}>*</span>
+                            Picture Policy
 
 
                           </label>
@@ -703,7 +703,7 @@ export function DesignationEditForm({
                               setFieldValue("empPictureIsMandatory", e.target.value); // Use the raw value
                             }}
                           >
-                            <option value="">Select </option>
+                            {/* <option value="">Select </option> */}
                             {pictureIsMandatoryOptions.map((option) => (
                               <option key={option.value} value={option.value}>
                                 {option.label}
