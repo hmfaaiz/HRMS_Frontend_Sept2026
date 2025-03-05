@@ -52,7 +52,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
     .catch((error) => {
       error.clientMessage = "Can't Generate PDF";
       dispatch(actions.catchError({ error, callType: callTypes.pdf }));
-      toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+      toast.error( error.clientMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -87,7 +87,7 @@ export const generateRegisterExcel = (filter, document, labels = {}) => async (d
       const decodedData = new TextDecoder().decode(error?.response?.data);
       const jsonData = JSON.parse(decodedData);
       // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
-      toast.error(error?.response?.status == 400 ? 'Please select filter to generate Excel' : error?.clientMessage, {
+      toast.error(error?.clientMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
