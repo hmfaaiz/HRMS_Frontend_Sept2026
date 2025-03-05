@@ -254,6 +254,7 @@ export function FormEditForm({
     }
   }
 
+
   return (
     <Formik
       enableReinitialize={true}
@@ -712,7 +713,8 @@ disabled={  isAfterResult}
                   dispatch(actions.clearReduxData())
                 }}
                 className="btn btn-green"
-                disabled={loading || !checkPayroll_EmployeesExist?.finalize}
+              
+                disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.finalize)}
               >
                 Finalize
                 {loading && (
@@ -731,7 +733,8 @@ disabled={  isAfterResult}
                   dispatch(actions.clearReduxData())
                 }}
                 className="btn btn-red"
-                disabled={loading || !checkPayroll_EmployeesExist?.revert}
+                // disabled={loading || !checkPayroll_EmployeesExist?.revert}
+                disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.revert)}
               >
                 Revert
                 {loading && (

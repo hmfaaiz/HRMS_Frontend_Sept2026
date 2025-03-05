@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo } from "react"
 import { Field, Formik } from "formik"
 import * as Yup from "yup";
 import { isEqual } from "lodash"
@@ -165,6 +165,19 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
     { value: "<=", label: "Less Than & Equal To" },
   ];
 
+
+
+    useEffect(() => {
+      // Extract subsidiaryId logic
+      const subsidiaryId = (allSubsidiaryList && allSubsidiaryList.length > 0) 
+        ? allSubsidiaryList[0].value 
+        : null;
+    
+        dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
+        dispatch(fetchAllDept(subsidiaryId));
+    }, [allSubsidiaryList]);
+
+    
   return (
     <>
       <Formik
@@ -185,6 +198,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
           handleBlur,
           setFieldValue,
           handleReset,
+          isValid,  // Destructure isValid
+          dirty,    // Destructure dirty
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
@@ -741,7 +756,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
               <button
                 onClick={() => { getPdf(values) }}
-                disabled={pdfLoading || !values?.subsidiaryId}
+                disabled={pdfLoading || !values?.subsidiaryId  || !isValid }
                 className="btn btn-primary btn-elevate"
               >
                 Generate Report (PDF)
@@ -754,7 +769,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
               <button
                 onClick={() => { getExcel(values) }}
-                disabled={registerExcelLoading || !values?.subsidiaryId}
+                disabled={registerExcelLoading || !values?.subsidiaryId || !isValid }
                 type="button"
                 className="btn btn-primary btn-elevate"
               >

@@ -536,7 +536,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                               name="groupByEmployee"
                               type="checkbox"
                               // onChange={handleChange}
-                              onChange={() => setFieldValue("groupByEmployee", !values?.groupByEmployee)}
+                              onChange={() => {setFieldValue("groupByEmployee", !values?.groupByEmployee)
+                                setFieldValue("groupByDepartment",null)
+                                 setFieldValue("groupByLocation",null)
+                              }
+
+                              }
                               onBlur={handleBlur}
                               value={values.groupByEmployee}
                               checked={values.groupByEmployee}
