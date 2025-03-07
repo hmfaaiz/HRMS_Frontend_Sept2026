@@ -310,12 +310,18 @@ export function FormTable(user) {
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
+      // leaveDeductionId: Yup.number()
+      //   .when('isEnableAttandanceIntegration', {
+      //     is: true, // if select value is 2
+      //     then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
+      //     otherwise: Yup.number().notRequired(),
+      //   }),
+
+
       leaveDeductionId: Yup.number()
-        .when('isEnableAttandanceIntegration', {
-          is: true, // if select value is 2
-          then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.number().notRequired(),
-        }),
+  .nullable() , // Allow null (for 'N/A')
+ 
+
       lateCountPerDaySalaryDeduction: Yup.number()
         .when('isEnableAttandanceIntegration', {
           is: true, // if select value is 2
@@ -1186,7 +1192,7 @@ Payroll Approver
                         />
                       </div>
 
-                      <div className="col-12 col-md-4 mt-3">
+                      {/* <div className="col-12 col-md-4 mt-3">
                         {<span>Leave Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
                         <select className="form-control"
                           disabled={!Boolean(values.isEnableAttandanceIntegration)}
@@ -1202,7 +1208,44 @@ Payroll Approver
                             })}
                         </select>
                         {errors.leaveDeductionId && touched.leaveDeductionId && <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />}
-                      </div>
+                      </div> */}
+
+<div className="col-12 col-md-4 mt-3">
+  <span>
+    Leave Deduction
+    {Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}
+  </span>
+  <select
+    className="form-control"
+    disabled={!Boolean(values.isEnableAttandanceIntegration)}
+    onChange={(e) => {
+      // If 'N/A' is selected, set the value to null, else convert the selected value to a number
+      const value = e.target.value === 'N/A' ? null : Number(e.target.value);
+      setFieldValue('leaveDeductionId', value); // Update form value with the selected option
+    }}
+    value={values.leaveDeductionId || 'N/A'} // Default to 'N/A' if no value is selected
+    name="leaveDeductionId"
+  >
+    {/* Add 'N/A' option */}
+    <option value="N/A">N/A</option>
+
+    {/* Filter out '--Select--' and render other options for leave types */}
+    {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
+      <option key={x.value} value={x.value}>
+        {x.label}
+      </option>
+    ))}
+  </select>
+
+  {errors.leaveDeductionId && touched.leaveDeductionId && (
+    <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />
+  )}
+</div>
+
+
+
+
+
 
                       <div className="col-12 col-md-4 mt-3">
                         {<span>Late Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
