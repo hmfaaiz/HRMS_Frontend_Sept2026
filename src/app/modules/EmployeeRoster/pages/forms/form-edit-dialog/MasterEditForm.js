@@ -7,12 +7,13 @@ import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { useSelector, shallowEqual } from "react-redux";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import EmployeeListTable from "./EmployeeListTable";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { VALIDATION_MESSAGES, WEEK_DAY_STRING } from "../../../../../utils/constants";
 import { formatDates } from "../../../../../utils/common";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary } from "../../../../../../_metronic/redux/dashboardActions";
 import { initialFilter } from "../FormUIHelpers";
+import { Edit } from "@material-ui/icons";
 
 export function MasterEditForm({
   submitForm,
@@ -53,12 +54,30 @@ export function MasterEditForm({
         subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
         from: Yup.date().required(VALIDATION_MESSAGES.required).min(payrollData.startDate, `Date cannot be before ${formatDates(payrollData.startDate)}`),
         to: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('from'), 'To date cannot be before From date'),
-        shiftId: Yup.number().required(VALIDATION_MESSAGES.required),
+        // shiftId: Yup.number().required(VALIDATION_MESSAGES.required),
         list: Yup.array().of(
           Yup.object().shape({
             employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
           })
         ).min(1, 'Choose atleast One Employee'),
+
+
+        shiftId: Yup.string().when('isEnable_roster_via_shift', {
+          is: true,  // Check if `isEnable_roster_via_shift` is true
+          then: Yup.string().required(VALIDATION_MESSAGES.required), // Make required
+          otherwise: Yup.string().notRequired(), // Make not required if false
+        }),
+        // offDay_1: Yup.string().when('isEnable_roster_via_shift', {
+        //   is: true,  // Check if `isEnable_roster_via_shift` is true
+        //   then: Yup.string().required(VALIDATION_MESSAGES.required), // Make required
+        //   otherwise: Yup.string().notRequired(), // Make not required if false
+        // }),
+
+        // offDay_2: Yup.string().when('isEnable_roster_via_shift', {
+        //   is: true,  // Check if `isEnable_roster_via_shift` is true
+        //   then: Yup.string().required(VALIDATION_MESSAGES.required), // Make required
+        //   otherwise: Yup.string().notRequired(), // Make not required if false
+        // }),
       })
     }
     else {
@@ -75,6 +94,15 @@ export function MasterEditForm({
       });
     }
   }, [payrollData])
+
+
+  const weekDayOptions = Object.keys(WEEK_DAY_STRING).map(key => ({
+    label: WEEK_DAY_STRING[key],
+    value: WEEK_DAY_STRING[key]
+  }));
+
+  // Add the 'N/A' option
+  const options = [{ label: 'N/A', value: null }, ...weekDayOptions];
 
   return (
     <>
@@ -120,7 +148,7 @@ export function MasterEditForm({
                           dispatch(actions.getPayrollMonth(value))
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           setFieldValue('list', [])
-                          setQueryParams({...initialFilter, filter: {subsidiaryId: value}})
+                          setQueryParams({ ...initialFilter, filter: { subsidiaryId: value } })
                         }}
                         label={
                           <span>
@@ -137,12 +165,6 @@ export function MasterEditForm({
                       />
                     </div>
                     {/* Subsidiary Field End */}
-
-
-                  </div>
-                  <div className="from-group row">
-
-                    {/* Date from Field Start */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field
                         name="from"
@@ -182,42 +204,152 @@ export function MasterEditForm({
                         autoComplete="off"
                       />
                     </div>
-                    {/* Date to Field End */}
 
-                    {/* Shift Field Start */}
+                  </div>
+
+
+                  {/* Date from Field Start */}
+
+                  {/* Date to Field End */}
+
+
+
+                  <br />
+                  <br />
+
+
+                  <div className="from-group row">
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="shiftId"
-                        component={Select}
-                        className={errors?.shiftId && touched?.shiftId ? 'form-control is-invalid' : 'form-control'}
-                        disabled={checkPayrolMonth(values, payrollData)}
-                        placeholder=""
-                        onBlur={handleBlur}
+                      <input
+                        name="isEnable_roster_via_shift"
+                        type="checkbox"
+                        // onChange={handleChange}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
-                          setFieldValue('shiftId', value)
+                          handleChange(e);  // Trigger the form change handler
+                          if (!e.target.checked) {
+                            setFieldValue('shiftId', '');  // Clear other fields when unchecked
+                            setFieldValue('offDay_1', '');
+                            setFieldValue('offDay_2', '');
+                          }
                         }}
-                        label={
-                          <span>
-                            {" "}
-                            Shift<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.shiftId}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: allEmployeeShifts, firstElement: { label: '--Select--', value: null } })}
+                        onBlur={handleBlur}
+                        value={values.isEnable_roster_via_shift}
+                        checked={values.isEnable_roster_via_shift}
+                        disabled={isEdit}
                       />
-                      {
-                        errors.shiftId && touched.shiftId && <CustomErrorLabel touched={true} error={errors.shiftId} />
-                      }
+                      <label>&nbsp;<span>Create Roster Via Shift</span></label>
                     </div>
-                    {/* Shift Field End */}
 
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+                    {/* Create Roster Via shift  */}
+                    <div
+                      style={{
+                        backgroundColor: "rgb(235 243 255)",
+                        padding: "20px",
+                        borderRadius: "5px",
+                        border: "2px solid #adceff",
+                        width: '-webkit-fill-available',
+                        display: "flex", // Use flexbox to align children horizontally
+                        flexDirection: "row",
+                        marginBottom: "20px",
+                        opacity: values.isEnable_roster_via_shift ? 1 : 0.7, // Make the div semi-transparent when disabled
+                        pointerEvents: values.isEnable_roster_via_shift ? "auto" : "none",
+
+                      }}
+                    >
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="offDay_1"
+                          component={Select}
+                          className={errors?.offDay_1 && touched?.offDay_1 ? 'form-control is-invalid' : 'form-control'}
+                          placeholder=""
+                          onBlur={handleBlur}
+                          disabled={isEdit}
+                          onChange={(e) => {
+                            setFieldValue('offDay_1', e.target.value);
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Off Day 1
+                            </span>
+                          }
+                          value={values.offDay_1}
+                          autoComplete="off"
+
+
+                          children={CustomDropdown({
+                            data: options,  // Passing the options here
+                          })}
+                        />
+                        {errors.offDay_1 && touched.offDay_1 && (
+                          <CustomErrorLabel touched={true} error={errors.offDay_1} />
+                        )}
+                      </div>
+
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="offDay_2"
+                          component={Select}
+                          className={errors?.offDay_2 && touched?.offDay_2 ? 'form-control is-invalid' : 'form-control'}
+                          placeholder=""
+                          disabled={isEdit}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            setFieldValue('offDay_2', e.target.value);
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Off Day 2
+                            </span>
+                          }
+                          value={values.offDay_2}
+                          autoComplete="off"
+
+
+                          children={CustomDropdown({
+                            data: options,  // Passing the options here
+                          })}
+                        />
+                        {errors.offDay_2 && touched.offDay_2 && (
+                          <CustomErrorLabel touched={true} error={errors.offDay_2} />
+                        )}
+                      </div>
+
+                      {/* Shift Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="shiftId"
+                          component={Select}
+                          className={errors?.shiftId && touched?.shiftId ? 'form-control is-invalid' : 'form-control'}
+                          disabled={checkPayrolMonth(values, payrollData) || isEdit}
+                          placeholder=""
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                            setFieldValue('shiftId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Shift<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          value={values.shiftId}
+                          autoComplete="off"
+                          children={CustomDropdown({ data: allEmployeeShifts, firstElement: { label: '--Select--', value: null } })}
+                        />
+                        {
+                          errors.shiftId && touched.shiftId && <CustomErrorLabel touched={true} error={errors.shiftId} />
+                        }
+                      </div>
+                      {/* Shift Field End */}
+                    </div>
+
+
+
+
 
                     {/* Employee List Table Start */}
                     <div
@@ -241,6 +373,8 @@ export function MasterEditForm({
                       />
                     </div>
                     {/* Employee List Table End */}
+
+
 
                   </div>
                 </fieldset>
