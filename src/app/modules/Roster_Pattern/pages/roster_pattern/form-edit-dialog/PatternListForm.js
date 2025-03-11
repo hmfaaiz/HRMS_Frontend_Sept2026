@@ -6,17 +6,32 @@ import { SearchSelect } from '../../../../../../_metronic/_helpers/SearchSelect'
 function PatternListForm({ values, setFieldValue, errors, touched, dropdownData, isdataForRead }) {
     console.log("isdataForRead111", isdataForRead)
     //   Set All Employees List in Map so we can get data faster in the field
+    // const allEmployeeShifts = useMemo(() => {
+    //     // Create a Map from the dropdownData.allEmployeeShifts array
+    //     const shiftsMap = new Map(dropdownData?.allEmployeeShifts?.map(item => [item.value, item]));
+    
+    //     // Add the "offDay" option with value: 0 if it's not already included
+    //     shiftsMap.set(0, { label: "Off Day", value: 0 });
+    // console.log("shiftsMap111",shiftsMap)
+    //     return shiftsMap;
+    // }, [dropdownData?.allEmployeeShifts]);
+    
     const allEmployeeShifts = useMemo(() => {
-        // Create a Map from the dropdownData.allEmployeeShifts array
+     
         const shiftsMap = new Map(dropdownData?.allEmployeeShifts?.map(item => [item.value, item]));
-    
-        // Add the "offDay" option with value: 0 if it's not already included
-        shiftsMap.set(0, { label: "offDay", value: 0 });
-    console.log("shiftsMap111",shiftsMap)
-        return shiftsMap;
-    }, [dropdownData?.allEmployeeShifts]);
-    
 
+      
+        shiftsMap.set(0, { label: "Off Day", value: 0 });
+     
+
+        
+        const shiftsArray = Array.from(shiftsMap?.values());
+
+       
+        const sortedShiftsArray = [shiftsArray?.find(item => item?.value === 0), ...shiftsArray?.filter(item => item?.value !== 0)];
+
+        return sortedShiftsArray;
+    }, [dropdownData?.allEmployeeShifts]);
     return (
         <>
             <h6>Shift List</h6>
@@ -65,7 +80,7 @@ function PatternListForm({ values, setFieldValue, errors, touched, dropdownData,
                                                 )}
 
                                         </td>
-                                        <td>
+                                        {/* <td>
 
                                             <SearchSelect
                                                 name={`list[${index}].shiftId`}
@@ -86,10 +101,34 @@ function PatternListForm({ values, setFieldValue, errors, touched, dropdownData,
                                                 // options={dropdownData?.allEmployeeShifts || []}
 
                                                 value={allEmployeeShifts?.get(row?.shiftId) || ''}
-  options={Array.from(allEmployeeShifts.values())}
+  options={Array.from(allEmployeeShifts?.values())}
                                             />
 
-                                        </td>
+                                        </td> */}
+<td>
+    <SearchSelect
+        name={`list[${index}].shiftId`}
+        component={SearchSelect}
+        className={
+            errors.list?.[index]?.shiftId && touched.list?.[index]?.shiftId
+                ? 'form-control is-invalid'
+                : 'form-control'
+        }
+        onChange={(e) => {
+            const value = e.label === '--Select--' ? '' : Number(e.value);
+            setFieldValue(`list[${index}].shiftId`, value);
+        }}
+        error={errors?.list?.[index]?.shiftId}
+        touched={touched?.list?.[index]?.shiftId}
+        isDisabled={isdataForRead}
+        // Find the corresponding shift object by matching the shiftId
+        value={allEmployeeShifts?.find(shift => shift.value === row?.shiftId) || ''}
+        // Ensure "Off Day" (value: 0) is the first option
+        options={Array.from(allEmployeeShifts?.values())
+            .sort((a, b) => (a.value === 0 ? -1 : b.value === 0 ? 1 : 0))}
+    />
+</td>
+
 
                                     </tr>
                                 ))}
@@ -98,7 +137,7 @@ function PatternListForm({ values, setFieldValue, errors, touched, dropdownData,
                         {/* Table Ends */}
 
                         {/* Add button Field Starts */}
-                        {!isdataForRead && values.list.length < 5 && 
+                        {!isdataForRead && values?.list.length < 31 && 
                        ( <button
                             type="button"
                             className="btn btn-primary btn-elevate"
