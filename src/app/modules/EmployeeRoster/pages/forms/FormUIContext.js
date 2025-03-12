@@ -29,6 +29,11 @@ export function FormUIProvider({ FormUIEvents, children }) {
     from: '',
     to: '',
     shiftId: '',
+    offDay_1:'',
+    offDay_2:'',
+    isEnable_roster_via_shift:false,
+    isEnable_roster_via_pattern:false,
+    patternId:'',
     list: []
   };
 

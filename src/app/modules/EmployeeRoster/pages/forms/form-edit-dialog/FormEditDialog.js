@@ -6,7 +6,7 @@ import * as actions from "../../../_redux/formActions";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
-import { fetchAllEmployeeShifts, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllEmployeeShifts, fetchAllRosterPattern, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 
 export function FormEditDialog() {
   const [loading, setLoading] = useState(false);
@@ -47,10 +47,13 @@ export function FormEditDialog() {
       dispatch(fetchAllEmployeeShifts('allEmployeeShifts'));
     if (!dashboard?.allSubsidiaryList?.length)
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    if (!dashboard?.allRosterPatternList?.length)
+      dispatch(fetchAllRosterPattern("allRosterPatternList"))
   }, [formUIProps.id, dispatch]);
 
   //Create or Update record according to values from dialog
   const submitForm = (values, resetForm) => {
+
     dispatch(actions.saveRecord(values, formUIProps.id, disbaleLoading, resetForm))
   }
 

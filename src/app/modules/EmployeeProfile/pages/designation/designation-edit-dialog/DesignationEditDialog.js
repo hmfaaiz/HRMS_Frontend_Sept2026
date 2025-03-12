@@ -67,6 +67,8 @@ export function DesignationEditDialog({ id, show, onHide, userForRead }) {
 
   const saveEmployeeProfile = async (user, image,contactList,workExperienceList,academicList,skillsList,incidentList,imagePolicy,isImageReq) => {
 
+delete user?.all_report_to
+
     if (imagePolicy && isImageReq) {
       disbaleLoading();
     

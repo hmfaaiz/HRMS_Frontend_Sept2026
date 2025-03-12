@@ -584,3 +584,17 @@ export const fetchPayrollConfigApproverPermission = (key) => async (dispatch) =>
     });
 };
 
+
+
+export const fetchAllRosterPattern = (key) => async (dispatch) => {
+  return await requestFromServer
+    .getAllRosterPattern()
+    .then((response) => {
+   
+      const entities = [...response.data?.data];
+      dispatch(actions.AllRosterPatternFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
