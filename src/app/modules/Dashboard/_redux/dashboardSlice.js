@@ -58,6 +58,7 @@ const initialDashboardState = {
   allEmployeeStatus:[],
   allEmployeesWithNoPermissionList:[],
   allEmpTypeDynamicChildMenus:[],
+  allRosterPatternList:[],
 };
 
 export const callTypes = {
@@ -229,6 +230,11 @@ export const dashboardSlice = createSlice({
     },
     AllPayrollConfigApproverPermissionFetch: (state, action) => {
       state.allPayrollConfigApproverPermissionList = action.payload;
+ 
+    },
+
+    AllRosterPatternFetch: (state, action) => {
+      state.allRosterPatternList = action.payload;
  
     },
   },

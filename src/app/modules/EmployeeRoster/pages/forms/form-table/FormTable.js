@@ -80,6 +80,8 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
+
+        formatter: (cell) => cell? cell:"---",
     },
     {
       dataField: "from",

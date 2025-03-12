@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useLayoutEffect, useMemo } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -11,7 +11,7 @@ import { VALIDATION_MESSAGES, WEEK_DAY_STRING } from "../../../../../utils/const
 import { formatDates } from "../../../../../utils/common";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllRosterPattern } from "../../../../../../_metronic/redux/dashboardActions";
 import { initialFilter } from "../FormUIHelpers";
 import { Edit } from "@material-ui/icons";
 
@@ -28,12 +28,23 @@ export function MasterEditForm({
 }) {
 
   //Get Data from states
-  const { allEmployeeShifts, allEmployees, payrollData, allSubsidiaryList } = useSelector(
+
+    useLayoutEffect(() => {
+      if (!user.Id) {
+  
+        dispatch(fetchAllRosterPattern("allRosterPatternList"))
+      }
+      //allPayrolGroupList
+    }, [dispatch, user?.Id]);
+
+
+  const { allRosterPatternList,allEmployeeShifts, allEmployees, payrollData, allSubsidiaryList } = useSelector(
     (state) => ({
       payrollData: state.employee_roster.payrollData,
       allEmployeeShifts: state.dashboard.allEmployeeShifts,
       allEmployees: state.dashboard.allEmployees,
       allSubsidiaryList: state.dashboard.allSubsidiaryList,
+      allRosterPatternList:state.dashboard.allRosterPatternList,
     }),
     shallowEqual
   )
@@ -67,6 +78,12 @@ export function MasterEditForm({
           then: Yup.string().required(VALIDATION_MESSAGES.required), // Make required
           otherwise: Yup.string().notRequired(), // Make not required if false
         }),
+
+        patternId: Yup.string().when('isEnable_roster_via_pattern', {
+          is: true,  // Check if `isEnable_roster_via_shift` is true
+          then: Yup.string().required(VALIDATION_MESSAGES.required), // Make required
+          otherwise: Yup.string().notRequired(), // Make not required if false
+        }),
         // offDay_1: Yup.string().when('isEnable_roster_via_shift', {
         //   is: true,  // Check if `isEnable_roster_via_shift` is true
         //   then: Yup.string().required(VALIDATION_MESSAGES.required), // Make required
@@ -86,6 +103,7 @@ export function MasterEditForm({
         from: Yup.date().required(VALIDATION_MESSAGES.required),
         to: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('from'), 'To date cannot be before From date'),
         shiftId: Yup.number().required(VALIDATION_MESSAGES.required),
+        patternId: Yup.number().required(VALIDATION_MESSAGES.required),
         list: Yup.array().of(
           Yup.object().shape({
             employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -103,6 +121,13 @@ export function MasterEditForm({
 
   // Add the 'N/A' option
   const options = [{ label: 'N/A', value: null }, ...weekDayOptions];
+
+  const clearFields = (values = [], setFieldValue) => {
+    values.forEach(field => {
+      setFieldValue(field, ''); // Set each field to an empty value
+    });
+  };
+  
 
   return (
     <>
@@ -225,11 +250,12 @@ export function MasterEditForm({
                         type="checkbox"
                         // onChange={handleChange}
                         onChange={(e) => {
+                          clearFields(['patternId'],setFieldValue)
+                          setFieldValue('isEnable_roster_via_pattern',false)
                           handleChange(e);  // Trigger the form change handler
                           if (!e.target.checked) {
-                            setFieldValue('shiftId', '');  // Clear other fields when unchecked
-                            setFieldValue('offDay_1', '');
-                            setFieldValue('offDay_2', '');
+                            clearFields(['shiftId','offDay_1','offDay_2'],setFieldValue)
+                         
                           }
                         }}
                         onBlur={handleBlur}
@@ -336,7 +362,7 @@ export function MasterEditForm({
                               Shift<span style={{ color: "red" }}>*</span>
                             </span>
                           }
-                          value={values.shiftId}
+                          value={values.shiftId === null ? '--Select--' : values.shiftId}
                           autoComplete="off"
                           children={CustomDropdown({ data: allEmployeeShifts, firstElement: { label: '--Select--', value: null } })}
                         />
@@ -351,6 +377,91 @@ export function MasterEditForm({
 
 
 
+
+
+
+                  </div>
+
+
+                  <div className="from-group row">
+                    <div className="col-12 col-md-4 mt-3">
+                      <input
+                        name="isEnable_roster_via_pattern"
+                        type="checkbox"
+                        // onChange={handleChange}
+                        onChange={(e) => {
+                  
+
+                          clearFields(['shiftId','offDay_1','offDay_2'],setFieldValue)
+                          setFieldValue('isEnable_roster_via_shift',false)
+                          handleChange(e); 
+                          if (!e.target.checked) {
+                            setFieldValue('patternId', ''); 
+                  
+              
+                          }
+                        }}
+                        onBlur={handleBlur}
+                        value={values.isEnable_roster_via_pattern}
+                        checked={values.isEnable_roster_via_pattern}
+                        disabled={isEdit}
+                      />
+                      <label>&nbsp;<span>Create Roster Via Roster Pattern</span></label>
+                    </div>
+
+                    {/* Create Roster Via shift  */}
+                    <div
+                      style={{
+                        backgroundColor: "rgb(235 243 255)",
+                        padding: "20px",
+                        borderRadius: "5px",
+                        border: "2px solid #adceff",
+                        width: '-webkit-fill-available',
+                        display: "flex", // Use flexbox to align children horizontally
+                        flexDirection: "row",
+                        marginBottom: "20px",
+                        opacity: values.isEnable_roster_via_pattern ? 1 : 0.7, // Make the div semi-transparent when disabled
+                        pointerEvents: values.isEnable_roster_via_pattern ? "auto" : "none",
+
+                      }}
+                    >
+                    
+
+
+                      {/* Shift Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="patternId"
+                          component={Select}
+                          className={errors?.patternId && touched?.patternId ? 'form-control is-invalid' : 'form-control'}
+                          disabled={checkPayrolMonth(values, payrollData) || isEdit}
+                          placeholder=""
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                            setFieldValue('patternId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Pattern<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          value={values.patternId}
+                          autoComplete="off"
+                          children={CustomDropdown({ data: allRosterPatternList, firstElement: { label: '--Select--', value: null } })}
+                        />
+                        {
+                          errors.patternId && touched.patternId && <CustomErrorLabel touched={true} error={errors.patternId} />
+                        }
+                      </div>
+                      {/* Shift Field End */}
+
+
+                      
+                    </div>
+
+                    
                     {/* Employee List Table Start */}
                     <div
                       style={{
@@ -373,8 +484,6 @@ export function MasterEditForm({
                       />
                     </div>
                     {/* Employee List Table End */}
-
-
 
                   </div>
                 </fieldset>

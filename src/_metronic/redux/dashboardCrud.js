@@ -244,3 +244,11 @@ export const getPayrollConfigApproverPermission = async () => {
     {}
   );
 };
+
+
+export const getAllRosterPattern = async () => {
+  return await axios.get(
+    `${USERS_URL}/settings/read-all-roster-pattern`,
+    {}
+  );
+};
