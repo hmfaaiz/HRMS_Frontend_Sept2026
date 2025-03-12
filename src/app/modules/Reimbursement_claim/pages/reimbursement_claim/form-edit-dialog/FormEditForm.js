@@ -243,8 +243,9 @@ export function FormEditForm({
                       maxDate={new Date()}
                       minDate={data.dateOfJoining ? new Date(data.dateOfJoining) : null}
                     // disabled={!isActiveMonth}
-                    disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
-                      (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+                    // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
+                    //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+                    disabled={isEdit}
 
                     />
                   </div>
@@ -252,6 +253,7 @@ export function FormEditForm({
                   <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="pay_in_payroll_forId"
+                      
                       label={
                         <span>
                          Reimbursement Month
@@ -274,10 +276,10 @@ export function FormEditForm({
                       }
                       // options={dashboard.allPayrollMonthYearList}
                       // isDisabled={ !isActiveMonth}
-                      isDisabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
-                        (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+                      // isDisabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
+                      //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
 
-
+                      isDisabled={isEdit}
                       error={errors.pay_in_payroll_forId}
                       touched={touched.pay_in_payroll_forId}
                     />
@@ -288,9 +290,10 @@ export function FormEditForm({
                       name="amount"
                       component={Input}
                       placeholder="Enter Amount"
-                      disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
-                        (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+                      // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
+                      //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
                       // disabled={!isActiveMonth}
+                      disabled={isEdit}
                       label={(() => {
                         const finalAmountLimit = calculateRemainingAmount(
                           values?.reimbursement_typeId,
@@ -380,8 +383,10 @@ export function FormEditForm({
                       component={TextArea}
                       placeholder="Enter Details"
                       //  disabled={ !isActiveMonth}
-                      disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
-                        (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+                      // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
+                      //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+   disabled={ isEdit}
+
                       label={
                         <span>
                           Details <span style={{ color: "red" }}>*</span>
@@ -503,9 +508,10 @@ export function FormEditForm({
                   }}
                   className="btn btn-primary btn-elevate"
                   // disabled={loading}
-                  disabled={loading || (isEdit && !dashboard?.allPayrollMonthYearList.some(
-                    (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true
-                  ))}
+                  // disabled={loading || (isEdit && !dashboard?.allPayrollMonthYearList.some(
+                  //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true
+                  // ))}
+                   disabled={loading || isEdit}
                 >
                   Save
                   {loading && (
