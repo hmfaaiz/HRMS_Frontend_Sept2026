@@ -1,10 +1,11 @@
 import { Field, FieldArray } from 'formik'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import CustomErrorLabel from '../../../../../utils/common-modules/CustomErrorLabel';
 import { SearchSelect } from '../../../../../../_metronic/_helpers/SearchSelect';
+import { amountLimitDynamic } from '../../../../../utils/common';
 
 function PatternListForm({ values, setFieldValue, errors, touched, dropdownData, isdataForRead }) {
-    console.log("isdataForRead111", isdataForRead)
+    
     //   Set All Employees List in Map so we can get data faster in the field
     // const allEmployeeShifts = useMemo(() => {
     //     // Create a Map from the dropdownData.allEmployeeShifts array
@@ -32,6 +33,13 @@ function PatternListForm({ values, setFieldValue, errors, touched, dropdownData,
 
         return sortedShiftsArray;
     }, [dropdownData?.allEmployeeShifts]);
+
+
+    useEffect(() => {
+        values.list.forEach((_, index) => {
+            setFieldValue(`list[${index}].sno`, index + 1);
+        });
+    }, [values.list, setFieldValue]);
     return (
         <>
             <h6>Shift List</h6>
@@ -66,10 +74,14 @@ function PatternListForm({ values, setFieldValue, errors, touched, dropdownData,
 
                                             <Field
                                                 name={`list[${index}].sno`}
+                                                value={index + 1} 
                                                 type="number"
                                                 className="form-control"
                                                 style={{ width: '100px' }}
-
+        // onInput={(e) => {
+        //                             e.target.value = amountLimitDynamic(e.target.value,2); // Limit to 3 digits
+        //                           }}
+                                  disabled 
 
                                             />
                                             {errors.list?.[index]?.sno &&

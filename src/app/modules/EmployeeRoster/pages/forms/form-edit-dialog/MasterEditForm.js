@@ -505,7 +505,7 @@ export function MasterEditForm({
 
               {!checkPayrolMonth(values, payrollData) && <button
                 type="submit"
-                disabled={!values?.list?.length}
+                disabled={isEdit || !values?.list?.length || (!values?.isEnable_roster_via_shift && !values?.isEnable_roster_via_pattern)}
                 onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
               >
