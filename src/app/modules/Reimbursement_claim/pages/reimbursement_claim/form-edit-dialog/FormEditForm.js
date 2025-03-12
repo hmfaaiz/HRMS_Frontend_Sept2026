@@ -25,7 +25,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getEmployeeProfileById } from "../../../../../../_metronic/redux/dashboardCrud";
-
+import { updateApprovedStatus ,fetchReimbursementClaim} from "../../../_redux/redux-Actions";
 
 const ReimbursementSchema = Yup.object().shape({
   reimbursement_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -58,7 +58,7 @@ export function FormEditForm({
   isEdit,
   isFileReq,
   setIsFileReq,
-  employeeId
+  employeeId,disbaleLoading,formUIProps
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -116,7 +116,7 @@ export function FormEditForm({
   const calculateRemainingAmount = (reimbursementTypeId, payrollForId, policies, values) => {
     // Find the max amount allowed for the reimbursement type
     // let employee = currentState?.loan_config_details_permission?.employee;
-    
+
 
     const maxAmount =
       policies?.find((item) => item.reimbursement_typeId === reimbursementTypeId)?.max_amount || 0;
@@ -127,8 +127,8 @@ export function FormEditForm({
       ?.filter(
         (entity) =>
           entity.reimbursement_typeId === reimbursementTypeId &&
-          entity.pay_in_payroll_forId === payrollForId &&
-          entity.approved_status == 1
+          entity.pay_in_payroll_forId === payrollForId 
+          // && entity.approved_status == 1
       )
       ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
 
@@ -149,6 +149,20 @@ export function FormEditForm({
 
 
 
+ const UpdateApprovedStatus = async (Id, approved_status) => {
+
+    if (Id && approved_status) {
+      let data = {
+        Id, approved_status,
+
+      }
+      await dispatch(updateApprovedStatus(data, disbaleLoading, onHide));
+      await dispatch(fetchReimbursementClaim(formUIProps));
+      setIds("");
+
+    }
+
+  }
 
 
 
@@ -173,7 +187,7 @@ export function FormEditForm({
             inputFile.current.value = "";
           }
         };
-        saveForm(values, finalAmountLimit, isFileReq, clearForm, );
+        saveForm(values, finalAmountLimit, isFileReq, clearForm,);
       }}
     >
       {({
@@ -242,10 +256,10 @@ export function FormEditForm({
                       type="date"
                       maxDate={new Date()}
                       minDate={data.dateOfJoining ? new Date(data.dateOfJoining) : null}
-                    // disabled={!isActiveMonth}
-                    // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
-                    //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
-                    disabled={isEdit}
+                      // disabled={!isActiveMonth}
+                      // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
+                      //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
+                      disabled={isEdit}
 
                     />
                   </div>
@@ -253,10 +267,10 @@ export function FormEditForm({
                   <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="pay_in_payroll_forId"
-                      
+
                       label={
                         <span>
-                         Reimbursement Month
+                          Reimbursement Month
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -337,7 +351,7 @@ export function FormEditForm({
                       }}
                     />
                   </div>
-                  {isEdit ? (<div className="col-12 col-md-6 mt-3">
+                  {/* {isEdit ? (<div className="col-12 col-md-6 mt-3">
                     <label htmlFor="approved_status">
                       Action
 
@@ -373,7 +387,7 @@ export function FormEditForm({
                         </div>
                       )}
                   </div>
-                  ) : null}
+                  ) : null} */}
 
 
 
@@ -385,7 +399,7 @@ export function FormEditForm({
                       //  disabled={ !isActiveMonth}
                       // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
                       //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
-   disabled={ isEdit}
+                      disabled={isEdit}
 
                       label={
                         <span>
@@ -396,28 +410,6 @@ export function FormEditForm({
                     />
                   </div>
 
-                  {/* <div className="col-12 col-md-6 mt-3">
-                    <SearchSelect
-                      name="pay_slip_refId"
-                      label={
-                        <span>
-                          Pay Slip REFID <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      disabled={isEdit}
-                      // onChange={(e) =>
-                      //   setFieldValue("pay_slip_refId", e.value || null)
-                      // } // This won't be called since it's disabled
-                      // value={
-                      //   dashboard.allPaySlipList.find(
-                      //     (option) => option.value === values.pay_slip_refId
-                      //   ) || null
-                      // }
-                      // options={dashboard.allPaySlipList}
-                      // error={errors.pay_slip_refId}
-                      // touched={touched.pay_slip_refId}
-                    />
-                  </div> */}
 
                   <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
                     <label
@@ -471,7 +463,7 @@ export function FormEditForm({
                 onClick={() => {
                   setIds("");
                   handleReset();
-                
+
                   if (inputFile?.current) {
                     inputFile.current.value = "";
                   }
@@ -490,16 +482,8 @@ export function FormEditForm({
               </button>
             )}
 
-            {/* Save Button */}
-            {/* {!isUserForRead || !isActiveMonth && ( */}
-            {
-
-             true
-
-
-
-
-              && (
+       
+            {/* { true && (
                 <button
                   type="submit"
                   // onClick={() => handleSubmit()}
@@ -511,14 +495,49 @@ export function FormEditForm({
                   // disabled={loading || (isEdit && !dashboard?.allPayrollMonthYearList.some(
                   //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true
                   // ))}
-                   disabled={loading || isEdit}
+                  disabled={loading || isEdit}
                 >
                   Save
                   {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
                 </button>
-              )}
+              )} */}
+
+
+                <button
+                  type="submit"
+                  // onClick={() => handleSubmit()}
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                  className="btn btn-primary btn-elevate"
+                  // disabled={loading}
+                  // disabled={loading || (isEdit && !dashboard?.allPayrollMonthYearList.some(
+                  //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true
+                  // ))}
+                  disabled={loading || isEdit}
+                >
+                  Save
+                  {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+           
+
+               {
+                  user?.approved_status ==0 ? (
+                    <button
+                      type="button"
+                      className="btn btn-green"
+                      // disabled={user?.approved_status  == 1}
+                      onClick={() => UpdateApprovedStatus(user.Id, 1)}
+                    >
+                      Approve
+                    </button>
+                  ) : ( null
+                  )
+                }
           </Modal.Footer>
         </>
       )}

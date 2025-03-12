@@ -209,3 +209,43 @@ export const updateReimbursementClaim = (user, disbaleLoading, onHide) => (dispa
       });
     });
 };
+
+
+export const updateApprovedStatus = (data,disbaleLoading,onHide, resetForm) => (dispatch) => {
+
+  return requestFromServer
+    .updateApprovedStatus({data})
+    .then((response) => {
+      dispatch(actions.clearUserForEdit());
+      // dispatch(actions.LoanApprovedStatusUpdated({ updateApprovedStatus }));
+
+ 
+      disbaleLoading();
+      onHide();
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+
+    })
+    .catch((error) => {
+
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      disbaleLoading();
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

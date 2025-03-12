@@ -48,3 +48,9 @@ export function getAllReimbursementConfigPolicy(body) {
 
   
 }
+
+
+export function updateApprovedStatus(data) {
+   
+  return axios.put(`${USERS_URL}/reimbursement_claim/update-reimbursement-approved-status`, data);
+}
