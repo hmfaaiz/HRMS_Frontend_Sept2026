@@ -211,6 +211,7 @@ export function FormEditForm({
                 type="submit"
                 onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
+                disabled={!values?.list?.length}
               >
                 Save
                 {loading && (
