@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo ,useRef} from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -49,7 +49,7 @@ const profileValidation = Yup.object().shape(
         then: Yup.string().required(VALIDATION_MESSAGES.required), // Apply 'required' validation
         otherwise: Yup.string(), // No validation if 'requireDeligation' is false
       }),
-      codeAuto: Yup.string()
+    codeAuto: Yup.string()
       .nullable()
       .matches(/^\d{6}$/, 'Must be exactly 6 digits')
       .required('Required*'),
@@ -58,8 +58,8 @@ const profileValidation = Yup.object().shape(
     lastName: Yup.string()
       .required("Required*"),
     middleName: Yup.string()
-    .nullable(),
-      // .required("Required*"),
+      .nullable(),
+    // .required("Required*"),
     employeeCode: Yup.string()
       .nullable()
       .required("Required*")
@@ -231,13 +231,13 @@ const profileValidation = Yup.object().shape(
       otherwise: Yup.string(),
     }),
     approvedForPayroll: Yup.boolean()
-    .nullable()
-    .oneOf([true, false], 'Required*') , // Ensures the value is either true or false
+      .nullable()
+      .oneOf([true, false], 'Required*'), // Ensures the value is either true or false
     // .required('Required*'),
 
 
     additional_summary: Yup.string()
-    .required("Required*"),
+      .required("Required*"),
 
   },
 
@@ -381,7 +381,7 @@ export function DesignationEditForm({
   const [isImageReq, setIsImageReq] = useState(false)
   const [imgAlreadySet, setImgAlreadySet] = useState(false)
   const [allEmpTypes, setAllEmpTypes] = useState([])
-  const scrollRef=useRef(null);
+  const scrollRef = useRef(null);
   //off for temp
   // useEffect(() => {
   //   if (user.Id) {
@@ -488,8 +488,8 @@ export function DesignationEditForm({
       dispatch(fetchAllEmployeeShifts('allEmployeeShifts'));
 
       dispatch(fetchAllEmployeesWithNoPermissionData('allEmployeesWithNoPermissionList'));
-      
-      dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus")); 
+
+      dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
     }
   }, [dispatch]);
 
@@ -802,20 +802,20 @@ export function DesignationEditForm({
 
 
     setDefaultChildEmpTypeMenus(
- 
+
       // dashboard.allEmpTypeChildMenus &&
 
       // dashboard.allEmpTypeChildMenus.filter((item) => {
       //   return item.value === emptypeId;
       // })
-     [
+      [
         ...dashboard.allEmpTypeDynamicChildMenus,
         ...dashboard.allEmpTypeChildMenus
       ].filter(item => item.value === emptypeId));
 
-      // ...dashboard.allEmpTypeChildMenus.filter((item) => {return item.value === emptypeId}),
- 
-   
+    // ...dashboard.allEmpTypeChildMenus.filter((item) => {return item.value === emptypeId}),
+
+
 
   }, [user?.employeeTypeId, dashboard.employeeTypeId]);
 
@@ -1077,22 +1077,22 @@ export function DesignationEditForm({
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
       // setDefaultProbationPolicyMonth(new Date(newDate));
-    
+
 
       if (!id && response?.data?.data[0].isEmployeeCodeGenerationAuto) {
 
 
 
-    console.log("response?.data?.data[0]?.subsidiary",response?.data?.data[0]?.subsidiaryId )
+
         dispatch(getLatestTableId("t_employee_profile", "	codeAuto", "subsidiaryId = " + response?.data?.data[0]?.subsidiaryId, (setEmployee) => {
 
           setFieldValue("codeAuto", setEmployee)
           // setEmployeeCode(setEmployee)
           setCodeAuto(setEmployee)
-          setFieldValue("employeeCode", response?.data?.data[0]?.codePrefix + "-" +setEmployee )
-          setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" +setEmployee);
+          setFieldValue("employeeCode", response?.data?.data[0]?.codePrefix + "-" + setEmployee)
+          setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" + setEmployee);
           setFieldValue("codePrefix", response?.data?.data[0]?.codePrefix)
-          
+
         }));
 
       };
@@ -1216,7 +1216,7 @@ export function DesignationEditForm({
 
     const newAcademicList = [...academicList];
     newAcademicList[index][field] = value;
-    
+
     if (field == "countryId") {
       newAcademicList[index]["cityId"] = null;
       newAcademicList[index]["city"] = '';
@@ -1328,12 +1328,12 @@ export function DesignationEditForm({
   const seEmpCodeEditMode = async () => {
 
 
-  
+
 
     setEmployeeCode(user?.employeeCode)
     // if(profilePolicy?.data?.data[0]?.codePrefix){
     //   setEmployeeCode(profilePolicy?.data?.data[0]?.codePrefix + "-" + defCodeAuto);
-      
+
     // }
 
   };
@@ -1349,10 +1349,10 @@ export function DesignationEditForm({
     if (!id && profilePolicy?.data?.data[0]?.empPictureIsMandatory) {
 
       setImagePolicy(true)
-      if(!imgAlreadySet){
+      if (!imgAlreadySet) {
         setIsImageReq(true)
       }
-     
+
     }
 
   };
@@ -1556,7 +1556,7 @@ export function DesignationEditForm({
     toast('Date of Confirmation, Date of Confirmation Due & Contract Expiry Date needs to be updated!');
   };
 
-
+console.log("profilePolicy111",profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto,id)
   return (
     <>
       <Formik
@@ -1635,7 +1635,7 @@ export function DesignationEditForm({
 
 
 
-                  
+
                     <div ref={scrollRef} className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
@@ -1648,7 +1648,7 @@ export function DesignationEditForm({
                           onChange={(e) => {
                             setFieldValue("subsidiaryId", e.value || null);
                             setDefualtSubsidiaryList(e);
-                        
+
                             if (!id) {
                               setEmployeeCode(" ")
                               setFieldValue("employeeCode", "")
@@ -1692,74 +1692,79 @@ export function DesignationEditForm({
 
                       </div>
 
-                      {/* {
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            name="employeeCode"
-                            component={Input}
-                            maxLength="10"
-                            placeholder=" Employee Code"
-                            label={<span> Employee Code<span style={{ color: 'red' }}>*</span></span>}
-                            autoComplete="off"
-                            onChange={(e) => {
-                              setFieldValue("employeeCode", e.target.value || null);
-                              setEmployeeCode(e.target.value || defEmployeeCode);
+                      {id || profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto ? (<div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="employeeCode"
+                          component={Input}
+                          maxLength="10"
+                          placeholder=" Employee Code"
+                          label={<span> Employee Code<span style={{ color: 'red' }}>*</span></span>}
+                          autoComplete="off"
+                          onChange={(e) => {
+                            setFieldValue("employeeCode", e.target.value || null);
+                            setEmployeeCode(e.target.value || defEmployeeCode);
 
 
-                            }}
-                            value={defEmployeeCode || null}
+                          }}
+                          value={defEmployeeCode || null}
 
-                            disabled={true}
-                          />
-                        </div>
-                      } */}
-                         {
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            name="codePrefix"
-                            component={Input}
-                            maxLength="10"
-                            placeholder="Employee code prefix"
-                            label={<span>Employee Code Prefix<span style={{ color: 'red' }}>*</span></span>}
-                            autoComplete="off"
-                            onChange={(e) => {
-                              setFieldValue("codePrefix", e.target.value || null);
-                              // setEmployeeCode(e.target.value || defEmployeeCode);
+                          disabled={true}
+                        />
+                      </div>) : (
+
+                        <>
+                          <div className="col-12 col-md-4 mt-3">
+                            <Field
+                              name="codePrefix"
+                              component={Input}
+                              maxLength="10"
+                              placeholder="Employee code prefix"
+                              label={<span>Employee Code Prefix<span style={{ color: 'red' }}>*</span></span>}
+                              autoComplete="off"
+                              onChange={(e) => {
+                                setFieldValue("codePrefix", e.target.value || null);
+                                // setEmployeeCode(e.target.value || defEmployeeCode);
 
 
-                            }}
-                            // value={defEmployeeCode || null}
+                              }}
+                              // value={defEmployeeCode || null}
 
-                            disabled={true}
-                          />
-                        </div>
+                              disabled={true}
+                            />
+                          </div>
+
+
+                          <div className="col-12 col-md-4 mt-3">
+                            <Field
+                              name="codeAuto"
+                              component={Input}
+                              maxLength="6"
+                              placeholder="Eg. 000001"
+                              label={<span>Employee Code <span style={{ color: 'red' }}>*</span></span>}
+                              autoComplete="off"
+                              onChange={(e) => {
+                                setFieldValue("codeAuto", e.target.value || null);
+                                // setEmployeeCode(e.target.value || defEmployeeCode);
+                                // setFieldValue("employeeCode", response?.data?.data[0]?.codePrefix + "-" +setEmployee )
+                                // setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" +setEmployee);
+                                setEmployeeCode(profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value);
+                                setFieldValue("employeeCode", profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value)
+                                setFieldValue("codePrefix", profilePolicy?.data?.data[0]?.codePrefix);
+
+                              }}
+                              // value={defEmployeeCode || null}
+
+                              disabled={isUserForRead || id || profilePolicy?.data?.data[0]?.isEmployeeCodeGenerationAuto}
+                            />
+                          </div>
+
+                        </>
+                      )
+
                       }
 
-{
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            name="codeAuto"
-                            component={Input}
-                            maxLength="6"
-                            placeholder="Eg. 000001"
-                            label={<span>Employee Code <span style={{ color: 'red' }}>*</span></span>}
-                            autoComplete="off"
-                            onChange={(e) => {
-                              setFieldValue("codeAuto", e.target.value || null);
-                              // setEmployeeCode(e.target.value || defEmployeeCode);
-                              // setFieldValue("employeeCode", response?.data?.data[0]?.codePrefix + "-" +setEmployee )
-                              // setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" +setEmployee);
-                              setEmployeeCode(profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value);
-                              setFieldValue("employeeCode", profilePolicy?.data?.data[0]?.codePrefix + "-" +e.target.value )
-                              setFieldValue("codePrefix", profilePolicy?.data?.data[0]?.codePrefix);
 
-                            }}
-                            // value={defEmployeeCode || null}
 
-                            disabled={isUserForRead || id || profilePolicy?.data?.data[0]?.isEmployeeCodeGenerationAuto}
-                          />
-                        </div>
-                      }
 
                     </div>
                     <div className="from-group row">
@@ -1905,45 +1910,45 @@ export function DesignationEditForm({
 
 
                       <div className="col-12 col-md-4 mt-3">
-                            <Select
-                              label={<span> Nationality</span>}
-                              name="nationality"
-                              value={values.nationality}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              style={{ display: "block" }}
-                            >
-                              <option value="-1" label="Select Nationality" />
-                              <option value="Pakistani" label="Pakistani" />
-                              <option value="Other" label="Other" />
+                        <Select
+                          label={<span> Nationality</span>}
+                          name="nationality"
+                          value={values.nationality}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          style={{ display: "block" }}
+                        >
+                          <option value="-1" label="Select Nationality" />
+                          <option value="Pakistani" label="Pakistani" />
+                          <option value="Other" label="Other" />
 
-                            </Select>
-                            {errors.nationality && touched.nationality && (
-                              <div className="invalid-text">{errors.nationality}</div>
-                            )}
-                          </div>
+                        </Select>
+                        {errors.nationality && touched.nationality && (
+                          <div className="invalid-text">{errors.nationality}</div>
+                        )}
+                      </div>
 
-                          <div className="col-12 col-md-4 mt-3">
-                            <SearchSelect
-                              name="teamId"
-                              label={<span> Team</span>}
-                              isDisabled={isUserForRead && true}
-                              onBlur={() => {
-                                // handleBlur({ target: { name: "countryId" } });
-                              }}
-                              onChange={(e) => {
-                                setFieldValue("teamId", e.value || null);
-                                setDefaultChildTeamsMenus(e);
-                                // dispatch(fetchAllFormsMenu(e.value));
-                              }}
-                              value={(defchildTeamMenus || null)}
-                              error={errors.teamId}
-                              touched={touched.teamId}
-                              options={dashboard.allTeamsChildMenus}
-                            />
-                          </div>
+                      <div className="col-12 col-md-4 mt-3">
+                        <SearchSelect
+                          name="teamId"
+                          label={<span> Team</span>}
+                          isDisabled={isUserForRead && true}
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("teamId", e.value || null);
+                            setDefaultChildTeamsMenus(e);
+                            // dispatch(fetchAllFormsMenu(e.value));
+                          }}
+                          value={(defchildTeamMenus || null)}
+                          error={errors.teamId}
+                          touched={touched.teamId}
+                          options={dashboard.allTeamsChildMenus}
+                        />
+                      </div>
 
-                          <div className="col-12 col-md-4 mt-3">
+                      <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
                           name="payrollGroupId"
                           label={<span> Payroll Group<span style={{ color: 'red' }}>*</span></span>}
@@ -2077,7 +2082,7 @@ export function DesignationEditForm({
                         />
                       </div>
 
-                    
+
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
                           name="locationId"
@@ -2151,22 +2156,22 @@ export function DesignationEditForm({
                       </div>
 
 
-                   
+
 
                       <div className="col-12 col-md-4 mt-3">
                         <label className="mr-4">Report To</label>
                         <input
-                              name="all_report_to"
-                              type="checkbox"
-                              // onChange={handleChange}
-                              onChange={() => setFieldValue("all_report_to", !values?.all_report_to)} 
-                              onBlur={handleBlur}
-                              value={values.all_report_to}
-                              checked={values.all_report_to}
-                              label="Show All"
-                            />
-                            <label className="ml-1">Show All</label>
-                            <ErrorMessage className="form-feedBack" name="all_report_to" component="div" />
+                          name="all_report_to"
+                          type="checkbox"
+                          // onChange={handleChange}
+                          onChange={() => setFieldValue("all_report_to", !values?.all_report_to)}
+                          onBlur={handleBlur}
+                          value={values.all_report_to}
+                          checked={values.all_report_to}
+                          label="Show All"
+                        />
+                        <label className="ml-1">Show All</label>
+                        <ErrorMessage className="form-feedBack" name="all_report_to" component="div" />
                         <SearchSelect
                           name="reportTo"
 
@@ -2186,7 +2191,7 @@ export function DesignationEditForm({
                           options={[
                             { value: null, label: 'Select' }, // Adding "All" option with value empty string
                             // ...dashboard.allEmployeesWithNoPermissionList.filter(x => x.departmentId == values.departmentId && x.value != values.Id), // Spread the rest of the menu options
-                          
+
                             ...dashboard.allEmployeesWithNoPermissionList.filter(x => {
                               if (values?.all_report_to) {
                                 // If "All" is selected, do not filter by department and exclude current user
@@ -2271,169 +2276,169 @@ export function DesignationEditForm({
                           options={dashboard.allReligionChildMenus}
                         />
                       </div>
-                      </div>
-<div className="from-group row ">
-  {
-<div className="col-12 col-md-4 mt-3">
-                        {<span> Date Of Birth<span style={{ color: 'red' }}>*</span></span>}
-                        <DatePicker
-                          className="form-control  mt-2"
-                          placeholder=" Date Of Birth"
-                          selected={DOBDateSelected}
-                          //value={values.dateOfBirth}
-                          showYearDropdown
-                          scrollableMonthYearDropdown
-                          onChange={(date) => {
-                            setFieldValue("dateOfBirth", date);
-                            setDOBDate(date);
-                            if (!id) {
+                    </div>
+                    <div className="from-group row ">
+                      {
+                        <div className="col-12 col-md-4 mt-3">
+                          {<span> Date Of Birth<span style={{ color: 'red' }}>*</span></span>}
+                          <DatePicker
+                            className="form-control  mt-2"
+                            placeholder=" Date Of Birth"
+                            selected={DOBDateSelected}
+                            //value={values.dateOfBirth}
+                            showYearDropdown
+                            scrollableMonthYearDropdown
+                            onChange={(date) => {
+                              setFieldValue("dateOfBirth", date);
+                              setDOBDate(date);
+                              if (!id) {
 
-                              updateRetirmentPolicy(setFieldValue, date, values?.gender)
-                            }else{
-                              doBnotify()
-                            }
+                                updateRetirmentPolicy(setFieldValue, date, values?.gender)
+                              } else {
+                                doBnotify()
+                              }
 
-                          }}
-                          timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
-                          // showTimeInput
-                          name="dateOfBirth"
-                          disabled={isUserForRead || !values?.subsidiaryId}
-                          autoComplete="off"
-                          // maxDate={new Date()}
-                          // minDate={new Date(1900, 0, 1)}
-                          // const currentDate = new Date();
-                          minDate={maxAgeLimin !== null ? new Date(new Date().getFullYear() - maxAgeLimin, new Date().getMonth(), new Date().getDate()) : null}
-                          maxDate={minAgeLimin !== null ? new Date(new Date().getFullYear() - minAgeLimin, new Date().getMonth(), new Date().getDate()) : new Date()}
-                        />
-                        <ErrorMessage className="form-feedBack" name="dateOfBirth" component="div" />
-                      </div>
-                    }
-  {
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd/MM/yyyy"
+                            // showTimeInput
+                            name="dateOfBirth"
+                            disabled={isUserForRead || !values?.subsidiaryId}
+                            autoComplete="off"
+                            // maxDate={new Date()}
+                            // minDate={new Date(1900, 0, 1)}
+                            // const currentDate = new Date();
+                            minDate={maxAgeLimin !== null ? new Date(new Date().getFullYear() - maxAgeLimin, new Date().getMonth(), new Date().getDate()) : null}
+                            maxDate={minAgeLimin !== null ? new Date(new Date().getFullYear() - minAgeLimin, new Date().getMonth(), new Date().getDate()) : new Date()}
+                          />
+                          <ErrorMessage className="form-feedBack" name="dateOfBirth" component="div" />
+                        </div>
+                      }
+                      {
+                        <div className="col-12 col-md-4 mt-3">
+                          <label>Date Of Joining<span style={{ color: 'red' }}>*</span></label>
+                          <DatePicker
+                            className="form-control"
+                            placeholder=" Date Of Joining"
+                            selected={joiningDateSelected}
+                            onChange={(date) => {
+                              setFieldValue("dateOfJoining", date);
+                              setJoiningDate(date);
+                              if (!id) {
+                                updateConfirmationDuePolicy(setFieldValue, values.employeeTypeId, values.employeeStatusId, date)
+                                updateContractExpiryPolicy(setFieldValue, values.employeeTypeId, values.employeeStatusId, date)
+                              }
+                              else {
+                                doJnotify()
+                              }
+
+                              // *********************************************************************************************************
+
+                              // if (values?.employeeTypeId == "93" && !isNaN(defContractExpiryPolicy)) // Probation
+
+                              // {
+
+                              //   setConfirmationDueDate(addMonths(date, defProbationPolicyMonth))
+                              //   setFieldValue("dateOfConfirmationDue", addMonths(date, defProbationPolicyMonth))
+                              // }
+                              // if (values?.employeeTypeId == "147" && !isNaN(defContractExpiryPolicy)) // Contract Type
+                              // {
+                              //   setContractExpiryDate(addMonths(date, defContractExpiryPolicy))
+                              //   setFieldValue("dateOfContractExpiry", addMonths(date, defContractExpiryPolicy))
+
+                              // }
+
+
+                              // *********************************************************************************************************                           
+                            }}
+                            showYearDropdown
+                            scrollableMonthYearDropdown
+                            timeInputLabel="Time:"
+                            dateFormat="dd/MM/yyyy"
+                            // showTimeInput
+                            autoComplete="off"
+                            name="dateOfJoining"
+                            disabled={isUserForRead || !values?.subsidiaryId}
+                            error={errors.dateOfJoining}
+                            touched={touched.dateOfJoining}
+
+                            minDate={values.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                          />
+                          <ErrorMessage className="form-feedBack" name="dateOfJoining" component="div" />
+                        </div>
+                      }
+                      {
+                        <div className="col-12 col-md-4 mt-3">
+                          <label>Date Of Confirmation</label>
+                          <DatePicker
+                            className="form-control"
+                            placeholder=" Date Of Confirmation"
+                            selected={confirmationDateSelected}
+                            showYearDropdown
+                            scrollableMonthYearDropdown
+                            onChange={(date) => {
+                              setFieldValue("dateOfConfirmation", date);
+                              setConfirmationDate(date);
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd/MM/yyyy"
+                            // showTimeInput
+                            name="dateOfConfirmation"
+                            // disabled={disabledConfirmationDateSelected}
+                            autoComplete="off"
+
+                            minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
+                          />
+                          <ErrorMessage className="form-feedBack" name="dateOfConfirmation" component="div" />
+                        </div>
+                      }
+                    </div>
+
+                    <div className="from-group row ">
+
                       <div className="col-12 col-md-4 mt-3">
-                        <label>Date Of Joining<span style={{ color: 'red' }}>*</span></label>
+                        <label>Date Confirmation Due </label>
                         <DatePicker
                           className="form-control"
-                          placeholder=" Date Of Joining"
-                          selected={joiningDateSelected}
+                          placeholder=" Date Of Confirmation Due"
+                          selected={confirmationDueDateSelected}
                           onChange={(date) => {
-                            setFieldValue("dateOfJoining", date);
-                            setJoiningDate(date);
-                            if (!id) {
-                              updateConfirmationDuePolicy(setFieldValue, values.employeeTypeId, values.employeeStatusId, date)
-                              updateContractExpiryPolicy(setFieldValue, values.employeeTypeId, values.employeeStatusId, date)
-                            }
-                            else{
-                              doJnotify()
-                            }
-
-                            // *********************************************************************************************************
-
-                            // if (values?.employeeTypeId == "93" && !isNaN(defContractExpiryPolicy)) // Probation
-
-                            // {
-
-                            //   setConfirmationDueDate(addMonths(date, defProbationPolicyMonth))
-                            //   setFieldValue("dateOfConfirmationDue", addMonths(date, defProbationPolicyMonth))
-                            // }
-                            // if (values?.employeeTypeId == "147" && !isNaN(defContractExpiryPolicy)) // Contract Type
-                            // {
-                            //   setContractExpiryDate(addMonths(date, defContractExpiryPolicy))
-                            //   setFieldValue("dateOfContractExpiry", addMonths(date, defContractExpiryPolicy))
-
-                            // }
-
-
-                            // *********************************************************************************************************                           
+                            setFieldValue("dateOfConfirmationDue", date);
+                            setConfirmationDueDate(date);
                           }}
-                          showYearDropdown
-                          scrollableMonthYearDropdown
                           timeInputLabel="Time:"
                           dateFormat="dd/MM/yyyy"
                           // showTimeInput
+                          name="dateOfConfirmationDue"
+                          disabled={disableConfDueDate}
                           autoComplete="off"
-                          name="dateOfJoining"
-                          disabled={isUserForRead || !values?.subsidiaryId}
-                          error={errors.dateOfJoining}
-                          touched={touched.dateOfJoining}
 
-                          minDate={values.dateOfBirth ? new Date(values.dateOfBirth) : null}
+
+                          minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
                         />
-                        <ErrorMessage className="form-feedBack" name="dateOfJoining" component="div" />
+                        <ErrorMessage className="form-feedBack" name="dateOfConfirmationDue" component="div" />
                       </div>
-                    }
-                      {
-                      <div className="col-12 col-md-4 mt-3">
-                            <label>Date Of Confirmation</label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder=" Date Of Confirmation"
-                              selected={confirmationDateSelected}
-                              showYearDropdown
-                              scrollableMonthYearDropdown
-                              onChange={(date) => {
-                                setFieldValue("dateOfConfirmation", date);
-                                setConfirmationDate(date);
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
-                              // showTimeInput
-                              name="dateOfConfirmation"
-                              // disabled={disabledConfirmationDateSelected}
-                              autoComplete="off"
 
-                              minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
-                            />
-                            <ErrorMessage className="form-feedBack" name="dateOfConfirmation" component="div" />
-                          </div>
-                            }
-</div>
-                
-<div className="from-group row ">
-
-                          <div className="col-12 col-md-4 mt-3">
-                            <label>Date Confirmation Due </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder=" Date Of Confirmation Due"
-                              selected={confirmationDueDateSelected}
-                              onChange={(date) => {
-                                setFieldValue("dateOfConfirmationDue", date);
-                                setConfirmationDueDate(date);
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
-                              // showTimeInput
-                              name="dateOfConfirmationDue"
-                              disabled={disableConfDueDate}
-                              autoComplete="off"
-
-
-                              minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
-                            />
-                            <ErrorMessage className="form-feedBack" name="dateOfConfirmationDue" component="div" />
-                          </div>
-
-                          {!hideContractExpDate ? (<div className="col-12 col-md-4 mt-3">
-                            <label>Contract Expiry </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder=" Contract Expiry"
-                              selected={contractExpirtyDateSelected}
-                              onChange={(date) => {
-                                setFieldValue("dateOfContractExpiry", date);
-                                setContractExpiryDate(date);
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
-                              // showTimeInput
-                              name="dateOfContractExpiry"
-                              // disabled={disabledContractExpirtyDateSelected}
-                              autoComplete="off"
-                              minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
-                            />
-                            <ErrorMessage className="form-feedBack" name="dateOfContractExpiry" component="div" />
-                          </div>) : (null)}
+                      {!hideContractExpDate ? (<div className="col-12 col-md-4 mt-3">
+                        <label>Contract Expiry </label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder=" Contract Expiry"
+                          selected={contractExpirtyDateSelected}
+                          onChange={(date) => {
+                            setFieldValue("dateOfContractExpiry", date);
+                            setContractExpiryDate(date);
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd/MM/yyyy"
+                          // showTimeInput
+                          name="dateOfContractExpiry"
+                          // disabled={disabledContractExpirtyDateSelected}
+                          autoComplete="off"
+                          minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
+                        />
+                        <ErrorMessage className="form-feedBack" name="dateOfContractExpiry" component="div" />
+                      </div>) : (null)}
 
 
                       {!hidehideRetirementAgeDate ? (<div className="col-12 col-md-4 mt-3">
@@ -2462,26 +2467,26 @@ export function DesignationEditForm({
 
 
                     <div className="col-12 col-md-4 mt-5">
-                            <input
-                              name="approvedForPayroll"
-                              type="checkbox"
-                              // onChange={handleChange}
-                              onChange={() => setFieldValue("approvedForPayroll", !values?.approvedForPayroll)} 
-                              onBlur={handleBlur}
-                              value={values.approvedForPayroll}
-                              checked={values.approvedForPayroll}
-                              label="Approved for Payroll"
-                            />
-                            <label>Approved for Payroll</label>
-                            <ErrorMessage className="form-feedBack" name="approvedForPayroll" component="div" />
-                          </div>
+                      <input
+                        name="approvedForPayroll"
+                        type="checkbox"
+                        // onChange={handleChange}
+                        onChange={() => setFieldValue("approvedForPayroll", !values?.approvedForPayroll)}
+                        onBlur={handleBlur}
+                        value={values.approvedForPayroll}
+                        checked={values.approvedForPayroll}
+                        label="Approved for Payroll"
+                      />
+                      <label>Approved for Payroll</label>
+                      <ErrorMessage className="form-feedBack" name="approvedForPayroll" component="div" />
+                    </div>
 
 
 
-                          </div>
-                    <br></br>
+                  </div>
+                  <br></br>
 
-               
+
 
                   <br></br>
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
@@ -2526,7 +2531,7 @@ export function DesignationEditForm({
                           placeholder="example@gmail.com"
                           label="Official Email"
                           autoComplete="off"
-                            maxLength="30"
+                          maxLength="30"
 
                         />
                       </div>
@@ -2538,7 +2543,7 @@ export function DesignationEditForm({
                           placeholder="example@gmail.com"
                           label="Personal Email"
                           autoComplete="off"
-                            maxLength="30"
+                          maxLength="30"
                         />
                       </div>
 
@@ -2779,7 +2784,7 @@ export function DesignationEditForm({
                         </div>
                         <div className="from-group row">
 
-               
+
 
                           <div className="col-12 col-md-4 mt-3">
                             <label>Date Confirmation Extended  </label>
@@ -2854,7 +2859,7 @@ export function DesignationEditForm({
                           </div>
 
 
-                    
+
 
 
 
@@ -2862,7 +2867,7 @@ export function DesignationEditForm({
 
                         <div className="from-group row">
 
-                        
+
 
                           <div className="col-12 col-md-4 mt-3">
                             <Select
@@ -2902,17 +2907,17 @@ export function DesignationEditForm({
                             />
                           </div>
 
-                          </div>
+                        </div>
 
                         <div className="from-group row">
-                        
+
 
                           <div className="col-12 col-md-4 mt-5">
                             <input
                               name="salesRep"
                               type="checkbox"
                               // onChange={handleChange}
-                              onChange={() => setFieldValue("salesRep", !values?.salesRep)} 
+                              onChange={() => setFieldValue("salesRep", !values?.salesRep)}
                               onBlur={handleBlur}
                               value={values.salesRep}
                               checked={values.salesRep}
@@ -2925,7 +2930,7 @@ export function DesignationEditForm({
                               name="supportRep"
                               type="checkbox"
                               // onChange={handleChange}
-                              onChange={() => setFieldValue("supportRep", !values?.supportRep)} 
+                              onChange={() => setFieldValue("supportRep", !values?.supportRep)}
                               onBlur={handleBlur}
                               value={values.supportRep}
                               checked={values.supportRep}
@@ -2934,7 +2939,7 @@ export function DesignationEditForm({
                             <label><span>Support Representative</span></label>
                           </div>
 
-                          
+
 
                         </div>
 
@@ -3871,7 +3876,7 @@ export function DesignationEditForm({
                     handleSubmit()
                     if (scrollRef?.current) {
                       scrollRef.current.scrollIntoView({
-                        behavior : "smooth"
+                        behavior: "smooth"
                       });
                     }
 
