@@ -16,6 +16,7 @@ import {
   amountLimit,
   formatDates,
   getDateDiffInDays,
+  getDateDiffInMonths,
   getFileName,
   getUploadUrl,
 } from "../../../../../utils/common";
@@ -91,16 +92,18 @@ export function FormEditForm({
 
 
 
-  const { currentState, userAccess, auth } = useSelector((state) => {
+  const { currentState, userAccess, auth,entities } = useSelector((state) => {
     return {
       currentState: state.employee_loan_request,
       userAccess: state?.auth?.userAccess["employee_loan_request"],
-      auth: state.auth.user
+      auth: state.auth.user,
+      entities:state?.employee_loan_request?.entities,
     };
   }, shallowEqual);
 
   const { loan_type, userForEdit } = currentState;
 
+  //set the values limit
   useEffect(() => {
     setTotalLoanAmount(userForEdit?.total_loan_amount);
     setMonthlyInstallments(userForEdit?.monthly_installment);
@@ -119,27 +122,17 @@ export function FormEditForm({
       let employee = currentState?.loan_config_details_permission?.employee;
       let salary = currentState?.loan_config_details_permission?.salary;
       let payroll = currentState?.loan_config_details_permission?.payroll;
+
+      //slalry type limit according to loan salry policy
       let salaryAmount =
         loandetails?.basis == 0
           ? salary?.gross * loandetails?.salary_count
           : salary?.basic * loandetails?.salary_count;
       let monthlyInstallment;
-      // let monthlySalarySuggest =
-      //   loandetails?.installment_deduction_basis_type == 0
-      //     ? (salary?.gross *
-      //       parseFloat(
-      //         currentState?.loan_config_details_permission?.loanDetails
-      //           ?.installment_deduction_percentage
-      //       )) /
-      //     100
-      //     : (salary?.basic *
-      //       parseFloat(
-      //         currentState?.loan_config_details_permission?.loanDetails
-      //           ?.installment_deduction_percentage
-      //       )) /
-      //     100;
+
       let monthlySalarySuggest;
 
+      //calculation for monthly amount suggestion limit by installment deduction basis type
       if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
         monthlySalarySuggest = (salary?.gross *
           parseFloat(
@@ -157,30 +150,33 @@ export function FormEditForm({
         monthlySalarySuggest = 0
       }
 
+      //no. of installments
       if (loandetails?.max_no_of_installment_for_loan) {
         monthlyInstallment = loandetails?.max_no_of_installment_for_loan
 
       }
 
       setMonthlyInstallmentsLimit(monthlyInstallment)
+
+      //start date policy for loan deduction
       if (loandetails?.installment_start_date_policy) {
         setStartDatePolicy(loandetails?.installment_start_date_policy)
 
       }
 
-      //  if(!isClear){
 
+      //ma loan amount
       if (loandetails?.basis == null) {
 
         setMaxAmountLimit(loandetails?.max_loan_amount);
       } else {
-
+        // set min value salary or loan limit
         setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount));
       }
 
 
       setMaxMonthlyAmountSuggest(monthlySalarySuggest);
-      //  }
+
 
       if (employee?.dateOfJoining) {
         const joiningDate = new Date(employee?.dateOfJoining);
@@ -209,12 +205,45 @@ export function FormEditForm({
     }
   }, [totalLoanAmount, monthlyInstallment, isEdit]);
 
-  const filteredOptions = loan_type?.filter((option) =>
-    currentState?.loan_config_details_permission?.loanDetails?.details?.some(
-      (item) => item.loan_typeId === option.value
-    )
-  );
+  // const filteredOptions = loan_type?.filter((option) =>
+  //   currentState?.loan_config_details_permission?.loanDetails?.details?.some(
+  //     (item) => item.loan_typeId === option.value
+  //   )
+  // );
 
+  const filteredOptions = loan_type?.map((option) => {
+   
+
+    //check eleigibility according to joining
+    let currentDropDownLoan=currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+      (item) => item?.loan_typeId === option?.value);
+
+
+    let eligibilityMonth;
+
+      const today = new Date();
+      const dateOfJoining = new Date(currentState?.loan_config_details_permission?.employee?.dateOfJoining);
+
+     if (currentDropDownLoan?.eligibilityPolicy <= getDateDiffInMonths(dateOfJoining, today)) {
+      eligibilityMonth=true;
+    }
+
+    //if multiple loans are not allowed
+    if (!currentDropDownLoan?.isAllowMultipleLoans && entities?.some(item => item?.loan_typeId === option?.value && item.isActive)) {
+      eligibilityMonth = false;
+    }
+    
+    
+    const isDisabled = !eligibilityMonth; // Disable option if not eligible or not in filteredOptions
+
+    return {
+      ...option, // Spread the existing option properties
+      isDisabled: isDisabled, // Add disabled flag
+    };
+  });
+
+
+console.log("filteredOptions111",filteredOptions)
   const clearCustomeData = () => {
     setMaxAmountLimit("");
     setMaxMonthlyAmountSuggest("");
@@ -228,6 +257,7 @@ export function FormEditForm({
     { value: 2, label: "Pending" },
   ];
 
+  //update status
   const UpdateApprovedStatus = async (Id, approved_status) => {
 
     if (Id && approved_status) {
@@ -271,7 +301,7 @@ export function FormEditForm({
   };
 
 
-
+  //approval permission 
   const checkPermission = () => {
 
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
@@ -286,7 +316,7 @@ export function FormEditForm({
 
       const isRoleLoanApprover = loanApproverIds?.includes(roleId);
       setPayrollConfigApproverPermission(isRoleLoanApprover);
-     
+
     }
   }
 
@@ -303,7 +333,7 @@ export function FormEditForm({
 
         const clearForm = () => {
           resetForm();
-     
+
         };
         saveForm(
           values,
@@ -356,6 +386,7 @@ export function FormEditForm({
                         ) || null
                       }
                       options={filteredOptions}
+                   
                       error={errors.loan_typeId}
                       touched={touched.loan_typeId}
                     />
@@ -637,7 +668,7 @@ export function FormEditForm({
 
 
                 </button>
-                
+
 
                 {/* {
                   userForEdit?.approved_status === 2 ? (
@@ -672,44 +703,44 @@ export function FormEditForm({
                     </button></> : null
                 } */}
 
-{payrollConfigApproverPermission && (
-  userForEdit ? (
-    userForEdit?.approved_status === 2 ? (
-      <button
-        type="button"
-        className="btn btn-green"
-        onClick={() => UpdateApprovedStatus(user.Id, 1)}
-      >
-        Approve
-      </button>
-    ) : userForEdit?.approved_status === 1 ? (
-      <button
-        type="button"
-        className="btn btn-red"
-        onClick={() => UpdateApprovedStatus(user.Id, 2)}
-      >
-        Reject
-      </button>
-    ) : (
-      <>
-        <button
-          type="button"
-          className="btn btn-green"
-          onClick={() => UpdateApprovedStatus(user.Id, 1)}
-        >
-          Approve
-        </button>
-        <button
-          type="button"
-          className="btn btn-red"
-          onClick={() => UpdateApprovedStatus(user.Id, 2)}
-        >
-          Reject
-        </button>
-      </>
-    )
-  ) : null
-)}
+                {payrollConfigApproverPermission && (
+                  userForEdit ? (
+                    userForEdit?.approved_status === 2 ? (
+                      <button
+                        type="button"
+                        className="btn btn-green"
+                        onClick={() => UpdateApprovedStatus(user.Id, 1)}
+                      >
+                        Approve
+                      </button>
+                    ) : userForEdit?.approved_status === 1 ? (
+                      <button
+                        type="button"
+                        className="btn btn-red"
+                        onClick={() => UpdateApprovedStatus(user.Id, 2)}
+                      >
+                        Reject
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="btn btn-green"
+                          onClick={() => UpdateApprovedStatus(user.Id, 1)}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-red"
+                          onClick={() => UpdateApprovedStatus(user.Id, 2)}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )
+                  ) : null
+                )}
 
 
 

@@ -1,6 +1,6 @@
 import moment from "moment";
 import { DateTimeFormats } from "./constants";
-const { differenceInDays, format } = require('date-fns');
+const { differenceInDays, format,differenceInMonths } = require('date-fns');
 export const UPLOAD_URL = process.env.REACT_APP_UPLOAD_URL;
 
 export const getDate = (
@@ -129,4 +129,15 @@ export const formatDate = (dateInput) =>{
   }
  
 }
+
+export const getDateDiffInMonths = (startDate, endDate) => {
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+  console.log(startDate,endDate)
+  if (startDate && endDate) {
+    return differenceInMonths(new Date(endDate), new Date(startDate));
+  }
+  return 0;
+}
+
 
