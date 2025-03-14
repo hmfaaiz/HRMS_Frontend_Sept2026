@@ -127,12 +127,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   return (
     <Modal
       size="xl"
+      // style={{ maxWidth: '90%' }} // Customize width here
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
         backdrop="static"
     >
-      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      <FormEditDialogHeader   id={id} isUserForRead={userForRead} />
+      
       <FormEditForm
         saveForm={saveForm}
         user={userForEdit || formUIProps .initUser}
