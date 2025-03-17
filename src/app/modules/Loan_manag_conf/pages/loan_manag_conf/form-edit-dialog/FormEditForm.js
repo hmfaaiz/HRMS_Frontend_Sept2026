@@ -423,7 +423,7 @@ export function FormEditForm({
 
                           <th>Allow Multiple Loans at a time</th>
                           <th>Months required to apply for new loan</th>
-                          <th>Eligibility policy</th>
+                          <th>Eligibility policy for new loan</th>
                         </tr>
                       </thead>
                       <tbody>

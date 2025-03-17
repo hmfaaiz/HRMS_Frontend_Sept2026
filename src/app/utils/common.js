@@ -133,7 +133,6 @@ export const formatDate = (dateInput) =>{
 export const getDateDiffInMonths = (startDate, endDate) => {
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
-  console.log(startDate,endDate)
   if (startDate && endDate) {
     return differenceInMonths(new Date(endDate), new Date(startDate));
   }

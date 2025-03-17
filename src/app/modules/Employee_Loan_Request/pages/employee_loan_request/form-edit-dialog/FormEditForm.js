@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
+
 import {
   DatePickerField,
   Input,
@@ -92,12 +93,12 @@ export function FormEditForm({
 
 
 
-  const { currentState, userAccess, auth,entities } = useSelector((state) => {
+  const { currentState, userAccess, auth, entities } = useSelector((state) => {
     return {
       currentState: state.employee_loan_request,
       userAccess: state?.auth?.userAccess["employee_loan_request"],
       auth: state.auth.user,
-      entities:state?.employee_loan_request?.entities,
+      entities: state?.employee_loan_request?.entities,
     };
   }, shallowEqual);
 
@@ -211,29 +212,94 @@ export function FormEditForm({
   //   )
   // );
 
+
+
+
+  // Function to get the last payroll month
+  const getLastPayrollMonth = (loanDeductionDate) => {
+
+    // Get the payroll month dates from the account details
+    const payrollDates = loanDeductionDate.map(detail => new Date(detail.payroll_month_date));
+
+    // Sort the payroll dates in descending order and get the most recent one
+    const latestDate = payrollDates.sort((a, b) => b - a)[0];
+
+    // Return the most recent payroll date as a string
+    return latestDate.toLocaleDateString('en-GB'); // Format it as 'dd/mm/yyyy'
+
+  }
+
+  const formatDateString = (dateString) => {
+    const [month, day, year] = dateString.split('/');
+    const paddedMonth = month.padStart(2, '0');
+    const paddedDay = day.padStart(2, '0');
+    return `${paddedMonth}/${paddedDay}/${year}`;
+  }
+
+
+
   const filteredOptions = loan_type?.map((option) => {
-   
+
 
     //check eleigibility according to joining
-    let currentDropDownLoan=currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+    let currentDropDownLoan = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
       (item) => item?.loan_typeId === option?.value);
 
 
     let eligibilityMonth;
 
-      const today = new Date();
-      const dateOfJoining = new Date(currentState?.loan_config_details_permission?.employee?.dateOfJoining);
+    const today = new Date();
+    const dateOfJoining = new Date(currentState?.loan_config_details_permission?.employee?.dateOfJoining);
 
-     if (currentDropDownLoan?.eligibilityPolicy <= getDateDiffInMonths(dateOfJoining, today)) {
-      eligibilityMonth=true;
+    if (currentDropDownLoan?.eligibilityPolicy <= getDateDiffInMonths(dateOfJoining, today)) {
+      eligibilityMonth = true;
     }
 
     //if multiple loans are not allowed
-    if (!currentDropDownLoan?.isAllowMultipleLoans && entities?.some(item => item?.loan_typeId === option?.value && item.isActive)) {
+    if (!currentDropDownLoan?.isAllowMultipleLoans && entities?.some(item => item?.loan_typeId === option?.value && item.isLoanContinuing)) {
       eligibilityMonth = false;
     }
-    
-    
+
+    //if loan completed then how many months are  required to take it again
+    if (currentDropDownLoan?.monthsToApplyForNewLoan > 0) {
+      const matchingEntities = entities.filter(item => item?.loan_typeId === option?.value && !item.isLoanContinuing);
+      let monthsRequiredForLoan=false;
+      if (matchingEntities.length > 0) {
+
+        matchingEntities.forEach(entity => {
+
+          const lastLoanDeduction = getLastPayrollMonth(entity?.details);
+
+          if (lastLoanDeduction) {
+            const formattedDateString = formatDateString(lastLoanDeduction);
+            const lastLoanDeductionDate = parse(formattedDateString, 'dd/MM/yyyy', new Date());
+            if (currentDropDownLoan?.monthsToApplyForNewLoan <= getDateDiffInMonths(new Date(lastLoanDeductionDate), today)) {
+              eligibilityMonth = true;
+          
+           
+            }else{
+              monthsRequiredForLoan=true
+              eligibilityMonth = false;
+        
+            }
+          }
+
+        })
+
+  
+
+      }
+
+      const matchingCurrentLoans = entities.filter(item => item?.loan_typeId === option?.value && item.isLoanContinuing);
+      if (matchingCurrentLoans.length > 0) {
+        eligibilityMonth = false;
+      }
+
+      if(monthsRequiredForLoan){
+        eligibilityMonth = false;
+      }
+
+    }
     const isDisabled = !eligibilityMonth; // Disable option if not eligible or not in filteredOptions
 
     return {
@@ -243,7 +309,7 @@ export function FormEditForm({
   });
 
 
-console.log("filteredOptions111",filteredOptions)
+
   const clearCustomeData = () => {
     setMaxAmountLimit("");
     setMaxMonthlyAmountSuggest("");
@@ -386,7 +452,7 @@ console.log("filteredOptions111",filteredOptions)
                         ) || null
                       }
                       options={filteredOptions}
-                   
+
                       error={errors.loan_typeId}
                       touched={touched.loan_typeId}
                     />
