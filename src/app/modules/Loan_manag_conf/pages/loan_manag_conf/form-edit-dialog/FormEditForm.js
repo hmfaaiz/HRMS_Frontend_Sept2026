@@ -81,6 +81,25 @@ const loanManagementSchema = Yup.object().shape({
             return true; // Validation passes
           }
         ),
+
+
+        eligibilityPolicy: Yup.number()
+        .required(VALIDATION_MESSAGES.required)
+        .nullable()
+        .min(1, VALIDATION_MESSAGES.minOneValue)
+        .max(999, "Must be at most 999"),
+
+
+        monthsToApplyForNewLoan: Yup.number()
+        .when('isAllowMultipleLoans', {
+          is: false, // Only validate if isAllowMultipleLoans is false
+          then: Yup.number()
+          .nullable()
+            .min(1, VALIDATION_MESSAGES.minOneValue)
+            .max(999, "Must be at most 999")
+            .required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().nullable() // If isAllowMultipleLoans is true, no validation
+        })
     })
   ),
 });
@@ -401,6 +420,10 @@ export function FormEditForm({
                           <th>Salary Count</th>
                           <th>Max. No. of Installment for Loan</th>
                           <th>Installment Start date Policy</th>
+
+                          <th>Allow Multiple Loans at a time</th>
+                          <th>Months required to apply for new loan</th>
+                          <th>Eligibility policy for new loan</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -437,28 +460,12 @@ export function FormEditForm({
                                   name={`details[${index}].loan_typeId`}
                                   as="select"
                                   className="form-control"
+                                  style={{ width: '130px' }}
                                   // disabled={isUserForRead}
                                   disabled={isUserForRead || values.details[index]?.Id}
                                 >
 
 
-                                  {/* {loan_type?.map((x) => {
-                                    return (
-                                      <option
-                                        disabled={
-                                          values.details.find(
-                                            (el) => el.loan_typeId == x.value
-                                          )
-                                            ? true
-                                            : false
-                                        }
-                                        value={x.value}
-                                      >
-                                        {" "}
-                                        {x.label}{" "}
-                                      </option>
-                                    );
-                                  })} */}
                                   <option value="">Select--</option>
 
 
@@ -487,6 +494,7 @@ export function FormEditForm({
                                   name={`details[${index}].max_loan_amount`}
                                   type="number"
                                   className="form-control"
+                                  style={{ width: '80px' }}
                                   disabled={isUserForRead}
                                   onInput={(e) => {
                                     e.target.value = amountLimit(e.target.value); // Limit to 3 digits
@@ -514,6 +522,7 @@ export function FormEditForm({
                                   name={`details[${index}].basis`}
                                   as="select"
                                   className="form-control"
+                                  style={{ width: '85px' }}
                                   disabled={isUserForRead}
                                   onChange={(e) => {
                  
@@ -556,6 +565,7 @@ export function FormEditForm({
                                   name={`details[${index}].salary_count`}
                                   type="number"
                                   className="form-control"
+                                  style={{ width: '60px' }}
                                   // disabled={isUserForRead}
                                   disabled={isUserForRead || values.details[index]?.basis=='N/A' || !values.details[index]?.basis }
                                   onInput={(e) => {
@@ -578,6 +588,7 @@ export function FormEditForm({
                                   name={`details[${index}].max_no_of_installment_for_loan`}
                                   type="number"
                                   className="form-control"
+                                  style={{ width: '60px' }}
                                   disabled={isUserForRead}
                                 
                                   onInput={(e) => {
@@ -600,6 +611,7 @@ export function FormEditForm({
                                   name={`details[${index}].installment_start_date_policy`}
                                   type="number"
                                   className="form-control"
+                                  style={{ width: '60px' }}
                                   disabled={isUserForRead}
                                   onInput={(e) => {
                                     if (e.target.value.length > 2) {
@@ -611,6 +623,77 @@ export function FormEditForm({
                                   touched.details?.[index]?.installment_start_date_policy && (
                                     <div className="text-danger">
                                       {errors.details[index].installment_start_date_policy}
+                                    </div>
+                                  )}
+                              </td>
+
+
+
+                              <td>
+                                <input
+                                  name={`details[${index}].isAllowMultipleLoans`}
+                                    type="checkbox"
+                                  
+                                  disabled={isUserForRead}
+                                  checked={values.details?.[index]?.isAllowMultipleLoans}
+                                  onChange={(e)=> { setFieldValue(`details[${index}].isAllowMultipleLoans`, e.target.checked)
+                                
+                                  if (e.target.checked) {
+                                    setFieldValue(`details[${index}].monthsToApplyForNewLoan`, '');
+                                  }
+                                  }
+                                }
+                                  
+                                />
+                                {errors.details?.[index]?.isAllowMultipleLoans &&
+                                  touched.details?.[index]?.isAllowMultipleLoans && (
+                                    <div className="text-danger">
+                                      {errors.details[index].isAllowMultipleLoans}
+                                    </div>
+                                  )}
+                              </td>
+
+
+                              <td>
+                                <Field
+                                  name={`details[${index}].monthsToApplyForNewLoan`}
+                                  type="number"
+                                  className="form-control"
+                                  style={{ width: '60px' }}
+                                  disabled={isUserForRead || values.details?.[index]?.isAllowMultipleLoans}
+                                  onInput={(e) => {
+                                    if (e.target.value.length > 3) {
+                                      e.target.value = e.target.value.slice(0, 3); // Restrict to 2 digits
+                                    }
+                                  }}
+                                />
+                                {errors.details?.[index]?.monthsToApplyForNewLoan &&
+                                  touched.details?.[index]?.monthsToApplyForNewLoan && (
+                                    <div className="text-danger">
+                                      {errors.details[index].monthsToApplyForNewLoan}
+                                    </div>
+                                  )}
+                              </td>
+
+
+
+                              <td>
+                                <Field
+                                  name={`details[${index}].eligibilityPolicy`}
+                                  type="number"
+                                  className="form-control"
+                                  style={{ width: '60px' }}
+                                  disabled={isUserForRead}
+                                  onInput={(e) => {
+                                    if (e.target.value.length >3) {
+                                      e.target.value = e.target.value.slice(0, 3); // Restrict to 2 digits
+                                    }
+                                  }}
+                                />
+                                {errors.details?.[index]?.eligibilityPolicy &&
+                                  touched.details?.[index]?.eligibilityPolicy && (
+                                    <div className="text-danger">
+                                      {errors.details[index].eligibilityPolicy}
                                     </div>
                                   )}
                               </td>
@@ -630,6 +713,9 @@ export function FormEditForm({
                             salary_count: "",
                             max_no_of_installment_for_loan: "",
                             installment_start_date_policy: "",
+                            isAllowMultipleLoans:true,
+                            monthsToApplyForNewLoan:"",
+                            eligibilityPolicy:"",
 
                           })
                         }

@@ -345,7 +345,7 @@ export function MasterEditForm({
 
                       {/* Shift Field Start */}
                       <div className="col-12 col-md-4 mt-3">
-                        <Field
+                        {/* <Field
                           name="shiftId"
                           component={Select}
                           className={errors?.shiftId && touched?.shiftId ? 'form-control is-invalid' : 'form-control'}
@@ -365,7 +365,39 @@ export function MasterEditForm({
                           value={values.shiftId === null ? '--Select--' : values.shiftId}
                           autoComplete="off"
                           children={CustomDropdown({ data: allEmployeeShifts, firstElement: { label: '--Select--', value: null } })}
-                        />
+                        /> */}
+
+<SearchSelect
+                          name="shiftId"
+                          // component={Select}
+                          className={errors?.shiftId && touched?.shiftId ? 'form-control is-invalid' : 'form-control'}
+                          isDisabled={checkPayrolMonth(values, payrollData) || isEdit}
+                          placeholder=""
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            // const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                            setFieldValue("shiftId", e.value || null);
+                            // setFieldValue('shiftId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Shift<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          // value={values.shiftId === null ? '--Select--' : values.shiftId}
+                          value={
+                            allEmployeeShifts?.find(
+                              (option) => option.value === values.shiftId
+                            ) || null
+                          }
+                          autoComplete="off"
+                          // children={CustomDropdown({ data: allEmployeeShifts, firstElement: { label: '--Select--', value: null } })}
+                          options={allEmployeeShifts?.filter(item=>item?.subsidiaryId==values?.subsidiaryId)}
+                       
+                       />
+
+
                         {
                           errors.shiftId && touched.shiftId && <CustomErrorLabel touched={true} error={errors.shiftId} />
                         }
@@ -430,7 +462,7 @@ export function MasterEditForm({
 
                       {/* Shift Field Start */}
                       <div className="col-12 col-md-4 mt-3">
-                        <Field
+                        {/* <Field
                           name="patternId"
                           component={Select}
                           className={errors?.patternId && touched?.patternId ? 'form-control is-invalid' : 'form-control'}
@@ -449,7 +481,37 @@ export function MasterEditForm({
                           }
                           value={values.patternId}
                           autoComplete="off"
-                          children={CustomDropdown({ data: allRosterPatternList, firstElement: { label: '--Select--', value: null } })}
+                          // children={CustomDropdown({ data: allRosterPatternList, firstElement: { label: '--Select--', value: null } })}
+                          options={allRosterPatternList}
+                        /> */}
+
+<SearchSelect
+                          name="patternId"
+                          component={Select}
+                          className={errors?.patternId && touched?.patternId ? 'form-control is-invalid' : 'form-control'}
+                          isDisabled={checkPayrolMonth(values, payrollData) || isEdit}
+                          placeholder=""
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            // const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                            // setFieldValue('patternId', value)
+                            setFieldValue("patternId", e.value || null);
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Pattern<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          // value={values.patternId}
+                          value={
+                            allRosterPatternList?.find(
+                              (option) => option.value === values.patternId
+                            ) || null
+                          }
+                          autoComplete="off"
+                          // children={CustomDropdown({ data: allRosterPatternList, firstElement: { label: '--Select--', value: null } })}
+                          options={allRosterPatternList.filter(item=>item.subsidiaryId==values.subsidiaryId)}
                         />
                         {
                           errors.patternId && touched.patternId && <CustomErrorLabel touched={true} error={errors.patternId} />
