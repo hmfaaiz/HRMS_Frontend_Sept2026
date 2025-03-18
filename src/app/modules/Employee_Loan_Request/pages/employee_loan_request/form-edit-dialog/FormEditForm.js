@@ -113,91 +113,227 @@ export function FormEditForm({
     checkPermission()
   }, [userForEdit]);
 
-  useEffect(() => {
-    if (changeLoanType) {
 
-      setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
-      let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
-        (item) => item.loan_typeId === changeLoanType
-      );
-      let employee = currentState?.loan_config_details_permission?.employee;
-      let salary = currentState?.loan_config_details_permission?.salary;
-      let payroll = currentState?.loan_config_details_permission?.payroll;
+const policyLoadByLoanType =(changeLoanType)=>{
+  if (changeLoanType) {
+    
+    setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
+    let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+      (item) => item.loan_typeId === changeLoanType
+    );
+    let employee = currentState?.loan_config_details_permission?.employee;
+    let salary = currentState?.loan_config_details_permission?.salary;
+    let payroll = currentState?.loan_config_details_permission?.payroll;
 
-      //slalry type limit according to loan salry policy
-      let salaryAmount =
-        loandetails?.basis == 0
-          ? salary?.gross * loandetails?.salary_count
-          : salary?.basic * loandetails?.salary_count;
-      let monthlyInstallment;
+    //slalry type limit according to loan salry policy
+    let salaryAmount =
+      loandetails?.basis == 0
+        ? salary?.gross * loandetails?.salary_count
+        : salary?.basic * loandetails?.salary_count;
+    let monthlyInstallment;
 
-      let monthlySalarySuggest;
+    let monthlySalarySuggest;
 
-      //calculation for monthly amount suggestion limit by installment deduction basis type
-      if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
-        monthlySalarySuggest = (salary?.gross *
-          parseFloat(
-            currentState?.loan_config_details_permission?.loanDetails
-              ?.installment_deduction_percentage
-          )) / 100
+    //calculation for monthly amount suggestion limit by installment deduction basis type
+    if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
+      monthlySalarySuggest = (salary?.gross *
+        parseFloat(
+          currentState?.loan_config_details_permission?.loanDetails
+            ?.installment_deduction_percentage
+        )) / 100
 
-      } else if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type === 0) {
-        monthlySalarySuggest = (salary?.basic *
-          parseFloat(
-            currentState?.loan_config_details_permission?.loanDetails
-              ?.installment_deduction_percentage
-          )) / 100;
-      } else {
-        monthlySalarySuggest = 0
-      }
-
-      //no. of installments
-      if (loandetails?.max_no_of_installment_for_loan) {
-        monthlyInstallment = loandetails?.max_no_of_installment_for_loan
-
-      }
-
-      setMonthlyInstallmentsLimit(monthlyInstallment)
-
-      //start date policy for loan deduction
-      if (loandetails?.installment_start_date_policy) {
-        setStartDatePolicy(loandetails?.installment_start_date_policy)
-
-      }
-
-
-      //ma loan amount
-      if (loandetails?.basis == null) {
-
-        setMaxAmountLimit(loandetails?.max_loan_amount);
-      } else {
-        // set min value salary or loan limit
-        setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount));
-      }
-
-
-      setMaxMonthlyAmountSuggest(monthlySalarySuggest);
-
-
-      if (employee?.dateOfJoining) {
-        const joiningDate = new Date(employee?.dateOfJoining);
-        joiningDate.setHours(0, 0, 0, 0);
-        setDateOfJoining(joiningDate); // Update state with the valid date
-      }
-      setPayrollMonth(null);
-      if (payroll?.startDate) {
-
-        const payrollDate = new Date(payroll?.startDate);
-        payrollDate.setHours(0, 0, 0, 0);
-        setPayrollMonth(payrollDate); // Update state with the valid date
-      }
+    } else if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type === 0) {
+      monthlySalarySuggest = (salary?.basic *
+        parseFloat(
+          currentState?.loan_config_details_permission?.loanDetails
+            ?.installment_deduction_percentage
+        )) / 100;
     } else {
-      setMaxAmountLimit("");
-      setMaxMonthlyAmountSuggest("");
-      setTotalInstallments("");
-      setMonthlyInstallmentsLimit("")
+      monthlySalarySuggest = 0
     }
+
+    //no. of installments
+    if (loandetails?.max_no_of_installment_for_loan) {
+      monthlyInstallment = loandetails?.max_no_of_installment_for_loan
+
+    }
+
+    setMonthlyInstallmentsLimit(monthlyInstallment)
+
+    //start date policy for loan deduction
+    if (loandetails?.installment_start_date_policy) {
+      setStartDatePolicy(loandetails?.installment_start_date_policy)
+
+    }
+
+
+    //if already loan taken ,running balanace
+    const currentLoan = entities.filter(item => item?.loan_typeId === changeLoanType && item.isLoanContinuing);
+
+    let runningBalance = 0
+    currentLoan.forEach(loan => {
+      
+   
+      loan.details.forEach(detail => {
+        // Add the payment amount from the running balance
+       
+        if(!detail?.is_deducted){
+         
+          runningBalance += detail.amount_received;
+        }
+       
+      });
+    });
+   
+
+
+    //max loan amount
+    if (loandetails?.basis == null) {
+
+
+      setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
+    } else {
+      // set min value salary or loan limit
+
+      setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance);
+    }
+
+
+    setMaxMonthlyAmountSuggest(monthlySalarySuggest);
+
+
+    if (employee?.dateOfJoining) {
+      const joiningDate = new Date(employee?.dateOfJoining);
+      joiningDate.setHours(0, 0, 0, 0);
+      setDateOfJoining(joiningDate); // Update state with the valid date
+    }
+    setPayrollMonth(null);
+    if (payroll?.startDate) {
+
+      const payrollDate = new Date(payroll?.startDate);
+      payrollDate.setHours(0, 0, 0, 0);
+      setPayrollMonth(payrollDate); // Update state with the valid date
+    }
+  } else {
+    setMaxAmountLimit("");
+    setMaxMonthlyAmountSuggest("");
+    setTotalInstallments("");
+    setMonthlyInstallmentsLimit("")
+  }
+}
+
+useEffect(()=>{
+  policyLoadByLoanType(changeLoanType)
   }, [changeLoanType, isEdit]);
+
+  // useEffect(() => {
+
+  //   if (changeLoanType) {
+    
+  //     setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
+  //     let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+  //       (item) => item.loan_typeId === changeLoanType
+  //     );
+  //     let employee = currentState?.loan_config_details_permission?.employee;
+  //     let salary = currentState?.loan_config_details_permission?.salary;
+  //     let payroll = currentState?.loan_config_details_permission?.payroll;
+
+  //     //slalry type limit according to loan salry policy
+  //     let salaryAmount =
+  //       loandetails?.basis == 0
+  //         ? salary?.gross * loandetails?.salary_count
+  //         : salary?.basic * loandetails?.salary_count;
+  //     let monthlyInstallment;
+
+  //     let monthlySalarySuggest;
+
+  //     //calculation for monthly amount suggestion limit by installment deduction basis type
+  //     if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
+  //       monthlySalarySuggest = (salary?.gross *
+  //         parseFloat(
+  //           currentState?.loan_config_details_permission?.loanDetails
+  //             ?.installment_deduction_percentage
+  //         )) / 100
+
+  //     } else if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type === 0) {
+  //       monthlySalarySuggest = (salary?.basic *
+  //         parseFloat(
+  //           currentState?.loan_config_details_permission?.loanDetails
+  //             ?.installment_deduction_percentage
+  //         )) / 100;
+  //     } else {
+  //       monthlySalarySuggest = 0
+  //     }
+
+  //     //no. of installments
+  //     if (loandetails?.max_no_of_installment_for_loan) {
+  //       monthlyInstallment = loandetails?.max_no_of_installment_for_loan
+
+  //     }
+
+  //     setMonthlyInstallmentsLimit(monthlyInstallment)
+
+  //     //start date policy for loan deduction
+  //     if (loandetails?.installment_start_date_policy) {
+  //       setStartDatePolicy(loandetails?.installment_start_date_policy)
+
+  //     }
+
+
+  //     //if already loan taken ,running balanace
+  //     const currentLoan = entities.filter(item => item?.loan_typeId === changeLoanType && item.isLoanContinuing);
+
+  //     let runningBalance = 0
+  //     currentLoan.forEach(loan => {
+        
+     
+  //       loan.details.forEach(detail => {
+  //         // Add the payment amount from the running balance
+         
+  //         if(!detail?.is_deducted){
+
+  //           runningBalance += detail.amount_received;
+  //         }
+         
+  //       });
+  //     });
+
+
+
+  //     //max loan amount
+  //     if (loandetails?.basis == null) {
+
+  
+  //       setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
+  //     } else {
+  //       // set min value salary or loan limit
+
+  //       setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance);
+  //     }
+
+
+  //     setMaxMonthlyAmountSuggest(monthlySalarySuggest);
+
+
+  //     if (employee?.dateOfJoining) {
+  //       const joiningDate = new Date(employee?.dateOfJoining);
+  //       joiningDate.setHours(0, 0, 0, 0);
+  //       setDateOfJoining(joiningDate); // Update state with the valid date
+  //     }
+  //     setPayrollMonth(null);
+  //     if (payroll?.startDate) {
+
+  //       const payrollDate = new Date(payroll?.startDate);
+  //       payrollDate.setHours(0, 0, 0, 0);
+  //       setPayrollMonth(payrollDate); // Update state with the valid date
+  //     }
+  //   } else {
+  //     setMaxAmountLimit("");
+  //     setMaxMonthlyAmountSuggest("");
+  //     setTotalInstallments("");
+  //     setMonthlyInstallmentsLimit("")
+  //   }
+  // }, [changeLoanType, isEdit]);
 
   useEffect(() => {
     if (totalLoanAmount && monthlyInstallment) {
@@ -317,6 +453,11 @@ export function FormEditForm({
     setMonthlyInstallmentsLimit("")
   };
 
+
+  useEffect(()=>{
+   
+    clearCustomeData()
+  },[currentState])
   const statusOptions = [
     { value: 0, label: "Inactive" },
     { value: 1, label: "Active" },
@@ -445,6 +586,7 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("loan_typeId", e.value || null);
                         setChangeLoanType(e.value);
+                        policyLoadByLoanType(e.value)
                       }}
                       value={
                         loan_type?.find(
@@ -736,38 +878,7 @@ export function FormEditForm({
                 </button>
 
 
-                {/* {
-                  userForEdit?.approved_status === 2 ? (
-                    <button
-                      type="button"
-                      className="btn btn-green"
-                      onClick={() => UpdateApprovedStatus(user.Id, 1)}
-                    >
-                      Approve
-                    </button>
-                  ) : userForEdit?.approved_status === 1 ? (
-                    <button
-                      type="button"
-                      className="btn btn-red"
-                      onClick={() => UpdateApprovedStatus(user.Id, 2)}
-                    >
-                      Reject
-                    </button>
-                  ) : userForEdit ? <><button
-                    type="button"
-                    className="btn btn-green"
-                    onClick={() => UpdateApprovedStatus(user.Id, 1)}
-                  >
-                    Approve
-                  </button>
-                    <button
-                      type="button"
-                      className="btn btn-red"
-                      onClick={() => UpdateApprovedStatus(user.Id, 2)}
-                    >
-                      Reject
-                    </button></> : null
-                } */}
+           
 
                 {payrollConfigApproverPermission && (
                   userForEdit ? (
