@@ -630,7 +630,7 @@ useEffect(()=>{
                       }))}
                       error={errors.employee_loan_accountId}
                       touched={touched.employee_loan_accountId}
-                      isDisabled={userForEdit?.details[0]?.is_deducted}
+                      isDisabled={userForEdit || userForEdit?.details[0]?.is_deducted}
                     />
                   </div>
 
@@ -655,7 +655,7 @@ useEffect(()=>{
                       }}
                       minDate={dateOfJoining}
                       maxDate={new Date()}
-                      disabled={userForEdit?.details[0]?.is_deducted || !values.loan_typeId}
+                      disabled={userForEdit || userForEdit?.details[0]?.is_deducted || !values.loan_typeId}
                     />
                   </div>
 
@@ -676,7 +676,7 @@ useEffect(()=>{
                       // minDate={new Date(values.applied_date) < new Date() ? new Date() : values.applied_date}
                       maxDate={startDateLimit}
                       // disabled={!payrollMonth || userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date}
-                      disabled={userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date || !payrollMonth}
+                      disabled={userForEdit || userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date || !payrollMonth}
                     />
                   </div>
 
@@ -714,7 +714,8 @@ useEffect(()=>{
                       onInput={(e) => {
                         e.target.value = amountLimit(e.target.value); // Limit to 3 digits
                       }}
-                      disabled={userForEdit?.details[0]?.is_deducted}
+                      // disabled={userForEdit?.details[0]?.is_deducted}
+                      disabled ={userForEdit}
                     />
                   </div>
 
@@ -755,7 +756,8 @@ useEffect(()=>{
                       onInput={(e) => {
                         e.target.value = amountLimit(e.target.value); // Limit to 3 digits
                       }}
-                      disabled={userForEdit?.details[0]?.is_deducted}
+                      // disabled={userForEdit?.details[0]?.is_deducted}
+                      disabled ={userForEdit}
                     />
                   </div>
 
@@ -794,7 +796,7 @@ useEffect(()=>{
                         </span>
                       }
                       type="text"
-                      disabled={userForEdit?.details[0]?.is_deducted}
+                      disabled={userForEdit || userForEdit?.details[0]?.is_deducted}
                     />
                   </div>
 
@@ -867,7 +869,7 @@ useEffect(()=>{
                     handleSubmit();
                   }}
                   className="btn btn-primary btn-elevate"
-                  disabled={loading}
+                  disabled={userForEdit || loading}
                 >
                   Save
                   {loading && (
@@ -891,13 +893,15 @@ useEffect(()=>{
                         Approve
                       </button>
                     ) : userForEdit?.approved_status === 1 ? (
-                      <button
-                        type="button"
-                        className="btn btn-red"
-                        onClick={() => UpdateApprovedStatus(user.Id, 2)}
-                      >
-                        Reject
-                      </button>
+                      <></>
+                      // for temporary purpose
+                      // <button
+                      //   type="button"
+                      //   className="btn btn-red"
+                      //   onClick={() => UpdateApprovedStatus(user.Id, 2)}
+                      // >
+                      //   Reject
+                      // </button>
                     ) : (
                       <>
                         <button
@@ -907,13 +911,15 @@ useEffect(()=>{
                         >
                           Approve
                         </button>
-                        <button
+
+                        {/* //for temporary purpose */}
+                        {/* <button
                           type="button"
                           className="btn btn-red"
                           onClick={() => UpdateApprovedStatus(user.Id, 2)}
                         >
                           Reject
-                        </button>
+                        </button> */}
                       </>
                     )
                   ) : null
