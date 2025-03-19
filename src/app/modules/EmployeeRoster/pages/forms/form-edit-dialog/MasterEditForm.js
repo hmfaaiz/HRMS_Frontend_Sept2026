@@ -174,6 +174,10 @@ export function MasterEditForm({
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           setFieldValue('list', [])
                           setQueryParams({ ...initialFilter, filter: { subsidiaryId: value } })
+                          clearFields(['shiftId','offDay_1','offDay_2'],setFieldValue)
+                          setFieldValue('isEnable_roster_via_shift',false)
+                          clearFields(['patternId'],setFieldValue)
+                          setFieldValue('isEnable_roster_via_pattern',false)
                         }}
                         label={
                           <span>
