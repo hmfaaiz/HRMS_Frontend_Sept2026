@@ -32,6 +32,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       queryParams: FormUIContext.queryParams,
       isFileReq: FormUIContext.isFileReq,
       setIsFileReq: FormUIContext.setIsFileReq,
+      openDeleteFormDialog: FormUIContext.openDeleteFormDialog,
     };
   }, [FormUIContext]);
 
@@ -66,98 +67,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
   }, [id, dispatch, show]);
 
-  // const saveForm = async (
-  //   data,
-  //   totalInstallments,
-  //   maxAmountLimit,
-  //   setTotalInstallments,
-  //   setMaxAmountLimit,
-  //   setMaxMonthlyAmountSuggest,
-  //   resetForm,
-  //   monthlyInstallmentsLimit,setMonthlyInstallmentsLimit,subsidiaryid
-  // ) => {
-  //   // enableLoading();
-  //   console.log("hit11",subsidiaryid)
-  //   data.subsidiaryId=subsidiaryid
-
-  //   if (maxAmountLimit < data.total_loan_amount) {
-  //     disbaleLoading();
-  //     toast.error("Loan amount exceeds the limit.", {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //   }
-   
-  //   else if ( monthlyInstallmentsLimit < totalInstallments ) {
-  //     disbaleLoading();
-  //     toast.error("The total installments must not exceed monthly installments limit.", {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //   }
-
-  //  else if ( data.total_loan_amount < data.monthly_installment) {
-  //     disbaleLoading();
-  //     toast.error("The monthly installment must not exceed loan amount.", {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //   } else if (!data.Id && data) {
-  //     formUIProps.setIds("");
-  //     data.total_installment = totalInstallments;
-
-  //     await dispatch(
-  //       actions.createEmployeeLoanRequest(data, disbaleLoading, resetForm)
-  //     );
-  //     await dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
-  //     setTotalInstallments("");
-  //     setMaxAmountLimit("");
-  //     setMaxMonthlyAmountSuggest("");
-  //     setMonthlyInstallmentsLimit("")
-  //   } else {
-  //     formUIProps.setIds("");
-  //     const formUpdatedFields = {
-  //       Id: data.Id,
-  //       employee_loan_accountId: data.employee_loan_accountId,
-  //       employeeId: data.employeeId,
-  //       loan_typeId: data.loan_typeId,
-  //       monthly_installment: data.monthly_installment,
-  //       applied_date: data.applied_date,
-  //       installment_start_date: data.installment_start_date,
-  //       total_loan_amount: data.total_loan_amount,
-  //       total_installment: totalInstallments,
-  //       reason: data.reason,
-  //       loan_amount_remaining: data.total_loan_amount,
-  //       loan_amount_paid: 0,
-  //       subsidiaryId:subsidiaryid,
-  //     };
-
-  //     await dispatch(
-  //       actions.updateEmployeeLoanRequest(
-  //         formUpdatedFields,
-  //         disbaleLoading,
-  //         resetForm
-  //       )
-  //     );
-  //     await dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
-  //     setTotalInstallments("");
-  //   }
-  // };
 
 
   const saveForm = async (
@@ -237,18 +146,19 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   
       const formUpdatedFields = {
         Id: updatedData.Id,
-        employee_loan_accountId: updatedData.employee_loan_accountId,
-        employeeId: updatedData.employeeId,
-        loan_typeId: updatedData.loan_typeId,
-        monthly_installment: updatedData.monthly_installment,
-        applied_date: updatedData.applied_date,
-        installment_start_date: updatedData.installment_start_date,
-        total_loan_amount: updatedData.total_loan_amount,
-        total_installment: totalInstallments,
-        reason: updatedData.reason,
-        loan_amount_remaining: updatedData.total_loan_amount,
-        loan_amount_paid: 0,
-        subsidiaryId: subsidiaryid, // Using the updated value for subsidiaryId
+        // employee_loan_accountId: updatedData.employee_loan_accountId,
+        // employeeId: updatedData.employeeId,
+        // loan_typeId: updatedData.loan_typeId,
+        // monthly_installment: updatedData.monthly_installment,
+        // applied_date: updatedData.applied_date,
+        // installment_start_date: updatedData.installment_start_date,
+        // total_loan_amount: updatedData.total_loan_amount,
+        // total_installment: totalInstallments,
+        // reason: updatedData.reason,
+        // loan_amount_remaining: updatedData.total_loan_amount,
+        // loan_amount_paid: 0,
+        // subsidiaryId: subsidiaryid, // Using the updated value for subsidiaryId
+        isLoanContinuing:updatedData.isLoanContinuing
       };
   
       await dispatch(

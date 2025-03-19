@@ -8,6 +8,8 @@ const { actions } = employee_loan_requestSlice;
 
 export const fetchEmployeeLoanRequest = (params) => async (dispatch) => {
 
+  // delete params?.openDeleteFormDialog
+
   return requestFromServer.getAllEmployeeLoanRequest(params)
 
     .then((response) => {
@@ -163,7 +165,7 @@ export const updateEmployeeLoanRequest = (user, disbaleLoading, onHide) => (disp
 
 
       dispatch(actions.clearUserForEdit());
-      dispatch(actions.employeeLoanRequestUpdated({ updatedEmployeeLoanRequest }));
+      // dispatch(actions.employeeLoanRequestUpdated({ updatedEmployeeLoanRequest }));
 
  
       disbaleLoading();
