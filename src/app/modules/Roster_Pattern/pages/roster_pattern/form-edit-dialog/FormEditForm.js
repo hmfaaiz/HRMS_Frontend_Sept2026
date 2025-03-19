@@ -61,7 +61,7 @@ export function FormEditForm({
 
 
 
-  console.log("allEmployeeShifts1112", dashboard.allEmployeeShifts)
+  
 
 
 
@@ -98,6 +98,7 @@ export function FormEditForm({
                       isDisabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
+                        setFieldValue("list",[])
 
                       }}
                       value={
@@ -166,7 +167,8 @@ export function FormEditForm({
                     errors={errors}
                     touched={touched}
                     dropdownData={{
-                      allEmployeeShifts: dashboard?.allEmployeeShifts
+                      // allEmployeeShifts: dashboard?.allEmployeeShifts
+                      allEmployeeShifts:dashboard?.allEmployeeShifts?.filter(shift => shift.subsidiaryId === values.subsidiaryId)
                     }}
                     isdataForRead={isdataForRead}
                   />
