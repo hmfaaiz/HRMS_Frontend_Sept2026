@@ -103,7 +103,7 @@ export function BanksTable() {
       headerStyle: {
         textAlign: "center", // Align header text to the left
       },
-      formatter: (cell) => cell ? `L - ${cell}` : "",
+      // formatter: (cell) => cell ? `L - ${cell}` : "",
 
     },
 
