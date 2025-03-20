@@ -713,8 +713,8 @@ disabled={  isAfterResult}
                   dispatch(actions.clearReduxData())
                 }}
                 className="btn btn-green"
-              
-                disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.finalize)}
+                // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.finalize)}
+                disabled={loading ||  (!checkPayroll_EmployeesExist?.finalize && !resultAfterPayrollProcess?.finalize)}
               >
                 Finalize
                 {loading && (
@@ -733,8 +733,9 @@ disabled={  isAfterResult}
                   dispatch(actions.clearReduxData())
                 }}
                 className="btn btn-red"
-                // disabled={loading || !checkPayroll_EmployeesExist?.revert}
-                disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.revert)}
+           
+                // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.revert)}
+                disabled={loading ||  !checkPayroll_EmployeesExist?.revert  }
               >
                 Revert
                 {loading && (
@@ -791,7 +792,8 @@ disabled={  isAfterResult}
                   setIsAfterResult(true)
                 }}
                 className="btn btn-primary btn-elevate"
-                disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0}
+                disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0 ||      !checkPayroll_EmployeesExist?.execute}
+                
               >
                 Execute
                 {loading && (
