@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo } from "react"
 import { Field, Formik } from "formik"
 import * as Yup from "yup";
 import { isEqual } from "lodash"
@@ -104,6 +104,15 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
   }
 
+    useEffect(()=>{
+     
+      if(allSubsidiaryList && allSubsidiaryList.length > 0){
+        dispatch(fetchAllActiveEmployeesBySubsidiary(allSubsidiaryList[0].value));
+        dispatch(fetchAllDept(allSubsidiaryList[0].value));
+
+      }
+  
+    },[allSubsidiaryList])
   return (
     <>
       <Formik
