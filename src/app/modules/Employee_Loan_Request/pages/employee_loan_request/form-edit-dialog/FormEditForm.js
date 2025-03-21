@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 import { format, parse } from "date-fns";
-
+import CustomFormLoanDialog  from "./CustomFormLoanDialog"
 import {
   DatePickerField,
   Input,
@@ -114,122 +114,122 @@ export function FormEditForm({
   }, [userForEdit]);
 
 
-const policyLoadByLoanType =(changeLoanType)=>{
-  if (changeLoanType) {
-    
-    setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
-    let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
-      (item) => item.loan_typeId === changeLoanType
-    );
-    let employee = currentState?.loan_config_details_permission?.employee;
-    let salary = currentState?.loan_config_details_permission?.salary;
-    let payroll = currentState?.loan_config_details_permission?.payroll;
+  const policyLoadByLoanType = (changeLoanType) => {
+    if (changeLoanType) {
 
-    //slalry type limit according to loan salry policy
-    let salaryAmount =
-      loandetails?.basis == 0
-        ? salary?.gross * loandetails?.salary_count
-        : salary?.basic * loandetails?.salary_count;
-    let monthlyInstallment;
+      setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
+      let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
+        (item) => item.loan_typeId === changeLoanType
+      );
+      let employee = currentState?.loan_config_details_permission?.employee;
+      let salary = currentState?.loan_config_details_permission?.salary;
+      let payroll = currentState?.loan_config_details_permission?.payroll;
 
-    let monthlySalarySuggest;
+      //slalry type limit according to loan salry policy
+      let salaryAmount =
+        loandetails?.basis == 0
+          ? salary?.gross * loandetails?.salary_count
+          : salary?.basic * loandetails?.salary_count;
+      let monthlyInstallment;
 
-    //calculation for monthly amount suggestion limit by installment deduction basis type
-    if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
-      monthlySalarySuggest = (salary?.gross *
-        parseFloat(
-          currentState?.loan_config_details_permission?.loanDetails
-            ?.installment_deduction_percentage
-        )) / 100
+      let monthlySalarySuggest;
 
-    } else if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type === 0) {
-      monthlySalarySuggest = (salary?.basic *
-        parseFloat(
-          currentState?.loan_config_details_permission?.loanDetails
-            ?.installment_deduction_percentage
-        )) / 100;
-    } else {
-      monthlySalarySuggest = 0
-    }
+      //calculation for monthly amount suggestion limit by installment deduction basis type
+      if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
+        monthlySalarySuggest = (salary?.gross *
+          parseFloat(
+            currentState?.loan_config_details_permission?.loanDetails
+              ?.installment_deduction_percentage
+          )) / 100
 
-    //no. of installments
-    if (loandetails?.max_no_of_installment_for_loan) {
-      monthlyInstallment = loandetails?.max_no_of_installment_for_loan
+      } else if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type === 0) {
+        monthlySalarySuggest = (salary?.basic *
+          parseFloat(
+            currentState?.loan_config_details_permission?.loanDetails
+              ?.installment_deduction_percentage
+          )) / 100;
+      } else {
+        monthlySalarySuggest = 0
+      }
 
-    }
+      //no. of installments
+      if (loandetails?.max_no_of_installment_for_loan) {
+        monthlyInstallment = loandetails?.max_no_of_installment_for_loan
 
-    setMonthlyInstallmentsLimit(monthlyInstallment)
+      }
 
-    //start date policy for loan deduction
-    if (loandetails?.installment_start_date_policy) {
-      setStartDatePolicy(loandetails?.installment_start_date_policy)
+      setMonthlyInstallmentsLimit(monthlyInstallment)
 
-    }
+      //start date policy for loan deduction
+      if (loandetails?.installment_start_date_policy) {
+        setStartDatePolicy(loandetails?.installment_start_date_policy)
+
+      }
 
 
-    //if already loan taken ,running balanace
-    const currentLoan = entities.filter(item => item?.loan_typeId === changeLoanType && item.isLoanContinuing);
+      //if already loan taken ,running balanace
+      const currentLoan = entities.filter(item => item?.loan_typeId === changeLoanType && item.isLoanContinuing);
 
-    let runningBalance = 0
-    currentLoan.forEach(loan => {
-      
-   
-      loan.details.forEach(detail => {
-        // Add the payment amount from the running balance
-       
-        if(!detail?.is_deducted){
-         
-          runningBalance += detail.amount_received;
-        }
-       
+      let runningBalance = 0
+      currentLoan.forEach(loan => {
+
+
+        loan.details.forEach(detail => {
+          // Add the payment amount from the running balance
+
+          if (!detail?.is_deducted) {
+
+            runningBalance += detail.amount_received;
+          }
+
+        });
       });
-    });
-   
 
 
-    //max loan amount
-    if (loandetails?.basis == null) {
+
+      //max loan amount
+      if (loandetails?.basis == null) {
 
 
-      setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
+        setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
+      } else {
+        // set min value salary or loan limit
+
+        setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance);
+      }
+
+
+      setMaxMonthlyAmountSuggest(monthlySalarySuggest);
+
+
+      if (employee?.dateOfJoining) {
+        const joiningDate = new Date(employee?.dateOfJoining);
+        joiningDate.setHours(0, 0, 0, 0);
+        setDateOfJoining(joiningDate); // Update state with the valid date
+      }
+      setPayrollMonth(null);
+      if (payroll?.startDate) {
+
+        const payrollDate = new Date(payroll?.startDate);
+        payrollDate.setHours(0, 0, 0, 0);
+        setPayrollMonth(payrollDate); // Update state with the valid date
+      }
     } else {
-      // set min value salary or loan limit
-
-      setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance);
+      setMaxAmountLimit("");
+      setMaxMonthlyAmountSuggest("");
+      setTotalInstallments("");
+      setMonthlyInstallmentsLimit("")
     }
-
-
-    setMaxMonthlyAmountSuggest(monthlySalarySuggest);
-
-
-    if (employee?.dateOfJoining) {
-      const joiningDate = new Date(employee?.dateOfJoining);
-      joiningDate.setHours(0, 0, 0, 0);
-      setDateOfJoining(joiningDate); // Update state with the valid date
-    }
-    setPayrollMonth(null);
-    if (payroll?.startDate) {
-
-      const payrollDate = new Date(payroll?.startDate);
-      payrollDate.setHours(0, 0, 0, 0);
-      setPayrollMonth(payrollDate); // Update state with the valid date
-    }
-  } else {
-    setMaxAmountLimit("");
-    setMaxMonthlyAmountSuggest("");
-    setTotalInstallments("");
-    setMonthlyInstallmentsLimit("")
   }
-}
 
-useEffect(()=>{
-  policyLoadByLoanType(changeLoanType)
+  useEffect(() => {
+    policyLoadByLoanType(changeLoanType)
   }, [changeLoanType, isEdit]);
 
   // useEffect(() => {
 
   //   if (changeLoanType) {
-    
+
   //     setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
   //     let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
   //       (item) => item.loan_typeId === changeLoanType
@@ -285,16 +285,16 @@ useEffect(()=>{
 
   //     let runningBalance = 0
   //     currentLoan.forEach(loan => {
-        
-     
+
+
   //       loan.details.forEach(detail => {
   //         // Add the payment amount from the running balance
-         
+
   //         if(!detail?.is_deducted){
 
   //           runningBalance += detail.amount_received;
   //         }
-         
+
   //       });
   //     });
 
@@ -303,7 +303,7 @@ useEffect(()=>{
   //     //max loan amount
   //     if (loandetails?.basis == null) {
 
-  
+
   //       setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
   //     } else {
   //       // set min value salary or loan limit
@@ -399,7 +399,7 @@ useEffect(()=>{
     //if loan completed then how many months are  required to take it again
     if (currentDropDownLoan?.monthsToApplyForNewLoan > 0) {
       const matchingEntities = entities.filter(item => item?.loan_typeId === option?.value && !item.isLoanContinuing);
-      let monthsRequiredForLoan=false;
+      let monthsRequiredForLoan = false;
       if (matchingEntities.length > 0) {
 
         matchingEntities.forEach(entity => {
@@ -411,18 +411,18 @@ useEffect(()=>{
             const lastLoanDeductionDate = parse(formattedDateString, 'dd/MM/yyyy', new Date());
             if (currentDropDownLoan?.monthsToApplyForNewLoan <= getDateDiffInMonths(new Date(lastLoanDeductionDate), today)) {
               eligibilityMonth = true;
-          
-           
-            }else{
-              monthsRequiredForLoan=true
+
+
+            } else {
+              monthsRequiredForLoan = true
               eligibilityMonth = false;
-        
+
             }
           }
 
         })
 
-  
+
 
       }
 
@@ -431,7 +431,7 @@ useEffect(()=>{
         eligibilityMonth = false;
       }
 
-      if(monthsRequiredForLoan){
+      if (monthsRequiredForLoan) {
         eligibilityMonth = false;
       }
 
@@ -444,7 +444,10 @@ useEffect(()=>{
     };
   });
 
+const isLoanCompleted=()=>{
+  console.log("userforedit111",userForEdit)
 
+}
 
   const clearCustomeData = () => {
     setMaxAmountLimit("");
@@ -454,10 +457,10 @@ useEffect(()=>{
   };
 
 
-  useEffect(()=>{
-   
+  useEffect(() => {
+
     clearCustomeData()
-  },[currentState])
+  }, [currentState])
   const statusOptions = [
     { value: 0, label: "Inactive" },
     { value: 1, label: "Active" },
@@ -473,6 +476,7 @@ useEffect(()=>{
 
       }
       await dispatch(updateApprovedStatus(data, disbaleLoading, onHide));
+   
       await dispatch(fetchEmployeeLoanRequest(formUIProps));
       setIds("");
 
@@ -527,7 +531,16 @@ useEffect(()=>{
     }
   }
 
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
+  const handleCheckboxClick = () => {
+    isLoanCompleted()
+    setShowModal(true); // Open the modal when checkbox is clicked
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close the modal
+  };
 
   return (
     <Formik
@@ -715,7 +728,7 @@ useEffect(()=>{
                         e.target.value = amountLimit(e.target.value); // Limit to 3 digits
                       }}
                       // disabled={userForEdit?.details[0]?.is_deducted}
-                      disabled ={userForEdit}
+                      disabled={userForEdit}
                     />
                   </div>
 
@@ -757,7 +770,7 @@ useEffect(()=>{
                         e.target.value = amountLimit(e.target.value); // Limit to 3 digits
                       }}
                       // disabled={userForEdit?.details[0]?.is_deducted}
-                      disabled ={userForEdit}
+                      disabled={userForEdit}
                     />
                   </div>
 
@@ -826,6 +839,34 @@ useEffect(()=>{
                   </div>
 
 
+                  <div className="col-12 col-md-6 mt-3">
+                    {/* Your Field component (Checkbox) */}
+                    <Field
+                      name="isLoanContinuing"
+                      component="input"
+                      type="checkbox"
+                      id="isLoanContinuing"
+                      checked={!values.isLoanContinuing && userForEdit}
+                      onClick={handleCheckboxClick} // Trigger modal on checkbox click
+                      disabled={!userForEdit || !userForEdit?.isLoanContinuing }
+                    />
+                    <label htmlFor="isLoanContinuing">Loan Completed</label>
+
+                    {/* CustomFormLoanDialog component is rendered here and controlled by the state */}
+
+                    <CustomFormLoanDialog showModal={showModal} handleClose={handleCloseModal}  
+                
+                userForEdit={userForEdit}
+                
+                message={userForEdit && userForEdit.loan_amount_remaining == 0? "Are you sure to close this loan?":"Are you sure to close this loan, this loan is not completed?"}
+                handleReset={handleReset}
+                setIds={ setIds}
+                
+                />
+
+
+                  </div>
+
 
 
                 </div>
@@ -880,7 +921,7 @@ useEffect(()=>{
                 </button>
 
 
-           
+
 
                 {payrollConfigApproverPermission && (
                   userForEdit ? (

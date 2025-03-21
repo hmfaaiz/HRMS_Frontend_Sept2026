@@ -13,6 +13,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
+import { amountLimitDynamic } from "../../../../../utils/common";
 
 
 const roster_patternEditSchema = Yup.object().shape({
@@ -25,7 +26,9 @@ const roster_patternEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   patternName: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+  .matches(/^[A-Za-z\s.-]+$/, 'Pattern Name must only contain letters.')
+  .required(VALIDATION_MESSAGES.required),
+
 
     list: Yup.array().of(
       Yup.object().shape({
@@ -127,6 +130,9 @@ export function FormEditForm({
                       placeholder="Enter Pattern Code"
 
                       type="text"
+                       onInput={(e) => {
+                                                e.target.value = amountLimitDynamic(e.target.value,30); // Limit to 30 digits
+                                              }}
 
                     />
                   </div>
@@ -144,6 +150,9 @@ export function FormEditForm({
                       placeholder="Enter Pattern Name"
 
                       type="text"
+                      onInput={(e) => {
+                        e.target.value = amountLimitDynamic(e.target.value,30); // Limit to 30 digits
+                      }}
 
                     />
                   </div>
