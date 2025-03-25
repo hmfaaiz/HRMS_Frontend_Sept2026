@@ -134,7 +134,7 @@ export function BankEditForm({
                         placeholder="Bank Name"
                         label={<span> Bank Name<span style={{ color: 'red' }}>*</span></span>}
                         onInput={(e) => {
-                          e.target.value = amountLimitDynamic(e.target.value,50); // Limit to 3 digits
+                          e.target.value = amountLimitDynamic(e.target.value,50); // Limit to 50 digits
                         }}
 
                       />

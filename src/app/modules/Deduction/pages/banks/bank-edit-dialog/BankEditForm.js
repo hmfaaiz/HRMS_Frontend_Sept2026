@@ -346,7 +346,7 @@ export function BankEditForm({
                           onBlur={handleBlur}
                           style={{ display: "block" }}
                         >
-                          <option value="-1" label="Select" />
+                          <option value="" label="Select" />
                           <option value="true" label="Yes" />
                           <option value="false" label="No" />
 
