@@ -53,6 +53,7 @@ const initialDashboardState = {
   allEmployeesWithNoPermissionList: [],
   allPayrollConfigApproverPermissionList:[],
   allRosterPatternList:[],
+  allCurrency : [],
 };
 
 export const callTypes = {
@@ -79,6 +80,9 @@ export const dashboardSlice = createSlice({
     },
     AllCityFetch: (state, action) => {
       state.allCity = action.payload;
+    },
+    AllCurrencyFetch: (state, action) => {
+      state.allCurrency = action.payload;
     },
     AllBanksFetch: (state, action) => {
       state.allBanks = action.payload;
