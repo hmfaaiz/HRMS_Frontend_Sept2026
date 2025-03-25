@@ -9,7 +9,6 @@ import { usersSlice } from "../app/modules/UserMangement/_redux/usersSlice";
 import { specificationsSlice } from "../app/modules/ECommerce/_redux/specifications/specificationsSlice";
 import { rolesSlice } from "../app/modules/Settings/_redux/roles/rolesSlice";
 
-
 import { dashboardSlice } from "../app/modules/Dashboard/_redux/dashboardSlice";
 
 import { bankSlice } from "../app/modules/Banks/_redux/bankSlice";
@@ -59,28 +58,29 @@ import { leaveManagementConfigurationSlice } from "../app/modules/leaveManagemen
 import { payroll_policySlice } from "../app/modules/Payroll_Process_Policy/_redux/payroll_policySlice";
 import { LeaveApplicationSlice } from "../app/modules/LeaveApplication/_redux/LeaveApplicationSlice";
 import { taxSetupSlice } from "../app/modules/Tax_Setup/_redux/taxSetupSlice";
-import { loan_manag_confSlice } from "../app/modules/Loan_manag_conf/_redux/redux-Slice"
-import { employee_loan_requestSlice } from "../app/modules/Employee_Loan_Request/_redux/redux-Slice"
-import { AllocateLeavesSlice } from "../app/modules/AllocateLeaves/_redux/AllocateLeavesSlice"
-import { EmployeeLeaveBalanceSlice } from "../app/modules/EmployeeLeaveBalance/_redux/EmployeeLeaveBalanceSlice"
-import { gratuity_configurationSlice } from "../app/modules/Gratuity_Configuration/_redux/redux-Slice"
-import { accrue_gratuity_configurationSlice } from "../app/modules/Accrue_Gratuity_Configuration/_redux/redux-Slice"
-import { reimbursement_configurationSlice } from "../app/modules/Reimbursement_Configuration/_redux/redux-Slice"
-import { reimbursement_claimSlice } from "../app/modules/Reimbursement_claim/_redux/redux-Slice"
+import { loan_manag_confSlice } from "../app/modules/Loan_manag_conf/_redux/redux-Slice";
+import { employee_loan_requestSlice } from "../app/modules/Employee_Loan_Request/_redux/redux-Slice";
+import { AllocateLeavesSlice } from "../app/modules/AllocateLeaves/_redux/AllocateLeavesSlice";
+import { EmployeeLeaveBalanceSlice } from "../app/modules/EmployeeLeaveBalance/_redux/EmployeeLeaveBalanceSlice";
+import { gratuity_configurationSlice } from "../app/modules/Gratuity_Configuration/_redux/redux-Slice";
+import { accrue_gratuity_configurationSlice } from "../app/modules/Accrue_Gratuity_Configuration/_redux/redux-Slice";
+import { reimbursement_configurationSlice } from "../app/modules/Reimbursement_Configuration/_redux/redux-Slice";
+import { reimbursement_claimSlice } from "../app/modules/Reimbursement_claim/_redux/redux-Slice";
 import { LeaveEncashmentSlice } from "../app/modules/LeaveEncashment/_redux/LeaveEncashmentSlice";
 import { EmployeeRosterSlice } from "../app/modules/EmployeeRoster/_redux/EmployeeRosterSlice";
-import {AttendanceConfigurationSlice} from "../app/modules/Attendance_Configuration/_redux/attendanceConfigSlice"
-import {employeeShiftSlice} from "../app/modules/Employee_Shift/_redux/employeeShiftSlice"
-import {HolidaysSlice} from "../app/modules/Holidays/_redux/redux-Slice"
-import {payroll_processSlice} from "../app/modules/Payroll_Process/_redux/redux-Slice"
+import { AttendanceConfigurationSlice } from "../app/modules/Attendance_Configuration/_redux/attendanceConfigSlice";
+import { employeeShiftSlice } from "../app/modules/Employee_Shift/_redux/employeeShiftSlice";
+import { HolidaysSlice } from "../app/modules/Holidays/_redux/redux-Slice";
+import { payroll_processSlice } from "../app/modules/Payroll_Process/_redux/redux-Slice";
 import { AttendanceSlice } from "../app/modules/Attendance/_redux/AttendanceSlice";
 import { LeaveRegisterSlice } from "../app/modules/LeaveRegister/_redux/LeaveRegisterSlice";
 import { PayrollRegisterSlice } from "../app/modules/PayrollRegister/_redux/PayrollRegisterSlice";
 import { UserSlice } from "../app/modules/User/_redux/redux-Slice";
 import { passwordSlice } from "../app/modules/Reset_Password/_redux/redux-Slice";
 
-import {EmployeeRegisterSlice} from "../app/modules/EmployeeRegister/_redux/EmployeeRegisterSlice";
-import {roster_patternSlice} from "../app/modules/Roster_Pattern/_redux/redux-Slice"
+import { EmployeeRegisterSlice } from "../app/modules/EmployeeRegister/_redux/EmployeeRegisterSlice";
+import { roster_patternSlice } from "../app/modules/Roster_Pattern/_redux/redux-Slice";
+import { CompanySlice } from "../app/modules/Company/redux/companySlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -90,7 +90,7 @@ export const rootReducer = combineReducers({
   specifications: specificationsSlice.reducer,
   users: usersSlice.reducer,
   roles: rolesSlice.reducer,
-
+  company: CompanySlice.reducer,
   bank: bankSlice.reducer,
   branch: branchSlice.reducer,
   dept: deptSlice.reducer,
@@ -149,17 +149,16 @@ export const rootReducer = combineReducers({
   holidays: HolidaysSlice.reducer,
   reimbursement_claim: reimbursement_claimSlice.reducer,
   leave_encashment: LeaveEncashmentSlice.reducer,
-  payroll_process:payroll_processSlice.reducer,
+  payroll_process: payroll_processSlice.reducer,
 
-  
   attendance: AttendanceSlice.reducer,
   employee_roster: EmployeeRosterSlice.reducer,
   leave_register: LeaveRegisterSlice.reducer,
   payroll_register: PayrollRegisterSlice.reducer,
-  UserModule:UserSlice.reducer,
-  password:passwordSlice.reducer,
-  employee_register:EmployeeRegisterSlice.reducer,
-  roster_pattern:roster_patternSlice.reducer,
+  UserModule: UserSlice.reducer,
+  password: passwordSlice.reducer,
+  employee_register: EmployeeRegisterSlice.reducer,
+  roster_pattern: roster_patternSlice.reducer,
 });
 
 export function* rootSaga() {

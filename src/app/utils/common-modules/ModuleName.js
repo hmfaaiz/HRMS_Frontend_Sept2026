@@ -11,7 +11,6 @@ const CurrentModuleName = () => {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
   const pathName = window?.location?.pathname?.substring(1);
-
   const name = useMemo(() => {
     return Object.values(UserAccess || {})?.flatMap(el => el)?.find(acc => pathName.includes(acc?.url))?.name || '';
   }, [pathName, UserAccess]);
