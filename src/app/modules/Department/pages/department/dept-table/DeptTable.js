@@ -115,7 +115,7 @@ export function DeptTable() {
 
     {
       dataField: "budgetStrength",
-      text: "Budget Strength",
+      text: "Department Strength",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
