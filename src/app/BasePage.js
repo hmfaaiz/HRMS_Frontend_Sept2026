@@ -173,6 +173,7 @@ const Roster_PatternModule = lazy(() =>
   import("./modules/Roster_Pattern/pages/index")
 );
 const companyModule = lazy(() => import("./modules/Company/page/index"));
+const subsidiaryModule = lazy(() => import("./modules/Subsidiary/page/index"));
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -245,6 +246,7 @@ const ROUTES = {
   password: passwordModule,
   employee_register: EmployeeRegister,
   roster_pattern: Roster_PatternModule,
+  subsidiary: subsidiaryModule,
 };
 
 export default function BasePage() {
