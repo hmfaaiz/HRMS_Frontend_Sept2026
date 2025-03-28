@@ -81,6 +81,7 @@ import { passwordSlice } from "../app/modules/Reset_Password/_redux/redux-Slice"
 import { EmployeeRegisterSlice } from "../app/modules/EmployeeRegister/_redux/EmployeeRegisterSlice";
 import { roster_patternSlice } from "../app/modules/Roster_Pattern/_redux/redux-Slice";
 import { CompanySlice } from "../app/modules/Company/redux/companySlice";
+import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -159,6 +160,7 @@ export const rootReducer = combineReducers({
   password: passwordSlice.reducer,
   employee_register: EmployeeRegisterSlice.reducer,
   roster_pattern: roster_patternSlice.reducer,
+  subsidiary: SubsidiarySlice.reducer,
 });
 
 export function* rootSaga() {
