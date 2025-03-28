@@ -169,7 +169,7 @@ export const updateEmployeeLoanRequest = (user, disbaleLoading, onHide) => (disp
 
  
       disbaleLoading();
-      onHide();
+ 
       toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -179,7 +179,7 @@ export const updateEmployeeLoanRequest = (user, disbaleLoading, onHide) => (disp
         draggable: true,
         progress: undefined,
       });
-
+      onHide();
 
     })
     .catch((error) => {
@@ -249,7 +249,7 @@ export const updateApprovedStatus = (data,disbaleLoading,onHide, resetForm) => (
 
  
       disbaleLoading();
-      onHide();
+     
       toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -259,7 +259,7 @@ export const updateApprovedStatus = (data,disbaleLoading,onHide, resetForm) => (
         draggable: true,
         progress: undefined,
       });
-
+      onHide();
 
     })
     .catch((error) => {
