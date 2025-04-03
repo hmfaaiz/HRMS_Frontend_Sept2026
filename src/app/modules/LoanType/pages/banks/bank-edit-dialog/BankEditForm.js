@@ -242,7 +242,7 @@ useEffect (()=>{
                           name="name"
                           maxLength={50}
                           component={Input}
-                          placeholder="Enter Deduction Name"
+                          placeholder="Enter Loan Type"
                           autoComplete="off"
                           label={<span> Name<span style={{ color: 'red' }}>*</span></span>}
                         />
