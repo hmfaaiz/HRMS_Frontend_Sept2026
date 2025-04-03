@@ -660,12 +660,15 @@ export function MasterEditForm({
                         type="checkbox"
                         onChange={(e) => {
                           // Update the checkbox value using Formik's handleChange
-                          handleChange(e);
+                         
+                          // handleChange(e);
+                          setFieldValue("isIncludeInterShifGap",!values.isIncludeInterShifGap)
                           const { checked } = e.target;
                           
                           // If unchecked, clear the overTimeStart field
                           if (checked && values.overTimeStart) {
                             setFieldValue("interShiftGap", handleOverTimeStartChange(e,setFieldValue,values)  ); // Clear the time field when Overtime is disabled
+                          
                           }
                         }}
                         onBlur={handleBlur}
