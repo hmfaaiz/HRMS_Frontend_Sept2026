@@ -408,7 +408,8 @@ export function FormTable(user) {
     payroll_approverId: "",
     payroll_groupId: "",
     basicSalaryId: "",
-
+    salaryRoundingId:"",
+    
     //-- Email Sender ------------
     sender_emailId: "",
     employee_email_recipentId: "",
@@ -457,6 +458,7 @@ export function FormTable(user) {
     sessi_basis: "",
     sessi_employeer_value_in_percent: "",
     sessi_employee_value_in_percent: "",
+    
     //-- Other
   };
 
@@ -492,7 +494,7 @@ export function FormTable(user) {
         payroll_approverId: user.payroll_approverId,
         payroll_groupId: user.payroll_groupId,
         basicSalaryId: user.basicSalaryId,
-
+        salaryRoundingId:user?.salaryRoundingId,
         // -- Email Sender ------------
         sender_emailId: user.sender_emailId,
         employee_email_recipentId: user.employee_email_recipentId,
@@ -802,6 +804,23 @@ export function FormTable(user) {
                       value={allEarningsMap?.get(values?.basicSalaryId || '') || ''}
                       error={errors.basicSalaryId}
                       touched={touched.basicSalaryId}
+                      options={dashboard.allEarnings}
+                      isDisabled={Boolean(user?.readOnly)}
+                    />
+                  </div>
+
+
+
+                  <div className="col-12 col-md-4 mt-3">
+                    <SearchSelect
+                      name="salaryRoundingId"
+                      label={<span>Salary Rounding </span>}
+                      onChange={(e) => {
+                        setFieldValue("salaryRoundingId", e.value || null);
+                      }}
+                      value={allEarningsMap?.get(values?.salaryRoundingId || '') || ''}
+                      error={errors.salaryRoundingId}
+                      touched={touched.salaryRoundingId}
                       options={dashboard.allEarnings}
                       isDisabled={Boolean(user?.readOnly)}
                     />
