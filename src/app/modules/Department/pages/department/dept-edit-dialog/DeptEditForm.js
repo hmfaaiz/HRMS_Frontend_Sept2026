@@ -273,7 +273,7 @@ useEffect (()=>{
                               maxLength={6}
                               component={Input}
                               placeholder="Enter budgetStrength"
-                              label={<span> Bugdet Strength<span style={{ color: 'red' }}>*</span></span>}
+                              label={<span> Department Strength<span style={{ color: 'red' }}>*</span></span>}
 
                             />
                           </div>

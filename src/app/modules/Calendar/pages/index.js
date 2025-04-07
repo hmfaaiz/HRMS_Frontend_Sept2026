@@ -4,7 +4,6 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./calendar/FormPage";
 
 export default function CalendarManagement() {
-console.log("Calendar111")
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
 

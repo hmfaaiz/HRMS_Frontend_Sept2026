@@ -1,0 +1,17 @@
+/* styles.css */
+.calendar-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #0093DD;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .calendar-btn:disabled {
+    background-color: #ccc; /* Add a gray background when disabled */
+    cursor: not-allowed; /* Change the cursor when the button is disabled */
+  }
+  
