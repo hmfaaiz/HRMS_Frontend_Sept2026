@@ -2970,7 +2970,7 @@ console.log("profilePolicy111",profilePolicy?.data?.data[0].isEmployeeCodeGenera
                               onBlur={handleBlur}
                               value={values.requireDeligation}
                               checked={values.requireDeligation}
-                              label="Require Deligation"
+                              label="Require Delegation"
 
                             />
                             <label>Require Deligation</label>

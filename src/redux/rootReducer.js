@@ -82,6 +82,8 @@ import { EmployeeRegisterSlice } from "../app/modules/EmployeeRegister/_redux/Em
 import { roster_patternSlice } from "../app/modules/Roster_Pattern/_redux/redux-Slice";
 import { CompanySlice } from "../app/modules/Company/redux/companySlice";
 import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice";
+import {CalendarSlice} from "../app/modules/Calendar/_redux/redux-Slice"
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -161,6 +163,7 @@ export const rootReducer = combineReducers({
   employee_register: EmployeeRegisterSlice.reducer,
   roster_pattern: roster_patternSlice.reducer,
   subsidiary: SubsidiarySlice.reducer,
+  calendar:CalendarSlice.reducer,
 });
 
 export function* rootSaga() {
