@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Field, Formik } from "formik"
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,8 @@ import { FormTable } from "../form-table/FormTable"
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CardHeader } from "@material-ui/core";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 
 
 
@@ -26,18 +28,54 @@ const formValidation = Yup.object().shape({
 export function FormCard() {
   const dispatch = useDispatch();
 const [loading,setLoading]=useState(false)
+const [bodyValues,setBodyValues]=useState()
+const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+
   const customSubmit = (values) => {
     dispatch(actions.fetchHolidays(values,setLoading));
   }
-  const { currentState } = useSelector(
+
+
+  const { currentState,dashboard } = useSelector(
     (state) => {
       return {
-        currentState: state.calendar,
+        currentState: state?.calendar,
+        dashboard:state?.dashboard,
       };
     }
   );
 
+    useEffect(() => {
+        dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+   
+  
+    }, [dispatch]);
+
+
+;
   const {holidayCalendar } = currentState;
+
+  useEffect(() => {
+    if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
+      const firstSubsidiary = dashboard.allSubsidiaryList[0];
+      setBodyValues({
+        from_date: firstSubsidiary.fiscalYear?.startDate || '',
+        to_date: firstSubsidiary.fiscalYear?.endDate || '',
+        subsidiaryId: firstSubsidiary.value || ''
+      });
+      setIsDataLoaded(true); // Mark data as loaded
+    }
+  }, [dashboard.allSubsidiaryList]);
+
+  useEffect(() => {
+    // Automatically submit when data is loaded
+    if (isDataLoaded && bodyValues?.subsidiaryId) {
+      customSubmit(bodyValues);
+    }
+  }, [isDataLoaded, bodyValues])
+
+
   return (
 <>
     <Card>
@@ -51,8 +89,10 @@ const [loading,setLoading]=useState(false)
     <Formik
         enableReinitialize={true}
         initialValues={{
-          from_date: null,  // Assuming no date initially
-          to_date: null,    // Assuming no date initially
+          from_date:bodyValues?.from_date,
+          to_date:bodyValues?.to_date,
+          subsidiaryId: bodyValues?.subsidiaryId,
+              
         }}
         validationSchema={formValidation}
         onSubmit={(values) => 
@@ -65,7 +105,7 @@ const [loading,setLoading]=useState(false)
           handleSubmit,
           handleBlur,
           setFieldValue,
-          handleReset,values,
+          handleReset,values,touched,errors,
         
         }) => (
           <>
@@ -77,11 +117,37 @@ const [loading,setLoading]=useState(false)
 
 
                   <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>{CurrentModuleName()}</h6>
+                    <h6>Holiday Calendar</h6>
 
                     <div className="from-group row">
 
+  <div className="col-12 col-md-4 mt-3">
+     
 
+                            <SearchSelect
+                                             name="subsidiaryId"
+                                             label={
+                                               <span>
+                                                 Subsidiary<span style={{ color: "red" }}>*</span>
+                                               </span>
+                                             }
+                                          
+                                             onChange={(e) => {
+                                               setFieldValue("subsidiaryId", e.value || null);
+                                               
+                                             }}
+                                             value={
+                                               dashboard?.allSubsidiaryList?.find(
+                                                 (option) => option?.value === values?.subsidiaryId
+                                               ) || null
+                                             }
+                                             options={dashboard?.allSubsidiaryList}
+                                         
+                                     
+                                             error={errors.subsidiaryId}
+                                             touched={touched.subsidiaryId}
+                                           />
+                      </div>
 
 
                       <div className="col-12 col-md-4 mt-3">
@@ -90,6 +156,8 @@ const [loading,setLoading]=useState(false)
                           component={DatePickerField}
                           dateFormat="dd/MM/yyyy"
                           className="form-control"
+                          timeInputLabel="Time:"
+                          showTimeInput
                           label={
                             <span>
                               {" "}
