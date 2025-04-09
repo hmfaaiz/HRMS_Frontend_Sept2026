@@ -175,6 +175,7 @@ const Roster_PatternModule = lazy(() =>
 const companyModule = lazy(() => import("./modules/Company/page/index"));
 const subsidiaryModule = lazy(() => import("./modules/Subsidiary/page/index"));
 const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
+const leave_calendarModule = lazy(() => import("./modules/Leave_Calendar/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -250,6 +251,7 @@ const ROUTES = {
   roster_pattern: Roster_PatternModule,
   subsidiary: subsidiaryModule,
   calendar:calendarModule,
+  leave_calendar:leave_calendarModule,
 };
 
 export default function BasePage() {
