@@ -34,7 +34,7 @@ export function FormTable() {
     const calendarEvents = holidayCalendar?.map((holiday) => ({
       title: holiday.name,
       start: moment(holiday.from_date).toDate(),
-      end: moment(holiday.to_date).toDate(),
+      end: moment(holiday.to_date).endOf('day').toDate(),
       allDay: true,
     })
   
