@@ -6,7 +6,11 @@ const { actions } = LeaveCalendarSlice;
 
 
 export const fetchLeaves = (body,setLoading) => async (dispatch) => {
-
+ if (new Date(body?.from_date) > new Date (body?.to_date)) {
+      toast.error("Please select correct date range");
+      dispatch(actions.clearEvents(null));
+      return;
+    }
 
   return requestFromServer.getAllLeave(body)
    
