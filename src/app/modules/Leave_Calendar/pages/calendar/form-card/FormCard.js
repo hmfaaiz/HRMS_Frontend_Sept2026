@@ -35,8 +35,8 @@ export function FormCard() {
 
 
   const customSubmit = (values) => {
-    let formattedFromDate= formatDates(values?.from_date)
-    let formattedToDate=  formatDates(values?.to_date)
+    let formattedFromDate= formatDates(values?.from_date,'yyyy-MM-dd')
+    let formattedToDate=  formatDates(values?.to_date,'yyyy-MM-dd')
    
     dispatch(actions.fetchLeaves( {...values, from_date: formattedFromDate, to_date: formattedToDate }, setLoading));
   }

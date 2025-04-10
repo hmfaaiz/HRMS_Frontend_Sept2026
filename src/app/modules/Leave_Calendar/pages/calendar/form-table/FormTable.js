@@ -37,7 +37,7 @@ export function FormTable() {
       start: moment(leave?.from).toDate(),
       end: moment(leave?.to).endOf('day').toDate(),
       allDay: true,
-      description: `${leave?.from} - ${leave?.to} `,
+      description: `${leave?.from} - ${leave?.to} \n${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
     })
   
   

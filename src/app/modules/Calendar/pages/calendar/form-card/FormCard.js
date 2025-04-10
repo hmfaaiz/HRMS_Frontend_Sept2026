@@ -11,6 +11,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
 
 
 
@@ -33,7 +34,10 @@ export function FormCard() {
 
 
   const customSubmit = (values) => {
-    dispatch(actions.fetchHolidays(values, setLoading));
+      let formattedFromDate= formatDates(values?.from_date, 'yyyy-MM-dd')
+        let formattedToDate=  formatDates(values?.to_date, 'yyyy-MM-dd')
+           dispatch(actions.fetchHolidays( {...values, from_date: formattedFromDate, to_date: formattedToDate }, setLoading));
+    // dispatch(actions.fetchHolidays(values, setLoading));
   }
 
 
