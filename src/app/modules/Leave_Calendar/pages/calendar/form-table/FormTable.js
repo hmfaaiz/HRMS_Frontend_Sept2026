@@ -20,7 +20,7 @@ export function FormTable() {
     (state) => {
       
       return {
-        currentState: state.leave_calendar,
+        currentState: state?.leave_calendar,
       };
     }
   );
@@ -33,10 +33,11 @@ export function FormTable() {
 
 
     const calendarEvents = leaveCalendar?.map((leave) => ({
-      title: leave?.t_employee_profile?.fullName,
+      title: `${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
       start: moment(leave?.from).toDate(),
       end: moment(leave?.to).endOf('day').toDate(),
       allDay: true,
+      description: `${leave?.from} - ${leave?.to} `,
     })
   
   
@@ -68,6 +69,7 @@ export function FormTable() {
       <Calendar
         localizer={localizer}
         events={events}
+        tooltipAccessor={(event) => event.description}
         startAccessor="start"
         endAccessor="end"
         style={{ height: "100%" }}
