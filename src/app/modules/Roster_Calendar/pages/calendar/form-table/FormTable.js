@@ -34,11 +34,11 @@ export function FormTable() {
 
 
     const calendarEvents = rosterCalendar?.map((roster) => ({
-      title: `${roster?.t_employee_roster?.t_employee_profile?.fullName} (${roster?.t_employee_shift?.name || 'Roster'})`,
+      title: `${roster?.t_employee_roster?.t_employee_profile?.employeeCode} - ${roster?.t_employee_roster?.t_employee_profile?.fullName} (${roster?.t_employee_shift?.name || 'Off Day'})`,
       start: moment(roster?.date).toDate(),
       end: moment(roster?.date).endOf('day').toDate(),
       allDay: true,
-      description: `${formatDates(roster?.date, 'yyyy-MM-dd')} \n${roster?.t_employee_roster?.t_employee_profile?.fullName} \n${roster?.t_employee_shift?.name || 'Roster'}  (${roster?.t_employee_shift?.startTime || '0000'} - ${roster?.t_employee_shift?.endTime || '0000'})`,
+      description: `${roster?.t_employee_roster?.t_employee_profile?.employeeCode} - ${roster?.t_employee_roster?.t_employee_profile?.fullName} \n${roster?.t_employee_shift?.name || 'Off Day'}  \n${formatDates(roster?.date, 'dd/MM/yyyy')} \n(${roster?.t_employee_shift?.startTime || '0000'} - ${roster?.t_employee_shift?.endTime || '0000'})`,
     })
 
 

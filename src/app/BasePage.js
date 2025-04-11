@@ -177,6 +177,7 @@ const subsidiaryModule = lazy(() => import("./modules/Subsidiary/page/index"));
 const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
 const leave_calendarModule = lazy(() => import("./modules/Leave_Calendar/pages/index"));
 const roster_calendarModule = lazy(() => import("./modules/Roster_Calendar/pages/index"));
+const attendance_calendarModule = lazy(() => import("./modules/Attendance_Calendar/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -254,6 +255,7 @@ const ROUTES = {
   calendar:calendarModule,
   leave_calendar:leave_calendarModule,
   roster_calendar:roster_calendarModule,
+  attendance_calendar:attendance_calendarModule,
 };
 
 export default function BasePage() {

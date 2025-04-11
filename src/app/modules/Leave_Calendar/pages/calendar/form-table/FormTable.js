@@ -33,11 +33,11 @@ export function FormTable() {
 
 
     const calendarEvents = leaveCalendar?.map((leave) => ({
-      title: `${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+      title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
       start: moment(leave?.from).toDate(),
       end: moment(leave?.to).endOf('day').toDate(),
       allDay: true,
-      description: `${leave?.from} - ${leave?.to} \n${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+      description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to} `,
     })
   
   

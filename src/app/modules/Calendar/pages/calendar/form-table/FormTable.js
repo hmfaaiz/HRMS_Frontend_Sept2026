@@ -32,10 +32,11 @@ export function FormTable() {
 
 
     const calendarEvents = holidayCalendar?.map((holiday) => ({
-      title: holiday.name,
-      start: moment(holiday.from_date).toDate(),
-      end: moment(holiday.to_date).endOf('day').toDate(),
+      title: holiday?.name,
+      start: moment(holiday?.from_date).toDate(),
+      end: moment(holiday?.to_date).endOf('day').toDate(),
       allDay: true,
+      description: `${holiday?.name}  \n${holiday?.from_date} - ${holiday?.to_date} `,
     })
   
   
@@ -67,6 +68,7 @@ export function FormTable() {
       <Calendar
         localizer={localizer}
         events={events}
+        tooltipAccessor={(event) => event.description}
         startAccessor="start"
         endAccessor="end"
         style={{ height: "100%" }}

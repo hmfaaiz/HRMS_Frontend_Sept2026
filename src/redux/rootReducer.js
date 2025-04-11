@@ -85,6 +85,7 @@ import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice
 import {CalendarSlice} from "../app/modules/Calendar/_redux/redux-Slice"
 import {LeaveCalendarSlice} from "../app/modules/Leave_Calendar/_redux/redux-Slice"
 import {RosterCalendarSlice} from "../app/modules/Roster_Calendar/_redux/redux-Slice"
+import {AttendanceCalendarSlice} from "../app/modules/Attendance_Calendar/_redux/redux-Slice"
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -168,6 +169,7 @@ export const rootReducer = combineReducers({
   calendar:CalendarSlice.reducer,
   leave_calendar:LeaveCalendarSlice.reducer,
   roster_calendar:RosterCalendarSlice.reducer,
+  attendance_calendar:AttendanceCalendarSlice.reducer,
 });
 
 
