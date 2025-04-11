@@ -30,6 +30,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     to: '',
     from: '',
     leaveType: '',
+    request_status : 'A',
     remarks: '',
     days: '',
     file: null,

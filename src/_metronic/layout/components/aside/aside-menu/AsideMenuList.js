@@ -7,9 +7,9 @@ import { shallowEqual, useSelector } from "react-redux";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
 import AsideparentList from "./AsideParentList";
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './navigation_menu.css'
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./navigation_menu.css";
 
 export function AsideMenuList({ layoutProps }) {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
@@ -19,7 +19,6 @@ export function AsideMenuList({ layoutProps }) {
   const [isVisible, setIsVisible] = useState(true);
   const menuRef = useRef(null);
   // Hide menu when clicked outside
-
 
   // Hide menu when it loses focus
   const handleBlur = () => {
@@ -35,7 +34,6 @@ export function AsideMenuList({ layoutProps }) {
     setIsVisible((prevState) => !prevState);
   };
 
-
   const isDashboardAccess = Settings?.some((obj) =>
     Object.values(obj).includes("read-all-vehicles-dashboard")
   );
@@ -46,25 +44,24 @@ export function AsideMenuList({ layoutProps }) {
   // if (!isReadALLRolesAccess) {
   //   delete UserAccess.Settings;
   // }
- 
+
   const location = useLocation();
   const getMenuItemActive = (url, hasSubmenu = false) => {
     return checkIsActive(location, url)
       ? ` ${!hasSubmenu &&
-      "menu-item-active"} menu-item-open menu-item-not-hightlighted`
+          "menu-item-active"} menu-item-open menu-item-not-hightlighted`
       : "";
   };
 
   function fnHideMenu() {
-    alert('0')
-    const menu_css = document.getElementById("dv_submenu").style = "display:none"
-    //menu_css.insertRule(stl, 0); 
+    alert("0");
+    const menu_css = (document.getElementById("dv_submenu").style =
+      "display:none");
+    //menu_css.insertRule(stl, 0);
   }
-
 
   return (
     <>
-
       {/* begin::Menu Nav */}
 
       <ul className={`menu-nav ${layoutProps.ulClasses}`}>
@@ -89,41 +86,50 @@ export function AsideMenuList({ layoutProps }) {
         {/* {Object.keys(UserAccess).map((res) => {
           return <AsideparentList element={res} key={res} />;
         })} */}
-
-
-
       </ul>
 
-
-      <div style={{ position: "fixed", width: "100%",marginTop:"45px" }}>
+      <div style={{ position: "fixed", width: "100%", marginTop: "45px" }}>
         <Navbar className="navbar" bg="light" expand="lg" variant="dark">
           {/* <Navbar.Brand href="#home">MyApp</Navbar.Brand> */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <NavDropdown  title="Dashboard" id="basic-nav-dropdown" className="custom-nav-dropdown">
-
-                <NavDropdown.Item href='/dashboard'>Dashboard</NavDropdown.Item>
-
+              <NavDropdown
+                title="Dashboard"
+                id="basic-nav-dropdown"
+                className="custom-nav-dropdown"
+              >
+                <NavDropdown.Item href="/dashboard">Dashboard</NavDropdown.Item>
               </NavDropdown>
-              {
-                UserAccess && Object.keys(UserAccess)?.map((res) => {
-                  return UserAccess[res].sort((a, b) => a.sortOrder - b.sortOrder).some(item => item.isResourceShow) &&
-                    <>
-                      <NavDropdown className="custom-nav-dropdown" title={res.replace(/_/g, " ")} id="basic-nav-dropdown">
-                        {UserAccess[res].map((ce) => {
-                          return ce.isResourceShow &&
-                            <NavDropdown.Item href={`/${ce.url}`}>{ce.name}</NavDropdown.Item>
-                        })}
-                      </NavDropdown>
-                    </>
-                })
-              }
-
+              {UserAccess &&
+                Object.keys(UserAccess)?.map((res) => {
+                  return (
+                    UserAccess[res]
+                      .sort((a, b) => a.sortOrder - b.sortOrder)
+                      .some((item) => item.isResourceShow) && (
+                      <>
+                        <NavDropdown
+                          className="custom-nav-dropdown"
+                          title={res.replace(/_/g, " ")}
+                          id="basic-nav-dropdown"
+                        >
+                          {UserAccess[res].map((ce) => {
+                            return (
+                              ce.isResourceShow && (
+                                <NavDropdown.Item href={`/${ce.url}`}>
+                                  {ce.name}
+                                </NavDropdown.Item>
+                              )
+                            );
+                          })}
+                        </NavDropdown>
+                      </>
+                    )
+                  );
+                })}
             </Nav>
-
           </Navbar.Collapse>
-        </Navbar >
+        </Navbar>
       </div>
 
       {/* end::Menu Nav */}

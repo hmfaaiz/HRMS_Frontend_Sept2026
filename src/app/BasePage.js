@@ -9,6 +9,7 @@ import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 import { fetchAllCountry } from "./modules/Dashboard/_redux/dashboardActions";
 import { incidentTypes } from "./modules/Dashboard/_redux/dashboardActions";
+import HODManagement from "./modules/HOD_Setup";
 
 const SettingsPage = lazy(() =>
   import("./modules/Settings/pages/SettingsPage")
@@ -174,6 +175,12 @@ const Roster_PatternModule = lazy(() =>
 );
 const companyModule = lazy(() => import("./modules/Company/page/index"));
 const subsidiaryModule = lazy(() => import("./modules/Subsidiary/page/index"));
+const leaveRequestModule = lazy(() =>
+  import("./modules/LeaveRequest/pages/index")
+);
+const workFlowPolicyModule = lazy(() =>
+  import("./modules/WorkflowPolicy/index")
+);
 const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
 
 const ROUTES = {
@@ -250,6 +257,9 @@ const ROUTES = {
   roster_pattern: Roster_PatternModule,
   subsidiary: subsidiaryModule,
   calendar:calendarModule,
+  leaverequest: leaveRequestModule,
+  workflow_policy: workFlowPolicyModule,
+  hod_setup : HODManagement
 };
 
 export default function BasePage() {
@@ -257,7 +267,6 @@ export default function BasePage() {
   dispatch(fetchAllCountry());
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
-
   const UserAccess = auth?.userAccess;
 
   const SettingsAccess = auth?.userAccess?.Settings;

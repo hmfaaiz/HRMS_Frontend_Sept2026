@@ -54,6 +54,7 @@ const initialDashboardState = {
   allPayrollConfigApproverPermissionList:[],
   allRosterPatternList:[],
   allCurrency : [],
+  allEmployeeRequestTypeList:[], 
 };
 
 export const callTypes = {
@@ -235,5 +236,8 @@ export const dashboardSlice = createSlice({
       state.allRosterPatternList = action.payload;
  
     },
+    allEmployeeRequestTypeFetch : (state, action) => {
+      state.allEmployeeRequestTypeList = action.payload;
+    }
   },
 });
