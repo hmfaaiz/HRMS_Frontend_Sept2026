@@ -84,6 +84,8 @@ import { CompanySlice } from "../app/modules/Company/redux/companySlice";
 import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice";
 import {CalendarSlice} from "../app/modules/Calendar/_redux/redux-Slice"
 import {LeaveCalendarSlice} from "../app/modules/Leave_Calendar/_redux/redux-Slice"
+import {RosterCalendarSlice} from "../app/modules/Roster_Calendar/_redux/redux-Slice"
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -165,7 +167,9 @@ export const rootReducer = combineReducers({
   subsidiary: SubsidiarySlice.reducer,
   calendar:CalendarSlice.reducer,
   leave_calendar:LeaveCalendarSlice.reducer,
+  roster_calendar:RosterCalendarSlice.reducer,
 });
+
 
 export function* rootSaga() {
   yield all([auth.saga()]);
