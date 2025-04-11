@@ -45,7 +45,7 @@ const DesignationWorkflowEditForm = ({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   useEffect(() => {
-    dispatch(fetchAllFormsMenu(398, "allEmployeeRequestTypeList"));
+    dispatch(fetchAllFormsMenu(380, "allEmployeeRequestTypeList"));
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllActiveEmployees());
     // }
