@@ -82,6 +82,9 @@ import { EmployeeRegisterSlice } from "../app/modules/EmployeeRegister/_redux/Em
 import { roster_patternSlice } from "../app/modules/Roster_Pattern/_redux/redux-Slice";
 import { CompanySlice } from "../app/modules/Company/redux/companySlice";
 import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice";
+import { LeaveRequestSlice } from "../app/modules/LeaveRequest/_redux/LeaveApplicationSlice";
+import { workflowPolicySlice } from "../app/modules/WorkflowPolicy/redux/formSlice";
+import { HODSlice } from "../app/modules/HOD_Setup/redux/formSlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -161,6 +164,9 @@ export const rootReducer = combineReducers({
   employee_register: EmployeeRegisterSlice.reducer,
   roster_pattern: roster_patternSlice.reducer,
   subsidiary: SubsidiarySlice.reducer,
+  leave_request: LeaveRequestSlice.reducer,
+  workflow_policy: workflowPolicySlice.reducer,
+  hod_setup: HODSlice.reducer,
 });
 
 export function* rootSaga() {
