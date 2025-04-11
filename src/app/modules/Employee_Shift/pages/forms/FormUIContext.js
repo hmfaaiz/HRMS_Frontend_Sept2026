@@ -44,7 +44,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isOverTime: "",
     overTimeStart: "",
     interShiftGap: "",
-    isIncludeInterShifGap: "",
+    isIncludeInterShifGap:false,
     markAbsent:"",
     markHalfDay:""
   };

@@ -181,6 +181,8 @@ const leaveRequestModule = lazy(() =>
 const workFlowPolicyModule = lazy(() =>
   import("./modules/WorkflowPolicy/index")
 );
+const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -254,6 +256,7 @@ const ROUTES = {
   employee_register: EmployeeRegister,
   roster_pattern: Roster_PatternModule,
   subsidiary: subsidiaryModule,
+  calendar:calendarModule,
   leaverequest: leaveRequestModule,
   workflow_policy: workFlowPolicyModule,
   hod_setup : HODManagement
@@ -265,10 +268,11 @@ export default function BasePage() {
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
+
   const SettingsAccess = auth?.userAccess?.Settings;
-  const isDashboardAccess = SettingsAccess?.some((obj) =>
-    Object.values(obj).includes("read-all-vehicles-dashboard")
-  );
+  // const isDashboardAccess = SettingsAccess?.some((obj) =>
+  //   Object.values(obj).includes("read-all-vehicles-dashboard")
+  // );
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

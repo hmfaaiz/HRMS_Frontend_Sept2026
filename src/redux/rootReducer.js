@@ -85,6 +85,7 @@ import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice
 import { LeaveRequestSlice } from "../app/modules/LeaveRequest/_redux/LeaveApplicationSlice";
 import { workflowPolicySlice } from "../app/modules/WorkflowPolicy/redux/formSlice";
 import { HODSlice } from "../app/modules/HOD_Setup/redux/formSlice";
+import {CalendarSlice} from "../app/modules/Calendar/_redux/redux-Slice"
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -167,6 +168,7 @@ export const rootReducer = combineReducers({
   leave_request: LeaveRequestSlice.reducer,
   workflow_policy: workflowPolicySlice.reducer,
   hod_setup: HODSlice.reducer,
+  calendar:CalendarSlice.reducer,
 });
 
 export function* rootSaga() {
