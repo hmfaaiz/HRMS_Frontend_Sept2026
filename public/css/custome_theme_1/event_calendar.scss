@@ -1,0 +1,42 @@
+/* Add this CSS to your global stylesheet or component styles */
+.custom-tooltip {
+    height: 40px;
+    overflow-wrap: break-word; /* Ensures long words break and wrap onto the next line */
+    word-break: break-word;    /* Allows unbreakable words to be broken and wrap onto the next line */
+    white-space: normal;       /* Ensures that white spaces are handled normally */
+    display: block;            /* Ensures the div behaves as a block-level element */
+    word-wrap: break-word;
+  
+  }
+  
+
+  .tooltip-absent{
+    background-color:  #06c00f !important;
+    height: 45px;
+    overflow-wrap: break-word; /* Ensures long words break and wrap onto the next line */
+    word-break: break-word;    /* Allows unbreakable words to be broken and wrap onto the next line */
+    white-space: normal;       /* Ensures that white spaces are handled normally */
+    display: block;            /* Ensures the div behaves as a block-level element */
+    word-wrap: break-word;
+}
+
+
+// .rbc-event-more {
+//   background-color: #06c00f;  /* Green color */
+//   color: white;
+//   font-weight: bold;
+//   cursor: pointer;
+//   padding: 5px;
+//   text-align: center;
+//   border-radius: 4px;
+//   margin-top: 5px;
+//   display: inline-block;
+//   font-size: 14px;
+//   text-transform: uppercase;
+// }
+
+// /* Hover effect for the "More" button */
+// .rbc-event-more:hover {
+//   background-color: #049e00;
+//   opacity: 0.8;
+// }
