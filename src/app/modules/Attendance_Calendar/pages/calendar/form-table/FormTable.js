@@ -66,7 +66,7 @@ export function FormTable() {
   };
 
   return (
-    <div style={{ height: '1500px' }}>
+    <div style={{ height: '1550px' }}>
 
       {/* Render the calendar */}
       <Calendar
@@ -94,17 +94,7 @@ export function FormTable() {
         components={{
           event: ({ event }) => (
             <div className="custom-tooltip"
-              // style={{
-              //   // backgroundColor: '',
-              //   // color:"black",
-              //   // padding: '10px',
-              //   height: '50px',  // Adjust the height for event boxes here
-              //   overflowWrap: 'break-word',  // Ensures long words break and wrap onto the next line
-              //   wordBreak: 'break-word',     // Allows unbreakable words to be broken and wrap onto the next line
-              //   whiteSpace: 'normal',        // Ensures that white spaces are handled normally
-              //   display: 'block',            // Ensures the div behaves as a block-level element
-              //   wordWrap: 'break-word',  
-              // }}
+             
             >
               {event.title}
             </div>

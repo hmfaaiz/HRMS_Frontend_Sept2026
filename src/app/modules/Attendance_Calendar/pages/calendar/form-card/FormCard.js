@@ -10,7 +10,7 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 
@@ -73,6 +73,7 @@ const setInitialValues=(firstSubsidiary)=>{
   useEffect(() => {
     if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
       const firstSubsidiary = dashboard.allSubsidiaryList[0];
+      dispatch(fetchAllDept(dashboard.allSubsidiaryList[0].value));
       setInitialValues(firstSubsidiary)
     }
   }, [dashboard.allSubsidiaryList]);
@@ -129,7 +130,7 @@ const setInitialValues=(firstSubsidiary)=>{
 
               // Set the newly selected subsidiaryId
               setFieldValue("subsidiaryId", selectedValue);
-           
+             dispatch(fetchAllDept(selectedValue));
               setInitialValues(dashboard?.allSubsidiaryList?.find(
                 (option) => option?.value ===selectedValue
               ) || null)
@@ -172,6 +173,32 @@ const setInitialValues=(firstSubsidiary)=>{
                               touched={touched.subsidiaryId}
                             />
                           </div>
+
+                               <div className="col-12 col-md-4 mt-3">
+                                                      <Field
+                                                        name="departmentId"
+                                                        component={SearchSelect}
+                                                        onBlur={handleBlur}
+                                                        onChange={(e) => {
+                                                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                                                          setFieldValue('departmentId', value)
+                                                        }}
+                                                        label={
+                                                          <span>
+                                                            {" "}
+                                                            Department
+                                                          </span>
+                                                        }
+                                                        value={
+                                                          dashboard?.allDept?.find(
+                                                            (option) => option?.value === values?.departmentId
+                                                          ) || null
+                                                        }
+                                                        options={dashboard?.allDept}
+                                                        error={errors.departmentId}
+                                                        touched={touched.departmentId}
+                                                      />
+                                                    </div>
                         </div>
 
                         {/* Employee Selector */}
@@ -188,7 +215,14 @@ const setInitialValues=(firstSubsidiary)=>{
                                   (option) => option?.value === values?.employeeId
                                 ) || null
                               }
-                              options={dashboard?.allEmployees}
+                              // options={dashboard?.allEmployees}
+                              options={
+                                values?.departmentId
+                                  ? dashboard?.allEmployees?.filter(
+                                      (emp) => emp?.departmentId === values.departmentId
+                                    )
+                                  : dashboard?.allEmployees
+                              }
                               error={errors.employeeId}
                               touched={touched.employeeId}
                             />
