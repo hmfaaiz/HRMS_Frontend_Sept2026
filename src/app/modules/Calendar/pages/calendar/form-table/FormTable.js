@@ -68,6 +68,8 @@ export function FormTable() {
       <Calendar
         localizer={localizer}
         events={events}
+          views={['month', 'week', 'day']} // ✅ Agenda ko remove kiya yahan
+          defaultView="month"
         tooltipAccessor={(event) => event.description}
         startAccessor="start"
         endAccessor="end"
@@ -92,46 +94,46 @@ export function FormTable() {
               {event.title}
             </div>
           ),
-          toolbar: (props) => (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+          // toolbar: (props) => (
+          //   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          //     <div style={{ display: 'flex', alignItems: 'center' }}>
              
-                <button
-                  disabled={isPreviousDisabled(props.date)}  // Disable if at the start date
-                  onClick={() => {
-                    if (!isPreviousDisabled(props.date)) {
-                      props.onNavigate('PREV');  // Navigate to the previous date
-                    }
-                  }}
+          //       <button
+          //         disabled={isPreviousDisabled(props.date)}  // Disable if at the start date
+          //         onClick={() => {
+          //           if (!isPreviousDisabled(props.date)) {
+          //             props.onNavigate('PREV');  // Navigate to the previous date
+          //           }
+          //         }}
                   
 
-                   className="calendar-btn"
-                >
-                  {"<"}
-                </button>
-                {/* Next Button */}
-                <button
-                  disabled={isNextDisabled(props.date)}  // Disable if at the end date
-                  onClick={() => {
-                    if (!isNextDisabled(props.date)) {
-                      props.onNavigate('NEXT');  // Navigate to the next date
-                    }
-                  }}
-                 className="calendar-btn"
-                >
-                  {">"}
-                </button>
-              </div>
+          //          className="calendar-btn"
+          //       >
+          //         {"<"}
+          //       </button>
+          //       {/* Next Button */}
+          //       <button
+          //         disabled={isNextDisabled(props.date)}  // Disable if at the end date
+          //         onClick={() => {
+          //           if (!isNextDisabled(props.date)) {
+          //             props.onNavigate('NEXT');  // Navigate to the next date
+          //           }
+          //         }}
+          //        className="calendar-btn"
+          //       >
+          //         {">"}
+          //       </button>
+          //     </div>
 
-              {/* Month/Week/Day/Agenda View Selector */}
+          //     {/* Month/Week/Day/Agenda View Selector */}
              
 
-              {/* Display the current month/year */}
-              <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                {moment(props.date).format('MMMM YYYY')}
-              </div>
-            </div>
-          ),
+          //     {/* Display the current month/year */}
+          //     <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
+          //       {moment(props.date).format('MMMM YYYY')}
+          //     </div>
+          //   </div>
+          // ),
 
         }}
       />
