@@ -10,7 +10,7 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 
@@ -35,10 +35,10 @@ export function FormCard() {
 
 
   const customSubmit = (values) => {
-    let formattedFromDate= formatDates(values?.from_date,'yyyy-MM-dd')
-    let formattedToDate=  formatDates(values?.to_date,'yyyy-MM-dd')
-   
-    dispatch(actions.fetchLeaves( {...values, from_date: formattedFromDate, to_date: formattedToDate }, setLoading));
+    let formattedFromDate = formatDates(values?.from_date, 'yyyy-MM-dd')
+    let formattedToDate = formatDates(values?.to_date, 'yyyy-MM-dd')
+
+    dispatch(actions.fetchLeaves({ ...values, from_date: formattedFromDate, to_date: formattedToDate }, setLoading));
   }
 
 
@@ -53,13 +53,16 @@ export function FormCard() {
 
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+
+
   }, [dispatch]);
 
 
-  ;
+
+
   const { leaveCalendar } = currentState;
 
-const setInitialValues=(firstSubsidiary)=>{
+  const setInitialValues = (firstSubsidiary) => {
     setBodyValues({
       from_date: firstSubsidiary?.payrollMonth?.startDate || '',
       to_date: firstSubsidiary?.payrollMonth?.endDate || '',
@@ -68,11 +71,12 @@ const setInitialValues=(firstSubsidiary)=>{
     setIsDataLoaded(true); // Mark data as loaded
     dispatch(fetchAllActiveEmployeesBySubsidiary(firstSubsidiary?.value));
 
-}
+  }
 
   useEffect(() => {
     if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
       const firstSubsidiary = dashboard.allSubsidiaryList[0];
+      dispatch(fetchAllDept(dashboard.allSubsidiaryList[0].value));
       setInitialValues(firstSubsidiary)
     }
   }, [dashboard.allSubsidiaryList]);
@@ -104,10 +108,10 @@ const setInitialValues=(firstSubsidiary)=>{
             employeeId: null, // Default null for employeeId
           }}
           validationSchema={formValidation}
-          // onSubmit={(values) => {
-           
-          //   customSubmit(values);
-          // }}
+        // onSubmit={(values) => {
+
+        //   customSubmit(values);
+        // }}
         >
           {({
             handleSubmit,
@@ -121,17 +125,17 @@ const setInitialValues=(firstSubsidiary)=>{
             // Handle subsidiaryId change to reset all fields
             const handleSubsidiaryChange = (e) => {
               const selectedValue = e.value || null;
-           
+
               Object.keys(values).forEach((key) => {
                 setFieldValue(key, null); // Reset each field to null
               });
-        
+
 
               // Set the newly selected subsidiaryId
               setFieldValue("subsidiaryId", selectedValue);
-           
+              dispatch(fetchAllDept(selectedValue));
               setInitialValues(dashboard?.allSubsidiaryList?.find(
-                (option) => option?.value ===selectedValue
+                (option) => option?.value === selectedValue
               ) || null)
             };
 
@@ -172,6 +176,32 @@ const setInitialValues=(firstSubsidiary)=>{
                               touched={touched.subsidiaryId}
                             />
                           </div>
+
+                          <div className="col-12 col-md-4 mt-3">
+                            <Field
+                              name="departmentId"
+                              component={SearchSelect}
+                              onBlur={handleBlur}
+                              onChange={(e) => {
+                                const value = e.value == '--Select--' ? '' : Number(e.value)
+                                setFieldValue('departmentId', value)
+                              }}
+                              label={
+                                <span>
+                                  {" "}
+                                  Department
+                                </span>
+                              }
+                              value={
+                                dashboard?.allDept?.find(
+                                  (option) => option?.value === values?.departmentId
+                                ) || null
+                              }
+                              options={dashboard?.allDept}
+                              error={errors.departmentId}
+                              touched={touched.departmentId}
+                            />
+                          </div>
                         </div>
 
                         {/* Employee Selector */}
@@ -188,7 +218,14 @@ const setInitialValues=(firstSubsidiary)=>{
                                   (option) => option?.value === values?.employeeId
                                 ) || null
                               }
-                              options={dashboard?.allEmployees}
+                              // options={dashboard?.allEmployees}
+                              options={
+                                values?.departmentId
+                                  ? dashboard?.allEmployees?.filter(
+                                      (emp) => emp?.departmentId === values.departmentId
+                                    )
+                                  : dashboard?.allEmployees
+                              }
                               error={errors.employeeId}
                               touched={touched.employeeId}
                             />
@@ -244,17 +281,17 @@ const setInitialValues=(firstSubsidiary)=>{
                   </button>
 
                   <button
-              onClick={() => {
-                
-           
-              
-                // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
-                customSubmit(values);
-              }}
-              className="btn btn-success btn-elevate"
-              >
-                Filter Record
-              </button>
+                    onClick={() => {
+
+
+
+                      // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
+                      customSubmit(values);
+                    }}
+                    className="btn btn-success btn-elevate"
+                  >
+                    Filter Record
+                  </button>
                 </Modal.Footer>
               </>
             );
