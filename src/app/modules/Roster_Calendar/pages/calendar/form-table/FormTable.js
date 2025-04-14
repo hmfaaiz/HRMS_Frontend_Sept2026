@@ -39,6 +39,7 @@ export function FormTable() {
       end: moment(roster?.date).endOf('day').toDate(),
       allDay: true,
       description: `${roster?.t_employee_roster?.t_employee_profile?.employeeCode} - ${roster?.t_employee_roster?.t_employee_profile?.fullName} \n${roster?.t_employee_shift?.name || 'Off Day'}  \n${formatDates(roster?.date, 'dd/MM/yyyy')} \n(${roster?.t_employee_shift?.startTime || '0000'} - ${roster?.t_employee_shift?.endTime || '0000'})`,
+      shift: roster?.t_employee_shift?.name || null,
     })
 
 
@@ -92,11 +93,11 @@ export function FormTable() {
         // Optionally, you can customize navigation behavior to stay within range
         components={{
           event: ({ event }) => (
-            <div className="custom-tooltip" >
+            <div className={`${"custom-tooltip"}`} >
               {event.title}
             </div>
           ),
-         
+
           toolbar: (props) => (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -138,6 +139,14 @@ export function FormTable() {
             </div>
           ),
 
+        }}
+        eventPropGetter={(event) => {
+          if (!event.shift) {
+            return {
+              className: 'tooltip-absent'
+            };
+          }
+          return {};
         }}
       />
 

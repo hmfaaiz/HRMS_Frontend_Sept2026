@@ -1,10 +1,21 @@
 /* Add this CSS to your global stylesheet or component styles */
 .custom-tooltip {
+    height: 40px;
+    overflow-wrap: break-word; /* Ensures long words break and wrap onto the next line */
+    word-break: break-word;    /* Allows unbreakable words to be broken and wrap onto the next line */
+    white-space: normal;       /* Ensures that white spaces are handled normally */
+    display: block;            /* Ensures the div behaves as a block-level element */
+    word-wrap: break-word;
+  
+  }
+  
+
+  .tooltip-absent{
+    background-color:  #06c00f !important;
     height: 45px;
     overflow-wrap: break-word; /* Ensures long words break and wrap onto the next line */
     word-break: break-word;    /* Allows unbreakable words to be broken and wrap onto the next line */
     white-space: normal;       /* Ensures that white spaces are handled normally */
     display: block;            /* Ensures the div behaves as a block-level element */
     word-wrap: break-word;
-  }
-  
+}

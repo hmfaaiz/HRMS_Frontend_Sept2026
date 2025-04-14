@@ -34,7 +34,7 @@ export function FormTable() {
 
 
     const calendarEvents = attendanceCalendar?.map((attendance) => ({
-      title: `${attendance.EmployeeCode} - ${attendance?.FullName} `,
+      title: `${attendance.EmployeeCode} - ${attendance?.FullName} (${attendance?.shiftDescription})`,
       start: moment(attendance?.AttDate).toDate(),
       end: moment(attendance?.AttDate).endOf('day').toDate(),
       allDay: true,
