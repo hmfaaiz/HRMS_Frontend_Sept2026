@@ -62,7 +62,7 @@ export function FormTable() {
   };
 
   return (
-    <div style={{ height: '600px' }}>
+    <div style={{ height: '1500px' }}>
 
       {/* Render the calendar */}
       <Calendar
@@ -87,6 +87,11 @@ export function FormTable() {
         defaultDate={selectedRange?.from_date}
         // Optionally, you can customize navigation behavior to stay within range
         components={{
+          event: ({ event }) => (
+            <div className="custom-tooltip" >
+              {event.title}
+            </div>
+          ),
           toolbar: (props) => (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>

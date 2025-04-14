@@ -66,7 +66,7 @@ export function FormTable() {
   };
 
   return (
-    <div style={{ height: '600px' }}>
+    <div style={{ height: '1500px' }}>
 
       {/* Render the calendar */}
       <Calendar
@@ -89,8 +89,27 @@ export function FormTable() {
         min={selectedRange?.from}
         max={selectedRange?.to}
         defaultDate={selectedRange?.from}
-        // Optionally, you can customize navigation behavior to stay within range
+      
+       
         components={{
+          event: ({ event }) => (
+            <div className="custom-tooltip"
+              // style={{
+              //   // backgroundColor: '',
+              //   // color:"black",
+              //   // padding: '10px',
+              //   height: '50px',  // Adjust the height for event boxes here
+              //   overflowWrap: 'break-word',  // Ensures long words break and wrap onto the next line
+              //   wordBreak: 'break-word',     // Allows unbreakable words to be broken and wrap onto the next line
+              //   whiteSpace: 'normal',        // Ensures that white spaces are handled normally
+              //   display: 'block',            // Ensures the div behaves as a block-level element
+              //   wordWrap: 'break-word',  
+              // }}
+            >
+              {event.title}
+            </div>
+          ),
+        
           toolbar: (props) => (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
