@@ -3,6 +3,7 @@ import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { PayrollRegisterPage } from "./forms/PayrollRegisterPage";
 import { PayrollRegisterPreviewPage } from "./preview/previewRegisterPDF";
+import PreviewPayslipPDF from "./preview/previewPayslipPDF";
 
 export default function PayrollRegisterManagement() {
   return (
@@ -13,6 +14,10 @@ export default function PayrollRegisterManagement() {
 
         {<Redirect exact={true} from="/payroll_register" to="/payroll_register/preview-registered-payroll-pdf" />}
         <ContentRoute path="/payroll_register/preview-registered-payroll-pdf" component={PayrollRegisterPreviewPage} />
+
+
+        {<Redirect exact={true} from="/payroll_register" to="/payroll_register/preview-payslip-pdf" />}
+        <ContentRoute path="/payroll_register/preview-payslip-pdf" component={PreviewPayslipPDF} />
       </Switch>
     </Suspense>
   );

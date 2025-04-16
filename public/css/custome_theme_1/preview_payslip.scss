@@ -1,0 +1,134 @@
+
+
+.payslip-container {
+    width: 90%;
+    margin: 10px auto;
+    // border: 2px solid #f2a349;
+    background-color: rgb(255, 255, 255);
+  padding: 35px;
+}
+
+.payslip-container-inner {
+
+    border: 2px solid #f2a349;
+    margin-bottom: 60px;
+
+}
+.payslip-header {
+    background-color: #f2a349;
+    color: white;
+    padding: 10px;
+}
+
+.payslip-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payslip-left {
+    text-align: left;
+}
+
+.payslip-right {
+    text-align: right;
+}
+
+
+.payslip-header .company-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.payslip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.payslip-tdWidth {
+    width: 10%;
+}
+
+.payslip-tdWidthEmpAtt{
+width: 2%;
+}
+.payslip-tdWidthOther {
+    border: 0px;
+    padding: 0%;
+}
+
+.payslip-alligntd {
+    vertical-align: top;
+}
+
+.payslip-th,
+.payslip-table  td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.payslip-table .payslip-table-td{
+    padding: 0px !important;
+}
+
+.payslip-table th {
+    background-color: #f2a349;
+    color: white;
+}
+
+.payslip-section-title {
+    background-color: #f2a349;
+    color: white;
+    // text-align: center;
+    font-weight: bold;
+}
+
+.payslip-footer {
+    text-align: center;
+    font-style: italic;
+    margin: 5px 0;
+}
+
+.payslip-amount-in-words {
+    font-weight: bold;
+}
+
+.payslip-right-align {
+    text-align: right !important;
+}
+
+.payslip-page-break {
+page-break-after: always;
+}
+.payslip-page-break:last-child {
+page-break-after: auto; /* Prevents an extra blank page at the end */
+}
+
+
+    .payslip-signature-content {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    padding-top: 0px;
+
+}
+.payslip-flex-column {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 25px;
+}
+.payslip-input-field {
+width: 150px; /* You can adjust the width of the input box */
+}
+
+
+.payslip-td-width{
+    width:100%;
+    // background-color: red;
+    padding: 0 !important;
+  
+}
