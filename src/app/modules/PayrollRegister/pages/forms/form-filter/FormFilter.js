@@ -484,7 +484,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             // history.push(`/payroll_register/read-all-registered-payroll/preview-registered-payroll-pdf`);
                             window.open('/payroll_register/preview-registered-payroll-pdf');
                           }}
-                          disabled={registerLoading}
+                          disabled={registerLoading || !values.subsidiaryId || !values.monthId}
                           type="button"
                           className="btn btn-primary btn-elevate"
                         >
@@ -493,6 +493,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
                         </button>
+                        
+                        <span>    </span>
 
                         <button
                           onClick={() => { getPdf(values) }}

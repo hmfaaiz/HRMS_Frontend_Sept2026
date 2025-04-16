@@ -245,8 +245,8 @@ export const PreviewRegisterPDFGroupBy = () => {
         {labels?.subsidiaryLabel && <p>Subsidiary: <strong>{labels.subsidiaryLabel}</strong></p>}
         {labels?.groupWiseLabel && <p>Payroll: <strong>{labels.groupWiseLabel}</strong></p>}
       </div>
-      <div style={{ height: '80vh', overflow: 'auto' }}>
-      <table className="payroll-table" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
+      <div style={{ height: '60vh', overflow: 'auto' }}>
+      <table className="payroll-register-groupBy" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
         <thead>
           <tr>
             <th>S. No.</th>
