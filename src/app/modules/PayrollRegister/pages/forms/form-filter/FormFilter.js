@@ -471,16 +471,16 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           onClick ={()=>{
                             // history.push("/preview-register-pdf");
                             previewRegisterPdf(values);
-                            const previewData = {
-                              labels: {
-                                monthLabel: 'April 2025',
-                                subsidiaryLabel: 'XYZ Corp',
-                                groupWiseLabel: 'Group A',
-                              },
-                              filter: {} // if needed
-                            };
+                            // const previewData = {
+                            //   labels: {
+                            //     monthLabel: 'April 2025',
+                            //     subsidiaryLabel: 'XYZ Corp',
+                            //     groupWiseLabel: 'Group A',
+                            //   },
+                            //   filter: {} // if needed
+                            // };
                           
-                            localStorage.setItem('payroll_register_preview', JSON.stringify(previewData));
+                            // localStorage.setItem('payroll_register_preview', JSON.stringify(previewData));
                             // history.push(`/payroll_register/read-all-registered-payroll/preview-registered-payroll-pdf`);
                             window.open('/payroll_register/preview-registered-payroll-pdf');
                           }}
@@ -488,7 +488,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           type="button"
                           className="btn btn-primary btn-elevate"
                         >
-                          Preview Register (PDF)
+                          Preview 
                           {registerLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
