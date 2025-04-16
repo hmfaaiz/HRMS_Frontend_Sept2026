@@ -31,7 +31,7 @@ export const PayrollRegisterPreviewPage = () => {
 
   }, []);
 
-  if (!data) return <p>Loading preview...</p>;
+  if (!data) return <p>Please go back...</p>;
 
   // Extract data
   const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals} = data;

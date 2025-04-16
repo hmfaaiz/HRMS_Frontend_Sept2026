@@ -234,11 +234,12 @@ const PreviewPayslipPDF = () => {
         if (raw) {
             const parsed = JSON.parse(raw);
             setData(parsed);  // Set the data from localStorage
+          localStorage.removeItem('previewPayslipPdf'); // Clear it
         }
     }, []);
 
     if (data.length === 0) {
-        return <div>Loading...</div>; // Show loading message while the data is being fetched
+        return <div>Please go back...</div>; // Show loading message while the data is being fetched
     }
 
     return (
