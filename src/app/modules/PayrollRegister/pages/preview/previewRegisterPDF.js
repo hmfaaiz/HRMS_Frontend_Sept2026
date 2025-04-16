@@ -25,7 +25,7 @@ export const PayrollRegisterPreviewPage = () => {
     if (raw) {
       const parsed = JSON.parse(raw);
       setData(parsed);
-      localStorage.removeItem('payroll_register_preview'); // Clear it
+     
     }
 
 
@@ -75,7 +75,7 @@ const PreviewRegisterPDF = ({
   const toFixed = (value) => Number(value || 0).toFixed(2);
 
   const isMultipleOf = (index, num) => (index + 1) % num === 0;
-
+  localStorage.removeItem('previewRegisterPdf'); // Clear it
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', margin: 20, backgroundColor: '#f9f9f9', zoom: 0.6 , padding:20}}>
       <h1 style={{ textAlign: 'center', color: '#333' }}>Payroll Register</h1>

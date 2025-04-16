@@ -181,7 +181,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
     dispatch(actions.fetchPreviewRegisterPdf(newQueryParams.filter, document, labels));
   }
 
-
+  const previewPayslipPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchPreviewPayslipPdf(newQueryParams.filter, document, labels));
+  }
 
   return (
     <>
@@ -471,16 +475,16 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           onClick ={()=>{
                             // history.push("/preview-register-pdf");
                             previewRegisterPdf(values);
-                            const previewData = {
-                              labels: {
-                                monthLabel: 'April 2025',
-                                subsidiaryLabel: 'XYZ Corp',
-                                groupWiseLabel: 'Group A',
-                              },
-                              filter: {} // if needed
-                            };
+                            // const previewData = {
+                            //   labels: {
+                            //     monthLabel: 'April 2025',
+                            //     subsidiaryLabel: 'XYZ Corp',
+                            //     groupWiseLabel: 'Group A',
+                            //   },
+                            //   filter: {} // if needed
+                            // };
                           
-                            localStorage.setItem('payroll_register_preview', JSON.stringify(previewData));
+                            // localStorage.setItem('payroll_register_preview', JSON.stringify(previewData));
                             // history.push(`/payroll_register/read-all-registered-payroll/preview-registered-payroll-pdf`);
                             window.open('/payroll_register/preview-registered-payroll-pdf');
                           }}
@@ -488,7 +492,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           type="button"
                           className="btn btn-primary btn-elevate"
                         >
-                          Preview Register (PDF)
+                          Preview 
                           {registerLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -551,6 +555,26 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                     <h6>Payslip</h6>
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-11">
+                      
+                      <button
+                       
+                          onClick ={()=>{
+                         
+                            previewPayslipPdf(values);
+                     
+                            window.open('/payroll_register/preview-payslip-pdf');
+                          }}
+                          disabled={pdfLoading || !values.subsidiaryId || !values.monthId}
+                          type="button"
+                          className="btn btn-primary btn-elevate"
+                        >
+                          Preview 
+                          { pdfLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      
+                        <span>    </span>
                         <button
                           onClick={() => { getPayslip(values) }}
                           disabled={pdfLoading}
@@ -561,6 +585,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
                         </button>
+                    
+                    
                       </div>
                     </div>
                   </div>

@@ -275,3 +275,18 @@ export const fetchPreviewRegisterPdf = (filter, document, labels = {}) => async 
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
 };
+
+
+
+export const fetchPreviewPayslipPdf = (filter, document, labels = {}) => async (dispatch) => {
+
+  dispatch(actions.startCall({ callType: callTypes.list }));
+  return requestFromServer.previewPayslipPdf({ ...filter, labels })
+    .then((response) => {
+      dispatch(actions.previewPayslipPdfFetched(response));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find data";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};

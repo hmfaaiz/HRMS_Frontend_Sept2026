@@ -18,6 +18,11 @@ const initialState = {
     //preview register pdf
     previewRegisterPdData:[],
     previewRegisterPdftotalCount:0,
+
+
+    //preview payslip
+    previewPayslipPdfData:[],
+    previewPayslipPdftotalCount:0,
 };
 
 export const callTypes = {
@@ -115,6 +120,21 @@ export const PayrollRegisterSlice = createSlice({
             state.previewRegisterPdftotalCount = totalResult;
 
             localStorage.setItem('previewRegisterPdf', JSON.stringify(previewRegisterPdData));
+         
+        },
+
+
+        
+        previewPayslipPdfFetched: (state, action) => {
+            
+            const previewPayslipPdfData = action.payload.data?.data;
+            const totalResult = action.payload.data?.data.totalResults;
+            state.listLoading = false;
+            state.error = null;
+            state.previewPayslipPdfData = previewPayslipPdfData;
+            state.previewPayslipPdftotalCount = totalResult;
+
+            localStorage.setItem('previewPayslipPdf', JSON.stringify(previewPayslipPdfData));
          
         }
     },

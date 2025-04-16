@@ -655,12 +655,12 @@ disabled={  isAfterResult}
 
                       </div>
 
-                      <div className="col-12 col-md-6 mt-3">
+                      {/* <div className="col-12 col-md-6 mt-3">
                         <label>
                           Tax not calculated: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.TaxNotCalculated || 0}</span>
                         </label>
 
-                      </div>
+                      </div> */}
 
 
                       <div className="col-12 col-md-6 mt-3">
