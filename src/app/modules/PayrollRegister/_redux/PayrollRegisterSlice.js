@@ -14,6 +14,10 @@ const initialState = {
     pdfLoading: false,
     registerGDExcelLoading:false,
     registerExcelLoading:false,
+
+    //preview register pdf
+    previewRegisterPdData:[],
+    previewRegisterPdftotalCount:0,
 };
 
 export const callTypes = {
@@ -99,6 +103,19 @@ export const PayrollRegisterSlice = createSlice({
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
+        },
+
+        previewRegisterPdfFetched: (state, action) => {
+            
+            const previewRegisterPdData = action.payload.data?.data;
+            const totalResult = action.payload.data?.data.totalResults;
+            state.listLoading = false;
+            state.error = null;
+            state.previewRegisterPdData = previewRegisterPdData;
+            state.previewRegisterPdftotalCount = totalResult;
+
+            localStorage.setItem('previewRegisterPdf', JSON.stringify(previewRegisterPdData));
+         
         }
     },
 });
