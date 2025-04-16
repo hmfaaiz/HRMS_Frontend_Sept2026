@@ -586,9 +586,18 @@ console.log("user111",user)
     }
   }
 
-  const totalAllowance = defMapEarningDeductionList?.reduce((prev, curr) => {
-    return curr.transactionType == 'Earning' && curr.isPartOfGrossSalary == false ? prev + curr.amount : prev
-  }, 0) || 0;
+  // const totalAllowance = defMapEarningDeductionList?.reduce((prev, curr) => {
+  //   return curr.transactionType == 'Earning' && curr.isPartOfGrossSalary == false ? prev + curr.amount : prev
+  // }, 0) || 0;
+
+
+// The above code was written by another developer. The issue is that total earnings and other earnings are not being summed up correctly.
+// So I have updated the below code"
+
+const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+  return item.transactionType === 'Earning' ? sum + item.amount : sum;
+}, 0);
+
 
 
   const totalGross = defMapEarningDeductionList?.reduce((prev, curr) => {
