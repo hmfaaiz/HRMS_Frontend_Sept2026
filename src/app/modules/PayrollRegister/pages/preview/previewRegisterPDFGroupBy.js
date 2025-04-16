@@ -10,7 +10,7 @@
 //       if (raw) {
 //         const parsed = JSON.parse(raw);
 //         setData(parsed);
-//         console.log("parsed111",parsed)
+
 //         localStorage.removeItem('payroll_register_preview'); // Clear it
 //       }
   
@@ -225,7 +225,7 @@ export const PreviewRegisterPDFGroupBy = () => {
     if (raw) {
       const parsed = JSON.parse(raw);
       setData(parsed);
-      console.log("Parsed Data:", parsed);
+    
       localStorage.removeItem('previewRegisterPdf'); // Clear it
     }
   }, []);

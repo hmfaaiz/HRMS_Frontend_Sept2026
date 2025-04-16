@@ -115,7 +115,7 @@ export const PayrollRegisterSlice = createSlice({
             state.previewRegisterPdftotalCount = totalResult;
 
             localStorage.setItem('previewRegisterPdf', JSON.stringify(previewRegisterPdData));
-            console.log("datacomin222",state.previewRegisterPdData)
+         
         }
     },
 });

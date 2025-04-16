@@ -264,7 +264,7 @@ export const generateRegisterJVCreditExcel = (filter, document, labels = {}) => 
 //preview
 
 export const fetchPreviewRegisterPdf = (filter, document, labels = {}) => async (dispatch) => {
- console.log("daatgoing111",filter)
+
   dispatch(actions.startCall({ callType: callTypes.list }));
   return requestFromServer.previewRegisterPdf({ ...filter, labels })
     .then((response) => {
