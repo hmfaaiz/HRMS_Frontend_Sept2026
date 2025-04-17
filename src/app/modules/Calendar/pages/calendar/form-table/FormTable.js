@@ -12,7 +12,8 @@ export function FormTable() {
   const [events, setEvents] = useState([]);
   const [selectedRange, setSelectedRange] = useState();
 
-
+  const [defaultCalendarDate, setDefaultCalendarDate] = useState(null);
+const [currentDate, setCurrentDate] = useState(null);
 
 
 
@@ -26,7 +27,15 @@ export function FormTable() {
 
   const { holidayCalendar,dateRange } = currentState;
 
-
+  const getEarliestDate = (data) => {
+    if (!data || data.length === 0) return new Date(); // fallback
+  
+    const sorted = [...data].sort(
+      (a, b) => new Date(a.from_date) - new Date(b.from_date)
+    );
+    return new Date(sorted[0].from_date);
+  };
+  
 
   useEffect(() => {
 
@@ -39,6 +48,7 @@ export function FormTable() {
       description: `${holiday?.name}  \n${holiday?.from_date} - ${holiday?.to_date} `,
     })
   
+    
   
   ) || [];
 
@@ -49,7 +59,9 @@ export function FormTable() {
   
   
   
-  
+    const earliestDate = getEarliestDate(holidayCalendar);
+    setDefaultCalendarDate(earliestDate); 
+    setCurrentDate(earliestDate)
   
   }, [holidayCalendar, dispatch]);
 
@@ -65,11 +77,14 @@ export function FormTable() {
     <div style={{ height: '1500px' }}>
 
       {/* Render the calendar */}
+      {defaultCalendarDate  && (
       <Calendar
         localizer={localizer}
         events={events}
           views={['month', 'week', 'day']} // ✅ Agenda ko remove kiya yahan
           defaultView="month"
+          date={currentDate}                    // Controlled date
+          onNavigate={(date) => setCurrentDate(date)} 
         tooltipAccessor={(event) => event.description}
         startAccessor="start"
         endAccessor="end"
@@ -137,7 +152,7 @@ export function FormTable() {
 
         }}
       />
-
+      )}
 
 
     </div>

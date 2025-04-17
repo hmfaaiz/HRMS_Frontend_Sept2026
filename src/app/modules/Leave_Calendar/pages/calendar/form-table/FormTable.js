@@ -11,7 +11,8 @@ export function FormTable() {
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
   const [selectedRange, setSelectedRange] = useState();
-
+const [defaultCalendarDate, setDefaultCalendarDate] = useState(null);
+const [currentDate, setCurrentDate] = useState(null);
 
 
 
@@ -27,10 +28,20 @@ export function FormTable() {
 
   const { leaveCalendar,dateRange } = currentState;
 
+  const getEarliestDate = (data) => {
+  
+
+    
+    if (!data || data.length === 0) return new Date(); // fallback
+  
+    const sorted = [...data].sort(
+      (a, b) => new Date(a.from) - new Date(b.from)
+    );
+    return new Date(sorted[0].from);
+  };
 
 
   useEffect(() => {
-
 
     const calendarEvents = leaveCalendar?.map((leave) => ({
       title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
@@ -50,8 +61,9 @@ export function FormTable() {
   
   
   
-  
-  
+    const earliestDate = getEarliestDate(leaveCalendar);
+    setDefaultCalendarDate(earliestDate); 
+    setCurrentDate(earliestDate)
   }, [leaveCalendar, dispatch]);
 
   const isPreviousDisabled = (date) => {
@@ -66,11 +78,15 @@ export function FormTable() {
     <div style={{ height: '1500px' }}>
 
       {/* Render the calendar */}
+      {defaultCalendarDate  && (
       <Calendar
         localizer={localizer}
         events={events}
           views={['month', 'week', 'day']} // ✅ Agenda ko remove kiya yahan
           defaultView="month"
+          // date={defaultCalendarDate}
+          date={currentDate}                    // Controlled date
+    onNavigate={(date) => setCurrentDate(date)} 
         tooltipAccessor={(event) => event.description}
         startAccessor="start"
         endAccessor="end"
@@ -87,7 +103,7 @@ export function FormTable() {
 
         min={selectedRange?.from}
         max={selectedRange?.to}
-        defaultDate={selectedRange?.from}
+        
         // Optionally, you can customize navigation behavior to stay within range
         components={{
           event: ({ event }) => (
@@ -137,8 +153,9 @@ export function FormTable() {
           // ),
 
         }}
+        
       />
-
+      )}
 
 
     </div>
