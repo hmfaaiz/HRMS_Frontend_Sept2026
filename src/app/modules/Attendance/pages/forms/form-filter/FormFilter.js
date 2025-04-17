@@ -10,7 +10,7 @@ import { DatePickerField, Select } from "../../../../../../_metronic/_partials/c
 import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
-import { runProcess } from "../../../_redux/formActions";
+import { fetchAttendance, runProcess } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 
 //Validation for date fields
@@ -77,6 +77,10 @@ export function FormFilter({ loading, dispatch, processLoading }) {
       // update list by queryParams
       formUIProps.setQueryParams(newQueryParams)
     }
+    
+    dispatch(fetchAttendance(newQueryParams));
+
+
   }
 
   const runAllProcess = (values) => {
