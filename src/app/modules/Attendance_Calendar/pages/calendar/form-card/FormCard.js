@@ -274,7 +274,7 @@ export function FormCard() {
                       <span className="dot bg_custom_color_15 me-2"></span> Absent
                     </div>
                     <div className="d-flex align-items-center m-3">
-                      <span className="dot bg_custom_color_16 me-2"></span> H.D
+                      <span className="dot bg_custom_color_16 me-2"></span> Half day
                     </div>
                     <div className="d-flex align-items-center m-3">
                       <span className="dot bg_custom_color_1 me-2"></span> Leave
@@ -284,7 +284,7 @@ export function FormCard() {
                       <span className="dot bg_custom_color_22 me-2"></span> Day Off / Holiday
                     </div>
                     <div className="d-flex align-items-center m-3">
-                      <span className="dot bg_custom_color_26 me-2"></span> Early
+                      <span className="dot bg_custom_color_26 me-2"></span> Late In / Early Out
                     </div>
                   </div>
 
