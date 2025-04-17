@@ -265,14 +265,39 @@ export function FormCard() {
                   </Form>
                 </Modal.Body>
 
-                <Modal.Footer>
+                <Modal.Footer className="justify-content-between">
+                  <div className="d-flex justify-content-center ">
+                    <div className="d-flex align-items-center m-3">
+                      <span className="dot bg_custom_color_25 me-2"></span> Present
+                    </div>
+                    <div className="d-flex align-items-center m-3">
+                      <span className="dot bg_custom_color_15 me-2"></span> Absent
+                    </div>
+                    <div className="d-flex align-items-center m-3">
+                      <span className="dot bg_custom_color_16 me-2"></span> Half day
+                    </div>
+                    <div className="d-flex align-items-center m-3">
+                      <span className="dot bg_custom_color_1 me-2"></span> Leave
+                    </div>
+
+                    <div className="d-flex align-items-center m-3">
+                      <span className="dot bg_custom_color_22 me-2"></span> Day Off / Holiday
+                    </div>
+                    <div className="d-flex align-items-center m-3">
+                      <span className="dot bg_custom_color_26 me-2"></span> Late In / Early Out
+                    </div>
+                  </div>
+
+<div >
+
+
                   <button
                     type="button"
                     onClick={() => {
                       handleReset();
                       dispatch(actions.clearEvents()); // Reset form and clear events
                     }}
-                    className="btn btn-danger btn-elevate"
+                    className="btn btn-danger btn-elevate m-2"
                   >
                     Cancel
                   </button>
@@ -285,10 +310,13 @@ export function FormCard() {
                       // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
                       customSubmit(values);
                     }}
-                    className="btn btn-success btn-elevate"
+                    className="btn btn-success btn-elevate m-2"
                   >
                     Filter Record
                   </button>
+
+                  </div>
+
                 </Modal.Footer>
               </>
             );
