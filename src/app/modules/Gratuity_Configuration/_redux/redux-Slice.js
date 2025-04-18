@@ -40,7 +40,7 @@ export const gratuity_configurationSlice = createSlice({
             const totalResult = action.payload.data?.data.totalResults;
             const updatedEntities = entities.map(entity => {
                 // Check the basis_of_gratuityId and assign 'Gross' or 'Basis'
-                const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basis';
+                const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basic';
                 
             
                 return {

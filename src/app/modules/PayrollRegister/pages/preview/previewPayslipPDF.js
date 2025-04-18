@@ -314,8 +314,8 @@ const PreviewPayslipPDF = () => {
                                     <td>{employeeData.accountNumber}</td>
                                 </tr>
                                 <tr>
-                                    <td>Lates per Day Deduction:</td>
-                                    <td className="payslip-right-align">{employeeData.LateDaysCount ? employeeData.LatePerDayAmount : 0}</td>
+                                    <td>Absent:</td>
+                                    <td className="payslip-right-align">{employeeData.AbsentDays ? employeeData.AbsentDays : 0}</td>
                                     <td>Lates Deducted:</td>
                                     <td className="payslip-tdWidthEmpAtt payslip-right-align">{employeeData.lateCount}</td>
                                 </tr>

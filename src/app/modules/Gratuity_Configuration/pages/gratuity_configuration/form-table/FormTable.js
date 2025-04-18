@@ -106,7 +106,7 @@ export function FormTable() {
 
     {
       dataField: "basis_of_gratuity",
-      text: "Basis of gratuity",
+      text: "Gratuity Basis",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
