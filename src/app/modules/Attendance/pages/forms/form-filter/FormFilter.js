@@ -309,7 +309,18 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                         }
                         value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                         autoComplete="off"
-                        options={allEmployees}
+                        // options={allEmployees}
+                        options={
+                          allEmployees.filter(emp => {
+                            // If no attendanceType is selected, show all
+                            if (values?.attendanceType === undefined || values?.attendanceType === '') {
+                              return true;
+                            }
+                            // Match employee's attendanceType
+                            return emp.attendanceType === Number(values.attendanceType);
+                          })
+                        }
+               
                       />
                     </div>
                     {/* Employee Field End */}
