@@ -407,12 +407,12 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                 )}
               </button>
 
-              <button
+              {/* <button
                 disabled={loading}
                 className="btn btn-secondary"
               >
                 Generate Report
-              </button>
+              </button> */}
 
               <button
                 disabled={loading || processLoading}
