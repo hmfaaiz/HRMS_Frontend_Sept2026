@@ -68,6 +68,8 @@ export function DesignationEditDialog({ id, show, onHide, userForRead }) {
   const saveEmployeeProfile = async (user, image,contactList,workExperienceList,academicList,skillsList,incidentList,imagePolicy,isImageReq) => {
 
 delete user?.all_report_to
+delete user?.all_deligationId
+
 
     if (imagePolicy && isImageReq) {
       disbaleLoading();
@@ -158,6 +160,7 @@ delete user?.all_report_to
         requireDeligation: user.requireDeligation,
         employeeStatusId:user.employeeStatusId,
         approvedForPayroll:user.approvedForPayroll,
+        deligationId:user?.deligationId,
       };
 
     
