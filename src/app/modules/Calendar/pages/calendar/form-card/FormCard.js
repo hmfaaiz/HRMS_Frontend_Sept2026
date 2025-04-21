@@ -3,12 +3,11 @@ import { Field, Formik } from "formik"
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Form, Modal } from "react-bootstrap";
-import { CardBody, DatePickerField, } from "../../../../../../_metronic/_partials/controls";
+import { CardBody, DatePickerField,CardHeader } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import { FormTable } from "../form-table/FormTable"
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { formatDates } from "../../../../../utils/common";
@@ -18,9 +17,13 @@ import { formatDates } from "../../../../../utils/common";
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
-  from_date: Yup.date(),
-  to_date: Yup.date().min(Yup.ref('from_date'), 'Date to date cannot be before Date from date'),
-
+    from_date: Yup.date()
+    .typeError('Please select the date')
+    .required(VALIDATION_MESSAGES.required),
+    to_date: Yup.date()
+    .typeError('Please select the date')
+    .required(VALIDATION_MESSAGES.required)
+    .min(Yup.ref('from_date'), 'Date to date cannot be before Date from date'),
 });
 
 
@@ -163,7 +166,7 @@ export function FormCard() {
                             label={
                               <span>
                                 {" "}
-                                Date From
+                                Date From<span style={{ color: "red" }}>*</span>
                               </span>
                             }
                             onChange={(date) => {
@@ -186,7 +189,7 @@ export function FormCard() {
                             label={
                               <span>
                                 {" "}
-                                Date To
+                                Date To<span style={{ color: "red" }}>*</span>
                               </span>
                             }
                             onChange={(date) => {
@@ -222,7 +225,7 @@ export function FormCard() {
                 <button
 
                   onClick={() => { customSubmit(values) }}
-
+                  disabled={!values.from_date || !values.to_date}
                   className="btn btn-success btn-elevate"
                 >
                   Filter Record
