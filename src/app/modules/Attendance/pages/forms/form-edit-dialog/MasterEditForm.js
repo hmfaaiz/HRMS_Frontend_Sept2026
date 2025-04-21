@@ -69,17 +69,63 @@ export function MasterEditForm({
               const diffInDays = (dateOut - dateIn) / (1000 * 60 * 60 * 24);
               return diffInDays <= 2;
             }
+          )
+          
+          .test(
+            'date-out-not-equal-if-different',
+            'Date Out must be after Date In if they are not the same',
+            function (value) {
+              const { attDateIn } = this.parent;
+              if (!value || !attDateIn) return true;
+        
+              const dateIn = new Date(formatDates(attDateIn, 'yyyy-MM-dd'));
+              const dateOut = new Date(formatDates(value, 'yyyy-MM-dd'));
+        
+              if (dateIn.getTime() === dateOut.getTime()) return true;
+        
+              return dateOut > dateIn;
+            }
           ),
+          
+          
+          
+          
         timeIn: Yup.string().required(VALIDATION_MESSAGES.required).matches(
           /^(?:[01]\d|2[0-3])[0-5]\d$/,
           'Time must be in HHMM format and valid 24-hour format'
         ),
-        timeOut: Yup.string().required(VALIDATION_MESSAGES.required).matches(
+        timeOut: Yup.string().required(VALIDATION_MESSAGES.required)
+        .matches(
           /^(?:[01]\d|2[0-3])[0-5]\d$/,
           'Time must be in HHMM format and valid 24-hour format'
-        ),
+        )
+        .test(
+          'time-out-after-time-in-if-same-date',
+          ' Date In and Date Out are same, Time Out must be after Time In',
+          function (value) {
+            const { timeIn, attDateIn, attDateOut } = this.parent;
+            if (!value || !timeIn || !attDateIn || !attDateOut) return true;
+      
+            // Convert dates to string for comparison
+            const dateIn = formatDates(attDateIn, 'yyyy-MM-dd');
+            const dateOut = formatDates(attDateOut, 'yyyy-MM-dd');
+      
+            if (dateIn !== dateOut) return true; // Only apply this test if dates are same
+      
+            // Convert HHMM strings to minutes
+            const timeInMinutes = parseInt(timeIn.substring(0, 2)) * 60 + parseInt(timeIn.substring(2, 4));
+            const timeOutMinutes = parseInt(value.substring(0, 2)) * 60 + parseInt(value.substring(2, 4));
+      
+            return timeOutMinutes > timeInMinutes;
+          }
+        ) ,
         comments: Yup.string().required(VALIDATION_MESSAGES.required),
       })
+   
+   
+   
+   
+   
     }
     else {
       return Yup.object().shape({
@@ -227,7 +273,7 @@ export function MasterEditForm({
                       <Field
                         name="attDateIn"
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd/MMM/yyyy"
                         onChange={(date) => {
                           setFieldValue("attDateIn", date);
                           setfilters((prevState) => ({
@@ -270,7 +316,7 @@ export function MasterEditForm({
                       <Field
                         name="attDateOut"
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd/MMM/yyyy"
                         label={
                           <span>
                             {" "}
