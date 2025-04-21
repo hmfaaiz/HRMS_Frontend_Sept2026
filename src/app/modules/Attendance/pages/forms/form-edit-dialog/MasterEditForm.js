@@ -239,9 +239,9 @@ export function MasterEditForm({
                       payrollData.startDate &&
                       payrollData.endDate && (
                         <div className="col-12 col-md-6 mt-8">
-                          <div className="row">
-                              <span >
-                                <b>Active Payroll Month:</b>{"  "}
+                          <div className="row  justify-content-end">
+                              <span className="mr-2">
+                                <b>Active Payroll Month:</b>{" "}
                               </span>
                               <span>
                                 <ActivePayrollMonthLabel
