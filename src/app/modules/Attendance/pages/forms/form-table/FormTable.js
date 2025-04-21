@@ -16,6 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Modal } from "react-bootstrap";
+import { format } from "date-fns";
 
 export function FormTable() {
   //Users UI Context
@@ -68,6 +69,23 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+    },
+    //attDate
+
+    {
+      dataField: "attDate",
+      text: "Attendance Date",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+      formatter: (cell) => {
+              // Format the date without timestamp
+              return format(new Date(cell), 'dd-MMM-yyyy'); // Customize format as needed
+            },
     },
     {
       dataField: "formattedDateIn",

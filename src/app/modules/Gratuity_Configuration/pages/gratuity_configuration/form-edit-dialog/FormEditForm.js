@@ -184,7 +184,7 @@ export function FormEditForm({
 
                   <div className="col-12 col-md-6 mt-3">
                     <label htmlFor="basis_of_gratuityId">
-                      Basis of Gratuity <span style={{ color: "red" }}>*</span>
+                    Gratuity Basis <span style={{ color: "red" }}>*</span>
 
 
                     </label>

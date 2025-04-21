@@ -10,7 +10,7 @@ import { DatePickerField, Select } from "../../../../../../_metronic/_partials/c
 import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
-import { runProcess } from "../../../_redux/formActions";
+import { fetchAttendance, runProcess } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 
 //Validation for date fields
@@ -77,6 +77,10 @@ export function FormFilter({ loading, dispatch, processLoading }) {
       // update list by queryParams
       formUIProps.setQueryParams(newQueryParams)
     }
+    
+    dispatch(fetchAttendance(newQueryParams));
+
+
   }
 
   const runAllProcess = (values) => {
@@ -305,7 +309,24 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                         }
                         value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                         autoComplete="off"
-                        options={allEmployees}
+                        // options={allEmployees}
+                        options={
+                          allEmployees.filter(emp => {
+                            const attendanceMatch =
+                              values?.attendanceType === undefined || values?.attendanceType === ''
+                                ? true
+                                : emp.attendanceType === Number(values.attendanceType);
+                        
+                            const departmentMatch =
+                              values?.departmentId === undefined || values?.departmentId === ''
+                                ? true
+                                : emp.departmentId === Number(values.departmentId);
+                        
+                            return attendanceMatch && departmentMatch;
+                          })
+                        }
+                        
+               
                       />
                     </div>
                     {/* Employee Field End */}
@@ -386,12 +407,12 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                 )}
               </button>
 
-              <button
+              {/* <button
                 disabled={loading}
                 className="btn btn-secondary"
               >
                 Generate Report
-              </button>
+              </button> */}
 
               <button
                 disabled={loading || processLoading}

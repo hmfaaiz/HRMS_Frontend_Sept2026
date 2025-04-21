@@ -75,7 +75,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     emiratesNo: '',
     passportExpiry: '',
     nicExpiry: '',
-    deligation: '',
+    // deligation: '',
     personId: '',
     routingCode: '',
     contractTypeId: '',
@@ -90,6 +90,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     approvedForPayroll:"",
     codePrefix:"",
     additional_summary:"",
+    deligationId:"",
   };
 
  

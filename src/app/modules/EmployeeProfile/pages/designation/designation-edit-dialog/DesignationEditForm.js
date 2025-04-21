@@ -43,11 +43,12 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
 const profileValidation = Yup.object().shape(
   {
-    deligation: Yup.string()
+    deligationId: Yup.string()
       .when('requireDeligation', {
+        
         is: true, // Condition: when 'requireDeligation' is true
-        then: Yup.string().required(VALIDATION_MESSAGES.required), // Apply 'required' validation
-        otherwise: Yup.string(), // No validation if 'requireDeligation' is false
+        then: Yup.string().nullable().required(VALIDATION_MESSAGES.required), // Apply 'required' validation
+        otherwise: Yup.string().nullable(), // No validation if 'requireDeligation' is false
       }),
     codeAuto: Yup.string()
       .nullable()
@@ -1556,7 +1557,7 @@ export function DesignationEditForm({
     toast('Date of Confirmation, Date of Confirmation Due & Contract Expiry Date needs to be updated!');
   };
 
-console.log("profilePolicy111",profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto,id)
+
   return (
     <>
       <Formik
@@ -2964,7 +2965,7 @@ console.log("profilePolicy111",profilePolicy?.data?.data[0].isEmployeeCodeGenera
                                 const { checked } = e.target;
                                 setFieldValue('requireDeligation', checked); // Update the checkbox state
                                 if (!checked) {
-                                  setFieldValue('deligation', ''); // Clear deligation field when unchecked
+                                  setFieldValue('deligationId', null); // Clear deligation field when unchecked
                                 }
                               }}
                               onBlur={handleBlur}
@@ -2976,7 +2977,7 @@ console.log("profilePolicy111",profilePolicy?.data?.data[0].isEmployeeCodeGenera
                             <label>Require Deligation</label>
                           </div>
 
-                          <div className="col-12 col-md-4 mt-3">
+                          {/* <div className="col-12 col-md-4 mt-3">
                             <Field
                               name="deligation"
                               maxLength="20"
@@ -2987,7 +2988,60 @@ console.log("profilePolicy111",profilePolicy?.data?.data[0].isEmployeeCodeGenera
                               disabled={!values.requireDeligation}
                             />
 
-                          </div>
+                          </div> */}
+
+
+<div className="col-12 col-md-4 mt-3">
+                        <label className="mr-4">Deligation</label>
+                        <input
+                          name="all_deligationId"
+                          type="checkbox"
+                          disabled={!values.requireDeligation}
+                          onChange={() => setFieldValue("all_deligationId", !values?.all_deligationId)}
+                          onBlur={handleBlur}
+                          value={values.all_deligationId}
+                          checked={values.all_deligationId}
+                          label="Show All"
+                        />
+                        <label className="ml-1">Show All</label>
+                        <ErrorMessage className="form-feedBack" name="all_deligationId" component="div" />
+                        <SearchSelect
+                          name="deligationId"
+                    
+                          isDisabled={!values.requireDeligation || isUserForRead && true}
+                          // onBlur={() => {
+                          //   handleBlur({ target: { name: "countryId" } });
+                          // }}
+                          onChange={(e) => {
+                            setFieldValue("deligationId", e.value || null);
+                            setEmployeeReportToDefault(e);
+                            //dispatch(fetchAllActiveEmployees(e.value));
+                          }}
+                          value={
+                            dashboard?.allEmployeesWithNoPermissionList?.find(
+                              (option) => option.value === values.deligationId
+                            ) || null
+                          }
+                          error={errors.deligationId}
+                          touched={touched.deligationId}
+                          
+                          options={[
+                           
+                            ...dashboard.allEmployeesWithNoPermissionList.filter(x => {
+                              if (values?.all_deligationId) {
+                                // If "All" is selected, do not filter by department and exclude current user
+                                return x.value !== values.Id;
+                              } else {
+                                // If "All" is not selected, filter based on departmentId and exclude current user
+                                return x.departmentId === values.departmentId && x.value !== values.Id;
+                              }
+                            })
+                          ]}
+                        />
+
+                      </div>
+
+
 
                           <div className="col-12 col-md-4 mt-3">
                             <SearchSelect
