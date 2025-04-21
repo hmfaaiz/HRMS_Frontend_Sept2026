@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { formatToDDMMYYYY } from "../../../utils/common";
 
 const initialState = {
     listLoading: false,
@@ -20,6 +21,9 @@ export const callTypes = {
     action: "action",
     process: "process"
 };
+
+
+
 
 export const AttendanceSlice = createSlice({
     name: "Attendance",
@@ -73,8 +77,16 @@ export const AttendanceSlice = createSlice({
             const entities = action?.payload?.userForEdit;
             state.actionsLoading = false;
             if (entities) {
-                entities.attDateIn = new Date(entities.attDateIn);
-                entities.attDateOut = new Date(entities.attDateOut)
+         // Commented out due to date shifting to the next day because of timezone conversion issue
+                // entities.attDateIn = new Date(entities.attDateIn);
+                // entities.attDateOut = new Date(entities.attDateOut)
+                entities.attDateIn = entities.attDateIn.split("T")[0];
+                entities.attDateOut = entities.attDateOut.split("T")[0];
+                
+               
+                
+
+           
             }
             state.userForEdit = entities;
             state.error = null;
@@ -84,8 +96,12 @@ export const AttendanceSlice = createSlice({
             state.actionsLoading = false;
             state.error = null;
             if (entities) {
-                entities.attDateIn = new Date(entities.attDateIn);
-                entities.attDateOut = new Date(entities.attDateOut)
+                // entities.attDateIn = new Date(entities.attDateIn);
+                // entities.attDateOut = new Date(entities.attDateOut)
+
+                entities.attDateIn = entities.attDateIn.split("T")[0];
+                entities.attDateOut = entities.attDateOut.split("T")[0];
+                
             }
             state.userForEdit = entities;
         },
@@ -94,8 +110,12 @@ export const AttendanceSlice = createSlice({
             state.error = null;
             state.actionsLoading = false;
             if (entities) {
-                entities.attDateIn = new Date(entities.attDateIn);
-                entities.attDateOut = new Date(entities.attDateOut)
+                // entities.attDateIn = new Date(entities.attDateIn);
+                // entities.attDateOut = new Date(entities.attDateOut)
+                entities.attDateIn = entities.attDateIn.split("T")[0];
+                entities.attDateOut = entities.attDateOut.split("T")[0];
+                
+               
             }
             state.userForEdit = entities;
         },
