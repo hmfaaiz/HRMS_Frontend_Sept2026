@@ -10,7 +10,7 @@ import { DatePickerField, Select } from "../../../../../../_metronic/_partials/c
 import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
-import { fetchAttendance, runProcess } from "../../../_redux/formActions";
+import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 
 //Validation for date fields
@@ -95,6 +95,28 @@ export function FormFilter({ loading, dispatch, processLoading }) {
     }
 
   },[allSubsidiaryList])
+
+  const getLabels = (values) => {
+    console.log("aaa111",allDeptMap?.get(values.departmentId || '')?.label,)
+    return {
+      departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
+      subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
+      reportToaLabel: allEmployeesMap?.get(values.reportTo || '')?.label,
+      gradeLabel: allGradeMap?.get(values.gradeId || '')?.label,
+      designationLabel: allDesignationsMap?.get(values.designationId || '')?.label,
+      locationLabel: allLocationMap?.get(values.locationId || '')?.label,
+      
+    }
+  }
+  const generateReport = (values) => {
+   
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    const labels = getLabels(values);
+    console.log("labels000",labels)
+    dispatch(fetchAttendanceSheetConsolidated(newQueryParams,document,labels));
+  }
+
+
 
   return (
     <>
@@ -407,12 +429,16 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                 )}
               </button>
 
-              {/* <button
-                disabled={loading}
+             <button
+          
                 className="btn btn-secondary"
+                //fetchAttendanceSheetConsolidated
+          
+                onClick={() => generateReport(values)}
+                disabled={loading || processLoading}
               >
                 Generate Report
-              </button> */}
+              </button> 
 
               <button
                 disabled={loading || processLoading}

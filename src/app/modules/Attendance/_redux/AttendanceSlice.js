@@ -20,7 +20,8 @@ const initialState = {
 export const callTypes = {
     list: "list",
     action: "action",
-    process: "process"
+    process: "process",
+    pdf:"pdf",
 };
 
 
@@ -126,5 +127,9 @@ export const AttendanceSlice = createSlice({
             state.error = null;
             state.payrollData = payrollData;
         },
+        pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
     },
 });
