@@ -12,7 +12,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
-
+import DatePicker from "react-datepicker";
 
 
 const formValidation = Yup.object().shape({
@@ -235,7 +235,7 @@ export function FormCard() {
                             />
                           </div>
 
-                          {/* Date From Selector */}
+{/*                      
                           <div className="col-12 col-md-4 mt-3">
                             <Field
                               name="from_date"
@@ -251,7 +251,7 @@ export function FormCard() {
                             />
                           </div>
 
-                          {/* Date To Selector */}
+                     
                           <div className="col-12 col-md-4 mt-3">
                             <Field
                               name="to_date"
@@ -265,7 +265,61 @@ export function FormCard() {
                               }}
                               autoComplete="off"
                             />
-                          </div>
+                          </div> */}
+
+                                      <div className="col-12 col-md-4 mt-3">
+                          
+                          
+                                                      <label>From Date<span style={{ color: "red" }}>*</span></label>
+                                                      <DatePicker
+                                                        className="form-control"
+                                                        placeholder="From Date "
+                                                        selected={values?.from_date ? new Date(values.from_date) : null}
+                          
+                                                        onChange={(date) => {
+                                                          setFieldValue("from_date", date);
+                                                          setFieldValue("to_date", date); // Sync from_date and to_date
+                          
+                                                        }}
+                                                        timeInputLabel="Time:"
+                                                        dateFormat="dd/MM/yyyy"
+                                                        // showTimeInput
+                                                        name="from_date"
+                          
+                                                        autoComplete="off"
+                          
+                          
+                          
+                                                      />
+                          
+                                                    </div>
+                          
+                                                    {/* Date To Selector */}
+                                                    <div className="col-12 col-md-4 mt-3">
+                          
+                          
+                                                      <label>Date To<span style={{ color: "red" }}>*</span></label>
+                                                      <DatePicker
+                                                        className="form-control"
+                                                        placeholder="To Date "
+                                                        selected={values?.to_date ? new Date(values.to_date) : null}
+                          
+                                                        onChange={(date) => {
+                                                          setFieldValue("to_date", date);
+                          
+                                                        }}
+                                                        timeInputLabel="Time:"
+                                                        dateFormat="dd/MM/yyyy"
+                                                        // showTimeInput
+                                                        name="to_date"
+                          
+                                                        autoComplete="off"
+                          
+                          
+                          
+                                                      />
+                          
+                                                    </div>
                         </div>
                       </div>
                     </fieldset>
