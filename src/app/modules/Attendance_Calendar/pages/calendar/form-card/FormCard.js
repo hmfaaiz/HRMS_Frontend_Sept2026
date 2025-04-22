@@ -1,26 +1,31 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Field, Formik } from "formik"
+import { Field, Formik, ErrorMessage } from "formik"
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Form, Modal } from "react-bootstrap";
-import { CardBody, DatePickerField, } from "../../../../../../_metronic/_partials/controls";
+import { CardBody, DatePickerField, CardHeader } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import { FormTable } from "../form-table/FormTable"
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
+import DatePicker from "react-datepicker";
 
 
 
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
-  from_date: Yup.date(),
-  to_date: Yup.date().min(Yup.ref('from_date'), 'Date to date cannot be before Date from date'),
+  from_date: Yup.date()
+    .typeError('Please select the date')
+    .required(VALIDATION_MESSAGES.required),
+  to_date: Yup.date()
+    .typeError('Please select the date')
+    .required(VALIDATION_MESSAGES.required)
+    .min(Yup.ref('from_date'), 'Date to date cannot be before Date from date'),
 
 });
 
@@ -99,7 +104,7 @@ export function FormCard() {
         <Formik
           enableReinitialize={true}
           initialValues={{
-            from_date: bodyValues?.from_date || null,
+            from_date: bodyValues?.from_date || new Date(),
             to_date: bodyValues?.to_date || null,
             subsidiaryId: bodyValues?.subsidiaryId || null,
             employeeId: null, // Default null for employeeId
@@ -228,36 +233,61 @@ export function FormCard() {
                             />
                           </div>
 
-                          {/* Date From Selector */}
+
+
+
                           <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="from_date"
-                              component={DatePickerField}
-                              dateFormat="dd/MM/yyyy"
+
+
+                            <label>From Date<span style={{ color: "red" }}>*</span></label>
+                            <DatePicker
                               className="form-control"
-                              label={<span>Date From</span>}
+                              placeholder="From Date "
+                              selected={values?.from_date ? new Date(values.from_date) : null}
+
                               onChange={(date) => {
                                 setFieldValue("from_date", date);
                                 setFieldValue("to_date", date); // Sync from_date and to_date
+
                               }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd/MM/yyyy"
+                              // showTimeInput
+                              name="from_date"
+
                               autoComplete="off"
+
+
+
                             />
+
                           </div>
 
                           {/* Date To Selector */}
                           <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="to_date"
-                              component={DatePickerField}
-                              onBlur={handleBlur}
+
+
+                            <label>Date To<span style={{ color: "red" }}>*</span></label>
+                            <DatePicker
                               className="form-control"
-                              dateFormat="dd/MM/yyyy"
-                              label={<span>Date To</span>}
+                              placeholder="To Date "
+                              selected={values?.to_date ? new Date(values.to_date) : null}
+
                               onChange={(date) => {
                                 setFieldValue("to_date", date);
+
                               }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd/MM/yyyy"
+                              // showTimeInput
+                              name="to_date"
+
                               autoComplete="off"
+
+
+
                             />
+
                           </div>
                         </div>
                       </div>
@@ -288,32 +318,30 @@ export function FormCard() {
                     </div>
                   </div>
 
-<div >
+                  <div >
 
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleReset();
-                      dispatch(actions.clearEvents()); // Reset form and clear events
-                    }}
-                    className="btn btn-danger btn-elevate m-2"
-                  >
-                    Cancel
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleReset();
+                        dispatch(actions.clearEvents()); // Reset form and clear events
+                      }}
+                      className="btn btn-danger btn-elevate m-2"
+                    >
+                      Cancel
+                    </button>
 
-                  <button
-                    onClick={() => {
-
-
-
-                      // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
-                      customSubmit(values);
-                    }}
-                    className="btn btn-success btn-elevate m-2"
-                  >
-                    Filter Record
-                  </button>
+                    <button
+                      onClick={() => {
+                        // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
+                        customSubmit(values);
+                      }}
+                      disabled={!values.from_date || !values.to_date}
+                      className="btn btn-success btn-elevate m-2"
+                    >
+                      Filter Record
+                    </button>
 
                   </div>
 

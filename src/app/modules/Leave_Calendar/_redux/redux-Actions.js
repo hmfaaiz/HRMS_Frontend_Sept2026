@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import {LeaveCalendarSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
@@ -7,7 +8,7 @@ const { actions } = LeaveCalendarSlice;
 
 export const fetchLeaves = (body,setLoading) => async (dispatch) => {
  if (new Date(body?.from_date) > new Date (body?.to_date)) {
-      toast.error("Please select correct date range");
+      toast.error(SERVER_MESSAGES.correctDateRange)
       dispatch(actions.clearEvents(null));
       return;
     }

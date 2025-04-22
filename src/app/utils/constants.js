@@ -384,6 +384,7 @@ export const SERVER_MESSAGES = {
   pdfFail:"Can't Generate PDF",
   csvFail:"Can't Generate CSV",
   excelFail:"Can't Generate Excel",
+  correctDateRange:"Please select correct date range",
 }
 
 export const WEEK_DAY_STRING = {
