@@ -12,6 +12,8 @@ import * as actions from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetchPayrollConfigApproverPermission } from "../../../../../../_metronic/redux/dashboardActions";
 import { Select } from "../../../../../../_metronic/_partials/controls";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+import { useHistory } from "react-router-dom";
+
 
 
 //Validation for date fields
@@ -28,7 +30,7 @@ const prepareFilter = (queryParams, values) => {
 }
 
 export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adviceLoading, registerExcelLoading }) {
-
+  const history = useHistory();
   const FormUIContext = useFormUIContext()
 
   //Get All dropdown data from state
@@ -140,7 +142,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
   useEffect(() => {
     dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
 
-  }, []);
+  }, []); 
 
 
   const checkPermission = (value) => {
@@ -169,6 +171,21 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
     checkPermission(subsidiaryId);
   
   }, [allSubsidiaryList]);
+
+
+  //preview 
+  const previewRegisterPdf = (values) => {
+
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchPreviewRegisterPdf(newQueryParams.filter, document, labels));
+  }
+
+  const previewPayslipPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchPreviewPayslipPdf(newQueryParams.filter, document, labels));
+  }
 
   return (
     <>
@@ -452,6 +469,37 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                       {/* Group By Field End */}
 
                       <div className="col-12 col-md-6 mt-11">
+
+                      <button
+                          // onClick={() => { getPdf(values) }}
+                          onClick ={()=>{
+                            // history.push("/preview-register-pdf");
+                            previewRegisterPdf(values);
+                            // const previewData = {
+                            //   labels: {
+                            //     monthLabel: 'April 2025',
+                            //     subsidiaryLabel: 'XYZ Corp',
+                            //     groupWiseLabel: 'Group A',
+                            //   },
+                            //   filter: {} // if needed
+                            // };
+                          
+                            // localStorage.setItem('payroll_register_preview', JSON.stringify(previewData));
+                            // history.push(`/payroll_register/read-all-registered-payroll/preview-registered-payroll-pdf`);
+                            window.open('/payroll_register/preview-registered-payroll-pdf');
+                          }}
+                          disabled={registerLoading || !values.subsidiaryId || !values.monthId}
+                          type="button"
+                          className="btn btn-primary btn-elevate"
+                        >
+                          Preview 
+                          {registerLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                        
+                        <span>    </span>
+
                         <button
                           onClick={() => { getPdf(values) }}
                           disabled={registerLoading}
@@ -507,6 +555,26 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                     <h6>Payslip</h6>
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-11">
+                      
+                      <button
+                       
+                          onClick ={()=>{
+                         
+                            previewPayslipPdf(values);
+                     
+                            window.open('/payroll_register/preview-payslip-pdf');
+                          }}
+                          disabled={pdfLoading || !values.subsidiaryId || !values.monthId}
+                          type="button"
+                          className="btn btn-primary btn-elevate"
+                        >
+                          Preview 
+                          { pdfLoading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      
+                        <span>    </span>
                         <button
                           onClick={() => { getPayslip(values) }}
                           disabled={pdfLoading}
@@ -517,6 +585,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
                         </button>
+                    
+                    
                       </div>
                     </div>
                   </div>
@@ -644,7 +714,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                 Cancel
               </button>
 
-              <button
+              {/* <button
                 type="submit"
                 onClick={() => handleSubmit()}
                 disabled={loading}
@@ -654,7 +724,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
-              </button>
+              </button> */}
 
 
 

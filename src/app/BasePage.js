@@ -182,6 +182,9 @@ const workFlowPolicyModule = lazy(() =>
   import("./modules/WorkflowPolicy/index")
 );
 const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
+const leave_calendarModule = lazy(() => import("./modules/Leave_Calendar/pages/index"));
+const roster_calendarModule = lazy(() => import("./modules/Roster_Calendar/pages/index"));
+const attendance_calendarModule = lazy(() => import("./modules/Attendance_Calendar/pages/index"));
 
 const LeaveApprovalModule = lazy(() =>
   import("./modules/LeaveApproval/page/index")
@@ -260,7 +263,10 @@ const ROUTES = {
   employee_register: EmployeeRegister,
   roster_pattern: Roster_PatternModule,
   subsidiary: subsidiaryModule,
-  calendar: calendarModule,
+  calendar:calendarModule,
+  leave_calendar:leave_calendarModule,
+  roster_calendar:roster_calendarModule,
+  attendance_calendar:attendance_calendarModule,
   leaverequest: leaveRequestModule,
   workflow_policy: workFlowPolicyModule,
   hod_setup: HODManagement,

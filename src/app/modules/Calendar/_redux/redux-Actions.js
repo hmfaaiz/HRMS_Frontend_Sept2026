@@ -1,12 +1,17 @@
 import * as requestFromServer from "./redux-Crud";
 import {CalendarSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
-
+import { SERVER_MESSAGES } from "../../../utils/constants";
 const { actions } = CalendarSlice;
 
 
 export const fetchHolidays = (body,setLoading) => async (dispatch) => {
 
+  if (new Date(body?.from_date) > new Date (body?.to_date)) {
+    toast.error(SERVER_MESSAGES.correctDateRange);
+    dispatch(actions.clearEvents(null));
+    return;
+  }
 
   return requestFromServer.getAllHoliday(body)
    

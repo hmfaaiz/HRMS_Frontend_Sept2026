@@ -12,7 +12,8 @@ export function FormTable() {
   const [events, setEvents] = useState([]);
   const [selectedRange, setSelectedRange] = useState();
 
-
+  const [defaultCalendarDate, setDefaultCalendarDate] = useState(null);
+const [currentDate, setCurrentDate] = useState(null);
 
 
 
@@ -26,18 +27,28 @@ export function FormTable() {
 
   const { holidayCalendar,dateRange } = currentState;
 
-
+  const getEarliestDate = (data) => {
+    if (!data || data.length === 0) return new Date(); // fallback
+  
+    const sorted = [...data].sort(
+      (a, b) => new Date(a.from_date) - new Date(b.from_date)
+    );
+    return new Date(sorted[0].from_date);
+  };
+  
 
   useEffect(() => {
 
 
     const calendarEvents = holidayCalendar?.map((holiday) => ({
-      title: holiday.name,
-      start: moment(holiday.from_date).toDate(),
-      end: moment(holiday.to_date).endOf('day').toDate(),
+      title: holiday?.name,
+      start: moment(holiday?.from_date).toDate(),
+      end: moment(holiday?.to_date).endOf('day').toDate(),
       allDay: true,
+      description: `${holiday?.name}  \n${holiday?.from_date} - ${holiday?.to_date} `,
     })
   
+    
   
   ) || [];
 
@@ -48,7 +59,9 @@ export function FormTable() {
   
   
   
-  
+    const earliestDate = getEarliestDate(holidayCalendar);
+    setDefaultCalendarDate(earliestDate); 
+    setCurrentDate(earliestDate)
   
   }, [holidayCalendar, dispatch]);
 
@@ -61,12 +74,18 @@ export function FormTable() {
   };
 
   return (
-    <div style={{ height: '600px' }}>
+    <div style={{ height: '1500px' }}>
 
       {/* Render the calendar */}
+      {defaultCalendarDate  && (
       <Calendar
         localizer={localizer}
         events={events}
+          views={['month', 'week', 'day']} // ✅ Agenda ko remove kiya yahan
+          defaultView="month"
+          date={currentDate}                    // Controlled date
+          onNavigate={(date) => setCurrentDate(date)} 
+        tooltipAccessor={(event) => event.description}
         startAccessor="start"
         endAccessor="end"
         style={{ height: "100%" }}
@@ -85,50 +104,55 @@ export function FormTable() {
         defaultDate={selectedRange?.from_date}
         // Optionally, you can customize navigation behavior to stay within range
         components={{
-          toolbar: (props) => (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-             
-                <button
-                  disabled={isPreviousDisabled(props.date)}  // Disable if at the start date
-                  onClick={() => {
-                    if (!isPreviousDisabled(props.date)) {
-                      props.onNavigate('PREV');  // Navigate to the previous date
-                    }
-                  }}
-                  
-
-                   className="calendar-btn"
-                >
-                  {"<"}
-                </button>
-                {/* Next Button */}
-                <button
-                  disabled={isNextDisabled(props.date)}  // Disable if at the end date
-                  onClick={() => {
-                    if (!isNextDisabled(props.date)) {
-                      props.onNavigate('NEXT');  // Navigate to the next date
-                    }
-                  }}
-                 className="calendar-btn"
-                >
-                  {">"}
-                </button>
-              </div>
-
-              {/* Month/Week/Day/Agenda View Selector */}
-             
-
-              {/* Display the current month/year */}
-              <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                {moment(props.date).format('MMMM YYYY')}
-              </div>
+          event: ({ event }) => (
+            <div className="custom-tooltip" >
+              {event.title}
             </div>
           ),
+          // toolbar: (props) => (
+          //   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          //     <div style={{ display: 'flex', alignItems: 'center' }}>
+             
+          //       <button
+          //         disabled={isPreviousDisabled(props.date)}  // Disable if at the start date
+          //         onClick={() => {
+          //           if (!isPreviousDisabled(props.date)) {
+          //             props.onNavigate('PREV');  // Navigate to the previous date
+          //           }
+          //         }}
+                  
+
+          //          className="calendar-btn"
+          //       >
+          //         {"<"}
+          //       </button>
+          //       {/* Next Button */}
+          //       <button
+          //         disabled={isNextDisabled(props.date)}  // Disable if at the end date
+          //         onClick={() => {
+          //           if (!isNextDisabled(props.date)) {
+          //             props.onNavigate('NEXT');  // Navigate to the next date
+          //           }
+          //         }}
+          //        className="calendar-btn"
+          //       >
+          //         {">"}
+          //       </button>
+          //     </div>
+
+          //     {/* Month/Week/Day/Agenda View Selector */}
+             
+
+          //     {/* Display the current month/year */}
+          //     <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
+          //       {moment(props.date).format('MMMM YYYY')}
+          //     </div>
+          //   </div>
+          // ),
 
         }}
       />
-
+      )}
 
 
     </div>

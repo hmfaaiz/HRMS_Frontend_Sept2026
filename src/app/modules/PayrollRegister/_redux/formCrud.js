@@ -77,3 +77,12 @@ export async function generateJVCreditExcel(body) {
     responseType:'arraybuffer'
   });
 }
+
+
+export async function previewRegisterPdf(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll/preview-registered-payroll-pdf`,body);
+}
+
+export async function previewPayslipPdf(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll/preview-payslip-pdf`,body);
+}
