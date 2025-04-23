@@ -105,26 +105,26 @@ export function LeaveApplicationTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        payrollData: payrollData,
-        editRecord: FormUIProps.editRecord,
-        openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
-        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
-      },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: {
-        minWidth: "170px",
-      },
-    },
+    // {
+    //   dataField: "action",
+    //   text: "Actions",
+    //   isDummyField: true,
+    //   formatter: ActionsColumnFormatter,
+    //   formatExtraData: {
+    //     payrollData: payrollData,
+    //     editRecord: FormUIProps.editRecord,
+    //     openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
+    //     isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+    //     isAccessForDelete: isAccessForDelete
+    //       ? isAccessForDelete.isAccess
+    //       : false,
+    //   },
+    //   classes: "text-right pr-0",
+    //   headerClasses: "text-right pr-3",
+    //   style: {
+    //     minWidth: "170px",
+    //   },
+    // },
   ];
 
   //Table pagination properties

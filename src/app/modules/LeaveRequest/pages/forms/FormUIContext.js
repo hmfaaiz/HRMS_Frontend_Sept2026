@@ -9,9 +9,15 @@ export function useFormUIContext() {
 }
 
 export function FormUIProvider({ FormUIEvents, children }) {
-  const [queryParamsLeaveApp, setQueryParamsLeaveAppBaseLeaveApp] = useState(initialFilter);
-  const [employeeId, setemployeeId] = useState('');
-  const [id, setId] = useState('');
+  const [queryParamsLeaveApp, setQueryParamsLeaveAppBaseLeaveApp] = useState(
+    initialFilter
+  );
+  const [queryParamsPendingLeaveApp, setQueryParamsPendingLeaveApp] = useState(
+    initialFilter
+  );
+  const [currentLevel, setCurrentLevel] = useState(0);
+  const [employeeId, setemployeeId] = useState("");
+  const [id, setId] = useState("");
   const setQueryParamsLeaveApp = useCallback((nextQueryParams) => {
     setQueryParamsLeaveAppBaseLeaveApp((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -27,29 +33,33 @@ export function FormUIProvider({ FormUIEvents, children }) {
   }, []);
 
   const initUser = {
-    to: '',
-    from: '',
-    leaveType: '',
-    remarks: '',
-    days: '',
+    to: "",
+    from: "",
+    leaveType: "",
+    remarks: "",
+    days: "",
     file: null,
-    request_status : 'P',
+    request_status: "P",
   };
 
   //Set Id for Edit record
   const editRecord = (id) => {
-    setId(id)
-  }
+    setId(id);
+  };
 
   const value = {
     queryParamsLeaveApp,
     setQueryParamsLeaveAppBaseLeaveApp,
+    queryParamsPendingLeaveApp,
+    setQueryParamsPendingLeaveApp,
     setQueryParamsLeaveApp,
     id,
     setId,
     editRecord,
     employeeId,
     setemployeeId,
+    currentLevel,
+    setCurrentLevel,
     initUser,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
   };

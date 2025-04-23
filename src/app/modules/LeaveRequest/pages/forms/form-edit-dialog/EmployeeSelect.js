@@ -7,8 +7,14 @@ import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLab
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../_redux/formActions";
-export function EmployeeSelect({ actionsLoading, setId, setemployeeId }) {
-  const [currentLevel, setCurrentLevel] = useState(0);
+export function EmployeeSelect({
+  actionsLoading,
+  setId,
+  setemployeeId,
+  employeeId,
+  currentLevel,
+  setCurrentLevel,
+}) {
   //Get all Employee list from dashboard global state
   const dispatch = useDispatch();
   const { employeeList, levelList } = useSelector(
@@ -27,7 +33,11 @@ export function EmployeeSelect({ actionsLoading, setId, setemployeeId }) {
     dispatch(actions.getEmployeeHierarchy(currentLevel));
   }, [currentLevel]);
 
-  setemployeeId(employeeList[0]?.value || "");
+  useEffect(() => {
+    if (employeeId == "" && employeeList?.length > 0) {
+      setemployeeId(employeeList[0]?.value);
+    }
+  }, [employeeList, employeeId]);
 
   return (
     <>

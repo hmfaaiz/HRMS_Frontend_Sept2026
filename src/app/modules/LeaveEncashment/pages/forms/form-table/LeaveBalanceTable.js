@@ -28,19 +28,16 @@ export function LeaveBalanceTable() {
       setId: formUIContext.setId,
       queryParamsLeaveEnc: formUIContext.queryParamsLeaveEnc,
       setQueryParamsLeaveEnc: formUIContext.setQueryParamsLeaveEnc,
-      editRecord: formUIContext.editRecord
+      editRecord: formUIContext.editRecord,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-      return {
-        currentState: state.leave_encashment,
-        userAccess: state?.auth?.userAccess["Leave_Encashment"],
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.leave_encashment,
+      userAccess: state?.auth?.userAccess["Leave_Encashment"],
+    };
+  }, shallowEqual);
 
   const { totalCount, leaveBalances } = currentState;
 
@@ -94,16 +91,6 @@ export function LeaveBalanceTable() {
       },
     },
     {
-      dataField: "remainingCount",
-      text: "Remaining",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
       dataField: "carryForwardCount",
       text: "Carry Forward Leave Count",
       sort: false,
@@ -132,7 +119,17 @@ export function LeaveBalanceTable() {
       style: {
         minWidth: "160px",
       },
-    }
+    },
+    {
+      dataField: "remainingCount",
+      text: "Remaining",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
   ];
 
   //Table pagination properties
@@ -148,48 +145,46 @@ export function LeaveBalanceTable() {
     <Accordion defaultActiveKey="">
       <Card>
         <Card.Header>
-        <div className='accordion-header-btn'>
-          <Accordion.Toggle as={Button} eventKey="0">
-            Leave Balance
-            <KeyboardArrowDown />
-          </Accordion.Toggle>
+          <div className="accordion-header-btn">
+            <Accordion.Toggle as={Button} eventKey="0">
+              Leave Balance
+              <KeyboardArrowDown />
+            </Accordion.Toggle>
           </div>
         </Card.Header>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
             {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
               {({ paginationProps, paginationTableProps }) => { */}
-                {/* return ( */}
-                  
-                    <BootstrapTable
-                      noDataIndication={NoRecordsFoundMessage({ entities: leaveBalances || [] })}
-                      wrapperClasses="table-responsive"
-                      bordered={false}
-                      classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
-                      bootstrap4
-                      remote
-                      keyField="Id"
-                      data={leaveBalances || []}
-                      columns={columns}
-                      defaultSorted={uiHelpers.defaultSorted}
-                      onTableChange={getHandlerTableChange(
-                        FormUIProps.setQueryParamsLeaveEnc
-                      )}
-                      // {...paginationTableProps}
-                    >
+            {/* return ( */}
 
-                      <PleaseWaitMessage entities={leaveBalances || []} />
-                      <NoRecordsFoundMessage entities={leaveBalances || []} />
-                    </BootstrapTable>
-                {/* ); */}
-              {/* }}
+            <BootstrapTable
+              noDataIndication={NoRecordsFoundMessage({
+                entities: leaveBalances || [],
+              })}
+              wrapperClasses="table-responsive"
+              bordered={false}
+              classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
+              bootstrap4
+              remote
+              keyField="Id"
+              data={leaveBalances || []}
+              columns={columns}
+              defaultSorted={uiHelpers.defaultSorted}
+              onTableChange={getHandlerTableChange(
+                FormUIProps.setQueryParamsLeaveEnc
+              )}
+              // {...paginationTableProps}
+            >
+              <PleaseWaitMessage entities={leaveBalances || []} />
+              <NoRecordsFoundMessage entities={leaveBalances || []} />
+            </BootstrapTable>
+            {/* ); */}
+            {/* }}
             </PaginationProvider> */}
-
           </Card.Body>
         </Accordion.Collapse>
       </Card>
     </Accordion>
-
-
   );
 }

@@ -15,6 +15,7 @@ const initialState = {
   userForRead: false,
   payrollData: null,
   leaveBalances: [],
+  empAuthorityList: [],
 };
 
 export const callTypes = {
@@ -43,8 +44,8 @@ export const LeaveRequestSlice = createSlice({
       }
     },
     LeaveApplicationFetched: (state, action) => {
-      const entities = action.payload.data?.data.rows || [];
-      const totalResult = action.payload.data?.data.totalResults || 0;
+      const entities = action.payload.data?.data?.rows || [];
+      const totalResult = action.payload.data?.data?.totalResults || 0;
       state.listLoading = false;
       state.error = null;
       state.entities = entities;
@@ -102,6 +103,11 @@ export const LeaveRequestSlice = createSlice({
       state.listLoading = false;
       state.error = null;
       state.leaveBalances = leaveBalances;
+    },
+    EmployeeAuthorityFetched: (state, action) => {
+      state.listLoading = false;
+      state.error = null;
+      state.empAuthorityList = action.payload;
     },
   },
 });

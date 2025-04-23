@@ -183,6 +183,10 @@ const workFlowPolicyModule = lazy(() =>
 );
 const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
 
+const LeaveApprovalModule = lazy(() =>
+  import("./modules/LeaveApproval/page/index")
+);
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -256,10 +260,11 @@ const ROUTES = {
   employee_register: EmployeeRegister,
   roster_pattern: Roster_PatternModule,
   subsidiary: subsidiaryModule,
-  calendar:calendarModule,
+  calendar: calendarModule,
   leaverequest: leaveRequestModule,
   workflow_policy: workFlowPolicyModule,
-  hod_setup : HODManagement
+  hod_setup: HODManagement,
+  leaveapproval: LeaveApprovalModule,
 };
 
 export default function BasePage() {
@@ -268,7 +273,6 @@ export default function BasePage() {
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
-
   const SettingsAccess = auth?.userAccess?.Settings;
   // const isDashboardAccess = SettingsAccess?.some((obj) =>
   //   Object.values(obj).includes("read-all-vehicles-dashboard")
