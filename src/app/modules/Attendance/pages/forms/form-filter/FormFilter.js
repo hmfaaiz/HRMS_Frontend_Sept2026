@@ -21,6 +21,7 @@ const formValidation = Yup.object().shape({
 
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
+ 
   const newQueryParams = { ...queryParams }
   newQueryParams.filter = { ...values }
   return newQueryParams
@@ -111,8 +112,8 @@ export function FormFilter({ loading, dispatch, processLoading }) {
   const generateReport = (values) => {
    
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    console.log("filter111",values)
     const labels = getLabels(values);
-    console.log("labels000",labels)
     dispatch(fetchAttendanceSheetConsolidated(newQueryParams,document,labels));
   }
 
@@ -434,11 +435,25 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                 className="btn btn-secondary"
                 //fetchAttendanceSheetConsolidated
           
-                onClick={() => generateReport(values)}
+                onClick={() => {
+                  setFieldValue("group_by_emp",true)
+                  generateReport(values)}}
                 disabled={loading || processLoading}
               >
-                Generate Report
+                Generate Report (Group By Emp)
               </button> 
+
+
+              <button
+          
+          className="btn btn-secondary"
+          //fetchAttendanceSheetConsolidated
+    
+          onClick={() => generateReport(values)}
+          disabled={loading || processLoading}
+        >
+          Generate Report
+        </button> 
 
               <button
                 disabled={loading || processLoading}
