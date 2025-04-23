@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
-import { LeaveApplicationPage } from "./forms/LeaveApplicationPage";
+import { LeaveRequestPage } from "./forms/LeaveApplicationPage";
 
 export default function LeaveRequestManagement() {
   return (
@@ -16,7 +16,7 @@ export default function LeaveRequestManagement() {
         }
         <ContentRoute
           path="/leave-request/read-all-leave-request"
-          component={LeaveApplicationPage}
+          component={LeaveRequestPage}
         />
       </Switch>
     </Suspense>

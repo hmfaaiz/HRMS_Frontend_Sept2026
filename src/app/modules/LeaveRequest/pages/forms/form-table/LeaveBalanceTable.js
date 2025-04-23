@@ -24,30 +24,18 @@ export function LeaveBalanceTable() {
 
   const FormUIProps = useMemo(() => {
     return {
-      id: formUIContext.id,
-      setId: formUIContext.setId,
-      queryParamsLeaveApp: formUIContext.queryParamsLeaveApp,
       setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
-      editRecord: formUIContext.editRecord,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState } = useSelector((state) => {
     return {
       currentState: state.leave_request,
-      userAccess: state?.auth?.userAccess["Leave Request"],
     };
   }, shallowEqual);
 
-  const { totalCount, leaveBalances } = currentState;
+  const {  leaveBalances } = currentState;
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateLeaveApplication"
-  );
-
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteLeaveApplication"
-  );
   // Table columns
   const columns = [
     {
@@ -90,16 +78,7 @@ export function LeaveBalanceTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "remainingCount",
-      text: "Remaining",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    
     {
       dataField: "carryForwardCount",
       text: "Carry Forward Leave Count",
@@ -130,16 +109,18 @@ export function LeaveBalanceTable() {
         minWidth: "160px",
       },
     },
+    {
+      dataField: "remainingCount",
+      text: "Remaining",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
   ];
 
-  //Table pagination properties
-  const paginationOptions = {
-    custom: true,
-    totalSize: totalCount,
-    sizePerPageList: uiHelpers.sizePerPageList,
-    sizePerPage: FormUIProps.queryParamsLeaveApp.pageSize,
-    page: FormUIProps.queryParamsLeaveApp.pageNumber,
-  };
 
   return (
     <Accordion defaultActiveKey="">
@@ -154,9 +135,6 @@ export function LeaveBalanceTable() {
         </Card.Header>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
-            {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-              {({ paginationProps, paginationTableProps }) => { */}
-            {/* return ( */}
 
             <BootstrapTable
               noDataIndication={NoRecordsFoundMessage({
@@ -174,14 +152,10 @@ export function LeaveBalanceTable() {
               onTableChange={getHandlerTableChange(
                 FormUIProps.setQueryParamsLeaveApp
               )}
-              // {...paginationTableProps}
             >
               <PleaseWaitMessage entities={leaveBalances || []} />
               <NoRecordsFoundMessage entities={leaveBalances || []} />
             </BootstrapTable>
-            {/* ); */}
-            {/* }}
-            </PaginationProvider> */}
           </Card.Body>
         </Accordion.Collapse>
       </Card>

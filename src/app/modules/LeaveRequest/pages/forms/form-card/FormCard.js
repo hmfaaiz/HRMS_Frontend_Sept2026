@@ -20,6 +20,7 @@ import { PendingLeaveTable } from "../form-table/PendingLeaveTable";
 import "../../../../../utils/common-modules/form.css";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { getStorage } from "../../../../../../_metronic/_helpers";
+import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -33,14 +34,17 @@ export function FormCard() {
       queryParamsLeaveApp: FormUIContext.queryParamsLeaveApp,
       id: FormUIContext.id,
       setId: FormUIContext.setId,
+      currentLevel: FormUIContext.currentLevel,
+      setCurrentLevel: FormUIContext.setCurrentLevel,
     };
   }, [FormUIContext]);
 
   //Get data from states
-  const { dashboard, entities } = useSelector(
+  const { dashboard, entities, empAuthorityList } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
-      entities: state.leave_application.entities,
+      entities: state.leave_request.entities,
+      empAuthorityList: state?.leave_request?.empAuthorityList,
     }),
     shallowEqual
   );
@@ -61,9 +65,12 @@ export function FormCard() {
   //Update Leave Balances whenever employee Id is changed or leave application table is updated
   //Also update dropdown of leave type when employee is selected
   useEffect(() => {
-    dispatch(actions.fetchLeaveBalances(formUIProps.employeeId));
-    dispatch(fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId));
-    dispatch(actions.getPayrollMonth(formUIProps.employeeId));
+    if (formUIProps.employeeId) {
+      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId));
+      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId));
+      dispatch(fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId));
+      dispatch(actions.getPayrollMonth(formUIProps.employeeId));
+    }
   }, [dispatch, formUIProps.employeeId, entities]);
 
   return (
@@ -79,6 +86,9 @@ export function FormCard() {
             <EmployeeSelect
               setId={formUIProps.setId}
               setemployeeId={formUIProps.setemployeeId}
+              employeeId={formUIProps.employeeId}
+              currentLevel={formUIProps.currentLevel}
+              setCurrentLevel={formUIProps.setCurrentLevel}
             />
             {/* EmployeeSelect Ends */}
 
@@ -95,7 +105,9 @@ export function FormCard() {
           {/* FormEditDialog Starts */}
           <FormEditDialog
             id={formUIProps.id}
+            currentLevel={formUIProps.currentLevel}
             employeeId={formUIProps.employeeId}
+            empAuthorityList={empAuthorityList}
           />
           {/* FormEditDialog Ends */}
         </div>
@@ -104,12 +116,12 @@ export function FormCard() {
         {/* LeaveApplicationTable Starts */}
         <LeaveApplicationTable />
         {/* LeaveApplicationTable Ends */}
-
+        {/* 
         <br />
-        <hr />
+        <hr /> */}
 
         {/* PendingLeaveTable Starts */}
-        <PendingLeaveTable />
+        {/* <PendingLeaveTable /> */}
         {/* PendingLeaveTable Ends */}
 
         <br />
@@ -117,6 +129,11 @@ export function FormCard() {
 
         {/* LeaveBalanceTable Starts */}
         <LeaveBalanceTable />
+
+        <br />
+        <hr />
+
+        <WorkflowAuthortiesTable />
         {/* LeaveBalanceTable Ends */}
       </CardBody>
 

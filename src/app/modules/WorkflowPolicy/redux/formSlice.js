@@ -6,6 +6,7 @@ const initialState = {
   totalCount: 0,
   entities: null,
   dataForEdit: null,
+  designationList: [],
   lastError: null,
 };
 
@@ -41,6 +42,11 @@ export const workflowPolicySlice = createSlice({
       state.error = null;
       state.entities = entities;
       state.totalCount = totalResult;
+    },
+    RecordDesignationListFetch: (state, action) => {
+      state.actionsLoading = false;
+      state.designationList = action.payload;
+      state.error = null;
     },
     RecordFetchedForEdit: (state, action) => {
       const entities = action?.payload;

@@ -24,34 +24,29 @@ export function PendingLeaveTable() {
 
   const FormUIProps = useMemo(() => {
     return {
-      id: formUIContext.id,
-      setId: formUIContext.setId,
-      queryParamsLeaveApp: formUIContext.queryParamsLeaveApp,
-      setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
-      editRecord: formUIContext.editRecord
+      queryParamsPendingLeaveApp: formUIContext.queryParamsPendingLeaveApp,
+      setQueryParamsPendingLeaveApp:
+        formUIContext.setQueryParamsPendingLeaveApp,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess, state } = useSelector(
-    (state) => {
-      return {
-        currentState: state.leave_request,
-        userAccess: state?.auth?.userAccess["Leave Request"],
-        state: state
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.leave_request,
+      userAccess: state?.auth?.userAccess["Leave Request"],
+      state: state,
+    };
+  }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
+  const { pendingtotalCount, pendingLeaveEntities, listLoading } = currentState;
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateLeaveApplication"
-  );
+  // const isAccessForEdit = userAccess?.find(
+  //   (item) => item.componentName === "UpdateLeaveApplication"
+  // );
 
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteLeaveApplication"
-  );
+  // const isAccessForDelete = userAccess?.find(
+  //   (item) => item.componentName === "DeleteLeaveApplication"
+  // );
   // Table columns
   const columns = [
     {
@@ -113,32 +108,34 @@ export function PendingLeaveTable() {
       style: {
         minWidth: "160px",
       },
-    }
+    },
   ];
 
   //Table pagination properties
   const paginationOptions = {
     custom: true,
-    totalSize: totalCount,
+    totalSize: pendingtotalCount,
     sizePerPageList: uiHelpers.sizePerPageList,
-    sizePerPage: FormUIProps.queryParamsLeaveApp.pageSize,
-    page: FormUIProps.queryParamsLeaveApp.pageNumber,
+    sizePerPage: FormUIProps.queryParamsPendingLeaveApp.pageSize,
+    page: FormUIProps.queryParamsPendingLeaveApp.pageNumber,
   };
 
   return (
     <Accordion defaultActiveKey="">
       <Card>
         <Card.Header>
-        <div className='accordion-header-btn'>
-          <Accordion.Toggle as={Button} eventKey="0">
-            Pending Leaves
-            <KeyboardArrowDown />
-          </Accordion.Toggle>
+          <div className="accordion-header-btn">
+            <Accordion.Toggle as={Button} eventKey="0">
+              Pending Leaves
+              <KeyboardArrowDown />
+            </Accordion.Toggle>
           </div>
         </Card.Header>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
-            <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+            <PaginationProvider
+              pagination={paginationFactory(paginationOptions)}
+            >
               {({ paginationProps, paginationTableProps }) => {
                 return (
                   <Pagination
@@ -146,24 +143,29 @@ export function PendingLeaveTable() {
                     paginationProps={paginationProps}
                   >
                     <BootstrapTable
-                      noDataIndication={NoRecordsFoundMessage({ entities: [] })}
+                      noDataIndication={NoRecordsFoundMessage({
+                        entities: pendingLeaveEntities || [],
+                      })}
                       wrapperClasses="table-responsive"
                       bordered={false}
                       classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
                       bootstrap4
                       remote
                       keyField="Id"
-                      data={[]}
+                      data={pendingLeaveEntities || []}
                       columns={columns}
                       defaultSorted={uiHelpers.defaultSorted}
                       onTableChange={getHandlerTableChange(
-                        FormUIProps.setQueryParamsLeaveApp
+                        FormUIProps.setQueryParamsPendingLeaveApp
                       )}
                       {...paginationTableProps}
                     >
-
-                      <PleaseWaitMessage entities={[]} />
-                      <NoRecordsFoundMessage entities={[]} />
+                      <PleaseWaitMessage
+                        entities={pendingLeaveEntities || []}
+                      />
+                      <NoRecordsFoundMessage
+                        entities={pendingLeaveEntities || []}
+                      />
                     </BootstrapTable>
                   </Pagination>
                 );
@@ -173,7 +175,5 @@ export function PendingLeaveTable() {
         </Accordion.Collapse>
       </Card>
     </Accordion>
-
-
   );
 }

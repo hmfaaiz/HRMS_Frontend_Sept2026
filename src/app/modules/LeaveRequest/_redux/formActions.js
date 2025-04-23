@@ -43,7 +43,7 @@ export const fetchLeaveApplication = (queryparm, employeeId) => async (
         dispatch(actions.LeaveApplicationFetched(response));
       })
       .catch((error) => {
-        error.clientMessage = "Can't find Leave Applications";
+        error.clientMessage = "Can't find Leave Data";
         dispatch(actions.catchError({ error, callType: callTypes.list }));
       });
   } else {
@@ -151,6 +151,7 @@ export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
     } else {
       const body = { ...data };
       delete body.fileName;
+      resetForm();
       return requestFromServer
         .updateLeaveApplicationSetup(body)
         .then((res) => {
@@ -249,10 +250,25 @@ export const getEmployeeHierarchy = (level) => (dispatch) => {
     .getEmployeeHierarchy(level)
     .then((res) => {
       const { levelList, employeeList } = res.data?.data;
-      dispatch(actions.EmployeeLeaveHierarchyFetched({ levelList, employeeList }));
+      dispatch(
+        actions.EmployeeLeaveHierarchyFetched({ levelList, employeeList })
+      );
     })
     .catch((error) => {
       dispatch(actions.EmployeeHierarchyFetched({ employeeHierarchy: [] }));
       error.clientMessage = "Can't Get Employee Hierarchy";
+    });
+};
+
+export const getEmployeeAuthorities = (empId) => (dispatch) => {
+  return requestFromServer
+    .getEmployeeAuthorties(empId, "399")
+    .then((res) => {
+
+      const data = Array.isArray(res.data?.data) ? res.data?.data : [];
+      dispatch(actions.EmployeeAuthorityFetched(data));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Get Employee Authorities";
     });
 };

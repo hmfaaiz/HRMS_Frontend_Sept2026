@@ -46,3 +46,9 @@ export function createMultipleRecord(body, type) {
     body
   );
 }
+
+export function getDesignationList(workflowTypeId) {
+  return axios.get(
+    `${USERS_URL}/workflow_policy/read-designation/${workflowTypeId}`
+  );
+}

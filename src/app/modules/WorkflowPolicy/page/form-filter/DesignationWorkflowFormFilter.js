@@ -5,6 +5,8 @@ import { useFormUIContext } from "../FormUIContext";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchSelect } from "../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllFormsMenu } from "../../../../../_metronic/redux/dashboardActions";
+import { Select } from "../../../../../_metronic/_partials/controls";
+import CustomDropdown from "../../../../utils/common-modules/CustomDropdown";
 
 const DesignationWorkflowFormFilter = () => {
   const { queryParamsDesig, setQueryParamsDesig } = useFormUIContext();
@@ -23,14 +25,13 @@ const DesignationWorkflowFormFilter = () => {
   useEffect(() => {
     dispatch(fetchAllFormsMenu(380, "allEmployeeRequestTypeList"));
   }, [dispatch]);
-
   return (
     <Formik
       enableReinitialize
-      initialValues={{ ...queryParamsDesig?.filter }}
+      initialValues={queryParamsDesig?.filter}
       onSubmit={applyFilter}
     >
-      {({ values, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
+      {({ values, handleSubmit, handleBlur, setFieldValue }) => (
         <form onSubmit={handleSubmit} className="form form-label-right">
           <div className="row">
             <div className="col-12 col-md-6">
@@ -39,45 +40,44 @@ const DesignationWorkflowFormFilter = () => {
                 className="form-control"
                 name="searchQuery"
                 placeholder="Search"
-                onBlur={handleBlur}
+                onBlur={handleSubmit}
                 value={values.searchQuery}
                 onChange={(e) => {
                   setFieldValue("searchQuery", e.target.value);
-                  // handleSubmit(values);
+                  applyFilter({
+                    ...values,
+                    searchQuery: e.target.value,
+                  });
                 }}
               />
             </div>
-            <div className="col-12 col-md-6">
+            {/* <div className="col-12 col-md-6">
               <Field
                 name="workflowType"
-                as="select"
-                className="form-control"
-                onChange={({ value }) => {
-                  setFieldValue("workflowType", value);
-                  // handleSubmit(values);
+                component={Select}
+                className={"form-control"}
+                placeholder=""
+                onBlur={handleBlur}
+                onChange={(e) => {
+                  const value =
+                    e.target.value == "--Select--"
+                      ? ""
+                      : Number(e.target.value);
+                  setFieldValue("workflowType", e.target.value);
+                  applyFilter({
+                    ...values,
+                    workflowType: value,
+                  });
                 }}
-              >
-                <option value="">All </option>
-                {dashboard?.allEmployeeRequestTypeList?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Field>
-              {/* <SearchSelect
-                name="workflowType"
-                onChange={({ value }) => {
-                  setFieldValue("workflowType", value);
-                  // handleSubmit();
-                }}
-                value={
-                  dashboard?.allEmployeeRequestTypeList?.find(
-                    (e) => e?.value == values?.workflowType
-                  ) || null
-                }
-                options={dashboard.allEmployeeRequestTypeList}
-              /> */}
-            </div>
+                label={""}
+                value={values.workflowType}
+                autoComplete="off"
+                children={CustomDropdown({
+                  data: dashboard?.allEmployeeRequestTypeList || [],
+                  firstElement: { label: "All", value: "" },
+                })}
+              />
+            </div> */}
           </div>
         </form>
       )}

@@ -2,45 +2,51 @@ import React, { useMemo, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  DatePickerField,
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
-import { useSelector, shallowEqual } from "react-redux"
+import { useSelector, shallowEqual } from "react-redux";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
-import { formatDates, getDateDiffInDays, getFileName, getUploadUrl } from "../../../../../utils/common";
+import {
+  formatDates,
+  getDateDiffInDays,
+  getFileName,
+  getUploadUrl,
+} from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-
-
 
 export function MasterEditForm({
   submitForm,
   user,
   actionsLoading,
+  isReaply,
   enableLoading,
   loading,
   isEdit,
   setId,
   payrollData,
-  employeeId
+  employeeId,
+  empAuthorityList,
+  currentLevel,
 }) {
-
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
   const { allLeaveTypes, userAccess } = useSelector(
     (state) => ({
       allLeaveTypes: state.dashboard.allLeaveTypes,
-      userAccess: state?.auth?.userAccess["Leave_Application"],
+      userAccess: state?.auth?.userAccess["Leave Request"],
     }),
     shallowEqual
-  )
-
+  );
   //Check Access for creation and Updation
-  const accessUser = useMemo(() =>
-    userAccess?.find(
-      (item) =>
-        item?.componentName === "CreateLeaveApplication" ||
-        item?.componentName === "UpdateLeaveApplication"
-    ),
-    [userAccess]
+  const accessUser = useMemo(
+    () =>
+      userAccess?.find((item) => item?.componentName === "CreateLeaveRequest"),
+    [userAccess, employeeId]
   );
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
@@ -52,37 +58,43 @@ export function MasterEditForm({
   const formValidation = useMemo(() => {
     if (payrollData && payrollData.endDate) {
       return Yup.object().shape({
-        from: Yup.date().required(VALIDATION_MESSAGES.required).min(payrollData.startDate, `Date cannot be before ${formatDates(payrollData.startDate)}`),
-        to: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('from'), 'To date cannot be before From date'),
+        from: Yup.date()
+          .required(VALIDATION_MESSAGES.required)
+          .min(
+            payrollData.startDate,
+            `Date cannot be before ${formatDates(payrollData.startDate)}`
+          ),
+        to: Yup.date()
+          .required(VALIDATION_MESSAGES.required)
+          .min(Yup.ref("from"), "To date cannot be before From date"),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
-        days: Yup.number()
-          .when(['from', 'to'], {
-            is: (from, to) => from && to && getDateDiffInDays(from, to) == 1,
-            then: Yup.number()
-              .required(VALIDATION_MESSAGES.required)
-              .oneOf([1, 0.5], 'Days must be either 1 or 0.5'),
-            otherwise: Yup.number().optional()
-          }),
+        days: Yup.number().when(["from", "to"], {
+          is: (from, to) => from && to && getDateDiffInDays(from, to) == 1,
+          then: Yup.number()
+            .required(VALIDATION_MESSAGES.required)
+            .oneOf([1, 0.5], "Days must be either 1 or 0.5"),
+          otherwise: Yup.number().optional(),
+        }),
         remarks: Yup.string().required(VALIDATION_MESSAGES.required),
-      })
-    }
-    else {
+      });
+    } else {
       return Yup.object().shape({
         from: Yup.date().required(VALIDATION_MESSAGES.required),
-        to: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('from'), 'To date cannot be before From date'),
+        to: Yup.date()
+          .required(VALIDATION_MESSAGES.required)
+          .min(Yup.ref("from"), "To date cannot be before From date"),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
-        days: Yup.number()
-          .when(['from', 'to'], {
-            is: (from, to) => from && to && getDateDiffInDays(from, to) == 1,
-            then: Yup.number()
-              .required(VALIDATION_MESSAGES.required)
-              .oneOf([1, 0.5], 'Days must be either 1 or 0.5'),
-            otherwise: Yup.number().optional()
-          }),
+        days: Yup.number().when(["from", "to"], {
+          is: (from, to) => from && to && getDateDiffInDays(from, to) == 1,
+          then: Yup.number()
+            .required(VALIDATION_MESSAGES.required)
+            .oneOf([1, 0.5], "Days must be either 1 or 0.5"),
+          otherwise: Yup.number().optional(),
+        }),
         remarks: Yup.string().required(VALIDATION_MESSAGES.required),
-      })
+      });
     }
-  }, [payrollData])
+  }, [payrollData]);
 
   return (
     <>
@@ -100,8 +112,9 @@ export function MasterEditForm({
             if (inputFile?.current) {
               inputFile.current.value = "";
             }
-          }
-          submitForm(values, clearForm)
+            setId("");
+          };
+          submitForm(values, clearForm);
         }}
       >
         {({
@@ -112,7 +125,7 @@ export function MasterEditForm({
           handleBlur,
           handleChange,
           setFieldValue,
-          handleReset
+          handleReset,
         }) => (
           <>
             {/* Modal Body Start */}
@@ -122,13 +135,21 @@ export function MasterEditForm({
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
               )}
+              {empAuthorityList && empAuthorityList?.length === 0 && (
+                <span style={{ color: "red" }}>
+                  Designation workflow policy not exist againts this employee
+                </span>
+              )}
               {/* Form Start */}
               <Form className="form form-label-right">
-                <fieldset>
-
+                <fieldset
+                  disabled={
+                    (empAuthorityList && empAuthorityList?.length === 0) ||
+                    currentLevel > 1
+                  }
+                >
                   {/* First Row Start */}
                   <div className="from-group row">
-
                     {/* Date from Field Start */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field
@@ -143,8 +164,11 @@ export function MasterEditForm({
                           </span>
                         }
                         onChange={(date) => {
-                          setFieldValue('from', date)
-                          setFieldValue('days', getDateDiffInDays(date, values.to)) //Set difference in to from days in days key
+                          setFieldValue("from", date);
+                          setFieldValue(
+                            "days",
+                            getDateDiffInDays(date, values.to)
+                          ); //Set difference in to from days in days key
                         }}
                         autoComplete="off"
                       />
@@ -165,8 +189,11 @@ export function MasterEditForm({
                           </span>
                         }
                         onChange={(date) => {
-                          setFieldValue('to', date)
-                          setFieldValue('days', getDateDiffInDays(values.from, date)) //Set difference in to from days in days key
+                          setFieldValue("to", date);
+                          setFieldValue(
+                            "days",
+                            getDateDiffInDays(values.from, date)
+                          ); //Set difference in to from days in days key
                         }}
                         autoComplete="off"
                       />
@@ -178,17 +205,21 @@ export function MasterEditForm({
                       <Field
                         name="days"
                         component={Input}
-                        className={errors?.days && touched?.days && getDateDiffInDays(values.from, values.to) === 1 ? 'form-control is-invalid' : 'form-control'} //throw validation error if the difference in days is 1 day
-                        disabled={isEdit || getDateDiffInDays(values.from, values.to) !== 1} //disable field if the difference in dates is more than 1 days
+                        className={
+                          errors?.days &&
+                          touched?.days &&
+                          getDateDiffInDays(values.from, values.to) === 1
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        } //throw validation error if the difference in days is 1 day
+                        disabled={
+                          isEdit ||
+                          getDateDiffInDays(values.from, values.to) !== 1
+                        } //disable field if the difference in dates is more than 1 days
                         type="number"
                         min="0"
                         onChange={handleChange}
-                        label={
-                          <span>
-                            {" "}
-                            Days
-                          </span>
-                        }
+                        label={<span> Days</span>}
                       />
                     </div>
                     {/* Days Field End */}
@@ -197,33 +228,42 @@ export function MasterEditForm({
 
                   {/* Second Row Start */}
                   <div className="from-group row">
-
                     {/* Leave Type Field Start */}
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="leaveType"
-                        component={Select}
-                        disabled={isEdit || !employeeId}
-                        className={errors?.leaveType && touched?.leaveType ? 'form-control is-invalid' : 'form-control'}
-                        placeholder=""
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
-                          setFieldValue('leaveType', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Leave Type<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.leaveType}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: allLeaveTypes })}
-                      />
-                      {
-                        errors.leaveType && touched.leaveType && <CustomErrorLabel touched={true} error={errors.leaveType} />
-                      }
+                        <Field
+                          name="leaveType"
+                          component={Select}
+                          disabled={isReaply || !employeeId}
+                          className={
+                            errors?.leaveType && touched?.leaveType
+                              ? "form-control is-invalid"
+                              : "form-control"
+                          }
+                          placeholder=""
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.target.value == "--Select--"
+                                ? ""
+                                : Number(e.target.value);
+                            setFieldValue("leaveType", value);
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Leave Type<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          value={values.leaveType}
+                          autoComplete="off"
+                          children={CustomDropdown({ data: allLeaveTypes })}
+                        />
+                      {errors.leaveType && touched.leaveType && (
+                        <CustomErrorLabel
+                          touched={true}
+                          error={errors.leaveType}
+                        />
+                      )}
                     </div>
                     {/* Leave Type Field End */}
 
@@ -251,12 +291,11 @@ export function MasterEditForm({
 
                   {/* Third Row Start */}
                   <div className="from-group row">
-
                     {/* File Field Start */}
                     <div className="col-12 col-md-4 mt-3">
-                      <label style={{ 'margin-right': '0.5rem' }}>
+                      <label style={{ "margin-right": "0.5rem" }}>
                         {" "}
-                        Attachment: {" "}
+                        Attachment:{" "}
                       </label>
                       <input
                         name="file"
@@ -271,12 +310,21 @@ export function MasterEditForm({
                       />
                       <div>
                         <br />
-                        {values.fileName && values.file == values.fileName &&
+                        {values.fileName && values.file == values.fileName && (
                           <>
-                            <label><strong>Existing File:</strong></label>
-                            {<a href={getUploadUrl(values.fileName)} target="_blank"><span>{getFileName(values.fileName)}</span></a>}
+                            <label>
+                              <strong>Existing File:</strong>
+                            </label>
+                            {
+                              <a
+                                href={getUploadUrl(values.fileName)}
+                                target="_blank"
+                              >
+                                <span>{getFileName(values.fileName)}</span>
+                              </a>
+                            }
                           </>
-                        }
+                        )}
                       </div>
                     </div>
                     {/* File Field End */}
@@ -288,14 +336,13 @@ export function MasterEditForm({
             </Modal.Body>
             {/* Modal Body End */}
 
-
             <Modal.Footer>
               {/* Cancel button Start */}
               <button
                 type="reset"
                 onClick={() => {
-                  setId('')
-                  handleReset()
+                  setId("");
+                  handleReset();
                   if (inputFile?.current) {
                     inputFile.current.value = "";
                   }
@@ -307,22 +354,26 @@ export function MasterEditForm({
               {/* Cancel button End */}
 
               {/* Save button Start */}
-              {employeeId && accessUser ? <button
-                type="submit"
-                disabled={loading}
-                onClick={() => handleSubmit()}
-                className="btn btn-primary btn-elevate"
-              >
-                Save
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button> : <></>}
+              {employeeId && accessUser ? (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  onClick={() => handleSubmit()}
+                  className="btn btn-primary btn-elevate"
+                >
+                  Save
+                  {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+              ) : (
+                <></>
+              )}
               {/* Save button End */}
             </Modal.Footer>
           </>
         )}
-      </Formik >
+      </Formik>
       {/* Formik End */}
     </>
   );

@@ -6,7 +6,7 @@ import { FormUIProvider } from "./FormUIContext";
 import { FormCard } from "./form-card/FormCard";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
-export function LeaveApplicationPage({ history }) {
+export function LeaveRequestPage({ history }) {
   const FormUIEvents = {
     openDeleteFormDialog: (id) => {
       history.push(`/leave-request/read-all-leave-request/${id}/delete`);
