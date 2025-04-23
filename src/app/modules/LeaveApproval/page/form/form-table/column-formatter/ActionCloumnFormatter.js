@@ -19,7 +19,7 @@ export function ActionsColumnFormatter(
       >
         <a
           title=""
-          className="btn btn-icon read-button"
+          className="btn btn-icon view-button"
           onClick={() => {
             if (row?.requestBelongToEmpId) {
               setLeaveWorkflowId(null);
@@ -43,7 +43,7 @@ export function ActionsColumnFormatter(
       >
         <a
           title=""
-          className="btn btn-icon read-button"
+          className="btn btn-icon edit-button"
           onClick={() => {
             setLeaveBalanceId(null);
             setLeaveWorkflowId(row?.parentRecordId);
