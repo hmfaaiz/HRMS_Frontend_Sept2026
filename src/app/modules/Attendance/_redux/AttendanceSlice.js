@@ -15,6 +15,8 @@ const initialState = {
     userForRead: false,
     processLoading: false,
     payrollData: null,
+    consolidatedLoading: false,
+
 };
 
 export const callTypes = {
@@ -22,6 +24,7 @@ export const callTypes = {
     action: "action",
     process: "process",
     pdf:"pdf",
+    consolidated:"consolidated"
 };
 
 
@@ -39,6 +42,9 @@ export const AttendanceSlice = createSlice({
             else if(action.payload.callType === callTypes.process){
                 state.processLoading = false;
             }
+            else if(action.payload.callType === callTypes.consolidated){
+                state.consolidatedLoading = false;
+            }
             else {
                 state.actionsLoading = false;
             }
@@ -51,6 +57,13 @@ export const AttendanceSlice = createSlice({
             else if(action.payload.callType === callTypes.process){
                 state.processLoading = true;
             }
+
+            else if(action.payload.callType === callTypes.consolidated){
+                state.consolidatedLoading = true;
+            }
+
+
+
             else {
                 state.actionsLoading = true;
             }
@@ -62,6 +75,10 @@ export const AttendanceSlice = createSlice({
             } 
             else if(action.payload.callType === callTypes.process){
                 state.processLoading = false;
+            }
+            
+            else if(action.payload.callType === callTypes.consolidated){
+                state.consolidatedLoading = false;
             }
             else {
                 state.actionsLoading = false;

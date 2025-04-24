@@ -21,7 +21,6 @@ export const initialFilter = {
     employeeId: "",
     from: "",
     to: "",
-    group_by_emp:false,
   },
   sortOrder: "asc",
   pageSize: 50,

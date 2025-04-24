@@ -212,38 +212,39 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
 
 
 //attendance sheet report
-export const fetchAttendanceSheetConsolidated = (filters, document, labels = {}) => async (dispatch) => {
+export const fetchAttendanceSheetConsolidated = (filters, document, labels = {},group_by_emp) => async (dispatch) => {
 
   // if (!(filters.employeeId && filters.attDateIn)) {
   //   console.log("filter2222",filters)
   //   return dispatch(actions.AttendanceFetchedForEdit(null));
   // }
-  console.log("filter333",labels)
-    dispatch(actions.startCall({ callType: callTypes.pdf }));
-    return requestFromServer.getAttendanceSheetConsolidated({ ...filters, labels })
+
+    dispatch(actions.startCall({ callType: callTypes.consolidated }));
+    return requestFromServer.getAttendanceSheetConsolidated({ ...filters, labels ,group_by_emp})
 
 
 
       .then((res) => {
-       console.log("res111",res)
+      
         const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
         const pdfUrl = URL.createObjectURL(pdfBlob);
-console.log("pdfUrl11",pdfUrl)
+
         // Trigger file download
         const link = document.createElement('a');
         link.href = pdfUrl;
-        link.setAttribute('download', 't_attendance_sheet_consolidated.pdf');
+        link.setAttribute('download', 't_attendance_sheet.pdf');
         document.body.appendChild(link);
         link.click();
         dispatch(actions.pdfFetched({}));
         document.body.removeChild(link);
+        dispatch(actions.catchError({callType: callTypes.consolidated }));
       })
 
 
       .catch((error) => {
       
         error.clientMessage = SERVER_MESSAGES.pdfFail;
-        dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+        dispatch(actions.catchError({ error, callType: callTypes.consolidated }));
         toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
           position: "top-right",
           autoClose: 5000,
