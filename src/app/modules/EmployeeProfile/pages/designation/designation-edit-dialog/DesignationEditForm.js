@@ -249,8 +249,12 @@ const profileValidation = Yup.object().shape(
   const { title, maritalStatus, gender } = value;
 
   // Check conditions based on title // 196 == Single
-  if (title === 'Mrs.' && maritalStatus === '196') {
+  // if (title === 'Mrs.' && maritalStatus === '196') {
+    if (title === 'Mrs.' && maritalStatus === '261') {
+    return this.createError({ path: 'maritalStatus', message: 'Only for Married' });
+  }
 
+  if (title === 'Mrs.' && maritalStatus === '266') {
     return this.createError({ path: 'maritalStatus', message: 'Mrs. cannot be single.' });
   }
 
@@ -1382,9 +1386,15 @@ export function DesignationEditForm({
 
       const contactNo = contact.contactNo ? contact.contactNo.trim() : '';
 
-      if (!contactNo || !/^\d{7,15}$/.test(contactNo)) {
+      // if (!contactNo || !/^\d{7,15}$/.test(contactNo)) {
+      //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 to 15 digits';
+      // }
+      if (!contactNo) {
+        newErrors[`contactNo-${index}`] = 'Contact no. is required';
+      } else if (!/^\d{7,15}$/.test(contactNo)) {
         newErrors[`contactNo-${index}`] = 'Contact No must be between 7 to 15 digits';
       }
+   
     });
 
     // Validations for Work Experience
@@ -2974,7 +2984,7 @@ export function DesignationEditForm({
                               label="Require Delegation"
 
                             />
-                            <label>Require Deligation</label>
+                            <label>Delegation Required</label>
                           </div>
 
                           {/* <div className="col-12 col-md-4 mt-3">
