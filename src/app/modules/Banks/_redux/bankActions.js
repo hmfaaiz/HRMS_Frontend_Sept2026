@@ -147,7 +147,7 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-  console.log("User Action id " + id)
+
   if (!id) {
     return dispatch(actions.BankFetchedForEdit({ userForEdit: undefined }));
   }

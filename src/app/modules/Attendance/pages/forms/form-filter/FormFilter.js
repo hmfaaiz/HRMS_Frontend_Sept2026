@@ -10,7 +10,7 @@ import { DatePickerField, Select } from "../../../../../../_metronic/_partials/c
 import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
-import { fetchAttendance, runProcess } from "../../../_redux/formActions";
+import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 
 //Validation for date fields
@@ -21,12 +21,13 @@ const formValidation = Yup.object().shape({
 
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
+ 
   const newQueryParams = { ...queryParams }
   newQueryParams.filter = { ...values }
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, processLoading }) {
+export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoading}) {
 
   const FormUIContext = useFormUIContext()
 
@@ -95,6 +96,27 @@ export function FormFilter({ loading, dispatch, processLoading }) {
     }
 
   },[allSubsidiaryList])
+
+  const getLabels = (values) => {
+    console.log("aaa111",allDeptMap?.get(values.departmentId || '')?.label,)
+    return {
+      departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
+      subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
+      reportToaLabel: allEmployeesMap?.get(values.reportTo || '')?.label,
+      gradeLabel: allGradeMap?.get(values.gradeId || '')?.label,
+      designationLabel: allDesignationsMap?.get(values.designationId || '')?.label,
+      locationLabel: allLocationMap?.get(values.locationId || '')?.label,
+      
+    }
+  }
+  const generateReport = (values,group_by_emp) => {
+   
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    const labels = getLabels(values);
+    dispatch(fetchAttendanceSheetConsolidated(newQueryParams,document,labels,group_by_emp));
+  }
+
+
 
   return (
     <>
@@ -384,6 +406,7 @@ export function FormFilter({ loading, dispatch, processLoading }) {
             </Modal.Body>
             <Modal.Footer>
 
+   
               <button
                 type="button"
                 onClick={() => {
@@ -398,7 +421,7 @@ export function FormFilter({ loading, dispatch, processLoading }) {
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading || processLoading}
+                disabled={loading || processLoading || consolidatedLoading || !values.from || !values.to}
                 className="btn btn-success btn-elevate"
               >
                 Filter Records
@@ -407,15 +430,10 @@ export function FormFilter({ loading, dispatch, processLoading }) {
                 )}
               </button>
 
-              {/* <button
-                disabled={loading}
-                className="btn btn-secondary"
-              >
-                Generate Report
-              </button> */}
+       
 
               <button
-                disabled={loading || processLoading}
+                disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
                 className="btn btn-secondary"
                 onClick={() => runAllProcess(values)}
               >
@@ -426,6 +444,46 @@ export function FormFilter({ loading, dispatch, processLoading }) {
               </button>
 
             </Modal.Footer>
+
+            <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+            <h6>  Attendance Sheet</h6>
+
+<div className="d-flex justify-content-end">
+            <button
+          
+          className=" btn btn-primary btn-elevate"
+          //fetchAttendanceSheetConsolidated
+    
+          onClick={() => {
+            // setFieldValue("group_by_emp",true)
+            generateReport(values,true)}}
+          disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+        >
+          Employee wise Sheet
+          {consolidatedLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )}
+        </button> 
+
+
+        <button
+    
+    className="ml-3 btn btn-primary btn-elevate"
+    //fetchAttendanceSheetConsolidated
+
+    onClick={() => {
+      // setFieldValue("group_by_emp",false)
+      generateReport(values,false)}}
+    disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+  >
+    Consolidated Sheet
+    {consolidatedLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )}
+  </button> 
+
+            </div>
+            </div>
 
           </>
         )}
