@@ -89,7 +89,7 @@ import {CalendarSlice} from "../app/modules/Calendar/_redux/redux-Slice"
 import {LeaveCalendarSlice} from "../app/modules/Leave_Calendar/_redux/redux-Slice"
 import {RosterCalendarSlice} from "../app/modules/Roster_Calendar/_redux/redux-Slice"
 import {AttendanceCalendarSlice} from "../app/modules/Attendance_Calendar/_redux/redux-Slice"
-
+import { LeaveApprovalSlice } from "../app/modules/LeaveApproval/redux/formSlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -172,7 +172,8 @@ export const rootReducer = combineReducers({
   leave_request: LeaveRequestSlice.reducer,
   workflow_policy: workflowPolicySlice.reducer,
   hod_setup: HODSlice.reducer,
-  calendar:CalendarSlice.reducer,
+  calendar: CalendarSlice.reducer,
+  leave_approval: LeaveApprovalSlice.reducer,
   leave_calendar:LeaveCalendarSlice.reducer,
   roster_calendar:RosterCalendarSlice.reducer,
   attendance_calendar:AttendanceCalendarSlice.reducer,

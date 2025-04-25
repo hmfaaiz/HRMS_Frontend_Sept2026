@@ -5,10 +5,12 @@ import * as actions from "../../redux/formaction";
 import { useFormUIContext } from "../FormUIContext";
 import { useParams } from "react-router-dom";
 import { ModalProgressBar } from "../../../../../_metronic/_partials/controls";
+import { Field } from "formik";
 export function DuplicateDialog({ show, onHide }) {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [duplicateDetail, setDuplicateDetail] = useState("");
+  const [selectedDesignationList, setSelectedDesignationList] = useState([]);
   // Customers UI Context
   const formUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
@@ -27,7 +29,7 @@ export function DuplicateDialog({ show, onHide }) {
     shallowEqual
   );
 
-  const { entities } = currentState;
+  const { entities, designationList } = currentState;
 
   const enableLoading = () => {
     setLoading(true);
@@ -44,11 +46,16 @@ export function DuplicateDialog({ show, onHide }) {
       const currentRecord = entities?.find((el) => el.Id == id);
       setDuplicateDetail(
         currentRecord
-          ? `Duplicate Role: ${currentRecord?.designation?.formName} of ${currentRecord?.workflowType?.formName}`
+          ? `${currentRecord?.designation?.formName} of ${currentRecord?.workflowType?.formName}`
           : ""
       );
     }
   }, [id, currentState]);
+
+  useEffect(() => {
+    const currentRecord = entities?.find((el) => el.Id == id);
+    dispatch(actions.fetchDesignationRecord(currentRecord?.workflowTypeId));
+  }, [id, entities]);
 
   const handleClick = () => {
     enableLoading();
@@ -56,7 +63,7 @@ export function DuplicateDialog({ show, onHide }) {
       actions.createMultipleRecord(
         {
           id: id,
-          designationsIds: [290, 291],
+          designationsIds: selectedDesignationList,
         },
         disableLoading,
         "DWP"
@@ -78,13 +85,62 @@ export function DuplicateDialog({ show, onHide }) {
       {/*end::Loading*/}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          Duplicate Record
+          Copy workflow policy to other designations
           <h6>{duplicateDetail}</h6>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure want to delete this record?</span>}
-        {isLoading && <span>Workflow policy is deactivating...</span>}
+        <div className="col-12 col-md-12 mt-3">
+          Designation List
+          <div
+            style={{
+              backgroundColor: "#ffffff",
+              height: "350px",
+              padding: "10px",
+              overflow: "scroll",
+            }}
+          >
+            <div className="multi-select">
+              <div className="dropdown-label"></div>
+              <div
+                className="dropdown-options"
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  padding: "5px",
+                }}
+              >
+                {designationList.map((option, index) => (
+                  <div
+                    key={option.value || `fallback-key-${index}`}
+                    className="dropdown-option"
+                  >
+                    <input
+                      type="checkbox"
+                      name={option?.key}
+                      checked={selectedDesignationList?.includes(option?.value)}
+                      onChange={(e) => {
+                        const isSelected = selectedDesignationList?.includes(
+                          option?.value
+                        );
+                        const updatedSelectedDesignation = isSelected
+                          ? selectedDesignationList.filter(
+                              (el) => el !== option?.value
+                            ) // remove
+                          : [...selectedDesignationList, option?.value]; // add
+
+                        setSelectedDesignationList(updatedSelectedDesignation);
+                      }}
+                      style={{ width: "25px" }}
+                    />
+
+                    {option.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <div>

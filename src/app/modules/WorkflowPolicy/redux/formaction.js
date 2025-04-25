@@ -107,3 +107,17 @@ export const createMultipleRecord = (data, disableLoading, type) => (
       toast.error(error?.response?.data?.message);
     });
 };
+
+export const fetchDesignationRecord = (workflowTypeId) => async (dispatch) => {
+  return requestFromServer
+    .getDesignationList(workflowTypeId)
+    .then((response) => {
+      const entities =
+        response?.data?.data.length > 0 ? response?.data?.data : [];
+      dispatch(actions.RecordDesignationListFetch(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Designation List";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
