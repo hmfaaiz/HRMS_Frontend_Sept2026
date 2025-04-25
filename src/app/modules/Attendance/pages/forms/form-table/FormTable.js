@@ -169,7 +169,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "comments",
+      dataField: "finalRemarks",
       text: "Remarks",
       sort: false,
       sortCaret: sortCaret,
