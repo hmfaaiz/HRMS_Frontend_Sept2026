@@ -245,13 +245,13 @@ const profileValidation = Yup.object().shape(
 
 
 ).test('check-marital-status', 'Invalid marital status for selected title', function (value) {
-
+  // if (title === 'Mrs.' && maritalStatus === '261') {
   const { title, maritalStatus, gender } = value;
 
   // Check conditions based on title // 196 == Single
-  // if (title === 'Mrs.' && maritalStatus === '196') {
-    if (title === 'Mrs.' && maritalStatus === '261') {
-    return this.createError({ path: 'maritalStatus', message: 'Only for Married' });
+  if (title === 'Mrs.' && maritalStatus !== '267') {
+
+    return this.createError({ path: 'maritalStatus', message: 'Mrs. only for Married' });
   }
 
   if (title === 'Mrs.' && maritalStatus === '266') {
@@ -269,6 +269,19 @@ const profileValidation = Yup.object().shape(
   if ((title === 'Mr.') && gender === 'Female') {
     return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
   }
+
+
+  if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267) {
+
+    return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
+  }
+  
+  
+  if (title === 'Ms.' && maritalStatus == 267 ) {
+
+    return this.createError({ path: 'maritalStatus', message: 'Ms. only for single woman.' });
+  }
+  
 
 
 
@@ -992,7 +1005,8 @@ export function DesignationEditForm({
 
     setworkExperienceList([...workExperienceList.map((val, ind) => {
       if (ind == index) {
-        val[key] = new Date(el)
+        // val[key] = new Date(el)
+        val[key] = el ? new Date(el) : null;
       }
       return val
     })])
@@ -1057,7 +1071,8 @@ export function DesignationEditForm({
 
     setAcademicList([...academicList.map((val, ind) => {
       if (ind == index) {
-        val[key] = new Date(el)
+        // val[key] = new Date(el)
+        val[key] = el ? new Date(el) : null;
       }
       return val
     })])
@@ -1252,7 +1267,8 @@ export function DesignationEditForm({
 
     setSkillList([...skillsList.map((val, ind) => {
       if (ind == index) {
-        val[key] = new Date(el)
+        // val[key] = new Date(el)
+        val[key] = el ? new Date(el) : null;
       }
       return val
     })])
@@ -1298,12 +1314,16 @@ export function DesignationEditForm({
 
     setIncidentList([...incidentList.map((val, ind) => {
       if (ind == index) {
-        val[key] = new Date(el)
+        // val[key] = new Date(el)
+        val[key] = el ? new Date(el) : null;
       }
       return val
     })])
 
   }
+
+
+  
 
   const handleFieldChangedIncident = (index, field, value) => {
     const newIncidentList = [...incidentList];
@@ -1401,17 +1421,17 @@ export function DesignationEditForm({
     workExperienceList.forEach((obj, index) => {
 
       if (!obj.companyName) {
-        newErrors[`companyName-${index}`] = '*Required';
+        newErrors[`companyName-${index}`] = 'Required';
       }
       if (!obj.positionHeld) {
-        newErrors[`positionHeld-${index}`] = '*Required';
+        newErrors[`positionHeld-${index}`] = 'Required';
       }
       if (!obj.countryId) {
-        newErrors[`countryId-W-${index}`] = '*Required';
+        newErrors[`countryId-W-${index}`] = 'Required';
       }
 
       if (!obj.cityId) {
-        newErrors[`cityId-W-${index}`] = '*Required';
+        newErrors[`cityId-W-${index}`] = 'Required';
       }
 
       const num = getDateDiffInDays(obj.startDate, new Date().getTime())
@@ -1429,11 +1449,11 @@ export function DesignationEditForm({
 
 
       if (!obj?.startDate) {
-        newErrors[`startDate_W-${index}`] = '*Required';
+        newErrors[`startDate_W-${index}`] = 'Required';
       }
 
       if (!obj?.endDate) {
-        newErrors[`endDate_W-${index}`] = '*Required';
+        newErrors[`endDate_W-${index}`] = 'Required';
       }
 
 
@@ -1444,19 +1464,19 @@ export function DesignationEditForm({
     academicList.forEach((obj, index) => {
 
       if (!obj.institutionId) {
-        newErrors[`institutionId-${index}`] = '*Required';
+        newErrors[`institutionId-${index}`] = 'Required';
       }
       if (!obj.degreeId) {
-        newErrors[`degreeId-${index}`] = '*Required';
+        newErrors[`degreeId-${index}`] = 'Required';
       }
       if (!obj.countryId) {
-        newErrors[`countryId-A-${index}`] = '*Required';
+        newErrors[`countryId-A-${index}`] = 'Required';
       }
 
       // GPA Validation
       if (!obj.gpa) {
 
-        newErrors[`gpa-${index}`] = '*Required';
+        newErrors[`gpa-${index}`] = 'Required';
       } else if (isNaN(obj.gpa) || obj.gpa === '') {
         newErrors[`gpa-${index}`] = 'GPA must be a number';
       } else if (obj.gpa < 1 || obj.gpa > 5.0) {
@@ -1466,23 +1486,33 @@ export function DesignationEditForm({
       }
       if (!obj.cityId) {
 
-        newErrors[`cityId-A-${index}`] = '*Required';
+        newErrors[`cityId-A-${index}`] = 'Required';
       }
       if (new Date(obj.startDate) > new Date()) {
         newErrors[`startDate_A-${index}`] = 'Start Date cannot be a future date';
       }
 
       // Validate endDate
-      if (new Date(obj.endDate) <= new Date(obj.startDate)) {
-        newErrors[`endDate_A-${index}`] = 'End Date must be later than Start Date';
-      }
+      // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate_A-${index}`] = 'End Date must be later than Start Date';
+      // }
 
       if (!obj?.startDate) {
-        newErrors[`startDate_A-${index}`] = '*Required';
+        newErrors[`startDate_A-${index}`] = 'Required';
+      } else if (new Date(obj.startDate) > new Date()) {
+        newErrors[`startDate_A-${index}`] = 'Start Date cannot be a future date';
       }
 
+
+      
+      if (!obj.endDate) {
+        newErrors[`endDate_A-${index}`]  ='Required';
+      } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+        newErrors[`endDate_A-${index}`] = 'End Date must be later than Start Date';
+      }
+    
       // if (!obj?.endDate) {
-      //   newErrors[`endDate_A-${index}`] = '*Required';
+      //   newErrors[`endDate_A-${index}`] = 'Required';
       // }
 
 
@@ -1491,22 +1521,34 @@ export function DesignationEditForm({
     // Validations for Skills
     skillsList.forEach((obj, index) => {
       if (!obj.skill) {
-        newErrors[`skill-${index}`] = '*Required';
+        newErrors[`skill-${index}`] = 'Required';
       }
       if (!obj.description) {
-        newErrors[`description-${index}`] = '*Required';
+        newErrors[`description-${index}`] = 'Required';
       }
 
       if (!obj.ratingScale) {
-        newErrors[`ratingScale-${index}`] = '*Required';
+        newErrors[`ratingScale-${index}`] = 'Required';
       }
 
-      if (new Date(obj.startDate) > new Date()) {
+      // if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate-${index}`] = 'Start Date cannot be a future date';
+      // }
+
+      if (!obj.startDate) {
+        newErrors[`startDate-${index}`] ='Required';
+      } else if (new Date(obj.startDate) > new Date()) {
         newErrors[`startDate-${index}`] = 'Start Date cannot be a future date';
       }
 
       // Validate endDate
-      if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate-${index}`] = 'End Date must be later than Start Date';
+      // }
+
+      if (!obj.endDate) {
+        newErrors[`endDate-${index}`] ='Required';
+      } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
         newErrors[`endDate-${index}`] = 'End Date must be later than Start Date';
       }
 
@@ -1515,21 +1557,25 @@ export function DesignationEditForm({
     // Validations for Incident
     incidentList.forEach((obj, index) => {
       if (!obj.incidentDetail) {
-        newErrors[`incidentDetail-${index}`] = '*Required';
+        newErrors[`incidentDetail-${index}`] = 'Required';
       }
       if (!obj.actionTaken) {
-        newErrors[`actionTaken-${index}`] = '*Required';
+        newErrors[`actionTaken-${index}`] = 'Required';
       }
 
       if (!obj.actionTakenBy) {
-        newErrors[`actionTakenBy-${index}`] = '*Required';
+        newErrors[`actionTakenBy-${index}`] = 'Required';
       }
 
-      if (new Date(obj.incidentDate) > new Date()) {
-        newErrors[`incidentDate-${index}`] = 'incidentDate Date cannot be a future date';
+      // if (new Date(obj.incidentDate) > new Date()) {
+      //   newErrors[`incidentDate-${index}`] = 'incidentDate Date cannot be a future date';
+      // }
+
+      if (!obj.incidentDate) {
+        newErrors[`incidentDate-${index}`] = 'Required';
+      } else if (new Date(obj.incidentDate) > new Date()) {
+        newErrors[`incidentDate-${index}`] = 'Incident Date cannot be a future date';
       }
-
-
 
     });
 
@@ -3393,7 +3439,7 @@ export function DesignationEditForm({
                           {workExperienceList?.map((obj, rightindex) => (
 
                             <><tr>
-                              <td id={rightindex} onClick={deleteRowExperience}> <span className="btn btn-danger btn-sm"> Delete</span></td>
+                              <td id={rightindex} onClick={deleteRowExperience}> <button className="btn btn-danger btn-sm"> Delete</button></td>
                               <td>
                                 <input className="form-control" type="text"
                                   onChange={(e) => {
@@ -3539,7 +3585,7 @@ export function DesignationEditForm({
                             <>
 
                               <tr>
-                                <td id={rightindex} onClick={deleteRowAcademic}> <span className="btn btn-danger btn-sm"> Delete</span></td>
+                                <td id={rightindex} onClick={deleteRowAcademic}> <button className="btn btn-danger btn-sm"> Delete</button></td>
                                 <td>
                                   <select className="form-control" value={obj.institutionId}
 
@@ -3701,7 +3747,7 @@ export function DesignationEditForm({
                           {skillsList?.map((obj, rightindex) => (
                             <>
                               <tr>
-                                <td id={rightindex} onClick={deleteRowSkills}> <span className="btn btn-danger btn-sm"> Delete</span></td>
+                                <td id={rightindex} onClick={deleteRowSkills}> <button className="btn btn-danger btn-sm"> Delete</button></td>
 
                                 <td>
                                   <input className="form-control" type="text"
@@ -3824,7 +3870,7 @@ export function DesignationEditForm({
 
                               <tr>
 
-                                <td id={rightindex} onClick={deleteRowIncident} > <span className="btn btn-danger btn-sm"> Delete</span></td>
+                                <td id={rightindex} onClick={deleteRowIncident} > <button className="btn btn-danger btn-sm"> Delete</button></td>
                                 <td>
                                   <input className="form-control" type="text"
                                     onChange={(e) => {
@@ -3844,7 +3890,9 @@ export function DesignationEditForm({
                                       setErrors((prev) => ({ ...prev, [`actionTaken-${rightindex}`]: '' })); // Clear error on change
                                     }}
                                     value={obj.actionTaken} id={'actionTaken-' + rightindex}></input>
-                                  {deferrors[`incidentDetail-${rightindex}`] && <div className="form-feedBack">{deferrors[`actionTaken-${rightindex}`]}</div>}
+                                  {/* {deferrors[`incidentDetail-${rightindex}`] && <div className="form-feedBack">{deferrors[`actionTaken-${rightindex}`]}</div>} */}
+                                  {deferrors[`actionTaken-${rightindex}`] && <div className="form-feedBack">{deferrors[`actionTaken-${rightindex}`]}</div>}
+
                                 </td>
 
                                 <td>
@@ -3875,8 +3923,8 @@ export function DesignationEditForm({
                                     placeholder="Date"
                                     // selected={new Date(obj.incidentDate || currentDate)}
                                     selected={obj?.incidentDate ? new Date(obj?.incidentDate) : null}
-                                    showYearDropdown
-                                    scrollableMonthYearDropdown
+                                    // showYearDropdown
+                                    // scrollableMonthYearDropdown
                                     onChange={(el) => handleDatePickerIncident(el, 'incidentDate', rightindex, '')}
                                     id={"incidentDate-" + rightindex}
                                     timeInputLabel="Time:"
@@ -3890,6 +3938,8 @@ export function DesignationEditForm({
                                   />
                                   {deferrors[`incidentDate-${rightindex}`] && <div className="form-feedBack">{deferrors[`incidentDate-${rightindex}`]}</div>}
                                 </td>
+
+                                
 
 
                               </tr>
