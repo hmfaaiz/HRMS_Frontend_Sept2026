@@ -3048,7 +3048,7 @@ export function DesignationEditForm({
 
 
 <div className="col-12 col-md-4 mt-3">
-                        <label className="mr-4">Deligation</label>
+                        <label className="mr-4">Delegation</label>
                         <input
                           name="all_deligationId"
                           type="checkbox"
