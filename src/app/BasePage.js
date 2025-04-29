@@ -190,6 +190,7 @@ const LeaveApprovalModule = lazy(() =>
   import("./modules/LeaveApproval/page/index")
 );
 
+const loanRegisterModule = lazy(() => import("./modules/LoanRegister/pages/index"));
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -271,6 +272,7 @@ const ROUTES = {
   workflow_policy: workFlowPolicyModule,
   hod_setup: HODManagement,
   leaveapproval: LeaveApprovalModule,
+  loanRegister:loanRegisterModule,
 };
 
 export default function BasePage() {
