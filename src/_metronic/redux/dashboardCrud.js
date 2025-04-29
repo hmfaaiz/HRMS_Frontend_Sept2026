@@ -252,3 +252,9 @@ export const getAllRosterPattern = async () => {
     {}
   );
 };
+
+export function getAllLoanType() {
+  return axios.get(`${USERS_URL}/settings/read-all-loan-type`);
+
+  
+}

@@ -11,8 +11,11 @@ const initialState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
-    pdfLoading: false,
+    loanReqLoading: false,
     registerExcelLoading:false,
+
+
+    loan_type:null,
 };
 
 export const callTypes = {
@@ -21,8 +24,8 @@ export const callTypes = {
     pdf: "pdf"
 };
 
-export const EmployeeRegisterSlice = createSlice({
-    name: "EmployeeRegister",
+export const LoanRegisterSlice = createSlice({
+    name: "LoanRegister",
     initialState: initialState,
     reducers: {
         catchError: (state, action) => {
@@ -31,7 +34,7 @@ export const EmployeeRegisterSlice = createSlice({
                 state.listLoading = false;
             } 
             else if(action.payload.callType === callTypes.pdf){
-                state.pdfLoading = false;
+                state.loanReqLoading = false;
             }
 
             else if(action.payload.callType === callTypes.xlsx){
@@ -48,7 +51,7 @@ export const EmployeeRegisterSlice = createSlice({
                 state.listLoading = true;
             } 
             else if(action.payload.callType === callTypes.pdf){
-                state.pdfLoading = true;
+                state.loanReqLoading = true;
 
 
             }
@@ -60,23 +63,19 @@ export const EmployeeRegisterSlice = createSlice({
             }
         },
         pdfFetched: (state, action) => {
-            state.pdfLoading = false;
+            state.loanReqLoading = false;
         },
 
-        registerExcelFetched: (state, action) => {
-            state.registerExcelLoading = false;
-        },
-        EmployeeRegisterFetched: (state, action) => {
-            state.entities = null;
-            state.totalCount = 0;
-        
-            const entities = action.payload.data?.data.rows;
-            const totalResult = action.payload.data?.data.totalResults;
-            state.listLoading = false;
-            state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
+    
+   
+        getLoanType: (state, action) => {
            
-        }
+            state.actionsLoading = false;
+            state.error = null;
+            state.loan_type=action.payload;
+
+
+            
+        },
     },
 });

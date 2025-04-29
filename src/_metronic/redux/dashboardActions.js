@@ -598,3 +598,18 @@ export const fetchAllRosterPattern = (key) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
+
+
+
+export const getAllLoanType = (key) => async (dispatch) => {
+  return await requestFromServer
+    .getAllLoanType()
+    .then((response) => {
+   
+      const entities = [...response.data?.data];
+      dispatch(actions.AllLoanTypeFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};

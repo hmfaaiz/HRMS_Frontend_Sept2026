@@ -13,22 +13,11 @@ export const initialFilter = {
   filter: {
     subsidiaryId: "",
     departmentId: "",
-    reportTo: "",
-    gradeId: "",
-    designationId: "",
-    locationId: "",
     employeeId: "",
-    dojFrom: "",
-    dojTo: "",
-    docFrom: "",
-    docTo: "",
-    dobFrom: "",
-    dobTo: "", gratuity_member: "", overtime_allowance: "", eobi_member: "", social_security_member: "",
-    salary_type: "", operator: ""
-    , amount: "",
+    loan_typeId:""
+    
+   
     
   },
-  sortOrder: "asc",
-  pageSize: 50,
-  pageNumber: 1
+
 }

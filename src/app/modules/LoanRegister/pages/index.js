@@ -4,12 +4,12 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { LoanRegisterPage } from "./forms/LoanRegisterPage";
 
 export default function LoanRegisterManagement() {
-
+console.log("loan_register111")
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
-        {<Redirect exact={true} from="/loan_register" to="/loan_register/read-all-registered-loans" />}
-        <ContentRoute path="/loan_register/read-all-registered-loans" component={LoanRegisterPage} />
+        {<Redirect exact={true} from="/loan_register" to="/loan_register/read-loan-register-report" />}
+        <ContentRoute path="/loan_register/read-loan-register-report" component={LoanRegisterPage} />
       </Switch>
     </Suspense>
   );

@@ -7,43 +7,20 @@ import { Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { DatePickerField, Select } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+import {VALIDATION_MESSAGES } from "../../../../../utils/constants";
+
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { formatDates } from "../../../../../utils/common";
-import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept,getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
+;
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
    subsidiaryId: Yup.number()
      .required(VALIDATION_MESSAGES.required),
-  dojFrom: Yup.date().optional(),
-  dojTo: Yup.date().optional().min(Yup.ref('dojFrom'), 'Date to date cannot be before Date from date'),
-  docFrom: Yup.date().optional(),
-  docTo: Yup.date().optional().min(Yup.ref('docFrom'), 'Date to date cannot be before Date from date'),
-  dobFrom: Yup.date().optional(),
-  dobTo: Yup.date().optional().min(Yup.ref('dobFrom'), 'Date to date cannot be before Date from date'),
-
-  alary_type: Yup.string().optional(),
-  operator: Yup.string().optional(),
-  amount: Yup.string().optional(),
-
+  
   // Custom test to ensure all three fields (salary_type, operator, amount) are selected together
-}).test('all-fields-required', 'All fields  must be selected together', function(value) {
-  const { salary_type, operator, amount } = value;
-
-  // Check if any of the fields is selected but the others are not
-  if ((salary_type || operator || amount) && !(salary_type && operator && amount)) {
-    return this.createError({
-      path: 'salary_type',  // The error will be associated with salary_type (you can choose any of the fields)
-      message: 'All fields must be selected together.',
-    });
-  }
-
-  return true;  // Validation passed
 });
-
 
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
@@ -52,14 +29,15 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading}) {
+export function FormFilter({ loading, dispatch, loanReqLoading ,registerExcelLoading,loan_type}) {
 
   const FormUIContext = useFormUIContext()
 
   //Get All dropdown data from state
-  const { allEmployees, allSubsidiaryList, allEmployeeGradeList, allDept, allLocationChildMenus, allDesignations } = useSelector(
+  const { allEmployees, allSubsidiaryList, allEmployeeGradeList, allDept, allLocationChildMenus, allDesignations ,allLoanTypeList} = useSelector(
     (state) => (state.dashboard),
   )
+
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
   const allEmployeesMap = useMemo(() => {
@@ -112,26 +90,12 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
   const getLabels = (values) => {
     return {
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
-      // employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
+      employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
-      reportToLabel: allEmployeesMap?.get(values.reportTo || '')?.label,
-      gradeLabel: allGradeMap?.get(values.gradeId || '')?.label,
-      designationLabel: allDesignationsMap?.get(values.designationId || '')?.label,
-      locationLabel: allLocationMap?.get(values.locationId || '')?.label,
-      subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
-      dojFromLabel: values?.dojFrom ? formatDates(values.dojFrom) : '',
-      dojToLabel: values?.dojTo ? formatDates(values.dojTo) : '',
-      docFromLabel: values?.docFrom ? formatDates(values.docFrom) : '',
-      docToLabel: values?.docTo ? formatDates(values.docTo) : '',
-      dobFromLabel: values?.dobFrom ? formatDates(values.dobFrom) : '',
-      dobToLabel: values?.dobTo ? formatDates(values.dobTo) : '',
-      gratuity_memberLabel: values?.gratuity_member || '',
-      overtime_allowanceLabel: values?.overtime_allowance || '',
-      eobi_memberLabel: values?.eobi_member || '',
-      social_security_memberLabel: values?.social_security_member || '',
-      salary_typeLabel: salaryTypeOptions?.find(option => option.value === values.salary_type)?.label || '',
-      operatorLabel: operatorOptions?.find(option => option.value === values.operator)?.label || '',
-      amountLabel: values?.amount || '',
+    
+
+      
+     
     }
   }
 
@@ -140,32 +104,12 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
     const labels = getLabels(values);
-    dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
+    dispatch(actions.fetchLoanReqReport(newQueryParams, document, labels));
   }
 
 
-  const getExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(actions.generateRegisterExcel(newQueryParams.filter, document, labels));
-  }
 
-
-  const salaryTypeOptions = [
-    { value: "0", label: "Gross Salary" },
-    { value: "1", label: "Basic Salary" },
-  ];
-
-
-  const operatorOptions = [
-    { value: "=", label: "Equal To" },
-    { value: ">", label: "Greater Than" },
-    { value: ">=", label: "Greater Than & Equal To" },
-    { value: "<", label: "Less Than" },
-    { value: "<=", label: "Less Than & Equal To" },
-  ];
-
-
+console.log("loan_type111",allLoanTypeList)
 
     useEffect(() => {
       // Extract subsidiaryId logic
@@ -175,6 +119,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
     
         dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
         dispatch(fetchAllDept(subsidiaryId));
+           dispatch(getAllLoanType());
     }, [allSubsidiaryList]);
 
     
@@ -212,31 +157,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
 
                       {/* Subsidiary Field Start */}
                       <div className="col-12 col-md-4 mt-3">
-                        {/* <Field
-                          name="subsidiaryId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('subsidiaryId', value)
-                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                            dispatch(fetchAllDept(value));
-                            setFieldValue('employeeId', '')
-                            setFieldValue('departmentId', '')
-                          }}
-                      
-                          label={
-                            <span>
-                              {" "}
-                              Subsidiary <span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
-                          autoComplete="off"
-                          options={allSubsidiaryList}
-                          error={errors.subsidiaryId}
-                        /> */}
-
+                
 
                            <SearchSelect
                                               name="subsidiaryId"
@@ -289,443 +210,71 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                         />
                       </div>
                       {/* Deparment Field End */}
-
-                      {/* Report To Field Start */}
                       <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="reportTo"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('reportTo', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Report To
-                            </span>
-                          }
-                          value={allEmployeesMap?.get(values?.reportTo || '') || ''}
-                          autoComplete="off"
-                          options={allEmployees}
-                        />
-                      </div>
-                      {/* Report To Field End */}
+                            <Field
+                              name="employeeId"
+                              component={SearchSelect}
+                              onBlur={handleBlur}
+                              onChange={(e) => {
+                                const value = e.value == '--Select--' ? '' : Number(e.value)
+                                setFieldValue('employeeId', value)
+                              }}
+                              label={
+                                <span>
+                                  {" "}
+                                  Employee
+                                </span>
+                              }
+                              value={allEmployeesMap?.get(values?.employeeId || '') || ''}
+                              autoComplete="off"
+                              options={allEmployees}
 
-                      {/* Grade Field Start */}
+                         
+                              
+                     
+                            />
+                          </div>
+
+
                       <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="gradeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('gradeId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Grade
-                            </span>
-                          }
-                          value={allGradeMap?.get(values?.gradeId || '') || ''}
-                          autoComplete="off"
-                          options={allEmployeeGradeList}
-                        />
-                      </div>
-                      {/* Grade Field End */}
+                            <Field
+                              name="loan_typeId"
+                              component={SearchSelect}
+                              onBlur={handleBlur}
+                              onChange={(e) => {
+                                const value = e.value == '--Select--' ? '' : Number(e.value)
+                                setFieldValue('loan_typeId', value)
+                              }}
+                              label={
+                                <span>
+                                  {" "}
+                                  Loan Type
+                                </span>
+                              }
+                              value={
+                                allLoanTypeList?.find(
+                                  (option) => option.value === values.loan_typeId
+                                ) || null
+                              }
+                              autoComplete="off"
+                              options={allLoanTypeList}
 
-                      {/* Designation Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="designationId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('designationId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Designation
-                            </span>
-                          }
-                          value={allDesignationsMap?.get(values?.designationId || '') || ''}
-                          autoComplete="off"
-                          options={allDesignations}
-                        />
-                      </div>
-                      {/* Designation Field End */}
+                         
+                              
+                     
+                            />
+                          </div> 
 
-                      {/* Location Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="locationId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('locationId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Location
-                            </span>
-                          }
-                          value={allLocationMap?.get(values?.locationId || '') || ''}
-                          autoComplete="off"
-                          options={allLocationChildMenus}
-                        />
-                      </div>
-                      {/* Location Field End */}
-
-
+                          
 
                     </div>
 
                   </div>
 
 
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>  Date Of Joining</h6>
-
-                    <div className="from-group row">
-
-
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="dojFrom"
-                          component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
-                          className="form-control"
-                          label={
-                            <span>
-                              {" "}
-                              Date From
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('dojFrom', date)
-                            setFieldValue('dojTo', date)
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="dojTo"
-                          component={DatePickerField}
-                          onBlur={handleBlur}
-                          className="form-control"
-                          dateFormat="dd/MM/yyyy"
-                          label={
-                            <span>
-                              {" "}
-                              Date To
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('dojTo', date)
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-
-
-                    </div>
-
-                  </div>
-
-
-
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6> Date Of Confirmation </h6>
-
-                    <div className="from-group row">
-
-
-
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="docFrom"
-                          component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
-                          className="form-control"
-                          label={
-                            <span>
-                              {" "}
-                              Date From
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('docFrom', date)
-                            setFieldValue('docTo', date)
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="docTo"
-                          component={DatePickerField}
-                          onBlur={handleBlur}
-                          className="form-control"
-                          dateFormat="dd/MM/yyyy"
-                          label={
-                            <span>
-                              {" "}
-                              Date To
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('docTo', date)
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-                    </div>
-
-
-
-
-                  </div>
-
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6> Date Of Birth </h6>
-
-                    <div className="from-group row">
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="dobFrom"
-                          component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
-                          className="form-control"
-                          label={
-                            <span>
-                              {" "}
-                              Date From
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('dobFrom', date)
-                            setFieldValue('dobTo', date)
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="dobTo"
-                          component={DatePickerField}
-                          onBlur={handleBlur}
-                          className="form-control"
-                          dateFormat="dd/MM/yyyy"
-                          label={
-                            <span>
-                              {" "}
-                              Date To
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('dobTo', date)
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-                    </div>
-
-
-
-
-                  </div>
-
-
-
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>Entitlements</h6>
-
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          type="checkbox"
-                          name="gratuity_member"
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            // Set 1 for checked, 0 for unchecked
-                            setFieldValue('gratuity_member', e.target.checked ? 1 : 0);
-                          }}
-                          checked={values.gratuity_member === 1} // Checked if the value is 1
-                        /> Gratuity Member
-                      </div>
-
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          name="overtime_allowance"
-                          type="checkbox"
-                          onBlur={handleBlur}
-
-                          onChange={(e) => {
-                            // Set 1 for checked, 0 for unchecked
-                            setFieldValue('overtime_allowance', e.target.checked ? 1 : 0);
-                          }}
-                          checked={values.overtime_allowance === 1} // Checked if the value is 1
-                        /> Over Time
-                      </div>
-
-
-                    </div>
-                    <br></br>
-                    <div className="from-group row">
-
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          name="eobi_member"
-                          type="checkbox"
-
-                          onBlur={handleBlur}
-
-                          onChange={(e) => {
-                            // Set 1 for checked, 0 for unchecked
-                            setFieldValue('eobi_member', e.target.checked ? 1 : 0);
-                          }}
-                          checked={values.eobi_member === 1}
-                        /> EOBI Member
-
-                      </div>
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          type="checkbox"
-                          name="social_security_member"
-
-                          onBlur={handleBlur}
-
-                          onChange={(e) => {
-                            // Set 1 for checked, 0 for unchecked
-                            setFieldValue('social_security_member', e.target.checked ? 1 : 0);
-                          }}
-                          checked={values.social_security_member === 1}
-                        /> Social Security Member
-
-                      </div>
-
-
-
-                    </div>
-                  </div>
 
                   <br></br>
 
-
-
-
-
-
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "0px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>Salary Filter</h6>
-
-                    <div className="from-group row ">
-                      <div className="col-12 col-md-4 mt-12">
-                        <label >
-                          Salary Type
-                        </label>
-                        <Field
-                          name="salary_type"
-                          as="select"
-                          className="form-control"
-
-                          onChange={(e) => {
-                            setFieldValue("salary_type", e.target.value); // Use the raw value
-                          }}
-                        >
-                          <option value="">Select </option>
-                          {salaryTypeOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-
-
-                          ))}
-
-
-                        </Field>
-                        {errors.salary_type && touched.salary_type && (
-  <div className="error-message">{errors.salary_type}</div>
-)}
-
-                      </div>
-
-                      <div className="col-12 col-md-4 mt-12">
-                        <label >
-                          Operator
-                        </label>
-                        <Field
-                          name="operator"
-                          as="select"
-                          className="form-control"
-
-                          onChange={(e) => {
-                            setFieldValue("operator", e.target.value); // Use the raw value
-                          }}
-                        >
-                          <option value="">Select </option>
-                          {operatorOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-
-
-                          ))}
-
-
-                        </Field>
-
-                      </div>
-
-
-
-                      <div className="col-12 col-md-4 mt-12">
-                        <label >
-                          Amount
-                        </label>
-                        <Field
-                          name="amount"
-                          as="input"
-                          className="form-control"
-
-                          onChange={(e) => {
-                            setFieldValue("amount", e.target.value); // Use the raw value
-                          }}
-                        >
-
-
-                        </Field>
-
-                      </div>
-                    </div>
-
-
-
-
-
-                  </div>
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -742,7 +291,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                 Cancel
               </button>
 
-              <button
+              {/* <button
                 type="submit"
                 onClick={() => handleSubmit()}
                 disabled={loading}
@@ -752,32 +301,21 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
-              </button>
+              </button> */}
 
               <button
                 onClick={() => { getPdf(values) }}
-                disabled={pdfLoading || !values?.subsidiaryId  || !isValid }
+                disabled={loanReqLoading || !values?.subsidiaryId  || !isValid }
                 className="btn btn-primary btn-elevate"
               >
-                Generate Report (PDF)
-                {pdfLoading && (
+                Loan Request Report
+                {loanReqLoading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
 
 
 
-              <button
-                onClick={() => { getExcel(values) }}
-                disabled={registerExcelLoading || !values?.subsidiaryId || !isValid }
-                type="button"
-                className="btn btn-primary btn-elevate"
-              >
-                Generate Register (Excel)
-                {registerExcelLoading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
 
             </Modal.Footer>
 

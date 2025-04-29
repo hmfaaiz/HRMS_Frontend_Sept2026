@@ -272,7 +272,7 @@ const ROUTES = {
   workflow_policy: workFlowPolicyModule,
   hod_setup: HODManagement,
   leaveapproval: LeaveApprovalModule,
-  loanRegister:loanRegisterModule,
+  loan_register:loanRegisterModule,
 };
 
 export default function BasePage() {

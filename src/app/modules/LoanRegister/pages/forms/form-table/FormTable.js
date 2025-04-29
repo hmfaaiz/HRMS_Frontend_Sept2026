@@ -42,9 +42,9 @@ export function FormTable() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(actions.fetchEmployeeRegister(FormUIProps.queryParams));
-  }, [FormUIProps.queryParams, dispatch]);
+  // useEffect(() => {
+  //   dispatch(actions.fetchEmployeeRegister(FormUIProps.queryParams));
+  // }, [FormUIProps.queryParams, dispatch]);
 
   // Table columns
   const columns = [

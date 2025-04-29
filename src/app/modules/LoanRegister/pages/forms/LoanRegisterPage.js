@@ -12,16 +12,15 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 
 export function LoanRegisterPage() {
   const dispatch = useDispatch();
-  const {
-    dashboard,
-    listLoading,
-    pdfLoading
-  } = useSelector((state) => ({
-    dashboard: state.dashboard,
-    listLoading: state.loan_register.listLoading,
-    pdfLoading: state.loan_register.pdfLoading
-  }
-  ));
+  const { dashboard, listLoading, loanReqLoading } = useSelector((state) => {
+    console.log(state.loan_register);
+    return {
+      dashboard: state.dashboard,
+      listLoading: state.loan_register.listLoading,
+      loanReqLoading: state.loan_register.loanReqLoading,
+      loan_type: state.loan_register.loan_type
+    };
+  });
 
   //Get all Dropdown data from server on page load and set it in state
   useEffect(() => {
@@ -34,8 +33,8 @@ export function LoanRegisterPage() {
     if (!dashboard?.allDesignations || !dashboard?.allDesignations?.length)
       dispatch(fetchAllFormsMenu(158, "allDesignations"));
 
-    if (!dashboard?.allLocationChildMenus || !dashboard?.allLocationChildMenus?.length)
-      dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    // if (!dashboard?.allLocationChildMenus || !dashboard?.allLocationChildMenus?.length)
+    //   dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, [dispatch]);
 
   return (
@@ -48,11 +47,11 @@ export function LoanRegisterPage() {
         </CardHeader>
 
         {/* Filter Form Starts */}
-        <FormFilter loading={listLoading} pdfLoading={pdfLoading} dispatch={dispatch} />
+        <FormFilter loading={listLoading} loanReqLoading={loanReqLoading} dispatch={dispatch} />
         {/* Filter Form Ends */}
 
         {/* Table Starts */}
-        <FormTable />
+        {/* <FormTable /> */}
         {/* Table Ends */}
 
         {/* Card Ends */}
