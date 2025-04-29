@@ -141,6 +141,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
+            <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+            <h6 className="mb-5">  Attendance Sheet</h6>
               <Form className="form form-label-right">
                 <fieldset>
                   <div className="from-group row">
@@ -403,6 +405,44 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                   </div>
                 </fieldset>
               </Form>
+
+             
+              <div className="d-flex justify-content-end">
+            <button
+          
+          className=" btn btn-primary btn-elevate"
+          //fetchAttendanceSheetConsolidated
+    
+          onClick={() => {
+            // setFieldValue("group_by_emp",true)
+            generateReport(values,true)}}
+          disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+        >
+          Employee wise Sheet
+          {consolidatedLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )}
+        </button> 
+
+
+        <button
+    
+    className="ml-3 btn btn-primary btn-elevate"
+    //fetchAttendanceSheetConsolidated
+
+    onClick={() => {
+      // setFieldValue("group_by_emp",false)
+      generateReport(values,false)}}
+    disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+  >
+    Consolidated Sheet
+    {consolidatedLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )}
+  </button> 
+
+            </div>
+              </div>
             </Modal.Body>
             <Modal.Footer>
 
@@ -445,45 +485,11 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
 
             </Modal.Footer>
 
-            <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-            <h6>  Attendance Sheet</h6>
-
-<div className="d-flex justify-content-end">
-            <button
-          
-          className=" btn btn-primary btn-elevate"
-          //fetchAttendanceSheetConsolidated
-    
-          onClick={() => {
-            // setFieldValue("group_by_emp",true)
-            generateReport(values,true)}}
-          disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
-        >
-          Employee wise Sheet
-          {consolidatedLoading && (
-            <span className="ml-3 mr-3 spinner spinner-white"></span>
-          )}
-        </button> 
+         
+        
 
 
-        <button
-    
-    className="ml-3 btn btn-primary btn-elevate"
-    //fetchAttendanceSheetConsolidated
-
-    onClick={() => {
-      // setFieldValue("group_by_emp",false)
-      generateReport(values,false)}}
-    disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
-  >
-    Consolidated Sheet
-    {consolidatedLoading && (
-            <span className="ml-3 mr-3 spinner spinner-white"></span>
-          )}
-  </button> 
-
-            </div>
-            </div>
+       
 
           </>
         )}
