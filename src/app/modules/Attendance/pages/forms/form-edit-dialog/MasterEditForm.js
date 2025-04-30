@@ -116,7 +116,7 @@ export function MasterEditForm({
             const timeInMinutes = parseInt(timeIn.substring(0, 2)) * 60 + parseInt(timeIn.substring(2, 4));
             const timeOutMinutes = parseInt(value.substring(0, 2)) * 60 + parseInt(value.substring(2, 4));
       
-            return timeOutMinutes > timeInMinutes;
+            return timeOutMinutes >= timeInMinutes;
           }
         ) ,
         comments: Yup.string().required(VALIDATION_MESSAGES.required),

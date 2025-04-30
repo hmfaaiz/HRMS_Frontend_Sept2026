@@ -76,3 +76,13 @@ export function processAttendance(body) {
 export function getPayrollMonth(body) {
   return axios.post(`${USERS_URL}/payroll_month/get-payroll-month-previous-date`, body);
 }
+
+export function getAttendanceSheetConsolidated(body) {
+
+  const config = {
+    responseType:  'arraybuffer', 
+  };
+
+  return axios.post(`${USERS_URL}/attendance/read-attendance-sheet-consolidated`, body,config);
+}
+

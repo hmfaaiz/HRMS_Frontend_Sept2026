@@ -61,7 +61,7 @@ export function FormTable() {
     },
     {
       dataField: "fullName",
-      text: "Name",
+      text: "Emp. Name",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -89,7 +89,7 @@ export function FormTable() {
     },
     {
       dataField: "formattedDateIn",
-      text: "Attendance Date In",
+      text: "Date In",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -109,17 +109,7 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
-    {
-      dataField: "formattedDateOut",
-      text: "Attendance Date Out",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+
     {
       dataField: "timeOut",
       text: "Time Out",
@@ -131,9 +121,10 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
+
     {
-      dataField: "attendanceStatus",
-      text: "Attendance Status",
+      dataField: "formattedDateOut",
+      text: "Date Out",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -142,6 +133,8 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
+   
+   
     {
       dataField: "workedHours",
       text: "Worked Hours",
@@ -165,7 +158,18 @@ export function FormTable() {
       },
     },
     {
-      dataField: "comments",
+      dataField: "attendanceStatus",
+      text: "Attendance Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+    },
+    {
+      dataField: "finalRemarks",
       text: "Remarks",
       sort: false,
       sortCaret: sortCaret,
