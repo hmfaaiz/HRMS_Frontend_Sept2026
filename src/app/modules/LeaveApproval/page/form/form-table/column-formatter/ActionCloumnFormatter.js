@@ -8,7 +8,7 @@ export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
-  { setLeaveBalanceId, setLeaveWorkflowId }
+  { setLeaveBalanceId, setLeaveWorkflowId, setLeaveData }
 ) {
   return (
     <>
@@ -24,6 +24,7 @@ export function ActionsColumnFormatter(
             if (row?.requestBelongToEmpId) {
               setLeaveWorkflowId(null);
               setLeaveBalanceId(row?.requestBelongToEmpId);
+              setLeaveData(row);
             }
           }}
         >
@@ -47,6 +48,7 @@ export function ActionsColumnFormatter(
           onClick={() => {
             setLeaveBalanceId(null);
             setLeaveWorkflowId(row?.parentRecordId);
+            setLeaveData(row);
           }}
         >
           <span className="svg-icon svg-icon-md svg-icon-primary">

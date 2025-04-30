@@ -32,16 +32,11 @@ export async function getAllLeaveBalances(body) {
 }
 
 export function getLeaveApplicationSetupById(id) {
-  return axios.get(
-    `${USERS_URL}/leave_request/read-leave-application/${id}`
-  );
+  return axios.get(`${USERS_URL}/leave_request/read-leave-application/${id}`);
 }
 
 export function updateLeaveApplicationSetup(body) {
-  return axios.put(
-    `${USERS_URL}/leave_request/update-leave-application`,
-    body
-  );
+  return axios.put(`${USERS_URL}/leave_request/update-leave-application`, body);
 }
 
 export function deleteLeaveApplicationSetup(id) {
@@ -56,6 +51,6 @@ export function getEmployeeHierarchy(level) {
 
 export function getEmployeeAuthorties(empId, workflowTypeId) {
   return axios.get(
-    `${USERS_URL}/leave_request/get-employee-authorties/${empId}/${workflowTypeId}`
+    `${USERS_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`
   );
 }

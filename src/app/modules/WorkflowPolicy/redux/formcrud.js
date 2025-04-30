@@ -52,3 +52,9 @@ export function getDesignationList(workflowTypeId) {
     `${USERS_URL}/workflow_policy/read-designation/${workflowTypeId}`
   );
 }
+
+//get All Roles
+export function getAllRoles() {
+  return axios.get(`${USERS_URL}/settings/read-all-roles-master-data`);
+}
+

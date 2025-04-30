@@ -121,3 +121,16 @@ export const fetchDesignationRecord = (workflowTypeId) => async (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };
+
+export const fetchRoles = () => (dispatch) => {
+  return requestFromServer
+    .getAllRoles()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.RolesFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find roles";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};

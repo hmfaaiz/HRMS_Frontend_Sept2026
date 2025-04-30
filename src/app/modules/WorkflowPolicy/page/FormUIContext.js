@@ -8,7 +8,9 @@ export const useFormUIContext = () => {
 };
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
-  const [queryParamsDesig, setQueryParamsBaseDesig] = useState(initialFilterDesig);
+  const [queryParamsDesig, setQueryParamsBaseDesig] = useState(
+    initialFilterDesig
+  );
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -23,7 +25,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
 
-
   const setQueryParamsDesig = useCallback((nextQueryParams) => {
     setQueryParamsBaseDesig((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -35,7 +36,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
       return nextQueryParams;
     });
   }, []);
-
 
   const initVal = {
     subsidiaryId: null,
@@ -65,6 +65,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isHODFinalAuthority: false,
     isEmpFinalAuthority: false,
     empFinalAuthorityId: null,
+    isCustomApprover: false,
+    customApprovalList : [],
   };
 
   const value = {

@@ -8,6 +8,7 @@ const initialState = {
   dataForEdit: null,
   designationList: [],
   lastError: null,
+  roles: null,
 };
 
 export const callTypes = {
@@ -82,6 +83,12 @@ export const workflowPolicySlice = createSlice({
         }
         return el;
       });
+    },
+    RolesFetched: (state, action) => {
+      const entities = action.payload;
+      state.listLoading = false;
+      state.error = null;
+      state.roles = entities;
     },
   },
 });

@@ -29,6 +29,7 @@ export function LeaveApprovalFormTable() {
       setQueryParams: formUIContext?.setQueryParams,
       setLeaveBalanceId: formUIContext?.setLeaveBalanceId,
       setLeaveWorkflowId: formUIContext?.setLeaveWorkflowId,
+      setLeaveData: formUIContext?.setLeaveData,
       setIds: formUIContext?.setIds,
       Ids: formUIContext?.Ids,
     };
@@ -120,6 +121,7 @@ export function LeaveApprovalFormTable() {
       formatExtraData: {
         setLeaveBalanceId: FormUIProps.setLeaveBalanceId,
         setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
+        setLeaveData: FormUIProps?.setLeaveData,
       },
 
       style: {
