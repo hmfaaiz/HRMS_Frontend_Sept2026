@@ -418,7 +418,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                                               label={
                                                 <span>
                                                   {" "}
-                                                  Payroll Month
+                                                  Payroll Month<span style={{ color: "red" }}>*</span>
                                                 </span>
                                               }
                                               value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
