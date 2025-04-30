@@ -7,18 +7,19 @@ import { Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { DatePickerField, Select } from "../../../../../../_metronic/_partials/controls";
-import {VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept,getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
-;
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
+import DatePicker from "react-datepicker";
+
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
-   subsidiaryId: Yup.number()
-     .required(VALIDATION_MESSAGES.required),
-  
+  subsidiaryId: Yup.number()
+    .required(VALIDATION_MESSAGES.required),
+
   // Custom test to ensure all three fields (salary_type, operator, amount) are selected together
 });
 
@@ -29,12 +30,12 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, loanReqLoading ,registerExcelLoading,loan_type}) {
+export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoading, loan_type }) {
 
   const FormUIContext = useFormUIContext()
 
   //Get All dropdown data from state
-  const { allEmployees, allSubsidiaryList, allEmployeeGradeList, allDept, allLocationChildMenus, allDesignations ,allLoanTypeList} = useSelector(
+  const { allEmployees, allSubsidiaryList, allEmployeeGradeList, allDept, allLocationChildMenus, allDesignations, allLoanTypeList } = useSelector(
     (state) => (state.dashboard),
   )
 
@@ -92,10 +93,10 @@ export function FormFilter({ loading, dispatch, loanReqLoading ,registerExcelLoa
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
       employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
-    
 
-      
-     
+
+
+
     }
   }
 
@@ -109,20 +110,25 @@ export function FormFilter({ loading, dispatch, loanReqLoading ,registerExcelLoa
 
 
 
-console.log("loan_type111",allLoanTypeList)
+  console.log("loan_type111", allLoanTypeList)
 
-    useEffect(() => {
-      // Extract subsidiaryId logic
-      const subsidiaryId = (allSubsidiaryList && allSubsidiaryList.length > 0) 
-        ? allSubsidiaryList[0].value 
-        : null;
-    
-        dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
-        dispatch(fetchAllDept(subsidiaryId));
-           dispatch(getAllLoanType());
-    }, [allSubsidiaryList]);
+  useEffect(() => {
+    // Extract subsidiaryId logic
+    const subsidiaryId = (allSubsidiaryList && allSubsidiaryList.length > 0)
+      ? allSubsidiaryList[0].value
+      : null;
 
-    
+    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
+    dispatch(fetchAllDept(subsidiaryId));
+    dispatch(getAllLoanType());
+  }, [allSubsidiaryList]);
+
+  const loan_status = [
+    { value: 1, label: "Active" },
+    { value: 0, label: "InActive" }
+  ];
+  
+
   return (
     <>
       <Formik
@@ -138,7 +144,7 @@ console.log("loan_type111",allLoanTypeList)
         }}
       >
         {({
-          values,errors,touched,
+          values, errors, touched,
           handleSubmit,
           handleBlur,
           setFieldValue,
@@ -157,34 +163,34 @@ console.log("loan_type111",allLoanTypeList)
 
                       {/* Subsidiary Field Start */}
                       <div className="col-12 col-md-4 mt-3">
-                
 
-                           <SearchSelect
-                                              name="subsidiaryId"
-                                              label={
-                                                <span>
-                                                  Subsidiary<span style={{ color: "red" }}>*</span>
-                                                </span>
-                                              }
-                                         
-                                              onChange={(e) => {
-                                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                                setFieldValue('subsidiaryId', value)
-                                                dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                                                dispatch(fetchAllDept(value));
-                                                setFieldValue('employeeId', '')
-                                                setFieldValue('departmentId', '')
-                                              }}
-                                           
-                                              value={allSubsidiaryMap?.get(values?.subsidiaryId ||  (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
-                                              autoComplete="off"
-                                              options={allSubsidiaryList}
-                                            
-                        
-                                      
-                                              error={errors.subsidiaryId}
-                                              touched={touched.subsidiaryId}
-                                            />
+
+                        <SearchSelect
+                          name="subsidiaryId"
+                          label={
+                            <span>
+                              Subsidiary<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('subsidiaryId', value)
+                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                            dispatch(fetchAllDept(value));
+                            setFieldValue('employeeId', '')
+                            setFieldValue('departmentId', '')
+                          }}
+
+                          value={allSubsidiaryMap?.get(values?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
+                          autoComplete="off"
+                          options={allSubsidiaryList}
+
+
+
+                          error={errors.subsidiaryId}
+                          touched={touched.subsidiaryId}
+                        />
                       </div>
                       {/* Subsidiary Field End */}
 
@@ -211,64 +217,199 @@ console.log("loan_type111",allLoanTypeList)
                       </div>
                       {/* Deparment Field End */}
                       <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="employeeId"
-                              component={SearchSelect}
-                              onBlur={handleBlur}
-                              onChange={(e) => {
-                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                setFieldValue('employeeId', value)
-                              }}
-                              label={
-                                <span>
-                                  {" "}
-                                  Employee
-                                </span>
-                              }
-                              value={allEmployeesMap?.get(values?.employeeId || '') || ''}
-                              autoComplete="off"
-                              options={allEmployees}
+                        <Field
+                          name="employeeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('employeeId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Employee
+                            </span>
+                          }
+                          value={allEmployeesMap?.get(values?.employeeId || '') || ''}
+                          autoComplete="off"
+                          options={allEmployees}
 
-                         
-                              
-                     
-                            />
-                          </div>
+
+
+
+                        />
+                      </div>
 
 
                       <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="loan_typeId"
-                              component={SearchSelect}
-                              onBlur={handleBlur}
-                              onChange={(e) => {
-                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                setFieldValue('loan_typeId', value)
-                              }}
-                              label={
-                                <span>
-                                  {" "}
-                                  Loan Type
-                                </span>
-                              }
-                              value={
-                                allLoanTypeList?.find(
-                                  (option) => option.value === values.loan_typeId
-                                ) || null
-                              }
-                              autoComplete="off"
-                              options={allLoanTypeList}
+                        <Field
+                          name="loan_typeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('loan_typeId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Loan Type
+                            </span>
+                          }
+                          value={
+                            allLoanTypeList?.find(
+                              (option) => option.value === values.loan_typeId
+                            ) || null
+                          }
+                          autoComplete="off"
+                          options={allLoanTypeList}
 
-                         
-                              
-                     
-                            />
-                          </div> 
 
-                          
+
+
+                        />
+                      </div>
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="isLoanContinuing"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('isLoanContinuing', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Loan Status
+                            </span>
+                          }
+                          value={
+                            loan_status?.find(
+                              (option) => option.value === values.isLoanContinuing
+                            ) || null
+                          }
+                          autoComplete="off"
+                          options={loan_status}
+
+
+
+
+                        />
+                      </div>
+
+
+
+
 
                     </div>
+                    <div className="from-group row">
+                      {/* Date from Field Start */}
+                      {/* <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="from"
+                          component={DatePickerField}
+                          dateFormat="dd/MM/yyyy"
+                          className="form-control"
 
+                          label={
+                            <span>
+                              {" "}
+                              Date From<span style={{ color: 'red' }}>*</span>
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('from', date)
+                            setFieldValue('to', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div> */}
+                      {/* Date from Field End */}
+
+                      {/* Date to Field Start */}
+                      {/* <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="to"
+                          component={DatePickerField}
+                          onBlur={handleBlur}
+                          className="form-control"
+                          dateFormat="dd/MM/yyyy"
+                          label={
+                            <span>
+                              {" "}
+                              Date To<span style={{ color: 'red' }}>*</span>
+                            </span>
+                          }
+                          onChange={(date) => {
+                            setFieldValue('to', date)
+                          }}
+                          autoComplete="off"
+                        />
+                      </div> */}
+                      {/* Date to Field End */}
+
+
+ <div className="col-12 col-md-4 mt-3">
+
+
+                            <label>From Date<span style={{ color: "red" }}>*</span></label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="From Date "
+                              selected={values?.from ? new Date(values.from) : null}
+
+                              onChange={(date) => {
+                                setFieldValue("from", date);
+                                setFieldValue("to", date); // Sync from_date and to_date
+
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd/MM/yyyy"
+                              // showTimeInput
+                              name="from"
+
+                              autoComplete="off"
+
+
+
+                            />
+
+                          </div>
+
+                          {/* Date To Selector */}
+                          <div className="col-12 col-md-4 mt-3">
+
+
+                            <label>Date To<span style={{ color: "red" }}>*</span></label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="To Date "
+                              selected={values?.to ? new Date(values.to) : null}
+
+                              onChange={(date) => {
+                                setFieldValue("to", date);
+
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd/MM/yyyy"
+                              // showTimeInput
+                              name="to"
+
+                              autoComplete="off"
+
+
+
+                            />
+
+                          </div>
+
+
+
+
+                    </div>
                   </div>
 
 
@@ -305,7 +446,7 @@ console.log("loan_type111",allLoanTypeList)
 
               <button
                 onClick={() => { getPdf(values) }}
-                disabled={loanReqLoading || !values?.subsidiaryId  || !isValid }
+                disabled={loanReqLoading || !values?.subsidiaryId || !isValid}
                 className="btn btn-primary btn-elevate"
               >
                 Loan Request Report

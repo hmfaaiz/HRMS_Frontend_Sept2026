@@ -164,7 +164,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         label={
                           <span>
                             {" "}
-                            Subsidiary
+                            Subsidiary<span style={{ color: 'red' }}>*</span>
                           </span>
                         }
                         value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
@@ -368,7 +368,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         label={
                           <span>
                             {" "}
-                            Date From
+                            Date From<span style={{ color: 'red' }}>*</span>
                           </span>
                         }
                         onChange={(date) => {
@@ -391,7 +391,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         label={
                           <span>
                             {" "}
-                            Date To
+                            Date To<span style={{ color: 'red' }}>*</span>
                           </span>
                         }
                         onChange={(date) => {
