@@ -17,13 +17,15 @@ const DesignationWorkFlowFormEditDailog = ({ show, onHide, isUserForRead }) => {
   const [title, setTitle] = useState();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(fetchRecordById(id , "DWP"));
-    const title = id ? "Edit Designation Workflow Policy" : "New Designation Workflow Policy";
+    dispatch(fetchRecordById(id, "DWP"));
+    const title = id
+      ? "Edit Designation Workflow Policy"
+      : "New Designation Workflow Policy";
     setTitle(title);
   }, [id]);
   const formUIProps = useMemo(() => {
     return {
-        initValDesig: formUIContext.initValDesig,
+      initValDesig: formUIContext.initValDesig,
       queryParamsDesig: formUIContext.queryParamsDesig,
     };
   }, [formUIContext]);
@@ -44,9 +46,9 @@ const DesignationWorkFlowFormEditDailog = ({ show, onHide, isUserForRead }) => {
     try {
       enableLoading();
       if (!id) {
-        await dispatch(createRecord(val, disbaleLoading , "DWP"));
+        await dispatch(createRecord(val, disbaleLoading, "DWP"));
       } else {
-        dispatch(updateRecord(val, disbaleLoading , "DWP"));
+        dispatch(updateRecord(val, disbaleLoading, "DWP"));
       }
       onHide();
     } catch (error) {
@@ -57,7 +59,7 @@ const DesignationWorkFlowFormEditDailog = ({ show, onHide, isUserForRead }) => {
   };
   return (
     <Modal
-      size="lg"
+      size="xl"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

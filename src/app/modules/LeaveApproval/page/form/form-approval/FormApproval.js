@@ -21,6 +21,7 @@ export const FormApproval = () => {
     return {
       Ids: FormUIContext?.Ids,
       setIds: FormUIContext?.setIds,
+      setLeaveData: FormUIContext?.setLeaveData,
     };
   });
 
@@ -36,6 +37,7 @@ export const FormApproval = () => {
       dispatch(actions.handleLeaveRequest(values, resetForm));
       setLoading(false);
       formUIProps.setIds([]);
+      formUIProps.setLeaveData(null);
       dispatch(
         actions.fetchLeaveApprovalApplication(
           initialFilter,

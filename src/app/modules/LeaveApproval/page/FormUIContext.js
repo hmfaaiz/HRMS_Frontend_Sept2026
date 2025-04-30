@@ -12,6 +12,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParams] = useState(initialFilter);
   const [leaveBalanceId, setLeaveBalanceId] = useState(null);
   const [leaveWorkflowId, setLeaveWorkflowId] = useState(null);
+  const [leaveData, setLeaveData] = useState(null);
   const [Ids, setIds] = useState([]);
   const setQueryParamsLeaveApproval = useCallback((nextQueryParams) => {
     setQueryParams((prevQueryParams) => {
@@ -34,6 +35,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setLeaveBalanceId,
     leaveWorkflowId,
     setLeaveWorkflowId,
+    leaveData,
+    setLeaveData,
     setQueryParams,
     Ids,
     setIds,

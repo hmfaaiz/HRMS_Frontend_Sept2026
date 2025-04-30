@@ -24,6 +24,7 @@ export function LeaveBalanceTable({ onHide, show }) {
   const formUIProps = useMemo(() => {
     return {
       leaveBalanceId: FormUIContext?.leaveBalanceId,
+      leaveData: FormUIContext?.leaveData,
     };
   });
   const columns = [
@@ -112,7 +113,6 @@ export function LeaveBalanceTable({ onHide, show }) {
     dispatch(actions.fetchLeaveBalances(formUIProps?.leaveBalanceId));
   }, [formUIProps.leaveBalanceId]);
 
-
   return (
     <Modal
       size="lg"
@@ -128,6 +128,42 @@ export function LeaveBalanceTable({ onHide, show }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="overlay overlay-block cursor-default">
+        {formUIProps?.leaveData && (
+          <div className="row mb-4">
+            <div className="col-3">
+              Employee Code :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.requestBelongToEmp?.employeeCode}
+              </span>
+            </div>
+            <div className="col-3">
+              Name :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.requestBelongToEmp?.firstName}{" "}
+                {formUIProps?.leaveData?.requestBelongToEmp?.middleName}{" "}
+                {formUIProps?.leaveData?.requestBelongToEmp?.lastName}
+              </span>
+            </div>
+            <div className="col-3">
+              Department :{" "}
+              <span className="font-weight-bold">
+                {
+                  formUIProps?.leaveData?.requestBelongToEmp?.department
+                    ?.deptName
+                }
+              </span>
+            </div>
+            <div className="col-3">
+              Designation :{" "}
+              <span className="font-weight-bold">
+                {
+                  formUIProps?.leaveData?.requestBelongToEmp?.designation
+                    ?.formName
+                }
+              </span>
+            </div>
+          </div>
+        )}
         <BootstrapTable
           noDataIndication={NoRecordsFoundMessage({
             entities: leaveBalances || [],
