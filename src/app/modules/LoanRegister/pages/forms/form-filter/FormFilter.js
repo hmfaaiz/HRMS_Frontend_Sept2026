@@ -125,7 +125,8 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
   
   const loan_status = [
     { value: 1, label: "Active" },
-    { value: 0, label: "InActive" }
+    { value: 0, label: "In-Active" },
+    { value: '', label: "All" }
   ];
 
     //Trugger request to download PDF of data according to filters
@@ -297,7 +298,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('isLoanContinuing', value)
+                            setFieldValue('isLoanContinuing',  e.value )
                           }}
                           label={
                             <span>

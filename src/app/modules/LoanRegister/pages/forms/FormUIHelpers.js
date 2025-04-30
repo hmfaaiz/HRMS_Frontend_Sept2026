@@ -15,7 +15,7 @@ export const initialFilter = {
     departmentId: "",
     employeeId: "",
     loan_typeId:"",
-    isLoanContinuing:""
+    isLoanContinuing:1
    
     
   },
