@@ -12,7 +12,7 @@ const initialState = {
     lastError: null,
     userForRead: false,
     loanReqLoading: false,
-    registerExcelLoading:false,
+    LoanPositionLoading:false,
 
 
     loan_type:null,
@@ -21,7 +21,8 @@ const initialState = {
 export const callTypes = {
     list: "list",
     action: "action",
-    pdf: "pdf"
+    pdf: "pdf",
+    position_report:"position_report"
 };
 
 export const LoanRegisterSlice = createSlice({
@@ -37,8 +38,9 @@ export const LoanRegisterSlice = createSlice({
                 state.loanReqLoading = false;
             }
 
-            else if(action.payload.callType === callTypes.xlsx){
-                state.registerExcelLoading = false;
+            else if(action.payload.callType == callTypes.position_report){
+              
+                state.LoanPositionLoading = false;
             }
             
             else {
@@ -46,6 +48,7 @@ export const LoanRegisterSlice = createSlice({
             }
         },
         startCall: (state, action) => {
+         
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
@@ -55,8 +58,9 @@ export const LoanRegisterSlice = createSlice({
 
 
             }
-               else if(action.payload.callType === callTypes.registerExcel){
-                            state.registerExcelLoading = true;
+               else if(action.payload.callType === callTypes.position_report){
+       
+                            state.LoanPositionLoading = true;
                         }
             else {
                 state.actionsLoading = true;
@@ -64,6 +68,10 @@ export const LoanRegisterSlice = createSlice({
         },
         pdfFetched: (state, action) => {
             state.loanReqLoading = false;
+        },
+
+        pdfLoanPositionFetched: (state, action) => {
+            state.LoanPositionLoading = false;
         },
 
     

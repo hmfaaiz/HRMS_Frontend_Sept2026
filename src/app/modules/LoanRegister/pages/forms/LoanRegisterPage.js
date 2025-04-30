@@ -12,13 +12,14 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 
 export function LoanRegisterPage() {
   const dispatch = useDispatch();
-  const { dashboard, listLoading, loanReqLoading } = useSelector((state) => {
-    console.log(state.loan_register);
+  const { dashboard, listLoading, loanReqLoading,LoanPositionLoading } = useSelector((state) => {
+    // console.log(state.loan_register);
     return {
       dashboard: state.dashboard,
       listLoading: state.loan_register.listLoading,
       loanReqLoading: state.loan_register.loanReqLoading,
-      loan_type: state.loan_register.loan_type
+      loan_type: state.loan_register.loan_type,
+      LoanPositionLoading:state.loan_register.LoanPositionLoading,
     };
   });
 
@@ -47,7 +48,7 @@ export function LoanRegisterPage() {
         </CardHeader>
 
         {/* Filter Form Starts */}
-        <FormFilter loading={listLoading} loanReqLoading={loanReqLoading} dispatch={dispatch} />
+        <FormFilter loading={listLoading} loanReqLoading={loanReqLoading} dispatch={dispatch} LoanPositionLoading={LoanPositionLoading} />
         {/* Filter Form Ends */}
 
         {/* Table Starts */}

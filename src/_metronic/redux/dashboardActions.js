@@ -601,9 +601,9 @@ export const fetchAllRosterPattern = (key) => async (dispatch) => {
 
 
 
-export const getAllLoanType = (key) => async (dispatch) => {
+export const getAllLoanType = (body) => async (dispatch) => {
   return await requestFromServer
-    .getAllLoanType()
+    .getAllLoanType(body)
     .then((response) => {
    
       const entities = [...response.data?.data];

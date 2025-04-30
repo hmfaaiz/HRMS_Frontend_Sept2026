@@ -4,7 +4,7 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { LoanRegisterPage } from "./forms/LoanRegisterPage";
 
 export default function LoanRegisterManagement() {
-console.log("loan_register111")
+
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

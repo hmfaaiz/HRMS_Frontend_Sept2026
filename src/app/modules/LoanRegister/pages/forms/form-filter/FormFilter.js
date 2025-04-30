@@ -11,7 +11,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 
 
@@ -30,12 +30,12 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoading, loan_type }) {
+export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoading, loan_type }) {
 
   const FormUIContext = useFormUIContext()
 
   //Get All dropdown data from state
-  const { allEmployees, allSubsidiaryList, allEmployeeGradeList, allDept, allLocationChildMenus, allDesignations, allLoanTypeList } = useSelector(
+  const { allEmployees, allSubsidiaryList, allPayrollMonthYearList, allDept, allLoanTypeList } = useSelector(
     (state) => (state.dashboard),
   )
 
@@ -49,22 +49,15 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
     return new Map(allSubsidiaryList?.map(item => [item.value, item]));
   }, [allSubsidiaryList]);
 
-  const allGradeMap = useMemo(() => {
-    return new Map(allEmployeeGradeList?.map(item => [item.value, item]));
-  }, [allEmployeeGradeList]);
+
 
   const allDeptMap = useMemo(() => {
     return new Map(allDept?.map(item => [item.value, item]));
   }, [allDept]);
 
-  const allLocationMap = useMemo(() => {
-    return new Map(allLocationChildMenus?.map(item => [item.value, item]));
-  }, [allLocationChildMenus]);
-
-  const allDesignationsMap = useMemo(() => {
-    return new Map(allDesignations?.map(item => [item.value, item]));
-  }, [allDesignations]);
-  //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
+   const allPayrollMonthMap = useMemo(() => {
+     return new Map(allPayrollMonthYearList?.map(item => [item.value, item]));
+   }, [allPayrollMonthYearList]);
 
 
 
@@ -93,6 +86,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
       employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
+      payrollMonthLabel: allPayrollMonthMap?.get(values.monthId || '')?.label,
 
 
 
@@ -110,7 +104,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
 
 
 
-  console.log("loan_type111", allLoanTypeList)
+
 
   useEffect(() => {
     // Extract subsidiaryId logic
@@ -119,14 +113,28 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
       : null;
 
     dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
+    dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
     dispatch(fetchAllDept(subsidiaryId));
-    dispatch(getAllLoanType());
+    dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
+    dispatch(getAllLoanType({ subsidiaryId }));
+    
+    
   }, [allSubsidiaryList]);
 
+
+  
   const loan_status = [
     { value: 1, label: "Active" },
     { value: 0, label: "InActive" }
   ];
+
+    //Trugger request to download PDF of data according to filters
+    const getPositionReportPdf = (values) => {
+
+      const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+      const labels = getLabels(values);
+      dispatch(actions.fetchLoanPositionReport(newQueryParams, document, labels));
+    }
   
 
   return (
@@ -178,6 +186,8 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
                             setFieldValue('subsidiaryId', value)
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
+                            dispatch(fetchAllPayrollMonthYearList({ subsidiaryId:value }, "allPayrollMonthYearList"));
+                            dispatch(getAllLoanType({ subsidiaryId:value }));
                             setFieldValue('employeeId', '')
                             setFieldValue('departmentId', '')
                           }}
@@ -271,6 +281,15 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
                         />
                       </div>
 
+
+
+                    </div>
+                  </div>
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+
+                    <div className="from-group row">
+
+
                       <div className="col-12 col-md-4 mt-3">
                         <Field
                           name="isLoanContinuing"
@@ -302,116 +321,130 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
 
 
 
+                      <div className="col-12 col-md-4 mt-3">
 
 
-                    </div>
-                    <div className="from-group row">
-                      {/* Date from Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                        <Field
+                        <label>From Date<span style={{ color: "red" }}>*</span></label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="From Date "
+                          selected={values?.from ? new Date(values.from) : null}
+
+                          onChange={(date) => {
+                            setFieldValue("from", date);
+                            setFieldValue("to", date); // Sync from_date and to_date
+
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd/MM/yyyy"
+                          // showTimeInput
                           name="from"
-                          component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
-                          className="form-control"
 
-                          label={
-                            <span>
-                              {" "}
-                              Date From<span style={{ color: 'red' }}>*</span>
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('from', date)
-                            setFieldValue('to', date)
-                          }}
                           autoComplete="off"
-                        />
-                      </div> */}
-                      {/* Date from Field End */}
 
-                      {/* Date to Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                        <Field
+
+
+                        />
+
+                      </div>
+
+                      {/* Date To Selector */}
+                      <div className="col-12 col-md-4 mt-3">
+
+
+                        <label>Date To<span style={{ color: "red" }}>*</span></label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="To Date "
+                          selected={values?.to ? new Date(values.to) : null}
+
+                          onChange={(date) => {
+                            setFieldValue("to", date);
+
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd/MM/yyyy"
+                          // showTimeInput
                           name="to"
-                          component={DatePickerField}
-                          onBlur={handleBlur}
-                          className="form-control"
-                          dateFormat="dd/MM/yyyy"
-                          label={
-                            <span>
-                              {" "}
-                              Date To<span style={{ color: 'red' }}>*</span>
-                            </span>
-                          }
-                          onChange={(date) => {
-                            setFieldValue('to', date)
-                          }}
+
                           autoComplete="off"
+
+
+
                         />
-                      </div> */}
-                      {/* Date to Field End */}
 
-
- <div className="col-12 col-md-4 mt-3">
-
-
-                            <label>From Date<span style={{ color: "red" }}>*</span></label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="From Date "
-                              selected={values?.from ? new Date(values.from) : null}
-
-                              onChange={(date) => {
-                                setFieldValue("from", date);
-                                setFieldValue("to", date); // Sync from_date and to_date
-
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
-                              // showTimeInput
-                              name="from"
-
-                              autoComplete="off"
-
-
-
-                            />
-
-                          </div>
-
-                          {/* Date To Selector */}
-                          <div className="col-12 col-md-4 mt-3">
-
-
-                            <label>Date To<span style={{ color: "red" }}>*</span></label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="To Date "
-                              selected={values?.to ? new Date(values.to) : null}
-
-                              onChange={(date) => {
-                                setFieldValue("to", date);
-
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
-                              // showTimeInput
-                              name="to"
-
-                              autoComplete="off"
-
-
-
-                            />
-
-                          </div>
+                      </div>
 
 
 
 
                     </div>
+
+                    <div className="d-flex justify-content-end mt-5">
+                      <button
+                        type="button"
+                        onClick={() => { getPdf(values) }}
+                        disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !isValid || !values.from || !values.to}
+                        className="btn btn-primary btn-elevate"
+                      >
+                        Loan Request Report
+                        {loanReqLoading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    </div>
+
+
                   </div>
 
+
+
+
+                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+
+                    <div className="from-group row">
+
+
+                           <div className="col-12 col-md-4 mt-3">
+                                            <Field
+                                              name="monthId"
+                                              component={SearchSelect}
+                                              onBlur={handleBlur}
+                                              onChange={(e) => {
+                                                const value = e.value == '--Select--' ? '' : Number(e.value)
+                                                setFieldValue('monthId', value)
+                                              }}
+                                              label={
+                                                <span>
+                                                  {" "}
+                                                  Payroll Month
+                                                </span>
+                                              }
+                                              value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
+                                              autoComplete="off"
+                                              options={allPayrollMonthYearList}
+                                            />
+                                          </div>
+
+
+
+                    </div>
+                    <div className="d-flex justify-content-end mt-5">
+                      <button
+                      type="button"
+                        onClick={() => { getPositionReportPdf(values) }}
+                        disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !values.monthId}
+                        className="btn btn-primary btn-elevate"
+                      >
+                        Loan Position Report
+                        {LoanPositionLoading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    </div>
+
+
+                  </div>
 
 
                   <br></br>
@@ -432,28 +465,8 @@ export function FormFilter({ loading, dispatch, loanReqLoading, registerExcelLoa
                 Cancel
               </button>
 
-              {/* <button
-                type="submit"
-                onClick={() => handleSubmit()}
-                disabled={loading}
-                className="btn btn-success btn-elevate"
-              >
-                Filter Record
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button> */}
+       
 
-              <button
-                onClick={() => { getPdf(values) }}
-                disabled={loanReqLoading || !values?.subsidiaryId || !isValid}
-                className="btn btn-primary btn-elevate"
-              >
-                Loan Request Report
-                {loanReqLoading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
 
 
 
