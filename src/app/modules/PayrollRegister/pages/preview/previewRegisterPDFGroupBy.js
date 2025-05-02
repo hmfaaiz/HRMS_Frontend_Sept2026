@@ -17,7 +17,7 @@ export const PreviewRegisterPDFGroupBy = () => {
   }, []);
 
   if (!data) {
-    return <div>Please go back...</div>; // Show loading message while the data is being fetched
+    return <div>No data found. Please go back.</div>; // Show loading message while the data is being fetched
   }
 
   const { labels, earningColumns, deductionColumns, loanColumns, obj, totals } = data;

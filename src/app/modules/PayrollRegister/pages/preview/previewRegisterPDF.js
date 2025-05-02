@@ -83,7 +83,7 @@ const PreviewRegisterPDF = ({
       <div className="header-info" style={{ marginBottom: 20 }}>
         {labels.monthLabel && <p>For the Month of: <strong>{labels.monthLabel}</strong></p>}
         {labels.subsidiaryLabel && <p>Subsidiary: <strong>{labels.subsidiaryLabel}</strong></p>}
-        {labels.groupWiseLabel && <p>Payroll: <strong>{labels.groupWiseLabel}</strong></p>}
+        {labels.groupBy && <p>Payroll: <strong>{labels.groupWiseLabel}</strong></p>}
       </div>
       <div style={{ height: '100vh', overflow: 'auto' }}>
 
