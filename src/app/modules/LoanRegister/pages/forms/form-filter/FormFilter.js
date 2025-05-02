@@ -13,6 +13,7 @@ import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
+import { formatDates } from "../../../../../utils/common";
 
 
 //Validation for date fields
@@ -137,6 +138,8 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
       dispatch(actions.fetchLoanPositionReport(newQueryParams, document, labels));
     }
   
+
+
 
   return (
     <>
@@ -332,8 +335,10 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                           selected={values?.from ? new Date(values.from) : null}
 
                           onChange={(date) => {
-                            setFieldValue("from", date);
-                            setFieldValue("to", date); // Sync from_date and to_date
+                            let formattedFromDate= formatDates(date, 'yyyy-MM-dd')
+                            let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
+                            setFieldValue("from", formattedFromDate);
+                            setFieldValue("to", formattedToDate); // Sync from_date and to_date
 
                           }}
                           timeInputLabel="Time:"
@@ -360,7 +365,9 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                           selected={values?.to ? new Date(values.to) : null}
 
                           onChange={(date) => {
-                            setFieldValue("to", date);
+                    
+                            let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
+                            setFieldValue("to", formattedToDate);
 
                           }}
                           timeInputLabel="Time:"
@@ -385,7 +392,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                       <button
                         type="button"
                         onClick={() => { getPdf(values) }}
-                        disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !isValid || !values.from || !values.to}
+                        disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !isValid }
                         className="btn btn-primary btn-elevate"
                       >
                         Loan Request Report
