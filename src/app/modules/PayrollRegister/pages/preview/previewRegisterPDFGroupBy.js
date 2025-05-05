@@ -34,7 +34,7 @@ export const PreviewRegisterPDFGroupBy = () => {
       <div style={{ height: '60vh', overflow: 'auto' }}>
       <table className="payroll-register-groupBy" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
         <thead>
-          <tr>
+          <tr className='table-heade'>
             <th>S. No.</th>
             <th>Employee Code</th>
             <th>Employee Name</th>

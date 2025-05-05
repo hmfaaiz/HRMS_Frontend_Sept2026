@@ -31,7 +31,7 @@ export const PayrollRegisterPreviewPage = () => {
 
   }, []);
 
-  if (!data) return <p>Please go back...</p>;
+  if (!data) return <p>No data found. Please go back...</p>;
 
   // Extract data
   const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals} = data;
@@ -89,7 +89,7 @@ const PreviewRegisterPDF = ({
 
       <table className="payroll-table" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
         <thead>
-          <tr>
+          <tr className='table-heade'>
             <th>S. No.</th>
             <th>Employee Code</th>
             <th>Employee Name</th>
