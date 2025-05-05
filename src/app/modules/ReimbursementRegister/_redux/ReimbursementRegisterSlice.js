@@ -11,11 +11,11 @@ const initialState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
-    loanReqLoading: false,
+    reimbursementLoading: false,
   
 
 
-    loan_type:null,
+  
 };
 
 export const callTypes = {
@@ -35,7 +35,7 @@ export const ReimbursementRegisterSlice = createSlice({
                 state.listLoading = false;
             } 
             else if(action.payload.callType === callTypes.pdf){
-                state.loanReqLoading = false;
+                state.reimbursementLoading = false;
             }
 
             
@@ -50,7 +50,7 @@ export const ReimbursementRegisterSlice = createSlice({
                 state.listLoading = true;
             } 
             else if(action.payload.callType === callTypes.pdf){
-                state.loanReqLoading = true;
+                state.reimbursementLoading = true;
 
 
             }
@@ -60,7 +60,7 @@ export const ReimbursementRegisterSlice = createSlice({
             }
         },
         pdfFetched: (state, action) => {
-            state.loanReqLoading = false;
+            state.reimbursementLoading = false;
         },
 
 

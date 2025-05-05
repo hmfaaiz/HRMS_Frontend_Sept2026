@@ -1,6 +1,6 @@
 import moment from "moment";
 import { DateTimeFormats } from "./constants";
-const { differenceInDays, format,differenceInMonths } = require('date-fns');
+const { differenceInDays, format,differenceInMonths, isValid, parseISO } = require('date-fns');
 export const UPLOAD_URL = process.env.REACT_APP_UPLOAD_URL;
 
 export const getDate = (
@@ -71,8 +71,16 @@ export const getFileName = (fileName) => {
  * @returns 
  */
 export const formatDates = (date, dateFormat = null) => {
-  return format(new Date(date), dateFormat || 'dd/MMM/yyyy')
+  if(date){
+    return format(new Date(date), dateFormat || 'dd/MMM/yyyy')
+  }
+  else{
+    return null
+  }
+ 
 }
+
+
 
 /**
  * 

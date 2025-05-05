@@ -12,14 +12,14 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 
 export function ReimbursementRegisterPage() {
   const dispatch = useDispatch();
-  const { dashboard, listLoading, loanReqLoading,LoanPositionLoading } = useSelector((state) => {
-    // console.log(state.loan_register);
+  const { dashboard, listLoading, reimbursementLoading } = useSelector((state) => {
+   
     return {
       dashboard: state.dashboard,
-      listLoading: state.loan_register.listLoading,
-      loanReqLoading: state.loan_register.loanReqLoading,
-      loan_type: state.loan_register.loan_type,
-      LoanPositionLoading:state.loan_register.LoanPositionLoading,
+      listLoading: state.reimbursement_register.listLoading,
+      reimbursementLoading: state.reimbursement_register.reimbursementLoading,
+     
+    
     };
   });
 
@@ -48,7 +48,7 @@ export function ReimbursementRegisterPage() {
         </CardHeader>
 
         {/* Filter Form Starts */}
-        <FormFilter loading={listLoading} loanReqLoading={loanReqLoading} dispatch={dispatch} LoanPositionLoading={LoanPositionLoading} />
+        <FormFilter loading={listLoading} reimbursementLoading={reimbursementLoading} dispatch={dispatch}  />
         {/* Filter Form Ends */}
 
         {/* Table Starts */}

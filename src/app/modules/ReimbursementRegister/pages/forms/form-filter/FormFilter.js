@@ -11,7 +11,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, getAllLoanType, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, fetchAllFormsMenu, fetchAllFiscalYearData } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
 
@@ -31,7 +31,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoading, loan_type }) {
+export function FormFilter({ dispatch, reimbursementLoading }) {
 
   const FormUIContext = useFormUIContext()
 
@@ -91,8 +91,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
       employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
       payrollMonthLabel: allPayrollMonthMap?.get(values.monthId || '')?.label,
-
-
+      reimbursementTypeLabel: allReimbursementTypeMap?.get(values.reimbursement_typeId || '')?.label,
 
 
     }
@@ -117,24 +116,13 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
       : null;
 
     dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
-    dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
     dispatch(fetchAllDept(subsidiaryId));
     dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
-    dispatch(getAllLoanType({ subsidiaryId }));
     dispatch(fetchAllFormsMenu(202, "allReimbursementTypeList"));
     
   }, [allSubsidiaryList]);
 
 
-  
-  const loan_status = [
-    { value: 1, label: "Active" },
-    { value: 0, label: "In-Active" },
-    { value: '', label: "All" }
-  ];
-
-
-  
 
 
 
@@ -188,7 +176,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
                             dispatch(fetchAllPayrollMonthYearList({ subsidiaryId:value }, "allPayrollMonthYearList"));
-                            dispatch(getAllLoanType({ subsidiaryId:value }));
+                        
                             setFieldValue('employeeId', '')
                             setFieldValue('departmentId', '')
                           }}
@@ -251,7 +239,8 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
 
                         />
                       </div>
-
+                      </div>
+                      <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                                             <Field
                                               name="monthId"
@@ -264,7 +253,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                                               label={
                                                 <span>
                                                   {" "}
-                                                  Payroll Month<span style={{ color: "red" }}>*</span>
+                                                  Payroll Month
                                                 </span>
                                               }
                                               value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
@@ -287,7 +276,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                                               label={
                                                 <span>
                                                   {" "}
-                                                  Reimbursement Type<span style={{ color: "red" }}>*</span>
+                                                  Reimbursement Type
                                                 </span>
                                               }
                                               value={allReimbursementTypeMap?.get(values?.reimbursement_typeId || '') || ''}
@@ -295,9 +284,74 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                                               options={allReimbursementTypeList}
                                             />
                                           </div>
+                                          </div>
+
+
+<div className="from-group row">
+       <div className="col-12 col-md-4 mt-3">
+
+
+                            <label>From Date</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="From Date "
+                              selected={values?.from ? new Date(values.from) : null}
+
+                              onChange={(date) => {
+                               let formattedFromDate= formatDates(date, 'yyyy-MM-dd')
+                                                          let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
+                                                          setFieldValue("from", formattedFromDate);
+                                                          setFieldValue("to", formattedToDate); // Sync from_date and to_date
+
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd/MM/yyyy"
+                              // showTimeInput
+                              name="from_date"
+
+                              autoComplete="off"
+
+
+
+                            />
+
+                          </div>
+
+
+                            <div className="col-12 col-md-4 mt-3">
+                       
+                       
+                                                   <label>Date To</label>
+                                                   <DatePicker
+                                                     className="form-control"
+                                                     placeholder="To Date "
+                                                     selected={values?.to ? new Date(values.to) : null}
+                       
+                                                     onChange={(date) => {
+                                                          let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
+                                                                                  setFieldValue("to", formattedToDate);
+                                                      
+                                                     
+                       
+                                                     }}
+                                                     timeInputLabel="Time:"
+                                                     dateFormat="dd/MM/yyyy"
+                                                     // showTimeInput
+                                                     name="to"
+                       
+                                                     autoComplete="off"
+                       
+                       
+                       
+                                                   />
+                       
+                                                 </div>
+</div>
+                      
+                                            
 
                     </div>
-                  </div>
+                
            
 
 
@@ -327,11 +381,11 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                       <button
                         type="button"
                         onClick={() => { getPdf(values) }}
-                        disabled={loanReqLoading || !values?.subsidiaryId || !isValid }
+                        disabled={reimbursementLoading || !values?.subsidiaryId || !isValid  || !values.monthId && (!values.to || !values.from  )}
                         className="btn btn-primary btn-elevate"
                       >
                         Reimbursement Report
-                        {loanReqLoading && (
+                        {reimbursementLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
