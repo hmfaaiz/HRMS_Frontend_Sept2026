@@ -54,6 +54,6 @@ export function getEmployeeHierarchy(level) {
 
 export function getEmployeeAuthorties(empId, workflowTypeId) {
   return axios.get(
-    `${USERS_URL}/leave_request/get-employee-authorties/${empId}/${workflowTypeId}`
+    `${USERS_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`
   );
 }

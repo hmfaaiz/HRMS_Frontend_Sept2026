@@ -38,6 +38,16 @@ export function WorkflowAuthortiesTable() {
   // Table columns
   const columns = [
     {
+      dataField: "level",
+      text: "WF Level",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+    },
+    {
       dataField: "employeeCode",
       text: "Emp. Code",
       sort: false,
@@ -94,6 +104,16 @@ export function WorkflowAuthortiesTable() {
     {
       dataField: "employeeType.formName",
       text: "Employee Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "deligationAuthorityName",
+      text: "Delegation Authority",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

@@ -91,67 +91,79 @@ export function DesignationWorkflowPolicyTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "80px",
+        textAlign: "center",
       },
     },
     {
-      dataField: "isHODFinalAuthority",
-      text: "Final Aouthority HOD",
+      dataField: "customApprover",
+      text: "Custom Approver",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "50px",
-      },
-      formatter: (cell) => {
-        return cell ? (
-          <span className="svg-icon svg-icon-secondary svg-icon-md">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Navigation/Check.svg")}
-              title=""
-            />
-          </span>
-        ) : (
-          ""
-        );
+        minWidth: "80px",
+        textAlign: "center",
       },
     },
-    {
-      dataField: "isEmpFinalAuthority",
-      text: "Final Aouthority Emp",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-      formatter: (cell) => {
-        return cell ? (
-          <span className="svg-icon svg-icon-secondary svg-icon-md">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Navigation/Check.svg")}
-              title=""
-            />
-          </span>
-        ) : (
-          ""
-        );
-      },
-    },
-    {
-      dataField: "empFinalAuthority",
-      text: "Employee Final Authority",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        // Concatenate firstName and lastName
-        return cell ? `${cell.firstName} ${cell.lastName}` : "";
-      },
-    },
+    // {
+    //   dataField: "isHODFinalAuthority",
+    //   text: "Final Aouthority HOD",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "50px",
+    //   },
+    //   formatter: (cell) => {
+    //     return cell ? (
+    //       <span className="svg-icon svg-icon-secondary svg-icon-md">
+    //         <SVG
+    //           src={toAbsoluteUrl("/media/svg/icons/Navigation/Check.svg")}
+    //           title=""
+    //         />
+    //       </span>
+    //     ) : (
+    //       ""
+    //     );
+    //   },
+    // },
+    // {
+    //   dataField: "isEmpFinalAuthority",
+    //   text: "Final Aouthority Emp",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "50px",
+    //   },
+    //   formatter: (cell) => {
+    //     return cell ? (
+    //       <span className="svg-icon svg-icon-secondary svg-icon-md">
+    //         <SVG
+    //           src={toAbsoluteUrl("/media/svg/icons/Navigation/Check.svg")}
+    //           title=""
+    //         />
+    //       </span>
+    //     ) : (
+    //       ""
+    //     );
+    //   },
+    // },
+    // {
+    //   dataField: "empFinalAuthority",
+    //   text: "Employee Final Authority",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    //   formatter: (cell) => {
+    //     // Concatenate firstName and lastName
+    //     return cell ? `${cell.firstName} ${cell.lastName}` : "";
+    //   },
+    // },
     {
       dataField: "action",
       text: "Actions",

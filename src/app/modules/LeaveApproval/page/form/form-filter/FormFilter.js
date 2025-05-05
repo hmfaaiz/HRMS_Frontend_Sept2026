@@ -110,7 +110,7 @@ export const FormFilter = ({ loading, queryParams }) => {
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
-                <fieldset disabled={levelList?.length < 2}>
+                <fieldset>
                   <div
                     style={{
                       backgroundColor: "rgb(235 243 255)",
@@ -293,7 +293,7 @@ export const FormFilter = ({ loading, queryParams }) => {
             <Modal.Footer>
               <button
                 type="button"
-                disabled={levelList?.length < 2}
+                // disabled={levelList?.length < 2}
                 onClick={() => {
                   applyFilter(initialFilter.filter);
                   handleReset();
@@ -306,7 +306,9 @@ export const FormFilter = ({ loading, queryParams }) => {
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading || levelList?.length < 2}
+                disabled={loading 
+                  // || levelList?.length < 2
+                }
                 className="btn btn-success btn-elevate"
               >
                 Filter Record

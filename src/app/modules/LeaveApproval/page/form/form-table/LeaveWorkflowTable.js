@@ -24,6 +24,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
   const formUIProps = useMemo(() => {
     return {
       leaveWorkflowId: FormUIContext?.leaveWorkflowId,
+      leaveData: FormUIContext?.leaveData,
     };
   });
   const columns = [
@@ -169,11 +170,76 @@ export function LeaveWorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          Leave Balance
+          Leave Workflow
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="overlay overlay-block cursor-default">
-        <h1>Leave Workflow</h1>
+        {formUIProps?.leaveData && (
+          <div className="row mb-4">
+            <div className="col-3">
+              Employee Code :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.requestBelongToEmp?.employeeCode}
+              </span>
+            </div>
+            <div className="col-3">
+              Name :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.requestBelongToEmp?.firstName}{" "}
+                {formUIProps?.leaveData?.requestBelongToEmp?.middleName}{" "}
+                {formUIProps?.leaveData?.requestBelongToEmp?.lastName}
+              </span>
+            </div>
+            <div className="col-3">
+              Department :{" "}
+              <span className="font-weight-bold">
+                {
+                  formUIProps?.leaveData?.requestBelongToEmp?.department
+                    ?.deptName
+                }
+              </span>
+            </div>
+            <div className="col-3">
+              Designation :{" "}
+              <span className="font-weight-bold">
+                {
+                  formUIProps?.leaveData?.requestBelongToEmp?.designation
+                    ?.formName
+                }
+              </span>
+            </div>
+            <div className="col-3">
+              Leave Type :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.parentData?.t_leave_type?.name}
+              </span>
+            </div>
+            <div className="col-3">
+              From Date :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.parentData?.from}
+              </span>
+            </div>
+            <div className="col-3">
+              To Date :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.parentData?.to}
+              </span>
+            </div>
+            <div className="col-3">
+              Days :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.parentData?.days}
+              </span>
+            </div>
+            <div className="col-6">
+              Reason :{" "}
+              <span className="font-weight-bold">
+                {formUIProps?.leaveData?.parentData?.remarks}
+              </span>
+            </div>
+          </div>
+        )}
         <BootstrapTable
           noDataIndication={NoRecordsFoundMessage({
             entities: workflowStatusList || [],
