@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Field, Formik } from "formik"
 import * as Yup from "yup";
 import { isEqual } from "lodash"
@@ -14,6 +14,7 @@ import * as actions from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
+import { parse } from "date-fns";
 
 
 //Validation for date fields
@@ -32,7 +33,7 @@ const prepareFilter = (queryParams, values) => {
 }
 
 export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoading, loan_type }) {
-
+const [endDate,setEndDate]=useState()
   const FormUIContext = useFormUIContext()
 
   //Get All dropdown data from state
@@ -139,7 +140,15 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
     }
   
 
-
+  useEffect(() => {
+    if (allPayrollMonthYearList?.length > 0) {
+      const activeMonth = allPayrollMonthYearList.find(item => item.isActive);
+      if (activeMonth) {
+        const parsedDate = parse(activeMonth.endDate, 'dd/MMM/yyyy', new Date());
+        setEndDate(parsedDate);
+      }
+    }
+  }, [allPayrollMonthYearList]);
 
   return (
     <>
@@ -333,7 +342,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                           className="form-control"
                           placeholder="From Date "
                           selected={values?.from ? new Date(values.from) : null}
-
+                          maxDate={endDate}
                           onChange={(date) => {
                             let formattedFromDate= formatDates(date, 'yyyy-MM-dd')
                             let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
@@ -363,7 +372,8 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                           className="form-control"
                           placeholder="To Date "
                           selected={values?.to ? new Date(values.to) : null}
-
+                          minDate={values.from ? new Date(values.from) : ""}
+                          maxDate={endDate}
                           onChange={(date) => {
                     
                             let formattedToDate=  formatDates(date, 'yyyy-MM-dd')

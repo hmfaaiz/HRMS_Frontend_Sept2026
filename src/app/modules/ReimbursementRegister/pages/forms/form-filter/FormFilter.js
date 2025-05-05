@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Field, Formik } from "formik"
 import * as Yup from "yup";
 import { isEqual } from "lodash"
@@ -11,9 +11,10 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, fetchAllFormsMenu, fetchAllFiscalYearData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetchAllDept, fetchAllFormsMenu, fetchAllFiscalYearData } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
+import { parse } from "date-fns";
 
 
 //Validation for date fields
@@ -34,7 +35,7 @@ const prepareFilter = (queryParams, values) => {
 export function FormFilter({ dispatch, reimbursementLoading }) {
 
   const FormUIContext = useFormUIContext()
-
+const [endDate,setEndDate]=useState()
   //Get All dropdown data from state
   const { allEmployees, allSubsidiaryList, allPayrollMonthYearList, allDept, allReimbursementTypeList } = useSelector(
     (state) => (state.dashboard),
@@ -56,12 +57,12 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
     return new Map(allDept?.map(item => [item.value, item]));
   }, [allDept]);
 
-   const allPayrollMonthMap = useMemo(() => {
-     return new Map(allPayrollMonthYearList?.map(item => [item.value, item]));
-   }, [allPayrollMonthYearList]);
+  const allPayrollMonthMap = useMemo(() => {
+    return new Map(allPayrollMonthYearList?.map(item => [item.value, item]));
+  }, [allPayrollMonthYearList]);
 
 
-   const allReimbursementTypeMap = useMemo(() => {
+  const allReimbursementTypeMap = useMemo(() => {
     return new Map(allReimbursementTypeList?.map(item => [item.value, item]));
   }, [allReimbursementTypeList]);
 
@@ -119,11 +120,17 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
     dispatch(fetchAllDept(subsidiaryId));
     dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
     dispatch(fetchAllFormsMenu(202, "allReimbursementTypeList"));
-    
+
   }, [allSubsidiaryList]);
-
-
-
+  useEffect(() => {
+    if (allPayrollMonthYearList?.length > 0) {
+      const activeMonth = allPayrollMonthYearList.find(item => item.isActive);
+      if (activeMonth) {
+        const parsedDate = parse(activeMonth.endDate, 'dd/MMM/yyyy', new Date());
+        setEndDate(parsedDate);
+      }
+    }
+  }, [allPayrollMonthYearList]);
 
 
   return (
@@ -175,8 +182,8 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                             setFieldValue('subsidiaryId', value)
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
-                            dispatch(fetchAllPayrollMonthYearList({ subsidiaryId:value }, "allPayrollMonthYearList"));
-                        
+                            dispatch(fetchAllPayrollMonthYearList({ subsidiaryId: value }, "allPayrollMonthYearList"));
+
                             setFieldValue('employeeId', '')
                             setFieldValue('departmentId', '')
                           }}
@@ -239,125 +246,130 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
 
                         />
                       </div>
-                      </div>
-                      <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
-                                            <Field
-                                              name="monthId"
-                                              component={SearchSelect}
-                                              onBlur={handleBlur}
-                                              onChange={(e) => {
-                                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                                setFieldValue('monthId', value)
-                                              }}
-                                              label={
-                                                <span>
-                                                  {" "}
-                                                  Payroll Month
-                                                </span>
-                                              }
-                                              value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
-                                              autoComplete="off"
-                                              options={allPayrollMonthYearList}
-                                            />
-                                          </div>
-
-               
-
-                                          <div className="col-12 col-md-4 mt-3">
-                                            <Field
-                                              name="reimbursement_typeId"
-                                              component={SearchSelect}
-                                              onBlur={handleBlur}
-                                              onChange={(e) => {
-                                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                                setFieldValue('reimbursement_typeId', value)
-                                              }}
-                                              label={
-                                                <span>
-                                                  {" "}
-                                                  Reimbursement Type
-                                                </span>
-                                              }
-                                              value={allReimbursementTypeMap?.get(values?.reimbursement_typeId || '') || ''}
-                                              autoComplete="off"
-                                              options={allReimbursementTypeList}
-                                            />
-                                          </div>
-                                          </div>
-
-
-<div className="from-group row">
-       <div className="col-12 col-md-4 mt-3">
-
-
-                            <label>From Date</label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="From Date "
-                              selected={values?.from ? new Date(values.from) : null}
-
-                              onChange={(date) => {
-                               let formattedFromDate= formatDates(date, 'yyyy-MM-dd')
-                                                          let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
-                                                          setFieldValue("from", formattedFromDate);
-                                                          setFieldValue("to", formattedToDate); // Sync from_date and to_date
-
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
-                              // showTimeInput
-                              name="from_date"
-
-                              autoComplete="off"
-
-
-
-                            />
-
-                          </div>
-
-
-                            <div className="col-12 col-md-4 mt-3">
-                       
-                       
-                                                   <label>Date To</label>
-                                                   <DatePicker
-                                                     className="form-control"
-                                                     placeholder="To Date "
-                                                     selected={values?.to ? new Date(values.to) : null}
-                       
-                                                     onChange={(date) => {
-                                                          let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
-                                                                                  setFieldValue("to", formattedToDate);
-                                                      
-                                                     
-                       
-                                                     }}
-                                                     timeInputLabel="Time:"
-                                                     dateFormat="dd/MM/yyyy"
-                                                     // showTimeInput
-                                                     name="to"
-                       
-                                                     autoComplete="off"
-                       
-                       
-                       
-                                                   />
-                       
-                                                 </div>
-</div>
-                      
-                                            
-
                     </div>
-                
-           
+                    <div className="from-group row">
+
+
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="reimbursement_typeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('reimbursement_typeId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Reimbursement Type
+                            </span>
+                          }
+                          value={allReimbursementTypeMap?.get(values?.reimbursement_typeId || '') || ''}
+                          autoComplete="off"
+                          options={allReimbursementTypeList}
+                        />
+                      </div>
+                    </div>
+
+
+                    <div className="from-group row">
+
+
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="monthId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('monthId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Payroll Month
+                            </span>
+                          }
+                          value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
+                          autoComplete="off"
+                          options={allPayrollMonthYearList}
+                        />
+                      </div>
+
+                      <div className="col-12 col-md-4 mt-3">
+
+
+                        <label>From Date</label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="From Date "
+                          selected={values?.from ? new Date(values.from) : null}
+                         
+                          maxDate={endDate}
+                          onChange={(date) => {
+                            let formattedFromDate = formatDates(date, 'yyyy-MM-dd')
+                            let formattedToDate = formatDates(date, 'yyyy-MM-dd')
+                            setFieldValue("from", formattedFromDate);
+                            setFieldValue("to", formattedToDate); // Sync from_date and to_date
+
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd/MM/yyyy"
+                          // showTimeInput
+                          name="from_date"
+
+                          autoComplete="off"
+
+
+
+                        />
+
+                      </div>
+
+
+                      <div className="col-12 col-md-4 mt-3">
+
+
+                        <label>Date To</label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder="To Date "
+                          selected={values?.to ? new Date(values.to) : null}
+                          minDate={values.from ? new Date(values.from) : ""}
+                          maxDate={endDate}
+                          onChange={(date) => {
+                            let formattedToDate = formatDates(date, 'yyyy-MM-dd')
+                            setFieldValue("to", formattedToDate);
+
+
+
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd/MM/yyyy"
+                          // showTimeInput
+                          name="to"
+
+                          autoComplete="off"
+
+
+
+                        />
+
+                      </div>
+                    </div>
+
+
+
+                  </div>
 
 
 
 
-          
+
+
+
 
                   <br></br>
 
@@ -378,18 +390,18 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
               </button>
 
               <div className="d-flex justify-content-end">
-                      <button
-                        type="button"
-                        onClick={() => { getPdf(values) }}
-                        disabled={reimbursementLoading || !values?.subsidiaryId || !isValid  || !values.monthId && (!values.to || !values.from  )}
-                        className="btn btn-primary btn-elevate"
-                      >
-                        Reimbursement Report
-                        {reimbursementLoading && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
-                    </div>
+                <button
+                  type="button"
+                  onClick={() => { getPdf(values) }}
+                  disabled={reimbursementLoading || !values?.subsidiaryId || !isValid || !values.monthId && (!values.to || !values.from)}
+                  className="btn btn-primary btn-elevate"
+                >
+                  Reimbursement Report
+                  {reimbursementLoading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+              </div>
 
 
 
