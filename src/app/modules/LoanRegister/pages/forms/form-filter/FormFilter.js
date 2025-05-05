@@ -337,7 +337,7 @@ const [endDate,setEndDate]=useState()
                       <div className="col-12 col-md-4 mt-3">
 
 
-                        <label>From Date<span style={{ color: "red" }}>*</span></label>
+                        <label>From Date</label>
                         <DatePicker
                           className="form-control"
                           placeholder="From Date "
@@ -367,7 +367,7 @@ const [endDate,setEndDate]=useState()
                       <div className="col-12 col-md-4 mt-3">
 
 
-                        <label>Date To<span style={{ color: "red" }}>*</span></label>
+                        <label>Date To</label>
                         <DatePicker
                           className="form-control"
                           placeholder="To Date "
