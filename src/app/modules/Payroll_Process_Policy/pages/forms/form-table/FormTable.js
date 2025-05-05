@@ -1491,7 +1491,7 @@ Payroll Approver
                       type="number"
                       placeholder="Employeer value"
                       value={values.eobi_employeer_value_in_percent}
-                      label={<span>Employeer(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      label={<span>Employer(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
                       autoComplete="off"
                     />
                   </div>

@@ -27,7 +27,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoading}) {
+export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading}) {
 
   const FormUIContext = useFormUIContext()
 
@@ -164,7 +164,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         label={
                           <span>
                             {" "}
-                            Subsidiary
+                            Subsidiary<span style={{ color: 'red' }}>*</span>
                           </span>
                         }
                         value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
@@ -368,7 +368,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         label={
                           <span>
                             {" "}
-                            Date From
+                            Date From<span style={{ color: 'red' }}>*</span>
                           </span>
                         }
                         onChange={(date) => {
@@ -391,7 +391,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         label={
                           <span>
                             {" "}
-                            Date To
+                            Date To<span style={{ color: 'red' }}>*</span>
                           </span>
                         }
                         onChange={(date) => {
@@ -416,10 +416,10 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
           onClick={() => {
             // setFieldValue("group_by_emp",true)
             generateReport(values,true)}}
-          disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+          disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
         >
           Employee wise Sheet
-          {consolidatedLoading && (
+          {empWiseLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )}
         </button> 
@@ -433,7 +433,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
     onClick={() => {
       // setFieldValue("group_by_emp",false)
       generateReport(values,false)}}
-    disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+    disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
   >
     Consolidated Sheet
     {consolidatedLoading && (
@@ -461,7 +461,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading || processLoading || consolidatedLoading || !values.from || !values.to}
+                disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
                 className="btn btn-success btn-elevate"
               >
                 Filter Records
@@ -473,7 +473,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
        
 
               <button
-                disabled={loading || processLoading || consolidatedLoading  || !values.from || !values.to}
+                disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to}
                 className="btn btn-secondary"
                 onClick={() => runAllProcess(values)}
               >

@@ -31,7 +31,7 @@ export const PayrollRegisterPreviewPage = () => {
 
   }, []);
 
-  if (!data) return <p>Please go back...</p>;
+  if (!data) return <p>No data found. Please go back...</p>;
 
   // Extract data
   const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals} = data;
@@ -83,13 +83,13 @@ const PreviewRegisterPDF = ({
       <div className="header-info" style={{ marginBottom: 20 }}>
         {labels.monthLabel && <p>For the Month of: <strong>{labels.monthLabel}</strong></p>}
         {labels.subsidiaryLabel && <p>Subsidiary: <strong>{labels.subsidiaryLabel}</strong></p>}
-        {labels.groupWiseLabel && <p>Payroll: <strong>{labels.groupWiseLabel}</strong></p>}
+        {labels.groupBy && <p>Payroll: <strong>{labels.groupWiseLabel}</strong></p>}
       </div>
       <div style={{ height: '100vh', overflow: 'auto' }}>
 
       <table className="payroll-table" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
         <thead>
-          <tr>
+          <tr className='table-heade'>
             <th>S. No.</th>
             <th>Employee Code</th>
             <th>Employee Name</th>

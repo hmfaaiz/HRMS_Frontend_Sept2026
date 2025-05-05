@@ -237,6 +237,10 @@ export const dashboardSlice = createSlice({
       state.allRosterPatternList = action.payload;
  
     },
+    AllLoanTypeFetch: (state, action) => {
+      state.allLoanTypeList = action.payload;
+ 
+    },
   },
 });
 

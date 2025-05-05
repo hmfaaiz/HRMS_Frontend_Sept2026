@@ -218,8 +218,12 @@ export const fetchAttendanceSheetConsolidated = (filters, document, labels = {},
   //   console.log("filter2222",filters)
   //   return dispatch(actions.AttendanceFetchedForEdit(null));
   // }
-
-    dispatch(actions.startCall({ callType: callTypes.consolidated }));
+if(group_by_emp){
+  dispatch(actions.startCall({ callType: callTypes.empWise }));
+}else{
+  dispatch(actions.startCall({ callType: callTypes.consolidated }));
+}
+   
     return requestFromServer.getAttendanceSheetConsolidated({ ...filters, labels ,group_by_emp})
 
 
@@ -238,6 +242,7 @@ export const fetchAttendanceSheetConsolidated = (filters, document, labels = {},
         dispatch(actions.pdfFetched({}));
         document.body.removeChild(link);
         dispatch(actions.catchError({callType: callTypes.consolidated }));
+        dispatch(actions.catchError({callType: callTypes.empWise }));
       })
 
 
@@ -245,6 +250,7 @@ export const fetchAttendanceSheetConsolidated = (filters, document, labels = {},
       
         error.clientMessage = SERVER_MESSAGES.pdfFail;
         dispatch(actions.catchError({ error, callType: callTypes.consolidated }));
+        dispatch(actions.catchError({error,callType: callTypes.empWise }));
         toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
           position: "top-right",
           autoClose: 5000,

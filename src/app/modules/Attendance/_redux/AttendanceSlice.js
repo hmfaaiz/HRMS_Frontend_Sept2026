@@ -16,6 +16,7 @@ const initialState = {
     processLoading: false,
     payrollData: null,
     consolidatedLoading: false,
+    empWiseLoading: false,
 
 };
 
@@ -24,7 +25,8 @@ export const callTypes = {
     action: "action",
     process: "process",
     pdf:"pdf",
-    consolidated:"consolidated"
+    consolidated:"consolidated",
+    empWise:"empWise"
 };
 
 
@@ -45,6 +47,10 @@ export const AttendanceSlice = createSlice({
             else if(action.payload.callType === callTypes.consolidated){
                 state.consolidatedLoading = false;
             }
+            
+            else if(action.payload.callType === callTypes.empWise){
+                state.empWiseLoading = false;
+            }
             else {
                 state.actionsLoading = false;
             }
@@ -62,7 +68,10 @@ export const AttendanceSlice = createSlice({
                 state.consolidatedLoading = true;
             }
 
-
+            
+            else if(action.payload.callType === callTypes.empWise){
+                state.empWiseLoading = true;
+            }
 
             else {
                 state.actionsLoading = true;
@@ -79,6 +88,10 @@ export const AttendanceSlice = createSlice({
             
             else if(action.payload.callType === callTypes.consolidated){
                 state.consolidatedLoading = false;
+            }
+            
+            else if(action.payload.callType === callTypes.empWise){
+                state.empWiseLoading = false;
             }
             else {
                 state.actionsLoading = false;
