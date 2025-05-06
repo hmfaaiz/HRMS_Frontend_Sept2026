@@ -49,7 +49,7 @@ const [currentDate, setCurrentDate] = useState(null);
     "H.D(P) + H.D('LeaveCode')": "tooltip-HD",
     "Holiday (H.D(Present))": "tooltip-HD",
     "Day Off (H.D(Present))": "tooltip-HD",
-    "LeaveCode": "",
+    "Leave": "tooltip-Leave",
     "Holiday (Present)": "tooltip-dayoff",
     "Day Off (Present)": "tooltip-dayoff",
     "Day Off": "tooltip-dayoff",
@@ -147,65 +147,24 @@ const earliestAttendanceDate = getEarliestDate(attendanceCalendar);
             </div>
           ),
         
-          // toolbar: (props) => (
-          //   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          //     <div style={{ display: 'flex', alignItems: 'center' }}>
-
-          //       <button
-          //         disabled={isPreviousDisabled(props.date)}  // Disable if at the start date
-          //         onClick={() => {
-          //           if (!isPreviousDisabled(props.date)) {
-          //             props.onNavigate('PREV');  // Navigate to the previous date
-          //           }
-          //         }}
-
-
-          //         className="calendar-btn"
-          //       >
-          //         {"<"}
-          //       </button>
-          //       {/* Next Button */}
-          //       <button
-          //         disabled={isNextDisabled(props.date)}  // Disable if at the end date
-          //         onClick={() => {
-          //           if (!isNextDisabled(props.date)) {
-          //             props.onNavigate('NEXT');  // Navigate to the next date
-          //           }
-          //         }}
-          //         className="calendar-btn"
-          //       >
-          //         {">"}
-          //       </button>
-          //     </div>
-
-          //     {/* Month/Week/Day/Agenda View Selector */}
-
-
-          //     {/* Display the current month/year */}
-          //     <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-          //       {moment(props.date).format('MMMM YYYY')}
-          //     </div>
-          //   </div>
-          // ),
+  
 
         }}
-        // eventPropGetter={(event) => {
-        //   if (!attendance?.AttendanceStatus) {  
-        //     return {
-        //       className: 'tooltip-absent'
-        //     };
-        //   }
-        //   return {};
-        // }}
+  
 
 
         eventPropGetter={(event) => {
           let className = '';
         
           if (event.color_key && statusMap[event.color_key]) {
-            console.log("COLORING",statusMap[event.color_key])
+         
             className = statusMap[event.color_key];
-          }else{
+          }
+          else if (event.color_key.toLowerCase().includes("leave")) {
+          
+            className = statusMap["Leave"];
+          }
+          else{
             className="tooltip-absent-att"
           }
         
@@ -214,25 +173,7 @@ const earliestAttendanceDate = getEarliestDate(attendanceCalendar);
 
 
 
-        // eventPropGetter={(event) => {
-        //   let className = '';
-        
-        //   if (event.description) {
-        //     if (event.description.includes('Absent')) {
-        //       console.log("absent111")
-        //       className = 'tooltip-absent1';
-        //     } 
-        //     else if (event.description.includes('Present')) {
-        //       className = 'tooltip-present';
-        //     } else if (event.description.includes('Holiday')) {
-        //       className = 'tooltip-holiday';
-        //     } else if (event.description.includes('Day Off')) {
-        //       className = 'tooltip-dayofff';
-        //     }
-        //   }
-        
-        //   return { className };
-        // }}
+     
       />
 
       )}
