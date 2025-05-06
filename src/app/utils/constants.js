@@ -381,9 +381,9 @@ export const SERVER_MESSAGES = {
   deletedSuccess: 'Record deleted Successfully!',
   deletedFail: 'Unable to Delete: This record is already used in Transaction forms',
   processSuccessful: 'Process executed Successfully!',
-  pdfFail:"Can't Generate PDF",
-  csvFail:"Can't Generate CSV",
-  excelFail:"Can't Generate Excel",
+  pdfFail:"No data found!",
+  csvFail:"No data found!",
+  excelFail:"No data found!",
   correctDateRange:"Please select correct date range",
 }
 
