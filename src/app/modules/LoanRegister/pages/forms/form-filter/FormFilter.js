@@ -61,6 +61,9 @@ const [endDate,setEndDate]=useState()
      return new Map(allPayrollMonthYearList?.map(item => [item.value, item]));
    }, [allPayrollMonthYearList]);
 
+   const allLoanTypeListhMap = useMemo(() => {
+    return new Map(allLoanTypeList?.map(item => [item.value, item]));
+  }, [allLoanTypeList]);
 
 
 
@@ -89,6 +92,7 @@ const [endDate,setEndDate]=useState()
       employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
       payrollMonthLabel: allPayrollMonthMap?.get(values.monthId || '')?.label,
+      loanTypeLabel: allLoanTypeListhMap?.get(values.loan_typeId || '')?.label,
 
 
 
