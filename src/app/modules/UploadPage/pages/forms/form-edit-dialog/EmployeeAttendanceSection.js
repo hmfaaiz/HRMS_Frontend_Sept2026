@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -14,7 +14,7 @@ const formValidation = Yup.object().shape({
 });
 
 export function EmployeeAttendanceSection({ downloadExcel, dispatch }) {
-
+  const [loading, setLoading] = useState(false);
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
 
@@ -29,8 +29,22 @@ export function EmployeeAttendanceSection({ downloadExcel, dispatch }) {
         enableReinitialize={true}
         initialValues={{ file: null }}
         validationSchema={formValidation}
-        onSubmit={(values) => {
-        }}
+           onSubmit={(values, { resetForm }) => {
+                 if (values.file) {
+                   const formData = new FormData()
+                   formData.append('file', values.file)
+                   setLoading(true)
+       
+                   const clearForm = () => {
+                     resetForm();
+                     if (inputFile?.current) {
+                       inputFile.current.value = "";
+                     }
+                   }
+       
+                   dispatch(actions.saveAttendanceSheetData(formData, setLoading, clearForm))
+                 }
+               }}
       >
         {({
           handleSubmit,

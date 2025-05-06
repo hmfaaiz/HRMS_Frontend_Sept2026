@@ -54,3 +54,35 @@ export const saveLeaveData = (formData, setLoading, clearForm) => async (dispatc
       });
     });
 };
+
+
+
+export const saveAttendanceSheetData = (formData, setLoading, clearForm) => async (dispatch) => {
+  return requestFromServer.saveAttendanceSheetData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success(response.data.message ||'Attendance Uploaded Successfully', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = 'Some Error Occured. Try again later';
+      toast.error(error?.response?.status == 400 ? error?.response?.data?.message : error.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
