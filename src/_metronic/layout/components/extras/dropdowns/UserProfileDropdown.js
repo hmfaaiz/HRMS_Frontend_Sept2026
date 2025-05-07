@@ -9,6 +9,7 @@ import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 export function UserProfileDropdown() {
   const user = useSelector((state) => {
@@ -41,27 +42,34 @@ export function UserProfileDropdown() {
           Hi,
         </span>{" "}
         <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-          {user.email
+          {user.EmployeeMapping.fullName? user.EmployeeMapping.fullName : user.email
           }
            {" - "}(
            {user.role.name
           }
           )
         </span>
-        <span className="symbol symbol-35 symbol-light-success">
-          <span className="symbol-label font-size-h5 font-weight-bold">
+        {/* <span className="symbol symbol-35 symbol-light-success">
+          <span className="symbol-label font-size-h5 font-weight-bold"> */}
              {/* {user.firstname} */}
-            <img className="w-100" src="/media/users/default.jpg" />
+            {/* <img className="w-100" src="/media/users/default.jpg" />
           </span>
          
-        </span>
+        </span> */}
+        
+        <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
+  <span className="symbol-label font-size-h5 font-weight-bold p-0">
+    <img className="w-100 h-100 object-fit-cover" src={user.EmployeeMapping.profile_image} alt="User" />
+  </span>
+</span>
 
         <span className="ml-3">
+          
         <Link
             to="/password/reset-password"
             className="btn btn-light-primary font-weight-bold"
           >
-         
+          <LockOpenIcon />
             <span className="ml-3">Reset Password</span>
           </Link>
         </span>
