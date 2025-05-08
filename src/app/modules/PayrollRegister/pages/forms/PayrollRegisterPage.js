@@ -63,7 +63,7 @@ export function PayrollRegisterPage() {
         {/* Filter Form Ends */}
 
         {/* Table Starts */}
-        <FormTable />
+        {/* <FormTable /> */}
         {/* Table Ends */}
 
         {/* Card Ends */}

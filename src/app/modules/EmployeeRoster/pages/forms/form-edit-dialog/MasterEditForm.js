@@ -161,6 +161,29 @@ export function MasterEditForm({
                 <fieldset>
                   <div className="from-group row">
 
+                                                              {/* Active payroll month */}
+
+
+
+<div className="col-12 col-md-12mt-3 d-flex flex-column align-items-end">
+
+{values?.subsidiaryId ? (() => {
+ const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
+  return (
+    <>
+      <div>
+        <b>Active Fiscal Year -</b>{" "}
+        {selectedSubsidiary?.fiscalYearLabel}
+      </div>
+      <div>
+        <b>Active Payroll Month -</b>{" "}
+        {selectedSubsidiary?.payrollMonthLabel}
+      </div>
+    </>
+  );
+})() : null}
+</div>
+
                     {/* Subsidiary Field Start */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field
@@ -193,6 +216,8 @@ export function MasterEditForm({
                         options={allSubsidiaryList}
                       />
                     </div>
+
+
                     {/* Subsidiary Field End */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field

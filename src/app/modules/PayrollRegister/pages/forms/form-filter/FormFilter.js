@@ -247,148 +247,32 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           options={allSubsidiaryList}
                         />
                       </div>
-                      {/* Subsidiary Field End */}
+                      
+                 {/* Active payroll month */}
 
 
-                      {/* These fields are hidden and not removed because might come in use later on */}
-                      {/* Deparment Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="departmentId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('departmentId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Department
-                          </span>
-                        }
-                        value={allDeptMap?.get(values?.departmentId || '') || ''}
-                        autoComplete="off"
-                        options={allDept}
-                      />
-                    </div> */}
-                      {/* Deparment Field End */}
 
-                      {/* Report To Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="reportTo"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('reportTo', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Report To
-                          </span>
-                        }
-                        value={allEmployeesMap?.get(values?.reportTo || '') || ''}
-                        autoComplete="off"
-                        options={allEmployees}
-                      />
-                    </div> */}
-                      {/* Report To Field End */}
+<div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
 
-                      {/* Grade Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="gradeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('gradeId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Grade
-                          </span>
-                        }
-                        value={allGradeMap?.get(values?.gradeId || '') || ''}
-                        autoComplete="off"
-                        options={allEmployeeGradeList}
-                      />
-                    </div> */}
-                      {/* Grade Field End */}
-
-                      {/* Designation Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="designationId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('designationId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Designation
-                          </span>
-                        }
-                        value={allDesignationsMap?.get(values?.designationId || '') || ''}
-                        autoComplete="off"
-                        options={allDesignations}
-                      />
-                    </div> */}
-                      {/* Designation Field End */}
-
-                      {/* Location Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="locationId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('locationId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Location
-                          </span>
-                        }
-                        value={allLocationMap?.get(values?.locationId || '') || ''}
-                        autoComplete="off"
-                        options={allLocationChildMenus}
-                      />
-                    </div> */}
-                      {/* Location Field End */}
-
-                      {/* Attendance Type Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="attendanceType"
-                        component={Select}
-                        placeholder=""
-                        onChange={(e) => {
-                          const value = e.target.value == -1 ? '' : Number(e.target.value)
-                          setFieldValue('attendanceType', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Attendance Type
-                          </span>
-                        }
-                        value={values.attendanceType}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: ATTENDANCE_TYPE })}
-                      />
-                    </div> */}
-                      {/* Attendance Type Field End */}
-                      {/* These fields are hidden and not removed because might come in use later on */}
+{values?.subsidiaryId ? (() => {
+  const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+    (option) => option.value === values.subsidiaryId
+  );
+  return (
+    <>
+      <div>
+        <b>Active Fiscal Year -</b>{" "}
+        {selectedSubsidiary?.fiscalYearLabel}
+      
+      </div>
+      <div>
+        <b>Active Payroll Month -</b>{" "}
+        {selectedSubsidiary?.payrollMonthLabel}
+      </div>
+    </>
+  );
+})() : null}
+</div>
 
                       {/* Employee Field Start */}
                       <div className="col-12 col-md-4 mt-3">
