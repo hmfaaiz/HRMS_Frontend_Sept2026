@@ -42,10 +42,10 @@ export function UserProfileDropdown() {
           Hi,
         </span>{" "}
         <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-          {user.EmployeeMapping.fullName? user.EmployeeMapping.fullName : user.email
+          {user?.EmployeeMapping?.fullName? user?.EmployeeMapping?.fullName : user?.email
           }
            {" - "}(
-           {user.role.name
+           {user?.role?.name
           }
           )
         </span>
@@ -59,7 +59,8 @@ export function UserProfileDropdown() {
         
         <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
   <span className="symbol-label font-size-h5 font-weight-bold p-0">
-    <img className="w-100 h-100 object-fit-cover" src={user.EmployeeMapping.profile_image} alt="User" />
+    <img  width={100} height={47} src={user?.EmployeeMapping?.profile_image? user?.EmployeeMapping?.profile_image : "/media/users/default.jpg"
+          }  alt="User" />
   </span>
 </span>
 
