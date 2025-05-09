@@ -108,9 +108,20 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter: (cell) => (cell === 1 ? "Yes" : "No"),
+      formatter: (cell) => (cell == true ? "Yes" : "No"),
     },
    
+        {
+      dataField: "moduleType",
+      text: "Module Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell) => (cell === 1 ? "Employee" : "Recuritment"),
+    },
     // {
     //   dataField: "MenuName",
     //   text: "Parent",

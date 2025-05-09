@@ -34,7 +34,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     formName: "",
     formCode:"",
     parentFormID:"",
-    isActive:1
+    isActive:true,
+    moduleType:1
     // createdBy: "",
     // createdAt:"",
     

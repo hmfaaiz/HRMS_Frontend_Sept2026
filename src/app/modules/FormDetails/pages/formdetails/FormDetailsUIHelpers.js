@@ -39,5 +39,6 @@ excel:false,
 parentId:null,
     sortOrder: "asc",
     pageSize: 10,
-    pageNumber: 1
+    pageNumber: 1,
+    moduleType:1
 }
