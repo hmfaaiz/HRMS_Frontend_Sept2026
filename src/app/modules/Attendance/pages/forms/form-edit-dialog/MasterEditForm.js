@@ -3,7 +3,7 @@ import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Checkbox, DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual ,useDispatch} from "react-redux";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -12,6 +12,7 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import { addDays } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
+import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 
 //Validations for Form
 const formValidation = Yup.object().shape({
@@ -160,7 +161,10 @@ export function MasterEditForm({
   const allEmployeesMap = useMemo(() => {
     return new Map(allEmployees?.map(item => [item.value, item]));
   }, [allEmployees]);
-
+  const dispatch = useDispatch();
+    const{    activeFiscalYear
+        } = useSelector((state) => state.dashboard);
+  
   return (
     <>
       <Formik
@@ -210,7 +214,10 @@ export function MasterEditForm({
                           setfilters((prevState) => ({
                             ...prevState,
                             employeeId: value,
+                            
                           }));
+                            const selectedEmp = allEmployees.find(emp => emp.value === value);
+                            dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
                         }}
                         label={
                           <span>
@@ -235,7 +242,7 @@ export function MasterEditForm({
 
                     <div className="col-12 col-md-2 mt-3"></div>
 
-                    {payrollData &&
+                    {/* {payrollData &&
                       payrollData.startDate &&
                       payrollData.endDate && (
                         <div className="col-12 col-md-6 mt-8">
@@ -254,7 +261,30 @@ export function MasterEditForm({
                               </span>
                           </div>
                         </div>
-                      )}
+                      )} */}
+
+                       {/* Active payroll month */}
+
+
+
+            <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+
+  {activeFiscalYear ? (() => {
+
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {activeFiscalYear?.label}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {activeFiscalYear?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
                   </div>
 
                   <br />

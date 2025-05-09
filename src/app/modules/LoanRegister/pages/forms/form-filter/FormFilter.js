@@ -183,7 +183,7 @@ const [endDate,setEndDate]=useState()
                 <fieldset>
 
                   <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>Employee</h6>
+                    {/* <h6>Employee</h6> */}
                     <div className="from-group row">
 
                       {/* Subsidiary Field Start */}

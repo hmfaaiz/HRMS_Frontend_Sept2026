@@ -165,6 +165,9 @@ export function FormEditForm({
   }
 
 
+  const{    activeFiscalYear
+    } = useSelector((state) => state.dashboard);
+
 
   return (
     <Formik
@@ -242,6 +245,31 @@ export function FormEditForm({
                       touched={touched.reimbursement_typeId}
                     />
                   </div>
+
+
+                   {/* Active payroll month */}
+
+
+
+            <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+
+  {activeFiscalYear ? (() => {
+
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {activeFiscalYear?.label}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {activeFiscalYear?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
+
 
                   <div className="col-12 col-md-6 mt-3">
                     <label>

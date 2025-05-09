@@ -425,13 +425,17 @@ const [endDate,setEndDate]=useState()
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
                 </button>
+              
               </div>
 
 
 
 
-
             </Modal.Footer>
+            <div className="d-flex justify-content-end mr-5 mb-5">
+    <span>Select Payroll Month or Dates</span>
+</div>
+
 
           </>
         )}

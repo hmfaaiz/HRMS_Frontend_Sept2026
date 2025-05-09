@@ -3,18 +3,19 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Select } from "../../../../../../_metronic/_partials/controls";
-import { useSelector, shallowEqual } from "react-redux"
+import { useSelector, shallowEqual,useDispatch } from "react-redux"
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 
 export function EmployeeSelect({
   actionsLoading,
   setemployeeId
 }) {
-
+  const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
   const { allEmployees } = useSelector(
     (state) => ({
@@ -88,6 +89,8 @@ export function EmployeeSelect({
                                             const value = e.value === '--Select--' ? null : Number(e.value);
                                             setFieldValue('employeeId', value);
                                             setemployeeId(value);
+                                             const selectedEmp = allEmployees.find(emp => emp.value === value);
+                                             dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
                                           }}
                                           label={
                                             <span>
