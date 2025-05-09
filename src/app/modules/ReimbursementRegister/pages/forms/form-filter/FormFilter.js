@@ -200,6 +200,30 @@ const [endDate,setEndDate]=useState()
                       </div>
                       {/* Subsidiary Field End */}
 
+
+                      {/* Active payroll month */}
+
+
+
+<div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
+
+{values?.subsidiaryId ? (() => {
+ const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
+  return (
+    <>
+      <div>
+        <b>Active Fiscal Year -</b>{" "}
+        {selectedSubsidiary?.fiscalYearLabel}
+      </div>
+      <div>
+        <b>Active Payroll Month -</b>{" "}
+        {selectedSubsidiary?.payrollMonthLabel}
+      </div>
+    </>
+  );
+})() : null}
+</div>
+
                       {/* Deparment Field Start */}
                       <div className="col-12 col-md-4 mt-3">
                         <Field
@@ -401,13 +425,17 @@ const [endDate,setEndDate]=useState()
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
                 </button>
+              
               </div>
 
 
 
 
-
             </Modal.Footer>
+            <div className="d-flex justify-content-end mr-5 mb-5">
+    <span>Select Payroll Month or Dates</span>
+</div>
+
 
           </>
         )}

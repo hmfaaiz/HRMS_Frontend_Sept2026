@@ -183,7 +183,7 @@ const [endDate,setEndDate]=useState()
                 <fieldset>
 
                   <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>Employee</h6>
+                    {/* <h6>Employee</h6> */}
                     <div className="from-group row">
 
                       {/* Subsidiary Field Start */}
@@ -219,7 +219,32 @@ const [endDate,setEndDate]=useState()
                           touched={touched.subsidiaryId}
                         />
                       </div>
+
+                      
                       {/* Subsidiary Field End */}
+
+{/* Active payroll month */}
+
+
+
+<div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
+
+  {values?.subsidiaryId ? (() => {
+   const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {selectedSubsidiary?.fiscalYearLabel}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {selectedSubsidiary?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
 
                       {/* Deparment Field Start */}
                       <div className="col-12 col-md-4 mt-3">
