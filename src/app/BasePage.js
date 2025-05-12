@@ -192,6 +192,10 @@ const LeaveApprovalModule = lazy(() =>
 
 const loanRegisterModule = lazy(() => import("./modules/LoanRegister/pages/index"));
 const reimbursementRegisterModule = lazy(() => import("./modules/ReimbursementRegister/pages/index"));
+
+const jobVacancyModule = lazy(() => import("./modules/JobVacancy/pages/index"));
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -274,7 +278,8 @@ const ROUTES = {
   hod_setup: HODManagement,
   leaveapproval: LeaveApprovalModule,
   loan_register:loanRegisterModule,
-  reimbursement_register:reimbursementRegisterModule
+  reimbursement_register:reimbursementRegisterModule,
+  job_vacancy:jobVacancyModule,
 };
 
 export default function BasePage() {

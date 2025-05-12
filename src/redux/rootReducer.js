@@ -92,6 +92,7 @@ import {AttendanceCalendarSlice} from "../app/modules/Attendance_Calendar/_redux
 import { LeaveApprovalSlice } from "../app/modules/LeaveApproval/redux/formSlice";
 import { LoanRegisterSlice } from "../app/modules/LoanRegister/_redux/EmployeeRegisterSlice";
 import { ReimbursementRegisterSlice } from "../app/modules/ReimbursementRegister/_redux/ReimbursementRegisterSlice";
+import { JobVacancySlice } from "../app/modules/JobVacancy/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -182,6 +183,7 @@ export const rootReducer = combineReducers({
   attendance_calendar:AttendanceCalendarSlice.reducer,
   loan_register:LoanRegisterSlice.reducer,
   reimbursement_register:ReimbursementRegisterSlice.reducer,
+  job_vacancy:JobVacancySlice.reducer
 });
 
 
