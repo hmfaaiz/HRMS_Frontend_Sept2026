@@ -96,8 +96,8 @@ export function FormEditForm({
   };
 
   const moduleOptions = [
-    { value: 1, label: "HRMS" },
-    { value: 2, label: "Employee" },
+    { value: 1, label: "Employee" },
+    { value: 2, label: "Recuritment" },
   ];
 
   return (
