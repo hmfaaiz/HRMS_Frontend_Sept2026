@@ -52,7 +52,7 @@ export function ActionsColumnFormatter(
         </span>
       </a> */}
       <> </>
-      <OverlayTrigger
+      {/* <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Delete Role</Tooltip>}
       >
         <a
@@ -66,7 +66,7 @@ export function ActionsColumnFormatter(
             />
           </span>
         </a>
-      </OverlayTrigger>
+      </OverlayTrigger> */}
       <> </>
      
     </div>

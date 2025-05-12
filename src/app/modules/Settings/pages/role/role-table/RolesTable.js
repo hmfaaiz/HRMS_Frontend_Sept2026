@@ -69,13 +69,14 @@ export function RolesTable() {
       sort: true,
       sortCaret: sortCaret,
       headerSortingClasses,
+      formatter: (cell) => (cell ? "Active" : "Inactive"),
     },
-    {
-      dataField: "createdAt",
-      text: "Created At",
-      sort: true,
-      formatter: columnFormatters.DatetimeColumnFormatter,
-    },
+    // {
+    //   dataField: "createdAt",
+    //   text: "Created At",
+    //   sort: true,
+    //   formatter: columnFormatters.DatetimeColumnFormatter,
+    // },
 
     {
       dataField: "action",
