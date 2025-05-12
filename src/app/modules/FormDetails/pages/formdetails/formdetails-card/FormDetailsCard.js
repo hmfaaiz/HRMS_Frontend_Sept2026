@@ -126,7 +126,7 @@ export function FormCard() {
       className="btn btn-secondary mr-2"
       onClick={() => switchModule(1)}
     >
-      HRMS
+      Employee
     </button>
   ) : (
     <button
