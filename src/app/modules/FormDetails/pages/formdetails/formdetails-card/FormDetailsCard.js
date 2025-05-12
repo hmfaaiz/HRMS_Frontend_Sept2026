@@ -79,6 +79,24 @@ export function FormCard() {
 
   }
 
+
+    const switchModule = async (value) => {
+
+    let updatedQueryParams = {
+      ...FormUIProps.queryParams,
+      moduleType: value,
+      parentId:null
+    
+    };
+
+   
+    FormUIProps.setQueryParams(updatedQueryParams);
+
+    await dispatch(actions.customfetchFormDetail(updatedQueryParams));
+
+  }
+
+
   return (
     <>
 
@@ -100,10 +118,35 @@ export function FormCard() {
 
               <CardHeaderToolbar>
 
+<>
+{
+  FormUIProps.queryParams.moduleType == 2 ? (
+    <button
+      type="button"
+      className="btn btn-secondary mr-2"
+      onClick={() => switchModule(1)}
+    >
+      Employee
+    </button>
+  ) : (
+    <button
+      type="button"
+      className="btn btn-secondary mr-2"
+      onClick={() => switchModule(2)}
+    >
+      Recruitment
+    </button>
+  )
+}
 
+
+</>
 
                 {accessUser && currentId && (
                   <>
+
+                  
+
                     <button
                       type="button"
                       className="btn btn-primary"

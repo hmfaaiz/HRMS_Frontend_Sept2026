@@ -200,7 +200,7 @@ export function FormEditForm({
                           Supervised By<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-
+ isDisabled={id}
                       onChange={(e) => {
                         setFieldValue("supervisedbyId", e.value || null);
                       }}
@@ -357,7 +357,7 @@ export function FormEditForm({
                           Role<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-
+ isDisabled={id}
                       onChange={(e) => {
                         setFieldValue("roleId", e.value || null);
                       }}

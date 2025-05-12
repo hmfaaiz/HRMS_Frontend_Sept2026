@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../../utils/constants";
 import * as requestFromServer from "./rolesCrud";
 import { rolesSlice, callTypes } from "./rolesSlice";
 import { toast } from "react-toastify";
@@ -55,7 +56,7 @@ export const createRole = (roleForCreation,disableLoading) => (dispatch) => {
       const role = res.data?.data;
       dispatch(actions.roleCreated({ role }));
       disableLoading();
-      toast.success(res.data.message, {
+      toast.success(SERVER_MESSAGES.insertedSuccesse, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -68,7 +69,7 @@ export const createRole = (roleForCreation,disableLoading) => (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't create user";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(error.clientMessage, {
+      toast.error(error?.response?.data?.message || error.clientMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -111,7 +112,7 @@ export const updateRole = (role) => (dispatch) => {
     .then((response) => {
       const updatedRole = response?.data?.data;
       dispatch(actions.roleUpdated({ updatedRole }));
-      toast.success(response?.data?.message, {
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -124,7 +125,7 @@ export const updateRole = (role) => (dispatch) => {
     .catch((error) => {
       // console.log("error User update", error)
       //error.clientMessage = "Can't update User"
-      toast.error(error, {
+      toast.error(error?.response?.data?.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

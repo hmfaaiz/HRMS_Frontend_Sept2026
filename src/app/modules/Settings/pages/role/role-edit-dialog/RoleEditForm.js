@@ -104,7 +104,7 @@ export function RoleEditForm({ onHide, saveRole, role, actionsLoading, loading }
                 className="btn btn-primary btn-elevate"
               >
                 Save
-                {loading && <span className="ml-3 mr-3 spinner spinner-white"></span>}
+                {actionsLoading && <span className="ml-3 mr-3 spinner spinner-white"></span>}
               </button>
             </Modal.Footer>
           </>
