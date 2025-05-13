@@ -57,22 +57,22 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
   }
 };
 
-export const getEmployeeHierarchy = (level) => (dispatch) => {
-  return requestFromServer
-    .getEmployeeHierarchy(level)
-    .then((res) => {
-      const { levelList, employeeList } = res.data?.data;
-      dispatch(
-        actions.EmployeeLeaveHierarchyFetched({ levelList, employeeList })
-      );
-    })
-    .catch((error) => {
-      dispatch(
-        actions.EmployeeLeaveHierarchyFetched({ employeeHierarchy: [] })
-      );
-      error.clientMessage = "Can't Get Employee Hierarchy";
-    });
-};
+// export const getEmployeeHierarchy = (level) => (dispatch) => {
+//   return requestFromServer
+//     .getEmployeeHierarchy(level)
+//     .then((res) => {
+//       const { levelList, employeeList } = res.data?.data;
+//       dispatch(
+//         actions.EmployeeLeaveHierarchyFetched({ levelList, employeeList })
+//       );
+//     })
+//     .catch((error) => {
+//       dispatch(
+//         actions.EmployeeLeaveHierarchyFetched({ employeeHierarchy: [] })
+//       );
+//       error.clientMessage = "Can't Get Employee Hierarchy";
+//     });
+// };
 
 export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer

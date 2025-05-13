@@ -1,6 +1,6 @@
 import { async } from "q";
 import * as requestFromServer from "./dashboardCrud";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { dashboardSlice, callTypes } from "./dashboardSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,8 +19,7 @@ export const fetchAllCountry = () => async (dispatch) => {
     });
 };
 
-export const fetchAllActiveEmployees = (data={}) => async (dispatch) => {
-
+export const fetchAllActiveEmployees = (data = {}) => async (dispatch) => {
   return await requestFromServer
     .getAllActiveEmployees(data)
     .then((response) => {
@@ -33,9 +32,11 @@ export const fetchAllActiveEmployees = (data={}) => async (dispatch) => {
     });
 };
 
-export const fetchAllActiveEmployeesBySubsidiary = (subsidiaryId) => async (dispatch) => {
+export const fetchAllActiveEmployeesBySubsidiary = (subsidiaryId) => async (
+  dispatch
+) => {
   return await requestFromServer
-    .getAllActiveEmployeesBySubsidiary({subsidiaryId})
+    .getAllActiveEmployeesBySubsidiary({ subsidiaryId })
     .then((response) => {
       const entities = response.data?.data;
 
@@ -46,15 +47,16 @@ export const fetchAllActiveEmployeesBySubsidiary = (subsidiaryId) => async (disp
     });
 };
 
-export const fetchEmpSalaryRevisionByEmployeeId = (employeeId) => async (dispatch) => {
+export const fetchEmpSalaryRevisionByEmployeeId = (employeeId) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllEmployeeSalaryReviewForDDL(employeeId)
     .then((response) => {
       const formatDates = (dataArray) => {
-
-        return dataArray.map(item => ({
+        return dataArray.map((item) => ({
           ...item,
-          label: format(new Date(item.label), 'dd/MM/yyyy') // Format to 'Month Year'
+          label: format(new Date(item.label), "dd/MM/yyyy"), // Format to 'Month Year'
         }));
       };
 
@@ -68,8 +70,9 @@ export const fetchEmpSalaryRevisionByEmployeeId = (employeeId) => async (dispatc
     });
 };
 
-
-export const fetchAllActiveEmployeesSalaryForDDL = (employeeId) => async (dispatch) => {
+export const fetchAllActiveEmployeesSalaryForDDL = (employeeId) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllActiveEmployeesSalaryForDDL(employeeId)
     .then((response) => {
@@ -80,10 +83,6 @@ export const fetchAllActiveEmployeesSalaryForDDL = (employeeId) => async (dispat
       toast.error("Something went wrong");
     });
 };
-
-
-
-
 
 export const fetchAllEarningDeductionList = (Id) => async (dispatch) => {
   return await requestFromServer
@@ -97,7 +96,12 @@ export const fetchAllEarningDeductionList = (Id) => async (dispatch) => {
     });
 };
 
-export const fetchAllEarningList = (Id, subsidiaryId, employeeId = '', excludeBasic = false) => async (dispatch) => {
+export const fetchAllEarningList = (
+  Id,
+  subsidiaryId,
+  employeeId = "",
+  excludeBasic = false
+) => async (dispatch) => {
   return await requestFromServer
     .getAllEarningDeductionList(Id, subsidiaryId, employeeId, excludeBasic)
     .then((response) => {
@@ -109,8 +113,11 @@ export const fetchAllEarningList = (Id, subsidiaryId, employeeId = '', excludeBa
     });
 };
 
-
-export const fetchAllDeductionList = (Id, subsidiaryId, employeeId = '') => async (dispatch) => {
+export const fetchAllDeductionList = (
+  Id,
+  subsidiaryId,
+  employeeId = ""
+) => async (dispatch) => {
   return await requestFromServer
     .getAllEarningDeductionList(Id, subsidiaryId, employeeId)
     .then((response) => {
@@ -122,8 +129,9 @@ export const fetchAllDeductionList = (Id, subsidiaryId, employeeId = '') => asyn
     });
 };
 
-
-export const fetchAllEmpCompensationBenefitsForDDL = (Id) => async (dispatch) => {
+export const fetchAllEmpCompensationBenefitsForDDL = (Id) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllEmp_Compensation_Benefits_DDL()
     .then((response) => {
@@ -135,14 +143,11 @@ export const fetchAllEmpCompensationBenefitsForDDL = (Id) => async (dispatch) =>
     });
 };
 
-
 export const fetchAllDept = (id) => async (dispatch) => {
-
   return await requestFromServer
     .getAllDepartments(id)
     .then((response) => {
       const entities = response.data?.data;
-
 
       dispatch(actions.AllDeptFetch(entities));
     })
@@ -152,19 +157,24 @@ export const fetchAllDept = (id) => async (dispatch) => {
 };
 
 /**
- * 
+ *
  * Get Data for dropdown according to id and set it in state on the key provided
  * text key is sent so that when fetching dopdown data if text key has value it will add default entry in array for that value
- * 
+ *
  * like if text = 'All' the response will have 1 default object {label: 'All', value : null}
  * if text is not provided then response will have 1 default object {label: '--Select--', value: null}
- * 
- * @param {String|Number} id 
- * @param {string} key 
- * @param {string} text 
- * @returns 
+ *
+ * @param {String|Number} id
+ * @param {string} key
+ * @param {string} text
+ * @returns
  */
-export const fetchAllFormsMenu = (id, key, text = null, mergeLabel = false) => async (dispatch) => {
+export const fetchAllFormsMenu = (
+  id,
+  key,
+  text = null,
+  mergeLabel = false
+) => async (dispatch) => {
   return await requestFromServer
     .getAllFormMenus(id, text, mergeLabel)
     .then((response) => {
@@ -177,15 +187,17 @@ export const fetchAllFormsMenu = (id, key, text = null, mergeLabel = false) => a
 };
 
 /**
- * 
+ *
  * Get All leave Types Data from Server and set it in state on the key provided in argument
  * EmployeeId key is an optional parameter to send to request. If employeeId value is sent to the server then it's response will have leave Types that are accessible to that employee Only
- * otherwise if not provided by default its value will be null that means response will have all leave types 
- * 
- * @param {String} key 
- * @returns 
+ * otherwise if not provided by default its value will be null that means response will have all leave types
+ *
+ * @param {String} key
+ * @returns
  */
-export const fetchAllLeaveType = (key, employeeId = null) => async (dispatch) => {
+export const fetchAllLeaveType = (key, employeeId = null) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllLeaveTypes({ employeeId })
     .then((response) => {
@@ -198,15 +210,18 @@ export const fetchAllLeaveType = (key, employeeId = null) => async (dispatch) =>
 };
 
 /**
- * 
+ *
  * Get All leave Types Data from Server and set it in state on the key provided in argument
  * Get Leave Type according to Subsidiary. If Subsidiary is not present then it will bring empty array.
- * 
- * @param {String} key 
- * @param {String|Number} subsidiaryId 
- * @returns 
+ *
+ * @param {String} key
+ * @param {String|Number} subsidiaryId
+ * @returns
  */
-export const fetchAllLeaveTypeBySubsidiary = (key, subsidiaryId = null) => async (dispatch) => {
+export const fetchAllLeaveTypeBySubsidiary = (
+  key,
+  subsidiaryId = null
+) => async (dispatch) => {
   return await requestFromServer
     .getAllLeaveTypesBySubsidiary({ subsidiaryId })
     .then((response) => {
@@ -219,14 +234,18 @@ export const fetchAllLeaveTypeBySubsidiary = (key, subsidiaryId = null) => async
 };
 
 /**
- * 
+ *
  * Get All leave Types Data from Server and set it in state on the key provided in argument
  * It will only get Leave Type Data that are of Encashable for current year
- * 
- * @param {String} key 
- * @returns 
+ *
+ * @param {String} key
+ * @returns
  */
-export const fetchEncashmentLeaveType = (key, employeeId = null, yearId = null) => async (dispatch) => {
+export const fetchEncashmentLeaveType = (
+  key,
+  employeeId = null,
+  yearId = null
+) => async (dispatch) => {
   return await requestFromServer
     .getAllEncashmentLeaveTypes({ employeeId, yearId })
     .then((response) => {
@@ -239,11 +258,11 @@ export const fetchEncashmentLeaveType = (key, employeeId = null, yearId = null) 
 };
 
 /**
- * 
+ *
  * Get All Employee Shift Data from Server and set it in state on the key provided in argument
- * 
- * @param {String} key 
- * @returns 
+ *
+ * @param {String} key
+ * @returns
  */
 export const fetchAllEmployeeShifts = (key) => async (dispatch) => {
   return await requestFromServer
@@ -258,14 +277,15 @@ export const fetchAllEmployeeShifts = (key) => async (dispatch) => {
 };
 
 /**
- * 
+ *
  * Get Current Payroll Month data from server and set it in state on the key provided in argument
- * 
- * @param {String} key 
- * @returns 
+ *
+ * @param {String} key
+ * @returns
  */
 export const getPayrollMonth = (key) => (dispatch) => {
-  return requestFromServer.getPayrollMonth()
+  return requestFromServer
+    .getPayrollMonth()
     .then((res) => {
       const payrollData = res.data?.data;
       dispatch(actions.AllChildMenusFetch({ entities: payrollData, key }));
@@ -273,17 +293,18 @@ export const getPayrollMonth = (key) => (dispatch) => {
     .catch((error) => {
       toast.error("Something went wrong");
     });
-}
+};
 
 /**
- * 
+ *
  * Get Current Active Fiscal Year data from server and set it in state on the key provided in argument
- * 
- * @param {String} key 
- * @returns 
+ *
+ * @param {String} key
+ * @returns
  */
 export const getActiveFiscalYear = (key, subsidiaryId) => (dispatch) => {
-  return requestFromServer.getActiveFiscalYear({subsidiaryId})
+  return requestFromServer
+    .getActiveFiscalYear({ subsidiaryId })
     .then((res) => {
       const fiscalData = res.data?.data;
       dispatch(actions.AllChildMenusFetch({ entities: fiscalData, key }));
@@ -291,20 +312,19 @@ export const getActiveFiscalYear = (key, subsidiaryId) => (dispatch) => {
     .catch((error) => {
       toast.error("Something went wrong");
     });
-}
+};
 
 /**
- * 
+ *
  * Get All Subsidiaries Data from Server and set it in state on the key provided in argument
- * 
- * @param {String} key 
- * @returns 
+ *
+ * @param {String} key
+ * @returns
  */
 export const fetchAllSubsidiaryData = (key) => async (dispatch) => {
   return await requestFromServer
     .getAllSubsidiary()
     .then((response) => {
-
       const entities = [...response.data?.data];
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
@@ -313,17 +333,16 @@ export const fetchAllSubsidiaryData = (key) => async (dispatch) => {
     });
 };
 
-
 /**
- * 
+ *
  * Get All Fiscal year Data in dropdown format from Server and set it in state on the key provided in argument
- * 
- * @param {String} key 
- * @returns 
+ *
+ * @param {String} key
+ * @returns
  */
 export const fetchAllFiscalYearData = (key, employeeId) => async (dispatch) => {
   return await requestFromServer
-    .getAllFiscalYear({employeeId})
+    .getAllFiscalYear({ employeeId })
     .then((response) => {
       const entities = [...response.data?.data];
       dispatch(actions.AllChildMenusFetch({ entities, key }));
@@ -332,7 +351,6 @@ export const fetchAllFiscalYearData = (key, employeeId) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
-
 
 export const fetchAllEarningHeads = (id) => async (dispatch) => {
   return await requestFromServer
@@ -358,7 +376,6 @@ export const fetchAllBanks = (id) => async (dispatch) => {
     });
 };
 
-
 export const fetchAllCompanyBanks = (id) => async (dispatch) => {
   return await requestFromServer
     .getAllBanks(id)
@@ -373,7 +390,7 @@ export const fetchAllCompanyBanks = (id) => async (dispatch) => {
 
 export const fetchAllBankBranch = (bankId) => async (dispatch) => {
   return await requestFromServer
-    .getAllBankBranch({bankId})
+    .getAllBankBranch({ bankId })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllBankBranchFetch(entities));
@@ -382,8 +399,6 @@ export const fetchAllBankBranch = (bankId) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
-
-
 
 export const fetchAllCity = (cityId) => async (dispatch) => {
   return await requestFromServer
@@ -396,8 +411,6 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
-
-
 
 export const fetchStandByVehicles = (body) => async (dispatch) => {
   return await requestFromServer
@@ -438,7 +451,6 @@ export const getLatestBookingNo = (bookingNo) => async (dispatch) => {
   return await requestFromServer
     .getLastBookingNo(bookingNo)
     .then((response) => {
-
       return response?.data?.data;
       // dispatch(receiptSlice.MaxIdFetchForReceipt(response?.data?.data));
     })
@@ -447,12 +459,17 @@ export const getLatestBookingNo = (bookingNo) => async (dispatch) => {
     });
 };
 
-export const getLatestTableId = (tableName, pkIdColumn, whereClause, setValue = null) => async () => {
+export const getLatestTableId = (
+  tableName,
+  pkIdColumn,
+  whereClause,
+  setValue = null
+) => async () => {
   return await requestFromServer
     .getLastTableId(tableName, pkIdColumn, whereClause)
     .then((response) => {
-      if(setValue){
-        setValue(response?.data?.data?.[0]?.NewId || '')
+      if (setValue) {
+        setValue(response?.data?.data?.[0]?.NewId || "");
       }
       return response?.data?.data;
       // dispatch(receiptSlice.MaxIdFetchForReceipt(response?.data?.data));
@@ -461,7 +478,6 @@ export const getLatestTableId = (tableName, pkIdColumn, whereClause, setValue = 
       toast.error(error?.response?.data?.message);
     });
 };
-
 
 export const fetchAllHumanResourceRole = (key) => async (dispatch) => {
   return await requestFromServer
@@ -475,9 +491,6 @@ export const fetchAllHumanResourceRole = (key) => async (dispatch) => {
     });
 };
 
-
-
-
 export const fetchAllReimbursementConfigList = (key) => async (dispatch) => {
   return await requestFromServer
     .getAllReimbursementConfigList()
@@ -488,12 +501,9 @@ export const fetchAllReimbursementConfigList = (key) => async (dispatch) => {
     .catch((error) => {
       toast.error("Something went wrong");
     });
-
-
 };
 
 export const fetchAllPayrollMonthYearList = (body, key) => async (dispatch) => {
-
   return await requestFromServer
     .getAllPayrollMonthYearList(body, key)
     .then((response) => {
@@ -504,15 +514,12 @@ export const fetchAllPayrollMonthYearList = (body, key) => async (dispatch) => {
     .catch((error) => {
       toast.error("Something went wrong");
     });
-
-
-}
+};
 
 export const fetchAllComapnyData = (key) => async (dispatch) => {
   return await requestFromServer
     .getAllCompany()
     .then((response) => {
-
       const entities = [...response.data?.data];
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
@@ -521,14 +528,14 @@ export const fetchAllComapnyData = (key) => async (dispatch) => {
     });
 };
 
-
-export const fetchAllEmployeesWithNoPermissionData = (key) => async (dispatch) => {
+export const fetchAllEmployeesWithNoPermissionData = (key) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllEmployeesWithNoPermission()
     .then((response) => {
-
       const entities = [...response.data?.data];
-      dispatch(actions.AllEmployeesWithNoPermissionFetch( entities));
+      dispatch(actions.AllEmployeesWithNoPermissionFetch(entities));
     })
     .catch((error) => {
       toast.error("Something went wrong");
@@ -536,22 +543,28 @@ export const fetchAllEmployeesWithNoPermissionData = (key) => async (dispatch) =
 };
 
 /**
- * 
+ *
  * Download Excel Template
- * 
- * @param {Document} document 
- * @returns 
+ *
+ * @param {Document} document
+ * @returns
  */
-export const downloadTemplateExcel = (document, type, fileName) => async (dispatch) => {
-  return requestFromServer.downloadTemplate({type})
+export const downloadTemplateExcel = (document, type, fileName) => async (
+  dispatch
+) => {
+  return requestFromServer
+    .downloadTemplate({ type })
     .then((res) => {
-      const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const pdfBlob = new Blob([res.data], {
+        type:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
       const pdfUrl = URL.createObjectURL(pdfBlob);
 
       // Trigger file download
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = pdfUrl;
-      link.setAttribute('download', `${fileName}.xlsx`);
+      link.setAttribute("download", `${fileName}.xlsx`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -570,27 +583,26 @@ export const downloadTemplateExcel = (document, type, fileName) => async (dispat
     });
 };
 
-
-export const fetchPayrollConfigApproverPermission = (key) => async (dispatch) => {
+export const fetchPayrollConfigApproverPermission = (key) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getPayrollConfigApproverPermission()
     .then((response) => {
-   
       const entities = [...response.data?.data];
-      dispatch(actions.AllPayrollConfigApproverPermissionFetch({ entities, key }));
+      dispatch(
+        actions.AllPayrollConfigApproverPermissionFetch({ entities, key })
+      );
     })
     .catch((error) => {
       toast.error("Something went wrong");
     });
 };
 
-
-
 export const fetchAllRosterPattern = (key) => async (dispatch) => {
   return await requestFromServer
     .getAllRosterPattern()
     .then((response) => {
-   
       const entities = [...response.data?.data];
       dispatch(actions.AllRosterPatternFetch(entities));
     })
@@ -598,3 +610,5 @@ export const fetchAllRosterPattern = (key) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
+
+

@@ -85,11 +85,14 @@ import { SubsidiarySlice } from "../app/modules/Subsidiary/redux/subsidiarySlice
 import { LeaveRequestSlice } from "../app/modules/LeaveRequest/_redux/LeaveApplicationSlice";
 import { workflowPolicySlice } from "../app/modules/WorkflowPolicy/redux/formSlice";
 import { HODSlice } from "../app/modules/HOD_Setup/redux/formSlice";
-import {CalendarSlice} from "../app/modules/Calendar/_redux/redux-Slice"
-import {LeaveCalendarSlice} from "../app/modules/Leave_Calendar/_redux/redux-Slice"
-import {RosterCalendarSlice} from "../app/modules/Roster_Calendar/_redux/redux-Slice"
-import {AttendanceCalendarSlice} from "../app/modules/Attendance_Calendar/_redux/redux-Slice"
+import { CalendarSlice } from "../app/modules/Calendar/_redux/redux-Slice";
+import { LeaveCalendarSlice } from "../app/modules/Leave_Calendar/_redux/redux-Slice";
+import { RosterCalendarSlice } from "../app/modules/Roster_Calendar/_redux/redux-Slice";
+import { AttendanceCalendarSlice } from "../app/modules/Attendance_Calendar/_redux/redux-Slice";
 import { LeaveApprovalSlice } from "../app/modules/LeaveApproval/redux/formSlice";
+import { AttendanceRequestSlice } from "../app/modules/AttendanceRequest/_redux/AttendanceRequestSlice";
+import { AttendanceApprovalSlice } from "../app/modules/AttendanceApproval/redux/formSlice";
+import { PayrollPreviewSlice } from "../app/modules/PayrollPreview/_redux/PayrollPreviewSlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -174,11 +177,13 @@ export const rootReducer = combineReducers({
   hod_setup: HODSlice.reducer,
   calendar: CalendarSlice.reducer,
   leave_approval: LeaveApprovalSlice.reducer,
-  leave_calendar:LeaveCalendarSlice.reducer,
-  roster_calendar:RosterCalendarSlice.reducer,
-  attendance_calendar:AttendanceCalendarSlice.reducer,
+  leave_calendar: LeaveCalendarSlice.reducer,
+  roster_calendar: RosterCalendarSlice.reducer,
+  attendance_calendar: AttendanceCalendarSlice.reducer,
+  attendance_request: AttendanceRequestSlice.reducer,
+  attendance_approval: AttendanceApprovalSlice.reducer,
+  payroll_preview: PayrollPreviewSlice?.reducer,
 });
-
 
 export function* rootSaga() {
   yield all([auth.saga()]);

@@ -75,13 +75,6 @@ export const fetchLeaveBalances = (employeeId) => async (dispatch) => {
   }
 };
 
-/**
- *
- * Fetch Single Leave Application Record by Id
- *
- * @param {string|number} id
- * @returns
- */
 export const fetchEditRecord = (id) => (dispatch) => {
   if (!id) {
     return dispatch(actions.LeaveApplicationFetchedForEdit(null));
@@ -114,6 +107,13 @@ export const fetchEditRecord = (id) => (dispatch) => {
 export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
   dispatch
 ) => {
+  console.log(
+    "data, employeeId, disableLoading, resetForm",
+    data,
+    employeeId,
+    disableLoading,
+    resetForm
+  );
   if (employeeId) {
     if (!data.Id) {
       return requestFromServer
@@ -187,15 +187,6 @@ export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
   }
 };
 
-/**
- *
- * Delete Single Leave Application Record By Id
- *
- * @param {String|Number} id
- * @param {Function} disableLoading
- * @param {Function} onHide
- * @returns
- */
 export const deleteRecord = (id, disableLoading, onHide) => (dispatch) => {
   return requestFromServer
     .deleteLeaveApplicationSetup(id)
@@ -245,26 +236,10 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
   }
 };
 
-export const getEmployeeHierarchy = (level) => (dispatch) => {
-  return requestFromServer
-    .getEmployeeHierarchy(level)
-    .then((res) => {
-      const { levelList, employeeList } = res.data?.data;
-      dispatch(
-        actions.EmployeeLeaveHierarchyFetched({ levelList, employeeList })
-      );
-    })
-    .catch((error) => {
-      dispatch(actions.EmployeeHierarchyFetched({ employeeHierarchy: [] }));
-      error.clientMessage = "Can't Get Employee Hierarchy";
-    });
-};
-
 export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer
     .getEmployeeAuthorties(empId, "399")
     .then((res) => {
-
       const data = Array.isArray(res.data?.data) ? res.data?.data : [];
       dispatch(actions.EmployeeAuthorityFetched(data));
     })

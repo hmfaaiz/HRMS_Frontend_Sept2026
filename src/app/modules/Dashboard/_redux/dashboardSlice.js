@@ -12,28 +12,28 @@ const initialDashboardState = {
   allBankBranch: [],
   allEearningDeductList: [],
   allCity: [],
-  allCompanyBanks:[],
-  allDept: [],  
-  allEarnings:[],
-  allDeductions:[],
-  allChildMenus:[],
+  allCompanyBanks: [],
+  allDept: [],
+  allEarnings: [],
+  allDeductions: [],
+  allChildMenus: [],
   allPayrollPayableAccounts: [],
   allDegreeTitle: [],
   allStatus: [],
   allInstitution: [],
-  allTeamsChildMenus:[],
-  allRegionChildMenus:[],
-  allReligionChildMenus:[],
-  allEmpTypeChildMenus:[],
-  allNationalities:[],
-  allLocationChildMenus:[],
-  allCurrencyCodeList:[],
-  allDesignations:[],
-  allPaymentModeList:[],
-  allEmployeeGradeList:[],
-  allCompanyList:[],
+  allTeamsChildMenus: [],
+  allRegionChildMenus: [],
+  allReligionChildMenus: [],
+  allEmpTypeChildMenus: [],
+  allNationalities: [],
+  allLocationChildMenus: [],
+  allCurrencyCodeList: [],
+  allDesignations: [],
+  allPaymentModeList: [],
+  allEmployeeGradeList: [],
+  allCompanyList: [],
   allRelationCodeList: [],
-  allParentMenus:[],
+  allParentMenus: [],
   cityCenters: [],
   allVehicles: [],
   standBy: [],
@@ -43,22 +43,33 @@ const initialDashboardState = {
   alarmTime: [],
   incidentTypes: [],
   allPayrollAccounts: [],
-  allCompensationBenefitsList:[],
-  allCompensationBenefitsList:[],
-  allAccountList:[],
-  allHumanResourceRoleList:[],
+  allCompensationBenefitsList: [],
+  allCompensationBenefitsList: [],
+  allAccountList: [],
+  allHumanResourceRoleList: [],
   allLoanTypeList: [],
-  allContractTypeList:[],
-  allPayrolGroupList:[],
-  allCycleTypeList:[],
-  allReimbursementTypeList:[],
-  allReimbursementConfigList:[],
-  allPayrollMonthYearList:[],
-  allHolidayTypeList:[],
-  allEmployeeStatus:[],
-  allEmployeesWithNoPermissionList:[],
-  allEmpTypeDynamicChildMenus:[],
-  allRosterPatternList:[],
+  allContractTypeList: [],
+  allPayrolGroupList: [],
+  allCycleTypeList: [],
+  allReimbursementTypeList: [],
+  allReimbursementConfigList: [],
+  allPayrollMonthYearList: [],
+  allHolidayTypeList: [],
+  allEmployeeStatus: [],
+  allEmployeesWithNoPermissionList: [],
+  allEmpTypeDynamicChildMenus: [],
+  allRosterPatternList: [],
+  levelList: [], /// current Employee level report to
+  employeeList: [], /// current Employee level report to employee
+  logedInEmpoyee: null,
+  leaveBalances: [],
+  profileInfo: null,
+  contactInfo: null,
+  experienceInfo: null,
+  skillsInfo: null,
+  academicInfo: null,
+  payrollData: null,
+  reportingEmployee: null,
 };
 
 export const callTypes = {
@@ -96,31 +107,29 @@ export const dashboardSlice = createSlice({
     },
 
     AllActiveEmployeeFetch: (state, action) => {
-
       state.allEmployees = action.payload;
     },
-    
+
     AllEmpSalaryReviewDate: (state, action) => {
       state.allSalaryReviewDateByEmpIdForDDL = action.payload;
     },
-    
+
     allPayrollAccounts: (state, action) => {
-      state.allPayrollAccounts = action .payload;
+      state.allPayrollAccounts = action.payload;
     },
 
     AllActiveEmployeeSalaryDDL: (state, action) => {
       state.allEmployeesSalaryDDL = action.payload;
     },
 
-
     AllActiveNationalityFetch: (state, action) => {
       state.allNationalities = action.payload;
     },
-          
+
     AllEarningDeductionListFetch: (state, action) => {
       state.allEearningDeductList = action.payload;
     },
-    
+
     AllCurrencyCodesListFetch: (state, action) => {
       state.allCurrencyCodeList = action.payload;
     },
@@ -148,12 +157,11 @@ export const dashboardSlice = createSlice({
     AllChildMenusForTeams: (state, action) => {
       state.allTeamsChildMenus = action.payload;
     },
-     
-     
+
     AllParentMenusFetch: (state, action) => {
       state.allParentMenus = action.payload;
     },
-    
+
     AllCentersByCityIdFetch: (state, action) => {
       state.cityCenters = action.payload;
     },
@@ -166,7 +174,7 @@ export const dashboardSlice = createSlice({
     AllDesignationsFetch: (state, action) => {
       state.allDesignations = action.payload;
     },
-    
+
     AllCompanyBanksFetch: (state, action) => {
       state.allCompanyBanks = action.payload;
     },
@@ -176,14 +184,12 @@ export const dashboardSlice = createSlice({
       state.offDuty = action.payload.offDuty;
     },
     lastTripsVehicles: (state, action) => {
-   
       state.lastTrips = action.payload.rows;
     },
     setData: (state, action) => {
       state.data = action.payload;
     },
     updateData: (state, action) => {
-      
       state.lastTrips = state.lastTrips.map((entity) => {
         if (entity.id === action.payload.id) {
           return action.payload;
@@ -202,7 +208,6 @@ export const dashboardSlice = createSlice({
       state.allAccountList = action.payload;
     },
     AllHumanResourceRoleListFetch: (state, action) => {
-  
       state.allHumanResourceRoleList = action.payload.entities;
     },
     AllContractTypeListFetch: (state, action) => {
@@ -212,7 +217,7 @@ export const dashboardSlice = createSlice({
     AllPayrolGroupListFetch: (state, action) => {
       state.allPayrolGroupList = action.payload;
     },
-        
+
     AllReimbursementConfigListFetch: (state, action) => {
       state.allReimbursementConfigList = action.payload;
     },
@@ -223,21 +228,59 @@ export const dashboardSlice = createSlice({
       state.allHolidayTypeList = action.payload;
     },
 
-        
     AllEmployeesWithNoPermissionFetch: (state, action) => {
-    
       state.allEmployeesWithNoPermissionList = action.payload;
     },
     AllPayrollConfigApproverPermissionFetch: (state, action) => {
       state.allPayrollConfigApproverPermissionList = action.payload;
- 
     },
 
     AllRosterPatternFetch: (state, action) => {
       state.allRosterPatternList = action.payload;
- 
+    },
+    EmployeeHierarchyFetched: (state, action) => {
+      const { levelList, employeeList } = action?.payload;
+      state.levelList = levelList;
+      state.employeeList = employeeList;
+    },
+    fetchLogedInInEmployee: (state, action) => {
+      const data = action?.payload;
+      state.logedInEmpoyee = data;
+    },
+    LeaveBalancesFetched: (state, action) => {
+      const leaveBalances = action.payload.data?.data;
+      state.listLoading = false;
+      state.error = null;
+      state.leaveBalances = leaveBalances;
+    },
+    ProfileInfoFetched: (state, action) => {
+      state.error = null;
+      state.profileInfo = action.payload;
+    },
+    ContactInfoFetched: (state, action) => {
+      state.error = null;
+      state.contactInfo = action.payload;
+    },
+    ExperienceInfoFetched: (state, action) => {
+      state.error = null;
+      state.experienceInfo = action.payload;
+    },
+    AcademicInfoFetched: (state, action) => {
+      state.error = null;
+      state.academicInfo = action.payload;
+    },
+    SkillsInfoFetched: (state, action) => {
+      state.error = null;
+      state.skillsInfo = action.payload;
+    },
+    ReportingEmployeeFetched: (state, action) => {
+      state.error = null;
+      state.reportingEmployee = action.payload;
+    },
+    PayrollMonthFetched: (state, action) => {
+      const payrollData = action?.payload?.payrollData;
+      state.error = null;
+      state.payrollData = payrollData;
     },
   },
 });
-
-

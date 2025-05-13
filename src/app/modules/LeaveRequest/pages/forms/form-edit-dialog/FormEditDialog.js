@@ -12,6 +12,7 @@ export function FormEditDialog({
   employeeId,
   empAuthorityList,
   currentLevel,
+  initUser,
 }) {
   const [loading, setLoading] = useState(false);
   const FormUIContext = useFormUIContext();
@@ -19,7 +20,6 @@ export function FormEditDialog({
   //Get values and function from context that is initiated from FormUIContext.js
   const formUIProps = useMemo(() => {
     return {
-      initUser: FormUIContext.initUser,
       setId: FormUIContext.setId,
       queryParamsLeaveApp: FormUIContext.queryParamsLeaveApp,
       employeeId: FormUIContext.employeeId,
@@ -60,7 +60,7 @@ export function FormEditDialog({
               file: res.data.filename,
               authortiesList: empAuthorityList,
             },
-            employeeId,
+            formUIProps.employeeId?.value,
             disbaleLoading,
             resetForm
           )
@@ -68,7 +68,7 @@ export function FormEditDialog({
           dispatch(
             actions.fetchLeaveApplication(
               formUIProps.queryParamsLeaveApp,
-              formUIProps.employeeId
+              formUIProps.employeeId?.value
             )
           );
         });
@@ -77,7 +77,7 @@ export function FormEditDialog({
       dispatch(
         actions.saveRecord(
           { ...values, authortiesList: empAuthorityList },
-          employeeId,
+          formUIProps.employeeId?.value,
           disbaleLoading,
           resetForm
         )
@@ -85,23 +85,22 @@ export function FormEditDialog({
         dispatch(
           actions.fetchLeaveApplication(
             formUIProps.queryParamsLeaveApp,
-            formUIProps.employeeId
+            formUIProps.employeeId?.value
           )
         );
       });
     }
   };
-
   return (
     <>
       <FormEditDialogHeader />
       <MasterEditForm
         submitForm={submitForm}
-        user={userForEdit || formUIProps.initUser}
+        user={userForEdit || initUser}
         empAuthorityList={empAuthorityList}
         enableLoading={enableLoading}
         loading={loading}
-        employeeId={employeeId}
+        employeeId={formUIProps?.employeeId}
         currentLevel={currentLevel}
         isEdit={id ? true : false}
         isReaply={

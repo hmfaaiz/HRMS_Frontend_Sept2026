@@ -93,7 +93,7 @@ export function FormTable() {
     },
     {
       dataField: "department.deptName",
-      text: "Head of",
+      text: "Head Of Departments",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

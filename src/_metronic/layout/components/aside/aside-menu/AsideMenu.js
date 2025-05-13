@@ -23,6 +23,7 @@ export function AsideMenu({disableScroll}) {
         {...layoutProps.asideMenuAttr}
       >
         <AsideMenuList layoutProps={layoutProps} />
+        
       </div>
       {/* end::Menu Container */}
     </>

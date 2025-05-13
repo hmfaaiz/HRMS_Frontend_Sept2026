@@ -3,8 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   listLoading: false,
   actionsLoading: null,
-  levelList: [],
-  employeeList: [],
+  
   totalCount: 0,
   entities: null,
   roles: null,
@@ -86,12 +85,6 @@ export const LeaveRequestSlice = createSlice({
         }
         return el;
       });
-    },
-    EmployeeLeaveHierarchyFetched: (state, action) => {
-      const { levelList, employeeList } = action?.payload;
-      state.error = null;
-      state.levelList = levelList;
-      state.employeeList = employeeList;
     },
     PayrollMonthFetched: (state, action) => {
       const payrollData = action?.payload?.payrollData;
