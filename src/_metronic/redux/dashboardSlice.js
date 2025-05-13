@@ -55,6 +55,15 @@ const initialDashboardState = {
   allRosterPatternList:[],
   allCurrency : [],
   allEmployeeRequestTypeList:[], 
+  allHiringReasonList:[], 
+  alljobPreferenceList:[],
+  allAppointmentTypeList:[],
+  allPriorityTypeList:[],
+  allQualificationList:[],
+  allJobShiftList:[],
+  allJobSkillList:[],
+  allJobIndustryList:[],
+
 };
 
 export const callTypes = {
@@ -244,5 +253,7 @@ export const dashboardSlice = createSlice({
       state.allLoanTypeList = action.payload;
  
     },
+
+    
   },
 });

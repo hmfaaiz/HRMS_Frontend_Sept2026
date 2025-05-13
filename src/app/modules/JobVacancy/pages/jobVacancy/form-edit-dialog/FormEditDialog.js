@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, onHide, userForRead }) {
+export function FormEditDialog({ id, show, onHide, dataForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -41,20 +41,20 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const {
     actionsLoading,
     user,
-    userForEdit,
+    dataForEdit,
     roles,
     centers,
     userStatusTypes,
-    isuserForRead,
+    isdataForRead,
   } = useSelector((state) => ({
     
     
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
-    userForEdit: state.job_vacancy.userForEdit,
+    dataForEdit: state.job_vacancy.dataForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
-    isuserForRead: state.job_vacancy.userForRead,
+    isdataForRead: state.job_vacancy.dataForRead,
   }));
 
 
@@ -110,15 +110,15 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
     >
-      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
-        user={userForEdit || formUIProps .initUser}
+        user={dataForEdit || formUIProps .initUser}
         onHide={onHide}
         roles={roles}
         centers={centers}
         userStatusTypes={userStatusTypes}
-        isUserForRead={userForRead}
+        isdataForRead={dataForRead}
         enableLoading={enableLoading}
         loading={loading}
      

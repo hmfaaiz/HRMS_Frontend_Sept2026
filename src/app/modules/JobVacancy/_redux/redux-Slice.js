@@ -8,9 +8,9 @@ const initialJobVacancyState = {
     roles: null,
     centers: null,
     userStatusTypes: null,
-    userForEdit: undefined,
+    dataForEdit: undefined,
     lastError: null,
-    userForRead: false,
+    dataForRead: false,
 };
 
 
@@ -61,7 +61,7 @@ export const JobVacancySlice = createSlice({
            
    
             state.actionsLoading = false;
-            state.userForEdit = action.payload.userForEdit;
+            state.dataForEdit = action.payload.dataForEdit;
             state.error = null;
         },
 

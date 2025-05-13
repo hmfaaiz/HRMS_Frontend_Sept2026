@@ -62,7 +62,7 @@ export function FormPage({ history }) {
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
-            userForRead={true}
+            dataForRead={true}
             onHide={() => {
               history.push("/job_vacancy/read-all-job-vacancy");
             }}

@@ -27,7 +27,7 @@ export const fetchJobVacancyById = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.JobVacancyFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.JobVacancyFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
@@ -36,7 +36,7 @@ export const fetchJobVacancyById = (id) => (dispatch) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.JobVacancyFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.JobVacancyFetchedForEdit({ dataForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";

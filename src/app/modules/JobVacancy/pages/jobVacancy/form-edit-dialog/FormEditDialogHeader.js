@@ -3,14 +3,14 @@ import { shallowEqual, useSelector } from "react-redux";
 import { Modal } from "react-bootstrap";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 
-export function FormEditDialogHeader({ id, isUserForRead }) {
-  //const userForEdit = false
+export function FormEditDialogHeader({ id, isdataForRead }) {
+  //const dataForEdit = false
   const [title, setTitle] = useState("");
  
-  const { userForEdit, actionsLoading } = useSelector(
+  const { dataForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      userForEdit: state.job_vacancy.userForEdit,
+      dataForEdit: state.job_vacancy.dataForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
@@ -20,18 +20,18 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
     let _title = id ? "" : "Add Job Vacancy";
     if (id) {
       _title = `Edit Add Job Vacancy`;
-    } //else if (isUserForRead) {
+    } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }
     setTitle(_title);
-  }, [userForEdit, actionsLoading]);
+  }, [dataForEdit, actionsLoading]);
 
   return (
     <>
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Job Vacancy"}
+          {!isdataForRead ? title : "View Job Vacancy"}
         </Modal.Title>
       </Modal.Header>
     </>
