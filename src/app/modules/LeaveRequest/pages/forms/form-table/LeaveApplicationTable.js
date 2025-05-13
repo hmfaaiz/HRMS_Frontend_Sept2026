@@ -181,13 +181,9 @@ export function LeaveApplicationTable() {
         editRecord: FormUIProps.editRecord,
         openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
         isAccessForEdit: false,
-        // isAccessForEdit
-        //   ? isAccessForEdit.isAccess &&
-        //     user?.employeeIdMapping === FormUIProps?.employeeId
-        //   : false,
         isAccessForReApply: isAccessForReApply
           ? isAccessForReApply?.isAccess &&
-            user?.employeeIdMapping === FormUIProps?.employeeId
+            user?.employeeIdMapping === FormUIProps?.employeeId?.value
           : false,
       },
       classes: "text-right pr-0",

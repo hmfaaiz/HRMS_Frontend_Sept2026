@@ -213,6 +213,7 @@ export const EditForm = ({
                     <SearchSelect
                       name="currencyId"
                       label={<span>Currency</span>}
+                      isDisabled={isUserForRead}
                       onChange={(e) => {
                         setFieldValue("currencyId", e.value || null);
                       }}
@@ -228,6 +229,7 @@ export const EditForm = ({
                     <SearchSelect
                       name="countryId"
                       label={<span>Country</span>}
+                      isDisabled={isUserForRead}
                       onChange={(e) => {
                         setFieldValue("countryId", e.value || null);
                         if (e?.value) {
@@ -246,6 +248,7 @@ export const EditForm = ({
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       name="cityId"
+                      isDisabled={isUserForRead}
                       label={<span>City</span>}
                       onChange={(e) => {
                         setFieldValue("cityId", e.value || null);
@@ -260,6 +263,7 @@ export const EditForm = ({
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       name="firstFiscalMonth"
+                      isDisabled={isUserForRead}
                       label={<span>First Fiscal Month</span>}
                       onChange={(e) => {
                         setFieldValue("firstFiscalMonth", e.value || null);
@@ -276,6 +280,7 @@ export const EditForm = ({
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
+                      
                       label={<span>Phone</span>}
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 15);

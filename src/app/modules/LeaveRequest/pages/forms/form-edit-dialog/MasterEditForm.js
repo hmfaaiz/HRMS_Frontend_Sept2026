@@ -46,7 +46,7 @@ export function MasterEditForm({
   const accessUser = useMemo(
     () =>
       userAccess?.find((item) => item?.componentName === "CreateLeaveRequest"),
-    [userAccess, employeeId]
+    [userAccess, employeeId?.value]
   );
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
@@ -137,15 +137,23 @@ export function MasterEditForm({
               )}
               {empAuthorityList && empAuthorityList?.length === 0 && (
                 <span style={{ color: "red" }}>
-                  Designation workflow policy not exist againts this employee
+                  Designation workflow policy does not exist for this employee.
                 </span>
+              )}
+              {employeeId?.level > 1 && (
+                <>
+                  <span style={{ color: "red" }}>
+                    Employee level request not permitted.
+                  </span>
+                  <br />
+                </>
               )}
               {/* Form Start */}
               <Form className="form form-label-right">
                 <fieldset
                   disabled={
                     (empAuthorityList && empAuthorityList?.length === 0) ||
-                    currentLevel > 1
+                    employeeId?.level > 1
                   }
                 >
                   {/* First Row Start */}
@@ -230,34 +238,34 @@ export function MasterEditForm({
                   <div className="from-group row">
                     {/* Leave Type Field Start */}
                     <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="leaveType"
-                          component={Select}
-                          disabled={isReaply || !employeeId}
-                          className={
-                            errors?.leaveType && touched?.leaveType
-                              ? "form-control is-invalid"
-                              : "form-control"
-                          }
-                          placeholder=""
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value =
-                              e.target.value == "--Select--"
-                                ? ""
-                                : Number(e.target.value);
-                            setFieldValue("leaveType", value);
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Leave Type<span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          value={values.leaveType}
-                          autoComplete="off"
-                          children={CustomDropdown({ data: allLeaveTypes })}
-                        />
+                      <Field
+                        name="leaveType"
+                        component={Select}
+                        disabled={isReaply || !employeeId?.value}
+                        className={
+                          errors?.leaveType && touched?.leaveType
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
+                        placeholder=""
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.target.value == "--Select--"
+                              ? ""
+                              : Number(e.target.value);
+                          setFieldValue("leaveType", value);
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Leave Type<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={values.leaveType}
+                        autoComplete="off"
+                        children={CustomDropdown({ data: allLeaveTypes })}
+                      />
                       {errors.leaveType && touched.leaveType && (
                         <CustomErrorLabel
                           touched={true}
@@ -354,7 +362,7 @@ export function MasterEditForm({
               {/* Cancel button End */}
 
               {/* Save button Start */}
-              {employeeId && accessUser ? (
+              {employeeId?.value && accessUser ? (
                 <button
                   type="submit"
                   disabled={loading}

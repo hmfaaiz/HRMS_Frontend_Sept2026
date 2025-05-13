@@ -108,7 +108,7 @@ const DesignationWorkflowEditForm = ({
     dispatch(fetchAllCity());
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllFormsMenu(402, "allApprovalWorkflowList"));
-     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     dispatch(fetchAllActiveEmployees());
   }, [dispatch]);
 
@@ -138,6 +138,7 @@ const DesignationWorkflowEditForm = ({
                   {/* designation workflow set  */}
                   <div className="col-12 col-md-5 mt-3">
                     <SearchSelect
+                      isDisabled={isUserForRead}
                       name="workflowTypeId"
                       label={
                         <span>
@@ -160,6 +161,7 @@ const DesignationWorkflowEditForm = ({
                   </div>
                   <div className="col-12 col-md-5 mt-3">
                     <SearchSelect
+                      isDisabled={isUserForRead}
                       name="designationId"
                       label={
                         <span>
@@ -308,7 +310,7 @@ const DesignationWorkflowEditForm = ({
                           onChange={({ value }) => {
                             setFieldValue("empFinalAuthorityId", value);
                           }}
-                          isDisabled={!values.isEmpFinalAuthority}
+                          isDisabled={!values.isEmpFinalAuthority || isUserForRead}
                           value={
                             dashboard?.allEmployees?.find(
                               (e) => e.value === values?.empFinalAuthorityId
@@ -368,6 +370,7 @@ const DesignationWorkflowEditForm = ({
                   >
                     <fieldset disabled={!values?.isCustomApprover}>
                       <CustomApprovalWorkflowTable
+                      isUserForRead={isUserForRead}
                         values={values}
                         setFieldValue={setFieldValue}
                         errors={errors}

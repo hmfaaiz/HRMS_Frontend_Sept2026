@@ -11,23 +11,23 @@ const initialDashboardState = {
   allEarningDeductionList: [],
   allSubidiaryList: [],
   allAccountList: [],
-  allHumanResourceRoleList:[],
+  allHumanResourceRoleList: [],
   allBankBranch: [],
   allCity: [],
-  allBanks:[],
-  allDesignations:[],
-  allCompanyBanks:[],
-  allEarnings:[],
-  allCompanyList:[],
-  allNationalities:[],
-  allDeductions:[],
-  allDept:[],
-  allChildMenus:[],
+  allBanks: [],
+  allDesignations: [],
+  allCompanyBanks: [],
+  allEarnings: [],
+  allCompanyList: [],
+  allNationalities: [],
+  allDeductions: [],
+  allDept: [],
+  allChildMenus: [],
   allPayrollPayableAccounts: [],
-  allPayrollAccounts:[],
+  allPayrollAccounts: [],
   allDegreeTitle: [],
-  allTeamsChildMenus:[],
-  allParentMenus:[],
+  allTeamsChildMenus: [],
+  allParentMenus: [],
   cityCenters: [],
   allVehicles: [],
   standBy: [],
@@ -35,26 +35,26 @@ const initialDashboardState = {
   offDuty: [],
   lastTrips: [],
   alarmTime: [],
-  allCompensationBenefitsList:[],
+  allCompensationBenefitsList: [],
   allGenderList: [],
   allLeaveStatus: [],
-  allMaritalStatus:[],
-  allLeaveTypes:[],
+  allMaritalStatus: [],
+  allLeaveTypes: [],
   allLoanTypeList: [],
   allContractTypeList: [],
-  allPayrolGroupList:[],
-  allCycleTypeList:[],
-  allReimbursementTypeList:[],
-  allReimbursementConfigList:[],
-  allPayrollMonthYearList:[],
+  allPayrolGroupList: [],
+  allCycleTypeList: [],
+  allReimbursementTypeList: [],
+  allReimbursementConfigList: [],
+  allPayrollMonthYearList: [],
   allHolidayTypeList: [],
   allEmployeeStatus: [],
   allCompanyList: [],
   allEmployeesWithNoPermissionList: [],
-  allPayrollConfigApproverPermissionList:[],
-  allRosterPatternList:[],
-  allCurrency : [],
-  allEmployeeRequestTypeList:[], 
+  allPayrollConfigApproverPermissionList: [],
+  allRosterPatternList: [],
+  allCurrency: [],
+  allEmployeeRequestTypeList: [],
 };
 
 export const callTypes = {
@@ -72,7 +72,7 @@ export const dashboardSlice = createSlice({
     AllCentersFetch: (state, action) => {
       state.allCenters = action.payload;
     },
-    
+
     AllSubCenterFetch: (state, action) => {
       state.allSubCenter = action.payload;
     },
@@ -129,11 +129,10 @@ export const dashboardSlice = createSlice({
       state.allEmployeesSalaryDDL = action.payload;
     },
 
-
     AllEarningDeductionListFetch: (state, action) => {
       state.allEarningDeductionList = action.payload;
     },
-    
+
     AllChildMenusFetch: (state, action) => {
       state[action.payload.key] = action.payload.entities;
     },
@@ -141,13 +140,13 @@ export const dashboardSlice = createSlice({
     AllChildMenusForTeams: (state, action) => {
       state.allTeamsChildMenus = action.payload;
     },
-     
+
     AllParentMenusFetch: (state, action) => {
-      state.allParentMenus = action .payload;
+      state.allParentMenus = action.payload;
     },
-       
+
     allPayrollAccounts: (state, action) => {
-      state.allPayrollAccounts = action .payload;
+      state.allPayrollAccounts = action.payload;
     },
 
     AllCentersByCityIdFetch: (state, action) => {
@@ -162,7 +161,6 @@ export const dashboardSlice = createSlice({
       state.offDuty = action.payload.offDuty;
     },
     lastTripsVehicles: (state, action) => {
-    
       state.lastTrips = action.payload;
     },
     setData: (state, action) => {
@@ -170,7 +168,6 @@ export const dashboardSlice = createSlice({
     },
     updateData: (state, action) => {
       state.lastTrips = state.lastTrips.map((entity) => {
-       
         if (entity.id === action.payload.id) {
           return action.payload;
         }
@@ -196,21 +193,17 @@ export const dashboardSlice = createSlice({
       state.allContractTypeList = action.payload;
     },
 
-
     AllPayrolGroupListFetch: (state, action) => {
       state.allPayrolGroupList = action.payload;
     },
 
-    
     AllReimbursementConfigListFetch: (state, action) => {
       state.allReimbursementConfigList = action.payload;
     },
 
-
     AllPayrollMonthYearListFetch: (state, action) => {
       state.allPayrollMonthYearList = action.payload;
     },
-
 
     AllHolidayTypeListFetch: (state, action) => {
       state.allHolidayTypeList = action.payload;
@@ -220,26 +213,20 @@ export const dashboardSlice = createSlice({
       state.allCompanyList = action.payload;
     },
 
-    
     AllEmployeesWithNoPermissionFetch: (state, action) => {
-    
       state.allEmployeesWithNoPermissionList = action.payload;
     },
 
-
     AllPayrollConfigApproverPermissionFetch: (state, action) => {
       state.allPayrollConfigApproverPermissionList = action.payload;
- 
     },
 
     AllRosterPatternFetch: (state, action) => {
       state.allRosterPatternList = action.payload;
- 
     },
-    allEmployeeRequestTypeFetch : (state, action) => {
+    allEmployeeRequestTypeFetch: (state, action) => {
       state.allEmployeeRequestTypeList = action.payload;
     },
-
     AllLoanTypeFetch: (state, action) => {
       state.allLoanTypeList = action.payload;
  

@@ -34,11 +34,11 @@ export const FormApproval = () => {
   const handleRequestSubmit = async (values, resetForm) => {
     try {
       setLoading(true);
-      dispatch(actions.handleLeaveRequest(values, resetForm));
+      await dispatch(actions.handleLeaveRequest(values, resetForm));
       setLoading(false);
       formUIProps.setIds([]);
       formUIProps.setLeaveData(null);
-      dispatch(
+      await dispatch(
         actions.fetchLeaveApprovalApplication(
           initialFilter,
           user?.employeeIdMapping

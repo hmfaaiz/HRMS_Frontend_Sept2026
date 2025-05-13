@@ -11,8 +11,11 @@ import {
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import { initialFilter, requestFilter } from "../../FormUIHelper";
-import { fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllLeaveType,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const dispatch = useDispatch();
@@ -25,9 +28,9 @@ export const FormFilter = ({ loading, queryParams }) => {
     payrollData,
   } = useSelector(
     (state) => ({
-      employeeList: state.leave_approval.employeeList,
+      employeeList: state?.dashboard?.employeeList,
+      levelList: state?.dashboard?.levelList,
       allLeaveTypes: state.dashboard.allLeaveTypes,
-      levelList: state.leave_approval.levelList,
       payrollData: state.leave_approval.payrollData,
       user: state?.auth?.user,
     }),
@@ -35,7 +38,7 @@ export const FormFilter = ({ loading, queryParams }) => {
   );
 
   useEffect(() => {
-    dispatch(actions.getEmployeeHierarchy(currentLevel));
+    dispatch(getEmployeeHierarchy(currentLevel));
   }, [currentLevel]);
 
   useEffect(() => {
@@ -306,7 +309,8 @@ export const FormFilter = ({ loading, queryParams }) => {
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading 
+                disabled={
+                  loading
                   // || levelList?.length < 2
                 }
                 className="btn btn-success btn-elevate"

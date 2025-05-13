@@ -48,9 +48,6 @@ export function deleteLeaveApplicationSetup(id) {
   );
 }
 
-export function getEmployeeHierarchy(level) {
-  return axios.get(`${USERS_URL}/leave_request/employee_hierarchy/${level}`);
-}
 
 export function getEmployeeAuthorties(empId, workflowTypeId) {
   return axios.get(
