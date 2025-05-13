@@ -40,8 +40,8 @@ export function FormTable() {
       return {
 
 
-        currentState: state.holidays,
-        userAccess: state?.auth?.userAccess["holidays"],
+        currentState: state.job_vacancy,
+        userAccess: state?.auth?.userAccess["job_vacancy"],
       }
     },
     shallowEqual
@@ -58,15 +58,15 @@ export function FormTable() {
     formUIProps.setIds([]);
 
 
-    dispatch(actions.fetchHolidays(formUIProps.queryParams));
+    dispatch(actions.fetchJobVacancy(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateHolidays"
-  );
-
+const isAccessForEdit = userAccess?.find((item) => {
+  console.log("item.componentName111", item.componentName);
+  return item.componentName === "UpdateJobVacancy";
+});
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteHolidays"
+    (item) => item.componentName === "DeleteJobVacancy"
   );
   // Table columns
   const columns = [
@@ -81,16 +81,7 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "name",
-      text: "Holiday",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+
     {
       dataField: "from_date",
       text: "from date",

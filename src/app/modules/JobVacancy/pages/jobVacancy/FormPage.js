@@ -17,66 +17,66 @@ export function FormPage({ history }) {
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {
-      history.push("/holidays/read-all-holidays/new");
+      history.push("/job_vacancy/read-all-job-vacancy/new");
     },
     openEditFormDialog: (id) => {
-      history.push(`/holidays/read-all-holidays/${id}/edit`);
+      history.push(`/job_vacancy/read-all-job-vacancy/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
-      history.push(`/holidays/read-all-holidays/${id}/${status}/delete`);
+      history.push(`/job_vacancy/read-all-job-vacancy/${id}/${status}/delete`);
     },
     openActiveFormDialog: (id) => {
-      history.push(`/holidays/read-all-holidays/${id}/active`);
+      history.push(`/job_vacancy/read-all-job-vacancy/${id}/active`);
     },
     openReadFormDialog: (id, isUserRead) => {
-      history.push(`/holidays/read-all-holidays/${id}/read`);
+      history.push(`/job_vacancy/read-all-job-vacancy/${id}/read`);
     },
   };
   return (
 
     
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <Route exact path="/holidays/read-all-holidays/new">
+      <Route exact path="/job_vacancy/read-all-job-vacancy/new">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             onHide={() => {
-              history.push("/holidays/read-all-holidays");
+              history.push("/job_vacancy/read-all-job-vacancy");
             }}
           />
         )}
       </Route>
-      <Route path="/holidays/read-all-holidays/:id/edit">
+      <Route path="/job_vacancy/read-all-job-vacancy/:id/edit">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
             onHide={() => {
-              history.push("/holidays/read-all-holidays");
+              history.push("/job_vacancy/read-all-job-vacancy");
             }}
           />
         )}
       </Route>
-      <Route path="/holidays/read-all-holidays/:id/read">
+      <Route path="/job_vacancy/read-all-job-vacancy/:id/read">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
             id={match && match.params.id}
             userForRead={true}
             onHide={() => {
-              history.push("/holidays/read-all-holidays");
+              history.push("/job_vacancy/read-all-job-vacancy");
             }}
           />
         )}
       </Route>
-      <Route path="/holidays/read-all-holidays/:id/:status/delete">
+      <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
             id={match && match.params.id}
             status={match && match.params.status}
             onHide={() => {
-              history.push("/holidays/read-all-holidays");
+              history.push("/job_vacancy/read-all-job-vacancy");
             }}
           />
         )}

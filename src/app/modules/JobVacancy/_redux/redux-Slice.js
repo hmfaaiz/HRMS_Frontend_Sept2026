@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialHolidaysState = {
+const initialJobVacancyState = {
     listLoading: false,
     actionsLoading: null,
     totalCount: 0,
@@ -21,7 +21,7 @@ export const callTypes = {
 
 export const JobVacancySlice = createSlice({
     name: "jobVacancy",
-    initialState: initialHolidaysState,
+    initialState: initialJobVacancyState,
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
@@ -32,7 +32,7 @@ export const JobVacancySlice = createSlice({
             }
         },
 
-        holidayFetched: (state, action) => {
+        jobVacancyFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;
@@ -57,7 +57,7 @@ export const JobVacancySlice = createSlice({
         },
 
          //get User By ID
-         HolidayFetchedForEdit: (state, action) => {
+         JobVacancyFetchedForEdit: (state, action) => {
            
    
             state.actionsLoading = false;
@@ -66,7 +66,7 @@ export const JobVacancySlice = createSlice({
         },
 
       
-        HolidayDeleted: (state, action) => {
+        JobVacancyDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -81,7 +81,7 @@ export const JobVacancySlice = createSlice({
 
 
 
-        // holidayCreated: (state, action) => {
+        // jobVacancyCreated: (state, action) => {
            
         //     state.actionsLoading = false;
         //     state.error = null;
@@ -89,7 +89,7 @@ export const JobVacancySlice = createSlice({
         // },
 
 
-        holidayCreated: (state, action) => {
+        jobVacancyCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
         
@@ -113,7 +113,7 @@ export const JobVacancySlice = createSlice({
 
 
 
-        holidayUpdated: (state, action) => {
+        jobVacancyUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
@@ -124,9 +124,9 @@ export const JobVacancySlice = createSlice({
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedHoliday);
+                let finalObj = JSON.parse(payloadObj.updatedJobVacancy);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedHoliday;
+                    return finalObj; //action.payload.updatedJobVacancy;
                 }
                 return entity;
             });

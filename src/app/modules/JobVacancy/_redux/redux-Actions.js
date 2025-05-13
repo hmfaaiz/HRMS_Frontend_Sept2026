@@ -5,16 +5,16 @@ import { toast } from "react-toastify";
 const { actions } = JobVacancySlice;
 
 
-export const fetchHolidays = (queryparm) => async (dispatch) => {
+export const fetchJobVacancy = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllHoliday(queryparm)
+  return requestFromServer.getAllJobVacancy(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.holidayFetched(response));
+      dispatch(actions.jobVacancyFetched(response));
     })
     .catch((error) => {
     
@@ -23,20 +23,20 @@ export const fetchHolidays = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchHoliday = (id) => (dispatch) => {
+export const fetchJobVacancyById = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.HolidayFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.JobVacancyFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getHolidayById({ Id: id })
+    .getJobVacancyById({ Id: id })
     .then((response) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.HolidayFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.JobVacancyFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -44,13 +44,13 @@ export const fetchHoliday = (id) => (dispatch) => {
     });
 };
 
-export const deleteHoliday = (id) => (dispatch) => {
+export const deleteJobVacancy = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteHoliday({ Id: id })
+    .deleteJobVacancy({ Id: id })
     .then((response) => {
     
-      dispatch(actions.HolidayDeleted({ Id: id }));
+      dispatch(actions.JobVacancyDeleted({ Id: id }));
       toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 5000,
@@ -68,19 +68,19 @@ export const deleteHoliday = (id) => (dispatch) => {
 };
 
 
-export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
+export const createJobVacancy = (jobVacancyForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createHoliday(holidayForCreation)
+    .createJobVacancy(jobVacancyForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.holidayCreated(user));
+      dispatch(actions.jobVacancyCreated(user));
       disbaleLoading();
       toast.success("Successfully Created", {
         position: "top-right",
@@ -109,14 +109,14 @@ export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
     });
 };
 
-export const updateHoliday = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateJobVacancy = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateHoliday(user)
+    .updateJobVacancy(user)
     .then((response) => {
   
-      const updatedHoliday = response?.config?.data; // response.data?.data;
+      const updatedJobVacancy = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.holidayUpdated({ updatedHoliday }));
+      dispatch(actions.jobVacancyUpdated({ updatedJobVacancy }));
     
       disbaleLoading();
       onHide();

@@ -42,13 +42,13 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteHoliday = () => {
+  const deleteJobVacancy = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteHoliday(id)).then(() => {
+    dispatch(actions.deleteJobVacancy(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      dispatch(actions.fetchJobVacancy(usersUIProps.queryParams));
    
       disableLoading();
     });
@@ -84,7 +84,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteHoliday}
+            onClick={deleteJobVacancy}
             className="btn btn-primary btn-elevate"
           >
             Delete Record

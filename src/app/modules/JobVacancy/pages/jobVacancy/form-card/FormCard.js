@@ -22,25 +22,27 @@ export function FormCard() {
     }
   }, [FormUIContext])
 
-  const { userAccess } = useSelector(
+const { userAccess } = useSelector(
+  (state) => {
+    console.log("aaaa",state.auth.userAccess); // ✅ Now valid
+    return {
+      userAccess: state.auth.userAccess.job_vacancy,
+    };
+  },
+  shallowEqual
+);
 
-    (state) => ({
-
-      userAccess: state.auth.userAccess.holidays,
-    }),
-    shallowEqual
-  )
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateHolidays"
+    (item) => item.componentName === "CreateJobVacancy"
   )
 
   const { currentState } = useSelector(
     (state) => {
       return {
 
-        currentState: state.holidays,
-        userAccess: state?.auth?.userAccess["holidays"],
+        currentState: state.job_vacancy,
+        userAccess: state?.auth?.userAccess["job_vacancy"],
       }
     },
     shallowEqual
@@ -86,7 +88,7 @@ export function FormCard() {
 
                   >
 
-                    + Add Holiday
+                    + Add Job Vacancy
 
                   </button>
 

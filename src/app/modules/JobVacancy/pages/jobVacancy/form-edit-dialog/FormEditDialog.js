@@ -51,19 +51,19 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
-    userForEdit: state.holidays.userForEdit,
+    userForEdit: state.job_vacancy.userForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
-    isuserForRead: state.holidays.userForRead,
+    isuserForRead: state.job_vacancy.userForRead,
   }));
 
 
 
 
   useEffect(() => {
-    dispatch(actions.fetchHoliday(id));
+    dispatch(actions.fetchJobVacancy(id));
 
-    // dispatch(actions.fetchHoliday(formUIProps .queryParams))
+    // dispatch(actions.fetchJobVacancy(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
@@ -75,7 +75,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
  
       user.number_of_days=diffInDate
       const finalObject = { user }
-      dispatch(actions.createHoliday(user, disbaleLoading, onHide));
+      dispatch(actions.createJobVacancy(user, disbaleLoading, onHide));
       
       
 
@@ -92,20 +92,20 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         from_date: user.from_date,
         to_date: user.to_date,
         number_of_days: diffInDate,
-        holiday_typeId: user.holiday_typeId,
+
      
       };
 
       
 
-     await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide));
-     await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+     await dispatch(actions.updateJobVacancy(formUpdatedFields, disbaleLoading, onHide));
+     await dispatch(actions.fetchJobVacancy(usersUIProps.queryParams));
     }
   };
 
   return (
     <Modal
-      size="lg"
+     size="xl"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

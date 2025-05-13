@@ -2,48 +2,63 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import { DatePickerField, Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllFormsMenu,
-  
+
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { getDateDiffInDays } from "../../../../../utils/common";
-
-// percentage: Yup.string().required("Required*"),
-const holidaysEditSchema = Yup.object().shape({
-  // from_amount: Yup.string().required("Required*"),
-
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  // to_amount: Yup.string().required("Required*"),
-
-  name: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
 
 
-  from_date: Yup.date().required(VALIDATION_MESSAGES.required),
-  to_date: Yup.date()
-    .min(
-      Yup.ref('from_date'),
-      "End date cannot be earlier than from date"
-    )
-    .required(VALIDATION_MESSAGES.required),
-
-
-
-  holiday_typeId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  religionId: Yup.number()
-    .nullable(),
-    
-
+const jobVacancyEditSchema = Yup.object().shape({
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  companyId: Yup.number().required(VALIDATION_MESSAGES.required),
+  jobCode: Yup.string().required(VALIDATION_MESSAGES.required),
+  jobDate: Yup.date().required(VALIDATION_MESSAGES.required),
+  designationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  jobTitle: Yup.string().required(VALIDATION_MESSAGES.required),
+  grade: Yup.string().required(VALIDATION_MESSAGES.required),
+  locationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  jobPostingDateFrom: Yup.date().required(VALIDATION_MESSAGES.required),
+  jobPostingDateTo: Yup.date().required(VALIDATION_MESSAGES.required),
+  countryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  cityId: Yup.number().required(VALIDATION_MESSAGES.required),
+  employeeTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
+  employeeStatusId: Yup.number().required(VALIDATION_MESSAGES.required),
+  reportToDesignationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  relationshipWithReportTo: Yup.string().required(VALIDATION_MESSAGES.required),
+  noOfPosition: Yup.number().required(VALIDATION_MESSAGES.required),
+  hiringReason: Yup.string().required(VALIDATION_MESSAGES.required),
+  hiringPreference: Yup.string().required(VALIDATION_MESSAGES.required),
+  appointmentType: Yup.string().required(VALIDATION_MESSAGES.required),
+  comment: Yup.string().required(VALIDATION_MESSAGES.required),
+  jobPeriodStart: Yup.date().required(VALIDATION_MESSAGES.required),
+  jobPeriodEnd: Yup.date().required(VALIDATION_MESSAGES.required),
+  desireDateOfApp: Yup.date().required(VALIDATION_MESSAGES.required),
+  priority: Yup.string().required(VALIDATION_MESSAGES.required),
+  criticalDays: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredAgeFrom: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredAgeTo: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredShiftId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredGenderId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredJobSkillsId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredJobIndustryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  workExpFrom: Yup.number().required(VALIDATION_MESSAGES.required),
+  workExpTo: Yup.number().required(VALIDATION_MESSAGES.required),
+  workExpDetail: Yup.string().required(VALIDATION_MESSAGES.required),
+  additionalReq: Yup.string().required(VALIDATION_MESSAGES.required),
+  salaryRangeFrom: Yup.number().required(VALIDATION_MESSAGES.required),
+  salaryRangeTo: Yup.number().required(VALIDATION_MESSAGES.required),
+  incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
+  otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
+  jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
+  isActive: Yup.boolean().required(VALIDATION_MESSAGES.required),
 });
+
 
 export function FormEditForm({
   saveForm,
@@ -56,15 +71,14 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [start_date, setStart_date] = useState()
-  const [end_date, setEnd_date] = useState()
+
   const [diffInDate, setDiffInDate] = useState()
   useEffect(() => {
     if (!user.Id) {
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(184, "allContractTypeList"));
-      dispatch(fetchAllFormsMenu(213, "allHolidayTypeList"));
+    
       dispatch(fetchAllFormsMenu(87, "allReligionChildMenus"));
 
 
@@ -74,46 +88,32 @@ export function FormEditForm({
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
-      currentState: state.holidays,
-      userAccess: state?.auth?.userAccess["holidays"],
+      currentState: state.job_vacancy,
+      userAccess: state?.auth?.userAccess["job_vacancy"],
     };
   }, shallowEqual);
 
+
+  console.log("currentState111",currentState)
   const { userForEdit } = currentState;
 
-  useEffect(() => {
-    setStart_date(userForEdit?.from_date)
-    setEnd_date(userForEdit?.to_date)
-  }, [userForEdit])
-  useEffect(() => {
 
-    if (start_date && end_date) {
-      setDiffInDate(getDateDiffInDays(start_date, end_date))
 
-    }
-
-  }, [start_date, end_date]);
 
   return (
     <Formik
       enableReinitialize={true}
-      // initialValues={{
-      //   Id:user.Id || '',
-      //   type: user.type ||  '',
-      //   value:user.value || 0,
-      //   multiplier: user.multiplier || 0,
-      //   divisor: user.divisor || 0,
-      // }}
+
 
       initialValues={user}
-      validationSchema={holidaysEditSchema}
+      validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
 
         enableLoading();
         saveForm(values, diffInDate);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -123,14 +123,105 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
+
+
+
+                {/* Job */}
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Job</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-5 mt-3">
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Job Code<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Job Date<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+                {/* Request For */}
+
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Request For</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+                    <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
+                            Designation<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Job Title<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Grade<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead}
@@ -154,188 +245,992 @@ export function FormEditForm({
                     </div>
 
 
-                    {/* Active payroll month */}
 
 
 
-<div className="col-12 col-md-7 mt-3 d-flex flex-column align-items-end">
+                    <div className="col-12 col-md-4 mt-3">
+                      Subsidiary
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allSubsidiaryList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="subsidiaryId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.subsidiaryId &&
+                              touched.subsidiaryId && (
+                                <div className="invalid-text">
+                                  {errors.subsidiaryId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-{values?.subsidiaryId ? (() => {
-  const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-    (option) => option.value === values.subsidiaryId
-  );
-  return (
-    <>
-      <div>
-        <b>Active Fiscal Year -</b>{" "}
-        {selectedSubsidiary?.fiscalYearLabel}
-      </div>
-      {/* <div>
-        <b>Active Payroll Month -</b>{" "}
-        {selectedSubsidiary?.payrollMonthLabel}
-      </div> */}
-    </>
-  );
-})() : null}
-</div>
-                  </div>
-
-
-
-            
-
-                  <div className="col-12 col-md-5 mt-3">
-                    <label>
-                      From Date <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="from_date"
-                      component={DatePickerField} // Custom component
-                      dateFormat="dd/MM/yyyy"
-                      placeholder="Select Date"
-                      type="date"
-                      onChange={(e) => {
-
-
-                        setFieldValue("from_date", e);
-                        setStart_date(e);
-                      }}
-                    />
-                  </div>
-
-
-                  <div className="col-12 col-md-5 mt-3">
-                    <label>
-                      To Date <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="to_date"
-                      component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
-                      placeholder="Select Date"
-
-                      // type="date"
-                      onChange={(e) => {
-                        setFieldValue("to_date", e);
-                        setEnd_date(e);
-                      }}
-
-                    // minDate={dateOfJoining} 
-                    // disabled={userForEdit?.details[0]?.is_deducted }
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-5 mt-3">
-                    <label>
-                      <span>
-                        Holiday Name<span style={{ color: "red" }}>*</span>
-                      </span>
-                    </label>
-                    <Field
-                      name="name"
-                      component={Input}
-                      placeholder="Enter Name"
-
-                      type="text"
-
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-5 mt-3">
-                    <label>
-                      <span>
-                        Number of days<span style={{ color: "red" }}>*</span>
-                      </span>
-                    </label>
-                    <Field
-                      name="number_of_days"
-                      component={Input}
-                      // placeholder="Enter number_of_days"
-                      disabled={true}
-                      type="number"
-                      value={diffInDate}
-
-
-
-                    />
-                  </div>
-
-
-                  <div className="col-12 col-md-5 mt-3">
-                    <SearchSelect
-                      name="holiday_typeId"
-                      label={
-                        <span>
-                          Holiday Type<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isUserForRead}
-                      onChange={(e) => {
-                        setFieldValue("holiday_typeId", e.value || null);
-                      }}
-                      value={
-                        dashboard?.allHolidayTypeList?.find(
-                          (option) => option.value === values.holiday_typeId
-                        ) || null
-                      }
-
-                      options={dashboard?.allHolidayTypeList}
-                      // options={dashboard.allSubidiaryList.map(option => ({
-                      //   label: `${option.label} (${option.value})`, // Adding the value to the label
-                      //   value: option.value,
-                      // }))}
-                      error={errors.holiday_typeId}
-                      touched={touched.holiday_typeId}
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-5 mt-3">
-                    <SearchSelect
-                      name="religionId"
-                      label={
-                        <span>
-                          Select Religion
-                        </span>
-                      }
-                      isDisabled={isUserForRead}
-                      onChange={(e) => {
-                        setFieldValue("religionId", e.value || null);
-                      }}
-
-                      value={
-                        // Default to "All" if religionId is null or undefined
-                        values?.religionId ==null
-                          ? { value: null, label: 'All' }
-                          : dashboard?.allReligionChildMenus?.find(
-                            (option) => option.value === values.religionId
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Country<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
                           ) || null
-                      }
-                      // value={
-                      //   dashboard?.allReligionChildMenus?.find(
-                      //     (option) => option.value === values.religionId
-                      //   ) || null
-                      // }
+                        }
 
-                      // options={dashboard?.allReligionChildMenus}
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
 
-                      options={[
-                        { value: null, label: 'All' }, // Adding "All" option with value empty string
-                        ...dashboard?.allReligionChildMenus, // Spread the rest of the menu options
-                      ]}
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            City<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
 
-                      // options={dashboard.allSubidiaryList.map(option => ({
-                      //   label: `${option.label} (${option.value})`, // Adding the value to the label
-                      //   value: option.value,
-                      // }))}
-                      error={errors.religionId}
-                      touched={touched.religionId}
-                    />
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+
+
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      Location
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allSubsidiaryList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="subsidiaryId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.subsidiaryId &&
+                              touched.subsidiaryId && (
+                                <div className="invalid-text">
+                                  {errors.subsidiaryId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Employee Type<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Employee Status<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        Job Posting Date (From)  <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <Field
+                        name="from_date"
+                        component={DatePickerField} // Custom component
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="Select Date"
+                        type="date"
+                        onChange={(e) => {
+
+
+                          setFieldValue("from_date", e);
+
+                        }}
+                      />
+                    </div>
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        Job Posting Date (To) <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <Field
+                        name="to_date"
+                        component={DatePickerField}
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="Select Date"
+
+                        // type="date"
+                        onChange={(e) => {
+                          setFieldValue("to_date", e);
+
+                        }}
+
+                      // minDate={dateOfJoining} 
+                      // disabled={userForEdit?.details[0]?.is_deducted }
+                      />
+                    </div>
+
                   </div>
-
-
 
 
                 </div>
+
+
+
+
+                {/* Position Detail */}
+
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Position Detail</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Report To(Designation)<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Key relationship with Report To<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+
+                  </div>
+
+
+                </div>
+
+
+
+                {/* Job Vacany Detail */}
+
+
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Job Vacany Detail</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          No.of Positions <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Hiring Reason<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Job Preference<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Appointment Type<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Priority<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Critical (in Days)<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        Job Period Start <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <Field
+                        name="from_date"
+                        component={DatePickerField} // Custom component
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="Select Date"
+                        type="date"
+                        onChange={(e) => {
+
+
+                          setFieldValue("from_date", e);
+
+                        }}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        Job Period End <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <Field
+                        name="to_date"
+                        component={DatePickerField}
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="Select Date"
+
+                        // type="date"
+                        onChange={(e) => {
+                          setFieldValue("to_date", e);
+
+                        }}
+
+                      // minDate={dateOfJoining} 
+                      // disabled={userForEdit?.details[0]?.is_deducted }
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        Desire Date of Appointment <span style={{ color: "red" }}>*</span>
+                      </label>
+                      <Field
+                        name="to_date"
+                        component={DatePickerField}
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="Select Date"
+
+                        // type="date"
+                        onChange={(e) => {
+                          setFieldValue("to_date", e);
+
+                        }}
+
+                      // minDate={dateOfJoining} 
+                      // disabled={userForEdit?.details[0]?.is_deducted }
+                      />
+                    </div>
+
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Comments<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={TextArea}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+
+
+                {/* Position Preferences */}
+
+
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Position Preferences</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Preferred Age From <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Preferred Age To <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Job Preference<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      Preferred Shift
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allSubsidiaryList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="subsidiaryId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.subsidiaryId &&
+                              touched.subsidiaryId && (
+                                <div className="invalid-text">
+                                  {errors.subsidiaryId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      Preferred Gender
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allSubsidiaryList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="subsidiaryId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.subsidiaryId &&
+                              touched.subsidiaryId && (
+                                <div className="invalid-text">
+                                  {errors.subsidiaryId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      Preferred Job Skills
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allSubsidiaryList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="subsidiaryId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.subsidiaryId &&
+                              touched.subsidiaryId && (
+                                <div className="invalid-text">
+                                  {errors.subsidiaryId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Preferred Job Industry<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Work Experience From <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Work Experience To <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Work Experience Detail<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={TextArea}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Additional Requirement<span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={TextArea}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+
+
+                  </div>
+
+
+                </div>
+
+
+
+                {/* Compensation & Benefits */}
+
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Compensation & Benefits</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Salary Range (Per Month) From <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>
+                        <span>
+                          Salary Range (Per Month) To <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Incentive Packages <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={TextArea}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Other Benefits <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={TextArea}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+
+                {/*  Job Summary */}
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Job Summary</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Job Summary <span style={{ color: "red" }}>*</span>
+                        </span>
+                      </label>
+                      <Field
+                        name="name"
+                        component={TextArea}
+                        placeholder="Enter Name"
+
+                        type="text"
+
+                      />
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+        
               </fieldset>
             </Form>
           </Modal.Body>
