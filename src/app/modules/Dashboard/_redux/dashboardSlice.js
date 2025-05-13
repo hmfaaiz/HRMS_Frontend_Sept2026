@@ -282,5 +282,9 @@ export const dashboardSlice = createSlice({
       state.error = null;
       state.payrollData = payrollData;
     },
+    AllLoanTypeFetch: (state, action) => {
+      state.allLoanTypeList = action.payload;
+ 
+    },
   },
 });

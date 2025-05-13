@@ -453,7 +453,7 @@ export function FormEditForm({
               <fieldset disabled={isUserForRead}>
 
                 <div className="form-group row">
-                  <div className="col-12 col-md-12  p-0 m-0">
+                  
                     <div className="col-12 col-md-6 mt-3">
                       <SearchSelect
                         name="subsidiaryId"
@@ -488,7 +488,34 @@ export function FormEditForm({
                         touched={touched.subsidiaryId}
                       />
                     </div>
-                  </div>
+                 
+{/* Active payroll month */}
+
+
+
+<div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+
+  {values?.subsidiaryId ? (() => {
+    const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+      (option) => option.value === values.subsidiaryId
+    );
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {selectedSubsidiary?.fiscalYearLabel}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {selectedSubsidiary?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
+
+
+
 
 
                   <div className="col-12 col-md-6 mt-3">

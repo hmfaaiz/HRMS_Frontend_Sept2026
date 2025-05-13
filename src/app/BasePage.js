@@ -208,6 +208,12 @@ const PayrollPreview = lazy(() =>
   import("./modules/PayrollPreview/pages/index")
 );
 
+const loanRegisterModule = lazy(() =>
+  import("./modules/LoanRegister/pages/index")
+);
+const reimbursementRegisterModule = lazy(() =>
+  import("./modules/ReimbursementRegister/pages/index")
+);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -292,6 +298,8 @@ const ROUTES = {
   attendance_request: AttendanceRequestModule,
   attendance_approval: AttendanceApprovalModule,
   payroll_preview: PayrollPreview,
+  loan_register: loanRegisterModule,
+  reimbursement_register: reimbursementRegisterModule,
 };
 
 export default function BasePage() {
@@ -301,7 +309,7 @@ export default function BasePage() {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
   const SettingsAccess = auth?.userAccess?.Settings;
-  
+
   // );
   return (
     <Suspense fallback={<LayoutSplashScreen />}>

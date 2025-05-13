@@ -249,12 +249,12 @@ const profileValidation = Yup.object().shape(
   const { title, maritalStatus, gender } = value;
 
   // Check conditions based on title // 196 == Single
-  if (title === 'Mrs.' && maritalStatus !== '267') {
+  if (title === 'Mrs.' && maritalStatus !== '267') { //married
 
     return this.createError({ path: 'maritalStatus', message: 'Mrs. only for Married' });
   }
 
-  if (title === 'Mrs.' && maritalStatus === '266') {
+  if (title === 'Mrs.' && maritalStatus === '266') { //single
     return this.createError({ path: 'maritalStatus', message: 'Mrs. cannot be single.' });
   }
 
@@ -271,11 +271,14 @@ const profileValidation = Yup.object().shape(
   }
 
 
-  if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267) {
+  // if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267 && maritalStatus != 269) { //divorced
 
-    return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
+  //   return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
+  // }
+  if (title === 'Mr.' && maritalStatus == 268 ) { //Widow
+
+    return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be widow.' });
   }
-  
   
   if (title === 'Ms.' && maritalStatus == 267 ) {
 

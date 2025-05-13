@@ -104,7 +104,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         Id: user.Id,
         formName: user.formName,
         formCode: user.formCode,
-        isActive:user.isActive
+        isActive:user.isActive,
+        moduleType:user?.moduleType,
       };
 
 

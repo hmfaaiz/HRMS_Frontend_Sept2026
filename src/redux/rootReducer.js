@@ -93,6 +93,9 @@ import { LeaveApprovalSlice } from "../app/modules/LeaveApproval/redux/formSlice
 import { AttendanceRequestSlice } from "../app/modules/AttendanceRequest/_redux/AttendanceRequestSlice";
 import { AttendanceApprovalSlice } from "../app/modules/AttendanceApproval/redux/formSlice";
 import { PayrollPreviewSlice } from "../app/modules/PayrollPreview/_redux/PayrollPreviewSlice";
+import { LoanRegisterSlice } from "../app/modules/LoanRegister/_redux/EmployeeRegisterSlice";
+import { ReimbursementRegisterSlice } from "../app/modules/ReimbursementRegister/_redux/ReimbursementRegisterSlice";
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -183,6 +186,11 @@ export const rootReducer = combineReducers({
   attendance_request: AttendanceRequestSlice.reducer,
   attendance_approval: AttendanceApprovalSlice.reducer,
   payroll_preview: PayrollPreviewSlice?.reducer,
+  leave_calendar: LeaveCalendarSlice.reducer,
+  roster_calendar: RosterCalendarSlice.reducer,
+  attendance_calendar: AttendanceCalendarSlice.reducer,
+  loan_register: LoanRegisterSlice.reducer,
+  reimbursement_register: ReimbursementRegisterSlice.reducer,
 });
 
 export function* rootSaga() {

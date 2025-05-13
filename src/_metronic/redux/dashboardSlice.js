@@ -227,5 +227,9 @@ export const dashboardSlice = createSlice({
     allEmployeeRequestTypeFetch: (state, action) => {
       state.allEmployeeRequestTypeList = action.payload;
     },
+    AllLoanTypeFetch: (state, action) => {
+      state.allLoanTypeList = action.payload;
+ 
+    },
   },
 });

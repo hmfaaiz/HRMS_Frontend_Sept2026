@@ -18,14 +18,16 @@ export function PayrollRegisterPage() {
     pdfLoading,
     registerLoading,
     registerExcelLoading,
-    adviceLoading
+    adviceLoading,registerPreviewLoading,payslipPreviewLoading
   } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.payroll_register.listLoading,
     pdfLoading: state.payroll_register.pdfLoading,
     registerLoading: state.payroll_register.registerLoading,
     registerExcelLoading: state.payroll_register.registerExcelLoading,
-    adviceLoading: state.payroll_register.adviceLoading
+    adviceLoading: state.payroll_register.adviceLoading,
+    registerPreviewLoading:state.payroll_register.registerPreviewLoading,
+    payslipPreviewLoading:state.payroll_register.payslipPreviewLoading,
   }
   ));
 
@@ -57,11 +59,11 @@ export function PayrollRegisterPage() {
         </CardHeader>
 
         {/* Filter Form Starts */}
-        <FormFilter loading={listLoading} pdfLoading={pdfLoading} dispatch={dispatch} registerLoading={registerLoading} adviceLoading={adviceLoading} registerExcelLoading={registerExcelLoading} />
+        <FormFilter loading={listLoading} pdfLoading={pdfLoading} dispatch={dispatch} registerLoading={registerLoading} adviceLoading={adviceLoading} registerExcelLoading={registerExcelLoading} registerPreviewLoading={registerPreviewLoading} payslipPreviewLoading={payslipPreviewLoading}/>
         {/* Filter Form Ends */}
 
         {/* Table Starts */}
-        <FormTable />
+        {/* <FormTable /> */}
         {/* Table Ends */}
 
         {/* Card Ends */}

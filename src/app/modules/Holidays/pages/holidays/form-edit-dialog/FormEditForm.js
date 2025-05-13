@@ -124,8 +124,8 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="form-group row">
-                  <div className="col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-6 mt-3">
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+                    <div className="col-12 col-md-5 mt-3">
                       <SearchSelect
                         name="subsidiaryId"
                         label={
@@ -152,33 +152,39 @@ export function FormEditForm({
                         touched={touched.subsidiaryId}
                       />
                     </div>
+
+
+                    {/* Active payroll month */}
+
+
+
+<div className="col-12 col-md-7 mt-3 d-flex flex-column align-items-end">
+
+{values?.subsidiaryId ? (() => {
+  const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+    (option) => option.value === values.subsidiaryId
+  );
+  return (
+    <>
+      <div>
+        <b>Active Fiscal Year -</b>{" "}
+        {selectedSubsidiary?.fiscalYearLabel}
+      </div>
+      {/* <div>
+        <b>Active Payroll Month -</b>{" "}
+        {selectedSubsidiary?.payrollMonthLabel}
+      </div> */}
+    </>
+  );
+})() : null}
+</div>
                   </div>
 
 
 
-                  {/* <div className="col-12 col-md-6 mt-3">
-                    <label>
-                     From Date <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="from_date"
-                      component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
-                      placeholder="Select Date"
-                 
-                      type="date"
-                
-                      onChange={(e) => {
-                        setFieldValue("to_date", e);
-                   
-                        setStart_date(e)
-                      }}
-                      // minDate={dateOfJoining} 
-                      // disabled={userForEdit?.details[0]?.is_deducted }
-                    />
-                  </div> */}
+            
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-5 mt-3">
                     <label>
                       From Date <span style={{ color: "red" }}>*</span>
                     </label>
@@ -198,7 +204,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-5 mt-3">
                     <label>
                       To Date <span style={{ color: "red" }}>*</span>
                     </label>
@@ -219,7 +225,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-5 mt-3">
                     <label>
                       <span>
                         Holiday Name<span style={{ color: "red" }}>*</span>
@@ -235,7 +241,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-5 mt-3">
                     <label>
                       <span>
                         Number of days<span style={{ color: "red" }}>*</span>
@@ -255,7 +261,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-5 mt-3">
                     <SearchSelect
                       name="holiday_typeId"
                       label={
@@ -283,7 +289,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-5 mt-3">
                     <SearchSelect
                       name="religionId"
                       label={

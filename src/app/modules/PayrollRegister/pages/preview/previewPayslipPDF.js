@@ -239,7 +239,7 @@ const PreviewPayslipPDF = () => {
     }, []);
 
     if (data.length === 0) {
-        return <div>Please go back...</div>; // Show loading message while the data is being fetched
+        return <div>No data found. Please go back.</div>; // Show loading message while the data is being fetched
     }
 
     return (

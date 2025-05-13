@@ -23,6 +23,10 @@ const initialState = {
     //preview payslip
     previewPayslipPdfData:[],
     previewPayslipPdftotalCount:0,
+
+
+    registerPreviewLoading:false,
+    payslipPreviewLoading:false,
 };
 
 export const callTypes = {
@@ -33,6 +37,8 @@ export const callTypes = {
     registerExcel: 'registerExcel',
     bankAdvice: 'advice',
     registerGDExcel: 'registerGDExcel',
+    registerPreview:"registerPreview",
+    payslipPreview:"payslipPreview",
 };
 
 export const PayrollRegisterSlice = createSlice({
@@ -59,6 +65,17 @@ export const PayrollRegisterSlice = createSlice({
             else if(action.payload.callType === callTypes.registerGDExcel){
                 state.registerGDExcelLoading = false;
             }
+
+         
+            else if(action.payload.callType === callTypes.registerPreview){
+                state.registerPreviewLoading = false;
+            }
+     
+            
+         
+            else if(action.payload.callType === callTypes.payslipPreview){
+                state.payslipPreviewLoading = false;
+            }
             else {
                 state.actionsLoading = false;
             }
@@ -82,7 +99,14 @@ export const PayrollRegisterSlice = createSlice({
             }
             else if(action.payload.callType === callTypes.bankAdvice){
                 state.adviceLoading = true;
-            } else {
+            }
+            else if(action.payload.callType === callTypes.registerPreview){
+                state.registerPreviewLoading = true;
+            }
+            else if(action.payload.callType === callTypes.payslipPreview){
+                state.payslipPreviewLoading = true;
+            }
+            else {
                 state.actionsLoading = true;
             }
         },
@@ -101,6 +125,8 @@ export const PayrollRegisterSlice = createSlice({
         adviceFetched: (state, action) => {
             state.adviceLoading = false;
         },
+        
+       
         PayrollRegisterFetched: (state, action) => {
             const entities = action.payload.data?.data.rows;
             const totalResult = action.payload.data?.data.totalResults;
@@ -108,6 +134,7 @@ export const PayrollRegisterSlice = createSlice({
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
+            
         },
 
         previewRegisterPdfFetched: (state, action) => {
@@ -120,7 +147,7 @@ export const PayrollRegisterSlice = createSlice({
             state.previewRegisterPdftotalCount = totalResult;
 
             localStorage.setItem('previewRegisterPdf', JSON.stringify(previewRegisterPdData));
-         
+            state.registerPreviewLoading = false;
         },
 
 
@@ -135,7 +162,7 @@ export const PayrollRegisterSlice = createSlice({
             state.previewPayslipPdftotalCount = totalResult;
 
             localStorage.setItem('previewPayslipPdf', JSON.stringify(previewPayslipPdfData));
-         
+            state.payslipPreviewLoading = false;
         }
     },
 });

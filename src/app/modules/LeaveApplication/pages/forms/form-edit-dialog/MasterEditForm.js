@@ -84,6 +84,9 @@ export function MasterEditForm({
     }
   }, [payrollData])
 
+  const{    activeFiscalYear
+    } = useSelector((state) => state.dashboard);
+
   return (
     <>
       {/* Formik Start */}
@@ -128,6 +131,29 @@ export function MasterEditForm({
 
                   {/* First Row Start */}
                   <div className="from-group row">
+
+                      {/* Active payroll month */}
+
+
+
+            <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end">
+
+  {activeFiscalYear ? (() => {
+
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {activeFiscalYear?.label}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {activeFiscalYear?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
 
                     {/* Date from Field Start */}
                     <div className="col-12 col-md-4 mt-3">

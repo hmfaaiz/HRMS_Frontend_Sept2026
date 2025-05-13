@@ -13,7 +13,7 @@ import {
   fetchAllFormsMenu,
   getLatestTableId
 } from "../../../../../../_metronic/redux/dashboardActions";
-
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -26,10 +26,15 @@ const FormEditSchema = Yup.object().shape(
   {
     formName: Yup.string()
       .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters.')
-      .required("Required*"),
+      .required(VALIDATION_MESSAGES.required),
     formCode: Yup.string()
-    .required("Required*"),
+   .required(VALIDATION_MESSAGES.required),
 
+    moduleType:Yup.string()
+     .required(VALIDATION_MESSAGES.required),
+
+    isActive:Yup.string()
+     .required(VALIDATION_MESSAGES.required),
     
 
   },
@@ -90,7 +95,10 @@ export function FormEditForm({
     dispatch(getLatestTableId("t_form_menu", "formCode", " parentFormID is " + null   , setValue));
   };
 
-
+  const moduleOptions = [
+    { value: 1, label: "Employee" },
+    { value: 2, label: "Recuritment" },
+  ];
 
   return (
     <>
@@ -150,19 +158,7 @@ export function FormEditForm({
                       />
                     </div>}
 
-                    {/* {<div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="isActive"
-                        component={Input}
-                        label={<span> Select active status<span style={{ color: 'red' }}>*</span></span>}
-                      >
-                        <option value="">Select active status</option> 
-                        <option value="1">Yes</option> 
-                        <option value="0">No</option> 
-                      </Field>
-                    </div>
-                    } */}
-
+                   
 
                     <div className="col-12 col-md-4 mt-3">
                       <label htmlFor="basis_of_gratuityId">
@@ -195,6 +191,37 @@ export function FormEditForm({
                       </Field>
                       {errors.isActive && touched.isActive && (
                         <div className="text-danger">{errors.isActive}</div>
+                      )}
+                    </div>
+
+
+                         <div className="col-12 col-md-4 mt-3">
+                      <label htmlFor="moduleType">
+                      Select Module<span style={{ color: "red" }}>*</span>
+                      </label>
+                      <Field
+                        name="moduleType"
+                        as="select"
+                        className="form-control"
+                        disabled={isUserForRead}
+                   
+                        onChange={(e) => {
+                          setFieldValue("moduleType", e.target.value); // Use the raw value
+                        }}
+                  
+                        value={values.moduleType}
+  
+                      >
+                        
+                        <option value="">Select </option>
+                        {moduleOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </Field>
+                      {errors.moduleType && touched.moduleType && (
+                        <div className="text-danger">{errors.moduleType}</div>
                       )}
                     </div>
                   </div>

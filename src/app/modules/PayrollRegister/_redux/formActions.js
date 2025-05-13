@@ -265,14 +265,14 @@ export const generateRegisterJVCreditExcel = (filter, document, labels = {}) => 
 
 export const fetchPreviewRegisterPdf = (filter, document, labels = {}) => async (dispatch) => {
 
-  dispatch(actions.startCall({ callType: callTypes.list }));
+  dispatch(actions.startCall({ callType: callTypes.registerPreview }));
   return requestFromServer.previewRegisterPdf({ ...filter, labels })
     .then((response) => {
       dispatch(actions.previewRegisterPdfFetched(response));
     })
     .catch((error) => {
       error.clientMessage = "Can't find data";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
+      dispatch(actions.catchError({ error, callType: callTypes.registerPreview }));
     });
 };
 
@@ -280,13 +280,13 @@ export const fetchPreviewRegisterPdf = (filter, document, labels = {}) => async 
 
 export const fetchPreviewPayslipPdf = (filter, document, labels = {}) => async (dispatch) => {
 
-  dispatch(actions.startCall({ callType: callTypes.list }));
+  dispatch(actions.startCall({ callType: callTypes.payslipPreview }));
   return requestFromServer.previewPayslipPdf({ ...filter, labels })
     .then((response) => {
       dispatch(actions.previewPayslipPdfFetched(response));
     })
     .catch((error) => {
       error.clientMessage = "Can't find data";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
+      dispatch(actions.catchError({ error, callType: callTypes.payslipPreview }));
     });
 };

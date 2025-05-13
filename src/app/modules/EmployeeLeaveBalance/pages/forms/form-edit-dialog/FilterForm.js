@@ -4,7 +4,7 @@ import { Select } from "../../../../../../_metronic/_partials/controls";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { Modal } from "react-bootstrap";
-import { fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllFiscalYearData, fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 
 export function FilterForm({
@@ -18,6 +18,10 @@ export function FilterForm({
   const allEmployeesMap = useMemo(() => {
     return new Map(dropdownData?.allEmployees?.map(item => [item.value, item]));
   }, [dropdownData?.allEmployees]);
+
+
+
+ 
 
   return (
     <>
@@ -48,6 +52,7 @@ export function FilterForm({
                           const value = e.value == '--Select--' ? '' : Number(e.value)
                           if (value) {
                             dispatch(fetchAllLeaveType("allLeaveTypes", value));
+                            dispatch(fetchAllFiscalYearData("allFiscalYears",value));
                           }
                           setFieldValue('employeeId', value)
                           setfilters({ ...filters, employeeId: value, leaveType: '' })

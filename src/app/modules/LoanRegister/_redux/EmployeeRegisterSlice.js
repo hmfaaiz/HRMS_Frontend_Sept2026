@@ -1,0 +1,89 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+    listLoading: false,
+    actionsLoading: null,
+    totalCount: 0,
+    entities: null,
+    roles: null,
+    centers: null,
+    userStatusTypes: null,
+    userForEdit: undefined,
+    lastError: null,
+    userForRead: false,
+    loanReqLoading: false,
+    LoanPositionLoading:false,
+
+
+    loan_type:null,
+};
+
+export const callTypes = {
+    list: "list",
+    action: "action",
+    pdf: "pdf",
+    position_report:"position_report"
+};
+
+export const LoanRegisterSlice = createSlice({
+    name: "LoanRegister",
+    initialState: initialState,
+    reducers: {
+        catchError: (state, action) => {
+            state.error = `${action.type}: ${action.payload.error}`;
+            if (action.payload.callType === callTypes.list) {
+                state.listLoading = false;
+            } 
+            else if(action.payload.callType === callTypes.pdf){
+                state.loanReqLoading = false;
+            }
+
+            else if(action.payload.callType == callTypes.position_report){
+              
+                state.LoanPositionLoading = false;
+            }
+            
+            else {
+                state.actionsLoading = false;
+            }
+        },
+        startCall: (state, action) => {
+         
+            state.error = null;
+            if (action.payload.callType === callTypes.list) {
+                state.listLoading = true;
+            } 
+            else if(action.payload.callType === callTypes.pdf){
+                state.loanReqLoading = true;
+
+
+            }
+               else if(action.payload.callType === callTypes.position_report){
+       
+                            state.LoanPositionLoading = true;
+                        }
+            else {
+                state.actionsLoading = true;
+            }
+        },
+        pdfFetched: (state, action) => {
+            state.loanReqLoading = false;
+        },
+
+        pdfLoanPositionFetched: (state, action) => {
+            state.LoanPositionLoading = false;
+        },
+
+    
+   
+        getLoanType: (state, action) => {
+           
+            state.actionsLoading = false;
+            state.error = null;
+            state.loan_type=action.payload;
+
+
+            
+        },
+    },
+});
