@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import {JobVacancySlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
@@ -82,7 +83,7 @@ export const createJobVacancy = (jobVacancyForCreation, disbaleLoading, onHide) 
   
       dispatch(actions.jobVacancyCreated(user));
       disbaleLoading();
-      toast.success("Successfully Created", {
+      toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

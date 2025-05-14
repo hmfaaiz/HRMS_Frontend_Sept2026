@@ -16,14 +16,14 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- 
+
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
     };
   }, [FormUIContext]);
 
-  const formUIProps  = useMemo(() => {
+  const formUIProps = useMemo(() => {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
@@ -47,8 +47,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
     userStatusTypes,
     isdataForRead,
   } = useSelector((state) => ({
-    
-    
+
+
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
     dataForEdit: state.job_vacancy.dataForEdit,
@@ -61,51 +61,85 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchJobVacancy(id));
+    dispatch(actions.fetchJobVacancyById(id));
 
     // dispatch(actions.fetchJobVacancy(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
-  const saveForm = async (user,diffInDate) => {
+  const saveForm = async (formData, diffInDate) => {
 
 
 
     if (!id) {
- 
-      user.number_of_days=diffInDate
-      const finalObject = { user }
-      dispatch(actions.createJobVacancy(user, disbaleLoading, onHide));
-      
-      
+
+      dispatch(actions.createJobVacancy(formData, disbaleLoading, onHide));
+
+
 
     } else {
 
-  
-  
+
+
       // user.number_of_days=
-      const formUpdatedFields = {
-        Id: user.Id,
-        subsidiaryId: user.subsidiaryId,
-        name: user.name,
-        religionId: user.religionId,
-        from_date: user.from_date,
-        to_date: user.to_date,
-        number_of_days: diffInDate,
+     const formUpdatedFields = {
+  Id: formData.Id,
+  subsidiaryId: formData.subsidiaryId,
+  companyId: formData.companyId,
+  jobCode: formData.jobCode,
+  jobDate: formData.jobDate,
+  designationId: formData.designationId,
+  jobTitle: formData.jobTitle,
+  gradeId: formData.gradeId,
+  locationId: formData.locationId,
+  jobPostingDateFrom: formData.jobPostingDateFrom,
+  jobPostingDateTo: formData.jobPostingDateTo,
+  countryId: formData.countryId,
+  cityId: formData.cityId,
+  employeeTypeId: formData.employeeTypeId,
+  employeeStatusId: formData.employeeStatusId,
+  departmentId:formData.departmentId,
+  reportToDesignationId: formData.reportToDesignationId,
+  relationshipWithReportTo: formData.relationshipWithReportTo,
+  noOfPosition: formData.noOfPosition,
+  hiringReasonId: formData.hiringReasonId,
+  jobPreferenceId: formData.jobPreferenceId,
+  appointmentTypeId: formData.appointmentTypeId,
+  comment: formData.comment,
+  jobPeriodStart: formData.jobPeriodStart,
+  jobPeriodEnd: formData.jobPeriodEnd,
+  desireDateOfApp: formData.desireDateOfApp,
+  priorityTypeId: formData.priorityTypeId,
+  criticalDays: formData.criticalDays,
+  preferredAgeFrom: formData.preferredAgeFrom,
+  preferredAgeTo: formData.preferredAgeTo,
+  preferredShiftId: formData.preferredShiftId,
+  preferredGenderId: formData.preferredGenderId,
+  preferredQualificationId: formData.preferredQualificationId,
+  preferredJobSkillsId: formData.preferredJobSkillsId,
+  preferredJobIndustryId: formData.preferredJobIndustryId,
+  workExpFrom: formData.workExpFrom,
+  workExpTo: formData.workExpTo,
+  workExpDetail: formData.workExpDetail,
+  additionalReq: formData.additionalReq,
+  salaryRangeFrom: formData.salaryRangeFrom,
+  salaryRangeTo: formData.salaryRangeTo,
+  incentivePackages: formData.incentivePackages,
+  otherBenefits: formData.otherBenefits,
+  jobSummary: formData.jobSummary,
 
-     
-      };
+};
 
-      
 
-     await dispatch(actions.updateJobVacancy(formUpdatedFields, disbaleLoading, onHide));
-     await dispatch(actions.fetchJobVacancy(usersUIProps.queryParams));
+
+      await dispatch(actions.updateJobVacancy(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.fetchJobVacancy(usersUIProps.queryParams));
     }
   };
 
   return (
     <Modal
-     size="xl"
+      size="xl"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
@@ -113,7 +147,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
-        user={dataForEdit || formUIProps .initUser}
+        formData={dataForEdit || formUIProps.initUser}
         onHide={onHide}
         roles={roles}
         centers={centers}
@@ -121,7 +155,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         isdataForRead={dataForRead}
         enableLoading={enableLoading}
         loading={loading}
-     
+
       />
       <ToastContainer
         position="top-right"

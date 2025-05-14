@@ -8,12 +8,13 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import {
   fetchAllCity,
   fetchAllCountry,
+  fetchAllDept,
   fetchAllFormsMenu,
 
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { amountLimitDynamic, formatDates } from "../../../../../utils/common";
+import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 
 
@@ -40,11 +41,20 @@ const jobVacancyEditSchema = Yup.object().shape({
   // cityId: Yup.number().required(VALIDATION_MESSAGES.required),
   // employeeTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
   // employeeStatusId: Yup.number().required(VALIDATION_MESSAGES.required),
+  departmentId: Yup.number().required(VALIDATION_MESSAGES.required),
   jobPostingDateFrom: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required)
     .typeError("Invalid date"),
 
+  // jobPostingDateTo: Yup.date()
+  //   .nullable()
+  //   .required(VALIDATION_MESSAGES.required)
+  //   .typeError("Invalid date")
+  //   .min(
+  //     Yup.ref("jobPostingDateFrom"),
+  //     "Job Posting To date must be after From date"
+  //   ),
   jobPostingDateTo: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required)
@@ -52,8 +62,11 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(
       Yup.ref("jobPostingDateFrom"),
       "Job Posting To date must be after From date"
+    )
+    .max(
+      Yup.ref("jobPeriodEnd"),
+      "Job Posting To date must be before Job Period End"
     ),
-
 
   reportToDesignationId: Yup.number()
     .required(VALIDATION_MESSAGES.required)
@@ -71,15 +84,15 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   noOfPosition: Yup.number()
     .required(VALIDATION_MESSAGES.required)
-    .min(1, 'Minimum 1 ')
-    .max(999, 'Maximum 999 '),
+    .min(1, VALIDATION_MESSAGES.minOneValue)
+    .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   hiringReasonId: Yup.string().required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.string().required(VALIDATION_MESSAGES.required),
   appointmentTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
   priorityTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
   criticalDays: Yup.number()
-    .min(1, 'Minimum 1 ')
-    .max(999, 'Maximum 999 '),
+    .min(1, VALIDATION_MESSAGES.minOneValue)
+    .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   jobPeriodStart: Yup.date().nullable(),
   jobPeriodEnd: Yup.date().nullable()
     .min(
@@ -87,16 +100,37 @@ const jobVacancyEditSchema = Yup.object().shape({
       'End date must be after start date'
     ),
   comment: Yup.string(),
+
+  // desireDateOfApp: Yup.date()
+  //   .nullable()
+  //   .required(VALIDATION_MESSAGES.required)
+  //   .min(
+  //     Yup.ref('jobPostingDateFrom'),
+  //     'Desire Date of Appointment must be after Job Posting Date From'
+  //   ),
+
   desireDateOfApp: Yup.date()
     .nullable()
-    .required(VALIDATION_MESSAGES.required),
+    .required(VALIDATION_MESSAGES.required)
+    .min(
+      Yup.ref('jobPostingDateFrom'),
+      'Desire Date of Appointment must be after Job Posting Date From'
+    )
+    .when('jobPeriodEnd', (jobPeriodEnd, schema) => {
+      return jobPeriodEnd
+        ? schema.max(
+          Yup.ref('jobPeriodEnd'),
+          'Desire Date must be before Job Period End'
+        )
+        : schema; // if jobPeriodEnd is not set, skip the max check
+    }),
   preferredAgeFrom: Yup.number()
-    .min(18, 'Minimum 18 ')
-    .max(99, 'Maximum 99 '),
+    .min(18, VALIDATION_MESSAGES.minAgeEighteenValue)
+    .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue),
 
   preferredAgeTo: Yup.number()
-    .min(18, 'Minimum 18 ')
-    .max(99, 'Maximum 99 ')
+    .min(18, VALIDATION_MESSAGES.minAgeEighteenValue)
+    .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
     .moreThan(
       Yup.ref('preferredAgeFrom'),
       'Preferred age (to) must be greater than age from'
@@ -117,18 +151,27 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
   // workExpDetail: Yup.string().required(VALIDATION_MESSAGES.required),
   // additionalReq: Yup.string().required(VALIDATION_MESSAGES.required),
-  salaryRangeFrom: Yup.number().required(VALIDATION_MESSAGES.required),
-  salaryRangeTo: Yup.number().required(VALIDATION_MESSAGES.required),
-  incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
-  otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
+  salaryRangeFrom: Yup.number()
+    .min(1, VALIDATION_MESSAGES.minOneValue)
+    .required(VALIDATION_MESSAGES.required),
+
+  salaryRangeTo: Yup.number()
+    .min(1, VALIDATION_MESSAGES.minOneValue)
+    .required(VALIDATION_MESSAGES.required)
+    .moreThan(
+      Yup.ref('salaryRangeFrom'),
+      'Salary To must be greater than Salary From'
+    ),
+  // incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
+  // otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
   jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
- 
+
 });
 
 
 export function FormEditForm({
   saveForm,
-  user,
+  formData,
   actionsLoading,
   onHide,
   isdataForRead,
@@ -141,7 +184,7 @@ export function FormEditForm({
 
   //drop down
   useEffect(() => {
-    if (!user.Id) {
+    if (!formData.Id) {
 
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(158, "allDesignations"));
@@ -156,15 +199,15 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(442, "alljobPreferenceList"));
       dispatch(fetchAllFormsMenu(409, "allAppointmentTypeList"));
       dispatch(fetchAllFormsMenu(412, "allPriorityTypeList"));
-      dispatch(fetchAllFormsMenu(108, "allPriorityTypeList"));
+      dispatch(fetchAllFormsMenu(108, "allQualificationList"));
       dispatch(fetchAllFormsMenu(413, "allJobShiftList"));
       dispatch(fetchAllFormsMenu(187, "allGenderList"));
       dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
-
       dispatch(fetchAllFormsMenu(416, "allJobIndustryList"));
+      dispatch(fetchAllDept());
 
     }
-  }, [dispatch, user.Id]);
+  }, [dispatch, formData.Id]);
 
 
   const { currentState, userAccess } = useSelector((state) => {
@@ -190,7 +233,10 @@ export function FormEditForm({
       enableReinitialize={true}
 
 
-      initialValues={user}
+      initialValues={{
+        ...formData,
+        jobDate: formData?.jobDate ? formData.jobDate : formatDates(new Date(), 'yyyy-MM-dd'), // set to today if not provided
+      }}
       validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
 
@@ -227,6 +273,8 @@ export function FormEditForm({
                         placeholder="Enter code"
                         // disabled={true}
                         type="text"
+                        minLength={5}
+                        maxLength={10}
 
 
                       />
@@ -241,10 +289,11 @@ export function FormEditForm({
                         className="form-control"
                         placeholder="Job Date"
                         selected={values?.jobDate ? new Date(values.jobDate) : null}
-
-                        onChange={(date) => {
-                          setFieldValue("jobDate", date);
-                        }}
+                        disabled={true}
+                        // onChange={(date) => {
+                        //   let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                        //   setFieldValue("jobDate", selectedDate);
+                        // }}
                         dateFormat="dd/MM/yyyy"
                         name="jobDate"
                         autoComplete="off"
@@ -340,7 +389,7 @@ export function FormEditForm({
 
 
                     <div className="col-12 col-md-4 mt-3">
-                      Subsidiary
+                      Subsidiary<span style={{ color: "red" }}>*</span>
                       <div
                         style={{
                           backgroundColor: "#ffffff",
@@ -435,7 +484,7 @@ export function FormEditForm({
 
 
                     <div className="col-12 col-md-4 mt-3">
-                      Location
+                      Location<span style={{ color: "red" }}>*</span>
                       <div
                         style={{
                           backgroundColor: "#ffffff",
@@ -539,6 +588,33 @@ export function FormEditForm({
 
 
 
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="departmentId"
+                        label={
+                          <span>
+                            Department <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isdataForRead}
+                        onChange={(e) => {
+                          setFieldValue("departmentId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allDept?.find(
+                            (option) => option.value === values.departmentId
+                          ) || null
+                        }
+
+                        options={dashboard?.allDept}
+
+                        error={errors.departmentId}
+                        touched={touched.departmentId}
+
+
+
+                      />
+                    </div>
 
 
 
@@ -552,7 +628,8 @@ export function FormEditForm({
                         selected={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : null}
 
                         onChange={(date) => {
-                          setFieldValue("jobPostingDateFrom", date);
+                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("jobPostingDateFrom", selectedDate);
                         }}
                         dateFormat="dd/MM/yyyy"
                         name="jobPostingDateFrom"
@@ -578,7 +655,8 @@ export function FormEditForm({
                         selected={values?.jobPostingDateTo ? new Date(values.jobPostingDateTo) : null}
 
                         onChange={(date) => {
-                          setFieldValue("jobPostingDateTo", date);
+                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("jobPostingDateTo", selectedDate);
                         }}
                         dateFormat="dd/MM/yyyy"
                         name="jobPostingDateTo"
@@ -631,7 +709,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-12 mt-3">
                       <label>
                         <span>
                           Key relationship with Report To<span style={{ color: "red" }}>*</span>
@@ -639,7 +717,7 @@ export function FormEditForm({
                       </label>
                       <Field
                         name="relationshipWithReportTo"
-                        component={Input}
+                        component={TextArea}
                         placeholder="Enter relationship"
                         type="text"
 
@@ -727,6 +805,89 @@ export function FormEditForm({
                       />
                     </div>
 
+                    <div className="col-12 col-md-4 mt-3">
+
+
+                      <label> Job Period Start</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="Job period start"
+                        selected={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : null}
+
+                        onChange={(date) => {
+                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("jobPeriodStart", selectedDate);
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="jobPeriodStart"
+                        autoComplete="off"
+                        minDate={new Date()}
+                        maxDate={values.jobPeriodEnd}
+
+
+                      />
+
+                      {touched.jobPeriodStart && errors.jobPeriodStart && (
+                        <div className="invalid-feedback d-block">{errors.jobPeriodStart}</div>
+                      )}
+                    </div>
+
+                    <div className="col-12 col-md-4 mt-3">
+
+
+                      <label> Job Period End</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="Job period end"
+                        selected={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : null}
+
+                        onChange={(date) => {
+                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("jobPeriodEnd", selectedDate);
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="jobPeriodEnd"
+                        autoComplete="off"
+                        minDate={values.jobPeriodStart || new Date()}
+
+
+
+                      />
+
+                      {touched.jobPeriodEnd && errors.jobPeriodEnd && (
+                        <div className="invalid-feedback d-block">{errors.jobPeriodEnd}</div>
+                      )}
+                    </div>
+
+
+                    <div className="col-12 col-md-4 mt-3">
+
+
+                      <label>  Desire Date of Appointment<span style={{ color: "red" }}>*</span></label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="Desire Date of Appointment"
+                        selected={values?.desireDateOfApp ? new Date(values.desireDateOfApp) : null}
+
+                        onChange={(date) => {
+                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("desireDateOfApp", selectedDate);
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="desireDateOfApp"
+                        autoComplete="off"
+                        minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}
+                      //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
+
+
+
+                      />
+
+                      {touched.desireDateOfApp && errors.desireDateOfApp && (
+                        <div className="invalid-feedback d-block">{errors.desireDateOfApp}</div>
+                      )}
+                    </div>
+
 
 
                     <div className="col-12 col-md-4 mt-3">
@@ -779,7 +940,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* <div className="col-12 col-md-4 mt-3">
                       <label>
                         <span>
                           Critical (in Days)
@@ -793,87 +954,10 @@ export function FormEditForm({
                         type="number"
 
                       />
-                    </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Job Period Start</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="Job period start"
-                        selected={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : null}
-
-                        onChange={(date) => {
-                          setFieldValue("jobPeriodStart", date);
-                        }}
-                        dateFormat="dd/MM/yyyy"
-                        name="jobPeriodStart"
-                        autoComplete="off"
-                        minDate={new Date()}
-                        maxDate={values.jobPeriodEnd}
-
-
-                      />
-
-                      {touched.jobPeriodStart && errors.jobPeriodStart && (
-                        <div className="invalid-feedback d-block">{errors.jobPeriodStart}</div>
-                      )}
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Job Period End</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="Job period end"
-                        selected={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : null}
-
-                        onChange={(date) => {
-                          setFieldValue("jobPeriodEnd", date);
-                        }}
-                        dateFormat="dd/MM/yyyy"
-                        name="jobPeriodEnd"
-                        autoComplete="off"
-                        minDate={values.jobPeriodStart || new Date()}
+                    </div> */}
 
 
 
-                      />
-
-                      {touched.jobPeriodEnd && errors.jobPeriodEnd && (
-                        <div className="invalid-feedback d-block">{errors.jobPeriodEnd}</div>
-                      )}
-                    </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-
-
-                      <label>  Desire Date of Appointment<span style={{ color: "red" }}>*</span></label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="Desire Date of Appointment"
-                        selected={values?.desireDateOfApp ? new Date(values.desireDateOfApp) : null}
-
-                        onChange={(date) => {
-                          setFieldValue("desireDateOfApp", date);
-                        }}
-                        dateFormat="dd/MM/yyyy"
-                        name="desireDateOfApp"
-                        autoComplete="off"
-                        minDate={new Date()}
-
-
-
-                      />
-
-                      {touched.desireDateOfApp && errors.desireDateOfApp && (
-                        <div className="invalid-feedback d-block">{errors.desireDateOfApp}</div>
-                      )}
-                    </div>
 
                     <div className="col-12 col-md-12 mt-3">
                       <label>
@@ -963,12 +1047,12 @@ export function FormEditForm({
                           setFieldValue("preferredQualificationId", e.value || null);
                         }}
                         value={
-                          dashboard?.allPriorityTypeList?.find(
+                          dashboard?.allQualificationList?.find(
                             (option) => option.value === values.preferredQualificationId
                           ) || null
                         }
 
-                        options={dashboard?.allPriorityTypeList}
+                        options={dashboard?.allQualificationList}
 
                         error={errors.preferredQualificationId}
                         touched={touched.preferredQualificationId}
@@ -1256,11 +1340,17 @@ export function FormEditForm({
                         </span>
                       </label>
                       <Field
-                        name="name"
+                        name="salaryRangeFrom"
                         component={Input}
-                        placeholder="Enter Name"
+                        placeholder="Enter salary range (from)"
 
-                        type="text"
+                        type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(
+                            e.target.value
+
+                          );
+                        }}
 
                       />
                     </div>
@@ -1272,9 +1362,31 @@ export function FormEditForm({
                         </span>
                       </label>
                       <Field
-                        name="name"
+                        name="salaryRangeTo"
                         component={Input}
-                        placeholder="Enter Name"
+                        placeholder="Enter salary range (to)"
+
+                        type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(
+                            e.target.value
+
+                          );
+                        }}
+
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <label>
+                        <span>
+                          Incentive Packages
+                        </span>
+                      </label>
+                      <Field
+                        name="incentivePackages"
+                        component={TextArea}
+                        placeholder="Enter incentive packages"
 
                         type="text"
 
@@ -1284,29 +1396,13 @@ export function FormEditForm({
                     <div className="col-12 col-md-12 mt-3">
                       <label>
                         <span>
-                          Incentive Packages <span style={{ color: "red" }}>*</span>
+                          Other Benefits
                         </span>
                       </label>
                       <Field
-                        name="name"
+                        name="otherBenefits"
                         component={TextArea}
-                        placeholder="Enter Name"
-
-                        type="text"
-
-                      />
-                    </div>
-
-                    <div className="col-12 col-md-12 mt-3">
-                      <label>
-                        <span>
-                          Other Benefits <span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
-                        name="name"
-                        component={TextArea}
-                        placeholder="Enter Name"
+                        placeholder="Enter other benefits"
 
                         type="text"
 
@@ -1332,9 +1428,9 @@ export function FormEditForm({
                         </span>
                       </label>
                       <Field
-                        name="name"
+                        name="jobSummary"
                         component={TextArea}
-                        placeholder="Enter Name"
+                        placeholder="Enter job summary"
 
                         type="text"
 

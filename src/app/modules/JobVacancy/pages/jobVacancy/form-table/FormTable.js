@@ -72,8 +72,8 @@ const isAccessForEdit = userAccess?.find((item) => {
   const columns = [
 
     {
-      dataField: "Subsidiary.name",
-      text: "Subsidiary",
+      dataField: "CONCATJobTitle",
+      text: "Job Code / Job Title",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -83,31 +83,53 @@ const isAccessForEdit = userAccess?.find((item) => {
     },
 
     {
-      dataField: "from_date",
-      text: "from date",
+      dataField: "jobDate",
+      text: "Job Date",
       sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      // style: {
-      //   minWidth: "10px",
-      //   textAlign: "center",
-      // },
-      // headerStyle: {
-      //   textAlign: "center", // Align header text to the left
-      // },
+
     },
 
-
     {
-      dataField: "to_date",
-      text: "to date",
+      dataField: "Designation.formName",
+      text: "Designation",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "160px",
       },
     },
+        {
+      dataField: "Department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+           {
+      dataField: "PriorityType.formName",
+      text: "Priority",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+               {
+      dataField: "desireDateOfApp",
+      text: "Desire Date Of Appointment",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+
 
     {
       dataField: "action",

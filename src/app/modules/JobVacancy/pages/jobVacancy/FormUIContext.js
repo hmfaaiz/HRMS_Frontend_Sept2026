@@ -42,6 +42,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     cityId: "",
     employeeTypeId: "",
     employeeStatusId: "",
+    departmentId:"",
     reportToDesignationId: "",
     relationshipWithReportTo: "",
     noOfPosition: "",
@@ -70,7 +71,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     incentivePackages: "",
     otherBenefits: "",
     jobSummary: "",
-    isActive: "",
+
 
   };
 
