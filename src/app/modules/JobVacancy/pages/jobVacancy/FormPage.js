@@ -9,6 +9,7 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
 import {} from "../../_redux/redux-Actions";
+import { FormFIlter } from "./form-filter/FormFIlter";
 
 
 
@@ -81,8 +82,9 @@ export function FormPage({ history }) {
           />
         )}
       </Route>
-    
+      <FormFIlter />
       <FormCard />
+       
       <ToastContainer
         position="top-right"
         autoClose={5000}

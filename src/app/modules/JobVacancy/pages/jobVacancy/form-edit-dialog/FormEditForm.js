@@ -218,7 +218,7 @@ export function FormEditForm({
   }, shallowEqual);
 
 
-  console.log("currentState111", currentState)
+
   const { dataForEdit } = currentState;
 
 
@@ -353,7 +353,7 @@ export function FormEditForm({
                       <Field
                         name="jobTitle"
                         component={Input}
-                        placeholder="Enter Name"
+                        placeholder="Enter job title"
 
                         type="text"
 

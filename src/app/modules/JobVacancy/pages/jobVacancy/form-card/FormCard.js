@@ -58,17 +58,13 @@ const { userAccess } = useSelector(
 
       <Card>
 
-        <CardHeader title={CurrentModuleName()} >
+        <CardHeader >
 
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
+          <div className="">
 
 
 
-            <div className="pt-5">
-
-              <FormFIlter />
-
-            </div>
+         
 
             <div className=" p-2">
 

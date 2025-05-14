@@ -31,7 +31,12 @@ export const sizePerPageList = [
 export const initialFilter = {
   filter: {
 
-    searchQuery: ""
+    searchQuery: "",
+    departmentId:"",
+    designationId:"",
+    priorityTypeId:"",
+    desireFromDateOfApp:"",
+    desireToDateOfApp:"",
 
 },
 
