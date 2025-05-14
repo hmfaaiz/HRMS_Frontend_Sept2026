@@ -509,9 +509,9 @@ const WorkflowEditForm = ({
                                     `is${day}`,
                                     values[`is${day}`] ? false : true
                                   );
-                                  setTimeout(() => {
-                                    formik.validateForm();
-                                  }, 100);
+                                  // setTimeout(() => {
+                                  //   formik.validateForm();
+                                  // }, 100);
                                 }}
                                 checked={values[`is${day}`]}
                                 value={values[`is${day}`]}
