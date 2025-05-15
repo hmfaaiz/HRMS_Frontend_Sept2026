@@ -22,7 +22,7 @@ import DatePicker from "react-datepicker";
 const jobVacancyEditSchema = Yup.object().shape({
   subsidiaryId: Yup.string()
     .required(VALIDATION_MESSAGES.required),
-  companyId: Yup.number().required(VALIDATION_MESSAGES.required),
+
   jobCode: Yup.string()
     .min(5, "Job code must be  5 characters")
     .max(10, "Job code must be  10 characters")
@@ -55,18 +55,34 @@ const jobVacancyEditSchema = Yup.object().shape({
   //     Yup.ref("jobPostingDateFrom"),
   //     "Job Posting To date must be after From date"
   //   ),
+  // jobPostingDateTo: Yup.date()
+  //   .nullable()
+  //   .required(VALIDATION_MESSAGES.required)
+  //   .typeError("Invalid date")
+  //   .min(
+  //     Yup.ref("jobPostingDateFrom"),
+  //     "Job Posting To date must be after From date"
+  //   )
+  //   .max(
+  //     Yup.ref("jobPeriodEnd"),
+  //     "Job Posting To date must be before Job Period End"
+  //   ),
+
   jobPostingDateTo: Yup.date()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required)
-    .typeError("Invalid date")
-    .min(
-      Yup.ref("jobPostingDateFrom"),
-      "Job Posting To date must be after From date"
-    )
-    .max(
-      Yup.ref("jobPeriodEnd"),
-      "Job Posting To date must be before Job Period End"
-    ),
+  .nullable()
+  .required(VALIDATION_MESSAGES.required)
+  .min(
+    Yup.ref("jobPostingDateFrom"),
+    "Job Posting To date must be after From date"
+  )
+  .when("jobPeriodEnd", (jobPeriodEnd, schema) =>
+    jobPeriodEnd
+      ? schema.max(
+          Yup.ref("jobPeriodEnd"),
+          "Job Posting To date must be before Job Period End"
+        )
+      : schema
+  ),
 
   reportToDesignationId: Yup.number()
     .required(VALIDATION_MESSAGES.required)
@@ -90,9 +106,9 @@ const jobVacancyEditSchema = Yup.object().shape({
   jobPreferenceId: Yup.string().required(VALIDATION_MESSAGES.required),
   appointmentTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
   priorityTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
-  criticalDays: Yup.number()
-    .min(1, VALIDATION_MESSAGES.minOneValue)
-    .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
+  // criticalDays: Yup.number()
+  //   .min(1, VALIDATION_MESSAGES.minOneValue)
+  //   .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   jobPeriodStart: Yup.date().nullable(),
   jobPeriodEnd: Yup.date().nullable()
     .min(
@@ -821,8 +837,9 @@ export function FormEditForm({
                         dateFormat="dd/MM/yyyy"
                         name="jobPeriodStart"
                         autoComplete="off"
-                        minDate={new Date()}
-                        maxDate={values.jobPeriodEnd}
+                        minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}
+                        maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) :null}
+                       
 
 
                       />
@@ -848,7 +865,8 @@ export function FormEditForm({
                         dateFormat="dd/MM/yyyy"
                         name="jobPeriodEnd"
                         autoComplete="off"
-                        minDate={values.jobPeriodStart || new Date()}
+                        minDate={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : new Date()}
+                      
 
 
 
