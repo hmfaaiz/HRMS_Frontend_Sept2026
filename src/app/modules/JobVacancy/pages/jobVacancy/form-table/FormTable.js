@@ -31,6 +31,9 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      openPostingFormDialog: formUIContext.openPostingFormDialog,
+      openHoldFormDialog: formUIContext.openHoldFormDialog,
+      openCloseFormDialog: formUIContext.openCloseFormDialog,
     };
   }, [formUIContext]);
 
@@ -61,12 +64,30 @@ export function FormTable() {
     dispatch(actions.fetchJobVacancy(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
-const isAccessForEdit = userAccess?.find((item) => {
-  console.log("item.componentName111", item.componentName);
-  return item.componentName === "UpdateJobVacancy";
-});
+
+      const isAccessForView = userAccess?.find(
+    (item) => item.componentName === "ReadJobVacancy"
+  );
+
+  const isAccessForEdit = userAccess?.find((item) => {
+    return item.componentName === "UpdateJobVacancy";
+  });
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteJobVacancy"
+  );
+
+
+
+  // Posting
+
+    const isAccessForPost = userAccess?.find(
+    (item) => item.componentName === "PostJobVacancy"
+  );
+    const isAccessForHold = userAccess?.find(
+    (item) => item.componentName === "HoldJobVacancy"
+  );
+    const isAccessForClose = userAccess?.find(
+    (item) => item.componentName === "CloseJobVacancy"
   );
   // Table columns
   const columns = [
@@ -78,7 +99,7 @@ const isAccessForEdit = userAccess?.find((item) => {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "200px",
       },
     },
 
@@ -99,7 +120,7 @@ const isAccessForEdit = userAccess?.find((item) => {
         minWidth: "160px",
       },
     },
-        {
+    {
       dataField: "Department.deptName",
       text: "Department",
       sort: false,
@@ -109,29 +130,61 @@ const isAccessForEdit = userAccess?.find((item) => {
         minWidth: "160px",
       },
     },
-           {
+    {
       dataField: "PriorityType.formName",
       text: "Priority",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
       },
     },
-               {
+    {
       dataField: "desireDateOfApp",
       text: "Desire Date Of Appointment",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "10px",
       },
     },
 
 
     {
+      dataField: "Post",
+      text: "Job Posting",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+     
+        openPostingFormDialog: formUIProps.openPostingFormDialog,
+        openHoldFormDialog: formUIProps.openHoldFormDialog,
+        openCloseFormDialog: formUIProps.openCloseFormDialog,
+      
+
+        isAccessForPosting: isAccessForPost
+          ? isAccessForPost.isAccess
+          : false,
+
+                  isAccessForHold: isAccessForHold
+          ? isAccessForHold.isAccess
+          : false,
+
+                  isAccessForClose: isAccessForClose
+          ? isAccessForClose.isAccess
+          : false,
+      },
+
+      classes: "text-center pr-4",
+      headerClasses: "text-center pr-5",
+      style: {
+        minWidth: "100px",
+      },
+    },
+
+       {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -141,15 +194,19 @@ const isAccessForEdit = userAccess?.find((item) => {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        isAccessForView:isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
+
+      
       },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
+
+    classes: "text-center pr-0",
+      headerClasses: "text-center pr-3",
       style: {
-        minWidth: "10px",
+        minWidth: "100px",
       },
     },
   ];

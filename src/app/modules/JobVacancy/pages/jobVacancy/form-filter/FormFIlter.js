@@ -46,7 +46,7 @@ const prepareFilter = (queryParams, values) => {
     designationId,
     priorityTypeId,
     desireFromDateOfApp,
-    desireToDateOfApp
+    desireToDateOfApp, vacancyStatusId, jobFinalizedFromDate, jobFinalizedToDate,
   } = values;
 
   const newQueryParams = { ...queryParams };
@@ -76,6 +76,17 @@ const prepareFilter = (queryParams, values) => {
     filter.desireToDateOfApp = desireToDateOfApp;
   }
 
+  if (vacancyStatusId || vacancyStatusId === 0) {
+    filter.vacancyStatusId = vacancyStatusId;
+  }
+
+  if (jobFinalizedFromDate) {
+    filter.jobFinalizedFromDate = jobFinalizedFromDate;
+  }
+
+  if (jobFinalizedToDate) {
+    filter.jobFinalizedToDate = jobFinalizedToDate;
+  }
   newQueryParams.filter = filter;
   return newQueryParams;
 };
@@ -131,13 +142,25 @@ export function FormFIlter({ listLoading, user }) {
 
   }, []);
 
+
+  const vacancyStatusOptions = [
+    { value: null, label: "All" },
+    { value: 0, label: "Vacancy not posted " },
+    { value: 1, label: "Currently Posted" },
+    { value: 2, label: "On Hold" },
+    { value: 3, label: "Closed / Expired Job" },
+  ];
+
+
+
   const initialFilterValues = {
     searchText: "",
     departmentId: null,
     designationId: null,
     priorityTypeId: null,
     desireFromDateOfApp: null,
-    desireToDateOfApp: null
+    desireToDateOfApp: null,
+    vacancyStatusId: null, jobFinalizedFromDate: null, jobFinalizedToDate: null,
   };
   // return (
   //   <>
@@ -384,7 +407,7 @@ export function FormFIlter({ listLoading, user }) {
 
   //   </>
   // )
-return (
+  return (
     <>
       <Formik
         enableReinitialize={true}
@@ -410,141 +433,231 @@ return (
                 style={{
                   backgroundColor: "rgb(235 243 255)",
                   marginTop: "15px",
+                  marginBottom: "15px",
                   padding: "20px",
                   borderRadius: "5px",
                   border: "2px solid #adceff",
                 }}
               >
                 <div className="form-group row">
+
+                  {/* row 1 */}
+
+                  <div className="row col-12 col-md-12">
+
+                    {/* Vacancy status */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="vacancyStatusId"
+                        label="Vacancy Status"
+                        onChange={(e) => {
+                          console.log("Selected value:", e.value);
+                          setFieldValue("vacancyStatusId", e.value !== undefined ? e.value : null);
+                          handleSubmit();
+                        }}
+                        value={
+                          vacancyStatusOptions?.find(
+                            (option) => option.value == values.vacancyStatusId
+                          ) || null
+                        }
+                        options={vacancyStatusOptions}
+                      />
+                    </div>
+                  </div>
+
+
+                  {/* row 2 */}
+
                   {/* Department */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="departmentId"
-                      label="Department"
-                      onChange={(e) => {
-                        setFieldValue("departmentId", e.value || null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allDept?.find(
-                          (option) => option.value === values.departmentId
-                        ) || null
-                      }
-                      options={dashboard?.allDept}
-                    />
+
+
+                  <div className="row col-12 col-md-12">
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="departmentId"
+                        label="Department"
+                        onChange={(e) => {
+                          setFieldValue("departmentId", e.value || null);
+                          handleSubmit();
+                        }}
+                        value={
+                          dashboard?.allDept?.find(
+                            (option) => option.value === values.departmentId
+                          ) || null
+                        }
+                        options={dashboard?.allDept}
+                      />
+                    </div>
+
+                    {/* Designation */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="designationId"
+                        label="Designation"
+                        onChange={(e) => {
+                          setFieldValue("designationId", e.value || null);
+                          handleSubmit();
+                        }}
+                        value={
+                          dashboard?.allDesignations?.find(
+                            (option) => option.value === values.designationId
+                          ) || null
+                        }
+                        options={dashboard?.allDesignations}
+                      />
+                    </div>
+
+                    {/* Priority */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="priorityTypeId"
+                        label="Priority"
+                        onChange={(e) => {
+                          setFieldValue("priorityTypeId", e.value || null);
+                          handleSubmit();
+                        }}
+                        value={
+                          dashboard?.allPriorityTypeList?.find(
+                            (option) => option.value === values.priorityTypeId
+                          ) || null
+                        }
+                        options={dashboard?.allPriorityTypeList}
+                      />
+                    </div>
                   </div>
 
-                  {/* Designation */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="designationId"
-                      label="Designation"
-                      onChange={(e) => {
-                        setFieldValue("designationId", e.value || null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allDesignations?.find(
-                          (option) => option.value === values.designationId
-                        ) || null
-                      }
-                      options={dashboard?.allDesignations}
-                    />
+                  {/* row 3*/}
+                  <div className="row col-12 col-md-12">
+                    {/* Job Title */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>Job Title</label>
+                      <Field
+                        component={Input}
+                        name="searchText"
+                        placeholder="Enter job title"
+                        type="text"
+                        onBlur={handleBlur}
+                        value={values.searchText}
+                        onChange={(e) => {
+                          setFieldValue("searchText", e.target.value.trim());
+                          handleSubmit();
+                        }}
+                      />
+                    </div>
+
+                    {/* Date From */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>Desire Date of Appointment (From)</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="From Date"
+                        selected={
+                          values?.desireFromDateOfApp
+                            ? new Date(values.desireFromDateOfApp)
+                            : null
+                        }
+                        onChange={(date) => {
+                          setFieldValue("desireFromDateOfApp", date);
+                          setFieldValue("desireToDateOfApp", date);
+                          handleSubmit();
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="desireFromDateOfApp"
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    {/* Date To */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>Desire Date of Appointment (To)</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="To Date"
+                        selected={
+                          values?.desireToDateOfApp
+                            ? new Date(values.desireToDateOfApp)
+                            : null
+                        }
+                        onChange={(date) => {
+                          setFieldValue("desireToDateOfApp", date);
+                          handleSubmit();
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="desireToDateOfApp"
+                        autoComplete="off"
+                      />
+                    </div>
+
                   </div>
 
-                  {/* Priority */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="priorityTypeId"
-                      label="Priority"
-                      onChange={(e) => {
-                        setFieldValue("priorityTypeId", e.value || null);
-                        handleSubmit();
-                      }}
-                      value={
-                        dashboard?.allPriorityTypeList?.find(
-                          (option) => option.value === values.priorityTypeId
-                        ) || null
-                      }
-                      options={dashboard?.allPriorityTypeList}
-                    />
+                  {/* row 4*/}
+                  <div className="row col-12 col-md-12">
+
+
+                    {/* Date From */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>Job Finalized (From)</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="From Date"
+                        selected={
+                          values?.jobFinalizedFromDate
+                            ? new Date(values.jobFinalizedFromDate)
+                            : null
+                        }
+                        onChange={(date) => {
+                          setFieldValue("jobFinalizedFromDate", date);
+                          setFieldValue("jobFinalizedToDate", date);
+                          handleSubmit();
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="jobFinalizedFromDate"
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    {/* Date To */}
+                    <div className="col-12 col-md-4 mt-3">
+                      <label>Job Finalized (To)</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="To Date"
+                        selected={
+                          values?.jobFinalizedToDate
+                            ? new Date(values.jobFinalizedToDate)
+                            : null
+                        }
+                        onChange={(date) => {
+                          setFieldValue("jobFinalizedToDate", date);
+                          handleSubmit();
+                        }}
+                        dateFormat="dd/MM/yyyy"
+                        name="jobFinalizedToDate"
+                        autoComplete="off"
+                      />
+                    </div>
+
                   </div>
 
-                  {/* Job Title */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <label>Job Title</label>
-                    <Field
-                      component={Input}
-                      name="searchText"
-                      placeholder="Enter job title"
-                      type="text"
-                      onBlur={handleBlur}
-                      value={values.searchText}
-                      onChange={(e) => {
-                        setFieldValue("searchText", e.target.value.trim());
-                        handleSubmit();
-                      }}
-                    />
-                  </div>
 
-                  {/* Date From */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <label>Desire Date of Appointment (From)</label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="From Date"
-                      selected={
-                        values?.desireFromDateOfApp
-                          ? new Date(values.desireFromDateOfApp)
-                          : null
-                      }
-                      onChange={(date) => {
-                        setFieldValue("desireFromDateOfApp", date);
-                        setFieldValue("desireToDateOfApp", date);
-                        handleSubmit();
-                      }}
-                      dateFormat="dd/MM/yyyy"
-                      name="desireFromDateOfApp"
-                      autoComplete="off"
-                    />
-                  </div>
-
-                  {/* Date To */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <label>Desire Date of Appointment (To)</label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="To Date"
-                      selected={
-                        values?.desireToDateOfApp
-                          ? new Date(values.desireToDateOfApp)
-                          : null
-                      }
-                      onChange={(date) => {
-                        setFieldValue("desireToDateOfApp", date);
-                        handleSubmit();
-                      }}
-                      dateFormat="dd/MM/yyyy"
-                      name="desireToDateOfApp"
-                      autoComplete="off"
-                    />
-                  </div>
                 </div>
+                <Modal.Footer>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleReset(); // Resets form
+                      applyFilter(initialFilterValues); // Clears filter state
+                    }}
+                    className="btn btn-danger btn-elevate"
+                  >
+                    Cancel
+                  </button>
+                </Modal.Footer>
+
               </div>
             </form>
 
-            <Modal.Footer>
-              <button
-                type="button"
-                onClick={() => {
-                  handleReset(); // Resets form
-                  applyFilter(initialFilterValues); // Clears filter state
-                }}
-                className="btn btn-danger btn-elevate"
-              >
-                Cancel
-              </button>
-            </Modal.Footer>
+
           </>
         )}
       </Formik>

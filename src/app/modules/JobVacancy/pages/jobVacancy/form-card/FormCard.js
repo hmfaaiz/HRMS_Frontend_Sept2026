@@ -58,21 +58,11 @@ const { userAccess } = useSelector(
 
       <Card>
 
-        <CardHeader >
+        <CardHeader title={""}>
 
-          <div className="">
-
-
-
-         
-
+  
             <div className=" p-2">
-
-              <CardHeaderToolbar>
-
-
-
-                {accessUser && (
+                  {accessUser && (
 
                   <button
 
@@ -90,6 +80,12 @@ const { userAccess } = useSelector(
 
                 )}
 
+              <CardHeaderToolbar>
+
+
+
+            
+
 
 
 
@@ -100,7 +96,7 @@ const { userAccess } = useSelector(
 
 
 
-          </div>
+  
 
         </CardHeader>
 

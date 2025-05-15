@@ -77,6 +77,13 @@ export const JobVacancySlice = createSlice({
             );
         },
 
+         JobPostedStatus: (state, action) => {
+
+            state.error = null;
+            state.actionsLoading = false;
+         
+        },
+
 
 
 

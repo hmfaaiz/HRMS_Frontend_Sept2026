@@ -32,3 +32,23 @@ export function deleteJobVacancy(body) {
 
   return axios.patch(`${USERS_URL}/job_vacancy/delete-job-vacancy`, body);
 }
+
+//Post
+export function postJobVacancy(body) {
+
+  return axios.patch(`${USERS_URL}/job_vacancy/post-job-vacancy`, body);
+}
+
+
+//Hold
+export function holdJobVacancy(body) {
+
+  return axios.patch(`${USERS_URL}/job_vacancy/hold-job-vacancy`, body);
+}
+
+
+//Close
+export function closeJobVacancy(body) {
+
+  return axios.patch(`${USERS_URL}/job_vacancy/close-job-vacancy`, body);
+}

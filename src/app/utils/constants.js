@@ -388,6 +388,9 @@ export const SERVER_MESSAGES = {
   csvFail:"No data found!",
   excelFail:"No data found!",
   correctDateRange:"Please select correct date range",
+  postedSuccess: 'Record posted Successfully!',
+  holdSuccess: 'Record holded Successfully!',
+  closedSuccess: 'Record closed Successfully!',
 }
 
 export const WEEK_DAY_STRING = {
