@@ -146,7 +146,8 @@ export function Dashboard() {
         </FormUIProvider>
       ) : (
         <>
-          <div>
+          <h1>Dashboard</h1>
+          {/* <div>
             <HRMSDashboard />
           </div>
 
@@ -155,8 +156,7 @@ export function Dashboard() {
           </div>
           <div style={{ float: "left", width: "450px" }}>
             <Doughnut data={data} options={options} />
-            {/* <Pie data={data} options={options} />; */}
-          </div>
+          </div> */}
         </>
       )}
     </>

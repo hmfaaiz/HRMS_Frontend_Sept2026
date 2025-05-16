@@ -14,9 +14,17 @@ export function FormFilter({ dispatch, pdfLoading }) {
   const FormUIContext = useFormUIContext();
 
   //Get All dropdown data from state
-  const { levelList, allPayrollMonthYearList, employeeList } = useSelector(
-    (state) => state.dashboard
-  );
+  const {
+    levelList,
+    allPayrollMonthYearList,
+    employeeList,
+    user,
+  } = useSelector((state) => ({
+    levelList: state.dashboard?.levelList,
+    allPayrollMonthYearList: state.dashboard?.allPayrollMonthYearList,
+    employeeList: state.dashboard?.employeeList,
+    user: state?.auth?.user,
+  }));
 
   const { payrollData } = useSelector((state) => state.payroll_preview);
 
@@ -68,7 +76,13 @@ export function FormFilter({ dispatch, pdfLoading }) {
     if (selectedEmp) {
       dispatch(actions.getPayrollMonth(selectedEmp.value));
     }
-  }, [formUIProps.selectedEmp]);
+    if (formUIProps.selectedEmp?.value && formUIProps?.currentLevel === 0) {
+      let findEmp = employeeList.find(
+        (e) => e?.value === user?.employeeIdMapping
+      );
+      formUIProps.setSelectedEmp(findEmp);
+    }
+  }, [formUIProps.selectedEmp, employeeList]);
 
   // 4. When payrollData is ready, fetch payroll month/year list
   useEffect(() => {

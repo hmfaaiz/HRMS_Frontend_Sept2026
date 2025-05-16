@@ -20,6 +20,10 @@ import { LeaveApplicationTable } from "../EmpPortalComponent/LeaveApplicationTab
 import EmployeeProfile from "../EmpPortalComponent/EmployeeProfile";
 import { EmployeeExtendedInfo } from "../EmpPortalComponent/EmployeeExtendedInfo";
 import { ReportingEmpTable } from "../EmpPortalComponent/ReportingEmpTable";
+import { fetchAttendanceSheetConsolidated } from "../../../../AttendanceRequest/_redux/formActions";
+import { AttendanceSummary } from "../EmpPortalComponent/AttendanceSummary";
+import { HolidayTable } from "../EmpPortalComponent/HolidayTable";
+import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 export const EmployeePortal = () => {
   const formUIContext = useFormUIContext();
   const dispatch = useDispatch();
@@ -42,7 +46,7 @@ export const EmployeePortal = () => {
     leaveBalances,
     leaveApprovalCount,
     attendanceApprovalCount,
-    loanRequest,
+    loanList,
     leaveRequest,
     profileInfo,
     contactInfo,
@@ -51,6 +55,9 @@ export const EmployeePortal = () => {
     skillsInfo,
     payrollData,
     reportingEmployee,
+    attendanceSummary,
+    holidayList,
+    activeFiscalYear,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
@@ -60,7 +67,8 @@ export const EmployeePortal = () => {
       user: state?.auth?.user,
       leaveApprovalCount: state.leave_approval.entities,
       attendanceApprovalCount: state.attendance_approval?.entities,
-      loanRequest: state.employee_loan_request?.entities,
+      loanList: state.dashboard?.loanList,
+      holidayList: state.dashboard?.holidayList,
       leaveRequest: state?.leave_request?.entities,
       profileInfo: state?.dashboard?.profileInfo,
       contactInfo: state?.dashboard?.contactInfo,
@@ -69,10 +77,13 @@ export const EmployeePortal = () => {
       skillsInfo: state?.dashboard?.skillsInfo,
       payrollData: state?.dashboard?.payrollData,
       reportingEmployee: state?.dashboard?.reportingEmployee,
+      attendanceSummary: state?.attendance_request?.attendanceSummary,
+      activeFiscalYear: state?.dashboard?.activeFiscalYear,
     }),
     shallowEqual
   );
 
+  console.log("holidayListholidayList", loanList);
   useEffect(() => {
     dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
   }, [formUIProps.currentLevel]);
@@ -88,6 +99,12 @@ export const EmployeePortal = () => {
       );
       formUIProps.setSelectedEmp(findEmp);
       dispatch(action?.getLogedInEmployee());
+    }
+    if (formUIProps.selectedEmp?.value && formUIProps?.currentLevel === 0) {
+      let findEmp = employeeList.find(
+        (e) => e?.value === user?.employeeIdMapping
+      );
+      formUIProps.setSelectedEmp(findEmp);
     }
   }, [formUIProps?.selectedEmp, employeeList]);
 
@@ -105,26 +122,25 @@ export const EmployeePortal = () => {
     }
   }, [logedInEmpoyee]);
 
+  // First useEffect: Fetch basic data when selectedEmp changes
   useEffect(() => {
     if (formUIProps?.selectedEmp) {
-      dispatch(action?.fetchLeaveBalances(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchProfileInfo(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchAcademicInfo(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchContactInfo(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchExperienceInfo(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchSkillsInfo(formUIProps?.selectedEmp?.value));
-      dispatch(action.getPayrollMonth(formUIProps?.selectedEmp?.value));
+      dispatch(action.fetchLeaveBalances(formUIProps.selectedEmp.value));
+      dispatch(action.fetchProfileInfo(formUIProps.selectedEmp.value));
+      dispatch(action.fetchAcademicInfo(formUIProps.selectedEmp.value));
+      dispatch(action.fetchContactInfo(formUIProps.selectedEmp.value));
+      dispatch(action.fetchExperienceInfo(formUIProps.selectedEmp.value));
+      dispatch(action.fetchSkillsInfo(formUIProps.selectedEmp.value));
+      dispatch(action.getPayrollMonth(formUIProps.selectedEmp.value));
       dispatch(action.fetchReportingEmployee(formUIProps?.selectedEmp?.value));
-      dispatch(
-        fetchEmployeeLoanRequest({
-          employeeId: formUIProps?.selectedEmp?.value,
-          ids: "",
-          queryParams: loanDetailFilter,
-        })
-      );
+      dispatch(action.fetchLoanDetail(formUIProps?.selectedEmp?.value));
+      dispatch(action.fetchHolidayDetail(formUIProps?.selectedEmp?.value));
     }
+  }, [formUIProps?.selectedEmp]);
 
-    if (payrollData && formUIProps?.selectedEmp) {
+  // Second useEffect: Fetch leave & attendance when payrollData and selectedEmp are both available
+  useEffect(() => {
+    if (formUIProps?.selectedEmp && payrollData) {
       dispatch(
         fetchLeaveApplication(
           {
@@ -135,11 +151,21 @@ export const EmployeePortal = () => {
               to: payrollData?.endDate,
             },
           },
-          formUIProps?.selectedEmp?.value
+          formUIProps.selectedEmp.value
         )
       );
+      dispatch(
+        fetchAttendanceSheetConsolidated({
+          employeeId: formUIProps.selectedEmp.value,
+          from: payrollData.startDate,
+          to: payrollData.endDate,
+        })
+      );
+      dispatch(
+        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
+      );
     }
-  }, [formUIProps?.selectedEmp]);
+  }, [formUIProps?.selectedEmp, payrollData]);
 
   return (
     <>
@@ -164,7 +190,19 @@ export const EmployeePortal = () => {
       />
       <br />
       <hr />
+      <AttendanceSummary
+        payrollData={payrollData}
+        attendanceSummary={attendanceSummary}
+      />
+      <br />
+      <hr />
       <LeaveBalanceTable leaveBalances={leaveBalances} />
+      <br />
+      <hr />
+      <HolidayTable
+        activeFiscalYear={activeFiscalYear}
+        entities={holidayList?.length > 0 ? holidayList : []}
+      />
       <br />
       <hr />
       <LeaveApplicationTable
@@ -173,9 +211,7 @@ export const EmployeePortal = () => {
       />
       <br />
       <hr />
-      <EmployeeLoanDetail
-        entities={loanRequest?.length > 0 ? loanRequest : []}
-      />
+      <EmployeeLoanDetail entities={loanList?.length > 0 ? loanList : []} />
       <br />
       <hr />
       <EmployeeExtendedInfo

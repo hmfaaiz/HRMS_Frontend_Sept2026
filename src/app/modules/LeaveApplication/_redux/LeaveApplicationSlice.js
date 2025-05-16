@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   listLoading: false,
   actionsLoading: null,
+  detailLoading: false,
+  leaveApplicationDetail: [],
   totalCount: 0,
   entities: null,
   roles: null,
@@ -13,11 +15,14 @@ const initialState = {
   userForRead: false,
   payrollData: null,
   leaveBalances: [],
+  detailUpdateLoading: false,
 };
 
 export const callTypes = {
   list: "list",
   action: "action",
+  detail_list: "detail_list",
+  detail_action: "detail_action",
 };
 
 export const LeaveApplicationSlice = createSlice({
@@ -28,6 +33,10 @@ export const LeaveApplicationSlice = createSlice({
       state.error = `${action.type}: ${action.payload.error}`;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = false;
+      } else if (action.payload.detail_list === callTypes.detail_list) {
+        state.detailLoading = false;
+      } else if (action.payload.detail_action === callTypes.detail_action) {
+        state.detailUpdateLoading = false;
       } else {
         state.actionsLoading = false;
       }
@@ -36,17 +45,31 @@ export const LeaveApplicationSlice = createSlice({
       state.error = null;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
+      } else if (action.payload.detail_list === callTypes.detail_list) {
+        state.detailLoading = true;
+      } else if (action.payload.detail_action === callTypes.detail_action) {
+        state.detailUpdateLoading = true;
       } else {
         state.actionsLoading = true;
       }
     },
     LeaveApplicationFetched: (state, action) => {
       const entities = action.payload.data?.data.rows || [];
-      const totalResult = action.payload.data?.data.totalResults || 0;  
+      const totalResult = action.payload.data?.data.totalResults || 0;
       state.listLoading = false;
       state.error = null;
       state.entities = entities;
       state.totalCount = totalResult;
+    },
+    LeaveDetailFetched: (state, action) => {
+      const entities = action.payload.data?.data || [];
+      state.detailLoading = false;
+      state.error = null;
+      state.leaveApplicationDetail = entities;
+    },
+    LeaveDetailUpdated: (state, action) => {
+      state.detailUpdateLoading = false;
+      state.error = null;
     },
     LeaveApplicationFetchedForEdit: (state, action) => {
       const entities = action?.payload?.userForEdit;

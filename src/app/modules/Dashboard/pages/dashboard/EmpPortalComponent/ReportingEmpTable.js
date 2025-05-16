@@ -112,7 +112,7 @@ export function ReportingEmpTable({ empAuthorityList }) {
   ];
 
   return (
-    <Accordion defaultActiveKey="">
+    <Accordion defaultActiveKey="0">
       <Card>
         <Card.Header>
           <div className="accordion-header-btn">
@@ -121,7 +121,7 @@ export function ReportingEmpTable({ empAuthorityList }) {
               as={Button}
               eventKey="0"
             >
-              Reporting Employee
+              Team Members
               <KeyboardArrowDown />
             </Accordion.Toggle>
           </div>

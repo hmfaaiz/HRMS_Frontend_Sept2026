@@ -115,13 +115,16 @@ export function LeaveApplicationTable({ entities, payrollData }) {
         <Accordion.Collapse eventKey="0">
           <Card.Body>
             {payrollData && payrollData?.startDate && payrollData?.endDate && (
-              <ActivePayrollMonthLabel
-                month={payrollData?.month}
-                startDate={payrollData?.startDate}
-                endDate={payrollData?.endDate}
-                year={payrollData?.year}
-                className={"ee"}
-              />
+              <strong>
+                {" "}
+                <ActivePayrollMonthLabel
+                  month={payrollData?.month}
+                  startDate={payrollData?.startDate}
+                  endDate={payrollData?.endDate}
+                  year={payrollData?.year}
+                  className={"ee"}
+                />
+              </strong>
             )}
             <div style={{ width: "100%", overflowX: "auto" }}>
               <BootstrapTable

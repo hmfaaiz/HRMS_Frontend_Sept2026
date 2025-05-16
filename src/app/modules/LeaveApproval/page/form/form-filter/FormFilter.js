@@ -11,9 +11,7 @@ import {
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import { initialFilter, requestFilter } from "../../FormUIHelper";
-import {
-  fetchAllLeaveType,
-} from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardActions";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 export const FormFilter = ({ loading, queryParams }) => {
@@ -152,7 +150,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                             component={SearchSelect}
                             onBlur={handleBlur}
                             name="requestRaisedFor"
-                            label={<span>Request Raised For</span>}
+                            label={<span>Request Raised By</span>}
                             onChange={({ value }) => {
                               setFieldValue("requestRaisedFor", value);
                             }}
@@ -281,7 +279,10 @@ export const FormFilter = ({ loading, queryParams }) => {
                               dateFormat="dd/MM/yyyy"
                               label={<span> Date To</span>}
                               onChange={(date) => {
-                                setFieldValue("requestDate.to", date);
+                                setFieldValue(
+                                  "requestDate.to",
+                                  date ? date : ""
+                                );
                               }}
                               autoComplete="off"
                             />
