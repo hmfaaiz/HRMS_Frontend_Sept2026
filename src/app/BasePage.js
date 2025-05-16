@@ -297,7 +297,7 @@ const ROUTES = {
   leaveapproval: LeaveApprovalModule,
   attendance_request: AttendanceRequestModule,
   attendance_approval: AttendanceApprovalModule,
-  payroll_preview: PayrollPreview,
+  payslip : PayrollPreview,
   loan_register: loanRegisterModule,
   reimbursement_register: reimbursementRegisterModule,
 };

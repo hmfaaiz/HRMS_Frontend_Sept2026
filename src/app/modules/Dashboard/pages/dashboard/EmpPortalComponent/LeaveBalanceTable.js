@@ -99,7 +99,7 @@ export function LeaveBalanceTable({ leaveBalances }) {
   ];
 
   return (
-    <Accordion defaultActiveKey="">
+    <Accordion defaultActiveKey="0">
       <Card>
         <Card.Header>
           <div className="accordion-header-btn">

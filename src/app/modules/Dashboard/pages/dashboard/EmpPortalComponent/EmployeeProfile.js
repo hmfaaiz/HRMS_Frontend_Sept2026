@@ -6,7 +6,7 @@ import { formatDates } from "../../../../../utils/common";
 
 const EmployeeProfile = ({ data }) => {
   return (
-    <Accordion defaultActiveKey="">
+    <Accordion defaultActiveKey="0">
       <Card>
         <Card.Header>
           <div className="accordion-header-btn ">
@@ -179,6 +179,10 @@ const EmployeeProfile = ({ data }) => {
                     <Col md={3}>
                       <strong>Passport No: </strong>
                       {data?.passportNo || "N/A"}
+                    </Col>
+                    <Col md={6}>
+                      <strong>Address: </strong>
+                      {data?.additional_summary || "N/A"}
                     </Col>
                   </Row>
                   <hr />

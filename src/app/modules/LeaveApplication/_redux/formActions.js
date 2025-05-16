@@ -51,6 +51,44 @@ export const fetchLeaveApplication = (queryparm, employeeId) => async (
   }
 };
 
+export const fetchLeaveDetail = (id) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.detail_list }));
+  return requestFromServer
+    .getleaveDetail(id)
+    .then((response) => {
+      dispatch(actions.LeaveDetailFetched(response));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Leave Detail";
+      dispatch(actions.catchError({ error, callType: callTypes.detail_list }));
+    });
+};
+
+export const updateLeaveDetail = (body, onHide) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.detail_action }));
+  return requestFromServer
+    .updateleaveDetail(body)
+    .then((response) => {
+      dispatch(actions.LeaveDetailUpdated({}));
+      onHide();
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't Update Leave Detail";
+      dispatch(
+        actions.catchError({ error, callType: callTypes.detail_action })
+      );
+    });
+};
+
 /**
  *
  * Fetch All Leave Application by Employee Id from the server

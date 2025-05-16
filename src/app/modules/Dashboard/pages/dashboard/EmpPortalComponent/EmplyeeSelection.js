@@ -52,7 +52,7 @@ export const EmployeeSelection = ({
               }}
             />
           </div>
-          <h2 style={{ color: "red", marginTop: "10px" }}>
+          <h2 style={{ color: "green", marginTop: "10px" }}>
             {new Date().getHours() < 12
               ? "Good Morning"
               : new Date().getHours() < 18
@@ -74,7 +74,7 @@ export const EmployeeSelection = ({
             <>
               <Form className="form form-label-right">
                 <fieldset>
-                  <h6>Employee Selection</h6>
+
                   <div className="from-group row">
                     {/* Reporting Level */}
                     <div className="col-12 col-md-12 row">

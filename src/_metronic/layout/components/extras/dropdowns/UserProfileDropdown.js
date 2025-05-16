@@ -3,18 +3,49 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import objectPath from "object-path";
 import { useHtmlClassService } from "../../../_core/MetronicLayout";
 import { toAbsoluteUrl } from "../../../../_helpers";
 import { DropdownTopbarItemToggler } from "../../../../_partials/dropdowns";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import SVG from "react-inlinesvg";
 
 export function UserProfileDropdown() {
-  const user = useSelector((state) => {
-    return state.auth.user; // Directly access the user from state.auth
-  });
+  const history = useHistory();
+  const auth = useSelector(({ auth }) => auth, shallowEqual);
+  const UserAccess = auth?.userAccess;
+  const user = auth?.user;
+
+  const res = Object.values(UserAccess).flatMap((items) => items);
+  const portalRoutesLength = res.filter(
+    (e) => e?.isResourceShow && e.portalType === 2
+  ).length;
+  const HRMSRoutesLength = res.filter(
+    (e) => e?.isResourceShow && e.portalType === 1
+  ).length;
+
+  const isEmployeePortalStored =
+    localStorage.getItem("isEmployeePortal") === "true";
+
+  const isEmployeePortal = isEmployeePortalStored
+    ? portalRoutesLength > 0
+      ? "2"
+      : "1"
+    : HRMSRoutesLength > 0
+    ? "1"
+    : "2";
+
+  const handleSwitch = () => {
+    let val = localStorage.getItem("isEmployeePortal") === "true";
+    localStorage.setItem("isEmployeePortal", (!val).toString());
+
+    history.push("/dashboard"); // ✅ Navigate to /dashboard
+  };
+
   const uiService = useHtmlClassService();
   const layoutProps = useMemo(() => {
     return {
@@ -24,220 +55,100 @@ export function UserProfileDropdown() {
     };
   }, [uiService]);
 
-
   return (
-    
-
     <Dropdown drop="down" alignRight>
-    <Dropdown.Toggle
-      as={DropdownTopbarItemToggler}
-      id="dropdown-toggle-user-profile"
-    >
-      <div
-        className={
-          "w-auto d-flex align-items-center btn-lg px-2"
-        }
+      <Dropdown.Toggle
+        as={DropdownTopbarItemToggler}
+        id="dropdown-toggle-user-profile"
       >
-        <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
-          Hi,
-        </span>{" "}
-        <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-          {user?.EmployeeMapping?.fullName? user?.EmployeeMapping?.fullName : user?.email
-          }
-           {" - "}(
-           {user?.role?.name
-          }
-          )
-        </span>
-        {/* <span className="symbol symbol-35 symbol-light-success">
-          <span className="symbol-label font-size-h5 font-weight-bold"> */}
-             {/* {user.firstname} */}
-            {/* <img className="w-100" src="/media/users/default.jpg" />
+        <div className={"w-auto d-flex align-items-center btn-lg px-2"}>
+          <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
+            Hi,
+          </span>{" "}
+          <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
+            {user?.EmployeeMapping?.fullName
+              ? user?.EmployeeMapping?.fullName
+              : user?.email}
+            {" - "}({user?.role?.name})
           </span>
-         
-        </span> */}
-        
-        <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
-  <span className="symbol-label font-size-h5 font-weight-bold p-0">
-    <img  width={100} height={47} src={user?.EmployeeMapping?.profile_image? user?.EmployeeMapping?.profile_image : "/media/users/default.jpg"
-          }  alt="User" />
-  </span>
-</span>
-
-        <span className="ml-3">
-          
-        <Link
-            to="/password/reset-password"
-            className="btn btn-light-primary font-weight-bold"
+          <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
+            <span className="symbol-label font-size-h5 font-weight-bold p-0">
+              <img
+                width={100}
+                height={47}
+                src={
+                  user?.EmployeeMapping?.profile_image
+                    ? user?.EmployeeMapping?.profile_image
+                    : "/media/users/user.svg"
+                }
+                alt="User"
+              />
+            </span>
+          </span>
+          <span
+            style={{
+              borderRadius: "50%",
+              // padding: "2px",
+              backgroundColor: "#fff",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "48px",
+              height: "47px",
+              margin: "0px 5px 0px 5px",
+              background: "#556080",
+            }}
           >
-          <LockOpenIcon />
-            <span className="ml-3">Reset Password</span>
-          </Link>
-        </span>
-
-        <span className="ml-3">
-        <Link
-            to="/logout"
-            className="btn btn-light-primary font-weight-bold"
-          >
-          <ExitToAppIcon />
-            <span className="ml-3">Sign Out</span>
-          </Link>
-        </span>
-      </div>
-    </Dropdown.Toggle>
-   
-  </Dropdown>
-    // <Dropdown drop="down" alignRight>
-    //   <Dropdown.Toggle
-    //     as={DropdownTopbarItemToggler}
-    //     id="dropdown-toggle-user-profile"
-    //   >
-    //     <div
-    //       className={
-    //         "btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2"
-    //       }
-    //     >
-    //       <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
-    //         Hi,
-    //       </span>{" "}
-    //       <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-    //         {user.firstName}
-    //       </span>
-    //       <span className="symbol symbol-35 symbol-light-success">
-    //         <span className="symbol-label font-size-h5 font-weight-bold">
-    //            {user.firstname}
-    //           <img className="w-100" src="/media/users/default.jpg" />
-    //         </span>
-           
-    //       </span>
-    //       <span className="ml-3">
-    //       <Link
-    //           to="/logout"
-    //           className="btn btn-light-primary font-weight-bold"
-    //         >
-    //         <ExitToAppIcon />
-    //           <span className="ml-3">Sign Out</span>
-    //         </Link>
-    //       </span>
-    //     </div>
-    //   </Dropdown.Toggle>
-    //    <Dropdown.Menu className="p-0 m-0 dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">
-    //     <>
-       
-    //       {layoutProps.light && (
-    //         <>
-    //           <div className="d-flex align-items-center p-8 rounded-top">
-    //             <div className="symbol symbol-md bg-light-primary mr-3 flex-shrink-0">
-    //               <img src={toAbsoluteUrl("/media/users/300_21.jpg")} alt="" />
-    //             </div>
-    //             <div className="text-dark m-0 flex-grow-1 mr-3 font-size-h5">
-    //               {user.firstname} {user.lastname}
-    //             </div>
-    //             <span className="label label-light-success label-lg font-weight-bold label-inline">
-    //               3 messages
-    //             </span>
-    //           </div>
-    //           <div className="separator separator-solid"></div>
-    //         </>
-    //       )}
-
-    //       {!layoutProps.light && (
-    //         <div
-    //           className="d-flex align-items-center justify-content-between flex-wrap p-8 bgi-size-cover bgi-no-repeat rounded-top"
-    //           style={{
-    //             backgroundImage: `url(${toAbsoluteUrl(
-    //               "/media/misc/bg-1.jpg"
-    //             )})`,
-    //           }}
-    //         >
-    //           <div className="symbol d-flex mr-3">
-    //             <img className="w-100" src="/media/users/default.jpg" />
-    //             <span className="text-success font-weight-bold font-size-h4 mt-4 ml-3">
-    //               {user.firstname}
-    //             </span>
-    //             <img alt="Pic" className="hidden" src={user.pic} />
-    //           </div>
-    //           <div className="text-white m-0 flex-grow-1 mr-3 font-size-h5">
-    //             {user.firstname} {user.lastname}
-    //           </div>
-    //           <span className="label label-success label-lg font-weight-bold label-inline">
-    //             3 messages
-    //           </span>
-    //         </div>
-    //       )}
-    //     </>
-
-    //     <div className="navi navi-spacer-x-0 pt-5">
-    //       <Link to="/user-profile" className="navi-item px-8 cursor-pointer">
-    //         <div className="navi-link">
-    //           <div className="navi-icon mr-2">
-    //             <i className="flaticon2-calendar-3 text-success" />
-    //           </div>
-    //           <div className="navi-text">
-    //             <div className="font-weight-bold cursor-pointer">
-    //               My Profile
-    //             </div>
-    //             <div className="text-muted">
-    //               Account settings and more
-    //               <span className="label label-light-danger label-inline font-weight-bold">
-    //                 update
-    //               </span>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </Link>
-
-    //       <a className="navi-item px-8">
-    //         <div className="navi-link">
-    //           <div className="navi-icon mr-2">
-    //             <i className="flaticon2-mail text-warning"></i>
-    //           </div>
-    //           <div className="navi-text">
-    //             <div className="font-weight-bold">My Messages</div>
-    //             <div className="text-muted">Inbox and tasks</div>
-    //           </div>
-    //         </div>
-    //       </a>
-
-    //       <a className="navi-item px-8">
-    //         <div className="navi-link">
-    //           <div className="navi-icon mr-2">
-    //             <i className="flaticon2-rocket-1 text-danger"></i>
-    //           </div>
-    //           <div className="navi-text">
-    //             <div className="font-weight-bold">My Activities</div>
-    //             <div className="text-muted">Logs and notifications</div>
-    //           </div>
-    //         </div>
-    //       </a>
-
-    //       <a className="navi-item px-8">
-    //         <div className="navi-link">
-    //           <div className="navi-icon mr-2">
-    //             <i className="flaticon2-hourglass text-primary"></i>
-    //           </div>
-    //           <div className="navi-text">
-    //             <div className="font-weight-bold">My Tasks</div>
-    //             <div className="text-muted">latest tasks and projects</div>
-    //           </div>
-    //         </div>
-    //       </a>
-    //       <div className="navi-separator mt-3"></div>
-
-    //       <div className="navi-footer  px-8 py-5">
-    //         <Link
-    //           to="/logout"
-    //           className="btn btn-light-primary font-weight-bold"
-    //         >
-    //           Sign Out
-    //         </Link>
-    //         <a href="#" className="btn btn-clean font-weight-bold">
-    //           Upgrade Plan
-    //         </a>
-    //       </div>
-    //     </div>
-    //   </Dropdown.Menu>
-    // </Dropdown>
+            {portalRoutesLength > 0 &&
+              HRMSRoutesLength > 0 &&
+              user?.employeeIdMapping && (
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id="products-edit-tooltip">
+                      Switch Application
+                    </Tooltip>
+                  }
+                >
+                  <button
+                    onClick={handleSwitch}
+                    className="btn"
+                    style={{ border: "none" }}
+                  >
+                    <span
+                      style={{ marginRight: "0px" }}
+                      className="svg-icon svg-icon-xl"
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/Communication/Profile-Switch-Icon.svg"
+                        )}
+                      />
+                    </span>
+                  </button>
+                </OverlayTrigger>
+              )}
+          </span>
+          <span className="ml-3">
+            <Link
+              to="/password/reset-password"
+              className="btn btn-light-primary font-weight-bold"
+            >
+              <LockOpenIcon />
+              <span className="ml-3">Reset Password</span>
+            </Link>
+          </span>
+          <span className="ml-3">
+            <Link
+              to="/logout"
+              className="btn btn-light-primary font-weight-bold"
+            >
+              <ExitToAppIcon />
+              <span className="ml-3">Sign Out</span>
+            </Link>
+          </span>
+        </div>
+      </Dropdown.Toggle>
+    </Dropdown>
   );
 }

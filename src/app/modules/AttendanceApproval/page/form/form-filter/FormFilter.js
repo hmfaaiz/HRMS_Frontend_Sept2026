@@ -28,7 +28,6 @@ export const FormFilter = ({ loading, queryParams }) => {
     shallowEqual
   );
 
-
   useEffect(() => {
     dispatch(getEmployeeHierarchy(currentLevel));
   }, [currentLevel]);
@@ -127,7 +126,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                             component={SearchSelect}
                             onBlur={handleBlur}
                             name="requestRaisedFor"
-                            label={<span>Request Raised For</span>}
+                            label={<span>Request Raised By</span>}
                             onChange={({ value }) => {
                               setFieldValue("requestRaisedFor", value);
                             }}
@@ -189,7 +188,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                               dateFormat="dd/MM/yyyy"
                               label={<span>Date To</span>}
                               onChange={(date) => {
-                                setFieldValue("ate.to", date ? date : "");
+                                setFieldValue("date.to", date ? date : "");
                               }}
                               autoComplete="off"
                             />
@@ -227,7 +226,10 @@ export const FormFilter = ({ loading, queryParams }) => {
                               dateFormat="dd/MM/yyyy"
                               label={<span> Date To</span>}
                               onChange={(date) => {
-                                setFieldValue("requestDate.to", date);
+                                setFieldValue(
+                                  "requestDate.to",
+                                  date ? date : ""
+                                );
                               }}
                               autoComplete="off"
                             />

@@ -285,7 +285,7 @@ const WorkflowEditForm = ({
                         options={dashboard?.allEmployeeRequestTypeList}
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         isDisabled={isUserForRead}
                         name="defaultApproverId"
@@ -361,7 +361,7 @@ const WorkflowEditForm = ({
                           component="div"
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div className="col-12 col-md-12 mt-3">
                       <SearchSelect
                         isDisabled={isUserForRead}

@@ -3,7 +3,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
 } from "react-bootstrap-table2-paginator";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -103,6 +103,16 @@ export function LeaveApplicationTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+      },
+    },
+    {
+      dataField: "leave_modification_status",
+      text: "Modification Remarks",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "260px",
       },
     },
     {

@@ -39,12 +39,14 @@ export function EmployeeSelect({
     levelList,
     payrollData,
     activeFiscalYear,
+    user,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
       levelList: state?.dashboard?.levelList,
       payrollData: state?.leave_request?.payrollData,
       activeFiscalYear: state?.dashboard?.activeFiscalYear,
+      user: state?.auth?.user,
     }),
     shallowEqual
   );
@@ -80,6 +82,12 @@ export function EmployeeSelect({
   useEffect(() => {
     if (!formUIProps?.employeeId?.value && employeeList?.length > 0) {
       formUIProps.setemployeeId(employeeList[0]);
+    }
+    if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
+      let findEmp = employeeList.find(
+        (e) => e?.value === user?.employeeIdMapping
+      );
+      formUIProps.setemployeeId(findEmp);
     }
   }, [employeeList, formUIProps?.employeeId]);
 

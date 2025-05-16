@@ -70,6 +70,8 @@ const initialDashboardState = {
   academicInfo: null,
   payrollData: null,
   reportingEmployee: null,
+  loanList: [],
+  holidayList: [],
 };
 
 export const callTypes = {
@@ -284,7 +286,12 @@ export const dashboardSlice = createSlice({
     },
     AllLoanTypeFetch: (state, action) => {
       state.allLoanTypeList = action.payload;
- 
+    },
+    AllLoanFetch: (state, action) => {
+      state.loanList = action.payload;
+    },
+    AllHolidayFetch: (state, action) => {
+      state.holidayList = action.payload;
     },
   },
 });

@@ -40,12 +40,14 @@ export function FormFilter() {
     levelList,
     payrollData,
     activeFiscalYear,
+    user,
   } = useSelector((state) => {
     return {
       employeeList: state.dashboard?.employeeList,
       levelList: state.dashboard?.levelList,
       payrollData: state?.attendance_request?.payrollData,
       activeFiscalYear: state?.dashboard?.activeFiscalYear,
+      user: state?.auth?.user,
     };
   });
 
@@ -87,7 +89,13 @@ export function FormFilter() {
     if (!formUIProps?.employeeId?.value && employeeList?.length > 0) {
       formUIProps.setemployeeId(employeeList[0]);
     }
-  }, [employeeList, formUIProps?.employeeId]);
+    if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
+      let findEmp = employeeList.find(
+        (e) => e?.value === user?.employeeIdMapping
+      );
+      formUIProps.setemployeeId(findEmp);
+    }
+  }, [formUIProps.employeeId, employeeList]);
 
   useEffect(() => {
     // Only proceed if we have an employeeId
@@ -114,7 +122,6 @@ export function FormFilter() {
       );
     }
   }, [formUIProps.employeeId?.value, payrollData]); // Dependencies remain the same
-
 
   return (
     <>

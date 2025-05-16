@@ -8,13 +8,13 @@ export default function PayrollPreviewManagement() {
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
-        {<Redirect exact={true} from="/payroll_preview" to="/payroll_preview/read-all-payroll" />}
-        <ContentRoute path="/payroll_preview/read-all-payroll" component={PayrollRegisterPage} />
+        {<Redirect exact={true} from="/payslip" to="/payslip/read-payslip" />}
+        <ContentRoute path="/payslip/read-payslip" component={PayrollRegisterPage} />
 
 
 
-        {<Redirect exact={true} from="/payroll_preview" to="/payroll_preview/preview-payslip-pdf" />}
-        <ContentRoute path="/payroll_preview/preview-payslip-pdf" component={PreviewPayslipPDF} />
+        {<Redirect exact={true} from="/payslip" to="/payslip/preview-payslip-pdf" />}
+        <ContentRoute path="/payslip/preview-payslip-pdf" component={PreviewPayslipPDF} />
       </Switch>
     </Suspense>
   );

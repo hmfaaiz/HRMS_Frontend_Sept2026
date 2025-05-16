@@ -111,6 +111,17 @@ export async function getReportingEmployee(body) {
   );
 }
 
+export async function getLoanDetail(body) {
+  return axios.post(
+    `${USERS_URL}/emp_portal/read-employee-loan-request-by-empId`,
+    body
+  );
+}
+
+export async function getHolidayDetail(body) {
+  return axios.post(`${USERS_URL}/emp_portal/read-holidays-by-empId`, body);
+}
+
 export function getPayrollMonth(body) {
   return axios.post(
     `${USERS_URL}/payroll_month/get-payroll-month-previous-date`,
