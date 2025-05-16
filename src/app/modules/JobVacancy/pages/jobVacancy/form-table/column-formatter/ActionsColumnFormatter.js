@@ -192,7 +192,7 @@ export function ActionsColumnFormatter(
   )}
 
   {/* Close */}
-  {isAccessForClose &&  row?.jobPostingStatus!=3 && (
+  {isAccessForClose &&  (row?.jobPostingStatus==1 || row?.jobPostingStatus==2)  && (
     <OverlayTrigger overlay={<Tooltip id="close-tooltip">Close Job Vacancy</Tooltip>}>
       <a
         className="btn btn-icon posting-button"

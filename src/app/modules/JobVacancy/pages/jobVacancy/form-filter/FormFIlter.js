@@ -19,6 +19,7 @@ import {
   CardHeader,
   Input,
 } from "../../../../../../_metronic/_partials/controls"
+import { formatDates } from "../../../../../utils/common";
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -160,7 +161,7 @@ export function FormFIlter({ listLoading, user }) {
     priorityTypeId: null,
     desireFromDateOfApp: null,
     desireToDateOfApp: null,
-    vacancyStatusId: null, jobFinalizedFromDate: null, jobFinalizedToDate: null,
+    vacancyStatusId: 0, jobFinalizedFromDate: null, jobFinalizedToDate: null,
   };
   // return (
   //   <>
@@ -557,8 +558,9 @@ export function FormFIlter({ listLoading, user }) {
                             : null
                         }
                         onChange={(date) => {
-                          setFieldValue("desireFromDateOfApp", date);
-                          setFieldValue("desireToDateOfApp", date);
+                            let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("desireFromDateOfApp", selectedDate);
+                          setFieldValue("desireToDateOfApp", selectedDate);
                           handleSubmit();
                         }}
                         dateFormat="dd/MM/yyyy"
@@ -585,6 +587,7 @@ export function FormFIlter({ listLoading, user }) {
                         dateFormat="dd/MM/yyyy"
                         name="desireToDateOfApp"
                         autoComplete="off"
+                           minDate={values?.desireFromDateOfApp ? new Date(values.desireFromDateOfApp) : new Date()}
                       />
                     </div>
 
@@ -606,8 +609,10 @@ export function FormFIlter({ listLoading, user }) {
                             : null
                         }
                         onChange={(date) => {
-                          setFieldValue("jobFinalizedFromDate", date);
-                          setFieldValue("jobFinalizedToDate", date);
+                         let selectedDate = formatDates(date, 'yyyy-MM-dd')
+
+                          setFieldValue("jobFinalizedFromDate", selectedDate);
+                          setFieldValue("jobFinalizedToDate", selectedDate);
                           handleSubmit();
                         }}
                         dateFormat="dd/MM/yyyy"
@@ -634,6 +639,7 @@ export function FormFIlter({ listLoading, user }) {
                         dateFormat="dd/MM/yyyy"
                         name="jobFinalizedToDate"
                         autoComplete="off"
+                        minDate={values?.jobFinalizedFromDate ? new Date(values.jobFinalizedFromDate) : new Date()}
                       />
                     </div>
 

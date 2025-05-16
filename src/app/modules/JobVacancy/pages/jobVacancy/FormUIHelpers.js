@@ -37,7 +37,7 @@ export const initialFilter = {
     priorityTypeId: "",
     desireFromDateOfApp: "",
     desireToDateOfApp: "",
-    vacancyStatusId: "",
+    vacancyStatusId:0,
     jobFinalizedFromDate: "",
     jobFinalizedToDate: "",
 

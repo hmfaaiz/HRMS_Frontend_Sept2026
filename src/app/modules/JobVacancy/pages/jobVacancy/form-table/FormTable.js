@@ -65,7 +65,7 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
 
-      const isAccessForView = userAccess?.find(
+  const isAccessForView = userAccess?.find(
     (item) => item.componentName === "ReadJobVacancy"
   );
 
@@ -80,16 +80,40 @@ export function FormTable() {
 
   // Posting
 
-    const isAccessForPost = userAccess?.find(
+  const isAccessForPost = userAccess?.find(
     (item) => item.componentName === "PostJobVacancy"
   );
-    const isAccessForHold = userAccess?.find(
+  const isAccessForHold = userAccess?.find(
     (item) => item.componentName === "HoldJobVacancy"
   );
-    const isAccessForClose = userAccess?.find(
+  const isAccessForClose = userAccess?.find(
     (item) => item.componentName === "CloseJobVacancy"
   );
   // Table columns
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 0:
+        return "Vacancy not posted";
+      case 1:
+        return "Currently Posted";
+      case 2:
+        return "On Hold";
+      case 3:
+        return "Closed / Expired Jobsed";
+      default:
+        return "----";
+    }
+  };
+
+    const vacancyStatusOptions = [
+    { value: null, label: "All" },
+    { value: 0, label: "Vacancy not posted" },
+    { value: 1, label: "Currently Posted" },
+    { value: 2, label: "On Hold" },
+    { value: 3, label: "Closed / Expired Job" },
+  ];
+
   const columns = [
 
     {
@@ -151,28 +175,38 @@ export function FormTable() {
       },
     },
 
-
+    {
+      dataField: "jobPostingStatus",
+      text: "Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => getStatusLabel(cell),
+    },
     {
       dataField: "Post",
       text: "Job Posting",
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
-     
+
         openPostingFormDialog: formUIProps.openPostingFormDialog,
         openHoldFormDialog: formUIProps.openHoldFormDialog,
         openCloseFormDialog: formUIProps.openCloseFormDialog,
-      
+
 
         isAccessForPosting: isAccessForPost
           ? isAccessForPost.isAccess
           : false,
 
-                  isAccessForHold: isAccessForHold
+        isAccessForHold: isAccessForHold
           ? isAccessForHold.isAccess
           : false,
 
-                  isAccessForClose: isAccessForClose
+        isAccessForClose: isAccessForClose
           ? isAccessForClose.isAccess
           : false,
       },
@@ -184,7 +218,7 @@ export function FormTable() {
       },
     },
 
-       {
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -194,16 +228,16 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
-        isAccessForView:isAccessForView ? isAccessForView.isAccess : false,
+        isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
 
-      
+
       },
 
-    classes: "text-center pr-0",
+      classes: "text-center pr-0",
       headerClasses: "text-center pr-3",
       style: {
         minWidth: "100px",
