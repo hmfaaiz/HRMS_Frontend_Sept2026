@@ -80,6 +80,9 @@ export const customfetchFormDetail = (queryparm) => async (dispatch) => {
           draggable: true,
           progress: undefined,
         });
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        dispatch(actions.excelFetched({}));
       });
 
   }
@@ -117,6 +120,9 @@ export const customfetchFormDetail = (queryparm) => async (dispatch) => {
           draggable: true,
           progress: undefined,
         });
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        dispatch(actions.excelFetched({}));
       });
 
   }
@@ -152,6 +158,9 @@ export const customfetchFormDetail = (queryparm) => async (dispatch) => {
           draggable: true,
           progress: undefined,
         });
+        dispatch(actions.csvFetched({}));
+        dispatch(actions.pdfFetched({}));
+        dispatch(actions.excelFetched({}));
       });
 
   }
