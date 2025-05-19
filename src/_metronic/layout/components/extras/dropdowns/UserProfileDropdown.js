@@ -38,7 +38,7 @@ export function UserProfileDropdown() {
     : HRMSRoutesLength > 0
     ? "1"
     : "2";
-
+  
   const handleSwitch = () => {
     let val = localStorage.getItem("isEmployeePortal") === "true";
     localStorage.setItem("isEmployeePortal", (!val).toString());
@@ -85,23 +85,23 @@ export function UserProfileDropdown() {
               />
             </span>
           </span>
-          <span
-            style={{
-              borderRadius: "50%",
-              // padding: "2px",
-              backgroundColor: "#fff",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "48px",
-              height: "47px",
-              margin: "0px 5px 0px 5px",
-              background: "#556080",
-            }}
-          >
-            {portalRoutesLength > 0 &&
-              HRMSRoutesLength > 0 &&
-              user?.employeeIdMapping && (
+          {portalRoutesLength > 0 &&
+            HRMSRoutesLength > 0 &&
+            user?.employeeIdMapping && (
+              <span
+                style={{
+                  borderRadius: "50%",
+                  // padding: "2px",
+                  backgroundColor: "#fff",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "48px",
+                  height: "47px",
+                  margin: "0px 5px 0px 5px",
+                  background: "#556080",
+                }}
+              >
                 <OverlayTrigger
                   placement="bottom"
                   overlay={
@@ -127,8 +127,8 @@ export function UserProfileDropdown() {
                     </span>
                   </button>
                 </OverlayTrigger>
-              )}
-          </span>
+              </span>
+            )}
           <span className="ml-3">
             <Link
               to="/password/reset-password"
