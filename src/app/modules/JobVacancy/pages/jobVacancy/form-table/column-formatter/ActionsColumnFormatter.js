@@ -164,7 +164,7 @@ export function ActionsColumnFormatter(
     <div className="d-flex flex-nowrap align-items-center">
 
   {/* Post */}
-  {isAccessForPosting  && !row?.jobPostingStatus &&  (
+  {isAccessForPosting  && (row?.jobPostingStatus==0 || row?.jobPostingStatus==2 ) &&  (
     <OverlayTrigger overlay={<Tooltip id="post-tooltip">Post Job Vacancy</Tooltip>}>
       <a
         className="btn btn-icon posting-button"
@@ -261,6 +261,22 @@ export function ActionsColumnFormatter(
       )}
     </OverlayTrigger>
   )}
+
+
+    {/* Reopening */}
+  {isAccessForEdit  && row?.jobPostingStatus==3 &&  (
+    <OverlayTrigger overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}>
+      <a
+        className="btn btn-icon posting-button"
+        onClick={() => openEditFormDialog(row.Id)}
+      >
+        <span className="svg-icon svg-icon-md svg-icon-primary">
+          <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")} />
+        </span>
+      </a>
+    </OverlayTrigger>
+  )}
+
 </div>
 
   );

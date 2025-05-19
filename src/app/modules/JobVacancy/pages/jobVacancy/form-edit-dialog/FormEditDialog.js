@@ -71,7 +71,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
 
-    if (!id) {
+    if (!formData.Id) {
 
       dispatch(actions.createJobVacancy(formData, disbaleLoading, onHide));
 

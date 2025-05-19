@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -37,8 +37,16 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   gradeId: Yup.string().required(VALIDATION_MESSAGES.required),
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
-  // countryId: Yup.number().required(VALIDATION_MESSAGES.required),
-  // cityId: Yup.number().required(VALIDATION_MESSAGES.required),
+  countryId: Yup.number()
+    .nullable(), // optional banane ke liye
+
+cityId: Yup.string()
+  .nullable() // <- apply globally
+  .when('countryId', {
+    is: (val) => val !== undefined && val !== null && val !== '',
+    then: Yup.string().required(VALIDATION_MESSAGES.required),
+  }),
+
   // employeeTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
   // employeeStatusId: Yup.number().required(VALIDATION_MESSAGES.required),
   departmentId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -69,20 +77,20 @@ const jobVacancyEditSchema = Yup.object().shape({
   //   ),
 
   jobPostingDateTo: Yup.date()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required)
-  .min(
-    Yup.ref("jobPostingDateFrom"),
-    "Job Posting To date must be after From date"
-  )
-  .when("jobPeriodEnd", (jobPeriodEnd, schema) =>
-    jobPeriodEnd
-      ? schema.max(
+    .nullable()
+    .required(VALIDATION_MESSAGES.required)
+    .min(
+      Yup.ref("jobPostingDateFrom"),
+      "Job Posting To date must be after From date"
+    )
+    .when("jobPeriodEnd", (jobPeriodEnd, schema) =>
+      jobPeriodEnd
+        ? schema.max(
           Yup.ref("jobPeriodEnd"),
           "Job Posting To date must be before Job Period End"
         )
-      : schema
-  ),
+        : schema
+    ),
 
   reportToDesignationId: Yup.number()
     .required(VALIDATION_MESSAGES.required)
@@ -242,6 +250,13 @@ export function FormEditForm({
     return dashboard?.allCity?.filter((city) => city.code === countryId) || [];
   };
 
+  const cleanedFormData = useMemo(() => {
+    if (formData && !isdataForRead && formData.jobPostingStatus === 3) {
+      const { Id, jobCode, jobFinalizedeDate, jobPostingStatus, createdBy, updatedBy, createdAt, updatedAt, jobDate, ...rest } = formData;
+      return rest;
+    }
+    return formData;
+  }, [formData]);
 
 
   return (
@@ -249,14 +264,19 @@ export function FormEditForm({
       enableReinitialize={true}
 
 
+      // initialValues={{
+      //   ...formData,
+      //   jobDate: formData?.jobDate ? formData.jobDate : formatDates(new Date(), 'yyyy-MM-dd'), // set to today if not provided
+      // }}
       initialValues={{
-        ...formData,
-        jobDate: formData?.jobDate ? formData.jobDate : formatDates(new Date(), 'yyyy-MM-dd'), // set to today if not provided
+        ...cleanedFormData,
+        jobDate: cleanedFormData?.jobDate ? cleanedFormData?.jobDate : formatDates(new Date(), 'yyyy-MM-dd'),
       }}
       validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
 
         enableLoading();
+     
         saveForm(values);
       }}
     >
@@ -294,6 +314,9 @@ export function FormEditForm({
 
 
                       />
+                      {/* {errors.jobCode && (
+                        <div className="invalid-feedback d-block">{errors.jobCode}</div>
+                      )} */}
                     </div>
 
 
@@ -306,10 +329,7 @@ export function FormEditForm({
                         placeholder="Job Date"
                         selected={values?.jobDate ? new Date(values.jobDate) : null}
                         disabled={true}
-                        // onChange={(date) => {
-                        //   let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                        //   setFieldValue("jobDate", selectedDate);
-                        // }}
+
                         dateFormat="dd/MM/yyyy"
                         name="jobDate"
                         autoComplete="off"
@@ -401,58 +421,29 @@ export function FormEditForm({
                     </div>
 
 
-
-
-
                     <div className="col-12 col-md-4 mt-3">
-                      Subsidiary<span style={{ color: "red" }}>*</span>
-                      <div
-                        style={{
-                          backgroundColor: "#ffffff",
-                          height: "170px",
-                          padding: "10px",
-                          overflow: "scroll",
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isdataForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
                         }}
-                      >
-                        <div className="multi-select">
-                          <div className="dropdown-label"></div>
-                          <div
-                            className="dropdown-options"
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: "bold",
-                              padding: "5px",
-                            }}
-                          >
-                            {dashboard?.allSubsidiaryList?.map((option) => (
-                              <div
-                                key={option?.value}
-                                className="dropdown-option"
-                              >
-                                <input
-                                  style={{ width: "25px" }}
-                                  name="subsidiaryId"
-                                  type="checkbox"
-                                  value={option?.value}
-                                  checked={Boolean(
-                                    values?.subsidiaryId?.includes(
-                                      option?.value?.toString()
-                                    )
-                                  )}
-                                  onChange={handleChange}
-                                />
-                                {option?.label}
-                              </div>
-                            ))}
-                            {errors.subsidiaryId &&
-                              touched.subsidiaryId && (
-                                <div className="invalid-text">
-                                  {errors.subsidiaryId}
-                                </div>
-                              )}
-                          </div>
-                        </div>
-                      </div>
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+
+                        options={dashboard?.allSubsidiaryList}
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
@@ -476,7 +467,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="cityId"
                         label={<span>City</span>}
@@ -493,9 +484,58 @@ export function FormEditForm({
                         error={errors.cityId}
                         touched={touched.cityId}
                       />
+                    </div> */}
+
+                    <div className="col-12 col-md-4 mt-3">
+                      City
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {filteredCities(values.countryId).map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="cityId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.cityId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.cityId &&
+                              touched.cityId && (
+                                <div className="invalid-text">
+                                  {errors.cityId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-
 
 
 
@@ -838,8 +878,8 @@ export function FormEditForm({
                         name="jobPeriodStart"
                         autoComplete="off"
                         minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}
-                        maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) :null}
-                       
+                        maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : null}
+
 
 
                       />
@@ -866,7 +906,7 @@ export function FormEditForm({
                         name="jobPeriodEnd"
                         autoComplete="off"
                         minDate={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : new Date()}
-                      
+
 
 
 
