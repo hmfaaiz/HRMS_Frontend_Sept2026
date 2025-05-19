@@ -212,7 +212,7 @@ export function FormFilter({ dispatch, pdfLoading }) {
                           onClick={() => {
                             previewPayslipPdf(values);
 
-                            window.open("/payroll_preview/preview-payslip-pdf");
+                            window.open("/payslip/preview-payslip-pdf");
                           }}
                           disabled={
                             !values.employeeId || !values?.monthId || pdfLoading
