@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardBody,
@@ -12,6 +12,7 @@ import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import {
   fetchAllActiveEmployees,
   fetchAllLeaveType,
+  getActiveFiscalYear,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/formActions";
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
@@ -19,12 +20,14 @@ import { LeaveBalanceTable } from "../form-table/LeaveBalanceTable";
 import { PendingLeaveTable } from "../form-table/PendingLeaveTable";
 import "../../../../../utils/common-modules/form.css";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
-import { getStorage } from "../../../../../../_metronic/_helpers";
+import { useLocation } from "react-router-dom";
 import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [dateFromAtt, setDateFromAtt] = useState(null);
 
   //Get EmployeeId functions and values from Context in FormUIContext.js file
   const formUIProps = useMemo(() => {
@@ -36,43 +39,79 @@ export function FormCard() {
       setId: FormUIContext.setId,
       currentLevel: FormUIContext.currentLevel,
       setCurrentLevel: FormUIContext.setCurrentLevel,
+      initUser: FormUIContext.initUser,
     };
   }, [FormUIContext]);
 
   //Get data from states
-  const { dashboard, entities, empAuthorityList } = useSelector(
+  const {
+    dashboard,
+    entities,
+    empAuthorityList,
+    payrollData,
+    employeeList,
+  } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
       entities: state.leave_request.entities,
+      payrollData: state.leave_request?.payrollData,
       empAuthorityList: state?.leave_request?.empAuthorityList,
+      employeeList: state?.dashboard?.employeeList,
     }),
     shallowEqual
   );
 
+  useEffect(() => {
+    if (location?.state) {
+      let state = location?.state;
+      formUIProps.setCurrentLevel(state?.employeeId?.level);
+      formUIProps.setemployeeId(state?.employeeId);
+      setDateFromAtt(state?.leaveDate);
+    }
+    if (
+      !formUIProps?.employeeId?.value &&
+      employeeList?.length > 0 &&
+      !location?.state
+    ) {
+      formUIProps.setemployeeId(employeeList[0]);
+    }
+  }, [employeeList, formUIProps?.employeeId, location]);
+
   //Get data from server and set on state whenever employee Id is updated
   useEffect(() => {
-    dispatch(
-      actions.fetchLeaveApplication(
-        formUIProps.queryParamsLeaveApp,
-        formUIProps.employeeId
-      )
-    );
+    if (formUIProps.employeeId?.value) {
+      dispatch(
+        actions.fetchLeaveApplication(
+          formUIProps.queryParamsLeaveApp,
+          formUIProps.employeeId.value
+        )
+      );
 
-    if (!dashboard.allEmployees || !dashboard.allEmployees.length)
-      dispatch(fetchAllActiveEmployees());
-  }, [dispatch, formUIProps.employeeId, formUIProps.queryParamsLeaveApp]);
+      if (!dashboard.allEmployees?.length) {
+        dispatch(fetchAllActiveEmployees());
+      }
+    }
+  }, [formUIProps.employeeId?.value, formUIProps.queryParamsLeaveApp]);
 
   //Update Leave Balances whenever employee Id is changed or leave application table is updated
   //Also update dropdown of leave type when employee is selected
   useEffect(() => {
-    if (formUIProps.employeeId) {
-      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId));
-      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId));
-      dispatch(fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId));
-      dispatch(actions.getPayrollMonth(formUIProps.employeeId));
+    if (formUIProps.employeeId?.value) {
+      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId.value));
+      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId.value));
+      dispatch(
+        fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId.value)
+      );
+      dispatch(actions.getPayrollMonth(formUIProps.employeeId.value));
     }
-  }, [dispatch, formUIProps.employeeId, entities]);
-
+  }, [formUIProps.employeeId?.value]);
+  useEffect(() => {
+    if (payrollData) {
+      dispatch(
+        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
+      );
+    }
+  }, [payrollData]);
   return (
     <Card>
       {/* Card Starts */}
@@ -86,8 +125,9 @@ export function FormCard() {
             <EmployeeSelect
               setId={formUIProps.setId}
               setemployeeId={formUIProps.setemployeeId}
-              employeeId={formUIProps.employeeId}
+              employeeId={formUIProps.employeeId?.value}
               currentLevel={formUIProps.currentLevel}
+              initUser={formUIProps?.initUser}
               setCurrentLevel={formUIProps.setCurrentLevel}
             />
             {/* EmployeeSelect Ends */}
@@ -97,7 +137,7 @@ export function FormCard() {
           </div>
 
           {/* EmployeeProfile Starts */}
-          <EmployeeProfile employeeId={formUIProps.employeeId} />
+          <EmployeeProfile employeeId={formUIProps.employeeId.value} />
           {/* EmployeeProfile Ends */}
           <br />
           <hr />
@@ -106,8 +146,13 @@ export function FormCard() {
           <FormEditDialog
             id={formUIProps.id}
             currentLevel={formUIProps.currentLevel}
-            employeeId={formUIProps.employeeId}
+            employeeId={formUIProps.employeeId.value}
             empAuthorityList={empAuthorityList}
+            initUser={{
+              ...formUIProps?.initUser,
+              from: dateFromAtt !== null ? new Date(dateFromAtt) : "",
+              to: dateFromAtt !== null ? new Date(dateFromAtt) : "",
+            }}
           />
           {/* FormEditDialog Ends */}
         </div>

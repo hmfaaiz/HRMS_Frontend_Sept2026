@@ -3,7 +3,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
 } from "react-bootstrap-table2-paginator";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -106,6 +106,16 @@ export function LeaveApplicationTable() {
       },
     },
     {
+      dataField: "leave_modification_status",
+      text: "Modification Remarks",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "260px",
+      },
+    },
+    {
       dataField: "request_status",
       text: "Status",
       sort: false,
@@ -181,13 +191,9 @@ export function LeaveApplicationTable() {
         editRecord: FormUIProps.editRecord,
         openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
         isAccessForEdit: false,
-        // isAccessForEdit
-        //   ? isAccessForEdit.isAccess &&
-        //     user?.employeeIdMapping === FormUIProps?.employeeId
-        //   : false,
         isAccessForReApply: isAccessForReApply
           ? isAccessForReApply?.isAccess &&
-            user?.employeeIdMapping === FormUIProps?.employeeId
+            user?.employeeIdMapping === FormUIProps?.employeeId?.value
           : false,
       },
       classes: "text-right pr-0",

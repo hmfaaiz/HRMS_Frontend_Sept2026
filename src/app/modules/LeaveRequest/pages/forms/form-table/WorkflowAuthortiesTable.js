@@ -1,9 +1,6 @@
 import React, { useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory, {
-  PaginationProvider,
-} from "react-bootstrap-table2-paginator";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -12,7 +9,6 @@ import {
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelpers";
-import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";

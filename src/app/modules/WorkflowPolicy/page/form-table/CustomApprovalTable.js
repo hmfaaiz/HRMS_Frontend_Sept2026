@@ -6,6 +6,7 @@ import CustomErrorLabel from "../../../../utils/common-modules/CustomErrorLabel"
 import { LevelList } from "../FormUIHelper";
 
 function CustomApprovalWorkflowTable({
+  isUserForRead,
   values,
   setFieldValue,
   errors,
@@ -43,8 +44,8 @@ function CustomApprovalWorkflowTable({
   }, [roles?.allRoles]);
 
   return (
-    <>
-      <h6>Employee customApprovalList</h6>
+    <fieldset>
+      <h6>Employee Custom Approval List</h6>
       <FieldArray name="customApprovalList">
         {({ insert, remove, push }) => (
           <>
@@ -55,8 +56,8 @@ function CustomApprovalWorkflowTable({
                   <td>Action</td>
                   <td>WF Level</td>
                   <td>Approver</td>
-                  <td>Definition</td>
-                  <td>location</td>
+                  <td>Designation</td>
+                  <td>Location</td>
                 </tr>
               </thead>
               <tbody>
@@ -122,7 +123,7 @@ function CustomApprovalWorkflowTable({
                             touched.customApprovalList?.[index]
                               ?.workflowApprovalTypeId
                           }
-                          isDisabled={isEdit}
+                          isDisabled={isUserForRead}
                           value={
                             allApprovalWorkflowList?.get(
                               row?.workflowApprovalTypeId || ""
@@ -197,7 +198,7 @@ function CustomApprovalWorkflowTable({
                               touched={
                                 touched.customApprovalList?.[index]?.levelId
                               }
-                              isDisabled={isEdit}
+                              isDisabled={isUserForRead}
                               value={
                                 LevelList?.find(
                                   (e) => e?.value === row?.levelId
@@ -270,7 +271,7 @@ function CustomApprovalWorkflowTable({
                                 touched.customApprovalList?.[index]
                                   ?.designationId
                               }
-                              isDisabled={isEdit}
+                              isDisabled={isUserForRead}
                               value={
                                 allDesignations?.get(
                                   row?.designationId || ""
@@ -347,7 +348,7 @@ function CustomApprovalWorkflowTable({
                               touched={
                                 touched.customApprovalList?.[index]?.employeeId
                               }
-                              isDisabled={isEdit}
+                              isDisabled={isUserForRead}
                               value={
                                 allEmployees?.get(row?.employeeId || "") || ""
                               }
@@ -412,7 +413,7 @@ function CustomApprovalWorkflowTable({
                               touched={
                                 touched.customApprovalList?.[index]?.roleId
                               }
-                              isDisabled={isEdit}
+                              isDisabled={isUserForRead}
                               value={allRoles?.get(row?.roleId || "") || ""}
                               options={
                                 roles?.allRoles?.map((e) => {
@@ -469,7 +470,7 @@ function CustomApprovalWorkflowTable({
                               touched={
                                 touched.customApprovalList?.[index]?.locationId
                               }
-                              isDisabled={isEdit}
+                              isDisabled={isUserForRead}
                               value={[
                                 { value: null, label: "All" },
                                 ...dashboard?.allLocationChildMenus,
@@ -526,7 +527,7 @@ function CustomApprovalWorkflowTable({
           </>
         )}
       </FieldArray>
-    </>
+    </fieldset>
   );
 }
 

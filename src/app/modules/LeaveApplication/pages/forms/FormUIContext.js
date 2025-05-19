@@ -9,9 +9,12 @@ export function useFormUIContext() {
 }
 
 export function FormUIProvider({ FormUIEvents, children }) {
-  const [queryParamsLeaveApp, setQueryParamsLeaveAppBaseLeaveApp] = useState(initialFilter);
-  const [employeeId, setemployeeId] = useState('');
-  const [id, setId] = useState('');
+  const [queryParamsLeaveApp, setQueryParamsLeaveAppBaseLeaveApp] = useState(
+    initialFilter
+  );
+  const [employeeId, setemployeeId] = useState("");
+  const [id, setId] = useState("");
+  const [leaveId, setLeaveId] = useState(null);
   const setQueryParamsLeaveApp = useCallback((nextQueryParams) => {
     setQueryParamsLeaveAppBaseLeaveApp((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -27,19 +30,19 @@ export function FormUIProvider({ FormUIEvents, children }) {
   }, []);
 
   const initUser = {
-    to: '',
-    from: '',
-    leaveType: '',
-    request_status : 'A',
-    remarks: '',
-    days: '',
+    to: "",
+    from: "",
+    leaveType: "",
+    request_status: "A",
+    remarks: "",
+    days: "",
     file: null,
   };
 
   //Set Id for Edit record
   const editRecord = (id) => {
-    setId(id)
-  }
+    setId(id);
+  };
 
   const value = {
     queryParamsLeaveApp,
@@ -50,6 +53,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     id,
     setId,
     editRecord,
+    leaveId,
+    setLeaveId,
     initUser,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
   };

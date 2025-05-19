@@ -42,15 +42,13 @@ export const fetchAllCountry = () => async (dispatch) => {
     });
 };
 
-
 // export const fetchAllDept = (id) => async (dispatch) => {
-//   console.log("DashboardAction", id);
+//
 //   return await requestFromServer
 //     .getAllDepartments(id)
 //     .then((response) => {
-       
+
 //       const entities = response.data?.data;
-//       console.log("Get All dept", entities);
 //        dispatch(actions.AllDeptFetch(entities));
 //     })
 //     .catch((error) => {
@@ -59,11 +57,9 @@ export const fetchAllCountry = () => async (dispatch) => {
 // };
 
 export const fetchAllCity = (cityId) => async (dispatch) => {
-  // console.log("DashboardAction", cityId);
   return await requestFromServer
     .getCityByCountryId(cityId)
     .then((response) => {
-      // console.log("DashboardAction response", response);
       const entities = response.data?.data;
       dispatch(actions.AllCityFetch(entities));
     })
@@ -71,8 +67,6 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
-
-
 
 export const fetchStandByVehicles = (body) => async (dispatch) => {
   return await requestFromServer
@@ -152,3 +146,186 @@ export const alaramTime = () => async (dispatch) => {
     });
 };
 
+export const getEmployeeHierarchy = (level) => (dispatch) => {
+  return requestFromServer
+    .getEmployeeHierarchy(level)
+    .then((res) => {
+      const { levelList, employeeList } = res.data?.data;
+      dispatch(actions.EmployeeHierarchyFetched({ levelList, employeeList }));
+    })
+    .catch((error) => {
+      console.error("Error fetching employee hierarchy:", error);
+      dispatch(
+        actions.EmployeeHierarchyFetched({ levelList: [], employeeList: [] })
+      );
+      error.clientMessage = "Can't Get Employee Hierarchy";
+    });
+};
+
+export const getLogedInEmployee = () => (dispatch) => {
+  return requestFromServer
+    .getEmployeeProfile()
+    .then((res) => {
+      const data = res.data?.data;
+      dispatch(actions.fetchLogedInInEmployee(data));
+    })
+    .catch((error) => {
+      console.error("Error fetching employee:", error);
+      dispatch(actions.fetchLogedInInEmployee(null));
+      error.clientMessage = "Can't Get Employee";
+    });
+};
+
+export const fetchLeaveBalances = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getAllLeaveBalances({ employeeId })
+      .then((response) => {
+        dispatch(actions.LeaveBalancesFetched(response));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Leave Balances";
+      });
+  } else {
+    dispatch(actions.LeaveBalancesFetched([]));
+  }
+};
+
+export const fetchProfileInfo = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getProfileInfo({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.ProfileInfoFetched(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Profile Info";
+      });
+  } else {
+    dispatch(actions.ProfileInfoFetched(null));
+  }
+};
+
+export const fetchContactInfo = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getContactInfo({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.ContactInfoFetched(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Contact Info";
+      });
+  } else {
+    dispatch(actions.ContactInfoFetched(null));
+  }
+};
+
+export const fetchExperienceInfo = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getExperienceInfo({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.ExperienceInfoFetched(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Experience Info";
+      });
+  } else {
+    dispatch(actions.ExperienceInfoFetched(null));
+  }
+};
+
+export const fetchAcademicInfo = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getAcademicInfo({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.AcademicInfoFetched(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Academic Info";
+      });
+  } else {
+    dispatch(actions.AcademicInfoFetched(null));
+  }
+};
+
+export const fetchSkillsInfo = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getSkillsInfo({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.SkillsInfoFetched(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Skills Info";
+      });
+  } else {
+    dispatch(actions.SkillsInfoFetched(null));
+  }
+};
+
+export const fetchReportingEmployee = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getReportingEmployee({ Id: employeeId })
+      .then((response) => {
+        dispatch(
+          actions.ReportingEmployeeFetched(response?.data?.data || null)
+        );
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find reporting employee";
+      });
+  } else {
+    dispatch(actions.ReportingEmployeeFetched(null));
+  }
+};
+
+export const fetchLoanDetail = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getLoanDetail({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.AllLoanFetch(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find loan";
+      });
+  } else {
+    dispatch(actions.AllLoanFetch(null));
+  }
+};
+
+export const fetchHolidayDetail = (employeeId) => async (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getHolidayDetail({ Id: employeeId })
+      .then((response) => {
+        dispatch(actions.AllHolidayFetch(response?.data?.data || null));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Holidays";
+      });
+  } else {
+    dispatch(actions.AllHolidayFetch(null));
+  }
+};
+
+export const getPayrollMonth = (employeeId) => (dispatch) => {
+  if (!employeeId) {
+    dispatch(actions.PayrollMonthFetched({ payrollData: null }));
+  } else {
+    return requestFromServer
+      .getPayrollMonth({ employeeId })
+      .then((res) => {
+        const payrollData = res.data?.data;
+        dispatch(actions.PayrollMonthFetched({ payrollData }));
+      })
+      .catch((error) => {
+        dispatch(actions.PayrollMonthFetched({ payrollData: null }));
+        error.clientMessage = "Can't Get Payroll Data";
+      });
+  }
+};

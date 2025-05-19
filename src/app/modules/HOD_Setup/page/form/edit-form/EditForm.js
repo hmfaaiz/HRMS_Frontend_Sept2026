@@ -73,6 +73,7 @@ export const EditForm = ({
                     <div className="col-12 col-md-6 mt-3">
                       <SearchSelect
                         name="departmentId"
+                        isDisabled={isUserForRead}
                         label={
                           <span>
                             Department <span style={{ color: "red" }}>*</span>
@@ -119,7 +120,7 @@ export const EditForm = ({
                             Employee <span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        isDisabled={!values?.departmentId}
+                        isDisabled={!values?.departmentId || isUserForRead}
                         onChange={(e) => {
                           setFieldValue("empId", e.value || null);
                         }}

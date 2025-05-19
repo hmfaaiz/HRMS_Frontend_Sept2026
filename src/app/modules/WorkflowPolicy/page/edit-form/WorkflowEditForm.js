@@ -39,31 +39,143 @@ const validationSchema = Yup.object().shape({
   emailPendingToApprovers: Yup.boolean(),
   isMonday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   isTuesday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   isWednesday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   isThursday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   isFriday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   isSaturday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   isSunday: Yup.boolean().when("emailPendingToApprovers", {
     is: true,
-    then: Yup.boolean().required(VALIDATION_MESSAGES.required),
+    then: Yup.boolean().test(
+      "at-least-one-day",
+      "At least one day must be selected",
+      function() {
+        const parent = this.parent;
+        if (!parent.emailPendingToApprovers) return true;
+        return (
+          parent.isMonday ||
+          parent.isTuesday ||
+          parent.isWednesday ||
+          parent.isThursday ||
+          parent.isFriday ||
+          parent.isSaturday ||
+          parent.isSunday
+        );
+      }
+    ),
   }),
   emailTime: Yup.string()
     .matches(
@@ -127,6 +239,7 @@ const WorkflowEditForm = ({
                   <div className="from-group row">
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
+                        isDisabled={isUserForRead}
                         name="subsidiaryId"
                         label={
                           <span>
@@ -150,6 +263,7 @@ const WorkflowEditForm = ({
                     </div>
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
+                        isDisabled={isUserForRead}
                         name="workflowTypeId"
                         label={
                           <span>
@@ -171,8 +285,9 @@ const WorkflowEditForm = ({
                         options={dashboard?.allEmployeeRequestTypeList}
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
+                        isDisabled={isUserForRead}
                         name="defaultApproverId"
                         label={<span> Default Approver</span>}
                         onChange={({ value }) => {
@@ -246,9 +361,10 @@ const WorkflowEditForm = ({
                           component="div"
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div className="col-12 col-md-12 mt-3">
                       <SearchSelect
+                        isDisabled={isUserForRead}
                         name="emailCreationEmpId"
                         label={
                           <span>
@@ -272,6 +388,7 @@ const WorkflowEditForm = ({
                     </div>
                     <div className="col-12 col-md-12 mt-3">
                       <SearchSelect
+                        isDisabled={isUserForRead}
                         name="emailApprovedEmpId"
                         label={
                           <span>
@@ -295,6 +412,7 @@ const WorkflowEditForm = ({
                     </div>
                     <div className="col-12 col-md-12 mt-3">
                       <SearchSelect
+                        isDisabled={isUserForRead}
                         name="emailRejectedEmpId"
                         label={
                           <span>
@@ -386,12 +504,15 @@ const WorkflowEditForm = ({
                                 name={`is${day}`}
                                 disabled={!values?.emailPendingToApprovers}
                                 type="checkbox"
-                                onChange={() =>
+                                onChange={() => {
                                   setFieldValue(
                                     `is${day}`,
                                     values[`is${day}`] ? false : true
-                                  )
-                                }
+                                  );
+                                  // setTimeout(() => {
+                                  //   formik.validateForm();
+                                  // }, 100);
+                                }}
                                 checked={values[`is${day}`]}
                                 value={values[`is${day}`]}
                               />
@@ -401,17 +522,11 @@ const WorkflowEditForm = ({
                         </div>
                       </div>
                     </div>
-                    {errors?.isMonday ||
-                    errors?.isTuesday ||
-                    errors?.isWednesday ||
-                    errors?.isThursday ||
-                    errors?.isFriday ||
-                    errors?.isSaturday ||
-                    errors?.isSunday ? (
+                    {errors?.isMonday && (
                       <div className="form-feedBack" style={{ color: "red" }}>
-                        Atlest select one day
+                        {errors?.isMonday}
                       </div>
-                    ) : null}
+                    )}
                     <ErrorMessage
                       className="form-feedBack"
                       name="workingdays"
@@ -425,7 +540,7 @@ const WorkflowEditForm = ({
                       component={Input}
                       value={values?.emailTime}
                       disabled={!values?.emailPendingToApprovers}
-                      placeholder="Enter Min:hours"
+                      placeholder="Enter HHMM"
                       error={errors.emailTime}
                       autoComplete="off"
                       maxLength={4}

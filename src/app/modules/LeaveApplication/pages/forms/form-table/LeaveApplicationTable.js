@@ -24,35 +24,26 @@ export function LeaveApplicationTable() {
 
   const FormUIProps = useMemo(() => {
     return {
-      id: formUIContext.id,
-      setId: formUIContext.setId,
       queryParamsLeaveApp: formUIContext.queryParamsLeaveApp,
       setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
-      editRecord: formUIContext.editRecord,
-      openDeleteFormDialog: formUIContext.openDeleteFormDialog
+      setLeaveId: formUIContext.setLeaveId,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess, payrollData } = useSelector(
-    (state) => {
-      return {
-        payrollData: state.leave_application.payrollData,
-        currentState: state.leave_application,
-        userAccess: state?.auth?.userAccess["Leave_Application"],
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess, payrollData } = useSelector((state) => {
+    return {
+      payrollData: state.leave_application.payrollData,
+      currentState: state.leave_application,
+      userAccess: state?.auth?.userAccess["Leave_Application"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateLeaveApplication"
+    (item) => item.componentName === "UpdateLeaveDetail"
   );
 
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteLeaveApplication"
-  );
   // Table columns
   const columns = [
     {
@@ -105,26 +96,32 @@ export function LeaveApplicationTable() {
         minWidth: "160px",
       },
     },
-    // {
-    //   dataField: "action",
-    //   text: "Actions",
-    //   isDummyField: true,
-    //   formatter: ActionsColumnFormatter,
-    //   formatExtraData: {
-    //     payrollData: payrollData,
-    //     editRecord: FormUIProps.editRecord,
-    //     openDeleteFormDialog: FormUIProps.openDeleteFormDialog,
-    //     isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-    //     isAccessForDelete: isAccessForDelete
-    //       ? isAccessForDelete.isAccess
-    //       : false,
-    //   },
-    //   classes: "text-right pr-0",
-    //   headerClasses: "text-right pr-3",
-    //   style: {
-    //     minWidth: "170px",
-    //   },
-    // },
+    {
+      dataField: "leave_modification_status",
+      text: "Modification Remarks",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        payrollData: payrollData,
+        setLeaveId: FormUIProps.setLeaveId,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: {
+        minWidth: "170px",
+      },
+    },
   ];
 
   //Table pagination properties
@@ -140,16 +137,18 @@ export function LeaveApplicationTable() {
     <Accordion defaultActiveKey="">
       <Card>
         <Card.Header>
-        <div className='accordion-header-btn'>
-          <Accordion.Toggle as={Button} eventKey="0">
-            Leave Applications
-            <KeyboardArrowDown />
-          </Accordion.Toggle>
+          <div className="accordion-header-btn">
+            <Accordion.Toggle as={Button} eventKey="0">
+              Leave Applications
+              <KeyboardArrowDown />
+            </Accordion.Toggle>
           </div>
         </Card.Header>
         <Accordion.Collapse eventKey="0">
           <Card.Body>
-            <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+            <PaginationProvider
+              pagination={paginationFactory(paginationOptions)}
+            >
               {({ paginationProps, paginationTableProps }) => {
                 return (
                   <Pagination
@@ -172,7 +171,6 @@ export function LeaveApplicationTable() {
                       )}
                       {...paginationTableProps}
                     >
-
                       <PleaseWaitMessage entities={entities} />
                       <NoRecordsFoundMessage entities={entities} />
                     </BootstrapTable>
@@ -180,7 +178,6 @@ export function LeaveApplicationTable() {
                 );
               }}
             </PaginationProvider>
-
           </Card.Body>
         </Accordion.Collapse>
       </Card>

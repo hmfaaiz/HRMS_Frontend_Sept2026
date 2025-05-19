@@ -156,6 +156,7 @@ export const EditForm = ({
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="companyId"
+                        isDisabled={isUserForRead}
                         label={
                           <span>
                             Company Name <span style={{ color: "red" }}>*</span>
@@ -217,6 +218,7 @@ export const EditForm = ({
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       name="currencyId"
+                      isDisabled={isUserForRead}
                       label={<span>Currency</span>}
                       onChange={(e) => {
                         setFieldValue("currencyId", e.value || null);
@@ -231,6 +233,7 @@ export const EditForm = ({
                   </div>
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
+                      isDisabled={isUserForRead}
                       name="countryId"
                       label={<span>Country</span>}
                       onChange={(e) => {
@@ -250,6 +253,7 @@ export const EditForm = ({
                   </div>
                   <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
+                      isDisabled={isUserForRead}
                       name="cityId"
                       label={<span>City</span>}
                       onChange={(e) => {

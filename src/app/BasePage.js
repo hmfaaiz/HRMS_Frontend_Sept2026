@@ -182,9 +182,15 @@ const workFlowPolicyModule = lazy(() =>
   import("./modules/WorkflowPolicy/index")
 );
 const calendarModule = lazy(() => import("./modules/Calendar/pages/index"));
-const leave_calendarModule = lazy(() => import("./modules/Leave_Calendar/pages/index"));
-const roster_calendarModule = lazy(() => import("./modules/Roster_Calendar/pages/index"));
-const attendance_calendarModule = lazy(() => import("./modules/Attendance_Calendar/pages/index"));
+const leave_calendarModule = lazy(() =>
+  import("./modules/Leave_Calendar/pages/index")
+);
+const roster_calendarModule = lazy(() =>
+  import("./modules/Roster_Calendar/pages/index")
+);
+const attendance_calendarModule = lazy(() =>
+  import("./modules/Attendance_Calendar/pages/index")
+);
 
 const LeaveApprovalModule = lazy(() =>
   import("./modules/LeaveApproval/page/index")
@@ -195,6 +201,18 @@ const reimbursementRegisterModule = lazy(() => import("./modules/ReimbursementRe
 
 const jobVacancyModule = lazy(() => import("./modules/JobVacancy/pages/index"));
 
+
+const AttendanceRequestModule = lazy(() =>
+  import("./modules/AttendanceRequest/pages/index")
+);
+
+const AttendanceApprovalModule = lazy(() =>
+  import("./modules/AttendanceApproval/page/index")
+);
+
+const PayrollPreview = lazy(() =>
+  import("./modules/PayrollPreview/pages/index")
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -269,10 +287,10 @@ const ROUTES = {
   employee_register: EmployeeRegister,
   roster_pattern: Roster_PatternModule,
   subsidiary: subsidiaryModule,
-  calendar:calendarModule,
-  leave_calendar:leave_calendarModule,
-  roster_calendar:roster_calendarModule,
-  attendance_calendar:attendance_calendarModule,
+  calendar: calendarModule,
+  leave_calendar: leave_calendarModule,
+  roster_calendar: roster_calendarModule,
+  attendance_calendar: attendance_calendarModule,
   leaverequest: leaveRequestModule,
   workflow_policy: workFlowPolicyModule,
   hod_setup: HODManagement,
@@ -280,6 +298,11 @@ const ROUTES = {
   loan_register:loanRegisterModule,
   reimbursement_register:reimbursementRegisterModule,
   job_vacancy:jobVacancyModule,
+  attendance_request: AttendanceRequestModule,
+  attendance_approval: AttendanceApprovalModule,
+  payslip : PayrollPreview,
+  
+ 
 };
 
 export default function BasePage() {
@@ -289,8 +312,7 @@ export default function BasePage() {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
   const SettingsAccess = auth?.userAccess?.Settings;
-  // const isDashboardAccess = SettingsAccess?.some((obj) =>
-  //   Object.values(obj).includes("read-all-vehicles-dashboard")
+
   // );
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
