@@ -128,19 +128,21 @@ export function EmployeeLoanDetail({ entities }) {
           </Card.Header>
           <Accordion.Collapse eventKey="0">
             <Card.Body>
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-              >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                <BootstrapTable
+                  // wrapperClasses="table-responsive"
+                  bordered={false}
+                  classes="table table-head-custom table-vertical-center table-hover"
+                  bootstrap4
+                  remote
+                  keyField="Id"
+                  data={entities === null ? [] : entities}
+                  columns={columns}
+                >
+                  <PleaseWaitMessage entities={entities} />
+                  <NoRecordsFoundMessage entities={entities} />
+                </BootstrapTable>
+              </div>
             </Card.Body>
           </Accordion.Collapse>
         </Card>

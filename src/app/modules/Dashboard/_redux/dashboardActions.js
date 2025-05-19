@@ -68,6 +68,18 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
     });
 };
 
+export const fetchDashboardAlert = () => async (dispatch) => {
+  return await requestFromServer
+    .getDashboardAlert()
+    .then((response) => {
+      console.log("responseresponse", response);
+      dispatch(actions?.fetchDashboardAlert())
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
+
 export const fetchStandByVehicles = (body) => async (dispatch) => {
   return await requestFromServer
     .getVehiclesByCenterAndSubcenterId(body)
