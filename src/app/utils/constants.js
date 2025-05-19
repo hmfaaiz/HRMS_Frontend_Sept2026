@@ -368,8 +368,11 @@ export const VALIDATION_MESSAGES = {
   minZeroValue: 'Should not be less than 0',
   minOneValue: 'Should not be less than 1',
   maxHundredValue: 'Should not be greater than 100',
+  maxNineHundredNinetyNineValue: 'Should not be greater than 999',
   invalidUrl : 'Invalid URL',
   invalidEmail : 'Invalid Email',
+  minAgeEighteenValue: 'Should not be less than 18',
+  maxAgeNinetyNineValue: 'Should not be greater than 99',
 }
 
 //Server Response Messages
@@ -385,6 +388,9 @@ export const SERVER_MESSAGES = {
   csvFail:"No data found!",
   excelFail:"No data found!",
   correctDateRange:"Please select correct date range",
+  postedSuccess: 'Record posted Successfully!',
+  holdSuccess: 'Record holded Successfully!',
+  closedSuccess: 'Record closed Successfully!',
 }
 
 export const WEEK_DAY_STRING = {

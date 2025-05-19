@@ -29,7 +29,9 @@ export const PreviewRegisterPDFGroupBy = () => {
       <div style={{ marginBottom: '20px' }}>
         {labels?.monthLabel && <p>For the Month of: <strong>{labels.monthLabel}</strong></p>}
         {labels?.subsidiaryLabel && <p>Subsidiary: <strong>{labels.subsidiaryLabel}</strong></p>}
+          {labels?.departmentLabel && <p>Department: <strong>{labels?.departmentLabel}</strong></p>}
         {labels?.groupWiseLabel && <p>Payroll: <strong>{labels.groupWiseLabel}</strong></p>}
+        
       </div>
       <div style={{ height: '60vh', overflow: 'auto' }}>
       <table className="payroll-register-groupBy" style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>

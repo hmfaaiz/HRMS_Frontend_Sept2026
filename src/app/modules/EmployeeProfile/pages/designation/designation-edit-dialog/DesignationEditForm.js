@@ -123,8 +123,8 @@ const profileValidation = Yup.object().shape(
 
     drivingLicenseExpiry: Yup.date()
       .nullable()
-      .min(currentDate, 'Driving license expiry must be a future date')
-      .typeError('Driving License Expiry must be a valid date'),
+      .min(currentDate, 'ID Card Expiry must be a future date')
+      .typeError('ID Card Expiry must be a valid date'),
 
     // Other fields...
 
@@ -3165,10 +3165,10 @@ export function DesignationEditForm({
                           </div>
 
                           <div className="col-12 col-md-4 mt-3">
-                            <label>Driving License Expiry</label>
+                            <label>ID Card Expiry</label>
                             <DatePicker
                               className="form-control"
-                              placeholder="Driving License Expiry Date"
+                              placeholder="ID Card Expiry Date"
                               selected={defdrivingLicenseExpiry}
 
                               showYearDropdown

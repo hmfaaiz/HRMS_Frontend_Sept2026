@@ -96,6 +96,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
       monthLabel: allPayrollMonthMap?.get(values.monthId || '')?.label,
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
       groupWiseLabel: allGroupByMap?.get(values.groupBy || '')?.label,
+      departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
     }
   }
 
@@ -274,31 +275,29 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
 })() : null}
 </div>
 
-                      {/* Employee Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="employeeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('employeeId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Employee
-                            </span>
-                          }
-                          error={errors.employeeId}
-                          touched={touched.employeeId}
-                          value={allEmployeesMap?.get(values?.employeeId || '') || ''}
-                          autoComplete="off"
-                          options={allEmployees}
-                        />
-                      </div>
-                      {/* Employee Field End */}
-
+                     {/* Deparment Field Start */}
+                                  <div className="col-12 col-md-4 mt-3">
+                                    <Field
+                                      name="departmentId"
+                                      component={SearchSelect}
+                                      onBlur={handleBlur}
+                                      onChange={(e) => {
+                                        const value = e.value == '--Select--' ? '' : Number(e.value)
+                                        setFieldValue('departmentId', value)
+                                      }}
+                                      label={
+                                        <span>
+                                          {" "}
+                                          Department
+                                        </span>
+                                      }
+                                      value={allDeptMap?.get(values?.departmentId || '') || ''}
+                                      autoComplete="off"
+                                      options={allDept}
+                                    />
+                                  </div>
+                                  {/* Deparment Field End */}
+              
                       {/* Payroll Month Field Start */}
                       <div className="col-12 col-md-4 mt-3">
                         <Field
@@ -321,6 +320,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                         />
                       </div>
                       {/* Payroll Month Field End */}
+
+                      
                     </div>
                   </div>
 
@@ -438,6 +439,32 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                     <h6>Payslip</h6>
                     <div className="from-group row">
+                                     {/* Employee Field Start */}
+                      <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="employeeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            setFieldValue('employeeId', value)
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Employee
+                            </span>
+                          }
+                          error={errors.employeeId}
+                          touched={touched.employeeId}
+                          value={allEmployeesMap?.get(values?.employeeId || '') || ''}
+                          autoComplete="off"
+                          options={allEmployees}
+                        />
+                      </div>
+                      {/* Employee Field End */}
+
+                      
                       <div className="col-12 col-md-4 mt-11">
                       
                       <button
