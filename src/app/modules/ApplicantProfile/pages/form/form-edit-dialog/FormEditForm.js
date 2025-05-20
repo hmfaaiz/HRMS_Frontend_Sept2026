@@ -23,7 +23,7 @@ const applicantProfileEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
 
-      title: Yup.string()
+  title: Yup.string()
     .required(VALIDATION_MESSAGES.required),
 
   applicantCode: Yup.string()
