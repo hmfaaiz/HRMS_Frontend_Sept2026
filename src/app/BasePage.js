@@ -214,6 +214,9 @@ const PayrollPreview = lazy(() =>
   import("./modules/PayrollPreview/pages/index")
 );
 
+
+const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -301,6 +304,7 @@ const ROUTES = {
   attendance_request: AttendanceRequestModule,
   attendance_approval: AttendanceApprovalModule,
   payslip : PayrollPreview,
+  applicant_profile:ApplicantProfileModule,
   
  
 };
