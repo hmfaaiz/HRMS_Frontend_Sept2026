@@ -23,6 +23,9 @@ const applicantProfileEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
 
+      title: Yup.string()
+    .required(VALIDATION_MESSAGES.required),
+
   applicantCode: Yup.string()
     .min(5, "Job code must be  5 characters")
     .max(10, "Job code must be  10 characters")
@@ -106,8 +109,8 @@ const applicantProfileEditSchema = Yup.object().shape({
   expectedSalaryPayTypeId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
 
-  otherInformation: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+  // otherInformation: Yup.string()
+  //   .required(VALIDATION_MESSAGES.required),
 
 
   currentDesignation: Yup.string()
@@ -1013,7 +1016,7 @@ export function FormEditForm({
                         name="otherInformation"
                         component={TextArea}
                         placeholder="Enter other information"
-                        label={<span> Other Information<span style={{ color: 'red' }}>*</span></span>}
+                        label={<span> Other Information</span>}
                         autoComplete="off"
 
                       />
