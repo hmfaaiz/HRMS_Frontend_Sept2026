@@ -128,3 +128,7 @@ export function getPayrollMonth(body) {
     body
   );
 }
+
+export function getDashboardAlert() {
+  return axios.get(`${USERS_URL}/dashboard/dashboard-alert`);
+}

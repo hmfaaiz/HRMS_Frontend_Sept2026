@@ -221,9 +221,6 @@ export function FormFilter({ dispatch, pdfLoading }) {
                           className="btn btn-primary btn-elevate"
                         >
                           Preview
-                          {pdfLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
                         </button>
 
                         <span> </span>

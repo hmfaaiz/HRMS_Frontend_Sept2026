@@ -68,6 +68,19 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
     });
 };
 
+export const fetchDashboardAlert = () => async (dispatch) => {
+  return await requestFromServer
+    .getDashboardAlert()
+    .then((response) => {
+      console.log("response", response?.data?.data);
+      const entities = response.data?.data;
+      dispatch(actions.AllDashboardAlertsFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.AllDashboardAlertsFetch([]));
+    });
+};
+
 export const fetchStandByVehicles = (body) => async (dispatch) => {
   return await requestFromServer
     .getVehiclesByCenterAndSubcenterId(body)

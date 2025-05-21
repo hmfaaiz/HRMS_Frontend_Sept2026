@@ -83,7 +83,6 @@ export const EmployeePortal = () => {
     shallowEqual
   );
 
-  console.log("holidayListholidayList", loanList);
   useEffect(() => {
     dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
   }, [formUIProps.currentLevel]);
@@ -147,8 +146,8 @@ export const EmployeePortal = () => {
             ...leaveDetailFilter,
             filter: {
               ...leaveDetailFilter?.filter,
-              from: payrollData?.startDate,
-              to: payrollData?.endDate,
+              from: new Date(payrollData?.startDate),
+              to: new Date(payrollData?.endDate),
             },
           },
           formUIProps.selectedEmp.value

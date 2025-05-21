@@ -3,7 +3,7 @@ import {PaginationLinks} from "./PaginationLinks";
 import {PaginationToolbar} from "./PaginationToolbar";
 
 export function Pagination(props) {
-  const { children, isLoading, paginationProps } = props;
+  const { children, isLoading, paginationProps  } = props;
   return (
     <>
       {children}

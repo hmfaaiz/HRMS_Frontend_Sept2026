@@ -180,16 +180,18 @@ export function EmployeeSelect({
                           <div className="col-12 col-md-12">
                             <div className="row  justify-content-end">
                               <span className="mr-2">
-                                <b>Active Payroll Month:</b>{" "}
+                                <b>Active Payroll Month: </b>
                               </span>
                               <span>
-                                <ActivePayrollMonthLabel
-                                  className="date"
-                                  month={payrollData.month}
-                                  year={payrollData.year}
-                                  startDate={payrollData.startDate}
-                                  endDate={payrollData.endDate}
-                                />
+                                <b>
+                                  <ActivePayrollMonthLabel
+                                    className="date"
+                                    month={payrollData.month}
+                                    year={payrollData.year}
+                                    startDate={payrollData.startDate}
+                                    endDate={payrollData.endDate}
+                                  />
+                                </b>
                               </span>
                             </div>
                           </div>

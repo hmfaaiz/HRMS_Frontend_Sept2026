@@ -39,13 +39,13 @@ export const AttendanceSummary = ({ payrollData, attendanceSummary }) => {
               }}
             >
               <div className="row">
-                <div className="col-1">
+                <div className="col-2">
                   <span className="font-weight-bold">Present Days</span>
                 </div>
                 <div className="col-1">
                   {attendanceSummary?.PresentDays || 0}{" "}
                 </div>
-                <div className="col-1">
+                <div className="col-2">
                   <span className="font-weight-bold">Absent Days</span>
                 </div>
                 <div className="col-1">
