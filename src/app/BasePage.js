@@ -196,6 +196,12 @@ const LeaveApprovalModule = lazy(() =>
   import("./modules/LeaveApproval/page/index")
 );
 
+const loanRegisterModule = lazy(() => import("./modules/LoanRegister/pages/index"));
+const reimbursementRegisterModule = lazy(() => import("./modules/ReimbursementRegister/pages/index"));
+
+const jobVacancyModule = lazy(() => import("./modules/JobVacancy/pages/index"));
+
+
 const AttendanceRequestModule = lazy(() =>
   import("./modules/AttendanceRequest/pages/index")
 );
@@ -208,12 +214,6 @@ const PayrollPreview = lazy(() =>
   import("./modules/PayrollPreview/pages/index")
 );
 
-const loanRegisterModule = lazy(() =>
-  import("./modules/LoanRegister/pages/index")
-);
-const reimbursementRegisterModule = lazy(() =>
-  import("./modules/ReimbursementRegister/pages/index")
-);
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -295,11 +295,14 @@ const ROUTES = {
   workflow_policy: workFlowPolicyModule,
   hod_setup: HODManagement,
   leaveapproval: LeaveApprovalModule,
+  loan_register:loanRegisterModule,
+  reimbursement_register:reimbursementRegisterModule,
+  job_vacancy:jobVacancyModule,
   attendance_request: AttendanceRequestModule,
   attendance_approval: AttendanceApprovalModule,
   payslip : PayrollPreview,
-  loan_register: loanRegisterModule,
-  reimbursement_register: reimbursementRegisterModule,
+  
+ 
 };
 
 export default function BasePage() {

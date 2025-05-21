@@ -95,6 +95,7 @@ import { AttendanceApprovalSlice } from "../app/modules/AttendanceApproval/redux
 import { PayrollPreviewSlice } from "../app/modules/PayrollPreview/_redux/PayrollPreviewSlice";
 import { LoanRegisterSlice } from "../app/modules/LoanRegister/_redux/EmployeeRegisterSlice";
 import { ReimbursementRegisterSlice } from "../app/modules/ReimbursementRegister/_redux/ReimbursementRegisterSlice";
+import { JobVacancySlice } from "../app/modules/JobVacancy/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -180,17 +181,20 @@ export const rootReducer = combineReducers({
   hod_setup: HODSlice.reducer,
   calendar: CalendarSlice.reducer,
   leave_approval: LeaveApprovalSlice.reducer,
-  leave_calendar: LeaveCalendarSlice.reducer,
-  roster_calendar: RosterCalendarSlice.reducer,
-  attendance_calendar: AttendanceCalendarSlice.reducer,
+  leave_calendar:LeaveCalendarSlice.reducer,
+  roster_calendar:RosterCalendarSlice.reducer,
+  attendance_calendar:AttendanceCalendarSlice.reducer,
+  loan_register:LoanRegisterSlice.reducer,
+  reimbursement_register:ReimbursementRegisterSlice.reducer,
+  job_vacancy:JobVacancySlice.reducer,
   attendance_request: AttendanceRequestSlice.reducer,
   attendance_approval: AttendanceApprovalSlice.reducer,
   payroll_preview: PayrollPreviewSlice?.reducer,
-  leave_calendar: LeaveCalendarSlice.reducer,
-  roster_calendar: RosterCalendarSlice.reducer,
-  attendance_calendar: AttendanceCalendarSlice.reducer,
-  loan_register: LoanRegisterSlice.reducer,
-  reimbursement_register: ReimbursementRegisterSlice.reducer,
+
+ 
+
+ 
+ 
 });
 
 export function* rootSaga() {

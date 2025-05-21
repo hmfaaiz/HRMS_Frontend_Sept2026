@@ -51,6 +51,19 @@ const initialDashboardState = {
   allEmployeeStatus: [],
   allCompanyList: [],
   allEmployeesWithNoPermissionList: [],
+  allPayrollConfigApproverPermissionList:[],
+  allRosterPatternList:[],
+  allCurrency : [],
+  allEmployeeRequestTypeList:[], 
+  allHiringReasonList:[], 
+  alljobPreferenceList:[],
+  allAppointmentTypeList:[],
+  allPriorityTypeList:[],
+  allQualificationList:[],
+  allJobShiftList:[],
+  allJobSkillList:[],
+  allJobIndustryList:[],
+
   allPayrollConfigApproverPermissionList: [],
   allRosterPatternList: [],
   allCurrency: [],
@@ -231,5 +244,7 @@ export const dashboardSlice = createSlice({
       state.allLoanTypeList = action.payload;
  
     },
+
+    
   },
 });
