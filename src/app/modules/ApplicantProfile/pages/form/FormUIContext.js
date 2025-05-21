@@ -27,7 +27,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
   const initUser = {
-    
+
     subsidiaryId: "",
     companyId: "",
     applicantCode: "",
@@ -38,7 +38,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     lastName: "",
 
     dateOfBirth: "",  // Assuming input as a string in the filter
-    laborCardNo: "",
     passportNo: "",
     maritalStatus: "",
     nationality: "",
@@ -52,7 +51,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     phone_official: "",
     phone_cell: "",
     email_personal: "",
-nic_no:"",
+    nic_no: "",
     applicantCanJoin: "",
     lastDawnSalary: "",
     lastDawnSalaryCurrencyId: "",
@@ -64,7 +63,9 @@ nic_no:"",
     otherInformation: "",
     currentDesignation: "",
 
-  
+    details_applicant_vacancy:""
+
+
 
 
 
@@ -84,9 +85,9 @@ nic_no:"",
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
-    openPostingFormDialog:FormUIEvents.openPostingFormDialog,
-    openHoldFormDialog:FormUIEvents.openHoldFormDialog,
-    openCloseFormDialog:FormUIEvents.openCloseFormDialog,
+    openPostingFormDialog: FormUIEvents.openPostingFormDialog,
+    openHoldFormDialog: FormUIEvents.openHoldFormDialog,
+    openCloseFormDialog: FormUIEvents.openCloseFormDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

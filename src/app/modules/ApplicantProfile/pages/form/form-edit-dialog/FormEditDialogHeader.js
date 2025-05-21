@@ -19,7 +19,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   useEffect(() => {
     let _title = id ? "" : "Add Applicant Profile";
     if (id) {
-      _title = `Edit Add Applicant Profile`;
+      _title = `Edit Applicant Profile`;
     } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }

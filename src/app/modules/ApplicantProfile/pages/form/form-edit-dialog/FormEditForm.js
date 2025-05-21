@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
 import { DatePickerField, Input, MaskInput, Select, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import {
   fetchAllFormsMenu,
 
   fetchAllSubsidiaryData,
+  getAllJobVacancy,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
@@ -131,7 +132,39 @@ const applicantProfileEditSchema = Yup.object().shape({
     }),
 
 
+
+
+  details_applicant_vacancy: Yup.array()
+    .of(
+      Yup.object().shape({
+        jobVacancyId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+        applicationDate: Yup.date().required(VALIDATION_MESSAGES.required),
+        applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+        statusDate: Yup.date().required(VALIDATION_MESSAGES.required),
+        appointmentTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
+      })
+    )
+    .test('unique-jobVacancyId', 'Each Job Vacancy must be unique.', function (vacancies) {
+      if (!vacancies) return true;
+
+      const jobVacancyIds = vacancies.map((v) => v.jobVacancyId);
+      const duplicates = jobVacancyIds.filter((id, idx) => jobVacancyIds.indexOf(id) !== idx);
+
+      if (duplicates.length > 0) {
+        return this.createError({
+          path: `details_applicant_vacancy`, // attaches error to the array
+          message: `Duplicate Job Vacancy selected.`,
+        });
+      }
+
+      return true;
+    })
+
 })
+
+
   .test('check-marital-status', 'Invalid marital status for selected title', function (value) {
     // if (title === 'Mrs.' && maritalStatus === '261') {
     const { title, maritalStatus, gender } = value;
@@ -208,6 +241,11 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(190, "allMaritalStatus"));
       dispatch(fetchAllFormsMenu(87, "allReligionChildMenus")); // For Religion
       dispatch(fetchAllFormsMenu(126, "allCurrencyCodeList")); // For All currecy Codes
+      dispatch(getAllJobVacancy("allJobVacancyList")); // For All job vacancy
+      dispatch(fetchAllFormsMenu(408, "allApplicationStatusList")); // For All application status
+      dispatch(fetchAllFormsMenu(409, "allAppointmentTypeList")); // For All application status
+
+
     }
   }, [dispatch, formData.Id]);
 
@@ -234,6 +272,8 @@ export function FormEditForm({
     { value: 1, label: "Per Year" },
   ];
 
+
+
   return (
     <Formik
       enableReinitialize={true}
@@ -245,7 +285,6 @@ export function FormEditForm({
       onSubmit={(values) => {
 
         enableLoading();
-        console.log("values11122", values)
         saveForm(values);
       }}
     >
@@ -381,186 +420,6 @@ export function FormEditForm({
 
 
 
-
-                {/* Applied for Vacancy */}
-
-                {/* <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
-                  <h6>Applied for Vacancy</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="jobVacancyId"
-                        label={
-                          <span>
-                            Job Vacancy<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("jobVacancyId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allEmployeegradeList?.find(
-                            (option) => option.value === values.jobVacancyId
-                          ) || null
-                        }
-
-                        options={dashboard?.allEmployeegradeList}
-                        error={errors.jobVacancyId}
-                        touched={touched.jobVacancyId}
-                      />
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="designationId"
-                        label={
-                          <span>
-                            Designation<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("designationId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allDesignations?.find(
-                            (option) => option.value === values.designationId
-                          ) || null
-                        }
-
-                        options={dashboard?.allDesignations}
-
-                        error={errors.designationId}
-                        touched={touched.designationId}
-                      />
-                    </div>
-
-
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Job Title<span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
-                        name="jobTitle"
-                        component={Input}
-                        placeholder="Enter job title"
-
-                        type="text"
-
-                      />
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Application Date <span style={{ color: "red" }}>*</span></label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="Application Date"
-                        selected={values?.applicationDate ? new Date(values.applicationDate) : null}
-
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                          setFieldValue("applicationDate", selectedDate);
-                        }}
-                        dateFormat="dd/MM/yyyy"
-                        name="applicationDate"
-                        autoComplete="off"
-                        minDate={new Date()}
-
-                      />
-
-                      {touched.applicationDate && errors.applicationDate && (
-                        <div className="invalid-feedback d-block">{errors.applicationDate}</div>
-                      )}
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Application Status
-                        </span>
-                      </label>
-                      <Field
-                        name="applicationStatus"
-                        component={Input}
-                        placeholder="Enter application status"
-
-                        type="text"
-
-                      />
-                    </div>
-
-
-
-                    <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Status Date <span style={{ color: "red" }}>*</span></label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="Status Date"
-                        selected={values?.statusDate ? new Date(values.statusDate) : null}
-
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                          setFieldValue("statusDate", selectedDate);
-                        }}
-                        dateFormat="dd/MM/yyyy"
-                        name="statusDate"
-                        autoComplete="off"
-                        minDate={new Date()}
-
-                      />
-
-                      {touched.statusDate && errors.statusDate && (
-                        <div className="invalid-feedback d-block">{errors.statusDate}</div>
-                      )}
-                    </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="designationId"
-                        label={
-                          <span>
-                            Applicant Type<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("designationId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allDesignations?.find(
-                            (option) => option.value === values.designationId
-                          ) || null
-                        }
-
-                        options={dashboard?.allDesignations}
-
-                        error={errors.designationId}
-                        touched={touched.designationId}
-                      />
-                    </div>
-
-                  </div>
-
-
-
-
-                </div> */}
-
-
-
-
-
                 {/* Personal Information */}
 
 
@@ -584,7 +443,7 @@ export function FormEditForm({
                         dateFormat="dd/MM/yyyy"
                         name="dateOfBirth"
                         autoComplete="off"
-                        minDate={new Date()}
+                        maxDate={new Date()}
 
                       />
 
@@ -1029,6 +888,278 @@ export function FormEditForm({
 
 
               </fieldset>
+
+              <FieldArray name="details_applicant_vacancy">
+                {({ push, remove }) => (
+                  <div
+                    style={{
+                      backgroundColor: "rgb(235 243 255)",
+                      padding: "20px",
+                      borderRadius: "5px",
+                      border: "2px solid #adceff",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <h6>Applicant Vacancy</h6>
+                    <table className="table table-head-custom table-vertical-center  table-hover">
+                      <thead>
+                        <tr
+                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
+                        >
+                          <th>Action</th>
+
+
+                          <th className="col-3">Job Vacancy</th>
+                          <th className="col-2">Application Date</th>
+                          <th className="col-2">Application Status</th>
+                          <th className="col-2"> Status Date</th>
+
+                          <th className="col-2">Appointment Type Type</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {values?.details_applicant_vacancy &&
+                          values?.details_applicant_vacancy?.length > 0 &&
+                          values?.details_applicant_vacancy?.map((detail, index) => (
+                            <tr key={index}>
+                              {/* <td>
+                                {!isdataForRead && (
+
+
+                                  <button
+                                    type="button"
+                                    // onClick={() => remove(index)}
+                                    onClick={() => {
+                                      const item = values.details_applicant_vacancy[index];
+
+                                      // Only push to deleted array if item has an Id (means it's from backend)
+                                      if (item?.Id) {
+                                        const deleted = values.deleted_applicant_vacancy || [];
+                                        deleted.push(item);
+                                        setFieldValue("deleted_applicant_vacancy", deleted);
+                                      }
+
+                                      // Remove from main array
+                                      const updatedList = [...values.details_applicant_vacancy];
+                                      updatedList.splice(index, 1); // remove 1 item at position 'index'
+                                      setFieldValue("details_applicant_vacancy", updatedList); // THIS IS IMPORTANT
+                                    }}
+
+
+                                    className="btn btn-danger btn-sm"
+                                  >
+                                    Delete
+                                  </button>
+
+                                )}
+                              </td> */}
+                              <td>
+                                <button disabled={isdataForRead} className="btn btn-danger btn-elevate" type="button" onClick={() => {
+                                  remove(index)
+                                }}>
+                                  Delete
+                                </button>
+                              </td>
+                              {/* job vacancy selection */}
+                              <td>
+                                <SearchSelect
+                                  name={`details_applicant_vacancy[${index}].jobVacancyId`}
+                                  className="form-control"
+                                  style={{ width: '200px', zIndex: 9999 }}
+                                  disabled={isdataForRead || values.details_applicant_vacancy[index]?.Id}
+                                  value={
+                                    dashboard?.allJobVacancyList?.find(
+                                      (x) => x.value === values.details_applicant_vacancy[index]?.jobVacancyId
+                                    ) || null
+                                  }
+                                  onChange={(e) => {
+
+                                    setFieldValue(`details_applicant_vacancy[${index}].jobVacancyId`, e?.value);
+                                  }}
+                                  options={
+                                    dashboard?.allJobVacancyList
+                                      ?.filter(
+                                        (x) =>
+                                          !values?.subsidiaryId || x?.subsidiaryId === values?.subsidiaryId
+                                      )
+                                      .map((x) => ({
+                                        label: x.mergeLabel,
+                                        value: x.value,
+                                        disabled: values.details_applicant_vacancy.some(
+                                          (el) => el.jobVacancyId === x.value
+                                        ),
+                                      })) || []
+                                  }
+                                  getOptionLabel={(x) => x.label}
+                                  getOptionValue={(x) => x.value}
+                                  isOptionDisabled={(x) => x.disabled}
+                                  placeholder="Select--"
+                                />
+
+                                {errors.details_applicant_vacancy?.[index]?.jobVacancyId &&
+                                  touched.details_applicant_vacancy?.[index]?.jobVacancyId && (
+                                    <div className="text-danger">
+                                      {errors.details_applicant_vacancy[index]?.jobVacancyId}
+                                    </div>
+                                  )}
+                              </td>
+
+
+                              <td>
+                                <DatePicker
+                                  className="form-control"
+                                  style={{ width: '130px' }}
+                                  placeholderText="Select Date"
+                                  selected={
+                                    values?.details_applicant_vacancy?.[index]?.applicationDate
+                                      ? new Date(values.details_applicant_vacancy[index].applicationDate)
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    const selectedDate = formatDates(date, 'yyyy-MM-dd'); // or use date.toISOString().split('T')[0]
+                                    setFieldValue(`details_applicant_vacancy[${index}].applicationDate`, selectedDate);
+                                  }}
+                                  dateFormat="dd/MM/yyyy"
+                                  name={`details_applicant_vacancy[${index}].applicationDate`}
+                                  autoComplete="off"
+                                  disabled={isdataForRead}
+                                  maxDate={new Date()} // optional: restrict future dates
+                                  showPopperArrow={false}
+                                />
+
+                                {errors.details_applicant_vacancy?.[index]?.applicationDate &&
+                                  touched.details_applicant_vacancy?.[index]?.applicationDate && (
+                                    <div className="text-danger">
+                                      {errors.details_applicant_vacancy[index].applicationDate}
+                                    </div>
+                                  )}
+                              </td>
+
+
+                              <td>
+                                <SearchSelect
+                                  name={`details_applicant_vacancy[${index}].applicationStatusId`}
+                                  className="form-control"
+                                  style={{ width: '130px' }}
+                                  disabled={isdataForRead}
+                                  value={
+                                    dashboard?.allApplicationStatusList?.find(
+                                      (x) => x.value === values.details_applicant_vacancy[index]?.applicationStatusId
+                                    ) || null
+                                  }
+                                  onChange={(e) => {
+
+                                    setFieldValue(`details_applicant_vacancy[${index}].applicationStatusId`, e?.value);
+                                  }}
+                                  options={dashboard?.allApplicationStatusList || []}
+                                  getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                  getOptionValue={(x) => x.value} // optional: customize value extraction
+                                  placeholder="Select Status"
+                                />
+
+                                {errors.details_applicant_vacancy?.[index]?.applicationStatusId &&
+                                  touched.details_applicant_vacancy?.[index]?.applicationStatusId && (
+                                    <div className="text-danger">
+                                      {errors.details_applicant_vacancy[index].applicationStatusId}
+                                    </div>
+                                  )}
+                              </td>
+
+                              <td>
+                                <DatePicker
+                                  className="form-control"
+                                  style={{ width: '130px' }}
+                                  placeholderText="Select Date"
+                                  selected={
+                                    values?.details_applicant_vacancy?.[index]?.statusDate
+                                      ? new Date(values.details_applicant_vacancy[index].statusDate)
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    const selectedDate = formatDates(date, 'yyyy-MM-dd'); // or use date.toISOString().split('T')[0]
+                                    setFieldValue(`details_applicant_vacancy[${index}].statusDate`, selectedDate);
+                                  }}
+                                  dateFormat="dd/MM/yyyy"
+                                  name={`details_applicant_vacancy[${index}].statusDate`}
+                                  autoComplete="off"
+                                  disabled={isdataForRead}
+                                  maxDate={new Date()} // optional: restrict future dates
+                                  showPopperArrow={false}
+                                />
+
+                                {errors.details_applicant_vacancy?.[index]?.statusDate &&
+                                  touched.details_applicant_vacancy?.[index]?.statusDate && (
+                                    <div className="text-danger">
+                                      {errors.details_applicant_vacancy[index].statusDate}
+                                    </div>
+                                  )}
+                              </td>
+
+                              {/* allAppointmentTypeList */}
+                              <td>
+                                <SearchSelect
+                                  name={`details_applicant_vacancy[${index}].appointmentTypeId`}
+                                  className="form-control"
+                                  style={{ width: '130px' }}
+                                  disabled={isdataForRead}
+                                  value={
+                                    dashboard?.allAppointmentTypeList?.find(
+                                      (x) => x.value === values.details_applicant_vacancy[index]?.appointmentTypeId
+                                    ) || null
+                                  }
+                                  onChange={(e) => {
+
+                                    setFieldValue(`details_applicant_vacancy[${index}].appointmentTypeId`, e?.value);
+                                  }}
+                                  options={dashboard?.allAppointmentTypeList || []}
+                                  getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                  getOptionValue={(x) => x.value} // optional: customize value extraction
+                                  placeholder="Select Status"
+                                />
+
+                                {errors.details_applicant_vacancy?.[index]?.appointmentTypeId &&
+                                  touched.details_applicant_vacancy?.[index]?.appointmentTypeId && (
+                                    <div className="text-danger">
+                                      {errors.details_applicant_vacancy[index].appointmentTypeId}
+                                    </div>
+                                  )}
+                              </td>
+
+
+
+
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+
+                    {!isdataForRead && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          push({
+                            jobVacancyId: "",
+                            applicationDate: "",
+                            applicationStatusId: "",
+                            statusDate: "",
+                            appointmentTypeId: "", // ✅ fix this key name
+
+
+                          })
+                        }
+                        className="btn btn-primary btn-sm"
+                      >
+                        + Add Detail
+                      </button>
+                    )}
+                  </div>
+                )}
+              </FieldArray>
+              {typeof errors.details_applicant_vacancy === 'string' && (
+                <div className="text-danger">{errors.details_applicant_vacancy}</div>
+              )}
+
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -1055,7 +1186,7 @@ export function FormEditForm({
             {!isdataForRead && (
               <button
                 type="submit"
-                onClick={() => { console.log("values111"); handleSubmit() }}
+                onClick={() => { handleSubmit() }}
                 className="btn btn-primary btn-elevate"
               >
                 Save

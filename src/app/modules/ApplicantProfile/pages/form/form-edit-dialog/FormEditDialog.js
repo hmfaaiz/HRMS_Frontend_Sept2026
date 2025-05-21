@@ -59,7 +59,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
 
-
+  console.log("dataForEdit1111", dataForEdit)
   useEffect(() => {
     dispatch(actions.fetchApplicantProfileById(id));
 
@@ -79,52 +79,52 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
     } else {
 
-
+      console.log("formData1111", formData.details_applicant_vacancy)
 
       // user.number_of_days=
-    const formUpdatedFields = {
-  Id: formData.Id,
-  subsidiaryId: formData.subsidiaryId,
+      const formUpdatedFields = {
+        Id: formData.Id,
+        subsidiaryId: formData.subsidiaryId,
 
-  companyId: formData.companyId,
-  applicantCode: formData.applicantCode,
+        companyId: formData.companyId,
+        applicantCode: formData.applicantCode,
 
-  title: formData.title,
-  firstName: formData.firstName,
-  middleName: formData.middleName,
-  lastName: formData.lastName,
+        title: formData.title,
+        firstName: formData.firstName,
+        middleName: formData.middleName,
+        lastName: formData.lastName,
 
-  dateOfBirth: formData.dateOfBirth,
-  laborCardNo: formData.laborCardNo,
-  passportNo: formData.passportNo,
-  nic_no: formData.nic_no,
+        dateOfBirth: formData.dateOfBirth,
+        laborCardNo: formData.laborCardNo,
+        passportNo: formData.passportNo,
+        nic_no: formData.nic_no,
 
-  maritalStatus: formData.maritalStatus,
-  nationality: formData.nationality,
-  gender: formData.gender,
-  relation_name: formData.relation_name,
-  religionId: formData.religionId,
+        maritalStatus: formData.maritalStatus,
+        nationality: formData.nationality,
+        gender: formData.gender,
+        relation_name: formData.relation_name,
+        religionId: formData.religionId,
 
-  countryId: formData.countryId,
-  cityId: formData.cityId,
-  additional_summary: formData.additional_summary,
-  phone_official: formData.phone_official,
-  phone_cell: formData.phone_cell,
-  email_personal: formData.email_personal,
+        countryId: formData.countryId,
+        cityId: formData.cityId,
+        additional_summary: formData.additional_summary,
+        phone_official: formData.phone_official,
+        phone_cell: formData.phone_cell,
+        email_personal: formData.email_personal,
 
-  applicantCanJoin: formData.applicantCanJoin,
-  lastDawnSalary: formData.lastDawnSalary,
-  lastDawnSalaryCurrencyId: formData.lastDawnSalaryCurrencyId,
-  lastDawnSalaryPayTypeId: formData.lastDawnSalaryPayTypeId,
-  expectedSalaryRangeFrom: formData.expectedSalaryRangeFrom,
-  expectedSalaryRangeTo: formData.expectedSalaryRangeTo,
-  expectedSalaryCurrencyId: formData.expectedSalaryCurrencyId,
-  expectedSalaryPayTypeId: formData.expectedSalaryPayTypeId,
-  otherInformation: formData.otherInformation,
-  currentDesignation: formData.currentDesignation,
-
-  email: formData.email
-};
+        applicantCanJoin: formData.applicantCanJoin,
+        lastDawnSalary: formData.lastDawnSalary,
+        lastDawnSalaryCurrencyId: formData.lastDawnSalaryCurrencyId,
+        lastDawnSalaryPayTypeId: formData.lastDawnSalaryPayTypeId,
+        expectedSalaryRangeFrom: formData.expectedSalaryRangeFrom,
+        expectedSalaryRangeTo: formData.expectedSalaryRangeTo,
+        expectedSalaryCurrencyId: formData.expectedSalaryCurrencyId,
+        expectedSalaryPayTypeId: formData.expectedSalaryPayTypeId,
+        otherInformation: formData.otherInformation,
+        currentDesignation: formData.currentDesignation,
+        details_applicant_vacancy: formData.details_applicant_vacancy,
+        email: formData.email,
+      };
 
 
 
