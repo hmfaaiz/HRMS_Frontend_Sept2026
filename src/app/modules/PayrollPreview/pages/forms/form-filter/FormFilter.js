@@ -212,7 +212,7 @@ export function FormFilter({ dispatch, pdfLoading }) {
                           onClick={() => {
                             previewPayslipPdf(values);
 
-                            window.open("/payroll_preview/preview-payslip-pdf");
+                            window.open("/payslip/preview-payslip-pdf");
                           }}
                           disabled={
                             !values.employeeId || !values?.monthId || pdfLoading
@@ -221,9 +221,6 @@ export function FormFilter({ dispatch, pdfLoading }) {
                           className="btn btn-primary btn-elevate"
                         >
                           Preview
-                          {pdfLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
                         </button>
 
                         <span> </span>

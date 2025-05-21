@@ -294,7 +294,7 @@ export const dashboardSlice = createSlice({
     AllHolidayFetch: (state, action) => {
       state.holidayList = action.payload;
     },
-    AllDashboardFetch: (state, action) => {
+    AllDashboardAlertsFetch: (state, action) => {
       state.allDashboardAlerts = action.payload;
     },
   },

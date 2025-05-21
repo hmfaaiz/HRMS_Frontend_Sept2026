@@ -1,0 +1,70 @@
+.table-row-odd {
+  background-color: #e6f8ff !important; /* Bootstrap primary blue */
+}
+
+.table-row-even {
+  background-color: #edececec !important; /* light gray */
+}
+
+.table-row-odd:hover {
+  background-color: #ffffff !important; /* Bootstrap primary blue */
+}
+
+.table-row-even:hover {
+  background-color: #ffffff !important; /* light gray */
+}
+
+.success-card span {
+  color: #34b9a3 !important;
+}
+
+.success-card svg {
+  color: #34b9a3 !important;
+}
+
+.success-card .collapse {
+  background-color: #edfdfa !important;
+}
+
+.danger-card span {
+  color: #e23f35 !important;
+}
+
+.danger-card svg {
+  color: #e23f35 !important;
+}
+
+.danger-card .collapse {
+  background-color: #fff5f5 !important;
+}
+
+.warning-card span {
+  color: #dd8941 !important;
+}
+
+.warning-card svg {
+  color: #dd8941 !important;
+}
+
+.warning-card .collapse {
+  background-color: #f9ebdf !important;
+}
+
+/* Change background color of non-selected page buttons */
+.pagination .page-item .page-link {
+  background-color: #f2f2f2; /* Light gray background */
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* On hover */
+.pagination .page-item .page-link:hover {
+  background-color: #e0e0e0; /* Slightly darker gray */
+}
+
+/* Selected (active) page */
+.pagination .page-item.active .page-link {
+  background-color: #0093dd; /* Your primary blue */
+  color: white;
+  border-color: #0093dd;
+}

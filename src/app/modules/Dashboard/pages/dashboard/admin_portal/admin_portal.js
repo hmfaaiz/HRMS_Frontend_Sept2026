@@ -5,26 +5,28 @@ import { useSelector } from "react-redux";
 import { BigTable } from "../admin_portal_comp/BigTable";
 import * as actions from "../../../_redux/dashboardActions";
 import { useDispatch } from "react-redux";
+import ChartData from "../admin_portal_comp/Chart";
+import SmallTable from "../admin_portal_comp/SmallTable";
 const panels = [
   {
     title: "Employee Management",
     key: "Employee",
-    text: "Employee details go here.",
+    resourceId: 1784,
   },
   {
     title: "Leave Management",
     key: "Leave Management",
-    text: "Leave details go here.",
+    resourceId: 308,
   },
   {
     title: "Attendance Management",
     key: "Attendance Management",
-    text: "Attendance details go here.",
+    resourceId: 1726,
   },
   {
     title: "Payroll Management",
     key: "Payroll",
-    text: "Payroll details go here.",
+    resourceId: 252,
   },
 ];
 
@@ -32,6 +34,10 @@ export const AdminPortal = () => {
   const dispatch = useDispatch();
   const [activeKey, setActiveKey] = useState("0"); // Default to Employee
   const userAccess = useSelector((state) => state.auth?.userAccess || {});
+
+  const allDashboardAlerts = useSelector(
+    (state) => state.dashboard?.allDashboardAlerts || []
+  );
 
   const filteredPanels = panels.filter((panel) =>
     Object.keys(userAccess).includes(panel.key)
@@ -79,7 +85,6 @@ export const AdminPortal = () => {
         })}
       </div>
 
-      {/* Full width content below */}
       {filteredPanels.map((panel, idx) => {
         const key = `${idx}`;
         if (activeKey !== key) return null;
@@ -92,14 +97,28 @@ export const AdminPortal = () => {
           >
             <div className="col-12">
               <div className="row">
-                <div className="col-md-6">
-                  <BigTable />
+                <div className="col-md-9">
+                  {allDashboardAlerts.length > 0 &&
+                    allDashboardAlerts.map((e) => {
+                      if (
+                        e?.master_Id === panels[activeKey]?.resourceId &&
+                        e?.dashlet_type === "big_table"
+                      ) {
+                        return <BigTable data={e} />;
+                      }
+                    })}
                 </div>
                 <div className="col-md-3">
-                  <BigTable />
-                </div>
-                <div className="col-md-3">
-                  <BigTable />
+                  {allDashboardAlerts.length > 0 &&
+                    allDashboardAlerts.map((e) => {
+                      if (e?.master_Id === panels[activeKey]?.resourceId) {
+                        if (e?.dashlet_type === "chart") {
+                          return <ChartData data={e} />;
+                        } else if (e?.dashlet_type === "small_table") {
+                          return <SmallTable data={e} />;
+                        }
+                      }
+                    })}
                 </div>
               </div>
             </div>
