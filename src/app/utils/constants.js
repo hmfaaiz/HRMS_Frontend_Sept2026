@@ -373,6 +373,7 @@ export const VALIDATION_MESSAGES = {
   invalidEmail : 'Invalid Email',
   minAgeEighteenValue: 'Should not be less than 18',
   maxAgeNinetyNineValue: 'Should not be greater than 99',
+  endDateMustBeAfterStartDate: "End date must be after start date",
 }
 
 //Server Response Messages

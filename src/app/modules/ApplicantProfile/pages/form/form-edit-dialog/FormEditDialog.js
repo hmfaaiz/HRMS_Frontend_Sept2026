@@ -79,7 +79,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
     } else {
 
-      console.log("formData1111", formData.details_applicant_vacancy)
+      console.log("formData1111", formData.details_applicant_work_experience)
 
       // user.number_of_days=
       const formUpdatedFields = {
@@ -123,7 +123,13 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         otherInformation: formData.otherInformation,
         currentDesignation: formData.currentDesignation,
         details_applicant_vacancy: formData.details_applicant_vacancy,
-        email: formData.email,
+        details_applicant_work_experience:formData.details_applicant_work_experience,
+        details_applicant_academic_info:formData?.details_applicant_academic_info,
+        details_applicant_skills:formData?.details_applicant_skills,
+        // email: formData.email,
+        applicantStatusId: formData.applicantStatusId,
+        applicantStatusReason: formData.applicantStatusReason,
+
       };
 
 
