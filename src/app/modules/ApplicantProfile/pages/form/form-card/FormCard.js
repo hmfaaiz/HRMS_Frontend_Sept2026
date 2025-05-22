@@ -58,7 +58,7 @@ const { userAccess } = useSelector(
 
       <Card>
 
-        <CardHeader title={""}>
+        <CardHeader title={CurrentModuleName()}>
 
   
             <div className=" p-2">

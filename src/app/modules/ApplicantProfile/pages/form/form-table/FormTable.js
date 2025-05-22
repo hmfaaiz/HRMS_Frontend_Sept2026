@@ -95,16 +95,16 @@ export function FormTable() {
 
   const columns = [
 
-    {
-      dataField: "Subsidiary.name",
-      text: "Subsidiary",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "200px",
-      },
-    },
+    // {
+    //   dataField: "Subsidiary.name",
+    //   text: "Subsidiary",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "200px",
+    //   },
+    // },
 
     {
       dataField: "FullName",
@@ -116,6 +116,49 @@ export function FormTable() {
         minWidth: "200px",
       },
     },
+    {
+      dataField: "Country.name",
+      text: "Country",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
+    },
+    {
+      dataField: "City.name",
+      text: "City",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
+    },
+
+    {
+      dataField: "email_personal",
+      text: "Personal Email",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
+    },
+
+    {
+      dataField: "phone_cell",
+      text: "Cell No.",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
+    },
+
 
 
     {

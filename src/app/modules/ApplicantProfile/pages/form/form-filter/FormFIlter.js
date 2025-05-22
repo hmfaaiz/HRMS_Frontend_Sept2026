@@ -182,9 +182,9 @@ export function FormFIlter({ listLoading, user }) {
         }) => (
           <>
             <form onSubmit={handleSubmit}>
-              <Card>
+              {/* <Card>
                 <CardHeader title={CurrentModuleName()} />
-              </Card>
+              </Card> */}
 
               {/* <div
                 style={{

@@ -144,7 +144,7 @@ const applicantProfileEditSchema = Yup.object().shape({
       ratingScale: Yup.number()
 
         .min(1, "Minimum rating is 1")
-        .max(5, "Maximum rating is 5")
+        .max(10, "Maximum rating is 5")
         .required(VALIDATION_MESSAGES.required),
       startDate: Yup.date()
         .nullable()
@@ -157,69 +157,116 @@ const applicantProfileEditSchema = Yup.object().shape({
   ),
 
 
-  details_applicant_work_experience: Yup.array().of(
-    Yup.object().shape({
-      companyName: Yup.string()
-        .required(VALIDATION_MESSAGES.required),
-      positionHeld: Yup.string()
-        .required(VALIDATION_MESSAGES.required),
-      countryId: Yup.number()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      cityId: Yup.number()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      startDate: Yup.date()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      endDate: Yup.date()
-        .nullable()
-        .min(
-          Yup.ref('startDate'),
-          'End date must be after start date'
-        )
-        .required(VALIDATION_MESSAGES.required),
-    })
-  ),
+  details_applicant_work_experience: Yup.array()
+    .of(
+      Yup.object().shape({
+        companyName: Yup.string().required(VALIDATION_MESSAGES.required),
+        positionHeld: Yup.string().required(VALIDATION_MESSAGES.required),
+        countryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+        cityId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+        startDate: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+        endDate: Yup.date()
+          .nullable()
+          .min(Yup.ref("startDate"), "End date must be after start date")
+          .required(VALIDATION_MESSAGES.required),
+      })
+    )
+    .test(
+      "no-overlapping-dates",
+      "Work experience dates must not overlap.",
+      function (entries) {
+        if (!entries || entries.length <= 1) return true;
 
+        // Filter out invalid dates
+        const validEntries = entries.filter(
+          (entry) => entry.startDate && entry.endDate
+        );
 
-  details_applicant_academic_info: Yup.array().of(
-    Yup.object().shape({
-      institutionId: Yup.number()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
+        // Sort by start date
+        const sorted = [...validEntries].sort(
+          (a, b) => new Date(a.startDate) - new Date(b.startDate)
+        );
 
-      degreeId: Yup.number()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
+        for (let i = 0; i < sorted.length - 1; i++) {
+          const currentEnd = new Date(sorted[i].endDate);
+          const nextStart = new Date(sorted[i + 1].startDate);
 
-      countryId: Yup.number()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
+          if (currentEnd >= nextStart) {
+            return false; // Overlapping period detected
+          }
+        }
 
-      cityId: Yup.number()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
+        return true;
+      }
+    ),
 
-      gpa: Yup.number()
-        .nullable()
-        .min(0, "GPA must be 0 or more")
-        .max(4, "GPA must be 4 or less")
-        .required(VALIDATION_MESSAGES.required),
+  details_applicant_academic_info: Yup.array()
+    .of(
+      Yup.object().shape({
+        institutionId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
 
-      startDate: Yup.date()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
+        degreeId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
 
-      endDate: Yup.date()
-        .nullable()
-        .min(
-          Yup.ref("startDate"),
-          VALIDATION_MESSAGES.endDateMustBeAfterStartDate
-        )
-        .required(VALIDATION_MESSAGES.required),
-    })
-  ),
+        countryId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+
+        cityId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+
+        gpa: Yup.number()
+          .nullable()
+          .min(0, "GPA must be 0 or more")
+          .max(4, "GPA must be 4 or less")
+          .required(VALIDATION_MESSAGES.required),
+
+        startDate: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+
+        endDate: Yup.date()
+          .nullable()
+          .min(
+            Yup.ref("startDate"),
+            VALIDATION_MESSAGES.endDateMustBeAfterStartDate
+          )
+          .required(VALIDATION_MESSAGES.required),
+      })
+    )
+    .test(
+      "no-overlapping-academic-dates",
+      "Academic date ranges must not overlap.",
+      function (entries) {
+        if (!entries || entries.length <= 1) return true;
+
+        // Filter out entries without valid dates
+        const validEntries = entries.filter(
+          (entry) => entry.startDate && entry.endDate
+        );
+
+        // Sort by startDate
+        const sorted = [...validEntries].sort(
+          (a, b) => new Date(a.startDate) - new Date(b.startDate)
+        );
+
+        for (let i = 0; i < sorted.length - 1; i++) {
+          const currentEnd = new Date(sorted[i].endDate);
+          const nextStart = new Date(sorted[i + 1].startDate);
+
+          if (currentEnd >= nextStart) {
+            return false; // Overlap detected
+          }
+        }
+
+        return true;
+      }
+    ),
+
 
   details_applicant_vacancy: Yup.array()
     .of(
@@ -375,6 +422,10 @@ export function FormEditForm({
   ];
 
 
+  const selectedJobVacancy = (values) =>
+    dashboard?.allJobVacancyList?.find(
+      (x) => x.value === values?.jobVacancyId
+    );
 
 
   return (
@@ -551,7 +602,7 @@ export function FormEditForm({
                             <th className="col-2"> Status Date</th>
 
                             <th className="col-2">Appointment Type Type</th>
-                            <th className="col-1">Active</th>
+                            <th className="col-1">Active Vacancy</th>
 
                           </tr>
                         </thead>
@@ -562,8 +613,12 @@ export function FormEditForm({
                               <tr key={index}>
 
                                 <td>
-                                  <button disabled={isdataForRead} className="btn btn-danger btn-elevate" type="button" onClick={() => {
+                                  <button disabled={
+                                    isdataForRead ||
+                                    selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                  } className="btn btn-danger btn-elevate" type="button" onClick={() => {
                                     remove(index)
+
                                   }}>
                                     Delete
                                   </button>
@@ -574,7 +629,10 @@ export function FormEditForm({
                                     name={`details_applicant_vacancy[${index}].jobVacancyId`}
                                     className="form-control"
                                     style={{ width: '200px', zIndex: 9999 }}
-                                    isDisabled={isdataForRead}
+                                    isDisabled={
+                                      isdataForRead ||
+                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                    }
                                     value={
                                       dashboard?.allJobVacancyList?.find(
                                         (x) => x.value === values.details_applicant_vacancy[index]?.jobVacancyId
@@ -633,8 +691,10 @@ export function FormEditForm({
                                     }}
                                     dateFormat="dd/MM/yyyy"
                                     name={`details_applicant_vacancy[${index}].applicationDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
+                                    disabled={
+                                      isdataForRead ||
+                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                    }
                                     maxDate={new Date()} // optional: restrict future dates
                                     showPopperArrow={false}
                                   />
@@ -654,7 +714,10 @@ export function FormEditForm({
                                     name={`details_applicant_vacancy[${index}].applicationStatusId`}
                                     className="form-control"
                                     style={{ width: '130px' }}
-                                    isDisabled={isdataForRead || values.details_applicant_vacancy[index].activeCV}
+                                    isDisabled={
+                                      isdataForRead ||
+                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                    }
 
                                     value={
                                       dashboard?.allApplicationStatusList?.find(
@@ -696,7 +759,10 @@ export function FormEditForm({
                                     dateFormat="dd/MM/yyyy"
                                     name={`details_applicant_vacancy[${index}].statusDate`}
                                     autoComplete="off"
-                                    disabled={isdataForRead}
+                                    disabled={
+                                      isdataForRead ||
+                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                    }
                                     maxDate={new Date()} // optional: restrict future dates
                                     showPopperArrow={false}
                                   />
@@ -715,7 +781,10 @@ export function FormEditForm({
                                     name={`details_applicant_vacancy[${index}].appointmentTypeId`}
                                     className="form-control"
                                     style={{ width: '130px' }}
-                                    isDisabled={isdataForRead}
+                                    isDisabled={
+                                      isdataForRead ||
+                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                    }
                                     value={
                                       dashboard?.allAppointmentTypeList?.find(
                                         (x) => x.value === values.details_applicant_vacancy[index]?.appointmentTypeId
@@ -745,7 +814,10 @@ export function FormEditForm({
                                     name={`details_applicant_vacancy[${index}].activeCV`}
                                     type="checkbox"
 
-                                    disabled={isdataForRead}
+                                    disabled={
+                                      isdataForRead ||
+                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                    }
                                     checked={values.details_applicant_vacancy?.[index]?.activeCV}
                                     onChange={(e) => {
                                       setFieldValue(`details_applicant_vacancy[${index}].activeCV`, e.target.checked)
@@ -797,7 +869,83 @@ export function FormEditForm({
                 )}
 
 
+                {/* Applicant Status Information */}
 
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>Applicant Status Information</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+
+
+
+                    <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="applicantStatusId"
+                        label={<span>Applicant Status</span>}
+                        className="form-control"
+                        style={{ width: '130px' }}
+                        disabled={isdataForRead}
+                        value={
+                          dashboard?.allApplicationStatusList?.find(
+                            (x) => x.value === values.applicantStatusId
+                          ) || null
+                        }
+                        // onChange={(e) => {
+
+                        //   setFieldValue("applicantStatusId", e?.value);
+                        // }}
+                        onChange={(e) => {
+                          const selectedValue = e?.value;
+                          setFieldValue("applicantStatusId", selectedValue);
+
+                          // Update applicationStatusId for all rows where activeCV is true
+                          const updatedList = values.details_applicant_vacancy.map((item, idx) => {
+                            if (item.activeCV) {
+                              return {
+                                ...item,
+                                applicationStatusId: selectedValue
+                              };
+                            }
+                            return item;
+                          });
+
+                          setFieldValue("details_applicant_vacancy", updatedList);
+                        }}
+
+                        options={dashboard?.allApplicationStatusList || []}
+                        getOptionLabel={(x) => x.label} // optional: customize label rendering
+                        getOptionValue={(x) => x.value} // optional: customize value extraction
+                        placeholder="Select Status"
+                      />
+
+                      {errors.applicantStatusId &&
+                        touched.applicantStatusId && (
+                          <div className="text-danger">
+                            {errors.applicantStatusId}
+                          </div>
+                        )}
+                    </div>
+
+
+
+
+
+
+                    <div className="col-12 col-md-12 mt-3">
+                      <Field
+                        name="applicantStatusReason"
+                        component={TextArea}
+                        placeholder="Enter applicant status reason"
+                        label={<span>Applicant Status Reason</span>}
+                        autoComplete="off"
+
+                      />
+                    </div>
+
+                  </div>
+
+
+                </div>
 
                 {/* Personal Information */}
 
@@ -1265,83 +1413,7 @@ export function FormEditForm({
 
                 </div>
 
-                {/* Applicant Status Information */}
 
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
-                  <h6>Applicant Status Information</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="applicantStatusId"
-                        label={<span>Applicant Status</span>}
-                        className="form-control"
-                        style={{ width: '130px' }}
-                        disabled={isdataForRead}
-                        value={
-                          dashboard?.allApplicationStatusList?.find(
-                            (x) => x.value === values.applicantStatusId
-                          ) || null
-                        }
-                        // onChange={(e) => {
-
-                        //   setFieldValue("applicantStatusId", e?.value);
-                        // }}
-                        onChange={(e) => {
-                          const selectedValue = e?.value;
-                          setFieldValue("applicantStatusId", selectedValue);
-
-                          // Update applicationStatusId for all rows where activeCV is true
-                          const updatedList = values.details_applicant_vacancy.map((item, idx) => {
-                            if (item.activeCV) {
-                              return {
-                                ...item,
-                                applicationStatusId: selectedValue
-                              };
-                            }
-                            return item;
-                          });
-
-                          setFieldValue("details_applicant_vacancy", updatedList);
-                        }}
-
-                        options={dashboard?.allApplicationStatusList || []}
-                        getOptionLabel={(x) => x.label} // optional: customize label rendering
-                        getOptionValue={(x) => x.value} // optional: customize value extraction
-                        placeholder="Select Status"
-                      />
-
-                      {errors.applicantStatusId &&
-                        touched.applicantStatusId && (
-                          <div className="text-danger">
-                            {errors.applicantStatusId}
-                          </div>
-                        )}
-                    </div>
-
-
-
-
-
-
-                    <div className="col-12 col-md-12 mt-3">
-                      <Field
-                        name="applicantStatusReason"
-                        component={TextArea}
-                        placeholder="Enter applicant status reason"
-                        label={<span>Applicant Status Reason</span>}
-                        autoComplete="off"
-
-                      />
-                    </div>
-
-                  </div>
-
-
-                </div>
 
               </fieldset>
 
@@ -1505,6 +1577,7 @@ export function FormEditForm({
                                   name={`details_applicant_work_experience[${index}].startDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
+                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1536,6 +1609,7 @@ export function FormEditForm({
                                   name={`details_applicant_work_experience[${index}].endDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
+                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1577,6 +1651,10 @@ export function FormEditForm({
                   </div>
                 )}
               </FieldArray>
+
+              {typeof errors.details_applicant_work_experience === 'string' && (
+                <div className="text-danger">{errors.details_applicant_work_experience}</div>
+              )}
 
 
               {/* Details Academic Info */}
@@ -1775,6 +1853,7 @@ export function FormEditForm({
 
                               {/* start date  */}
                               <td>
+                         
                                 <DatePicker
                                   className="form-control"
                                   style={{ width: '130px' }}
@@ -1792,6 +1871,7 @@ export function FormEditForm({
                                   name={`details_applicant_academic_info[${index}].startDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
+                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1806,9 +1886,11 @@ export function FormEditForm({
 
                               {/* end date  */}
                               <td>
+
                                 <DatePicker
                                   className="form-control"
                                   style={{ width: '130px' }}
+
                                   placeholderText="Select Date"
                                   selected={
                                     values?.details_applicant_academic_info?.[index]?.endDate
@@ -1817,12 +1899,14 @@ export function FormEditForm({
                                   }
                                   onChange={(date) => {
                                     const selectedDate = formatDates(date, 'yyyy-MM-dd'); // or use date.toISOString().split('T')[0]
+                                    console.log("selectedDate1111", selectedDate)
                                     setFieldValue(`details_applicant_academic_info[${index}].endDate`, selectedDate);
                                   }}
                                   dateFormat="dd/MM/yyyy"
                                   name={`details_applicant_academic_info[${index}].endDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
+                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1867,6 +1951,9 @@ export function FormEditForm({
               </FieldArray>
 
 
+              {typeof errors.details_applicant_academic_info === 'string' && (
+                <div className="text-danger">{errors.details_applicant_academic_info}</div>
+              )}
               {/* Details Skills  */}
 
               <FieldArray name="details_applicant_skills">
@@ -2010,6 +2097,7 @@ export function FormEditForm({
                                   name={`details_applicant_skills[${index}].startDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
+                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -2041,6 +2129,7 @@ export function FormEditForm({
                                   name={`details_applicant_skills[${index}].endDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
+                                 minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
