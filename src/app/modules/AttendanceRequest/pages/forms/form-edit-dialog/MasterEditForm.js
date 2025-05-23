@@ -210,13 +210,15 @@ export function MasterEditForm({
                               <b>Active Payroll Month:</b>{" "}
                             </span>
                             <span>
-                              <ActivePayrollMonthLabel
-                                className="date"
-                                month={payrollData.month}
-                                year={payrollData.year}
-                                startDate={payrollData.startDate}
-                                endDate={payrollData.endDate}
-                              />
+                              <b>
+                                <ActivePayrollMonthLabel
+                                  className="date"
+                                  month={payrollData.month}
+                                  year={payrollData.year}
+                                  startDate={payrollData.startDate}
+                                  endDate={payrollData.endDate}
+                                />
+                              </b>
                             </span>
                           </div>
                         </div>

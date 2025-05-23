@@ -173,12 +173,12 @@ export function LeaveApplicationTable() {
     },
     {
       dataField: "request_remarks",
-      text: "authority Remarks",
+      text: "Final Authority Remarks",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "220px",
       },
     },
     {

@@ -11,7 +11,6 @@
 @import "./_metronic/_assets/sass/themes/layout/brand/dark.scss";
 @import "./_metronic/_assets/sass/themes/layout/aside/dark.scss";
 
-
 //Theme_1
 @import "../public/css/custome_theme_1/login-screen.scss";
 @import "../public/css/custome_theme_1/table-icon.scss";
@@ -25,13 +24,14 @@
 @import "../public/css/custome_theme_1/preview_payroll_register.scss";
 @import "../public/css/custome_theme_1/preview_payslip.scss";
 @import "../public/css/custome_theme_1/attendance_status.scss";
+@import "../public/css/custome_theme_1/dashboard_alert.scss";
 
 // Header themes
 // Light
 //@import "./_metronic/_assets/sass/themes/layout/header/base/light.scss";
 // Dark
 // @import "./_metronic/_assets/sass/themes/layout/header/base/dark.scss";
-  
+
 // Header Menu themes
 // Light
 //@import "./_metronic/_assets/sass/themes/layout/header/menu/light.scss";
@@ -50,13 +50,10 @@
 // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 100 to 900
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 100 to 900
-
-
 
 // Aside themes
 // Dark
@@ -71,20 +68,19 @@
 .example-highlight > pre {
   background: none transparent !important;
   margin: 0 !important;
-  padding-top: 0.5rem; 
-  code { 
-      overflow-y: auto;
-      display: block;
+  padding-top: 0.5rem;
+  code {
+    overflow-y: auto;
+    display: block;
 
-      span {
-        background: none transparent !important;
-      }
+    span {
+      background: none transparent !important;
+    }
   }
 }
 
 .json > pre {
   background: none #fff !important;
-
 }
 
 .example-code > .json {
@@ -107,16 +103,16 @@
   border-bottom: 1px solid #ffffff !important;
   border-radius: 12px;
   font-family: "Noto Sans", sans-serif;
-  color: #333333 ;
+  color: #333333;
   th {
     outline: none;
-   background-color:#0093dd;
+    background-color: #0093dd;
 
-    &.sortable {  
+    &.sortable {
       .svg-icon-sort {
         opacity: 0;
       }
-  
+
       &:hover {
         cursor: pointer;
 
@@ -124,28 +120,27 @@
           opacity: 1;
         }
       }
-    }    
+    }
   }
 
   .table.table-head-custom thead tr {
     .sortable-active {
-        color: $primary !important;
-    } 
+      color: $primary !important;
+    }
     // background-color: #f7f7f7;
-    color: #333333 !important; 
+    color: #333333 !important;
     border-radius: 140px;
-
   }
- .table.table-head-custom tr:hover{
-  background-color: #E6F8FF;
- }
+  .table.table-head-custom tr:hover {
+    background-color: #e6f8ff;
+  }
 
   .table.table-head-custom thead th {
-    color: #ffffff !important;  /* Same text color for header cells */
-   font-size: 16px;
-   font-weight: 600;
-   text-transform: capitalize;
-   letter-spacing: 0px;
+    color: #ffffff !important; /* Same text color for header cells */
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0px;
   }
 }
 
@@ -160,11 +155,9 @@
 .react-bootstrap-table table {
   table-layout: auto;
   border-left: 1px solid #dbdbdb;
-    border-right: 1px solid #e5e5e5;
-    border-bottom: 1px solid #e5e5e5;
-    border-radius: 12px;
-  
-    
+  border-right: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  border-radius: 12px;
 }
 
 .modal-75vw {
