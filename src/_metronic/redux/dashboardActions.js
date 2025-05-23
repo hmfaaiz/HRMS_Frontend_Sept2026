@@ -627,3 +627,19 @@ export const getAllLoanType = (body) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
+
+
+
+export const getAllJobVacancy = (body) => async (dispatch) => {
+  return await requestFromServer
+    .getAllJobVacancy(body)
+    .then((response) => {
+   
+      const entities = [...response.data?.data];
+      console.log("entities111",entities)
+      dispatch(actions.AllJobVacancyFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
