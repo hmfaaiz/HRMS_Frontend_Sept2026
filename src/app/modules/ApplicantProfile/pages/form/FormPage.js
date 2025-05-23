@@ -80,7 +80,7 @@ export function FormPage({ history }) {
           />
         )}
       </Route>
-      <Route path="/applicant_profile/read-all-applicant-profile/:id/:status/delete">
+      {/* <Route path="/applicant_profile/read-all-applicant-profile/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
             show={match != null}
@@ -89,63 +89,29 @@ export function FormPage({ history }) {
             onHide={() => {
               history.push("/applicant_profile/read-all-applicant-profile");
             }}
+             actionName="deleteApplicantProfile"
           />
         )}
-      </Route>
+      </Route> */}
 
       {/* dynamic rendering */}
 
-      {/* posting */}
-      <Route path="/applicant_profile/read-all-applicant-profile/:id/:status/posting">
-        {({ history, match }) => (
-          <FormDynamicDialogModal
-            show={match != null}
-            id={match && match.params.id}
-            status={match && match.params.status}
-            title="Post Record"
-            message="Are you sure you want to post this record?"
-            confirmButtonText="Post Record"
-            onHide={() => {
-              history.push("/applicant_profile/read-all-applicant-profile");
-            }}
-            actionName="postApplicantProfile"
-          />
-        )}
-      </Route>
-
-      {/* hold */}
-      <Route path="/applicant_profile/read-all-applicant-profile/:id/:status/hold">
-        {({ history, match }) => (
-          <FormDynamicDialogModal
-            show={match != null}
-            id={match && match.params.id}
-            status={match && match.params.status}
-            title="Hold Record"
-            message="Are you sure you want to hold this record?"
-            confirmButtonText="Hold Record"
-            onHide={() => {
-              history.push("/applicant_profile/read-all-applicant-profile");
-            }}
-            actionName="holdApplicantProfile"
-          />
-        )}
-      </Route>
 
 
       {/* close */}
-      <Route path="/applicant_profile/read-all-applicant-profile/:id/:status/close">
+      <Route path="/applicant_profile/read-all-applicant-profile/:id/:status/delete">
         {({ history, match }) => (
           <FormDynamicDialogModal
             show={match != null}
             id={match && match.params.id}
             status={match && match.params.status}
-            title="Close Record"
-            message="Are you sure you want to close this record?"
-            confirmButtonText="Close Record"
+            title="Delete Record"
+            message="Are you sure you want to delete this record?"
+            confirmButtonText="Delete Record"
             onHide={() => {
               history.push("/applicant_profile/read-all-applicant-profile");
             }}
-            actionName="closeApplicantProfile"
+            actionName="deleteApplicantProfile"
           />
         )}
       </Route>

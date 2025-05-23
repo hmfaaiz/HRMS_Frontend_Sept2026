@@ -59,7 +59,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
 
-  console.log("dataForEdit1111", dataForEdit)
+
   useEffect(() => {
     dispatch(actions.fetchApplicantProfileById(id));
 
@@ -72,16 +72,26 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
     if (!formData.Id) {
-
+      if (formData?.file && typeof formData?.file === "object") {
+        try {
+          const uploadRes = await actions.uploadFile(formData.file);
+          formData.file = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+        } catch (err) {
+          console.error("File upload failed:", err);
+          // Optionally return here or set a default file value
+        }
+      } else if (typeof formData?.file == "string") {
+        formData.file = formData.file;
+      }
       dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
 
 
 
     } else {
 
-      console.log("formData1111", formData.details_applicant_work_experience)
 
-      // user.number_of_days=
+
+
       const formUpdatedFields = {
         Id: formData.Id,
         subsidiaryId: formData.subsidiaryId,
@@ -123,19 +133,31 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         otherInformation: formData.otherInformation,
         currentDesignation: formData.currentDesignation,
         details_applicant_vacancy: formData.details_applicant_vacancy,
-        details_applicant_work_experience:formData.details_applicant_work_experience,
-        details_applicant_academic_info:formData?.details_applicant_academic_info,
-        details_applicant_skills:formData?.details_applicant_skills,
+        details_applicant_work_experience: formData.details_applicant_work_experience,
+        details_applicant_academic_info: formData?.details_applicant_academic_info,
+        details_applicant_skills: formData?.details_applicant_skills,
         // email: formData.email,
         applicantStatusId: formData.applicantStatusId,
         applicantStatusReason: formData.applicantStatusReason,
+        file: typeof formData.file === "string" ? formData.file : "", // fallback
 
       };
 
+      if (formData?.file && typeof formData?.file === "object") {
+        try {
+          const uploadRes = await actions.uploadFile(formData.file);
+          formUpdatedFields.file = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+        } catch (err) {
+          console.error("File upload failed:", err);
+          // Optionally return here or set a default file value
+        }
+      } else if (typeof formData?.file == "string") {
+        formUpdatedFields.file = formData.file;
+      }
 
-
-
+      // ✅ Now call the update API after file is correctly set
       await dispatch(actions.updateApplicantProfile(formUpdatedFields, disbaleLoading, onHide));
+
       await dispatch(actions.fetchApplicantProfile(usersUIProps.queryParams));
     }
   };

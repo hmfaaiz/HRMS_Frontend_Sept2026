@@ -16,6 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
+import { getFileName, getUploadUrl } from "../../../../../utils/common";
 
 export function FormTable() {
   //Users UI Context
@@ -95,17 +96,18 @@ export function FormTable() {
 
   const columns = [
 
-    // {
-    //   dataField: "Subsidiary.name",
-    //   text: "Subsidiary",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "200px",
-    //   },
-    // },
 
+
+    {
+      dataField: "applicantCode",
+      text: "Applicant Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
     {
       dataField: "FullName",
       text: "Name",
@@ -117,25 +119,21 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Country.name",
-      text: "Country",
+      dataField: "additional_summary",
+      text: "Address",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "200px",
       },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 50 ? cell.substring(0, 50) + "..." : cell;
+      }
     },
-    {
-      dataField: "City.name",
-      text: "City",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "200px",
-      },
-    },
+
+
 
     {
       dataField: "email_personal",
@@ -144,7 +142,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "160px",
       },
     },
 
@@ -155,8 +153,24 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "100px",
       },
+    },
+
+    {
+      dataField: "file",
+      text: "File",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell, row) => (
+        <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+          <span>{getFileName(cell)}</span>
+        </a>
+      )
     },
 
 

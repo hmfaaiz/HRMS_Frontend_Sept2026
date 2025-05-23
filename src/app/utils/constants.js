@@ -392,7 +392,9 @@ export const SERVER_MESSAGES = {
   postedSuccess: 'Record posted Successfully!',
   holdSuccess: 'Record holded Successfully!',
   closedSuccess: 'Record closed Successfully!',
+  fileFail: 'File not Uploaded!',
 }
+
 
 export const WEEK_DAY_STRING = {
   SUNDAY: 'Sunday',

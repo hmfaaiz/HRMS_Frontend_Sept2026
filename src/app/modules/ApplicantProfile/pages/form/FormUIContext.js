@@ -65,11 +65,12 @@ export function FormUIProvider({ FormUIEvents, children }) {
 
     applicantStatusId: "",
     applicantStatusReason: "",
+    file:"",
 
-    details_applicant_vacancy: "",
-    details_applicant_work_experience: "",
-    details_applicant_academic_info: "",
-    details_applicant_skills: ""
+    details_applicant_vacancy: [],
+    details_applicant_work_experience:[],
+    details_applicant_academic_info: [],
+    details_applicant_skills: [],
 
 
 

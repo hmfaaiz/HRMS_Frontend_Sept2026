@@ -34,21 +34,26 @@ export function deleteApplicantProfile(body) {
 }
 
 //Post
-export function postApplicantProfile(body) {
+// export function postApplicantProfile(body) {
 
-  return axios.patch(`${USERS_URL}/applicant_profile/post-applicant-profile`, body);
-}
+//   return axios.patch(`${USERS_URL}/applicant_profile/post-applicant-profile`, body);
+// }
 
 
 //Hold
-export function holdApplicantProfile(body) {
+// export function holdApplicantProfile(body) {
 
-  return axios.patch(`${USERS_URL}/applicant_profile/hold-applicant-profile`, body);
-}
+//   return axios.patch(`${USERS_URL}/applicant_profile/hold-applicant-profile`, body);
+// }
 
 
 //Close
-export function closeApplicantProfile(body) {
+// export function closeApplicantProfile(body) {
 
-  return axios.patch(`${USERS_URL}/applicant_profile/close-applicant-profile`, body);
+//   return axios.patch(`${USERS_URL}/applicant_profile/close-applicant-profile`, body);
+// }
+
+
+export function uploadFile(body) {
+  return axios.post(`${USERS_URL}/file-upload`, body);
 }

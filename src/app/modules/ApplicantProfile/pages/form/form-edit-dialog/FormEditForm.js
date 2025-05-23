@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
@@ -15,7 +15,7 @@ import {
   getAllJobVacancy,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
+import { amountLimit, amountLimitDynamic, formatDates, getFileName, getUploadUrl } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 
 
@@ -77,6 +77,12 @@ const applicantProfileEditSchema = Yup.object().shape({
     .matches(/^0[0-9]*$/, 'Phone number must start with 0 and contain only digits') // Must start with 0 and contain only digits
     .notRequired(), // Make it optional if you want
 
+  phone_cell: Yup.string()
+    .nullable() // Allows null values
+    .matches(/^0[0-9]*$/, 'Cell number must start with 0 and contain only digits') // Must start with 0 and contain only digits
+    .notRequired(), // Make it optional if you want
+
+
 
   email_personal: Yup.string()
     .nullable() // Allows null values
@@ -131,6 +137,24 @@ const applicantProfileEditSchema = Yup.object().shape({
       then: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
 
+
+  file: Yup.mixed()
+    .required(VALIDATION_MESSAGES.required)
+    .test("fileSize", "File size must be less than 1 MB", value => {
+      // Skip validation if it's an existing file (string)
+      if (typeof value === "string") return true;
+      return value && value.size <= 3 * 1024 * 1024;  // 3 MB
+    })
+    .test("fileType", "Unsupported file format", value => {
+      if (typeof value === "string") return true;
+      return value && [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "image/jpeg",
+        "image/png"
+      ].includes(value.type);
+    }),
 
 
   details_applicant_skills: Yup.array().of(
@@ -361,7 +385,7 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
 
-
+  const inputFile = useRef(null);
   //drop down
   useEffect(() => {
     if (!formData.Id) {
@@ -727,6 +751,9 @@ export function FormEditForm({
                                     onChange={(e) => {
 
                                       setFieldValue(`details_applicant_vacancy[${index}].applicationStatusId`, e?.value);
+
+                                      const selectedDate = formatDates(new Date(), 'yyyy-MM-dd');
+                                      setFieldValue(`details_applicant_vacancy[${index}].statusDate`, selectedDate);
                                     }}
                                     options={dashboard?.allApplicationStatusList || []}
                                     getOptionLabel={(x) => x.label} // optional: customize label rendering
@@ -760,8 +787,7 @@ export function FormEditForm({
                                     name={`details_applicant_vacancy[${index}].statusDate`}
                                     autoComplete="off"
                                     disabled={
-                                      isdataForRead ||
-                                      selectedJobVacancy(values.details_applicant_vacancy[index])?.jobPostingStatus == 3
+                                      isdataForRead || true
                                     }
                                     maxDate={new Date()} // optional: restrict future dates
                                     showPopperArrow={false}
@@ -890,20 +916,18 @@ export function FormEditForm({
                             (x) => x.value === values.applicantStatusId
                           ) || null
                         }
-                        // onChange={(e) => {
 
-                        //   setFieldValue("applicantStatusId", e?.value);
-                        // }}
                         onChange={(e) => {
                           const selectedValue = e?.value;
                           setFieldValue("applicantStatusId", selectedValue);
-
+                          const selectedDate = formatDates(new Date(), "yyyy-MM-dd");
                           // Update applicationStatusId for all rows where activeCV is true
                           const updatedList = values.details_applicant_vacancy.map((item, idx) => {
                             if (item.activeCV) {
                               return {
                                 ...item,
-                                applicationStatusId: selectedValue
+                                applicationStatusId: selectedValue,
+                                statusDate: selectedDate,
                               };
                             }
                             return item;
@@ -1115,7 +1139,7 @@ export function FormEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <label>
                         <span>
-                          S/O, D/O, W/O
+                          S/O, D/O, W/O <span style={{ color: 'red' }}>*</span>
                         </span>
                       </label>
                       <Field
@@ -1224,11 +1248,14 @@ export function FormEditForm({
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
+                      <label >
+                        Personal Email<span style={{ color: 'red' }}>*</span>
+                      </label>
                       <Field
                         name="email_personal"
                         component={Input}
                         placeholder="example@gmail.com"
-                        label="Personal Email"
+                        // label="Personal Email" 
                         autoComplete="off"
                         maxLength="30"
                       />
@@ -1413,7 +1440,48 @@ export function FormEditForm({
 
                 </div>
 
+                <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
+                  <label
+                    style={{
+                      "margin-right": "0.5rem",
+                    }}
+                  >
+                    {" "}
+                    Attachment:{" "}
+                    <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
 
+                    name="file"
+                    type="file"
+                    accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                    ref={inputFile}
+                    onChange={(event) => {
+                      // Update Formik's value
+                      const file = event.currentTarget.files[0];
+                      setFieldValue("file", file);
+                    }}
+                  />
+                  {errors.file && touched.file && (
+                    <div className="text-danger mt-1">{errors.file}</div>
+                  )}
+
+                  <div>
+                    <br />
+                    {formData?.file && (
+                      <>
+                        <label>
+                          <strong>Existing File:</strong>
+                        </label>
+                        {
+                          <a href={getUploadUrl(formData.file)} target="_blank">
+                            <span>{getFileName(formData.file)}</span>
+                          </a>
+                        }
+                      </>
+                    )}
+                  </div>
+                </div>
 
               </fieldset>
 
@@ -1577,7 +1645,7 @@ export function FormEditForm({
                                   name={`details_applicant_work_experience[${index}].startDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
-                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                                  minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1609,7 +1677,7 @@ export function FormEditForm({
                                   name={`details_applicant_work_experience[${index}].endDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
-                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                                  minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1853,7 +1921,7 @@ export function FormEditForm({
 
                               {/* start date  */}
                               <td>
-                         
+
                                 <DatePicker
                                   className="form-control"
                                   style={{ width: '130px' }}
@@ -1871,7 +1939,7 @@ export function FormEditForm({
                                   name={`details_applicant_academic_info[${index}].startDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
-                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                                  minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -1906,7 +1974,7 @@ export function FormEditForm({
                                   name={`details_applicant_academic_info[${index}].endDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
-                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                                  minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -2097,7 +2165,7 @@ export function FormEditForm({
                                   name={`details_applicant_skills[${index}].startDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
-                                      minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                                  minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
@@ -2129,7 +2197,7 @@ export function FormEditForm({
                                   name={`details_applicant_skills[${index}].endDate`}
                                   autoComplete="off"
                                   disabled={isdataForRead}
-                                 minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
+                                  minDate={values?.dateOfBirth ? new Date(values.dateOfBirth) : null}
                                   maxDate={new Date()} // optional: restrict future dates
                                   showPopperArrow={false}
                                 />
