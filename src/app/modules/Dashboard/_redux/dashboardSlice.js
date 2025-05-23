@@ -303,5 +303,5 @@ export const dashboardSlice = createSlice({
     AllDashboardAlertsFetch: (state, action) => {
       state.allDashboardAlerts = action.payload;
     },
-
+  },
 });
