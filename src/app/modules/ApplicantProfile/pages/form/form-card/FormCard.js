@@ -58,46 +58,29 @@ const { userAccess } = useSelector(
 
       <Card>
 
-        <CardHeader title={CurrentModuleName()}>
+      <CardHeader title={CurrentModuleName()} >
+          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
 
-  
-            <div className=" p-2">
-                  {accessUser && (
+      <div className="pt-5">
+      <FormFIlter />
+      </div>
+      <div className=" p-2">
+      <CardHeaderToolbar>
+    
+    <button
+      type="button"
+      className="btn btn-primary "
+      onClick={FormUIProps .newFormButtonClick}
+    >
+     + Applicant Profile
 
-                  <button
-
-                    type="button"
-
-                    className="btn btn-primary"
-
-                    onClick={FormUIProps.newFormButtonClick}
-
-                  >
-
-                    + Add Job Vacancy
-
-                  </button>
-
-                )}
-
-              <CardHeaderToolbar>
-
-
-
-            
-
-
-
-
-
-              </CardHeaderToolbar>
-
-            </div>
-
-
-
+    </button>
   
 
+</CardHeaderToolbar>
+      </div>
+       
+          </div>
         </CardHeader>
 
 
