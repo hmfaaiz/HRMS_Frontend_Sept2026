@@ -175,7 +175,9 @@ const profileValidation = Yup.object().shape(
       .required('Required*'),
 
     passportNo: Yup.string()
-      .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
+    .max(15, 'Passport number must be at most 15 characters'),
+    // on instruction of Mr. Mubin
+      // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
     //.required('ID Card No is required'), // Make it required if necessary
 
     email_official: Yup.string()

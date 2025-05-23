@@ -136,10 +136,15 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         details_applicant_work_experience: formData.details_applicant_work_experience,
         details_applicant_academic_info: formData?.details_applicant_academic_info,
         details_applicant_skills: formData?.details_applicant_skills,
-        // email: formData.email,
+
+        email: formData.email,
         applicantStatusId: formData.applicantStatusId,
         applicantStatusReason: formData.applicantStatusReason,
         file: typeof formData.file === "string" ? formData.file : "", // fallback
+
+        password: formData.password && formData.password.trim() !== "" ? formData.password : "",
+
+
 
       };
 

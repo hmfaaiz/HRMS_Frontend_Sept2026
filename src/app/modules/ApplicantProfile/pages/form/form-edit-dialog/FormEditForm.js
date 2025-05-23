@@ -19,8 +19,8 @@ import { amountLimit, amountLimitDynamic, formatDates, getFileName, getUploadUrl
 import DatePicker from "react-datepicker";
 
 
-
-const applicantProfileEditSchema = Yup.object().shape({
+export const getApplicantProfileEditSchema = (formData) => {
+return Yup.object().shape({
   subsidiaryId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
 
@@ -50,9 +50,10 @@ const applicantProfileEditSchema = Yup.object().shape({
     .matches(/^\d{5}-\d{7}-\d{1}$/, 'ID Card No must be in the format 12345-6789012-3')
     .required(VALIDATION_MESSAGES.required),
 
-
+  // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
   passportNo: Yup.string()
-    .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
+    .max(15, 'Passport number must be at most 15 characters'),
+  // .required(VALIDATION_MESSAGES.required),
 
 
   maritalStatus: Yup.string()
@@ -137,6 +138,21 @@ const applicantProfileEditSchema = Yup.object().shape({
       then: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
 
+
+  email: Yup.string()
+  .nullable() 
+  .required(VALIDATION_MESSAGES.required),
+  //   // .required(VALIDATION_MESSAGES.required),
+password: Yup.string()
+  .nullable()
+  .when([], {
+    is: () => !formData || !formData.Id, // Only apply validation in "create" mode
+    then: Yup.string()
+      .min(5, "At least 5 characters are required")
+      .max(15, "At most 15 characters are required")
+      .required("Password is required"),
+    otherwise: Yup.string().nullable()
+  }),
 
   file: Yup.mixed()
     .required(VALIDATION_MESSAGES.required)
@@ -298,10 +314,16 @@ const applicantProfileEditSchema = Yup.object().shape({
         jobVacancyId: Yup.number()
           .nullable()
           .required(VALIDATION_MESSAGES.required),
-        applicationDate: Yup.date().required(VALIDATION_MESSAGES.required),
+        applicationDate: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
         // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-        statusDate: Yup.date().required(VALIDATION_MESSAGES.required),
-        appointmentTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
+        statusDate: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
+        appointmentTypeId: Yup.number()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
       })
     )
     .test('unique-jobVacancyId', 'Each Job Vacancy must be unique.', function (vacancies) {
@@ -370,7 +392,7 @@ const applicantProfileEditSchema = Yup.object().shape({
     return true; // No error
   });
 
-
+};
 
 
 export function FormEditForm({
@@ -459,7 +481,7 @@ export function FormEditForm({
 
       initialValues={formData}
 
-      validationSchema={applicantProfileEditSchema}
+      validationSchema={getApplicantProfileEditSchema(formData)}
       onSubmit={(values) => {
 
         enableLoading();
@@ -474,7 +496,7 @@ export function FormEditForm({
                 <div className="spinner spinner-lg spinner-success" />
               </div>
             )}
-            <Form className="form form-label-right">
+            <Form className="form form-label-right" autoComplete="off">
               <fieldset disabled={isdataForRead}>
 
 
@@ -1482,6 +1504,52 @@ export function FormEditForm({
                     )}
                   </div>
                 </div>
+
+
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                  <h6>User Credentials</h6>
+                  <div className="form-group row col-12 col-md-12  p-0 m-0">
+
+
+
+
+
+
+                    <div className="col-12 col-md-6 mt-3">
+                      <label>
+                        Email <span style={{ color: 'red' }}>*</span>
+                      </label>
+                      <Field
+                        disabled={isdataForRead}
+                        name="email"
+                        component={Input}
+                        placeholder="example@gmail.com"
+                        maxLength="30"
+                        autoComplete="off"  // Add this to prevent autofill
+                      />
+                    </div>
+
+
+                    <div className="col-12 col-md-6 mt-3">
+                      <label>
+                     New Password {(!formData.Id) && <span style={{ color: "red" }}>*</span>}
+
+                      </label>
+                      <Field
+                        name="password"
+                        component={Input} // Custom component
+                        // disabled={id}
+                        placeholder="New password"
+                        type="password"
+                        autoComplete="off"
+                      />
+                    </div>
+
+                  </div>
+
+
+                </div>
+
 
               </fieldset>
 

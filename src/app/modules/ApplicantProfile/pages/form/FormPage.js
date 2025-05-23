@@ -116,7 +116,6 @@ export function FormPage({ history }) {
         )}
       </Route>
 
-      <FormFIlter />
       <FormCard />
 
       <ToastContainer
