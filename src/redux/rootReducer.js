@@ -97,6 +97,7 @@ import { LoanRegisterSlice } from "../app/modules/LoanRegister/_redux/EmployeeRe
 import { ReimbursementRegisterSlice } from "../app/modules/ReimbursementRegister/_redux/ReimbursementRegisterSlice";
 import { JobVacancySlice } from "../app/modules/JobVacancy/_redux/redux-Slice";
 import { ApplicantProfileSlice } from "../app/modules/ApplicantProfile/_redux/redux-Slice";
+import { ResumeSearchEngineSlice } from "../app/modules/ResumeSearchEngine/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -192,7 +193,7 @@ export const rootReducer = combineReducers({
   attendance_approval: AttendanceApprovalSlice.reducer,
   payroll_preview: PayrollPreviewSlice?.reducer,
   applicant_profile: ApplicantProfileSlice?.reducer,
- 
+  resume_search_engine:ResumeSearchEngineSlice.reducer,
 
  
  

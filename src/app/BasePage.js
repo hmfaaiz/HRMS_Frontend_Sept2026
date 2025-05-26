@@ -214,8 +214,8 @@ const PayrollPreview = lazy(() =>
   import("./modules/PayrollPreview/pages/index")
 );
 
-
 const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
+const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -305,6 +305,7 @@ const ROUTES = {
   attendance_approval: AttendanceApprovalModule,
   payslip : PayrollPreview,
   applicant_profile:ApplicantProfileModule,
+  resume_search_engine:ResumeSearchEngineModule,
   
  
 };
@@ -329,6 +330,7 @@ export default function BasePage() {
             .join("-")
             .toLowerCase();
           if (ROUTES[accessName]) {
+   
             return (
               <Route
                 key={key}

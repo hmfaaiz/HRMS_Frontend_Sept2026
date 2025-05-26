@@ -64,7 +64,7 @@ export const deleteApplicantProfile = (id) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(error.response.data.message);
+      toast.error(SERVER_MESSAGES?.deletedFail);
     });
 };
 
@@ -150,77 +150,6 @@ export const updateApplicantProfile = (user, disbaleLoading, onHide) => (dispatc
     });
 };
 
-//Post
-// export const postApplicantProfile = (id) => (dispatch) => {
-
-//   return requestFromServer
-//     .postApplicantProfile({ Id: id })
-//     .then((response) => {
-
-//       dispatch(actions.JobPostedStatus({ Id: id }));
-//       toast.success(SERVER_MESSAGES.postedSuccess, {
-//         position: "top-right",
-//         autoClose: 5000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//       });
-//     })
-//     .catch((error) => {
-//       dispatch(actions.catchError({ error, callType: callTypes.action }));
-//       toast.error(error.response.data.message);
-//     });
-// };
-
-//Hold
-// export const holdApplicantProfile = (id) => (dispatch) => {
-
-//   return requestFromServer
-//     .holdApplicantProfile({ Id: id })
-//     .then((response) => {
-
-//       dispatch(actions.JobPostedStatus({ Id: id }));
-//       toast.success(SERVER_MESSAGES.holdSuccess, {
-//         position: "top-right",
-//         autoClose: 5000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//       });
-//     })
-//     .catch((error) => {
-//       dispatch(actions.catchError({ error, callType: callTypes.action }));
-//       toast.error(error.response.data.message);
-//     });
-// };
-
-//Close
-// export const closeApplicantProfile = (id) => (dispatch) => {
-
-//   return requestFromServer
-//     .closeApplicantProfile({ Id: id })
-//     .then((response) => {
-
-//       dispatch(actions.JobPostedStatus({ Id: id }));
-//       toast.success(SERVER_MESSAGES.closedSuccess, {
-//         position: "top-right",
-//         autoClose: 5000,
-//         hideProgressBar: false,
-//         closeOnClick: true,
-//         pauseOnHover: true,
-//         draggable: true,
-//         progress: undefined,
-//       });
-//     })
-//     .catch((error) => {
-//       dispatch(actions.catchError({ error, callType: callTypes.action }));
-//       toast.error(error.response.data.message);
-//     });
-// };
 
 
 export const uploadFile = async (file) => {
