@@ -270,7 +270,7 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
 
 export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer
-    .getEmployeeAuthorties(empId, "410")
+    .getEmployeeAuthorties(empId, "457")
     .then((res) => {
       const data = Array.isArray(res.data?.data) ? res.data?.data : [];
       dispatch(actions.EmployeeAuthorityFetched(data));
