@@ -220,24 +220,24 @@ export function FormFIlter({ listLoading, user }) {
     applicationFromDate: null, applicationToDate: null,
 
     // Professional information
-    workExpFrom: null,
-    workExpTo: null,
-    expectedSalaryRangeFrom: null,
-    expectedSalaryRangeTo: null,
+    workExpFrom: "",
+    workExpTo: "",
+    expectedSalaryRangeFrom: "",
+    expectedSalaryRangeTo: "",
     expectedSalaryCurrencyId: null,
     expectedSalaryPayTypeId: null,
-    companyName: null,
+    companyName: '',
     preferredQualificationId: null,
 
 
     // Personal Information
-    preferredAgeFrom: null,
-    preferredAgeTo: null,
+    preferredAgeFrom: "",
+    preferredAgeTo: "",
     maritalStatus: null,
-    gender: null,
+    gender: "",
     religionId: null,
     nationality: null,
-    applicantCanJoin: null,
+    applicantCanJoin: "",
 
   };
 
