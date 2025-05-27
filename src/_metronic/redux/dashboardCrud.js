@@ -264,3 +264,9 @@ export function getAllLoanType(body) {
 
   
 }
+
+export function getAllJobVacancy(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-job-vacancy`,
+    body
+  );
+}

@@ -219,6 +219,9 @@ const PayrollPreview = lazy(() =>
 const LoanRequest = lazy(() => import("./modules/Loan_Request/pages/index"));
 const LoanApproval = lazy(() => import("./modules/LoanApproval/page/index"));
 
+
+const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -305,9 +308,12 @@ const ROUTES = {
   job_vacancy: jobVacancyModule,
   attendance_request: AttendanceRequestModule,
   attendance_approval: AttendanceApprovalModule,
-  payslip: PayrollPreview,
   loan_request: LoanRequest,
   loan_approval: LoanApproval,
+  payslip : PayrollPreview,
+  applicant_profile:ApplicantProfileModule,
+  
+ 
 };
 
 export default function BasePage() {

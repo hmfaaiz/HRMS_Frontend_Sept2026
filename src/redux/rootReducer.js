@@ -98,6 +98,7 @@ import { ReimbursementRegisterSlice } from "../app/modules/ReimbursementRegister
 import { JobVacancySlice } from "../app/modules/JobVacancy/_redux/redux-Slice";
 import { LoanRequestSlice } from "../app/modules/Loan_Request/_redux/redux-Slice";
 import { LoanApprovalSlice } from "../app/modules/LoanApproval/redux/formSlice";
+import { ApplicantProfileSlice } from "../app/modules/ApplicantProfile/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -194,6 +195,11 @@ export const rootReducer = combineReducers({
   payroll_preview: PayrollPreviewSlice?.reducer,
   loan_request: LoanRequestSlice.reducer,
   loan_approval: LoanApprovalSlice.reducer,
+  applicant_profile: ApplicantProfileSlice?.reducer,
+ 
+
+ 
+ 
 });
 
 export function* rootSaga() {

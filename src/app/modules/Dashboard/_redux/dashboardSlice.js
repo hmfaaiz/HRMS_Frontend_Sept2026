@@ -72,6 +72,7 @@ const initialDashboardState = {
   reportingEmployee: null,
   loanList: [],
   holidayList: [],
+  allJobVacancyList:[],
   allDashboardAlerts: [],
 };
 
@@ -294,6 +295,11 @@ export const dashboardSlice = createSlice({
     AllHolidayFetch: (state, action) => {
       state.holidayList = action.payload;
     },
+
+    AllJobVacancyFetch: (state, action) => {
+      state.allJobVacancyList = action.payload;
+     },
+ 
     AllDashboardAlertsFetch: (state, action) => {
       state.allDashboardAlerts = action.payload;
     },
