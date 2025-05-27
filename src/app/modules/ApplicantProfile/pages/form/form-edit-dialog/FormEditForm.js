@@ -698,7 +698,7 @@ export function FormEditForm({
                                             (!values?.subsidiaryId || x?.subsidiaryId === values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
                                         )
                                         .map((x) => ({
-                                          label: x.mergeLabel,
+                                          label: x.label,
                                           value: x.value,
                                           disabled: values.details_applicant_vacancy.some(
                                             (el) => el.jobVacancyId === x.value
@@ -1148,7 +1148,7 @@ export function FormEditForm({
                         onChange={handleChange}
                         style={{ display: "block" }}
                       >
-                        <option value="-1" label="Select Nationality" />
+                        <option value="" label="Select Nationality" />
                         <option value="Pakistani" label="Pakistani" />
                         <option value="Other" label="Other" />
 

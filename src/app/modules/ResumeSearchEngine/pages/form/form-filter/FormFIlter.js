@@ -27,71 +27,93 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const API_URL = process.env.REACT_APP_API_URL;
 
 
-// const prepareFilter = (queryParams, values) => {
-//   const { searchText } = values
-//   const newQueryParams = { ...queryParams }
-//   const filter = {}
-
-//   if (searchText) {
-//     filter.searchQuery = searchText
-//     // filter.email = searchText
-//   }
-//   newQueryParams.filter = filter
-//   return newQueryParams
-// }
-
 
 const prepareFilter = (queryParams, values) => {
   const {
+    // General
     searchText,
     departmentId,
     designationId,
+    gradeId,
+    locationId,
+    countryId,
+    cityId,
+    appointmentTypeId,
+
+    // Vacancy detail
+    applicantStatusId,
     priorityTypeId,
     desireFromDateOfApp,
-    desireToDateOfApp, vacancyStatusId, jobFinalizedFromDate, jobFinalizedToDate,
+    desireToDateOfApp,
+    applicationFromDate,
+    applicationToDate,
+
+    // Professional information
+    workExpFrom,
+    workExpTo,
+    expectedSalaryRangeFrom,
+    expectedSalaryRangeTo,
+    expectedSalaryCurrencyId,
+    expectedSalaryPayTypeId,
+    companyName,
+    preferredQualificationId,
+
+    // Personal Information
+    preferredAgeFrom,
+    preferredAgeTo,
+    maritalStatus,
+    gender,
+    religionId,
+    nationality,
+    applicantCanJoin,
   } = values;
 
   const newQueryParams = { ...queryParams };
   const filter = {};
 
-  if (searchText) {
+  if (searchText?.trim()) {
     filter.searchQuery = searchText.trim();
   }
 
-  if (departmentId) {
-    filter.departmentId = departmentId;
-  }
+  if (departmentId) filter.departmentId = departmentId;
+  if (designationId) filter.designationId = designationId;
+  if (gradeId) filter.gradeId = gradeId;
+  if (locationId) filter.locationId = locationId;
+  if (countryId) filter.countryId = countryId;
+  if (cityId) filter.cityId = cityId;
+  if (appointmentTypeId) filter.appointmentTypeId = appointmentTypeId;
 
-  if (designationId) {
-    filter.designationId = designationId;
-  }
+  // Vacancy detail
+  if (applicantStatusId) filter.applicantStatusId = applicantStatusId;
+  if (priorityTypeId) filter.priorityTypeId = priorityTypeId;
+  if (desireFromDateOfApp) filter.desireFromDateOfApp = desireFromDateOfApp;
+  if (desireToDateOfApp) filter.desireToDateOfApp = desireToDateOfApp;
+  if (applicationFromDate) filter.applicationFromDate = applicationFromDate;
+  if (applicationToDate) filter.applicationToDate = applicationToDate;
 
-  if (priorityTypeId) {
-    filter.priorityTypeId = priorityTypeId;
-  }
+  // Professional information
+  if (workExpFrom) filter.workExpFrom = workExpFrom;
+  if (workExpTo) filter.workExpTo = workExpTo;
+  if (expectedSalaryRangeFrom) filter.expectedSalaryRangeFrom = expectedSalaryRangeFrom;
+  if (expectedSalaryRangeTo) filter.expectedSalaryRangeTo = expectedSalaryRangeTo;
+  if (expectedSalaryCurrencyId) filter.expectedSalaryCurrencyId = expectedSalaryCurrencyId;
+  if (expectedSalaryPayTypeId || expectedSalaryPayTypeId == 0) filter.expectedSalaryPayTypeId = expectedSalaryPayTypeId;
+  if (companyName?.trim()) filter.companyName = companyName.trim();
+  if (preferredQualificationId) filter.preferredQualificationId = preferredQualificationId;
 
-  if (desireFromDateOfApp) {
-    filter.desireFromDateOfApp = desireFromDateOfApp;
-  }
+  // Personal Information
+  if (preferredAgeFrom) filter.preferredAgeFrom = preferredAgeFrom;
+  if (preferredAgeTo) filter.preferredAgeTo = preferredAgeTo;
+  if (maritalStatus) filter.maritalStatus = maritalStatus;
+  if (gender) filter.gender = gender;
+  if (religionId) filter.religionId = religionId;
+  if (nationality) filter.nationality = nationality;
+  if (applicantCanJoin) filter.applicantCanJoin = applicantCanJoin;
 
-  if (desireToDateOfApp) {
-    filter.desireToDateOfApp = desireToDateOfApp;
-  }
-
-  if (vacancyStatusId || vacancyStatusId === 0) {
-    filter.vacancyStatusId = vacancyStatusId;
-  }
-
-  if (jobFinalizedFromDate) {
-    filter.jobFinalizedFromDate = jobFinalizedFromDate;
-  }
-
-  if (jobFinalizedToDate) {
-    filter.jobFinalizedToDate = jobFinalizedToDate;
-  }
   newQueryParams.filter = filter;
   return newQueryParams;
 };
+
 
 export function FormFIlter({ listLoading, user }) {
 
@@ -112,26 +134,28 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-  function addCommas(nStr) {
-    nStr += '';
-    var x = nStr.split('.');
-    var x1 = x[0];
-    var x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-  }
+  // function addCommas(nStr) {
+  //   nStr += '';
+  //   var x = nStr.split('.');
+  //   var x1 = x[0];
+  //   var x2 = x.length > 1 ? '.' + x[1] : '';
+  //   var rgx = /(\d+)(\d{3})/;
+  //   while (rgx.test(x1)) {
+  //     x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  //   }
+  //   return x1 + x2;
+  // }
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
 
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1
 
       formUIProps.setQueryParams(newQueryParams)
+
     }
   }
 
@@ -150,6 +174,7 @@ export function FormFIlter({ listLoading, user }) {
     dispatch(fetchAllFormsMenu(108, "allQualificationList"));
     dispatch(fetchAllFormsMenu(190, "allMaritalStatus"));
     dispatch(fetchAllFormsMenu(87, "allReligionChildMenus"));
+    dispatch(fetchAllFormsMenu(126, "allCurrencyCodeList")); // For All currecy Codes
   }, []);
 
 
@@ -173,6 +198,7 @@ export function FormFIlter({ listLoading, user }) {
   ];
 
 
+
   const initialFilterValues = {
 
     //job filter
@@ -191,7 +217,7 @@ export function FormFIlter({ listLoading, user }) {
     priorityTypeId: null,
     desireFromDateOfApp: null,
     desireToDateOfApp: null,
-    jobFinalizedFromDate: null, jobFinalizedToDate: null,
+    applicationFromDate: null, applicationToDate: null,
 
     // Professional information
     workExpFrom: null,
@@ -214,6 +240,13 @@ export function FormFIlter({ listLoading, user }) {
     applicantCanJoin: null,
 
   };
+
+
+  const nationalityOptions = [
+    { label: "Pakistani", value: "Pakistani" },
+    { label: "Other", value: "Other" },
+  ];
+
 
   return (
     <>
@@ -354,6 +387,7 @@ export function FormFIlter({ listLoading, user }) {
                         onChange={(e) => {
                           const selectedCountryId = e.value || null;
                           setFieldValue("countryId", selectedCountryId);
+                          console.log("selectedCountryId1111", selectedCountryId)
                           setFieldValue("cityId", null); // Reset city on country change
                           handleSubmit();
                         }}
@@ -554,47 +588,47 @@ export function FormFIlter({ listLoading, user }) {
 
                     {/* Date From */}
                     <div className="col-12 col-md-4 mt-3">
-                      <label>Job Finalized (From)</label>
+                      <label>Applied Date (From)</label>
                       <DatePicker
                         className="form-control"
                         placeholder="From Date"
                         selected={
-                          values?.jobFinalizedFromDate
-                            ? new Date(values.jobFinalizedFromDate)
+                          values?.applicationFromDate
+                            ? new Date(values.applicationFromDate)
                             : null
                         }
                         onChange={(date) => {
                           let selectedDate = formatDates(date, 'yyyy-MM-dd')
 
-                          setFieldValue("jobFinalizedFromDate", selectedDate);
-                          setFieldValue("jobFinalizedToDate", selectedDate);
+                          setFieldValue("applicationFromDate", selectedDate);
+                          setFieldValue("applicationToDate", selectedDate);
                           handleSubmit();
                         }}
                         dateFormat="dd/MM/yyyy"
-                        name="jobFinalizedFromDate"
+                        name="applicationFromDate"
                         autoComplete="off"
                       />
                     </div>
 
                     {/* Date To */}
                     <div className="col-12 col-md-4 mt-3">
-                      <label>Job Finalized (To)</label>
+                      <label>Applied Date (To)</label>
                       <DatePicker
                         className="form-control"
                         placeholder="To Date"
                         selected={
-                          values?.jobFinalizedToDate
-                            ? new Date(values.jobFinalizedToDate)
+                          values?.applicationToDate
+                            ? new Date(values.applicationToDate)
                             : null
                         }
                         onChange={(date) => {
-                          setFieldValue("jobFinalizedToDate", date);
+                          setFieldValue("applicationToDate", date);
                           handleSubmit();
                         }}
                         dateFormat="dd/MM/yyyy"
-                        name="jobFinalizedToDate"
+                        name="applicationToDate"
                         autoComplete="off"
-                        minDate={values?.jobFinalizedFromDate ? new Date(values.jobFinalizedFromDate) : new Date()}
+                        minDate={values?.applicationFromDate ? new Date(values.applicationFromDate) : new Date()}
                       />
                     </div>
 
@@ -632,7 +666,7 @@ export function FormFIlter({ listLoading, user }) {
                         placeholder="Enter work experience (from)"
 
                         onChange={(e) => {
-                          const selectedValue = e?.value;
+                          const selectedValue = e.target.value;
                           setFieldValue("workExpFrom", selectedValue);
                           handleSubmit();
 
@@ -660,7 +694,7 @@ export function FormFIlter({ listLoading, user }) {
                         component={Input}
                         placeholder="Enter work experience (to)"
                         onChange={(e) => {
-                          const selectedValue = e?.value;
+                          const selectedValue = e.target.value;
                           setFieldValue("workExpTo", selectedValue);
                           handleSubmit();
 
@@ -688,7 +722,8 @@ export function FormFIlter({ listLoading, user }) {
                         autoComplete="off"
                         type="number"
                         onChange={(e) => {
-                          const selectedValue = e?.value;
+                          const selectedValue = e.target.value;
+                          console.log("selectedValue111", e.target.value)
                           setFieldValue("expectedSalaryRangeFrom", selectedValue);
                           handleSubmit();
 
@@ -707,7 +742,7 @@ export function FormFIlter({ listLoading, user }) {
                         autoComplete="off"
                         type="number"
                         onChange={(e) => {
-                          const selectedValue = e?.value;
+                          const selectedValue = e.target.value;
                           setFieldValue("expectedSalaryRangeTo", selectedValue);
                           handleSubmit();
 
@@ -720,7 +755,7 @@ export function FormFIlter({ listLoading, user }) {
                     <div className="col-12 col-md-2 mt-3">
                       <SearchSelect
                         name="expectedSalaryCurrencyId"
-                        label={<span> Currency<span style={{ color: 'red' }}>*</span></span>}
+                        label={<span> Currency</span>}
 
                         onChange={(e) => {
                           setFieldValue("expectedSalaryCurrencyId", e.value || null);
@@ -742,13 +777,15 @@ export function FormFIlter({ listLoading, user }) {
                     <div className="col-12 col-md-2 mt-3">
                       <SearchSelect
                         name="expectedSalaryPayTypeId"
-                        label={<span> Per Month / Per Year<span style={{ color: 'red' }}>*</span></span>}
+                        label={<span> Per Month / Per Year</span>}
 
                         value={salaryPayTypeIdOptions.find(
                           (option) => option.value === values.expectedSalaryPayTypeId
                         ) || null}
                         onChange={(e) => {
-                          setFieldValue("expectedSalaryPayTypeId", e?.value !== undefined ? e.value : null)
+                          console.log("expectedSalaryPayTypeId00", e.value)
+                          setFieldValue("expectedSalaryPayTypeId", e.value)
+                          console.log("expectedSalaryPayTypeId111", values.expectedSalaryPayTypeId)
                           handleSubmit();
                         }}
 
@@ -771,7 +808,7 @@ export function FormFIlter({ listLoading, user }) {
                         placeholder="Enter company"
                         autoComplete="off"
                         onChange={(e) => {
-                          setFieldValue("companyName", e)
+                          setFieldValue("companyName", e.target.value)
                           handleSubmit();
                         }}
 
@@ -840,7 +877,7 @@ export function FormFIlter({ listLoading, user }) {
                         component={Input}
                         placeholder="Enter preferred age (from)"
                         onChange={(e) => {
-                          setFieldValue("preferredAgeFrom", e.value || null);
+                          setFieldValue("preferredAgeFrom", e.target.value || null);
                           handleSubmit();
                         }}
                         type="number"
@@ -866,7 +903,7 @@ export function FormFIlter({ listLoading, user }) {
                         component={Input}
                         placeholder="Enter preferred age (to)"
                         onChange={(e) => {
-                          setFieldValue("preferredAgeTo", e.value || null);
+                          setFieldValue("preferredAgeTo", e.target.value || null);
                           handleSubmit();
                         }}
                         type="number"
@@ -954,22 +991,17 @@ export function FormFIlter({ listLoading, user }) {
 
 
                     <div className="col-12 col-md-4 mt-3">
-                      <Select
-                        label={<span>Nationality</span>}
+                      <SearchSelect
+                        label={<span> Nationality</span>}
                         name="nationality"
-                        value={values.nationality}
-                        onChange={(selectedOption) => {
-                          setFieldValue("nationality", selectedOption?.value ?? null);
+                        value={nationalityOptions.find(option => option.value === values.nationality) || null}
+                        onChange={(e) => {
+                          setFieldValue("nationality", e?.value ?? null);
                           handleSubmit();
                         }}
-                        options={[
-                          { value: null, label: "Select Nationality" },
-                          { value: "Pakistani", label: "Pakistani" },
-                          { value: "Other", label: "Other" }
-                        ]}
-                        style={{ display: "block" }}
+                        options={nationalityOptions}
+                        placeholder="Select Nationality"
                       />
-
 
                     </div>
 
@@ -982,7 +1014,8 @@ export function FormFIlter({ listLoading, user }) {
                         autoComplete="off"
                         type="number"
                         onChange={(selectedOption) => {
-                          setFieldValue("applicantCanJoin", selectedOption?.value ?? null);
+                          setFieldValue("applicantCanJoin", selectedOption.target.value);
+                          console.log("applicantCanJoin1111",selectedOption.target.value)
                           handleSubmit();
                         }}
                       />

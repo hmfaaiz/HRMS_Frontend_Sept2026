@@ -16,6 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
+import { getFileName, getUploadUrl } from "../../../../../utils/common";
 
 export function FormTable() {
   //Users UI Context
@@ -88,7 +89,7 @@ export function FormTable() {
     }
   };
 
-    const vacancyStatusOptions = [
+  const vacancyStatusOptions = [
     { value: null, label: "All" },
     { value: 0, label: "Vacancy not posted" },
     { value: 1, label: "Currently Posted" },
@@ -99,46 +100,8 @@ export function FormTable() {
   const columns = [
 
     {
-      dataField: "CONCATJobTitle",
-      text: "Job Code / Job Title",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "200px",
-      },
-    },
-
-    {
-      dataField: "jobDate",
-      text: "Job Date",
-      sort: false,
-
-    },
-
-    {
-      dataField: "Designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "Department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "PriorityType.formName",
-      text: "Priority",
+      dataField: "applicantCode",
+      text: "applicant Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -146,9 +109,39 @@ export function FormTable() {
         minWidth: "100px",
       },
     },
+
     {
-      dataField: "desireDateOfApp",
-      text: "Desire Date Of Appointment",
+      dataField: "FullName",
+      text: "Applicant Name",
+      sort: false,
+
+    },
+
+    {
+      dataField: "JobTitle",
+      text: "Job Title",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+    },
+    {
+      dataField: "AppliedOn",
+      text: "Applied On",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+    },
+
+
+    {
+      dataField: "AppliedOn",
+      text: "Applied On",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -158,17 +151,52 @@ export function FormTable() {
     },
 
     {
-      dataField: "jobPostingStatus",
-      text: "Status",
+      dataField: "file",
+      text: "Attached CV",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "160px",
       },
-      formatter: (cell) => getStatusLabel(cell),
+        formatter: (cell, row) => (
+              <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+                <span>{getFileName(cell)}</span>
+              </a>
+            )
     },
 
+    {
+      dataField: "fiRejectedRemarks",
+      text: "Rejected Remarks",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+    },
+    {
+      dataField: "ApplicantStatus",
+      text: "Applicant's Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+    },
+
+    {
+      dataField: "InterviewRecommendations",
+      text: "Interview Recommendations",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
 
     {
       dataField: "action",
