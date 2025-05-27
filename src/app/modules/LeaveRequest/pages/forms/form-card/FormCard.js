@@ -152,6 +152,7 @@ export function FormCard() {
               ...formUIProps?.initUser,
               from: dateFromAtt !== null ? new Date(dateFromAtt) : "",
               to: dateFromAtt !== null ? new Date(dateFromAtt) : "",
+              days: dateFromAtt !== null ? 1 : "",
             }}
           />
           {/* FormEditDialog Ends */}

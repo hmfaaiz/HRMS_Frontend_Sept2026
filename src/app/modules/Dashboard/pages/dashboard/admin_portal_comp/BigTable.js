@@ -8,6 +8,7 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { format } from "date-fns";
 
 export function BigTable({ data }) {
   const columnData = data?.data?.length > 0 ? data?.data[0] : {};
@@ -16,13 +17,13 @@ export function BigTable({ data }) {
     if (key === "profile_image") {
       return {
         dataField: "profile_image",
-        text: "Profile Image",
-        style: { textAlign: "center", minWidth: `${key.length}0px` },
+        text: "Picture",
+        style: { textAlign: "left", minWidth: `25px`, maxWidth: `25px` },
         headerStyle: {
-          textAlign: "center",
+          textAlign: "left",
           backgroundColor: "#0093dd",
           color: "#fff",
-          fontSize: "13px",
+          fontSize: "14px",
         },
         formatter: (cell) => {
           return (
@@ -34,8 +35,8 @@ export function BigTable({ data }) {
                   : toAbsoluteUrl("/media/users/profileImage.png")
               } // Fallback if no image
               alt="Profile"
-              width={40}
-              height={40}
+              width={26}
+              height={26}
               style={{
                 borderRadius: "50%", // Make the image circular
                 objectFit: "cover", // Ensure the image covers the entire area without distortion
@@ -49,18 +50,49 @@ export function BigTable({ data }) {
         },
       };
     } else {
+      let value = columnData[key];
+
+      let isDate =
+        typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+      let employee_code = key === "Employee_Code";
+      let isAmount = typeof value === "number" || !isNaN(Number(value));
+
       return {
         dataField: key,
         text: key.split("_").join(" "),
         style: {
-          textAlign: "center",
-          minWidth: `${key.length > 9 ? key.length : 9}0px`,
+          textAlign:
+            isDate || employee_code ? "center" : isAmount ? "right" : "left",
+          minWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
+          maxWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
         },
         headerStyle: {
-          textAlign: "center",
+          textAlign:
+            isDate || employee_code ? "center" : isAmount ? "right" : "left",
           backgroundColor: "#0093dd",
           color: "#fff",
-          fontSize: "13px",
+          fontSize: "14px",
+        },
+        formatter: (cell) => {
+          // For date formatting
+          if (isDate && typeof cell === "string") {
+            return <div>{format(new Date(cell), "dd/MMM/yyyy")}</div>;
+          }
+
+          // For amount formatting
+          if (isAmount) {
+            return (
+              <div>
+                {Number(cell).toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </div>
+            );
+          }
+
+          // For all other text fields
+          return <div>{cell}</div>;
         },
       };
     }
@@ -71,15 +103,34 @@ export function BigTable({ data }) {
       className="my-3"
       defaultActiveKey={data?.accordian_open ? "0" : ""}
     >
-      <Card>
+      <Card className="dashboard_card">
         <Accordion.Toggle
           as={Button}
           variant="link"
           eventKey="0"
+          style={{
+            backgroundColor: "#fafafc",
+          }}
           className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
         >
-          <span className="">{data?.dashlet_name}</span>
-          <KeyboardArrowDown />
+          <span
+            className=""
+            style={{
+              fontSize: "1.3rem",
+              fontWeight: "700",
+            }}
+          >
+            {data?.dashlet_name}
+          </span>
+          <span
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#0093dd",
+              color: "#fff",
+            }}
+          >
+            <KeyboardArrowDown style={{ fontSize: "25px" }} />
+          </span>
         </Accordion.Toggle>
 
         <Accordion.Collapse eventKey="0">
@@ -87,22 +138,20 @@ export function BigTable({ data }) {
             style={{
               width: "100%",
               overflow: "auto",
-              height: "415px",
-              fontSize: "10px",
+              height: "385px",
+              fontSize: "13px",
+              marginTop: "14px",
             }}
           >
             {data?.data.length > 0 ? (
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                classes="big-table table-head-custom table-vertical-center overflow-hidden table-hover"
                 bootstrap4
                 keyField="id"
                 data={data?.data?.length > 0 ? data?.data : []}
                 columns={columns}
-                rowClasses={(row, rowIndex) =>
-                  rowIndex % 2 === 0 ? "table-row-even" : "table-row-odd"
-                }
                 pagination={
                   data?.data?.length > 5
                     ? paginationFactory({

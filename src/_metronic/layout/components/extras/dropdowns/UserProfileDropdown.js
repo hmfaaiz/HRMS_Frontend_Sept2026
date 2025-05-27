@@ -36,7 +36,7 @@ export function UserProfileDropdown() {
     : HRMSRoutesLength > 0
     ? "1"
     : "2";
-  
+
   const handleSwitch = () => {
     let val = localStorage.getItem("isEmployeePortal") === "true";
     localStorage.setItem("isEmployeePortal", (!val).toString());
@@ -69,37 +69,24 @@ export function UserProfileDropdown() {
               : user?.email}
             {" - "}({user?.role?.name})
           </span>
-          <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
-            <span className="symbol-label font-size-h5 font-weight-bold p-0">
-              <img
-                width={100}
-                height={47}
-                src={
-                  user?.EmployeeMapping?.profile_image
-                    ? user?.EmployeeMapping?.profile_image
-                    : "/media/users/user.svg"
-                }
-                alt="User"
-              />
-            </span>
+          {/* <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden"> */}
+          <span>
+            <img
+              width={36}
+              height={36}
+              src={
+                user?.EmployeeMapping?.profile_image
+                  ? user?.EmployeeMapping?.profile_image
+                  : "/media/users/user.svg"
+              }
+              alt="User"
+            />
           </span>
+          {/* </span> */}
           {portalRoutesLength > 0 &&
             HRMSRoutesLength > 0 &&
             user?.employeeIdMapping && (
-              <span
-                style={{
-                  borderRadius: "50%",
-                  // padding: "2px",
-                  backgroundColor: "#fff",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "48px",
-                  height: "47px",
-                  margin: "0px 5px 0px 5px",
-                  background: "#556080",
-                }}
-              >
+              <span>
                 <OverlayTrigger
                   placement="bottom"
                   overlay={
@@ -113,16 +100,12 @@ export function UserProfileDropdown() {
                     className="btn"
                     style={{ border: "none" }}
                   >
-                    <span
-                      style={{ marginRight: "0px" }}
-                      className="svg-icon svg-icon-xl"
-                    >
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/Communication/Profile-Switch-Icon.svg"
-                        )}
-                      />
-                    </span>
+                    <img
+                      width={36}
+                      height={36}
+                      src={toAbsoluteUrl("/media/users/Profile-Switch-Icon.png")}
+                      alt="User"
+                    />
                   </button>
                 </OverlayTrigger>
               </span>

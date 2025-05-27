@@ -8,22 +8,37 @@ const SingleCard = ({ data }) => {
       className={`my-3 ${data?.color_theme_class}`}
       defaultActiveKey={data?.accordian_open ? "0" : ""}
     >
-      <Card className="">
+      <Card className="dashboard_card">
         <Accordion.Toggle
           as={Button}
           variant="link"
           eventKey="0"
+          style={{
+            backgroundColor: "#fafafc",
+          }}
           className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
         >
-          <span>{data?.dashlet_name}</span>
-          <KeyboardArrowDown />
+          <span
+            style={{
+              fontSize: "1.3rem",
+              fontWeight: "700",
+              textAlign: "left",
+            }}
+          >
+            {data?.dashlet_name}
+          </span>
+          <span>
+            <KeyboardArrowDown
+              style={{ fontSize: "25px", borderRadius: "50%" }}
+            />
+          </span>
         </Accordion.Toggle>
 
         <Accordion.Collapse eventKey="0">
           <div
             style={{
-              maxHeight: "415px",
-              minHeight: "415px",
+              maxHeight: "385px",
+              minHeight: "385px",
               overflowY: "auto",
               padding: "10px 0px",
             }}
@@ -49,13 +64,13 @@ const SingleCard = ({ data }) => {
                       }}
                     />
                     <div>
-                      <div style={{ fontWeight: "bold" }}>
+                      <div style={{ fontWeight: "bold", fontSize: "14px" }}>
                         {person?.Employee_Name}
                       </div>
                       <div style={{ fontSize: "13px" }}>
                         {person?.Designation}
                       </div>
-                      <div style={{ fontSize: "11px", color: "#888" }}>
+                      <div style={{ fontSize: "12px", color: "#888" }}>
                         {person.departmentName}
                       </div>
                     </div>

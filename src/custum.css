@@ -29,9 +29,9 @@
 
 .react-bootstrap-table table {
     table-layout: auto;
-    border-left: 1px solid #000 !important;
+    /* border-left: 1px solid #000 !important;
     border-right: 1px solid #000 !important;
-    border-bottom: 1px solid #000 !important;
+    border-bottom: 1px solid #000 !important; */
     border-radius: 12px;
     color:#000 
 }

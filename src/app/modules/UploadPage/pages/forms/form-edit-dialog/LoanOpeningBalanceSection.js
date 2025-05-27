@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -9,18 +9,18 @@ import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLab
 
 //Validation for Form
 const formValidation = Yup.object().shape({
-  file: Yup.mixed().required(VALIDATION_MESSAGES.required)
+  file: Yup.mixed().required(VALIDATION_MESSAGES.required),
 });
 
 export function LoanOpeningSection({ downloadExcel, dispatch }) {
-
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const onClick = (e) => {
     e.preventDefault();
-    downloadExcel(document, 'loan_balance', 'Loan_Balance_Template')
-  }
+    downloadExcel(document, "loan_balance", "Loan_Balance_Template");
+  };
 
   return (
     <>
@@ -28,7 +28,21 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
         enableReinitialize={true}
         initialValues={{ file: null }}
         validationSchema={formValidation}
-        onSubmit={(values) => {
+        onSubmit={(values, { resetForm }) => {
+          if (values.file) {
+            const formData = new FormData();
+            formData.append("file", values.file);
+            setLoading(true);
+
+            const clearForm = () => {
+              resetForm();
+              if (inputFile?.current) {
+                inputFile.current.value = "";
+              }
+            };
+
+            dispatch(actions.saveLoanData(formData, setLoading, clearForm));
+          }
         }}
       >
         {({
@@ -42,7 +56,7 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
           <Accordion defaultActiveKey="">
             <Card>
               <Card.Header>
-                <div className='accordion-header-btn'>
+                <div className="accordion-header-btn">
                   <Accordion.Toggle as={Button} eventKey="0">
                     Data Upload - Loan Opening Balance
                     <KeyboardArrowDown />
@@ -51,21 +65,27 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-
                   {/* Form Start */}
                   <Form className="form form-label-right">
                     <fieldset>
-
                       <div className="from-group row">
-                        <div className="col-12 col-md-4 mt-3">
+                        <div className="col-12 col-md-4 mt-3"></div>
+
+                        <div
+                          className="col-12 col-md-4 mt-3"
+                          style={{
+                            textAlign: "center",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          <a>
+                            <span onClick={onClick}>
+                              Download - Loan Opening Balance Template
+                            </span>
+                          </a>
                         </div>
 
-                        <div className="col-12 col-md-4 mt-3" style={{textAlign:"center", textDecoration: 'underline'}}>
-                          <a><span onClick={onClick}>Download -  Loan Opening Balance Template</span></a>
-                        </div>
-
-                        <div className="col-12 col-md-4 mt-3">
-                        </div>
+                        <div className="col-12 col-md-4 mt-3"></div>
                       </div>
 
                       {/* File Field Start */}
@@ -73,7 +93,11 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
                       <input
                         name="file"
                         type="file"
-                        className={errors?.file && !values.file ? 'form-control is-invalid' : 'form-control'}
+                        className={
+                          errors?.file && !values.file
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
                         accept=".xlsx,.xls"
                         ref={inputFile}
                         onChange={(event) => {
@@ -82,23 +106,22 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
                           setFieldValue("file", file);
                         }}
                       />
-                      {
-                        errors.file && !values.file && <CustomErrorLabel touched={true} error={errors.file} />
-                      }
+                      {errors.file && !values.file && (
+                        <CustomErrorLabel touched={true} error={errors.file} />
+                      )}
                       <hr />
                       {/* File Field End */}
 
                       <button
                         type="submit"
-                        disabled={false}
+                        disabled={loading}
                         className="btn btn-primary btn-elevate"
                       >
                         Save
-                        {false && (
+                        {loading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
-
                     </fieldset>
                   </Form>
                   {/* Form End */}

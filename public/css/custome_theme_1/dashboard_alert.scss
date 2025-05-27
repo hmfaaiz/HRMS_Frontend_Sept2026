@@ -18,8 +18,9 @@
   color: #34b9a3 !important;
 }
 
-.success-card svg {
-  color: #34b9a3 !important;
+.success-card span svg {
+  background-color: #34b9a3 !important;
+  color: #fff !important;
 }
 
 .success-card .collapse {
@@ -30,8 +31,9 @@
   color: #e23f35 !important;
 }
 
-.danger-card svg {
-  color: #e23f35 !important;
+.danger-card span svg {
+  background-color: #e23f35 !important;
+  color: #fff !important;
 }
 
 .danger-card .collapse {
@@ -42,8 +44,9 @@
   color: #dd8941 !important;
 }
 
-.warning-card svg {
-  color: #dd8941 !important;
+.warning-card span svg {
+  background-color: #dd8941 !important;
+  color: #fff !important;
 }
 
 .warning-card .collapse {
@@ -67,4 +70,22 @@
   background-color: #0093dd; /* Your primary blue */
   color: white;
   border-color: #0093dd;
+}
+
+.big-table {
+  border-radius: 0px !important;
+  border-left: 0px solid #000 !important;
+  border-right: 0px solid #000 !important;
+  border-bottom: 0px solid #000 !important;
+  tbody tr {
+    border-bottom: 1px solid $gray-200 !important;
+  }
+}
+
+.react-bootstrap-table-pagination-total {
+  margin-left: 10px !important;
+}
+
+.dashboard_card {
+  border: 0px solid #000 !important;
 }
