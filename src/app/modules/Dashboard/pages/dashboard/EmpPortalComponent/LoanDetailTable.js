@@ -13,7 +13,6 @@ import { formatNumberWithCommas } from "../../../../../utils/common";
 import { Link } from "react-router-dom";
 
 export function EmployeeLoanDetail({ entities }) {
-  console.log("entities", entities);
   const columns = [
     {
       dataField: "LoanType.name",
