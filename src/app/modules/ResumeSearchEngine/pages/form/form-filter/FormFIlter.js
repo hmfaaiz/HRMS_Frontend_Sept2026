@@ -72,7 +72,7 @@ const prepareFilter = (queryParams, values) => {
   const filter = {};
 
   if (searchText?.trim()) {
-    filter.searchQuery = searchText.trim();
+    filter.searchText = searchText.trim();
   }
 
   if (departmentId) filter.departmentId = departmentId;
@@ -1044,15 +1044,6 @@ export function FormFIlter({ listLoading, user }) {
               </button>
 
 
-              <button
-                type="button"
-                onClick={() => {
-                  handleSubmit()
-                }}
-                className="btn btn-danger btn-elevate"
-              >
-                Filter
-              </button>
             </Modal.Footer>
 
           </>
