@@ -10,6 +10,7 @@ import {
   attendanceApprovalFilter,
   leaveApprovalFilter,
   leaveDetailFilter,
+  loanApprovalFilter,
   loanDetailFilter,
 } from "../EmpUIHelper";
 import { fetchAttendanceApprovalApplication } from "../../../../AttendanceApproval/redux/formAction";
@@ -24,6 +25,7 @@ import { fetchAttendanceSheetConsolidated } from "../../../../AttendanceRequest/
 import { AttendanceSummary } from "../EmpPortalComponent/AttendanceSummary";
 import { HolidayTable } from "../EmpPortalComponent/HolidayTable";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchLoanApprovalApplication } from "../../../../LoanApproval/redux/formAction";
 export const EmployeePortal = () => {
   const formUIContext = useFormUIContext();
   const dispatch = useDispatch();
@@ -58,6 +60,7 @@ export const EmployeePortal = () => {
     attendanceSummary,
     holidayList,
     activeFiscalYear,
+    loanApprovalCount,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
@@ -67,6 +70,7 @@ export const EmployeePortal = () => {
       user: state?.auth?.user,
       leaveApprovalCount: state.leave_approval.entities,
       attendanceApprovalCount: state.attendance_approval?.entities,
+      loanApprovalCount: state.loan_approval?.entities,
       loanList: state.dashboard?.loanList,
       holidayList: state.dashboard?.holidayList,
       leaveRequest: state?.leave_request?.entities,
@@ -117,6 +121,9 @@ export const EmployeePortal = () => {
           attendanceApprovalFilter,
           logedInEmpoyee?.Id
         )
+      );
+      dispatch(
+        fetchLoanApprovalApplication(loanApprovalFilter, logedInEmpoyee?.Id)
       );
     }
   }, [logedInEmpoyee]);
@@ -178,6 +185,7 @@ export const EmployeePortal = () => {
         logedInEmpoyee={logedInEmpoyee}
         leaveApprovalCount={leaveApprovalCount?.length || 0}
         attendanceApprovalCount={attendanceApprovalCount?.length || 0}
+        loanApprovalCount={loanApprovalCount?.length || 0}
       />
       <EmployeeProfile data={profileInfo} />
       <br />

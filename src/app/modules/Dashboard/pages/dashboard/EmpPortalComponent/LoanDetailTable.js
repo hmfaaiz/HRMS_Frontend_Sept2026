@@ -10,8 +10,10 @@ import {
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { formatNumberWithCommas } from "../../../../../utils/common";
+import { Link } from "react-router-dom";
 
 export function EmployeeLoanDetail({ entities }) {
+  console.log("entities", entities);
   const columns = [
     {
       dataField: "LoanType.name",
@@ -32,7 +34,7 @@ export function EmployeeLoanDetail({ entities }) {
       headerSortingClasses,
       style: {
         minWidth: "10px",
-        textAlign: "center",
+        textAlign: "right",
       },
       headerStyle: {
         textAlign: "center", // Align header text to the left
@@ -72,40 +74,31 @@ export function EmployeeLoanDetail({ entities }) {
     },
 
     {
-      dataField: "applied_date",
-      text: "applied date",
+      dataField: "loan_amount_paid",
+      text: "Amount Paid",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "10px",
+        textAlign: "center",
       },
-      formatter: (cell) => {
-        // Format the date without timestamp
-        return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
+      headerStyle: {
+        textAlign: "center", // Align header text to the left
       },
     },
-
     {
-      dataField: "approved_status",
-      text: "approved status",
+      dataField: "loan_amount_remaining",
+      text: "Outstanding Amount",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "10px",
+        textAlign: "center",
       },
-      formatter: (cell) => {
-        switch (cell) {
-          case 0:
-            return "Pending";
-          case 1:
-            return "Approved";
-          case 2:
-            return "Rejected";
-          default:
-            return "Unknown"; // Default case if status is outside 0, 1, 2.
-        }
+      headerStyle: {
+        textAlign: "center", // Align header text to the left
       },
     },
   ];
@@ -113,6 +106,11 @@ export function EmployeeLoanDetail({ entities }) {
   return (
     <>
       <Accordion defaultActiveKey="">
+        <span className="col-6 text-underline cursor-pointer">
+          <Link target="_blank" to={"/loan_request/read-all-loan-request"}>
+            Create Loan Request
+          </Link>
+        </span>
         <Card>
           <Card.Header className="d-flex justify-content-center">
             <div className="accordion-header-btn w-100  d-flex justify-content-center">
@@ -130,9 +128,9 @@ export function EmployeeLoanDetail({ entities }) {
             <Card.Body>
               <div style={{ width: "100%", overflowX: "auto" }}>
                 <BootstrapTable
-                  // wrapperClasses="table-responsive"
+                  wrapperClasses="table-responsive"
                   bordered={false}
-                  classes="table table-head-custom table-vertical-center table-hover"
+                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
                   bootstrap4
                   remote
                   keyField="Id"

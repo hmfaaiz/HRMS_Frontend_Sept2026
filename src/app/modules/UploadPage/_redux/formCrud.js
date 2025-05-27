@@ -16,3 +16,7 @@ export function saveLeaveData(body) {
 export function saveAttendanceSheetData(body) {
     return axios.post(`${USERS_URL}/upload/save-attendance-data`, body);
 }
+
+export function saveLoanData(body) {
+    return axios.post(`${USERS_URL}/upload/save-loan-data`, body);
+}

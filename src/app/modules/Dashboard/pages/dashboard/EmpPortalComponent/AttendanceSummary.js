@@ -1,11 +1,19 @@
 import React from "react";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { Accordion, Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
+import { Link } from "react-router-dom";
 export const AttendanceSummary = ({ payrollData, attendanceSummary }) => {
   return (
     <Accordion defaultActiveKey="0">
+      <span className="col-6 text-underline cursor-pointer">
+        <Link
+          target="_blank"
+          to={"/attendance_request/read-all-attendance-request"}
+        >
+          Create Attendance Request
+        </Link>
+      </span>
       <Card>
         <Card.Header>
           <div className="accordion-header-btn ">

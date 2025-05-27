@@ -23,7 +23,12 @@ const formValidation = Yup.object().shape({
   ),
 });
 
-export const LeaveApplicationDetailTable = ({ show, onHide, leaveId , handleSubmit }) => {
+export const LeaveApplicationDetailTable = ({
+  show,
+  onHide,
+  leaveId,
+  handleSubmit,
+}) => {
   const dispatch = useDispatch();
 
   const {
@@ -38,7 +43,6 @@ export const LeaveApplicationDetailTable = ({ show, onHide, leaveId , handleSubm
     }),
     shallowEqual
   );
-
   useEffect(() => {
     if (!leaveId) {
       onHide();
@@ -69,8 +73,7 @@ export const LeaveApplicationDetailTable = ({ show, onHide, leaveId , handleSubm
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          handleSubmit(values?.leaveApplicationDetail, onHide)
-          
+          handleSubmit(values?.leaveApplicationDetail, onHide);
         }}
       >
         {({ touched, errors, values, handleSubmit }) => (
@@ -95,7 +98,7 @@ export const LeaveApplicationDetailTable = ({ show, onHide, leaveId , handleSubm
                           <tr key={index}>
                             <td>
                               {row?.date
-                                ? format(new Date(row.date), "yyyy-MM-dd")
+                                ? format(new Date(row.date), "dd/MMM/yyyy")
                                 : ""}
                             </td>
                             <td>
@@ -117,7 +120,10 @@ export const LeaveApplicationDetailTable = ({ show, onHide, leaveId , handleSubm
                                       disabled={
                                         form.values.leaveApplicationDetail?.[
                                           index
-                                        ]?.isCancel
+                                        ]?.isCancel ||
+                                        form.values.leaveApplicationDetail?.[
+                                          index
+                                        ]?.isOldCancel
                                       }
                                       className={
                                         errors.leaveApplicationDetail?.[index]
@@ -158,11 +164,16 @@ export const LeaveApplicationDetailTable = ({ show, onHide, leaveId , handleSubm
                               <Field
                                 name={`leaveApplicationDetail[${index}].isCancel`}
                               >
-                                {({ field }) => (
+                                {({ field, form }) => (
                                   <input
                                     type="checkbox"
                                     {...field}
                                     checked={field.value || false}
+                                    disabled={
+                                      form.values.leaveApplicationDetail?.[
+                                        index
+                                      ]?.isOldCancel
+                                    }
                                     className="form-check-input"
                                   />
                                 )}

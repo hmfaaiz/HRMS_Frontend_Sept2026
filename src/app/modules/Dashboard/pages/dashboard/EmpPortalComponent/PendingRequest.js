@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 export const PendingRequestSelf = ({
   attendanceApprovalCount,
   leaveApprovalCount,
+  loanApprovalCount,
 }) => {
   return (
     <div
@@ -19,7 +20,7 @@ export const PendingRequestSelf = ({
       <hr />
       <br />
       <div className="row">
-        <span className="col-6">Leave Request</span>
+        <span className="col-6">Leave Approval Request</span>
         <span className="col-6 text-underline cursor-pointer">
           <Link target="_blank" to={"/leave-approval/read-all-leave-approval"}>
             {leaveApprovalCount}
@@ -28,11 +29,23 @@ export const PendingRequestSelf = ({
       </div>
       <hr />
       <div className="row">
-        <span className="col-6">Attendance Request</span>
+        <span className="col-6">Attendance Approval Request</span>
 
         <span className="col-6 text-underline cursor-pointer">
-          <Link target="_blank" to={"/attendance_approval/read-all-attendance-approval"}>
+          <Link
+            target="_blank"
+            to={"/attendance_approval/read-all-attendance-approval"}
+          >
             {attendanceApprovalCount}
+          </Link>
+        </span>
+      </div>
+      <hr />
+      <div className="row">
+        <span className="col-6">Loan Approval Request</span>
+        <span className="col-6 text-underline cursor-pointer">
+          <Link target="_blank" to={"/loan_approval/read-all-loan-approval"}>
+            {loanApprovalCount}
           </Link>
         </span>
       </div>

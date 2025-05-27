@@ -217,7 +217,7 @@ export function DesignationWorkflowPolicyTable() {
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
+                  formUIProps.setQueryParamsDesig
                 )}
                 {...paginationTableProps}
               >

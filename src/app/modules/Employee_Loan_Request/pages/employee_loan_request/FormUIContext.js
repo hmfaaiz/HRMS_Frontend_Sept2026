@@ -12,9 +12,9 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
-  const [employeeId, setemployeeId] = useState('');
+  const [employeeId, setemployeeId] = useState("");
   const [ids, setIds] = useState("");
-  const [isFileReq,setIsFileReq]=useState(false)
+  const [isFileReq, setIsFileReq] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -29,27 +29,23 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
 
-
-  const initUser={
+  const initUser = {
     Id: "",
-    employeeId:employeeId,
-    employee_loan_accountId:"",
+    employeeId: employeeId,
+    employee_loan_accountId: "",
     loan_typeId: "",
-    monthly_installment:"",
+    monthly_installment: "",
     applied_date: "",
-    installment_start_date:"",
-    total_loan_amount:"",
-    total_installment:"",
-    reason:"", 
-    loan_amount_remaining:"",
-    loan_amount_paid:"",
-    subsidiaryId:""
-
-
-
-  }
-
-
+    installment_start_date: "",
+    total_loan_amount: "",
+    total_installment: "",
+    reason: "",
+    request_status: "A",
+    request_remarks: "",
+    loan_amount_remaining: "",
+    loan_amount_paid: "",
+    subsidiaryId: "",
+  };
 
   const value = {
     queryParams,

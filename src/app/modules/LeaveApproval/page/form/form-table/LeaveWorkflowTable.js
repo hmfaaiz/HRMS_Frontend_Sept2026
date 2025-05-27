@@ -11,6 +11,7 @@ import {
   sortCaret,
 } from "../../../../../../_metronic/_helpers";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
+import { format } from "date-fns";
 export function LeaveWorkflowTable({ onHide, show }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
@@ -125,22 +126,8 @@ export function LeaveWorkflowTable({ onHide, show }) {
         maxWidth: "160px",
       },
       formatter: (cell) => {
-        const date = new Date(cell);
-        if (cell) {
-          const options = {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit", // optional
-            hour12: false, // use 24-hour format; set to true for 12-hour with AM/PM
-          };
-
-          const formattedDateTime = date.toLocaleString("en-GB", options);
-          return formattedDateTime;
-        }
-        return "";
+        return cell ? format(new Date(cell) , "dd/MMM/yyyy:HH:mm:ss") : "";
+       
       },
     },
     {
