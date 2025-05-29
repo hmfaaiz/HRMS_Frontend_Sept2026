@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react"
+import * as Yup from 'yup';
 import { Field, Formik } from "formik"
 import { isEqual } from "lodash"
 import { useFormUIContext } from "../FormUIContext"
@@ -24,7 +25,8 @@ import { amountLimitDynamic, formatDates } from "../../../../../utils/common";
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-const API_URL = process.env.REACT_APP_API_URL;
+
+
 
 
 
@@ -183,13 +185,7 @@ export function FormFIlter({ listLoading, user }) {
   };
 
 
-  const vacancyStatusOptions = [
-    { value: null, label: "All" },
-    { value: 0, label: "Vacancy not posted " },
-    { value: 1, label: "Currently Posted" },
-    { value: 2, label: "On Hold" },
-    { value: 3, label: "Closed / Expired Job" },
-  ];
+
 
   const salaryPayTypeIdOptions = [
 
@@ -262,7 +258,7 @@ export function FormFIlter({ listLoading, user }) {
           handleSubmit,
           handleBlur,
           setFieldValue,
-          handleReset,
+          handleReset, touched, errors,
         }) => (
           <>
             <form onSubmit={handleSubmit}>
@@ -878,7 +874,10 @@ export function FormFIlter({ listLoading, user }) {
                         placeholder="Enter preferred age (from)"
                         onChange={(e) => {
                           setFieldValue("preferredAgeFrom", e.target.value || null);
-                          handleSubmit();
+                          if (values.preferredAgeFrom && values.preferredAgeTo) {
+                            handleSubmit();
+                          }
+
                         }}
                         type="number"
                         onInput={(e) => {
@@ -889,7 +888,7 @@ export function FormFIlter({ listLoading, user }) {
                         }}
 
                       />
-
+                  
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
@@ -904,7 +903,10 @@ export function FormFIlter({ listLoading, user }) {
                         placeholder="Enter preferred age (to)"
                         onChange={(e) => {
                           setFieldValue("preferredAgeTo", e.target.value || null);
-                          handleSubmit();
+                           if (values.preferredAgeFrom && values.preferredAgeTo) {
+                            handleSubmit();
+                          }
+
                         }}
                         type="number"
                         onInput={(e) => {
@@ -915,6 +917,7 @@ export function FormFIlter({ listLoading, user }) {
                         }}
 
                       />
+                 
                     </div>
 
 
@@ -1015,7 +1018,7 @@ export function FormFIlter({ listLoading, user }) {
                         type="number"
                         onChange={(selectedOption) => {
                           setFieldValue("applicantCanJoin", selectedOption.target.value);
-                          console.log("applicantCanJoin1111",selectedOption.target.value)
+                          console.log("applicantCanJoin1111", selectedOption.target.value)
                           handleSubmit();
                         }}
                       />

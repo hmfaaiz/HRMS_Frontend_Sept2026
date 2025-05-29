@@ -114,6 +114,11 @@ export function FormTable() {
       dataField: "FullName",
       text: "Applicant Name",
       sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
 
     },
 
@@ -124,12 +129,43 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "100px",
       },
+      formatter: (cell, row) => {
+        if (!row.details_applicant_vacancy || row.details_applicant_vacancy.length === 0) return "-";
+
+        // Find the latest applied vacancy by applicationDate
+        const latestVacancy = row.details_applicant_vacancy
+          .reduce((latest, current) => {
+            const currentDate = new Date(current.applicationDate);
+            const latestDate = latest ? new Date(latest.applicationDate) : null;
+            return !latestDate || currentDate > latestDate ? current : latest;
+          }, null);
+
+        return latestVacancy && latestVacancy.JobVacancy
+          ? latestVacancy.JobVacancy.jobTitle
+          : "-";
+      }
     },
     {
       dataField: "AppliedOn",
       text: "Applied On",
+      formatter: (cell, row) => {
+        if (!row.details_applicant_vacancy || row.details_applicant_vacancy.length === 0) return "-";
+
+        // convert dates and get latest
+        const latestDate = row.details_applicant_vacancy
+          .map(item => new Date(item.applicationDate))
+          .sort((a, b) => b - a)[0];
+
+        // format date as needed, e.g., dd/mm/yyyy
+        if (!latestDate) return "-";
+        const day = String(latestDate.getDate()).padStart(2, "0");
+        const month = String(latestDate.getMonth() + 1).padStart(2, "0");
+        const year = latestDate.getFullYear();
+
+        return `${day}/${month}/${year}`;
+      },
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -139,16 +175,7 @@ export function FormTable() {
     },
 
 
-    {
-      dataField: "AppliedOn",
-      text: "Applied On",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-    },
+
 
     {
       dataField: "file",
@@ -159,15 +186,15 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-        formatter: (cell, row) => (
-              <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-                <span>{getFileName(cell)}</span>
-              </a>
-            )
+      formatter: (cell, row) => (
+        <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+          <span>{getFileName(cell)}</span>
+        </a>
+      )
     },
 
     {
-      dataField: "fiRejectedRemarks",
+      dataField: "applicantStatusReason",
       text: "Rejected Remarks",
       sort: false,
       sortCaret: sortCaret,
@@ -177,7 +204,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "ApplicantStatus",
+      dataField: "ApplicantStatus.formName",
       text: "Applicant's Status",
       sort: false,
       sortCaret: sortCaret,
