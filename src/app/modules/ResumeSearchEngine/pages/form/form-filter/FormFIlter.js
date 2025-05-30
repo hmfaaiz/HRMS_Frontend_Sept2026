@@ -874,7 +874,7 @@ export function FormFIlter({ listLoading, user }) {
                         placeholder="Enter preferred age (from)"
                         onChange={(e) => {
                           setFieldValue("preferredAgeFrom", e.target.value || null);
-                          if (values.preferredAgeFrom && values.preferredAgeTo) {
+                          if (e.target.value && values.preferredAgeTo) {
                             handleSubmit();
                           }
 
@@ -902,8 +902,10 @@ export function FormFIlter({ listLoading, user }) {
                         component={Input}
                         placeholder="Enter preferred age (to)"
                         onChange={(e) => {
+                        
                           setFieldValue("preferredAgeTo", e.target.value || null);
-                           if (values.preferredAgeFrom && values.preferredAgeTo) {
+                           
+                           if (values.preferredAgeFrom && e.target.value) {
                             handleSubmit();
                           }
 

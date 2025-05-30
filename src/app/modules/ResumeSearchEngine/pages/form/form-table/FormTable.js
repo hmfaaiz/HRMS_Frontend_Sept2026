@@ -195,7 +195,7 @@ export function FormTable() {
 
     {
       dataField: "applicantStatusReason",
-      text: "Rejected Remarks",
+      text: "Remarks",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
