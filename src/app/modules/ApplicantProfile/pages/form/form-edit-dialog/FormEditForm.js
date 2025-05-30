@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { DatePickerField, Input, MaskInput, Select, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import axios from 'axios';
+
 import {
   fetchAllCity,
   fetchAllCountry,
@@ -17,290 +19,221 @@ import {
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit, amountLimitDynamic, formatDates, getFileName, getUploadUrl } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
-
+import { subYears } from "date-fns";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
-return Yup.object().shape({
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  return Yup.object().shape({
+    subsidiaryId: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
 
-  title: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+    title: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
 
-  applicantCode: Yup.string()
-    .min(5, "Job code must be  5 characters")
-    .max(10, "Job code must be  10 characters")
-    .required(VALIDATION_MESSAGES.required),
+    applicantCode: Yup.string()
+      .min(5, "Job code must be  5 characters")
+      .max(10, "Job code must be  10 characters")
+      .required(VALIDATION_MESSAGES.required),
 
-  firstName: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
-  lastName: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
-  middleName: Yup.string()
-    .nullable(),
-  // .required(VALIDATION_MESSAGES.required),
+    firstName: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
+    lastName: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
+    middleName: Yup.string()
+      .nullable(),
+    // .required(VALIDATION_MESSAGES.required),
+    applicantStatusId: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
 
-  dateOfBirth: Yup.date()
-    .nullable()
-    .typeError('Invalid date format')
-    .required(VALIDATION_MESSAGES.required),
-
-
-  nic_no: Yup.string()
-    .matches(/^\d{5}-\d{7}-\d{1}$/, 'ID Card No must be in the format 12345-6789012-3')
-    .required(VALIDATION_MESSAGES.required),
-
-  // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
-  passportNo: Yup.string()
-    .max(15, 'Passport number must be at most 15 characters'),
-  // .required(VALIDATION_MESSAGES.required),
+    dateOfBirth: Yup.date()
+      .nullable()
+      .typeError('Invalid date format')
+      .required(VALIDATION_MESSAGES.required)
+      .max(subYears(new Date(), 15), 'Must be at least 15 years old'),
 
 
-  maritalStatus: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+    nic_no: Yup.string()
+      .matches(/^\d{5}-\d{7}-\d{1}$/, 'ID Card No must be in the format 12345-6789012-3')
+      .required(VALIDATION_MESSAGES.required),
 
-  gender: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
-
-  relation_name: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
-
-  religionId: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
-
-  //address
-  additional_summary: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+    // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
+    passportNo: Yup.string()
+      .nullable()
+      .max(15, 'Passport number must be at most 15 characters'),
+    // .required(VALIDATION_MESSAGES.required),
 
 
-  phone_official: Yup.string()
-    .nullable() // Allows null values
-    .matches(/^0[0-9]*$/, 'Phone number must start with 0 and contain only digits') // Must start with 0 and contain only digits
-    .notRequired(), // Make it optional if you want
+    maritalStatus: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
 
-  phone_cell: Yup.string()
-    .nullable() // Allows null values
-    .matches(/^0[0-9]*$/, 'Cell number must start with 0 and contain only digits') // Must start with 0 and contain only digits
-    .notRequired(), // Make it optional if you want
+    gender: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
 
+    relation_name: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
 
+    religionId: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
 
-  email_personal: Yup.string()
-    .nullable() // Allows null values
-    .email('Invalid email address')
-    .required(VALIDATION_MESSAGES.required),
-
-
-  applicantCanJoin: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  lastDawnSalary: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  lastDawnSalaryCurrencyId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  lastDawnSalaryPayTypeId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  expectedSalaryRangeFrom: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  expectedSalaryRangeTo: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+    //address
+    additional_summary: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
 
 
-  expectedSalaryCurrencyId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+    phone_official: Yup.string()
+      .nullable() // Allows null values
+      .matches(/^0[0-9]*$/, 'Phone number must start with 0 and contain only digits') // Must start with 0 and contain only digits
+      .notRequired(), // Make it optional if you want
+
+    phone_cell: Yup.string()
+      .nullable() // Allows null values
+      .matches(/^0[0-9]*$/, 'Cell number must start with 0 and contain only digits') // Must start with 0 and contain only digits
+      .notRequired(), // Make it optional if you want
 
 
-  expectedSalaryPayTypeId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
 
-  // otherInformation: Yup.string()
-  //   .required(VALIDATION_MESSAGES.required),
-
-
-  currentDesignation: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+    email_personal: Yup.string()
+      .nullable() // Allows null values
+      .email('Invalid email address')
+      .required(VALIDATION_MESSAGES.required),
 
 
-  jobVacancyId: Yup.string().nullable(), // optional banane ke liye
+    applicantCanJoin: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
+
+    lastDawnSalary: Yup.number()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .required(VALIDATION_MESSAGES.required),
+
+    lastDawnSalaryCurrencyId: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
+
+    lastDawnSalaryPayTypeId: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
+
+    expectedSalaryRangeFrom: Yup.number()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .required(VALIDATION_MESSAGES.required),
 
 
-  countryId: Yup.number()
-    .nullable(), // optional banane ke liye
-
-  cityId: Yup.string()
-    .nullable() // <- apply globally
-    .when('countryId', {
-      is: (val) => val !== undefined && val !== null && val !== '',
-      then: Yup.string().required(VALIDATION_MESSAGES.required),
-    }),
-
-
-  email: Yup.string()
-  .nullable() 
-  .required(VALIDATION_MESSAGES.required),
-  //   // .required(VALIDATION_MESSAGES.required),
-password: Yup.string()
-  .nullable()
-  .when([], {
-    is: () => !formData || !formData.Id, // Only apply validation in "create" mode
-    then: Yup.string()
-      .min(5, "At least 5 characters are required")
-      .max(15, "At most 15 characters are required")
-      .required("Password is required"),
-    otherwise: Yup.string().nullable()
-  }),
-
-  file: Yup.mixed()
-    .required(VALIDATION_MESSAGES.required)
-    .test("fileSize", "File size must be less than 1 MB", value => {
-      // Skip validation if it's an existing file (string)
-      if (typeof value === "string") return true;
-      return value && value.size <= 3 * 1024 * 1024;  // 3 MB
-    })
-    .test("fileType", "Unsupported file format", value => {
-      if (typeof value === "string") return true;
-      return value && [
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "image/jpeg",
-        "image/png"
-      ].includes(value.type);
-    }),
-
-
-  details_applicant_skills: Yup.array().of(
-    Yup.object().shape({
-      skill: Yup.string()
-        .trim()
-        .required(VALIDATION_MESSAGES.required),
-      description: Yup.string()
-        .trim()
-        .required(VALIDATION_MESSAGES.required),
-      ratingScale: Yup.number()
-
-        .min(1, "Minimum rating is 1")
-        .max(10, "Maximum rating is 5")
-        .required(VALIDATION_MESSAGES.required),
-      startDate: Yup.date()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
-      endDate: Yup.date()
-        .nullable()
-        .min(Yup.ref("startDate"), VALIDATION_MESSAGES.endDateMustBeAfterStartDate)
-        .required(VALIDATION_MESSAGES.required),
-    })
-  ),
-
-
-  details_applicant_work_experience: Yup.array()
-    .of(
-      Yup.object().shape({
-        companyName: Yup.string().required(VALIDATION_MESSAGES.required),
-        positionHeld: Yup.string().required(VALIDATION_MESSAGES.required),
-        countryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-        cityId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-        startDate: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-        endDate: Yup.date()
-          .nullable()
-          .min(Yup.ref("startDate"), "End date must be after start date")
-          .required(VALIDATION_MESSAGES.required),
-      })
-    )
-    .test(
-      "no-overlapping-dates",
-      "Work experience dates must not overlap.",
-      function (entries) {
-        if (!entries || entries.length <= 1) return true;
-
-        // Filter out invalid dates
-        const validEntries = entries.filter(
-          (entry) => entry.startDate && entry.endDate
-        );
-
-        // Sort by start date
-        const sorted = [...validEntries].sort(
-          (a, b) => new Date(a.startDate) - new Date(b.startDate)
-        );
-
-        for (let i = 0; i < sorted.length - 1; i++) {
-          const currentEnd = new Date(sorted[i].endDate);
-          const nextStart = new Date(sorted[i + 1].startDate);
-
-          if (currentEnd >= nextStart) {
-            return false; // Overlapping period detected
-          }
+    expectedSalaryRangeTo: Yup.number()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .required(VALIDATION_MESSAGES.required)
+      .test(
+        'is-greater',
+        'Expected salary range "To" must be greater than "From"',
+        function (value) {
+          const { expectedSalaryRangeFrom } = this.parent;
+          return value > expectedSalaryRangeFrom;
         }
+      ),
 
-        return true;
-      }
-    ),
 
-  details_applicant_academic_info: Yup.array()
-    .of(
+
+    expectedSalaryCurrencyId: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
+
+
+    expectedSalaryPayTypeId: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
+
+    // otherInformation: Yup.string()
+    //   .required(VALIDATION_MESSAGES.required),
+
+
+    currentDesignation: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
+
+
+    jobVacancyId: Yup.string().nullable(), // optional banane ke liye
+
+
+    countryId: Yup.number()
+      .nullable(), // optional banane ke liye
+
+    cityId: Yup.string()
+      .nullable() // <- apply globally
+      .when('countryId', {
+        is: (val) => val !== undefined && val !== null && val !== '',
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
+      }),
+
+
+    email: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+    //   // .required(VALIDATION_MESSAGES.required),
+    password: Yup.string()
+      .nullable()
+      .when([], {
+        is: () => !formData || !formData.Id, // Only apply validation in "create" mode
+        then: Yup.string()
+          .min(5, "At least 5 characters are required")
+          .max(15, "At most 15 characters are required")
+          .required("Password is required"),
+        otherwise: Yup.string().nullable()
+      }),
+
+    file: Yup.mixed()
+      .required(VALIDATION_MESSAGES.required)
+      .test("fileSize", "File size must be less than 1 MB", value => {
+        // Skip validation if it's an existing file (string)
+        if (typeof value === "string") return true;
+        return value && value.size <= 3 * 1024 * 1024;  // 3 MB
+      })
+      .test("fileType", "Unsupported file format", value => {
+        if (typeof value === "string") return true;
+        return value && [
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "image/jpeg",
+          "image/png"
+        ].includes(value.type);
+      }),
+
+
+    details_applicant_skills: Yup.array().of(
       Yup.object().shape({
-        institutionId: Yup.number()
-          .nullable()
+        skill: Yup.string()
+          .trim()
           .required(VALIDATION_MESSAGES.required),
 
-        degreeId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
 
-        countryId: Yup.number()
-          .nullable()
+        description: Yup.string()
+          .trim()
           .required(VALIDATION_MESSAGES.required),
+        ratingScale: Yup.number()
 
-        cityId: Yup.number()
-          .nullable()
+          .min(1, "Minimum rating is 1")
+          .max(10, "Maximum rating is 5")
           .required(VALIDATION_MESSAGES.required),
-
-        gpa: Yup.number()
-          .nullable()
-          .min(0, "GPA must be 0 or more")
-          .max(4, "GPA must be 4 or less")
-          .required(VALIDATION_MESSAGES.required),
-
         startDate: Yup.date()
           .nullable()
           .required(VALIDATION_MESSAGES.required),
-
         endDate: Yup.date()
           .nullable()
-          .min(
-            Yup.ref("startDate"),
-            VALIDATION_MESSAGES.endDateMustBeAfterStartDate
-          )
+          .min(Yup.ref("startDate"), VALIDATION_MESSAGES.endDateMustBeAfterStartDate)
           .required(VALIDATION_MESSAGES.required),
       })
-    )
-    .test(
-      "no-overlapping-academic-dates",
-      "Academic date ranges must not overlap.",
-      function (entries) {
-        if (!entries || entries.length <= 1) return true;
+    ).test(
+      'unique-skill',
+      'Duplicate skill names are not allowed.',
+      function (skills) {
+        if (!Array.isArray(skills)) return true; // ✅ safely skip if not an array
 
-        // Filter out entries without valid dates
-        const validEntries = entries.filter(
-          (entry) => entry.startDate && entry.endDate
+        const skillNames = skills.map((s) => s.skill?.trim().toLowerCase());
+        const duplicates = skillNames.filter(
+          (name, idx) => skillNames.indexOf(name) !== idx
         );
 
-        // Sort by startDate
-        const sorted = [...validEntries].sort(
-          (a, b) => new Date(a.startDate) - new Date(b.startDate)
-        );
-
-        for (let i = 0; i < sorted.length - 1; i++) {
-          const currentEnd = new Date(sorted[i].endDate);
-          const nextStart = new Date(sorted[i + 1].startDate);
-
-          if (currentEnd >= nextStart) {
-            return false; // Overlap detected
-          }
+        if (duplicates.length > 0) {
+          return this.createError({
+            path: 'details_applicant_skills',
+            message: 'Duplicate skill are not allowed.',
+          });
         }
 
         return true;
@@ -308,89 +241,200 @@ password: Yup.string()
     ),
 
 
-  details_applicant_vacancy: Yup.array()
-    .of(
-      Yup.object().shape({
-        jobVacancyId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-        applicationDate: Yup.date()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-        // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-        statusDate: Yup.date()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
-        appointmentTypeId: Yup.number()
-          .nullable()
-          .required(VALIDATION_MESSAGES.required),
+    details_applicant_work_experience: Yup.array()
+      .of(
+        Yup.object().shape({
+          companyName: Yup.string().required(VALIDATION_MESSAGES.required),
+          positionHeld: Yup.string().required(VALIDATION_MESSAGES.required),
+          countryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+          cityId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+          startDate: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+          endDate: Yup.date()
+            .nullable()
+            .min(Yup.ref("startDate"), "End date must be after start date")
+            .required(VALIDATION_MESSAGES.required),
+        })
+      )
+      .test(
+        "no-overlapping-dates",
+        "Work experience dates must not overlap.",
+        function (entries) {
+          if (!entries || entries.length <= 1) return true;
+
+          // Filter out invalid dates
+          const validEntries = entries.filter(
+            (entry) => entry.startDate && entry.endDate
+          );
+
+          // Sort by start date
+          const sorted = [...validEntries].sort(
+            (a, b) => new Date(a.startDate) - new Date(b.startDate)
+          );
+
+          for (let i = 0; i < sorted.length - 1; i++) {
+            const currentEnd = new Date(sorted[i].endDate);
+            const nextStart = new Date(sorted[i + 1].startDate);
+
+            if (currentEnd >= nextStart) {
+              return false; // Overlapping period detected
+            }
+          }
+
+          return true;
+        }
+      ),
+
+    details_applicant_academic_info: Yup.array()
+      .of(
+        Yup.object().shape({
+          institutionId: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+
+          degreeId: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+
+          countryId: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+
+          cityId: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+
+          gpa: Yup.number()
+            .nullable()
+            .min(0, "GPA must be 0 or more")
+            .max(4, "GPA must be 4 or less")
+            .required(VALIDATION_MESSAGES.required),
+
+          startDate: Yup.date()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+
+          endDate: Yup.date()
+            .nullable()
+            .min(
+              Yup.ref("startDate"),
+              VALIDATION_MESSAGES.endDateMustBeAfterStartDate
+            )
+            .required(VALIDATION_MESSAGES.required),
+        })
+      )
+      .test(
+        "no-overlapping-academic-dates",
+        "Academic date ranges must not overlap.",
+        function (entries) {
+          if (!entries || entries.length <= 1) return true;
+
+          // Filter out entries without valid dates
+          const validEntries = entries.filter(
+            (entry) => entry.startDate && entry.endDate
+          );
+
+          // Sort by startDate
+          const sorted = [...validEntries].sort(
+            (a, b) => new Date(a.startDate) - new Date(b.startDate)
+          );
+
+          for (let i = 0; i < sorted.length - 1; i++) {
+            const currentEnd = new Date(sorted[i].endDate);
+            const nextStart = new Date(sorted[i + 1].startDate);
+
+            if (currentEnd >= nextStart) {
+              return false; // Overlap detected
+            }
+          }
+
+          return true;
+        }
+      ),
+
+
+    details_applicant_vacancy: Yup.array()
+      .of(
+        Yup.object().shape({
+          jobVacancyId: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          applicationDate: Yup.date()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+          statusDate: Yup.date()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+          appointmentTypeId: Yup.number()
+            .nullable()
+            .required(VALIDATION_MESSAGES.required),
+        })
+      )
+      .test('unique-jobVacancyId', 'Each Job Vacancy must be unique.', function (vacancies) {
+        if (!vacancies) return true;
+
+        const jobVacancyIds = vacancies.map((v) => v.jobVacancyId);
+        const duplicates = jobVacancyIds.filter((id, idx) => jobVacancyIds.indexOf(id) !== idx);
+
+        if (duplicates.length > 0) {
+          return this.createError({
+            path: `details_applicant_vacancy`, // attaches error to the array
+            message: `Duplicate Job Vacancy selected.`,
+          });
+        }
+
+        return true;
       })
-    )
-    .test('unique-jobVacancyId', 'Each Job Vacancy must be unique.', function (vacancies) {
-      if (!vacancies) return true;
 
-      const jobVacancyIds = vacancies.map((v) => v.jobVacancyId);
-      const duplicates = jobVacancyIds.filter((id, idx) => jobVacancyIds.indexOf(id) !== idx);
+  })
 
-      if (duplicates.length > 0) {
-        return this.createError({
-          path: `details_applicant_vacancy`, // attaches error to the array
-          message: `Duplicate Job Vacancy selected.`,
-        });
+
+    .test('check-marital-status', 'Invalid marital status for selected title', function (value) {
+      // if (title === 'Mrs.' && maritalStatus === '261') {
+      const { title, maritalStatus, gender } = value;
+
+      // Check conditions based on title // 196 == Single
+      if (title === 'Mrs.' && maritalStatus !== '267') { //married
+
+        return this.createError({ path: 'maritalStatus', message: 'Mrs. only for Married' });
       }
 
-      return true;
-    })
+      if (title === 'Mrs.' && maritalStatus === '266') { //single
+        return this.createError({ path: 'maritalStatus', message: 'Mrs. cannot be single.' });
+      }
 
-})
+      if ((title == 'Mrs.' || title == 'Ms.') && gender == 'Male') {
+        return this.createError({ path: 'gender', message: 'Mrs. Ms. cannot be male.' });
+      }
 
+      // if ((title === 'Mr.' || title === 'Dr.' || title === 'Professor.' || title === 'Captain') && gender === 'Female') {
+      //   return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
+      // }
 
-  .test('check-marital-status', 'Invalid marital status for selected title', function (value) {
-    // if (title === 'Mrs.' && maritalStatus === '261') {
-    const { title, maritalStatus, gender } = value;
-
-    // Check conditions based on title // 196 == Single
-    if (title === 'Mrs.' && maritalStatus !== '267') { //married
-
-      return this.createError({ path: 'maritalStatus', message: 'Mrs. only for Married' });
-    }
-
-    if (title === 'Mrs.' && maritalStatus === '266') { //single
-      return this.createError({ path: 'maritalStatus', message: 'Mrs. cannot be single.' });
-    }
-
-    if ((title == 'Mrs.' || title == 'Ms.') && gender == 'Male') {
-      return this.createError({ path: 'gender', message: 'Mrs. Ms. cannot be male.' });
-    }
-
-    // if ((title === 'Mr.' || title === 'Dr.' || title === 'Professor.' || title === 'Captain') && gender === 'Female') {
-    //   return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
-    // }
-
-    if ((title === 'Mr.') && gender === 'Female') {
-      return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
-    }
+      if ((title === 'Mr.') && gender === 'Female') {
+        return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
+      }
 
 
-    // if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267 && maritalStatus != 269) { //divorced
+      // if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267 && maritalStatus != 269) { //divorced
 
-    //   return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
-    // }
-    if (title === 'Mr.' && maritalStatus == 268) { //Widow
+      //   return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
+      // }
+      if (title === 'Mr.' && maritalStatus == 268) { //Widow
 
-      return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be widow.' });
-    }
+        return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be widow.' });
+      }
 
-    if (title === 'Ms.' && maritalStatus == 267) {
+      if (title === 'Ms.' && maritalStatus == 267) {
 
-      return this.createError({ path: 'maritalStatus', message: 'Ms. only for single woman.' });
-    }
+        return this.createError({ path: 'maritalStatus', message: 'Ms. only for single woman.' });
+      }
 
 
 
 
-    return true; // No error
-  });
+      return true; // No error
+    });
 
 };
 
@@ -406,8 +450,12 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-
+ const [profile_image, setImage] = useState(
+  formData?.profile_image || toAbsoluteUrl("/media/logos/defaultImg.png")
+);
   const inputFile = useRef(null);
+  const [file, setFile] = useState('');
+
   //drop down
   useEffect(() => {
     if (!formData.Id) {
@@ -473,7 +521,20 @@ export function FormEditForm({
       (x) => x.value === values?.jobVacancyId
     );
 
+  const onImageChange = async event => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setFile(img);
 
+      setImage(URL.createObjectURL(img));
+    }
+  };
+
+  useEffect(() => {
+  if (formData?.profile_image) {
+    setImage(formData.profile_image);
+  }
+}, [formData?.profile_image]);
   return (
     <Formik
       enableReinitialize={true}
@@ -482,10 +543,26 @@ export function FormEditForm({
       initialValues={formData}
 
       validationSchema={getApplicantProfileEditSchema(formData)}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
+ 
+
 
         enableLoading();
-        saveForm(values);
+        if (file) {
+          let formData = new FormData();
+          await formData.append('image', file);
+          await axios
+            .post(`${USERS_URL}/profile/image-upload`, formData)
+            .then((res) => {
+              setImage(res.data.imageUrl)
+              saveForm(values, res.data.imageUrl,);
+            });
+        }
+        else {
+
+          saveForm(values, values.profile_image || profile_image);
+        }
+
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
@@ -504,117 +581,141 @@ export function FormEditForm({
                 {/* Job */}
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
                   <h6>Applicant Profile</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Applicant Code<span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
-                        name="applicantCode"
-                        component={Input}
-                        placeholder="Enter code"
-                        // disabled={true}
-                        type="text"
-                        minLength={5}
-                        maxLength={10}
-                      // error={ errors.applicantCode}
 
-                      />
+                  {/* Code Name Image */}
+                  <div className="form-group row col-12 col-md-12  p-0 m-0" >
+                    {/* Code Name  */}
+                    <div className="form-group row col-12 col-md-10  p-0 m-0">
+                      {/* Code  */}
+                      <div className="form-group row col-12 col-md-12  p-0 m-0">
+                        <div className="col-12 col-md-5 mt-3">
+                          <label>
+                            <span>
+                              Applicant Code<span style={{ color: "red" }}>*</span>
+                            </span>
+                          </label>
+                          <Field
+                            name="applicantCode"
+                            component={Input}
+                            placeholder="Enter code"
+                            // disabled={true}
+                            type="text"
+                            minLength={5}
+                            maxLength={10}
+                          // error={ errors.applicantCode}
+
+                          />
+
+                        </div>
+
+                        <div className="col-12 col-md-5 mt-3">
+
+                          <SearchSelect
+                            name="subsidiaryId"
+                            isDisabled={isdataForRead}
+                            label={
+                              <span>
+                                Subsidiary<span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+
+                            onChange={(e) => {
+                              setFieldValue("subsidiaryId", e.value || null);
+                            }}
+                            value={
+                              dashboard?.allSubsidiaryList?.find(
+                                (option) => option.value === values.subsidiaryId
+                              ) || null
+                            }
+
+                            options={dashboard?.allSubsidiaryList}
+
+                            error={errors.subsidiaryId}
+                            touched={touched.subsidiaryId}
+                          />
+                        </div>
+
+
+                      </div>
+                      {/* Following Mr. Mubin's instructions, I am using this type of code block. */}
+
+                      {/* Name  */}
+
+                      <div className="form-group row col-12 col-md-12  p-0 m-0">
+                        <div className="col-12 col-md-2 mt-3">
+                          <Select
+                            label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
+                            name="title"
+                            value={values.title}
+                            onChange={handleChange}
+
+                            style={{ display: "block" }}
+                          >
+                            <option label="Select Title" />
+                            <option value="Mr." label="Mr." />
+                            <option value="Mrs." label="Mrs." />
+                            <option value="Ms." label="Ms." />
+                            <option value="Dr." label="Dr." />
+                            <option value="Professor." label="Professor." />
+
+
+                          </Select>
+                          {errors.title && touched.title && (
+                            <div className="invalid-text">{errors.title}</div>
+                          )}
+                        </div>
+
+
+                        <div className="col-12 col-md-3 mt-3">
+                          <Field
+                            name="firstName"
+                            component={Input}
+                            placeholder=" first name"
+                            label={<span> First Name<span style={{ color: 'red' }}>*</span></span>}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="col-12 col-md-3 mt-3">
+                          <Field
+                            name="middleName"
+                            component={Input}
+                            placeholder=" middle name"
+                            label={<span> Middle Name</span>}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="col-12 col-md-3 mt-3">
+                          <Field
+                            name="lastName"
+                            component={Input}
+                            placeholder=" last name"
+                            label={<span> Last Name<span style={{ color: 'red' }}>*</span></span>}
+                            autoComplete="off"
+                          />
+                        </div>
+
+
+
+                      </div>
 
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* Image */}
+                    <div className="col-12 col-md-2 ">
+                      <div>
+                        <div>
+                          <div>
 
-                      <SearchSelect
-                        name="subsidiaryId"
-                        isDisabled={isdataForRead}
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-
-                        onChange={(e) => {
-                          setFieldValue("subsidiaryId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allSubsidiaryList?.find(
-                            (option) => option.value === values.subsidiaryId
-                          ) || null
-                        }
-
-                        options={dashboard?.allSubsidiaryList}
-
-                        error={errors.subsidiaryId}
-                        touched={touched.subsidiaryId}
-                      />
+                            <img name='profile_image' width={120} height={120} src={profile_image ||  formData?.profile_image } />
+                            <h4>Select Image </h4>
+                            <input type="file" name="myImage" accept=".jpg, .jpeg, .png" onChange={onImageChange} />
+                            <ErrorMessage className="form-feedBack" name="myImage" component="div" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
 
                   </div>
-                  {/* Following Mr. Mubin's instructions, I am using this type of code block. */}
-
-
-
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-2 mt-3">
-                      <Select
-                        label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
-                        name="title"
-                        value={values.title}
-                        onChange={handleChange}
-
-                        style={{ display: "block" }}
-                      >
-                        <option label="Select Title" />
-                        <option value="Mr." label="Mr." />
-                        <option value="Mrs." label="Mrs." />
-                        <option value="Ms." label="Ms." />
-                        <option value="Dr." label="Dr." />
-                        <option value="Professor." label="Professor." />
-
-
-                      </Select>
-                      {errors.title && touched.title && (
-                        <div className="invalid-text">{errors.title}</div>
-                      )}
-                    </div>
-
-
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="firstName"
-                        component={Input}
-                        placeholder=" first name"
-                        label={<span> First Name<span style={{ color: 'red' }}>*</span></span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="middleName"
-                        component={Input}
-                        placeholder=" middle name"
-                        label={<span> Middle Name</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="lastName"
-                        component={Input}
-                        placeholder=" last name"
-                        label={<span> Last Name<span style={{ color: 'red' }}>*</span></span>}
-                        autoComplete="off"
-                      />
-                    </div>
-
-
-                  </div>
-
-
 
                 </div>
 
@@ -698,7 +799,7 @@ export function FormEditForm({
                                             (!values?.subsidiaryId || x?.subsidiaryId === values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
                                         )
                                         .map((x) => ({
-                                          label: x.mergeLabel,
+                                          label: x.label,
                                           value: x.value,
                                           disabled: values.details_applicant_vacancy.some(
                                             (el) => el.jobVacancyId === x.value
@@ -929,10 +1030,10 @@ export function FormEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="applicantStatusId"
-                        label={<span>Applicant Status</span>}
+                        label={<span>Applicant Status<span style={{ color: "red" }}>*</span></span>}
                         className="form-control"
                         style={{ width: '130px' }}
-                        disabled={isdataForRead}
+                        isDisabled={isdataForRead}
                         value={
                           dashboard?.allApplicationStatusList?.find(
                             (x) => x.value === values.applicantStatusId
@@ -1062,6 +1163,10 @@ export function FormEditForm({
                         placeholder=" Passport No"
                         label=" Passport No"
                         autoComplete="off"
+                        onBlur={(e) => {
+                          const value = e.target.value.trim();
+                          setFieldValue('passportNo', value == '' ? null : value);
+                        }}
                       />
                     </div>
 
@@ -1148,7 +1253,7 @@ export function FormEditForm({
                         onChange={handleChange}
                         style={{ display: "block" }}
                       >
-                        <option value="-1" label="Select Nationality" />
+                        <option value="" label="Select Nationality" />
                         <option value="Pakistani" label="Pakistani" />
                         <option value="Other" label="Other" />
 
@@ -1305,10 +1410,13 @@ export function FormEditForm({
                         <Field
                           name="applicantCanJoin"
                           component={Input}
-                          placeholder="Enter applicant can join"
-                          label={<span> Applicant can join<span style={{ color: 'red' }}>*</span></span>}
+                          placeholder="Enter applicant can join in days"
+                          label={<span> Applicant can join (Days)<span style={{ color: 'red' }}>*</span></span>}
                           autoComplete="off"
                           type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(e.target.value, 3); // Limit to 3 digits
+                          }}
                         />
                       </div>
 
@@ -1331,6 +1439,9 @@ export function FormEditForm({
                         label={<span> Last Dawn Salary<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(e.target.value);
+                        }}
                       />
                     </div>
 
@@ -1387,6 +1498,9 @@ export function FormEditForm({
                         label={<span> Expected Salary Range(From)<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(e.target.value);
+                        }}
                       />
                     </div>
 
@@ -1399,6 +1513,9 @@ export function FormEditForm({
                         label={<span> Expected Salary Range(To)<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(e.target.value);
+                        }}
                       />
                     </div>
 
@@ -1532,7 +1649,7 @@ export function FormEditForm({
 
                     <div className="col-12 col-md-6 mt-3">
                       <label>
-                     New Password {(!formData.Id) && <span style={{ color: "red" }}>*</span>}
+                        New Password {(!formData.Id) && <span style={{ color: "red" }}>*</span>}
 
                       </label>
                       <Field
@@ -2305,6 +2422,10 @@ export function FormEditForm({
                   </div>
                 )}
               </FieldArray>
+
+              {typeof errors.details_applicant_skills === 'string' && (
+                <div className="text-danger">{errors.details_applicant_skills}</div>
+              )}
 
             </Form>
           </Modal.Body>

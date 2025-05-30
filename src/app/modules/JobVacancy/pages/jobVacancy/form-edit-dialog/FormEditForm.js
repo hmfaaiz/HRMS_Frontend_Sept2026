@@ -40,12 +40,12 @@ const jobVacancyEditSchema = Yup.object().shape({
   countryId: Yup.number()
     .nullable(), // optional banane ke liye
 
-cityId: Yup.string()
-  .nullable() // <- apply globally
-  .when('countryId', {
-    is: (val) => val !== undefined && val !== null && val !== '',
-    then: Yup.string().required(VALIDATION_MESSAGES.required),
-  }),
+  cityId: Yup.string()
+    .nullable() // <- apply globally
+    .when('countryId', {
+      is: (val) => val !== undefined && val !== null && val !== '',
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+    }),
 
   // employeeTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
   // employeeStatusId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -117,7 +117,11 @@ cityId: Yup.string()
   // criticalDays: Yup.number()
   //   .min(1, VALIDATION_MESSAGES.minOneValue)
   //   .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
-  jobPeriodStart: Yup.date().nullable(),
+  jobPeriodStart: Yup.date().nullable()
+    .min(
+      Yup.ref('jobPostingDateTo'),
+      'Start date must be after posting date'
+    ),
   jobPeriodEnd: Yup.date().nullable()
     .min(
       Yup.ref('jobPeriodStart'),
@@ -125,13 +129,7 @@ cityId: Yup.string()
     ),
   comment: Yup.string(),
 
-  // desireDateOfApp: Yup.date()
-  //   .nullable()
-  //   .required(VALIDATION_MESSAGES.required)
-  //   .min(
-  //     Yup.ref('jobPostingDateFrom'),
-  //     'Desire Date of Appointment must be after Job Posting Date From'
-  //   ),
+
 
   desireDateOfApp: Yup.date()
     .nullable()
@@ -140,24 +138,44 @@ cityId: Yup.string()
       Yup.ref('jobPostingDateFrom'),
       'Desire Date of Appointment must be after Job Posting Date From'
     )
-    .when('jobPeriodEnd', (jobPeriodEnd, schema) => {
-      return jobPeriodEnd
-        ? schema.max(
-          Yup.ref('jobPeriodEnd'),
-          'Desire Date must be before Job Period End'
-        )
-        : schema; // if jobPeriodEnd is not set, skip the max check
-    }),
+
+    .test(
+      'within-job-period',
+      'Desired Date of Appointment must be within the Job Period range',
+      function (value) {
+        const { jobPeriodStart, jobPeriodEnd } = this.parent;
+
+        if (!value) return true; // Already handled by .required()
+
+        if (jobPeriodStart && value > jobPeriodStart) {
+          return this.createError({
+            message: 'Desired Date of Appointment must be before or same as Job Period Start',
+          });
+        }
+
+        if (jobPeriodEnd && value > jobPeriodEnd) {
+          return this.createError({
+            message: 'Desired Date of Appointment must be before or same as Job Period End',
+          });
+        }
+
+        return true;
+      }
+    ),
+
+
   preferredAgeFrom: Yup.number()
-    .min(18, VALIDATION_MESSAGES.minAgeEighteenValue)
+    .nullable()
+    .min(15, VALIDATION_MESSAGES.minAgeFifteenValue)
     .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue),
 
   preferredAgeTo: Yup.number()
-    .min(18, VALIDATION_MESSAGES.minAgeEighteenValue)
+    .nullable()
+    .min(15, VALIDATION_MESSAGES.minAgeFifteenValue)
     .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
     .moreThan(
       Yup.ref('preferredAgeFrom'),
-      'Preferred age (to) must be greater than age from'
+      'Preferred age (to) must be greater than age (from)'
     ),
   preferredShiftId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredGenderId: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -165,9 +183,12 @@ cityId: Yup.string()
   preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredJobIndustryId: Yup.number().required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
+
     .required(VALIDATION_MESSAGES.required),
 
   workExpTo: Yup.number()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
       Yup.ref('workExpFrom'),
@@ -274,9 +295,17 @@ export function FormEditForm({
       }}
       validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
+        values.preferredAgeFrom =
+          values.preferredAgeFrom === '' || values.preferredAgeFrom === null
+            ? null
+            : Number(values.preferredAgeFrom);
 
+        values.preferredAgeTo =
+          values.preferredAgeTo === '' || values.preferredAgeTo === null
+            ? null
+            : Number(values.preferredAgeTo);
         enableLoading();
-     
+
         saveForm(values);
       }}
     >
@@ -929,6 +958,7 @@ export function FormEditForm({
 
                         onChange={(date) => {
                           let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          console.log("selectedDate111", selectedDate)
                           setFieldValue("desireDateOfApp", selectedDate);
                         }}
                         dateFormat="dd/MM/yyyy"

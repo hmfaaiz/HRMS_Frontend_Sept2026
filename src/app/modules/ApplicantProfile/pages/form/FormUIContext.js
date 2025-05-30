@@ -38,7 +38,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     lastName: "",
 
     dateOfBirth: "",  // Assuming input as a string in the filter
-    passportNo: "",
+    passportNo: null,
     maritalStatus: "",
     nationality: "",
     gender: "",
@@ -74,7 +74,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
 
     email: "",
     password: "",
-
+profile_image:"",
   };
 
 
