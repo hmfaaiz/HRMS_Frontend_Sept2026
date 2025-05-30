@@ -74,7 +74,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
 
     email: "",
     password: "",
-
+profile_image:"",
   };
 
 

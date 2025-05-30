@@ -166,16 +166,16 @@ const jobVacancyEditSchema = Yup.object().shape({
 
   preferredAgeFrom: Yup.number()
     .nullable()
-    .min(18, VALIDATION_MESSAGES.minAgeEighteenValue)
+    .min(15, VALIDATION_MESSAGES.minAgeFifteenValue)
     .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue),
 
   preferredAgeTo: Yup.number()
     .nullable()
-    .min(18, VALIDATION_MESSAGES.minAgeEighteenValue)
+    .min(15, VALIDATION_MESSAGES.minAgeFifteenValue)
     .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
     .moreThan(
       Yup.ref('preferredAgeFrom'),
-      'Preferred age (to) must be greater than age from'
+      'Preferred age (to) must be greater than age (from)'
     ),
   preferredShiftId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredGenderId: Yup.string().required(VALIDATION_MESSAGES.required),

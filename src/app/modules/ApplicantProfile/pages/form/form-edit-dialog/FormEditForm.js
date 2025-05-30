@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { DatePickerField, Input, MaskInput, Select, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import axios from 'axios';
+
 import {
   fetchAllCity,
   fetchAllCountry,
@@ -17,7 +19,9 @@ import {
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit, amountLimitDynamic, formatDates, getFileName, getUploadUrl } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
-
+import { subYears } from "date-fns";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
   return Yup.object().shape({
@@ -46,7 +50,8 @@ export const getApplicantProfileEditSchema = (formData) => {
     dateOfBirth: Yup.date()
       .nullable()
       .typeError('Invalid date format')
-      .required(VALIDATION_MESSAGES.required),
+      .required(VALIDATION_MESSAGES.required)
+      .max(subYears(new Date(), 15), 'Must be at least 15 years old'),
 
 
     nic_no: Yup.string()
@@ -55,6 +60,7 @@ export const getApplicantProfileEditSchema = (formData) => {
 
     // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
     passportNo: Yup.string()
+      .nullable()
       .max(15, 'Passport number must be at most 15 characters'),
     // .required(VALIDATION_MESSAGES.required),
 
@@ -98,6 +104,7 @@ export const getApplicantProfileEditSchema = (formData) => {
       .required(VALIDATION_MESSAGES.required),
 
     lastDawnSalary: Yup.number()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
       .required(VALIDATION_MESSAGES.required),
 
     lastDawnSalaryCurrencyId: Yup.number()
@@ -107,10 +114,22 @@ export const getApplicantProfileEditSchema = (formData) => {
       .required(VALIDATION_MESSAGES.required),
 
     expectedSalaryRangeFrom: Yup.number()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
       .required(VALIDATION_MESSAGES.required),
 
+
     expectedSalaryRangeTo: Yup.number()
-      .required(VALIDATION_MESSAGES.required),
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .required(VALIDATION_MESSAGES.required)
+      .test(
+        'is-greater',
+        'Expected salary range "To" must be greater than "From"',
+        function (value) {
+          const { expectedSalaryRangeFrom } = this.parent;
+          return value > expectedSalaryRangeFrom;
+        }
+      ),
+
 
 
     expectedSalaryCurrencyId: Yup.number()
@@ -181,6 +200,8 @@ export const getApplicantProfileEditSchema = (formData) => {
         skill: Yup.string()
           .trim()
           .required(VALIDATION_MESSAGES.required),
+
+
         description: Yup.string()
           .trim()
           .required(VALIDATION_MESSAGES.required),
@@ -197,6 +218,26 @@ export const getApplicantProfileEditSchema = (formData) => {
           .min(Yup.ref("startDate"), VALIDATION_MESSAGES.endDateMustBeAfterStartDate)
           .required(VALIDATION_MESSAGES.required),
       })
+    ).test(
+      'unique-skill',
+      'Duplicate skill names are not allowed.',
+      function (skills) {
+        if (!Array.isArray(skills)) return true; // ✅ safely skip if not an array
+
+        const skillNames = skills.map((s) => s.skill?.trim().toLowerCase());
+        const duplicates = skillNames.filter(
+          (name, idx) => skillNames.indexOf(name) !== idx
+        );
+
+        if (duplicates.length > 0) {
+          return this.createError({
+            path: 'details_applicant_skills',
+            message: 'Duplicate skill are not allowed.',
+          });
+        }
+
+        return true;
+      }
     ),
 
 
@@ -409,8 +450,10 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-
+  const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
   const inputFile = useRef(null);
+   const [file, setFile] = useState('');
+
   //drop down
   useEffect(() => {
     if (!formData.Id) {
@@ -476,7 +519,14 @@ export function FormEditForm({
       (x) => x.value === values?.jobVacancyId
     );
 
+  const onImageChange = async event => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setFile(img);
 
+      setImage(URL.createObjectURL(img));
+    }
+  };
   return (
     <Formik
       enableReinitialize={true}
@@ -485,10 +535,24 @@ export function FormEditForm({
       initialValues={formData}
 
       validationSchema={getApplicantProfileEditSchema(formData)}
-      onSubmit={(values) => {
+      onSubmit={async(values) => {
 
         enableLoading();
-        saveForm(values);
+             if (file) {
+                      let formData = new FormData();
+                      await formData.append('image', file);
+                      await axios
+                        .post(`${USERS_URL}/profile/image-upload`, formData)
+                        .then((res) => {
+                          setImage(res.data.imageUrl)
+                          saveForm(values, res.data.imageUrl,);
+                        });
+                    }
+                    else {
+        
+                      saveForm(values, profile_image);
+                    }
+     
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
@@ -507,6 +571,21 @@ export function FormEditForm({
                 {/* Job */}
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
                   <h6>Applicant Profile</h6>
+                  <div className="from-group row">
+                    <div className="col-12 col-md-4 mt-3">
+                      <div>
+                        <div>
+                          <div>
+
+                            <img name='profile_image' width={120} height={120} src={formData?.profile_image || profile_image} />
+                            <h4>Select Image</h4>
+                            <input type="file" name="myImage" accept=".jpg, .jpeg, .png" onChange={onImageChange} />
+                            <ErrorMessage className="form-feedBack" name="myImage" component="div" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
                     <div className="col-12 col-md-4 mt-3">
                       <label>
@@ -1065,6 +1144,10 @@ export function FormEditForm({
                         placeholder=" Passport No"
                         label=" Passport No"
                         autoComplete="off"
+                        onBlur={(e) => {
+                          const value = e.target.value.trim();
+                          setFieldValue('passportNo', value == '' ? null : value);
+                        }}
                       />
                     </div>
 
@@ -1308,10 +1391,13 @@ export function FormEditForm({
                         <Field
                           name="applicantCanJoin"
                           component={Input}
-                          placeholder="Enter applicant can join"
-                          label={<span> Applicant can join<span style={{ color: 'red' }}>*</span></span>}
+                          placeholder="Enter applicant can join in days"
+                          label={<span> Applicant can join (Days)<span style={{ color: 'red' }}>*</span></span>}
                           autoComplete="off"
                           type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(e.target.value, 3); // Limit to 3 digits
+                          }}
                         />
                       </div>
 
@@ -1334,6 +1420,9 @@ export function FormEditForm({
                         label={<span> Last Dawn Salary<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(e.target.value);
+                        }}
                       />
                     </div>
 
@@ -1390,6 +1479,9 @@ export function FormEditForm({
                         label={<span> Expected Salary Range(From)<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(e.target.value);
+                        }}
                       />
                     </div>
 
@@ -1402,6 +1494,9 @@ export function FormEditForm({
                         label={<span> Expected Salary Range(To)<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimit(e.target.value);
+                        }}
                       />
                     </div>
 
@@ -2308,6 +2403,10 @@ export function FormEditForm({
                   </div>
                 )}
               </FieldArray>
+
+              {typeof errors.details_applicant_skills === 'string' && (
+                <div className="text-danger">{errors.details_applicant_skills}</div>
+              )}
 
             </Form>
           </Modal.Body>

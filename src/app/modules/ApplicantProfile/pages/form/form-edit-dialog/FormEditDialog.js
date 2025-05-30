@@ -67,7 +67,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
   }, [id, dispatch]);
 
 
-  const saveForm = async (formData) => {
+  const saveForm = async (formData,image) => {
 
 
 
@@ -143,7 +143,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         file: typeof formData.file === "string" ? formData.file : "", // fallback
 
         password: formData.password && formData.password.trim() !== "" ? formData.password : "",
-
+        profile_image: image,
 
 
       };
@@ -173,6 +173,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
+        backdrop="static"
     >
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
