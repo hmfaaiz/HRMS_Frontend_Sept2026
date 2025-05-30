@@ -450,9 +450,11 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
+ const [profile_image, setImage] = useState(
+  formData?.profile_image || toAbsoluteUrl("/media/logos/defaultImg.png")
+);
   const inputFile = useRef(null);
-   const [file, setFile] = useState('');
+  const [file, setFile] = useState('');
 
   //drop down
   useEffect(() => {
@@ -527,6 +529,12 @@ export function FormEditForm({
       setImage(URL.createObjectURL(img));
     }
   };
+
+  useEffect(() => {
+  if (formData?.profile_image) {
+    setImage(formData.profile_image);
+  }
+}, [formData?.profile_image]);
   return (
     <Formik
       enableReinitialize={true}
@@ -535,24 +543,26 @@ export function FormEditForm({
       initialValues={formData}
 
       validationSchema={getApplicantProfileEditSchema(formData)}
-      onSubmit={async(values) => {
+      onSubmit={async (values) => {
+ 
+
 
         enableLoading();
-             if (file) {
-                      let formData = new FormData();
-                      await formData.append('image', file);
-                      await axios
-                        .post(`${USERS_URL}/profile/image-upload`, formData)
-                        .then((res) => {
-                          setImage(res.data.imageUrl)
-                          saveForm(values, res.data.imageUrl,);
-                        });
-                    }
-                    else {
-        
-                      saveForm(values, profile_image);
-                    }
-     
+        if (file) {
+          let formData = new FormData();
+          await formData.append('image', file);
+          await axios
+            .post(`${USERS_URL}/profile/image-upload`, formData)
+            .then((res) => {
+              setImage(res.data.imageUrl)
+              saveForm(values, res.data.imageUrl,);
+            });
+        }
+        else {
+
+          saveForm(values, values.profile_image || profile_image);
+        }
+
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
@@ -571,132 +581,141 @@ export function FormEditForm({
                 {/* Job */}
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
                   <h6>Applicant Profile</h6>
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
+
+                  {/* Code Name Image */}
+                  <div className="form-group row col-12 col-md-12  p-0 m-0" >
+                    {/* Code Name  */}
+                    <div className="form-group row col-12 col-md-10  p-0 m-0">
+                      {/* Code  */}
+                      <div className="form-group row col-12 col-md-12  p-0 m-0">
+                        <div className="col-12 col-md-5 mt-3">
+                          <label>
+                            <span>
+                              Applicant Code<span style={{ color: "red" }}>*</span>
+                            </span>
+                          </label>
+                          <Field
+                            name="applicantCode"
+                            component={Input}
+                            placeholder="Enter code"
+                            // disabled={true}
+                            type="text"
+                            minLength={5}
+                            maxLength={10}
+                          // error={ errors.applicantCode}
+
+                          />
+
+                        </div>
+
+                        <div className="col-12 col-md-5 mt-3">
+
+                          <SearchSelect
+                            name="subsidiaryId"
+                            isDisabled={isdataForRead}
+                            label={
+                              <span>
+                                Subsidiary<span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+
+                            onChange={(e) => {
+                              setFieldValue("subsidiaryId", e.value || null);
+                            }}
+                            value={
+                              dashboard?.allSubsidiaryList?.find(
+                                (option) => option.value === values.subsidiaryId
+                              ) || null
+                            }
+
+                            options={dashboard?.allSubsidiaryList}
+
+                            error={errors.subsidiaryId}
+                            touched={touched.subsidiaryId}
+                          />
+                        </div>
+
+
+                      </div>
+                      {/* Following Mr. Mubin's instructions, I am using this type of code block. */}
+
+                      {/* Name  */}
+
+                      <div className="form-group row col-12 col-md-12  p-0 m-0">
+                        <div className="col-12 col-md-2 mt-3">
+                          <Select
+                            label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
+                            name="title"
+                            value={values.title}
+                            onChange={handleChange}
+
+                            style={{ display: "block" }}
+                          >
+                            <option label="Select Title" />
+                            <option value="Mr." label="Mr." />
+                            <option value="Mrs." label="Mrs." />
+                            <option value="Ms." label="Ms." />
+                            <option value="Dr." label="Dr." />
+                            <option value="Professor." label="Professor." />
+
+
+                          </Select>
+                          {errors.title && touched.title && (
+                            <div className="invalid-text">{errors.title}</div>
+                          )}
+                        </div>
+
+
+                        <div className="col-12 col-md-3 mt-3">
+                          <Field
+                            name="firstName"
+                            component={Input}
+                            placeholder=" first name"
+                            label={<span> First Name<span style={{ color: 'red' }}>*</span></span>}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="col-12 col-md-3 mt-3">
+                          <Field
+                            name="middleName"
+                            component={Input}
+                            placeholder=" middle name"
+                            label={<span> Middle Name</span>}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <div className="col-12 col-md-3 mt-3">
+                          <Field
+                            name="lastName"
+                            component={Input}
+                            placeholder=" last name"
+                            label={<span> Last Name<span style={{ color: 'red' }}>*</span></span>}
+                            autoComplete="off"
+                          />
+                        </div>
+
+
+
+                      </div>
+
+                    </div>
+
+                    {/* Image */}
+                    <div className="col-12 col-md-2 ">
                       <div>
                         <div>
                           <div>
 
-                            <img name='profile_image' width={120} height={120} src={formData?.profile_image || profile_image} />
-                            <h4>Select Image</h4>
+                            <img name='profile_image' width={120} height={120} src={profile_image ||  formData?.profile_image } />
+                            <h4>Select Image </h4>
                             <input type="file" name="myImage" accept=".jpg, .jpeg, .png" onChange={onImageChange} />
                             <ErrorMessage className="form-feedBack" name="myImage" component="div" />
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Applicant Code<span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
-                        name="applicantCode"
-                        component={Input}
-                        placeholder="Enter code"
-                        // disabled={true}
-                        type="text"
-                        minLength={5}
-                        maxLength={10}
-                      // error={ errors.applicantCode}
-
-                      />
-
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-
-                      <SearchSelect
-                        name="subsidiaryId"
-                        isDisabled={isdataForRead}
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-
-                        onChange={(e) => {
-                          setFieldValue("subsidiaryId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allSubsidiaryList?.find(
-                            (option) => option.value === values.subsidiaryId
-                          ) || null
-                        }
-
-                        options={dashboard?.allSubsidiaryList}
-
-                        error={errors.subsidiaryId}
-                        touched={touched.subsidiaryId}
-                      />
-                    </div>
-
 
                   </div>
-                  {/* Following Mr. Mubin's instructions, I am using this type of code block. */}
-
-
-
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-2 mt-3">
-                      <Select
-                        label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
-                        name="title"
-                        value={values.title}
-                        onChange={handleChange}
-
-                        style={{ display: "block" }}
-                      >
-                        <option label="Select Title" />
-                        <option value="Mr." label="Mr." />
-                        <option value="Mrs." label="Mrs." />
-                        <option value="Ms." label="Ms." />
-                        <option value="Dr." label="Dr." />
-                        <option value="Professor." label="Professor." />
-
-
-                      </Select>
-                      {errors.title && touched.title && (
-                        <div className="invalid-text">{errors.title}</div>
-                      )}
-                    </div>
-
-
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="firstName"
-                        component={Input}
-                        placeholder=" first name"
-                        label={<span> First Name<span style={{ color: 'red' }}>*</span></span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="middleName"
-                        component={Input}
-                        placeholder=" middle name"
-                        label={<span> Middle Name</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="lastName"
-                        component={Input}
-                        placeholder=" last name"
-                        label={<span> Last Name<span style={{ color: 'red' }}>*</span></span>}
-                        autoComplete="off"
-                      />
-                    </div>
-
-
-                  </div>
-
-
 
                 </div>
 

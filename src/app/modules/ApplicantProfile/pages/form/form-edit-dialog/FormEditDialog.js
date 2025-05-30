@@ -67,7 +67,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
   }, [id, dispatch]);
 
 
-  const saveForm = async (formData,image) => {
+  const saveForm = async (formData, image) => {
 
 
 
@@ -83,7 +83,10 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
       } else if (typeof formData?.file == "string") {
         formData.file = formData.file;
       }
-      dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
+      formData.profile_image = image;
+
+
+        dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
 
 
 
@@ -173,7 +176,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
-        backdrop="static"
+      backdrop="static"
     >
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
