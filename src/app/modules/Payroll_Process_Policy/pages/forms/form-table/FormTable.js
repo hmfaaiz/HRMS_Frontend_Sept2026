@@ -298,6 +298,12 @@ export function FormTable(user) {
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
+        default_loan_accountId: Yup.number()
+        .when('isEnableAccounting', {
+          is: true, // if select value is 2
+          then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
       payrollTax_DeductionTypeId: Yup.number()
         .when('isEnableTax', {
           is: true, // if select value is 2
@@ -418,6 +424,7 @@ export function FormTable(user) {
     isEnableAccounting: false,
     basic_pay_accountId: "",
     payroll_payable_accountId: "",
+    default_loan_accountId: "",
     // isGroupEarningOnAccount: "",
     // isGroupDeduductionOnAccount: "",
     // isAccrueGratuityOnPayroll: "",
@@ -503,6 +510,7 @@ export function FormTable(user) {
         isEnableAccounting: user.isEnableAccounting,
         basic_pay_accountId: user.basic_pay_accountId,
         payroll_payable_accountId: user.payroll_payable_accountId,
+        default_loan_accountId: user.default_loan_accountId,
         // isGroupEarningOnAccount: user.isGroupEarningOnAccount,
         // isGroupDeduductionOnAccount: user.isGroupDeduductionOnAccount,
         // isAccrueGratuityOnPayroll: user.isAccrueGratuityOnPayroll,
@@ -1031,6 +1039,25 @@ Payroll Approver
                       }
                       error={errors.payroll_payable_accountId}
                       touched={touched.payroll_payable_accountId}
+                      options={dashboard.allPayrollPayableAccounts}
+                    />
+                  </div>
+                                    <div className="col-12 col-md-4 mt-3">
+                    <SearchSelect
+                      name="default_loan_accountId"
+                      label={<span>Default Loan Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
+                      onChange={(e) => {
+                        setFieldValue("default_loan_accountId", e.value || null);
+                        setDefaultPaybleAccount(e);
+                      }}
+                      value={
+                        dashboard.allPayrollPayableAccounts.find(
+                          (option) => option.value === values.default_loan_accountId
+                        ) || null
+                      }
+                      error={errors.default_loan_accountId}
+                      touched={touched.default_loan_accountId}
                       options={dashboard.allPayrollPayableAccounts}
                     />
                   </div>

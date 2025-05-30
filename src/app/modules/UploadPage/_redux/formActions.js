@@ -5,32 +5,35 @@ import { SERVER_MESSAGES } from "../../../utils/constants";
 import { downloadTemplateExcel } from "../../../../_metronic/redux/dashboardActions";
 const { actions } = UploadDataSlice;
 
-
 /**
- * 
+ *
  * Download Excel Template from server by type
- * 
- * @param {Object} queryparm 
- * @returns 
+ *
+ * @param {Object} queryparm
+ * @returns
  */
-export const downloadTemplate = (document, type, fileName) => async (dispatch) => {
-  dispatch(downloadTemplateExcel(document, type, fileName))
+export const downloadTemplate = (document, type, fileName) => async (
+  dispatch
+) => {
+  dispatch(downloadTemplateExcel(document, type, fileName));
 };
 
-
 /**
- * 
+ *
  * Save Leave Data
- * 
- * @param {Object} queryparm 
- * @returns 
+ *
+ * @param {Object} queryparm
+ * @returns
  */
-export const saveLeaveData = (formData, setLoading, clearForm) => async (dispatch) => {
-  return requestFromServer.saveLeaveData(formData)
+export const saveLeaveData = (formData, setLoading, clearForm) => async (
+  dispatch
+) => {
+  return requestFromServer
+    .saveLeaveData(formData)
     .then((response) => {
       setLoading(false);
       clearForm();
-      toast.success('Leaves Uploaded Successfully', {
+      toast.success("Leaves Uploaded Successfully", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -42,27 +45,76 @@ export const saveLeaveData = (formData, setLoading, clearForm) => async (dispatc
     })
     .catch((error) => {
       setLoading(false);
-      error.clientMessage = 'Some Error Occured. Try again later';
-      toast.error(error?.response?.status == 400 ? error?.response?.data?.message : error.clientMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(
+        error?.response?.status == 400
+          ? error?.response?.data?.message
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
     });
 };
 
-
-
-export const saveAttendanceSheetData = (formData, setLoading, clearForm) => async (dispatch) => {
-  return requestFromServer.saveAttendanceSheetData(formData)
+export const saveAttendanceSheetData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveAttendanceSheetData(formData)
     .then((response) => {
       setLoading(false);
       clearForm();
-      toast.success(response.data.message ||'Attendance Uploaded Successfully', {
+      toast.success(
+        response.data.message || "Attendance Uploaded Successfully",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(
+        error?.response?.status == 400
+          ? error?.response?.data?.message
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    });
+};
+
+export const saveLoanData = (formData, setLoading, clearForm) => async (
+  dispatch
+) => {
+  return requestFromServer
+    .saveLoanData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("Loan Uploaded Successfully", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -74,15 +126,20 @@ export const saveAttendanceSheetData = (formData, setLoading, clearForm) => asyn
     })
     .catch((error) => {
       setLoading(false);
-      error.clientMessage = 'Some Error Occured. Try again later';
-      toast.error(error?.response?.status == 400 ? error?.response?.data?.message : error.clientMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(
+        error?.response?.status == 400
+          ? error?.response?.data?.message
+          : error.clientMessage,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
     });
 };

@@ -14,6 +14,7 @@ export const EmployeeSelection = ({
   logedInEmpoyee,
   leaveApprovalCount,
   attendanceApprovalCount,
+  loanApprovalCount
 }) => {
   return (
     <div className="row">
@@ -132,6 +133,7 @@ export const EmployeeSelection = ({
         <PendingRequestSelf
           leaveApprovalCount={leaveApprovalCount}
           attendanceApprovalCount={attendanceApprovalCount}
+          loanApprovalCount={loanApprovalCount}
         />
       </div>
     </div>

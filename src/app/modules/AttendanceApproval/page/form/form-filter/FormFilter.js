@@ -160,9 +160,9 @@ export const FormFilter = ({ loading, queryParams }) => {
                           />
                         </div>
                       </div>
-                      {/* Leave Date Failing */}
+                      {/* Attendance Date Failing */}
                       <div className="col-12 col-md-12 mt-4">
-                        <h6>Leave Date falling between</h6>
+                        <h6>Attendance Date falling between</h6>
 
                         <div className="from-group row">
                           <div className="col-12 col-md-4">

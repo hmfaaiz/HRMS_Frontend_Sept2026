@@ -68,6 +68,8 @@ export const AdminPortal = () => {
                     color: "#ffffff",
                     padding: "1rem",
                     borderRadius: "5px",
+                    fontSize: "1.1rem",
+                    fontWeight: "bold",
                   }}
                   className="d-flex justify-content-between align-items-center p-3"
                 >
@@ -111,13 +113,13 @@ export const AdminPortal = () => {
                 <div className="col-md-3">
                   {allDashboardAlerts.length > 0 &&
                     allDashboardAlerts.map((e) => {
-                      if (e?.master_Id === panels[activeKey]?.resourceId) {
+                      // if (e?.master_Id === panels[activeKey]?.resourceId) {
                         if (e?.dashlet_type === "chart") {
                           return <ChartData data={e} />;
                         } else if (e?.dashlet_type === "small_table") {
                           return <SmallTable data={e} />;
                         }
-                      }
+                      // }
                     })}
                 </div>
               </div>

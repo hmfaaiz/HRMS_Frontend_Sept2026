@@ -96,6 +96,8 @@ import { PayrollPreviewSlice } from "../app/modules/PayrollPreview/_redux/Payrol
 import { LoanRegisterSlice } from "../app/modules/LoanRegister/_redux/EmployeeRegisterSlice";
 import { ReimbursementRegisterSlice } from "../app/modules/ReimbursementRegister/_redux/ReimbursementRegisterSlice";
 import { JobVacancySlice } from "../app/modules/JobVacancy/_redux/redux-Slice";
+import { LoanRequestSlice } from "../app/modules/Loan_Request/_redux/redux-Slice";
+import { LoanApprovalSlice } from "../app/modules/LoanApproval/redux/formSlice";
 import { ApplicantProfileSlice } from "../app/modules/ApplicantProfile/_redux/redux-Slice";
 import { ResumeSearchEngineSlice } from "../app/modules/ResumeSearchEngine/_redux/redux-Slice";
 
@@ -183,15 +185,17 @@ export const rootReducer = combineReducers({
   hod_setup: HODSlice.reducer,
   calendar: CalendarSlice.reducer,
   leave_approval: LeaveApprovalSlice.reducer,
-  leave_calendar:LeaveCalendarSlice.reducer,
-  roster_calendar:RosterCalendarSlice.reducer,
-  attendance_calendar:AttendanceCalendarSlice.reducer,
-  loan_register:LoanRegisterSlice.reducer,
-  reimbursement_register:ReimbursementRegisterSlice.reducer,
-  job_vacancy:JobVacancySlice.reducer,
+  leave_calendar: LeaveCalendarSlice.reducer,
+  roster_calendar: RosterCalendarSlice.reducer,
+  attendance_calendar: AttendanceCalendarSlice.reducer,
+  loan_register: LoanRegisterSlice.reducer,
+  reimbursement_register: ReimbursementRegisterSlice.reducer,
+  job_vacancy: JobVacancySlice.reducer,
   attendance_request: AttendanceRequestSlice.reducer,
   attendance_approval: AttendanceApprovalSlice.reducer,
   payroll_preview: PayrollPreviewSlice?.reducer,
+  loan_request: LoanRequestSlice.reducer,
+  loan_approval: LoanApprovalSlice.reducer,
   applicant_profile: ApplicantProfileSlice?.reducer,
   resume_search_engine:ResumeSearchEngineSlice.reducer,
 

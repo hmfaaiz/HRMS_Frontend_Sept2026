@@ -74,22 +74,40 @@ const ChartData = ({ data }) => {
       className="my-3"
       defaultActiveKey={data?.accordian_open ? "0" : ""}
     >
-      <Card className="">
+      <Card className="dashboard_card">
         <Accordion.Toggle
           as={Button}
           variant="link"
           eventKey="0"
+          style={{
+            backgroundColor: "#fafafc",
+          }}
           className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
         >
-          <span className="">{data?.dashlet_name}</span>
-          <KeyboardArrowDown />
+          <span
+            style={{
+              fontSize: "1.3rem",
+              fontWeight: "700",
+            }}
+          >
+            {data?.dashlet_name}
+          </span>
+          <span
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#0093dd",
+              color: "#fff",
+            }}
+          >
+            <KeyboardArrowDown style={{ fontSize: "25px" }} />
+          </span>
         </Accordion.Toggle>
 
         <Accordion.Collapse eventKey="0">
           <div
             style={{
-              maxHeight: "415px",
-              minHeight: "415px",
+              maxHeight: "385px",
+              minHeight: "385px",
               overflowY: "auto",
             }}
             className="pt-3 d-flex flex-column align-items-center"
@@ -136,11 +154,16 @@ const ChartData = ({ data }) => {
               })}
             </div>
             <div
-              className="d-flex flex-wrap gap-2 justify-content-center px-2 align-items-center"
-              style={{ alignSelf: "center" }}
+              className="d-grid px-2"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr", // Two equal-width columns
+                gap: "8px", // Space between grid items
+                alignItems: "center",
+              }}
             >
               {departmentData.labels.map((label, idx) => (
-                <div key={label}>
+                <div key={label} className="d-flex align-items-center">
                   <span
                     style={{
                       display: "inline-block",
@@ -149,11 +172,10 @@ const ChartData = ({ data }) => {
                       borderRadius: "50%",
                       background:
                         departmentData.datasets[0].backgroundColor[idx],
+                      marginRight: 5,
                     }}
                   />
-                  <span style={{ margin: "0px 5px", fontSize: "10px" }}>
-                    {label}
-                  </span>
+                  <span style={{ fontSize: "10px" }}>{label}</span>
                 </div>
               ))}
             </div>

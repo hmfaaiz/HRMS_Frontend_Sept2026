@@ -196,11 +196,14 @@ const LeaveApprovalModule = lazy(() =>
   import("./modules/LeaveApproval/page/index")
 );
 
-const loanRegisterModule = lazy(() => import("./modules/LoanRegister/pages/index"));
-const reimbursementRegisterModule = lazy(() => import("./modules/ReimbursementRegister/pages/index"));
+const loanRegisterModule = lazy(() =>
+  import("./modules/LoanRegister/pages/index")
+);
+const reimbursementRegisterModule = lazy(() =>
+  import("./modules/ReimbursementRegister/pages/index")
+);
 
 const jobVacancyModule = lazy(() => import("./modules/JobVacancy/pages/index"));
-
 
 const AttendanceRequestModule = lazy(() =>
   import("./modules/AttendanceRequest/pages/index")
@@ -213,6 +216,8 @@ const AttendanceApprovalModule = lazy(() =>
 const PayrollPreview = lazy(() =>
   import("./modules/PayrollPreview/pages/index")
 );
+const LoanRequest = lazy(() => import("./modules/Loan_Request/pages/index"));
+const LoanApproval = lazy(() => import("./modules/LoanApproval/page/index"));
 
 const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
 const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
@@ -298,11 +303,13 @@ const ROUTES = {
   workflow_policy: workFlowPolicyModule,
   hod_setup: HODManagement,
   leaveapproval: LeaveApprovalModule,
-  loan_register:loanRegisterModule,
-  reimbursement_register:reimbursementRegisterModule,
-  job_vacancy:jobVacancyModule,
+  loan_register: loanRegisterModule,
+  reimbursement_register: reimbursementRegisterModule,
+  job_vacancy: jobVacancyModule,
   attendance_request: AttendanceRequestModule,
   attendance_approval: AttendanceApprovalModule,
+  loan_request: LoanRequest,
+  loan_approval: LoanApproval,
   payslip : PayrollPreview,
   applicant_profile:ApplicantProfileModule,
   resume_search_engine:ResumeSearchEngineModule,
