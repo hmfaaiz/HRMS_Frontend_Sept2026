@@ -219,8 +219,12 @@ const PayrollPreview = lazy(() =>
 const LoanRequest = lazy(() => import("./modules/Loan_Request/pages/index"));
 const LoanApproval = lazy(() => import("./modules/LoanApproval/page/index"));
 
-
-const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
+const ApplicantProfileModule = lazy(() =>
+  import("./modules/ApplicantProfile/pages/index")
+);
+const InterviewSchedule = lazy(() =>
+  import("./modules/Interview_Schedule/index")
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -310,10 +314,9 @@ const ROUTES = {
   attendance_approval: AttendanceApprovalModule,
   loan_request: LoanRequest,
   loan_approval: LoanApproval,
-  payslip : PayrollPreview,
-  applicant_profile:ApplicantProfileModule,
-  
- 
+  payslip: PayrollPreview,
+  applicant_profile: ApplicantProfileModule,
+  interview_schedule: InterviewSchedule,
 };
 
 export default function BasePage() {
