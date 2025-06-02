@@ -101,6 +101,7 @@ export const getApplicantProfileEditSchema = (formData) => {
 
 
     applicantCanJoin: Yup.number()
+      .min(1, VALIDATION_MESSAGES.minOneValue)
       .required(VALIDATION_MESSAGES.required),
 
     lastDawnSalary: Yup.number()
