@@ -219,12 +219,11 @@ const PayrollPreview = lazy(() =>
 const LoanRequest = lazy(() => import("./modules/Loan_Request/pages/index"));
 const LoanApproval = lazy(() => import("./modules/LoanApproval/page/index"));
 
-const ApplicantProfileModule = lazy(() =>
-  import("./modules/ApplicantProfile/pages/index")
-);
 const InterviewSchedule = lazy(() =>
   import("./modules/Interview_Schedule/index")
 );
+const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
+const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -317,6 +316,11 @@ const ROUTES = {
   payslip: PayrollPreview,
   applicant_profile: ApplicantProfileModule,
   interview_schedule: InterviewSchedule,
+  payslip : PayrollPreview,
+  applicant_profile:ApplicantProfileModule,
+  resume_search_engine:ResumeSearchEngineModule,
+  
+ 
 };
 
 export default function BasePage() {
@@ -339,6 +343,7 @@ export default function BasePage() {
             .join("-")
             .toLowerCase();
           if (ROUTES[accessName]) {
+   
             return (
               <Route
                 key={key}
