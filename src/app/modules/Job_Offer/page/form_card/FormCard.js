@@ -10,6 +10,7 @@ import JobSection from "../job_section/job_section";
 import ApplicationSection from "../applicant_section/applicant_section";
 import { useSelector, shallowEqual } from "react-redux";
 import { useFormUIContext } from "../FormUIContext";
+import GenerateSection from "../generate_section/generate_section";
 export default function FormCard() {
   const FormUIContext = useFormUIContext();
   const { userAccess } = useSelector((state) => {
@@ -42,7 +43,7 @@ export default function FormCard() {
           <ApplicationSection />
           <br />
           <hr />
-        
+         <GenerateSection />
 
     
         </CardBody>

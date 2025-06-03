@@ -40,7 +40,7 @@ export default function JobSection() {
     }
   }, [formUIProps?.selectedJob]);
 
-  console.log("jobData111", jobData)
+
   return (
     <div className="col-12">
       {/* job selection area  */}

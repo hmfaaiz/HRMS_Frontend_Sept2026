@@ -20,3 +20,12 @@ export function getApplicantProfile(body) {
   );
 }
 
+export function generatejob_offer_letter(body) {
+
+  const config = {
+    responseType:  'arraybuffer', 
+  };
+
+  return axios.post(`${USERS_URL}/job_offer/generate-offer-letter`, body,config);
+}
+
