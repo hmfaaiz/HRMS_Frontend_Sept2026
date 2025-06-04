@@ -37,6 +37,15 @@ export default function GenerateSection() {
         dispatch(actions.Generatejob_offer_letter(updatedBody));
     }
 
+     const previewOfferLetter = (values) => {
+console.log("hit111")
+        const updatedBody = {
+            ...values,
+            regenerated: false, // add new field here
+        };
+        dispatch(actions.Previewjob_offer_letter(updatedBody));
+    }
+
 
     useEffect(() => {
         dispatch(fetchAllFormsMenu(158, "allDesignations"));
@@ -59,7 +68,7 @@ export default function GenerateSection() {
                                     name="headOfHrId"
                                     label={
                                         <span>
-                                            Head Of HR
+                                           Signatory 1
                                         </span>
                                     }
                                     isDisabled={
@@ -79,17 +88,12 @@ export default function GenerateSection() {
                                 />
                             </div>
 
-
-                        </div>
-
-
-                        <div className="col-12 col-md-12 mt-3 row">
                             <div className="col-12 col-md-4 mt-3">
                                 <SearchSelect
                                     name="hrId"
                                     label={
                                         <span>
-                                            HR
+                                           Signatory 2
                                         </span>
                                     }
                                     isDisabled={
@@ -108,35 +112,64 @@ export default function GenerateSection() {
                                     options={dashboard?.allEmployeesWithNoPermissionList}
                                 />
                             </div>
+                        </div>
+
+
+                        <div className="col-12 col-md-12 mt-3 row">
+
 
 
                         </div>
 
+                        <div className="col-12 col-md-12 mt-4 row">
+                            <div className="">
+                                <button
+                                    className="ml-3 btn btn-primary btn-elevate"
+                                    onClick={() => {
+                                        generateOfferLetter({
+                                            applicantId: formUIProps.applicantId,
+                                            applicantVacancyId: formUIProps.applicantVacancyId,
+                                            jobVacancyId: formUIProps.jobVacancyId,
+                                            headOfHrId: values.headOfHrId,
 
-                        <div className="col-12 col-md-3 mt-4">
-                            <button
-                                className="ml-3 btn btn-primary btn-elevate"
-                                onClick={() => {
-                                    generateOfferLetter({
-                                        applicantId: formUIProps.applicantId,
-                                        applicantVacancyId: formUIProps.applicantVacancyId,
-                                        jobVacancyId: formUIProps.jobVacancyId,
-                                        headOfHrId: values.headOfHrId,
+                                            hrId: values.hrId,
 
-                                        hrId: values.hrId,
+                                        });
+                                    }}
+                                    type="button"
+                                    disabled={
+                                        !formUIProps.applicantVacancyId ||
+                                        !formUIProps.applicantId ||
+                                        !formUIProps.jobVacancyId
+                                    }
+                                >
+                                    Generate Offer Letter
+                                </button>
+                            </div>
 
-                                    });
-                                }}
-                                type="button"
-                                disabled={
-                                    !formUIProps.applicantVacancyId ||
-                                    !formUIProps.applicantId ||
-                                    !formUIProps.jobVacancyId
-                                }
-                            >
-                                Generate Offer Letter
-                            </button>
+                            <div className="">
+                                <button
+                                    className="ml-3 btn btn-primary btn-elevate"
+                                    onClick={() => {
+                                        console.log("hiting")
+                                       previewOfferLetter({
+                                            applicantId: formUIProps.applicantId,
+                                            applicantVacancyId: formUIProps.applicantVacancyId,
+                                            jobVacancyId: formUIProps.jobVacancyId,
+                                            headOfHrId: values.headOfHrId,
+
+                                            hrId: values.hrId,
+
+                                        });
+
+                                        window.open('/job_offer/read-job-offer-preview');
+                                    }}
+                                >
+                                    Preview Offer Letter
+                                </button>
+                            </div>
                         </div>
+
                     </div>
                 </Form>
             )

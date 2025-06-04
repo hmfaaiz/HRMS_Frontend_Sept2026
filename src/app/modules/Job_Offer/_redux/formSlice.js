@@ -8,8 +8,8 @@ const initialState = {
   actionsLoading: null,
   totalCount: 0,
   entities: null,
-  payrollData: null,
-  workflowStatusList: [],
+  previewJobOfferLetterwData:null,
+
 };
 
 export const callTypes = {
@@ -49,10 +49,18 @@ export const JobOfferSlice = createSlice({
       state.error = null;
       state.applicantProfile = action.payload;
     },
-    InterviewCreated: (state, action) => {
-      state.actionsLoading = false;
+    PreviewjobOfferLetterFetched: (state, action) => {
+
+      const previewJobOfferLetterwData = action.payload;
+      console.log("previewJobOfferLetterwData111",action.payload)
+      state.listLoading = false;
       state.error = null;
-      state.entities.unshift(action.payload);
+      state.previewJobOfferLetterwData = previewJobOfferLetterwData;
+
+
+      localStorage.setItem('JobOfferPreview', JSON.stringify(previewJobOfferLetterwData));
+      state.registerPreviewLoading = false;
     },
+
   },
 });

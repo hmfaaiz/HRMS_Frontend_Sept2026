@@ -29,3 +29,10 @@ export function generatejob_offer_letter(body) {
   return axios.post(`${USERS_URL}/job_offer/generate-offer-letter`, body,config);
 }
 
+
+export function previewjob_offer_letter(body) {
+
+
+  return axios.post(`${USERS_URL}/job_offer/read-job-offer-preview`, body);
+}
+
