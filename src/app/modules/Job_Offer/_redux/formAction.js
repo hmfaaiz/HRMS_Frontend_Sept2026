@@ -54,7 +54,10 @@ export const fetchApplicantProfile = (Id) => async (dispatch) => {
 
 export const Generatejob_offer_letter = (body) => async (dispatch) => {
 
-
+  if (!body.headOfHrId || !body.hrId) {
+    toast.error("Please select all the fields");
+    return;
+  }
 
   // dispatch(actions.startCall({ callType: callTypes.empWise }));
   return requestFromServer.generatejob_offer_letter(body)

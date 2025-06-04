@@ -45,7 +45,7 @@ export default function GenerateSection() {
 
     return (
         <Formik
-            initialValues={{ designationId: "" }} // Provide initial values
+            initialValues={{}} // Provide initial values
             onSubmit={() => { }} // Dummy onSubmit or real one
         >
             {({ values, setFieldValue }) => (
@@ -79,30 +79,7 @@ export default function GenerateSection() {
                                 />
                             </div>
 
-                            <div className="col-12 col-md-4 mt-3">
-                                <SearchSelect
-                                    name="headOfHrDesignationId"
-                                    label={
-                                        <span>
-                                            Designation
-                                        </span>
-                                    }
-                                    isDisabled={
-                                        !formUIProps.applicantVacancyId ||
-                                        !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId
-                                    }
-                                    onChange={(e) => {
-                                        setFieldValue("headOfHrDesignationId", e?.value || null);
-                                    }}
-                                    value={
-                                        dashboard?.allDesignations?.find(
-                                            (option) => option.value === values.headOfHrDesignationId
-                                        ) || null
-                                    }
-                                    options={dashboard?.allDesignations}
-                                />
-                            </div>
+
                         </div>
 
 
@@ -132,30 +109,7 @@ export default function GenerateSection() {
                                 />
                             </div>
 
-                            <div className="col-12 col-md-4 mt-3">
-                                <SearchSelect
-                                    name="hrDesignationId"
-                                    label={
-                                        <span>
-                                            Designation
-                                        </span>
-                                    }
-                                    isDisabled={
-                                        !formUIProps.applicantVacancyId ||
-                                        !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId
-                                    }
-                                    onChange={(e) => {
-                                        setFieldValue("hrDesignationId", e?.value || null);
-                                    }}
-                                    value={
-                                        dashboard?.allDesignations?.find(
-                                            (option) => option.value === values.hrDesignationId
-                                        ) || null
-                                    }
-                                    options={dashboard?.allDesignations}
-                                />
-                            </div>
+
                         </div>
 
 
@@ -167,10 +121,10 @@ export default function GenerateSection() {
                                         applicantId: formUIProps.applicantId,
                                         applicantVacancyId: formUIProps.applicantVacancyId,
                                         jobVacancyId: formUIProps.jobVacancyId,
-                                        headOfHrId:values.headOfHrId,
-                                        headOfHrDesignationId: values.headOfHrDesignationId,
+                                        headOfHrId: values.headOfHrId,
+
                                         hrId: values.hrId,
-                                        hrDesignationId: values.hrDesignationId,
+
                                     });
                                 }}
                                 type="button"
