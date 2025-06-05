@@ -182,6 +182,7 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
                 onClick={() => {
                   dispatch(Generatejob_offer_letter(updatedBody));
                   closeToast();
+
                 }}
                 style={{
                   marginTop: "10px",
@@ -201,7 +202,7 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
         );
       } else if (status === 404) {
         toast.error(error?.response?.data?.message || "Not found");
-      } else {
+      } else if (status === 500) {
         toast.error(SERVER_MESSAGES.pdfFail);
       }
     });
@@ -223,5 +224,8 @@ export const Previewjob_offer_letter = (body) => (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't find user";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
+   
+        toast.error(error?.response?.data?.message || "Not found");
+      
     });
 };

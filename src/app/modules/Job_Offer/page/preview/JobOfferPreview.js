@@ -5,7 +5,7 @@ const JobOfferPreview = () => {
 
     useEffect(() => {
         const raw = localStorage.getItem('JobOfferPreview');
-        console.log("JobOfferPreview11111", raw);
+        localStorage.removeItem('JobOfferPreview'); // Clear it
         if (raw) {
             const parsed = JSON.parse(raw);
             setData(parsed);
@@ -79,7 +79,7 @@ const JobOfferPreview = () => {
                     <table style={{ width: '100%', fontSize: '12px' }}>
                         <tbody>
                             <tr>
-                                <td style={{ paddingTop: '20px' }}>Dear {recipientName},</td>
+                                <td style={{ paddingTop: '20px' }}><strong>Dear</strong> {recipientName},</td>
                                 <td style={{ textAlign: 'right' }}>Date: {date}</td>
                             </tr>
                         </tbody>
@@ -90,24 +90,31 @@ const JobOfferPreview = () => {
                         following terms and conditions:
                     </p>
 
-                    <table className="details" style={{ width: '100%', fontSize: '11px' }}>
+                    <table className="details" style={{
+    width: '100%',
+    fontSize: '11px',
+    borderCollapse: 'separate',
+    borderSpacing: '0 10px',
+  }}>
                         <tbody>
-                            {designation && <tr><td style={{ fontWeight: 'bold' }}>Designation (Position)</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{designation}</td></tr>}
-                            {department && <tr><td style={{ fontWeight: 'bold' }}>Department</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{department}</td></tr>}
-                            {monthlySalary && <tr><td style={{ fontWeight: 'bold' }}>Monthly Fixed Salary</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{monthlySalary}</td></tr>}
-                            {nic_no && <tr><td style={{ fontWeight: 'bold' }}>ID Card No</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{nic_no}</td></tr>}
-                            {passportNo && <tr><td style={{ fontWeight: 'bold' }}>Passport No</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{passportNo}</td></tr>}
-                            {appointmentType && <tr><td style={{ fontWeight: 'bold' }}>Appointment Type</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{appointmentType}</td></tr>}
-                            {jobPreferences && <tr><td style={{ fontWeight: 'bold' }}>Job Preferences</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{jobPreferences}</td></tr>}
-                            {startDate && <tr><td style={{ fontWeight: 'bold' }}>Commencement Date</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{startDate}</td></tr>}
-                            {probationPeriod && <tr><td style={{ fontWeight: 'bold' }}>Probation Period</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{probationPeriod} Months</td></tr>}
-                            {noticePeriod && <tr><td style={{ fontWeight: 'bold' }}>Notice Period</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: 'bold' }}>{noticePeriod} Days</td></tr>}
+                            {designation && <tr><td style={{ fontWeight: '900' }}>Designation (Position)</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{designation}</td></tr>}
+                            {department && <tr><td style={{ fontWeight: '900' }}>Department</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{department}</td></tr>}
+                            {monthlySalary && <tr><td style={{ fontWeight: '900' }}>Monthly Fixed Salary</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{monthlySalary}</td></tr>}
+                            {nic_no && <tr><td style={{ fontWeight: '900' }}>ID Card No</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{nic_no}</td></tr>}
+                            {passportNo && <tr><td style={{ fontWeight: '900' }}>Passport No</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{passportNo}</td></tr>}
+                            {appointmentType && <tr><td style={{ fontWeight: '900' }}>Appointment Type</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{appointmentType}</td></tr>}
+                            {jobPreferences && <tr><td style={{ fontWeight: '900' }}>Job Preferences</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{jobPreferences}</td></tr>}
+                            {startDate && <tr><td style={{ fontWeight: '900' }}>Commencement Date</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{startDate}</td></tr>}
+                            {probationPeriod && <tr><td style={{ fontWeight: '900' }}>Probation Period</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{probationPeriod} Months</td></tr>}
+                            {noticePeriod && <tr><td style={{ fontWeight: '900' }}>Notice Period</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{noticePeriod} Days</td></tr>}
                         </tbody>
                     </table>
 
-                    <div className="jobOfferLetter" style={{ marginTop: '10px' }}>
+                    {/* <div className="jobOfferLetter" style={{ marginTop: '10px' }}>
                         {jobOfferLetter}
-                    </div>
+                    </div> */}
+
+                      <div  className="jobOfferLetter" style={{ marginTop: '10px' }} dangerouslySetInnerHTML={{__html: jobOfferLetter}}></div>
 
                     <div className="footer" style={{ marginTop: '30px' }}>
                         <div

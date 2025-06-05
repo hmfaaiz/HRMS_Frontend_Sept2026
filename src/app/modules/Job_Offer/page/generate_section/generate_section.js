@@ -37,8 +37,8 @@ export default function GenerateSection() {
         dispatch(actions.Generatejob_offer_letter(updatedBody));
     }
 
-     const previewOfferLetter = (values) => {
-console.log("hit111")
+    const previewOfferLetter = (values) => {
+
         const updatedBody = {
             ...values,
             regenerated: false, // add new field here
@@ -66,11 +66,7 @@ console.log("hit111")
                             <div className="col-12 col-md-4 mt-3">
                                 <SearchSelect
                                     name="headOfHrId"
-                                    label={
-                                        <span>
-                                           Signatory 1
-                                        </span>
-                                    }
+                                    label={<span>Signatory 1</span>}
                                     isDisabled={
                                         !formUIProps.applicantVacancyId ||
                                         !formUIProps.applicantId ||
@@ -84,18 +80,18 @@ console.log("hit111")
                                             (option) => option.value === values.headOfHrId
                                         ) || null
                                     }
-                                    options={dashboard?.allEmployeesWithNoPermissionList}
+                                    options={
+                                        dashboard?.allEmployeesWithNoPermissionList?.filter(
+                                            (option) => option.value !== values.hrId // prevent same as Signatory 2
+                                        )
+                                    }
                                 />
                             </div>
 
                             <div className="col-12 col-md-4 mt-3">
                                 <SearchSelect
                                     name="hrId"
-                                    label={
-                                        <span>
-                                           Signatory 2
-                                        </span>
-                                    }
+                                    label={<span>Signatory 2</span>}
                                     isDisabled={
                                         !formUIProps.applicantVacancyId ||
                                         !formUIProps.applicantId ||
@@ -109,9 +105,14 @@ console.log("hit111")
                                             (option) => option.value === values.hrId
                                         ) || null
                                     }
-                                    options={dashboard?.allEmployeesWithNoPermissionList}
+                                    options={
+                                        dashboard?.allEmployeesWithNoPermissionList?.filter(
+                                            (option) => option.value !== values.headOfHrId // prevent same as Signatory 1
+                                        )
+                                    }
                                 />
                             </div>
+
                         </div>
 
 
@@ -150,9 +151,13 @@ console.log("hit111")
                             <div className="">
                                 <button
                                     className="ml-3 btn btn-primary btn-elevate"
+                                    disabled={
+                                        !formUIProps.applicantVacancyId ||
+                                        !formUIProps.applicantId ||
+                                        !formUIProps.jobVacancyId
+                                    }
                                     onClick={() => {
-                                        console.log("hiting")
-                                       previewOfferLetter({
+                                        previewOfferLetter({
                                             applicantId: formUIProps.applicantId,
                                             applicantVacancyId: formUIProps.applicantVacancyId,
                                             jobVacancyId: formUIProps.jobVacancyId,
@@ -161,8 +166,11 @@ console.log("hit111")
                                             hrId: values.hrId,
 
                                         });
+                                        const raw = localStorage.getItem('JobOfferPreview');
+                                        // if (raw) {
 
                                         window.open('/job_offer/read-job-offer-preview');
+                                        // }
                                     }}
                                 >
                                     Preview Offer Letter
