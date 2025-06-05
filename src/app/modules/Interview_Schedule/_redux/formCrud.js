@@ -32,11 +32,17 @@ export function createInterview(body) {
 }
 
 export function getInterviewList(body) {
-  return axios.post(`${USERS_URL}/interview_schedule/get-interview-list`, body);
+  return axios.post(
+    `${USERS_URL}/interview_schedule/read-interview-schedule`,
+    body
+  );
 }
 
 export function getInterviewById(body) {
-  return axios.post(`${USERS_URL}/interview_schedule/interview-by-id`, body);
+  return axios.post(
+    `${USERS_URL}/interview_schedule/read-interview-by-id`,
+    body
+  );
 }
 
 export function updateInterview(body) {
@@ -49,6 +55,26 @@ export function updateInterview(body) {
 export function deleteInterview(body) {
   return axios.post(
     `${USERS_URL}/interview_schedule/delete-interview-schedule`,
+    body
+  );
+}
+
+export function getApplicationStatusForHRRecommendation() {
+  return axios.get(
+    `${USERS_URL}/interview_schedule/read-application-status-for-hr-recommendation`
+  );
+}
+
+export function updateApplicantStatus(body) {
+  return axios.post(
+    `${USERS_URL}/interview_schedule/update-applicant-status`,
+    body
+  );
+}
+
+export function sendInterviewEmail(body) {
+  return axios.post(
+    `${USERS_URL}/interview_schedule/send-interview-email`,
     body
   );
 }

@@ -13,10 +13,10 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 export function FormUIProvider({ FormUIEvents, children }) {
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [applicantDetail, setApplicantDetail] = useState(null);
   const [applicantVacancyId, setApplicantVacancyId] = useState(null);
 
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
-  const [ids, setIds] = useState([]);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -47,21 +47,15 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setSelectedJob,
     selectedApplicant,
     setSelectedApplicant,
-    FormUIEvents,
+    ...FormUIEvents,
     applicantVacancyId,
     setApplicantVacancyId,
-
+    applicantDetail,
+    setApplicantDetail,
     queryParams,
     setQueryParamsBase,
     setQueryParams,
-    ids,
-    setIds,
     initUser,
-    newFormButtonClick: FormUIEvents.newFormButtonClick,
-    openEditFormDialog: FormUIEvents.openEditFormDialog,
-    openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
-    openActiveFormDialog: FormUIEvents.openActiveFormDialog,
-    openReadFormDialog: FormUIEvents.openReadFormDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>
