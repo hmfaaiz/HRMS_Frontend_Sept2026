@@ -269,4 +269,11 @@ export function getAllJobVacancy(body) {
   return axios.post(`${USERS_URL}/settings/read-all-job-vacancy`,
     body
   );
-}
+};
+
+
+export function getAllPostedJobVacancy(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-posted-job-vacancy`,
+    body
+  );
+};

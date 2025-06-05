@@ -224,6 +224,7 @@ const InterviewSchedule = lazy(() =>
 );
 const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
 const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
+const JobOfferModule = lazy(() => import("./modules/Job_Offer/page/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -319,6 +320,7 @@ const ROUTES = {
   payslip : PayrollPreview,
   applicant_profile:ApplicantProfileModule,
   resume_search_engine:ResumeSearchEngineModule,
+  job_offer:JobOfferModule,
   
  
 };

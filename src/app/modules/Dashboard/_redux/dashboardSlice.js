@@ -74,6 +74,8 @@ const initialDashboardState = {
   holidayList: [],
   allJobVacancyList:[],
   allDashboardAlerts: [],
+  allPostedJobVacancyList:[],
+
 };
 
 export const callTypes = {
@@ -303,5 +305,10 @@ export const dashboardSlice = createSlice({
     AllDashboardAlertsFetch: (state, action) => {
       state.allDashboardAlerts = action.payload;
     },
+     AllPostedJobVacancyFetch: (state, action) => {
+      state.allPostedJobVacancyList = action.payload;
+     
+    },
+
   },
 });

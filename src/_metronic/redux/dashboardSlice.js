@@ -71,6 +71,8 @@ const initialDashboardState = {
 
   allJobVacancyList: [],
   allApplicationStatusList: [],
+  allPostedJobVacancyList:[],
+ 
   
 };
 
@@ -250,6 +252,10 @@ export const dashboardSlice = createSlice({
     },
     AllJobVacancyFetch: (state, action) => {
       state.allJobVacancyList = action.payload;
+    },
+
+    AllPostedJobVacancyFetch: (state, action) => {
+      state.allPostedJobVacancyList = action.payload;
     },
 
 
