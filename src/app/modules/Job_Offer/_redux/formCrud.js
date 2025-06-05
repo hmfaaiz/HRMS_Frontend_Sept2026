@@ -36,3 +36,9 @@ export function previewjob_offer_letter(body) {
   return axios.post(`${USERS_URL}/job_offer/read-job-offer-preview`, body);
 }
 
+export function sendJobOfferEmail(body) {
+
+
+  return axios.post(`${USERS_URL}/job_offer/send-offer-letter`, body);
+}
+

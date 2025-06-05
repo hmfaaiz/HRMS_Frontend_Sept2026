@@ -214,7 +214,29 @@ export const Previewjob_offer_letter = (body) => (dispatch) => {
 
 
   return requestFromServer
-    .previewjob_offer_letter(body)
+    // .previewjob_offer_letter(body)
+    .sendJobOfferEmail(body)
+    .then((response) => {
+      const entities = response.data?.data;
+
+
+      dispatch(actions.PreviewjobOfferLetterFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+   
+        toast.error(error?.response?.data?.message || "Not found");
+      
+    });
+};
+export const SendJobOfferEmail = (body) => (dispatch) => {
+
+
+
+
+  return requestFromServer
+    .sendJobOfferEmail(body)
     .then((response) => {
       const entities = response.data?.data;
 

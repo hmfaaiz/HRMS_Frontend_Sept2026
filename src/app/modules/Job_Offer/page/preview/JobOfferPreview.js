@@ -79,14 +79,14 @@ const JobOfferPreview = () => {
                     <table style={{ width: '100%', fontSize: '12px' }}>
                         <tbody>
                             <tr>
-                                <td style={{ paddingTop: '20px' }}><strong>Dear</strong> {recipientName},</td>
+                                <td style={{ paddingTop: '20px' }}><strong>Dear {recipientName},</strong> </td>
                                 <td style={{ textAlign: 'right' }}>Date: {date}</td>
                             </tr>
                         </tbody>
                     </table>
 
                     <p>
-                        The {companyName} is delighted to offer you the below-mentioned position based in {locationName} under the
+                        The <strong>{companyName} </strong>is delighted to offer you the below-mentioned position based in  <strong>{locationName}</strong> under the
                         following terms and conditions:
                     </p>
 
@@ -106,7 +106,7 @@ const JobOfferPreview = () => {
                             {jobPreferences && <tr><td style={{ fontWeight: '900' }}>Job Preferences</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{jobPreferences}</td></tr>}
                             {startDate && <tr><td style={{ fontWeight: '900' }}>Commencement Date</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{startDate}</td></tr>}
                             {probationPeriod && <tr><td style={{ fontWeight: '900' }}>Probation Period</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{probationPeriod} Months</td></tr>}
-                            {noticePeriod && <tr><td style={{ fontWeight: '900' }}>Notice Period</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{noticePeriod} Days</td></tr>}
+                          
                         </tbody>
                     </table>
 
