@@ -18,6 +18,10 @@ export default function GenerateSection() {
             setApplicantVacancyId: FormUIContext?.setApplicantVacancyId,
             applicantVacancyId: FormUIContext?.applicantVacancyId,
             jobVacancyId: FormUIContext?.selectedJob,
+            setHeadOfHrId: FormUIContext?.setHeadOfHrId,
+            setHrId: FormUIContext?.setHrId,
+            hrId: FormUIContext?.hrId,
+            headOfHrId: FormUIContext?.headOfHrId,
         };
     });
 
@@ -28,14 +32,7 @@ export default function GenerateSection() {
     //     };
     // }, shallowEqual);
     const { dashboard } = useSelector((state) => state);
-    const generateOfferLetter = (values) => {
 
-        const updatedBody = {
-            ...values,
-            regenerated: false, // add new field here
-        };
-        dispatch(actions.Generatejob_offer_letter(updatedBody));
-    }
 
     const previewOfferLetter = (values) => {
 
@@ -74,7 +71,11 @@ export default function GenerateSection() {
                                     }
                                     onChange={(e) => {
                                         setFieldValue("headOfHrId", e?.value || null);
-                                    }}
+                                           
+            formUIProps.setHeadOfHrId(e?.value);
+
+          }}
+                                    
                                     value={
                                         dashboard?.allEmployeesWithNoPermissionList?.find(
                                             (option) => option.value === values.headOfHrId
@@ -99,6 +100,7 @@ export default function GenerateSection() {
                                     }
                                     onChange={(e) => {
                                         setFieldValue("hrId", e?.value || null);
+                                        formUIProps.setHrId(e?.value);
                                     }}
                                     value={
                                         dashboard?.allEmployeesWithNoPermissionList?.find(
@@ -123,7 +125,7 @@ export default function GenerateSection() {
                         </div>
 
                         <div className="col-12 col-md-12 mt-4 row">
-                            <div className="">
+                            {/* <div className="">
                                 <button
                                     className="ml-3 btn btn-primary btn-elevate"
                                     onClick={() => {
@@ -146,7 +148,7 @@ export default function GenerateSection() {
                                 >
                                     Generate Offer Letter
                                 </button>
-                            </div>
+                            </div> */}
 
                             <div className="">
                                 <button
@@ -157,6 +159,8 @@ export default function GenerateSection() {
                                         !formUIProps.jobVacancyId
                                     }
                                     onClick={() => {
+                               
+                                        localStorage.setItem('formUIProps', JSON.stringify(formUIProps));
                                         previewOfferLetter({
                                             applicantId: formUIProps.applicantId,
                                             applicantVacancyId: formUIProps.applicantVacancyId,
@@ -166,7 +170,9 @@ export default function GenerateSection() {
                                             hrId: values.hrId,
 
                                         });
-                                        const raw = localStorage.getItem('JobOfferPreview');
+                                        
+
+                                      
                                         // if (raw) {
 
                                         window.open('/job_offer/read-job-offer-preview');

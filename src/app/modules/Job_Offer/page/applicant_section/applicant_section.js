@@ -24,6 +24,7 @@ export default function ApplicationSection() {
     return {
       applicants: state?.job_offer?.applicants,
       applicantProfile: state?.job_offer?.applicantProfile,
+    
     };
   }, shallowEqual);
 

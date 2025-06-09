@@ -14,6 +14,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [applicantVacancyId, setApplicantVacancyId] = useState(null);
+  const [headOfHrId, setHeadOfHrId] = useState(null);
+  const [hrId, setHrId] = useState(null);
 
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds] = useState([]);
@@ -31,15 +33,15 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
   const initUser = {
-    Id: "",
-    interview_date: "",
-    interview_time: "",
-    locationId: "",
-    interview_detail: "",
-    interview_remarks: "",
-    interview_recommendation: "",
-    recommendedApplicantStatusId: null,
-    interviewers: [],
+    // Id: "",
+    // interview_date: "",
+    // interview_time: "",
+    // locationId: "",
+    // interview_detail: "",
+    // interview_remarks: "",
+    // interview_recommendation: "",
+    // recommendedApplicantStatusId: null,
+    // interviewers: [],
   };
 
   const value = {
@@ -56,6 +58,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setQueryParams,
     ids,
     setIds,
+    setHrId,
+    hrId,
+    setHeadOfHrId,
+    headOfHrId,
     initUser,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
