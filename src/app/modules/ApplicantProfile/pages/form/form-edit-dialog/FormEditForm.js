@@ -801,7 +801,7 @@ export function FormEditForm({
                             <th className="col-2">Application Status</th>
                             <th className="col-2"> Status Date</th>
 
-                            <th className="col-2">Appointment Type Type</th>
+                            <th className="col-2">Appointment Type</th>
                             <th className="col-1">Active Vacancy</th>
                           </tr>
                         </thead>
