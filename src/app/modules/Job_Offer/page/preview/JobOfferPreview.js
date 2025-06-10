@@ -43,7 +43,7 @@ const JobOfferPreview = () => {
 
     useEffect(() => {
         if (formUIProps2) {
-           
+
         }
     }, [formUIProps2]);
 
@@ -231,9 +231,39 @@ const JobOfferPreview = () => {
 
                                     <strong>Best regards,</strong></div>
 
-                                <br />
-                                <br />
-                                <br />
+
+                                <div className="footer" style={{ marginTop: '30px' }}>
+                                    <div
+                                        className="signature"
+                                        style={{
+                                            marginTop: '40px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            fontSize: '11px'
+                                        }}
+                                    >
+                                        {directorName && (
+                                            <div>
+                                                <hr />
+                                                <strong>{directorName}</strong><br />
+                                                {headOfHrDesignation && <>{headOfHrDesignation}<br /></>}
+                                                {companyName && <>{companyName}</>}
+                                            </div>
+                                        )}
+
+                                        {hrName && (
+                                            <div>
+                                                <hr />
+                                                <strong>{hrName}</strong><br />
+                                                {hrDesignation && <>{hrDesignation}<br /></>}
+                                                {companyName && <>{companyName}</>}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
                                 <div>
 
                                     <strong>Candidate Acceptance</strong>
@@ -246,36 +276,7 @@ const JobOfferPreview = () => {
 
                                 </div>
                             </div>
-                            <div className="footer" style={{ marginTop: '30px' }}>
-                                <div
-                                    className="signature"
-                                    style={{
-                                        marginTop: '40px',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        fontSize: '11px'
-                                    }}
-                                >
-                                    {directorName && (
-                                        <div>
-                                            <hr />
-                                            <strong>{directorName}</strong><br />
-                                            {headOfHrDesignation && <>{headOfHrDesignation}<br /></>}
-                                            {companyName && <>{companyName}</>}
-                                        </div>
-                                    )}
 
-                                    {hrName && (
-                                        <div>
-                                            <hr />
-                                            <strong>{hrName}</strong><br />
-                                            {hrDesignation && <>{hrDesignation}<br /></>}
-                                            {companyName && <>{companyName}</>}
-                                        </div>
-                                    )}
-                                </div>
-
-                            </div>
                         </div>
                     </div>
                 </div>

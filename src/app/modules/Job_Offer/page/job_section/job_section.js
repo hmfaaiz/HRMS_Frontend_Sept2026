@@ -98,7 +98,7 @@ export default function JobSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Subsidiary: </strong>
-                        {jobData?.subsidiary?.name || "N/A"}
+                        {jobData?.Subsidiary?.name || "N/A"}
                       </Col>
                       <Col md={6}>
                         <strong>Department: </strong>
@@ -106,7 +106,7 @@ export default function JobSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Country: </strong>
-                        {jobData?.country?.name || "N/A"}
+                        {jobData?.Country?.name || "N/A"}
                       </Col>
                       <Col md={6}>
                         <strong>City: </strong>
@@ -137,11 +137,11 @@ export default function JobSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Employee Type: </strong>
-                        {jobData?.employeeType?.formName || "N/A"}
+                        {jobData?.EmployeeType?.formName || "N/A"}
                       </Col>
                       <Col md={6}>
                         <strong>Employee Status: </strong>
-                        {jobData?.employeeStatus?.formName || "N/A"}
+                        {jobData?.EmployeeStatus?.formName || "N/A"}
                       </Col>
                     </Row>
                   </div>

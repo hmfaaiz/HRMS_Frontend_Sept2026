@@ -114,7 +114,7 @@ export default function ApplicationSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Religion: </strong>
-                        {applicantProfile?.religion?.formName || "N/A"}
+                        {applicantProfile?.Religion?.formName || "N/A"}
                       </Col>
                       <Col md={6}>
                         <strong>Id Card No.: </strong>
