@@ -24,6 +24,7 @@ export default function ApplicationSection() {
     return {
       applicants: state?.job_offer?.applicants,
       applicantProfile: state?.job_offer?.applicantProfile,
+    
     };
   }, shallowEqual);
 
@@ -113,7 +114,7 @@ export default function ApplicationSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Religion: </strong>
-                        {applicantProfile?.religion?.formName || "N/A"}
+                        {applicantProfile?.Religion?.formName || "N/A"}
                       </Col>
                       <Col md={6}>
                         <strong>Id Card No.: </strong>

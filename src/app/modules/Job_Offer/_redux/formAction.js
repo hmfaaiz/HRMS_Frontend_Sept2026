@@ -52,96 +52,10 @@ export const fetchApplicantProfile = (Id) => async (dispatch) => {
   }
 };
 
-// export const Generatejob_offer_letter = (body) => async (dispatch) => {
-
-//   // if (!body.headOfHrId || !body.hrId) {
-//   //   toast.error("Please select all the fields");
-//   //   return;
-//   // }
-
-//   // dispatch(actions.startCall({ callType: callTypes.empWise }));
-//   return requestFromServer.generatejob_offer_letter(body)
-
-
-
-//     .then((res) => {
-
-//       const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-//       const pdfUrl = URL.createObjectURL(pdfBlob);
-
-//       // Trigger file download
-//       const link = document.createElement('a');
-//       link.href = pdfUrl;
-//       link.setAttribute('download', 'job_offer_letter.pdf');
-//       document.body.appendChild(link);
-//       link.click();
-//       dispatch(actions.pdfFetched({}));
-//       document.body.removeChild(link);
-//       // dispatch(actions.catchError({ callType: callTypes.consolidated }));
-//       // dispatch(actions.catchError({ callType: callTypes.empWise }));
-//     })
-
-
-//     .catch((error) => {
-
-//       const status = error?.response?.status;
-//       console.log("error22", error.response)
-//       if (status === 409) {
-
-//         const updatedBody = {
-//           ...body,
-//           regenerated: true, // add new field here
-//         };
-//         toast.warning(
-//           ({ closeToast }) => (
-//             <div>
-//               Offer Letter already generated.
-//               <br />
-//               Are you sure you want to regenerate?
-//               <br />
-//               <button
-//                 onClick={() => {
-//                   dispatch(Generatejob_offer_letter(updatedBody)); // ✅ dispatch thunk again
-//                   closeToast(); // close the toast after clicking
-//                 }}
-//                 style={{
-//                   marginTop: "10px",
-//                   padding: "6px 12px",
-//                   backgroundColor: "#f0ad4e",
-//                   color: "#fff",
-//                   border: "none",
-//                   borderRadius: "4px",
-//                   cursor: "pointer"
-//                 }}
-//               >
-//                 Yes
-//               </button>
-//             </div>
-//           ),
-//           {
-//             autoClose: false,
-//             closeOnClick: true
-//           }
-//         );
-//       } else if (status === 404) {
-//         toast.error(error?.response?.data?.message, {
-//           position: "top-right",
-//           autoClose: 5000,
-//           hideProgressBar: false,
-//           closeOnClick: true,
-//           pauseOnHover: true,
-//           draggable: true,
-//           progress: undefined,
-//         });
-//       }
-
-//       // dispatch(actions.catchError({ error, callType: callTypes.consolidated }));
-//       // dispatch(actions.catchError({ error, callType: callTypes.empWise }));
-//     });
-// };
 
 
 export const Generatejob_offer_letter = (body) => async (dispatch) => {
+    dispatch(actions.startCall({ callType: callTypes.pdfGenerate }));
   return requestFromServer.generatejob_offer_letter(body)
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
@@ -154,6 +68,7 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
       link.click();
       dispatch(actions.pdfFetched({}));
       document.body.removeChild(link);
+       dispatch(actions.stopCall());
     })
     .catch((error) => {
       const status = error?.response?.status;
@@ -170,6 +85,7 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
       }
 
       if (status === 409) {
+
         const updatedBody = { ...body, regenerated: true };
         toast.warning(
           ({ closeToast }) => (
@@ -182,6 +98,7 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
                 onClick={() => {
                   dispatch(Generatejob_offer_letter(updatedBody));
                   closeToast();
+
                 }}
                 style={{
                   marginTop: "10px",
@@ -201,9 +118,10 @@ export const Generatejob_offer_letter = (body) => async (dispatch) => {
         );
       } else if (status === 404) {
         toast.error(error?.response?.data?.message || "Not found");
-      } else {
+      } else if (status === 500) {
         toast.error(SERVER_MESSAGES.pdfFail);
       }
+       dispatch(actions.stopCall());
     });
 };
 
@@ -213,6 +131,7 @@ export const Previewjob_offer_letter = (body) => (dispatch) => {
 
 
   return requestFromServer
+    // .previewjob_offer_letter(body)
     .previewjob_offer_letter(body)
     .then((response) => {
       const entities = response.data?.data;
@@ -223,5 +142,28 @@ export const Previewjob_offer_letter = (body) => (dispatch) => {
     .catch((error) => {
       error.clientMessage = "Can't find user";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
+
+      toast.error(error?.response?.data?.message || "Not found");
+
+    });
+};
+
+
+export const SendJobOfferEmail = (body) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.emailSend }));
+  return requestFromServer
+    .sendJobOfferEmail(body)
+    .then((response) => {
+      const entities = response.data?.data;
+      toast.success(SERVER_MESSAGES.emailSuccess)
+      dispatch(actions.stopCall());
+
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+
+      toast.error(SERVER_MESSAGES.emailFail || "Not found");
+ dispatch(actions.stopCall());
     });
 };

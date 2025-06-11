@@ -189,6 +189,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         isdataForRead={dataForRead}
         enableLoading={enableLoading}
         loading={loading}
+        disbaleLoading={disbaleLoading}
 
       />
       <ToastContainer
