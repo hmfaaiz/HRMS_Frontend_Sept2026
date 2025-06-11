@@ -211,3 +211,9 @@ export const sendInterviewEmail = (body, disableLoading, onHide) => async (
     onHide();
   });
 };
+
+export const fetchJobVacancyList = () => async (dispatch) => {
+  return requestFromServer.getJobVacancyList().then((response) => {
+    dispatch(actions.JobVacancyListFetched(response?.data?.data));
+  });
+};

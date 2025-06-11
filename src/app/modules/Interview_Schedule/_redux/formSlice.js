@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   jobData: {},
   applicants: [],
+  jobList: [],
   applicantProfile: {},
   listLoading: false,
   actionsLoading: null,
@@ -87,6 +88,10 @@ export const InterviewScheduleSlice = createSlice({
     ApplicantStatusUpdated: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
+    },
+    JobVacancyListFetched: (state, action) => {
+      state.error = null;
+      state.jobList = action.payload;
     },
   },
 });

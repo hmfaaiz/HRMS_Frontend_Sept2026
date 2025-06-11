@@ -151,7 +151,6 @@ export default function HRRecomendation() {
                                       </span>
                                     }
                                     onChange={(e) => {
-                                      console.log(e);
                                       setFieldValue(
                                         "applicationStatusId",
                                         e.value || null
@@ -298,6 +297,7 @@ export default function HRRecomendation() {
                                   <Field
                                     name="dateOfJoining"
                                     component={DatePickerField}
+                                    value={values?.dateOfJoining || ""}
                                     placeholder="Date of Joining"
                                     type="date"
                                   />

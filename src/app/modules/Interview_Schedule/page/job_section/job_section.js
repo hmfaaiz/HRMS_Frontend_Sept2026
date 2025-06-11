@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { getAllJobVacancy } from "../../../../../_metronic/redux/dashboardActions";
+import { getAllPostedJobVacancy } from "../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../_metronic/_helpers/SearchSelect";
 import { useFormUIContext } from "../FormUIContext";
 import * as actions from "../../_redux/formAction";
@@ -19,16 +19,17 @@ export default function JobSection() {
     };
   });
 
-  const { allJobVacancyList, jobData } = useSelector((state) => {
+  const { jobData, jobList } = useSelector((state) => {
     return {
-      allJobVacancyList: state?.dashboard?.allJobVacancyList,
       jobData: state?.interview_schedule?.jobData,
-      jobLoading: state?.interview_schedule?.jobLoading,
+      jobList: state?.interview_schedule?.jobList,
     };
   }, shallowEqual);
 
+  console.log(jobList, "jobList");
+
   useEffect(() => {
-    dispatch(getAllJobVacancy("allJobVacancyList")); /// fetch job vicancies list
+    dispatch(actions.fetchJobVacancyList());
   }, []);
 
   useEffect(() => {
@@ -43,17 +44,15 @@ export default function JobSection() {
       {/* job selection area  */}
       <div className="col-12 col-md-3">
         <SearchSelect
-          name="cityId"
-          options={allJobVacancyList}
+          name="selectedJob"
+          options={jobList}
           label="Job Code/Job Title"
           onChange={(e) => {
             formUIProps.setSelectedApplicant(null);
             formUIProps.setSelectedJob(e?.value);
           }}
           value={
-            allJobVacancyList?.find(
-              (el) => el?.value === formUIProps.selectedJob
-            ) || ""
+            jobList?.find((el) => el?.value === formUIProps.selectedJob) || ""
           }
           isClearable={false}
         />

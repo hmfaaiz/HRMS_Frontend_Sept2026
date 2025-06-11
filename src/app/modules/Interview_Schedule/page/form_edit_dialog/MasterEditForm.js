@@ -16,14 +16,16 @@ import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../utils/constants";
 import { getProfileInfo } from "../../_redux/formCrud";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { TimePickerField } from "../../../../../_metronic/_partials/controls/forms/TimePickerField";
 
 const formValidation = Yup.object().shape({
   interview_date: Yup.date().required(VALIDATION_MESSAGES.required),
   interview_time: Yup.string()
+    .nullable()
     .required(VALIDATION_MESSAGES.required)
     .matches(
-      /^(?:[01]\d|2[0-3])[0-5]\d$/,
-      "Time must be in HHMM format and valid 24-hour format"
+      /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i,
+      "Enter time as hh:mm AM/PM"
     ),
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
   interviewers: Yup.array()
@@ -126,7 +128,6 @@ export default function MasterEditForm({
   useEffect(() => {
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // for all location
     dispatch(fetchAllActiveEmployees());
-    
   }, []);
 
   // Fetch employee details when interviewers change
@@ -185,7 +186,11 @@ export default function MasterEditForm({
                         name="interview_date"
                         component={DatePickerField}
                         dateFormat="dd/MM/yyyy"
-                        placeholder="Select Date"
+                        value={
+                          data?.interview_date
+                            ? new Date(data?.interview_date)
+                            : null
+                        }
                         type="date"
                         onChange={(e) => {
                           setFieldValue("interview_date", e ? e : "");
@@ -193,19 +198,21 @@ export default function MasterEditForm({
                       />
                     </div>
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
+                      <TimePickerField
                         name="interview_time"
-                        component={Input}
-                        placeholder={"HH:mm"}
-                        maxLength="4"
-                        label={
-                          <span>
-                            Interview Time{" "}
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
+                        label="Interview Time"
+                        value={values.interview_time}
+                        onChange={(val) => {
+                          setFieldValue("interview_time", val);
+                        }}
+                        touched={touched.interview_time}
+                        errors={errors.interview_time}
                       />
+                      {errors.interview_time && (
+                        <span className="text-danger">
+                          {errors.interview_time}
+                        </span>
+                      )}
                     </div>
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect

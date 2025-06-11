@@ -90,6 +90,7 @@
     "react-intl": "3.6.2",
     "react-is": "16.13.1",
     "react-lazy-load-image-component": "^1.6.0",
+    "react-multi-date-picker": "^4.5.2",
     "react-perfect-scrollbar": "1.5.8",
     "react-portal": "4.2.0",
     "react-quill": "^2.0.0",
