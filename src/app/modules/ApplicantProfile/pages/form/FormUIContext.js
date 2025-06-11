@@ -45,8 +45,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     relation_name: "",
     religionId: "",
 
-    countryId: "",
-    cityId: "",
+    countryId: null,
+    cityId:null,
     additional_summary: "",
     phone_official: "",
     phone_cell: "",

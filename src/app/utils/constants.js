@@ -394,6 +394,9 @@ export const SERVER_MESSAGES = {
   holdSuccess: 'Record holded Successfully!',
   closedSuccess: 'Record closed Successfully!',
   fileFail: 'File not Uploaded!',
+  emailFail: "Email has failed!",
+  emailSuccess: "Email sent Successfully!",
+
 }
 
 

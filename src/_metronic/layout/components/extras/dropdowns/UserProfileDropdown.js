@@ -69,20 +69,20 @@ export function UserProfileDropdown() {
               : user?.email}
             {" - "}({user?.role?.name})
           </span>
-          {/* <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden"> */}
-          <span>
-            <img
-              width={36}
-              height={36}
-              src={
-                user?.EmployeeMapping?.profile_image
-                  ? user?.EmployeeMapping?.profile_image
-                  : "/media/users/user.svg"
-              }
-              alt="User"
-            />
+          <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
+            <span>
+              <img
+                width={36}
+                height={36}
+                src={
+                  user?.EmployeeMapping?.profile_image
+                    ? user?.EmployeeMapping?.profile_image
+                    : "/media/users/user.svg"
+                }
+                alt="User"
+              />
+            </span>
           </span>
-          {/* </span> */}
           {portalRoutesLength > 0 &&
             HRMSRoutesLength > 0 &&
             user?.employeeIdMapping && (
@@ -103,7 +103,9 @@ export function UserProfileDropdown() {
                     <img
                       width={36}
                       height={36}
-                      src={toAbsoluteUrl("/media/users/Profile-Switch-Icon.png")}
+                      src={toAbsoluteUrl(
+                        "/media/users/Profile-Switch-Icon.png"
+                      )}
                       alt="User"
                     />
                   </button>

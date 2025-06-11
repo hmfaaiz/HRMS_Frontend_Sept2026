@@ -99,7 +99,9 @@ import { JobVacancySlice } from "../app/modules/JobVacancy/_redux/redux-Slice";
 import { LoanRequestSlice } from "../app/modules/Loan_Request/_redux/redux-Slice";
 import { LoanApprovalSlice } from "../app/modules/LoanApproval/redux/formSlice";
 import { ApplicantProfileSlice } from "../app/modules/ApplicantProfile/_redux/redux-Slice";
+import { InterviewScheduleSlice } from "../app/modules/Interview_Schedule/_redux/formSlice";
 import { ResumeSearchEngineSlice } from "../app/modules/ResumeSearchEngine/_redux/redux-Slice";
+import { JobOfferSlice } from "../app/modules/Job_Offer/_redux/formSlice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -197,8 +199,9 @@ export const rootReducer = combineReducers({
   loan_request: LoanRequestSlice.reducer,
   loan_approval: LoanApprovalSlice.reducer,
   applicant_profile: ApplicantProfileSlice?.reducer,
+  interview_schedule: InterviewScheduleSlice.reducer,
   resume_search_engine:ResumeSearchEngineSlice.reducer,
-
+  job_offer:JobOfferSlice.reducer,
  
  
 });
