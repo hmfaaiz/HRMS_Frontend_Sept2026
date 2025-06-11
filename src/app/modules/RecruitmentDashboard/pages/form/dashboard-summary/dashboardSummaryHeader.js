@@ -93,45 +93,22 @@ export function DashboardSummaryHeader({ listLoading, user }) {
 
                                 }}
                             ></div>
+
+
                             {/*frop down  */}
                             <div className="mt-5">
-                                {/* <Accordion defaultActiveKey="">
-                                    <Card>
-                                        <Card.Header className="d-flex justify-content-center">
-                                            <div className='accordion-header-btn w-100  d-flex justify-content-center'>
-                                                <Accordion.Toggle as={Button} eventKey="0" variant="link"
 
-                                                    className="flex-between-center text-bold"
-                                                    style={{
-                                                        backgroundColor: "#fafafc",
-                                                    }} >
-                                                    Application
-
-                                                    <KeyboardArrowDown />
-                                                </Accordion.Toggle>
-                                            </div>
-                                        </Card.Header>
-                                        <Accordion.Collapse eventKey="0">
-                                            <Card.Body>
-
-
-                                            </Card.Body>
-                                        </Accordion.Collapse>
-                                    </Card>
-                                </Accordion> */}
                                 <Accordion
                                     className=""
 
                                 >
                                     <Card className="">
                                         <Accordion.Toggle
-                                            as={Button}
+                                            // as={Button}
                                             variant="link"
                                             eventKey="0"
-                                            style={{
-                                                backgroundColor: "#fafafc",
-                                            }}
-                                            className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
+
+                                            className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center border none body-color"
                                         >
                                             <span
                                                 className=""
@@ -143,26 +120,27 @@ export function DashboardSummaryHeader({ listLoading, user }) {
                                                 Application
                                             </span>
                                             <span
-                                                // style={{
-                                                //     borderRadius: "50%",
-                                                //     backgroundColor: "#0093dd",
-                                                //     color: "#fff",
-                                                // }}
+
                                             >
                                                 <KeyboardArrowDown style={{ fontSize: "25px" }} />
                                             </span>
                                         </Accordion.Toggle>
 
                                         <Accordion.Collapse eventKey="0">
-                                            <div
+                                            <div className="body-color"
                                                 style={{
                                                     width: "100%",
                                                     overflow: "auto",
-                                                    height: "385px",
+                                                    // height: "385px",
                                                     fontSize: "13px",
-                                                    marginTop: "14px",
+                                                    fontWeight:"bold",
+
                                                 }}
                                             >
+                                                <div className="d-flex justify-content-between"><span>Applied</span><span>0001</span></div>
+                                                <div>Review</div>
+                                                <div>Rejected</div>
+                                                <div>Does not appear for interview</div>
 
                                             </div>
                                         </Accordion.Collapse>
