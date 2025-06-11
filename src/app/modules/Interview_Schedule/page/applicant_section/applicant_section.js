@@ -85,7 +85,7 @@ export default function ApplicationSection() {
             </div>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            {applicantProfile && Object.keys(applicantProfile).length > 0 ? (
+            {applicantProfile && Object?.keys(applicantProfile)?.length > 0 ? (
               <Card.Body>
                 <div
                   style={{
