@@ -3,8 +3,8 @@ import { useFormUIContext } from "../FormUIContext"
 import SVG from "react-inlinesvg";
 import { useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-
-
+import { Accordion, Button, Card } from "react-bootstrap";
+import { KeyboardArrowDown } from "@material-ui/icons";
 
 
 
@@ -73,10 +73,15 @@ export function DashboardSummaryHeader({ listLoading, user }) {
                 {/* job summary container */}
                 <div className="d-flex justify-content-between mt-5">
 
+                    {/* phase 1 */}
                     <div className="d-flex justify-content-between mt-5  w-100" >
+
+                        {/* circle */}
                         <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white" style={{ width: '65px', height: '50px' }}>
                             340
                         </div>
+
+                        {/* line */}
                         <div className="d-flex flex-column  w-100 ml-3">
                             <div className="mb-0"> <strong> Phase 1</strong></div>
                             <div
@@ -88,7 +93,85 @@ export function DashboardSummaryHeader({ listLoading, user }) {
 
                                 }}
                             ></div>
+                            {/*frop down  */}
+                            <div className="mt-5">
+                                {/* <Accordion defaultActiveKey="">
+                                    <Card>
+                                        <Card.Header className="d-flex justify-content-center">
+                                            <div className='accordion-header-btn w-100  d-flex justify-content-center'>
+                                                <Accordion.Toggle as={Button} eventKey="0" variant="link"
+
+                                                    className="flex-between-center text-bold"
+                                                    style={{
+                                                        backgroundColor: "#fafafc",
+                                                    }} >
+                                                    Application
+
+                                                    <KeyboardArrowDown />
+                                                </Accordion.Toggle>
+                                            </div>
+                                        </Card.Header>
+                                        <Accordion.Collapse eventKey="0">
+                                            <Card.Body>
+
+
+                                            </Card.Body>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion> */}
+                                <Accordion
+                                    className=""
+
+                                >
+                                    <Card className="">
+                                        <Accordion.Toggle
+                                            as={Button}
+                                            variant="link"
+                                            eventKey="0"
+                                            style={{
+                                                backgroundColor: "#fafafc",
+                                            }}
+                                            className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
+                                        >
+                                            <span
+                                                className=""
+                                                style={{
+                                                    fontSize: "1.3rem",
+                                                    fontWeight: "700",
+                                                }}
+                                            >
+                                                Application
+                                            </span>
+                                            <span
+                                                // style={{
+                                                //     borderRadius: "50%",
+                                                //     backgroundColor: "#0093dd",
+                                                //     color: "#fff",
+                                                // }}
+                                            >
+                                                <KeyboardArrowDown style={{ fontSize: "25px" }} />
+                                            </span>
+                                        </Accordion.Toggle>
+
+                                        <Accordion.Collapse eventKey="0">
+                                            <div
+                                                style={{
+                                                    width: "100%",
+                                                    overflow: "auto",
+                                                    height: "385px",
+                                                    fontSize: "13px",
+                                                    marginTop: "14px",
+                                                }}
+                                            >
+
+                                            </div>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            </div>
+
                         </div>
+
 
 
                     </div>
