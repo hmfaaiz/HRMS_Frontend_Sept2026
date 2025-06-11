@@ -70,7 +70,7 @@ export default function JobSection() {
             </div>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            {Object.keys(jobData).length > 0 ? (
+            {jobData && Object?.keys(jobData)?.length > 0 ? (
               <Card.Body>
                 <div
                   style={{
