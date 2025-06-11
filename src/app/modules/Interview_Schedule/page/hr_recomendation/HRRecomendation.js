@@ -90,7 +90,7 @@ export default function HRRecomendation() {
 
   useEffect(() => {
     dispatch(fetchAllFormsMenu(409, "allEmpTypeChildMenus")); // For Appointment Type
-    dispatch(fetchAllFormsMenu(275, "allEmployeeStatus")); // For Job Preferences
+    dispatch(fetchAllFormsMenu(442, "allJobPreferenceList")); // For Job Preferences
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // For Location
   }, [dispatch]);
 
@@ -274,13 +274,13 @@ export default function HRRecomendation() {
                                       );
                                     }}
                                     value={
-                                      dashboard?.allEmployeeStatus?.find(
+                                      dashboard?.allJobPreferenceList?.find(
                                         (option) =>
                                           option.value ===
                                           values.jobPreferencesId
                                       ) || null
                                     }
-                                    options={dashboard?.allEmployeeStatus}
+                                    options={dashboard?.allJobPreferenceList}
                                     error={errors.jobPreferencesId}
                                     touched={touched.jobPreferencesId}
                                   />
