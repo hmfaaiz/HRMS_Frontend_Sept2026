@@ -11,32 +11,35 @@ export function ActionsColumnFormatter(
   {
     openEditFormDialog,
     openDeleteFormDialog,
-    openActiveFormDialog,
-    openReadUserDialog,
-    isAccessForEdit,
-    isAccessForDelete,
     openReadFormDialog,
+    openEmailFormDialog,
+    isAccessForEdit,
+    isAccessForView,
+    isAccessForDelete,
+    isAccessForEmail,
   }
 ) {
   const isUserRead = false;
   return (
     <>
-      <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
-      >
-        <a
-          title=""
-          className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
+      {isAccessForView && row.isActive && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
         >
-          <span className="svg-icon svg-icon-md svg-icon-primary">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-            />
-          </span>
-        </a>
-      </OverlayTrigger>
-      {isAccessForEdit && row.isActive && (
+          <a
+            title=""
+            className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
+            onClick={() => openReadFormDialog(row.Id, isUserRead)}
+          >
+            <span className="svg-icon svg-icon-md svg-icon-primary">
+              <SVG
+                src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
+              />
+            </span>
+          </a>
+        </OverlayTrigger>
+      )}
+      {isAccessForEdit && row.isActive && rowIndex === 0 && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -53,10 +56,28 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
-
-      <> </>
-
-      {isAccessForDelete && (
+      {isAccessForEmail &&
+        row.isActive &&
+         rowIndex === 0 && (
+          <OverlayTrigger
+            overlay={<Tooltip id="products-edit-tooltip">Send Email</Tooltip>}
+          >
+            <a
+              title=""
+              className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
+              onClick={() => openEmailFormDialog(row.Id)}
+            >
+              <span className="svg-icon svg-icon-md svg-icon-primary">
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/Communication/schedule.svg"
+                  )}
+                />
+              </span>
+            </a>
+          </OverlayTrigger>
+        )}
+      {isAccessForDelete  && rowIndex === 0 && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
@@ -64,28 +85,18 @@ export function ActionsColumnFormatter(
             </Tooltip>
           }
         >
-          {row.isActive ? (
-            <a
-              title=""
-              className="btn btn-icon btn-hover-danger btn-sm mx-3 delete-button"
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-danger">
-                <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
-                  title=""
-                />
-              </span>
-            </a>
-          ) : (
-            <a
-              title=""
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-3"
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-success">A</span>
-            </a>
-          )}
+          <a
+            title=""
+            className="btn btn-icon btn-hover-danger btn-sm mx-3 delete-button"
+            onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+          >
+            <span className="svg-icon svg-icon-md svg-icon-danger">
+              <SVG
+                src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
+                title=""
+              />
+            </span>
+          </a>
         </OverlayTrigger>
       )}
     </>

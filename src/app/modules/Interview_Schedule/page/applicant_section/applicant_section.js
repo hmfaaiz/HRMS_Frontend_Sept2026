@@ -17,6 +17,10 @@ export default function ApplicationSection() {
       setSelectedApplicant: FormUIContext?.setSelectedApplicant,
       setApplicantVacancyId: FormUIContext?.setApplicantVacancyId,
       applicantVacancyId: FormUIContext?.applicantVacancyId,
+      queryParams: FormUIContext?.queryParams,
+      setQueryParams: FormUIContext?.setQueryParams,
+      setQueryParamsBase: FormUIContext?.setQueryParamsBase,
+      setApplicantDetail: FormUIContext?.setApplicantDetail,
     };
   });
 
@@ -30,12 +34,19 @@ export default function ApplicationSection() {
   useEffect(() => {
     if (formUIProps?.selectedApplicant) {
       dispatch(actions?.fetchApplicantProfile(formUIProps?.selectedApplicant));
+      dispatch(actions.getApplicationStatusForHRRecommendation());
     }
   }, [formUIProps?.selectedApplicant]);
 
   useEffect(() => {
     if (formUIProps?.applicantVacancyId && formUIProps?.selectedApplicant) {
-      // dispatch(actions?.fetchApplicantVacancy(formUIProps?.applicantVacancyId));
+      dispatch(
+        actions.fetchInterviewList({
+          ...formUIProps?.queryParams,
+          applicantVacancyId: formUIProps?.applicantVacancyId,
+          applicantId: formUIProps?.selectedApplicant,
+        })
+      );
     }
   }, [formUIProps?.applicantVacancyId, formUIProps?.selectedApplicant]);
 
@@ -48,8 +59,10 @@ export default function ApplicationSection() {
           options={applicants}
           label="Applicant Name"
           onChange={(e) => {
+            console.log("e", e);
             formUIProps.setSelectedApplicant(e?.value);
             formUIProps.setApplicantVacancyId(e?.applicantVacancyId);
+            formUIProps.setApplicantDetail(e?.applicantDetail);
           }}
           value={
             applicants?.find(
@@ -72,7 +85,7 @@ export default function ApplicationSection() {
             </div>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            {Object.keys(applicantProfile).length > 0 ? (
+            {applicantProfile && Object.keys(applicantProfile).length > 0 ? (
               <Card.Body>
                 <div
                   style={{
@@ -113,7 +126,7 @@ export default function ApplicationSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Religion: </strong>
-                        {applicantProfile?.religion?.formName || "N/A"}
+                        {applicantProfile?.Religion?.formName || "N/A"}
                       </Col>
                       <Col md={6}>
                         <strong>Id Card No.: </strong>
@@ -155,13 +168,15 @@ export default function ApplicationSection() {
                       </Col>
                       <Col md={6}>
                         <strong>Last Drawn Salary : </strong>
-                        {applicantProfile?.lastDawnSalaryCurrency?.formName ||
-                          ""}
+                        {applicantProfile?.LastDawnSalaryCurrency?.formName ||
+                          ""}{" "}
                         {applicantProfile?.lastDawnSalary || "N/A"}
                       </Col>
 
-                      <Col md={3}>
+                      <Col md={6}>
                         <strong>Expected Salary Range : </strong>
+                        {applicantProfile?.ExpectedSalaryCurrency?.formName ||
+                          ""}{" "}
                         {applicantProfile?.expectedSalaryRangeFrom || ""} to
                         {applicantProfile?.expectedSalaryRangeTo || ""}
                       </Col>

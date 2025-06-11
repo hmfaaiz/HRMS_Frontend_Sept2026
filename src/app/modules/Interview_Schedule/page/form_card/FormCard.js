@@ -11,6 +11,7 @@ import ApplicationSection from "../applicant_section/applicant_section";
 import { FormTable } from "../form_table/FormTable";
 import { useSelector, shallowEqual } from "react-redux";
 import { useFormUIContext } from "../FormUIContext";
+import HRRecomendation from "../hr_recomendation/HRRecomendation";
 export default function FormCard() {
   const FormUIContext = useFormUIContext();
   const { userAccess } = useSelector((state) => {
@@ -21,10 +22,15 @@ export default function FormCard() {
   const accessToCreate = userAccess.find(
     (item) => item?.componentName === "CreateInterviewSchedule"
   );
+  console.log("userAccess", userAccess);
+
+  const accessToHRRecommendation = userAccess.find(
+    (item) => item?.componentName === "UpdateApplicantStatus"
+  );
 
   const formUIProps = useMemo(() => {
     return {
-      newInterview: FormUIContext?.FormUIEvents.newInterview,
+      newButtonClick: FormUIContext?.newButtonClick,
       selectedApplicant: FormUIContext?.selectedApplicant,
       selectedJob: FormUIContext?.selectedJob,
     };
@@ -53,7 +59,7 @@ export default function FormCard() {
                     !formUIProps?.selectedApplicant || !formUIProps?.selectedJob
                   }
                   className="btn btn-primary"
-                  onClick={formUIProps.newInterview}
+                  onClick={formUIProps.newButtonClick}
                 >
                   + Add Interview
                 </button>
@@ -62,6 +68,9 @@ export default function FormCard() {
           </div>
 
           <FormTable />
+          <br />
+          <hr />
+          {accessToHRRecommendation?.isAccess && <HRRecomendation />}
         </CardBody>
       </Card>
     </>

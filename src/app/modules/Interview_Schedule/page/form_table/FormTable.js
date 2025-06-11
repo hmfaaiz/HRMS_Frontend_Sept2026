@@ -20,24 +20,25 @@ import { Pagination } from "../../../../../_metronic/_partials/controls";
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
-
   const formUIProps = useMemo(() => {
     return {
-      ids: formUIContext.ids,
-      setIds: formUIContext.setIds,
+      selectedApplicant: formUIContext.selectedApplicant,
+      applicantVacancyId: formUIContext.applicantVacancyId,
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
-      openEditFormDialog: formUIContext.openEditFormDialog,
-      openDeleteFormDialog: formUIContext.openDeleteFormDialog,
-      openActiveFormDialog: formUIContext.openActiveFormDialog,
-      openReadFormDialog: formUIContext.openReadFormDialog,
+      openEditFormDialog: formUIContext?.openEditFormDialog,
+      openDeleteFormDialog: formUIContext?.openDeleteFormDialog,
+      openReadFormDialog: formUIContext?.openReadFormDialog,
+      openEmailFormDialog: formUIContext?.openEmailFormDialog,
+      selectedJob: formUIContext?.selectedJob,
+      selectedApplicant: formUIContext?.selectedApplicant,
     };
   }, [formUIContext]);
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
-      currentState: state.holidays,
-      userAccess: state?.auth?.userAccess["holidays"],
+      currentState: state.interview_schedule,
+      userAccess: state?.auth?.userAccess["interview_schedule"],
     };
   }, shallowEqual);
 
@@ -48,23 +49,36 @@ export function FormTable() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // formUIProps.setIds([]);
-
-    // dispatch(actions.fetchHolidays(formUIProps.queryParams));
+    if (formUIProps?.applicantVacancyId && formUIProps?.selectedApplicant) {
+      dispatch(
+        actions.fetchInterviewList({
+          ...formUIProps.queryParams,
+          applicantVacancyId: formUIProps?.applicantVacancyId,
+          applicantId: formUIProps?.selectedApplicant,
+        })
+      );
+    }
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateHolidays"
+    (item) => item.componentName === "UpdateInterviewSchedule"
+  );
+  const isAccessForDelete = userAccess?.find(
+    (item) => item.componentName === "DeleteInterviewSchedule"
+  );
+  const isAccessForView = userAccess?.find(
+    (item) => item.componentName === "ReadInterviewById"
   );
 
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteHolidays"
+  const isAccessForEmail = userAccess?.find(
+    (item) => item.componentName === "SendInterviewEmail"
   );
+
   // Table columns
   const columns = [
     {
-      dataField: "Subsidiary.name",
-      text: "Subsidiary",
+      dataField: "interview_date",
+      text: "Interview Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -73,8 +87,8 @@ export function FormTable() {
       },
     },
     {
-      dataField: "name",
-      text: "Holiday",
+      dataField: "interview_time",
+      text: "Interview Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -83,23 +97,16 @@ export function FormTable() {
       },
     },
     {
-      dataField: "from_date",
-      text: "from date",
+      dataField: "Location.formName",
+      text: "Location",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      // style: {
-      //   minWidth: "10px",
-      //   textAlign: "center",
-      // },
-      // headerStyle: {
-      //   textAlign: "center", // Align header text to the left
-      // },
     },
 
     {
-      dataField: "to_date",
-      text: "to date",
+      dataField: "interview_detail",
+      text: "Interview Detail",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -107,7 +114,26 @@ export function FormTable() {
         minWidth: "10px",
       },
     },
-
+    {
+      dataField: "interview_remarks",
+      text: "Interview Remarks",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+    },
+    {
+      dataField: "RecommendedApplicantStatus.formName",
+      text: "Applicant Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+    },
     {
       dataField: "action",
       text: "Actions",
@@ -116,12 +142,14 @@ export function FormTable() {
       formatExtraData: {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openEmailFormDialog: formUIProps.openEmailFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
+        isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
+        isAccessForEmail: isAccessForEmail ? isAccessForEmail.isAccess : false,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -156,20 +184,31 @@ export function FormTable() {
                 bootstrap4
                 remote
                 keyField="Id"
-                data={entities === null ? [] : entities}
+                data={
+                  formUIProps?.selectedJob && formUIProps?.selectedApplicant
+                    ? entities || []
+                    : []
+                }
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams
                 )}
-                // selectRow={getSelectRow({
-                //   entities,
-
-                // })}
                 {...paginationTableProps}
               >
                 <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
+                <NoRecordsFoundMessage
+                  entities={
+                    formUIProps?.selectedJob && formUIProps?.selectedApplicant
+                      ? entities
+                      : []
+                  }
+                  message={
+                    formUIProps?.selectedJob && formUIProps?.selectedApplicant
+                      ? "No records found."
+                      : "Please select both a job and applicant to display results."
+                  }
+                />
               </BootstrapTable>
             </Pagination>
           );
