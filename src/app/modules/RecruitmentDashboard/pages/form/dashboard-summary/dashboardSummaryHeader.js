@@ -138,9 +138,10 @@ export function DashboardSummaryHeader({ listLoading, user }) {
                                                 }}
                                             >
                                                 <div className="d-flex justify-content-between"><span>Applied</span><span>0001</span></div>
-                                                <div>Review</div>
-                                                <div>Rejected</div>
-                                                <div>Does not appear for interview</div>
+                                                <div className="d-flex justify-content-between"><span>Review</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Rejected</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Does not appear for interview</span><span>0001</span></div>
+                                        
 
                                             </div>
                                         </Accordion.Collapse>
@@ -170,6 +171,59 @@ export function DashboardSummaryHeader({ listLoading, user }) {
 
                                 }}
                             ></div>
+                                {/*frop down  */}
+                            <div className="mt-5">
+
+                                <Accordion
+                                    className=""
+
+                                >
+                                    <Card className="">
+                                        <Accordion.Toggle
+                                            // as={Button}
+                                            variant="link"
+                                            eventKey="0"
+
+                                            className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center border none body-color"
+                                        >
+                                            <span
+                                                className=""
+                                                style={{
+                                                    fontSize: "1.3rem",
+                                                    fontWeight: "700",
+                                                }}
+                                            >
+                                                Application
+                                            </span>
+                                            <span
+
+                                            >
+                                                <KeyboardArrowDown style={{ fontSize: "25px" }} />
+                                            </span>
+                                        </Accordion.Toggle>
+
+                                        <Accordion.Collapse eventKey="0">
+                                            <div className="body-color"
+                                                style={{
+                                                    width: "100%",
+                                                    overflow: "auto",
+                                                    // height: "385px",
+                                                    fontSize: "13px",
+                                                    fontWeight:"bold",
+
+                                                }}
+                                            >
+                                                <div className="d-flex justify-content-between"><span>Applied</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Review</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Rejected</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Does not appear for interview</span><span>0001</span></div>
+                                        
+
+                                            </div>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            </div>
                         </div>
 
 
@@ -192,6 +246,59 @@ export function DashboardSummaryHeader({ listLoading, user }) {
 
                                 }}
                             ></div>
+                                {/*frop down  */}
+                            <div className="mt-5">
+
+                                <Accordion
+                                    className=""
+
+                                >
+                                    <Card className="">
+                                        <Accordion.Toggle
+                                            // as={Button}
+                                            variant="link"
+                                            eventKey="0"
+
+                                            className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center border none body-color"
+                                        >
+                                            <span
+                                                className=""
+                                                style={{
+                                                    fontSize: "1.3rem",
+                                                    fontWeight: "700",
+                                                }}
+                                            >
+                                                Application
+                                            </span>
+                                            <span
+
+                                            >
+                                                <KeyboardArrowDown style={{ fontSize: "25px" }} />
+                                            </span>
+                                        </Accordion.Toggle>
+
+                                        <Accordion.Collapse eventKey="0">
+                                            <div className="body-color"
+                                                style={{
+                                                    width: "100%",
+                                                    overflow: "auto",
+                                                    // height: "385px",
+                                                    fontSize: "13px",
+                                                    fontWeight:"bold",
+
+                                                }}
+                                            >
+                                                <div className="d-flex justify-content-between"><span>Applied</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Review</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Rejected</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Does not appear for interview</span><span>0001</span></div>
+                                        
+
+                                            </div>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            </div>
                         </div>
 
 
@@ -211,6 +318,59 @@ export function DashboardSummaryHeader({ listLoading, user }) {
 
                                 }}
                             ></div>
+                                {/*frop down  */}
+                            <div className="mt-5">
+
+                                <Accordion
+                                    className=""
+
+                                >
+                                    <Card className="">
+                                        <Accordion.Toggle
+                                            // as={Button}
+                                            variant="link"
+                                            eventKey="0"
+
+                                            className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center border none body-color"
+                                        >
+                                            <span
+                                                className=""
+                                                style={{
+                                                    fontSize: "1.3rem",
+                                                    fontWeight: "700",
+                                                }}
+                                            >
+                                                Application
+                                            </span>
+                                            <span
+
+                                            >
+                                                <KeyboardArrowDown style={{ fontSize: "25px" }} />
+                                            </span>
+                                        </Accordion.Toggle>
+
+                                        <Accordion.Collapse eventKey="0">
+                                            <div className="body-color"
+                                                style={{
+                                                    width: "100%",
+                                                    overflow: "auto",
+                                                    // height: "385px",
+                                                    fontSize: "13px",
+                                                    fontWeight:"bold",
+
+                                                }}
+                                            >
+                                                <div className="d-flex justify-content-between"><span>Applied</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Review</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Rejected</span><span>0001</span></div>
+                                                <div className="d-flex justify-content-between"><span>Does not appear for interview</span><span>0001</span></div>
+                                        
+
+                                            </div>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            </div>
                         </div>
 
 
