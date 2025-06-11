@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { getAllJobVacancy, getAllPostedJobVacancy, getJobVancyDetailForOfferLetter, getOfferLetterDetailApplicant } from "../../../../../_metronic/redux/dashboardActions";
+import {
+  getAllJobVacancy,
+  getAllPostedJobVacancy,
+  getJobVancyDetailForOfferLetter,
+  getOfferLetterDetailApplicant,
+} from "../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../_metronic/_helpers/SearchSelect";
 import { useFormUIContext } from "../FormUIContext";
 import * as actions from "../../_redux/formAction";
@@ -18,8 +23,6 @@ export default function JobSection() {
       setSelectedApplicant: FormUIContext?.setSelectedApplicant,
     };
   });
-
-
 
   const { allPostedJobVacancyList, jobData } = useSelector((state) => {
     return {
@@ -39,7 +42,6 @@ export default function JobSection() {
       dispatch(actions.fetchApplicants(formUIProps?.selectedJob));
     }
   }, [formUIProps?.selectedJob]);
-
 
   return (
     <div className="col-12">
@@ -74,7 +76,7 @@ export default function JobSection() {
             </div>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            {Object.keys(jobData).length > 0 ? (
+            {jobData && Object?.keys(jobData)?.length > 0 ? (
               <Card.Body>
                 <div
                   style={{
@@ -123,16 +125,16 @@ export default function JobSection() {
                         <strong>Job Posting Date : </strong>
                         {jobData?.jobPostingDateFrom
                           ? format(
-                            new Date(jobData?.jobPostingDateFrom),
-                            "dd/MM/yyyy"
-                          )
+                              new Date(jobData?.jobPostingDateFrom),
+                              "dd/MM/yyyy"
+                            )
                           : "N/A"}{" "}
                         to{" "}
                         {jobData?.jobPostingDateTo
                           ? format(
-                            new Date(jobData?.jobPostingDateTo),
-                            "dd/MM/yyyy"
-                          )
+                              new Date(jobData?.jobPostingDateTo),
+                              "dd/MM/yyyy"
+                            )
                           : "N/A"}
                       </Col>
                       <Col md={6}>
