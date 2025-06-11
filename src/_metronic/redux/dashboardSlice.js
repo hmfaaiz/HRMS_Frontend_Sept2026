@@ -72,6 +72,7 @@ const initialDashboardState = {
   allJobVacancyList: [],
   allApplicationStatusList: [],
   allPostedJobVacancyList:[],
+  allJobPreferenceList:[],
  
   
 };
