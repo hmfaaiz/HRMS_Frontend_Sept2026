@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 const { actions } = RecruitmentDashboardSlice;
 
 
-export const fetchResumeSearchEngine = (queryparm) => async (dispatch) => {
+export const fetchRecruitmentDashboard = (queryparm) => async (dispatch) => {
 
 
 
-  return requestFromServer.getAllResumeSearchEngine(queryparm)
+  return requestFromServer.getAllRecruitment_dashboard(queryparm)
 
     .then((response) => {
 
-
-      dispatch(actions.resumeSearchEngineFetched(response));
+console.log("response111",response)
+      dispatch(actions.RecruitmentDashboardFetched(response));
     })
     .catch((error) => {
 

@@ -127,7 +127,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
       // await dispatch(actions.updateResumeSearchEngine(formUpdatedFields, disbaleLoading, onHide));
-      // await dispatch(actions.fetchResumeSearchEngine(usersUIProps.queryParams));
+      // await dispatch(actions.fetchRecruitmentDashboard(usersUIProps.queryParams));
     }
   };
 

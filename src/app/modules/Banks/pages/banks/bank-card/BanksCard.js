@@ -129,7 +129,7 @@ export function BanksCard() {
                       <span className="file-button">
                         <SVG
                         
-                          src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")}
+                          src={toAbsoluteUrl("/media/svg/icons/Communication/Download-PDF-01.svg")}
                         />
                       </span>
                       {/* {pdfLoading && (
@@ -152,7 +152,7 @@ export function BanksCard() {
 
                       <span className=" file-button">
                         <SVG
-                          src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")}
+                          src={toAbsoluteUrl("/media/svg/icons/Communication/Download-CSV.svg")}
                         />
                       </span>
                       {/* {csvLoading && (
@@ -177,7 +177,7 @@ export function BanksCard() {
 
                       <span className="file-button">
                         <SVG
-                          src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")}
+                          src={toAbsoluteUrl("/media/svg/icons/Communication/Download-Excel.svg")}
                         />
                       </span>
                       {/* {excelLoading && (

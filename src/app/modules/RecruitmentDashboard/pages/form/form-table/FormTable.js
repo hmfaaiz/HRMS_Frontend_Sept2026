@@ -62,7 +62,7 @@ export function FormTable() {
     formUIProps.setIds([]);
 
 
-    dispatch(actions.fetchResumeSearchEngine(formUIProps.queryParams));
+    dispatch(actions.fetchRecruitmentDashboard(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
 

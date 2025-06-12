@@ -34,20 +34,11 @@ export const RecruitmentDashboardSlice = createSlice({
 
         RecruitmentDashboardFetched: (state, action) => {
 
-
+console.log("fetch1111",action.payload.data?.data.rows)
             const entities = action.payload.data?.data.rows;
 
             const totalResult = action.payload.data?.data.totalResults;
-            // const updatedEntities = entities.map(entity => {
-
-            //     const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basis';
-
-
-            //     return {
-            //         ...entity,
-            //         basis_of_gratuity // Add the new field to the entity
-            //     };
-            // });
+     
 
             state.listLoading = false;
             state.error = null;
