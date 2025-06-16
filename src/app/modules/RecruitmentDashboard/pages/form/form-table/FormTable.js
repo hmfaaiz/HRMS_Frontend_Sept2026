@@ -44,26 +44,20 @@ export function FormTable() {
       return {
 
 
-        currentState: state.resume_search_engine,
-        userAccess: state?.auth?.userAccess["resume_search_engine"],
+        currentState: state.recruitment_dashboard,
+        userAccess: state?.auth?.userAccess["recruitment_dashboard"],
       }
     },
     shallowEqual
   );
 
 
-  const { totalCount, entities, listLoading } = currentState;
-
+  
+  const { totalCount, dataForEdit, listLoading } = currentState;
+console.log("table1111",dataForEdit)
   //totalCount = 10
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    formUIProps.setIds([]);
-
-
-    dispatch(actions.fetchRecruitmentDashboard(formUIProps.queryParams));
-  }, [formUIProps.queryParams, dispatch, totalCount]);
 
 
   const isAccessForView = userAccess?.find(
@@ -74,28 +68,7 @@ export function FormTable() {
 
 
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case 0:
-        return "Vacancy not posted";
-      case 1:
-        return "Currently Posted";
-      case 2:
-        return "On Hold";
-      case 3:
-        return "Closed / Expired Jobsed";
-      default:
-        return "----";
-    }
-  };
 
-  const vacancyStatusOptions = [
-    { value: null, label: "All" },
-    { value: 0, label: "Vacancy not posted" },
-    { value: 1, label: "Currently Posted" },
-    { value: 2, label: "On Hold" },
-    { value: 3, label: "Closed / Expired Job" },
-  ];
 
   const columns = [
 
@@ -132,7 +105,7 @@ export function FormTable() {
         minWidth: "100px",
       },
       formatter: (cell, row) => {
-        if (!row.details_applicant_vacancy || row.details_applicant_vacancy.length === 0) return "-";
+        if (!row?.details_applicant_vacancy || row.details_applicant_vacancy?.length === 0) return "-";
 
         // Find the latest applied vacancy by applicationDate
         const latestVacancy = row.details_applicant_vacancy
@@ -214,39 +187,39 @@ export function FormTable() {
       },
     },
 
-    {
-      dataField: "InterviewRecommendations",
-      text: "Interview Recommendations",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "InterviewRecommendations",
+    //   text: "Interview Recommendations",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
 
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        openEditFormDialog: formUIProps.openEditFormDialog,
-        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        openActiveFormDialog: formUIProps.openActiveFormDialog,
-        openReadFormDialog: formUIProps.openReadFormDialog,
-        isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
+    // {
+    //   dataField: "action",
+    //   text: "Actions",
+    //   isDummyField: true,
+    //   formatter: ActionsColumnFormatter,
+    //   formatExtraData: {
+    //     openEditFormDialog: formUIProps.openEditFormDialog,
+    //     openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+    //     openActiveFormDialog: formUIProps.openActiveFormDialog,
+    //     openReadFormDialog: formUIProps.openReadFormDialog,
+    //     isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
 
 
 
-      },
+    //   },
 
-      classes: "text-center pr-0",
-      headerClasses: "text-center pr-3",
-      style: {
-        minWidth: "100px",
-      },
-    },
+    //   classes: "text-center pr-0",
+    //   headerClasses: "text-center pr-3",
+    //   style: {
+    //     minWidth: "100px",
+    //   },
+    // },
   ];
 
   //Table pagination properties
@@ -274,20 +247,21 @@ export function FormTable() {
                 bootstrap4
                 remote
                 keyField="Id"
-                data={entities === null ? [] : entities}
+                 data={dataForEdit || []}
+                // data={dataForEdit === null ? [] : dataForEdit}
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams
                 )}
                 // selectRow={getSelectRow({
-                //   entities,
+                //   dataForEdit,
 
                 // })}
                 {...paginationTableProps}
               >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
+                <PleaseWaitMessage dataForEdit={dataForEdit} />
+                <NoRecordsFoundMessage dataForEdit={dataForEdit} />
               </BootstrapTable>
             </Pagination>
           );

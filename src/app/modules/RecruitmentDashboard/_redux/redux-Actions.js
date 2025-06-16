@@ -25,20 +25,21 @@ console.log("response111",response)
 };
 
 
-export const fetchResumeSearchEngineById = (id) => (dispatch) => {
+export const FetchRecruitmentDashboardFetched = (id) => (dispatch) => {
 
-
+console.log("FetchRecruitmentDashboardFetched11111")
   if (!id) {
-    return dispatch(actions.RecruitmentDashboardFetchedForEdit({ dataForEdit: undefined }));
+    return dispatch(actions.RecruitmentDashboardFetchedDetail({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getResumeSearchEngineById({ Id: id })
+    .getRecruitment_dashboardDetailById({ Id: id })
     .then((response) => {
+      console.log("respinse111",response)
       const entities = response.data?.data;
 
 
-      dispatch(actions.RecruitmentDashboardFetchedForEdit({ dataForEdit: entities }));
+      dispatch(actions.RecruitmentDashboardFetchedDetail(response));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";

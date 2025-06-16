@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isdataForRead ? title : "View Job Vacancy"}
+          {!isdataForRead ? title : "View Applicant Profile"}
         </Modal.Title>
       </Modal.Header>
     </>

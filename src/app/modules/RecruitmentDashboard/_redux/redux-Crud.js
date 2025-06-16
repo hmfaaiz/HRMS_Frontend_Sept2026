@@ -12,7 +12,7 @@ export function getAllRecruitment_dashboard(body) {
 }
 
 // View
-export function getResumeSearchEngineById(id) {
+export function getRecruitment_dashboardDetailById(id) {
 
-  return axios.post(`${USERS_URL}/recruitment_dashboard/read-resume-search-engine`, id);
+  return axios.post(`${USERS_URL}/recruitment_dashboard/read-recruitment-dashboard-detail`, id);
 }

@@ -31,7 +31,7 @@ export function ActionsColumnFormatter(
     <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
       <a
         className="btn btn-icon view-button"
-        onClick={() => openReadFormDialog(row.Id)}
+        onClick={() => openReadFormDialog()}
       >
         <span className="svg-icon svg-icon-md svg-icon-primary">
           <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />

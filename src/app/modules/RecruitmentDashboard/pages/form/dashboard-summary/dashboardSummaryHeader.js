@@ -11,7 +11,7 @@ import * as actions from "../../../_redux/redux-Actions";
 
 
 export function DashboardSummaryHeader() {
-const [selectedJobIndex, setSelectedJobIndex] = useState(null);
+    const [selectedJobIndex, setSelectedJobIndex] = useState(null);
 
     //Users UI Context
     const formUIContext = useFormUIContext();
@@ -60,9 +60,6 @@ const [selectedJobIndex, setSelectedJobIndex] = useState(null);
     }, [formUIProps.queryParams, dispatch, totalCount]);
 
 
-    const isAccessForView = userAccess?.find(
-        (item) => item.componentName === "RecruitmentDashboard"
-    );
 
 
 
@@ -152,6 +149,10 @@ const [selectedJobIndex, setSelectedJobIndex] = useState(null);
 
 
 
+
+
+
+
     return (
         <>
             {entities && entities.map((job, jobIndex) => (
@@ -163,35 +164,40 @@ const [selectedJobIndex, setSelectedJobIndex] = useState(null);
                     <h6 className="text-primary mb-5">{job.jobTitle}</h6>
 
                     {/* Job Info Row */}
-                    <div className="d-flex justify-content-between mb-5">
-                        <div className="d-flex">
+                    <div className="d-flex justify-content-between flex-wrap mb-5">
+                        <div className="d-flex mb-2">
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-4">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Calendar.svg")} />
                             </span>
                             <span>Posted {job.postedDate}</span>
                         </div>
 
-                        <div className="d-flex">
+                        <div className="d-flex mb-2">
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-4">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Calendar.svg")} />
                             </span>
                             <span>Expiry {job.expiryDate}</span>
                         </div>
 
-                        <div className="d-flex">
+                        <div className="d-flex mb-2" style={{ width: '30%' }}>
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-3">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Map.svg")} />
                             </span>
-                            <span>{job.location}</span>
+                            <span className="ml-3 text-truncate" title={job.cityNames?.map(city => city.name).join(', ')}>
+                                {Array.isArray(job.cityNames)
+                                    ? job.cityNames.map(city => city.name).join(', ')
+                                    : 'N/A'}
+                            </span>
                         </div>
 
-                        <div className="d-flex">
+                        <div className="d-flex mb-2">
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-5">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Salary.svg")} />
                             </span>
                             <span className="ml-3">{job.salaryRange}</span>
                         </div>
                     </div>
+
 
                     {/* Phases for the Job */}
                     <div className="d-flex justify-content-between mt-5">
@@ -211,7 +217,7 @@ const [selectedJobIndex, setSelectedJobIndex] = useState(null);
                                                 <Accordion.Toggle
                                                     variant="link"
                                                     eventKey="0"
-                                                    className={`text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center border none  ${selectedJobIndex === jobIndex ? 'bg-white' : ''}`}
+                                                    className={`text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center border-0  ${selectedJobIndex === jobIndex ? 'bg-white' : 'body-color'}`}
                                                 >
                                                     <span className={`${phase.textColor} `} style={{ fontSize: "1.3rem", fontWeight: "700" }} >
                                                         {phase.dropdownTitle}
@@ -220,11 +226,15 @@ const [selectedJobIndex, setSelectedJobIndex] = useState(null);
                                                 </Accordion.Toggle>
 
                                                 <Accordion.Collapse eventKey="0">
-                                                    <div className={`${selectedJobIndex === jobIndex ? 'bg-white' : ''}`} style={{ width: "100%", overflow: "auto", fontSize: "13px", fontWeight: "bold" }}>
+                                                    <div className={`${selectedJobIndex === jobIndex ? 'bg-white' : 'body-color'} `} style={{ width: "100%", overflow: "auto", fontSize: "13px", fontWeight: "bold" }}>
                                                         {phase.steps.map((step, idx) => (
-                                                            <div key={idx} className="d-flex justify-content-between">
+                                                            <div key={idx}
+                                                                //  className="d-flex justify-content-between pointer"  onClick={() => formUIProps.openReadFormDialog(step.interviewStatusId)}>
+                                                                className={`d-flex justify-content-between }`}
+                                                                onClick={step.count > 0 ? () => formUIProps.openReadFormDialog(step.interviewStatusId) : undefined}>
                                                                 <span>{step.title}</span>
                                                                 <span className={`${phase.textColor}`}>{step.count}</span>
+                                                              
                                                             </div>
                                                         ))}
                                                     </div>
@@ -236,7 +246,7 @@ const [selectedJobIndex, setSelectedJobIndex] = useState(null);
                             </div>
                         ))}
                     </div>
-              
+
 
                 </div>
 

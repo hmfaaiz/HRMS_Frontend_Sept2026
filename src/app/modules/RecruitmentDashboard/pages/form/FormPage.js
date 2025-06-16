@@ -16,26 +16,32 @@ import { DashboardSummary } from "./dashboard-summary/dashboardSummary";
 
 
 export function FormPage({ history }) {
-console.log("aaaa1")
+  console.log("aaaa1")
   const dispatch = useDispatch();
   const FormUIEvents = {
 
-    openReadFormDialog: (id, isUserRead) => {
-      history.push(`/resume_search_engine/read-all-resume-search-engine/${id}/read`);
+    // openReadFormDialog: (id, isUserRead) => {
+    //   history.push(`/recruitment_dashboard/read-all-resume-search-engine/${id}/read`);
+    // },
+
+    openReadFormDialog: (id) => {
+      history.push(`/recruitment_dashboard/read-all-recruitment-dashboard/${id}/read`);
     },
+
 
   };
   return (
 
 
     <FormUIProvider FormUIEvents={FormUIEvents}>
+
+
   
- 
-      <Route path="/resume_search_engine/read-all-resume-search-engine/:id/read">
+      <Route path="/recruitment_dashboard/read-all-recruitment-dashboard/:id/read">
         {({ history, match }) => (
           <FormEditDialog
+           id={match && match.params.id}
             show={match != null}
-            id={match && match.params.id}
             dataForRead={true}
             onHide={() => {
               history.push("/recruitment_dashboard/read-all-recruitment-dashboard");
@@ -46,13 +52,13 @@ console.log("aaaa1")
 
 
 
- 
 
 
-  
+
+
 
       <FormFIlter />
-      <DashboardSummary/>
+      <DashboardSummary />
       <FormCard />
 
       <ToastContainer

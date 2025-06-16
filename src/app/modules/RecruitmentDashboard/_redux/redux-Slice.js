@@ -34,25 +34,28 @@ export const RecruitmentDashboardSlice = createSlice({
 
         RecruitmentDashboardFetched: (state, action) => {
 
-console.log("fetch1111",action.payload.data?.data.rows)
+
             const entities = action.payload.data?.data.rows;
 
-            const totalResult = action.payload.data?.data.totalResults;
-     
+       
+
 
             state.listLoading = false;
             state.error = null;
             state.entities = entities;
-            state.totalCount = totalResult;
+
 
         },
 
-        RecruitmentDashboardFetchedForEdit: (state, action) => {
+        RecruitmentDashboardFetchedDetail: (state, action) => {
 
 
             state.actionsLoading = false;
-            state.dataForEdit = action.payload.dataForEdit;
+            state.dataForEdit = action.payload.data?.data.rows;
             state.error = null;
+            const totalResult = action.payload.data?.data.totalResults;
+            state.totalCount = totalResult;
+            console.log("dat11111",state.dataForEdit)
         },
 
 

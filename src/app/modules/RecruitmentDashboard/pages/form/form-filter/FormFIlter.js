@@ -15,6 +15,7 @@ import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu } from "
 import { debounce } from "redux-saga/effects";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { Accordion, Button, Card } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import {
   // Card,
   CardHeader,
@@ -42,33 +43,12 @@ const prepareFilter = (queryParams, values) => {
     countryId,
     cityId,
     appointmentTypeId,
+    vacancyStatusId
 
-    // Vacancy detail
-    applicantStatusId,
-    priorityTypeId,
-    desireFromDateOfApp,
-    desireToDateOfApp,
-    applicationFromDate,
-    applicationToDate,
 
-    // Professional information
-    workExpFrom,
-    workExpTo,
-    expectedSalaryRangeFrom,
-    expectedSalaryRangeTo,
-    expectedSalaryCurrencyId,
-    expectedSalaryPayTypeId,
-    companyName,
-    preferredQualificationId,
 
-    // Personal Information
-    preferredAgeFrom,
-    preferredAgeTo,
-    maritalStatus,
-    gender,
-    religionId,
-    nationality,
-    applicantCanJoin,
+
+
   } = values;
 
   const newQueryParams = { ...queryParams };
@@ -85,33 +65,11 @@ const prepareFilter = (queryParams, values) => {
   if (countryId) filter.countryId = countryId;
   if (cityId) filter.cityId = cityId;
   if (appointmentTypeId) filter.appointmentTypeId = appointmentTypeId;
+  if (vacancyStatusId || vacancyStatusId === 0) {
+    filter.vacancyStatusId = vacancyStatusId;
+  }
 
-  // Vacancy detail
-  if (applicantStatusId) filter.applicantStatusId = applicantStatusId;
-  if (priorityTypeId) filter.priorityTypeId = priorityTypeId;
-  if (desireFromDateOfApp) filter.desireFromDateOfApp = desireFromDateOfApp;
-  if (desireToDateOfApp) filter.desireToDateOfApp = desireToDateOfApp;
-  if (applicationFromDate) filter.applicationFromDate = applicationFromDate;
-  if (applicationToDate) filter.applicationToDate = applicationToDate;
 
-  // Professional information
-  if (workExpFrom) filter.workExpFrom = workExpFrom;
-  if (workExpTo) filter.workExpTo = workExpTo;
-  if (expectedSalaryRangeFrom) filter.expectedSalaryRangeFrom = expectedSalaryRangeFrom;
-  if (expectedSalaryRangeTo) filter.expectedSalaryRangeTo = expectedSalaryRangeTo;
-  if (expectedSalaryCurrencyId) filter.expectedSalaryCurrencyId = expectedSalaryCurrencyId;
-  if (expectedSalaryPayTypeId || expectedSalaryPayTypeId == 0) filter.expectedSalaryPayTypeId = expectedSalaryPayTypeId;
-  if (companyName?.trim()) filter.companyName = companyName.trim();
-  if (preferredQualificationId) filter.preferredQualificationId = preferredQualificationId;
-
-  // Personal Information
-  if (preferredAgeFrom) filter.preferredAgeFrom = preferredAgeFrom;
-  if (preferredAgeTo) filter.preferredAgeTo = preferredAgeTo;
-  if (maritalStatus) filter.maritalStatus = maritalStatus;
-  if (gender) filter.gender = gender;
-  if (religionId) filter.religionId = religionId;
-  if (nationality) filter.nationality = nationality;
-  if (applicantCanJoin) filter.applicantCanJoin = applicantCanJoin;
 
   newQueryParams.filter = filter;
   return newQueryParams;
@@ -136,22 +94,8 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-
-  // function addCommas(nStr) {
-  //   nStr += '';
-  //   var x = nStr.split('.');
-  //   var x1 = x[0];
-  //   var x2 = x.length > 1 ? '.' + x[1] : '';
-  //   var rgx = /(\d+)(\d{3})/;
-  //   while (rgx.test(x1)) {
-  //     x1 = x1.replace(rgx, '$1' + ',' + '$2');
-  //   }
-  //   return x1 + x2;
-  // }
-
-  // queryParams, setQueryParams,
   const applyFilter = (values) => {
-
+    console.log("values1111", values)
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
 
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
@@ -188,17 +132,13 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-  const salaryPayTypeIdOptions = [
-
-    { value: 0, label: "Per Month" },
-    { value: 1, label: "Per Year" },
-  ];
 
 
 
   const initialFilterValues = {
 
     //job filter
+    vacancyStatusId: null,
     searchText: "",
     departmentId: null,
     designationId: null,
@@ -209,40 +149,22 @@ export function FormFIlter({ listLoading, user }) {
     appointmentTypeId: null,
 
 
-    //vacancy detail
-    applicantStatusId: null,
-    priorityTypeId: null,
-    desireFromDateOfApp: null,
-    desireToDateOfApp: null,
-    applicationFromDate: null, applicationToDate: null,
-
-    // Professional information
-    workExpFrom: "",
-    workExpTo: "",
-    expectedSalaryRangeFrom: "",
-    expectedSalaryRangeTo: "",
-    expectedSalaryCurrencyId: null,
-    expectedSalaryPayTypeId: null,
-    companyName: '',
-    preferredQualificationId: null,
 
 
-    // Personal Information
-    preferredAgeFrom: "",
-    preferredAgeTo: "",
-    maritalStatus: null,
-    gender: "",
-    religionId: null,
-    nationality: null,
-    applicantCanJoin: "",
+
+
 
   };
-
-
-  const nationalityOptions = [
-    { label: "Pakistani", value: "Pakistani" },
-    { label: "Other", value: "Other" },
+  const vacancyStatusOptions = [
+    { value: null, label: "All" },
+    { value: 0, label: "Vacancy not posted " },
+    { value: 1, label: "Currently Posted" },
+    { value: 2, label: "On Hold" },
+    { value: 3, label: "Closed / Expired Job" },
   ];
+
+
+
 
 
   return (
@@ -278,6 +200,7 @@ export function FormFIlter({ listLoading, user }) {
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
 
+
                     <form onSubmit={handleSubmit}>
 
 
@@ -295,6 +218,29 @@ export function FormFIlter({ listLoading, user }) {
                         <h6>Job Filter</h6>
                         <div className="form-group row">
 
+                          <div className="row col-12 col-md-12">
+
+                            {/* Vacancy status */}
+                            <div className="col-12 col-md-4 mt-3">
+                              <SearchSelect
+                                name="vacancyStatusId"
+                                label="Vacancy Status"
+                                onChange={(e) => {
+                                  console.log("Selected value:", e.value);
+                                  setFieldValue("vacancyStatusId", e.value !== undefined ? e.value : null);
+                                  handleSubmit();
+                                }}
+                                value={
+                                  vacancyStatusOptions?.find(
+                                    (option) => option.value == values.vacancyStatusId
+                                  ) || null
+                                }
+                                options={vacancyStatusOptions}
+                              />
+                            </div>
+                          </div>
+
+
 
                           <div className="col-12 col-md-4 mt-3">
                             <label>Job Title</label>
@@ -306,7 +252,7 @@ export function FormFIlter({ listLoading, user }) {
                               onBlur={handleBlur}
                               value={values.searchText}
                               onChange={(e) => {
-                                setFieldValue("searchText", e.target.value.trim());
+                                setFieldValue("searchText", e.target.value);
                                 handleSubmit();
                               }}
                             />
@@ -470,11 +416,25 @@ export function FormFIlter({ listLoading, user }) {
 
 
                     </form>
+                    <Modal.Footer>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleReset(); // Resets form
+                          applyFilter(initialFilterValues); // Clears filter state
+                        }}
+                        className="btn btn-danger btn-elevate"
+                      >
+                        Cancel
+                      </button>
+                    </Modal.Footer>
                   </Card.Body>
+
                 </Accordion.Collapse>
               </Card>
-            </Accordion>
 
+
+            </Accordion>
 
           </>
         )}

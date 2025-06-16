@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, onHide, dataForRead }) {
+export function FormEditDialog({ id, show,dataForRead, onHide }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -46,90 +46,22 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
   return {
     actionsLoading: state.users.actionsLoading,
-    dataForEdit: state.resume_search_engine.dataForEdit,
-    isdataForRead: state.resume_search_engine.dataForRead,
+    dataForEdit: state.recruitment_dashboard.dataForEdit,
+    isdataForRead: state.recruitment_dashboard.dataForRead,
   };
 });
 
 
+console.log("modal1111",id)
+
+useEffect(() => {
+  if (id) {
+    console.log("hitting1111");
+    dispatch(actions.FetchRecruitmentDashboardFetched(id));
+  }
+}, [id,dispatch]);
 
 
-  useEffect(() => {
-    dispatch(actions.fetchResumeSearchEngineById(id));
-
-
-  }, [id, dispatch]);
-
-
-  const saveForm = async (formData, diffInDate) => {
-
-
-
-    if (!formData.Id) {
-
-      // dispatch(actions.createResumeSearchEngine(formData, disbaleLoading, onHide));
-
-
-
-    } else {
-
-
-
-      // user.number_of_days=
-     const formUpdatedFields = {
-  Id: formData.Id,
-  subsidiaryId: formData.subsidiaryId,
-  companyId: formData.companyId,
-  jobCode: formData.jobCode,
-  jobDate: formData.jobDate,
-  designationId: formData.designationId,
-  jobTitle: formData.jobTitle,
-  gradeId: formData.gradeId,
-  locationId: formData.locationId,
-  jobPostingDateFrom: formData.jobPostingDateFrom,
-  jobPostingDateTo: formData.jobPostingDateTo,
-  countryId: formData.countryId,
-  cityId: formData.cityId,
-  employeeTypeId: formData.employeeTypeId,
-  employeeStatusId: formData.employeeStatusId,
-  departmentId:formData.departmentId,
-  reportToDesignationId: formData.reportToDesignationId,
-  relationshipWithReportTo: formData.relationshipWithReportTo,
-  noOfPosition: formData.noOfPosition,
-  hiringReasonId: formData.hiringReasonId,
-  jobPreferenceId: formData.jobPreferenceId,
-  appointmentTypeId: formData.appointmentTypeId,
-  comment: formData.comment,
-  jobPeriodStart: formData.jobPeriodStart,
-  jobPeriodEnd: formData.jobPeriodEnd,
-  desireDateOfApp: formData.desireDateOfApp,
-  priorityTypeId: formData.priorityTypeId,
-  criticalDays: formData.criticalDays,
-  preferredAgeFrom: formData.preferredAgeFrom,
-  preferredAgeTo: formData.preferredAgeTo,
-  preferredShiftId: formData.preferredShiftId,
-  preferredGenderId: formData.preferredGenderId,
-  preferredQualificationId: formData.preferredQualificationId,
-  preferredJobSkillsId: formData.preferredJobSkillsId,
-  preferredJobIndustryId: formData.preferredJobIndustryId,
-  workExpFrom: formData.workExpFrom,
-  workExpTo: formData.workExpTo,
-  workExpDetail: formData.workExpDetail,
-  additionalReq: formData.additionalReq,
-  salaryRangeFrom: formData.salaryRangeFrom,
-  salaryRangeTo: formData.salaryRangeTo,
-  incentivePackages: formData.incentivePackages,
-  otherBenefits: formData.otherBenefits,
-  jobSummary: formData.jobSummary,
-
-};
-
-
-
-      // await dispatch(actions.updateResumeSearchEngine(formUpdatedFields, disbaleLoading, onHide));
-      // await dispatch(actions.fetchRecruitmentDashboard(usersUIProps.queryParams));
-    }
-  };
 
   return (
     <Modal
@@ -140,13 +72,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
     >
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
-        // saveForm={saveForm}
-        formData={dataForEdit || formUIProps.initUser}
         onHide={onHide}
-      
-     
-     
-        isdataForRead={dataForRead}
+
         enableLoading={enableLoading}
         loading={loading}
 

@@ -30,8 +30,8 @@ export const sizePerPageList = [
 
 export const initialFilter = {
   filter: {
-
-     searchText: "",
+    vacancyStatusId: null,
+    searchText: "",
     departmentId: null,
     designationId: null,
     gradeId: null,
@@ -41,37 +41,10 @@ export const initialFilter = {
     appointmentTypeId: null,
 
 
-    //vacancy detail
-    applicantStatusId: null,
-    priorityTypeId: null,
-    desireFromDateOfApp: null,
-    desireToDateOfApp: null,
-    jobFinalizedFromDate: null, jobFinalizedToDate: null,
-
-    // Professional information
-    workExpFrom: null,
-    workExpTo: null,
-    expectedSalaryRangeFrom: null,
-    expectedSalaryRangeTo: null,
-    expectedSalaryCurrencyId: null,
-    expectedSalaryPayTypeId: null,
-    companyName: null,
-    preferredQualificationId: null,
-
-
-    // Personal Information
-    preferredAgeFrom: null,
-    preferredAgeTo: null,
-    maritalStatus: null,
-    gender: null,
-    religionId: null,
-    nationality: null,
-    applicantCanJoin: null,
-
   },
 
 
   sortOrder: "asc",
-  pageSize:50,
+  pageSize: 50,
   pageNumber: 1
 }
