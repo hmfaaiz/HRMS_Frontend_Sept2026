@@ -2503,7 +2503,7 @@ export function DesignationEditForm({
                       </div>)}
 
 
-                      {(values.employeeTypeId==148) && (<div className="col-12 col-md-4 mt-3">
+                      {(values.employeeTypeId!==147) && (<div className="col-12 col-md-4 mt-3">
                         <label>Date Of Retirement</label>
                         <DatePicker
                           className="form-control"
