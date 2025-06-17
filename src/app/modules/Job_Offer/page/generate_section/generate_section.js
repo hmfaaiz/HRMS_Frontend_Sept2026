@@ -22,6 +22,8 @@ export default function GenerateSection() {
             setHrId: FormUIContext?.setHrId,
             hrId: FormUIContext?.hrId,
             headOfHrId: FormUIContext?.headOfHrId,
+            signatoryisShow: FormUIContext?.signatoryisShow,
+
         };
     });
 
@@ -49,6 +51,14 @@ export default function GenerateSection() {
         dispatch(fetchAllEmployeesWithNoPermissionData('allEmployeesWithNoPermissionList'));
     }, [dispatch])
 
+
+    const { applicants } = useSelector((state) => {
+        return {
+            applicants: state?.job_offer?.applicants,
+
+        };
+    }, shallowEqual);
+
     return (
         <Formik
             initialValues={{}} // Provide initial values
@@ -67,15 +77,16 @@ export default function GenerateSection() {
                                     isDisabled={
                                         !formUIProps.applicantVacancyId ||
                                         !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId
+                                        !formUIProps.jobVacancyId ||
+                                        formUIProps.signatoryisShow
                                     }
                                     onChange={(e) => {
                                         setFieldValue("headOfHrId", e?.value || null);
-                                           
-            formUIProps.setHeadOfHrId(e?.value);
 
-          }}
-                                    
+                                        formUIProps.setHeadOfHrId(e?.value);
+
+                                    }}
+
                                     value={
                                         dashboard?.allEmployeesWithNoPermissionList?.find(
                                             (option) => option.value === values.headOfHrId
@@ -96,7 +107,8 @@ export default function GenerateSection() {
                                     isDisabled={
                                         !formUIProps.applicantVacancyId ||
                                         !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId
+                                        !formUIProps.jobVacancyId ||
+                                        formUIProps.signatoryisShow
                                     }
                                     onChange={(e) => {
                                         setFieldValue("hrId", e?.value || null);
@@ -156,10 +168,11 @@ export default function GenerateSection() {
                                     disabled={
                                         !formUIProps.applicantVacancyId ||
                                         !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId
+                                        !formUIProps.jobVacancyId ||
+                                        !values.hrId && !values.headOfHrId
                                     }
                                     onClick={() => {
-                               
+
                                         localStorage.setItem('formUIProps', JSON.stringify(formUIProps));
                                         previewOfferLetter({
                                             applicantId: formUIProps.applicantId,
@@ -169,13 +182,19 @@ export default function GenerateSection() {
 
                                             hrId: values.hrId,
 
-                                        });
-                                        
 
-                                      
+
+                                        });
+                                     
+                                          
+                                    
+
+
                                         // if (raw) {
 
                                         window.open('/job_offer/read-job-offer-preview');
+
+                                          dispatch(actions.Clear());
                                         // }
                                     }}
                                 >

@@ -42,3 +42,9 @@ export function sendJobOfferEmail(body) {
   return axios.post(`${USERS_URL}/job_offer/send-offer-letter`, body);
 }
 
+export function finalizeJobVacancy() {
+
+
+  return axios.post(`${USERS_URL}/job_offer/read-all-finalize-job-vacancy`);
+}
+

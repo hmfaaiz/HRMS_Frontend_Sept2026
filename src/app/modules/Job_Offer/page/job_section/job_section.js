@@ -24,17 +24,20 @@ export default function JobSection() {
     };
   });
 
-  const { allPostedJobVacancyList, jobData } = useSelector((state) => {
+  const { allFinalizeJobVacancyList, jobData } = useSelector((state) => {
     return {
-      allPostedJobVacancyList: state?.dashboard?.allPostedJobVacancyList,
+      allFinalizeJobVacancyList: state?.job_offer?.allFinalizeJobVacancyList,
       jobData: state?.job_offer?.jobData,
       jobLoading: state?.job_offer?.jobLoading,
     };
   }, shallowEqual);
 
   useEffect(() => {
-    dispatch(getAllPostedJobVacancy("allPostedJobVacancyList"));
-  }, [dispatch]);
+    
+      dispatch(actions.fetchAllFInalizeJobVacancy());
+   
+
+  }, []);
 
   useEffect(() => {
     if (formUIProps?.selectedJob) {
@@ -49,14 +52,14 @@ export default function JobSection() {
       <div className="col-12 col-md-3">
         <SearchSelect
           name="slectJob"
-          options={allPostedJobVacancyList}
+          options={allFinalizeJobVacancyList}
           label="Job Code/Job Title"
           onChange={(e) => {
             formUIProps.setSelectedApplicant(null);
             formUIProps.setSelectedJob(e?.value);
           }}
           value={
-            allPostedJobVacancyList?.find(
+            allFinalizeJobVacancyList?.find(
               (el) => el?.value === formUIProps.selectedJob
             ) || ""
           }

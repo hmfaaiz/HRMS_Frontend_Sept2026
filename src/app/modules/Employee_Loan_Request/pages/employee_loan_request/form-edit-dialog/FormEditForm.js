@@ -641,7 +641,7 @@ const isLoanCompleted=()=>{
   })() : null}
 </div>
 
-                  <div className="col-12 col-md-6">
+                  <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="employee_loan_accountId"
                       label={
@@ -877,7 +877,7 @@ const isLoanCompleted=()=>{
                       onClick={handleCheckboxClick} // Trigger modal on checkbox click
                       disabled={!userForEdit || !userForEdit?.isLoanContinuing }
                     />
-                    <label htmlFor="isLoanContinuing">Loan Completed</label>
+                    <label className="ml-2 mb-2" htmlFor="isLoanContinuing">Loan Completed</label>
 
                     {/* CustomFormLoanDialog component is rendered here and controlled by the state */}
 

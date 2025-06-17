@@ -102,6 +102,7 @@ import { ApplicantProfileSlice } from "../app/modules/ApplicantProfile/_redux/re
 import { InterviewScheduleSlice } from "../app/modules/Interview_Schedule/_redux/formSlice";
 import { ResumeSearchEngineSlice } from "../app/modules/ResumeSearchEngine/_redux/redux-Slice";
 import { JobOfferSlice } from "../app/modules/Job_Offer/_redux/formSlice";
+import { RecruitmentDashboardSlice } from "../app/modules/RecruitmentDashboard/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -202,6 +203,7 @@ export const rootReducer = combineReducers({
   interview_schedule: InterviewScheduleSlice.reducer,
   resume_search_engine:ResumeSearchEngineSlice.reducer,
   job_offer:JobOfferSlice.reducer,
+  recruitment_dashboard:RecruitmentDashboardSlice.reducer,
  
  
 });

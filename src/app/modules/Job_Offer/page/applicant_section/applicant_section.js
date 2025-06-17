@@ -15,6 +15,8 @@ export default function ApplicationSection() {
     return {
       selectedApplicant: FormUIContext?.selectedApplicant,
       setSelectedApplicant: FormUIContext?.setSelectedApplicant,
+      signatoryisShow: FormUIContext?.signatoryisShow,
+      setSignatoryisShow: FormUIContext?.setSignatoryisShow,
       setApplicantVacancyId: FormUIContext?.setApplicantVacancyId,
       applicantVacancyId: FormUIContext?.applicantVacancyId,
     };
@@ -50,6 +52,7 @@ export default function ApplicationSection() {
           onChange={(e) => {
             formUIProps.setSelectedApplicant(e?.value);
             formUIProps.setApplicantVacancyId(e?.applicantVacancyId);
+            formUIProps.setSignatoryisShow(e?.signatory)
           }}
           value={
             applicants?.find(

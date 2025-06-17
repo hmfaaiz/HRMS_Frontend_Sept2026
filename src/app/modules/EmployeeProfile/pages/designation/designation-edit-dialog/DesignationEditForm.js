@@ -2232,7 +2232,7 @@ export function DesignationEditForm({
                           checked={values.all_report_to}
                           label="Show All"
                         />
-                        <label className="ml-1">Show All</label>
+                        <label className="ml-2">Show All</label>
                         <ErrorMessage className="form-feedBack" name="all_report_to" component="div" />
                         <SearchSelect
                           name="reportTo"
@@ -2481,7 +2481,7 @@ export function DesignationEditForm({
                         <ErrorMessage className="form-feedBack" name="dateOfConfirmationDue" component="div" />
                       </div>
 
-                      {!hideContractExpDate ? (<div className="col-12 col-md-4 mt-3">
+                      {(values.employeeTypeId==147) && (<div className="col-12 col-md-4 mt-3">
                         <label>Contract Expiry </label>
                         <DatePicker
                           className="form-control"
@@ -2500,10 +2500,10 @@ export function DesignationEditForm({
                           minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
                         />
                         <ErrorMessage className="form-feedBack" name="dateOfContractExpiry" component="div" />
-                      </div>) : (null)}
+                      </div>)}
 
 
-                      {!hidehideRetirementAgeDate ? (<div className="col-12 col-md-4 mt-3">
+                      {(values.employeeTypeId==148) && (<div className="col-12 col-md-4 mt-3">
                         <label>Date Of Retirement</label>
                         <DatePicker
                           className="form-control"
@@ -2524,7 +2524,7 @@ export function DesignationEditForm({
                           autoComplete="off"
                         />
                         <ErrorMessage className="form-feedBack" name="dateOfRetirement" component="div" />
-                      </div>) : (null)}
+                      </div>)}
                     </div>
 
 
@@ -2539,7 +2539,7 @@ export function DesignationEditForm({
                         checked={values.approvedForPayroll}
                         label="Approved for Payroll"
                       />
-                      <label>Approved for Payroll</label>
+                      <label className="ml-2">Approved for Payroll</label>
                       <ErrorMessage className="form-feedBack" name="approvedForPayroll" component="div" />
                     </div>
 
@@ -2872,7 +2872,8 @@ export function DesignationEditForm({
                           </div>
 
                           <div className="col-12 col-md-4 mt-3">
-                            {<span> Last Review Date</span>}
+                        
+                              <label>Last Review Date</label>
                             <DatePicker
                               className="form-control"
                               placeholder="Last Review Date"
@@ -2985,7 +2986,7 @@ export function DesignationEditForm({
                               checked={values.salesRep}
                               label="Sales Representative"
                             />
-                            <label><span>Sales Representative</span></label>
+                            <label><span className="ml-2">Sales Representative</span></label>
                           </div>
                           <div className="col-12 col-md-4 mt-5">
                             <input
@@ -2998,7 +2999,7 @@ export function DesignationEditForm({
                               checked={values.supportRep}
                               label="Support Representative"
                             />
-                            <label><span>Support Representative</span></label>
+                            <label><span className="ml-2">Support Representative</span></label>
                           </div>
 
 
@@ -3035,7 +3036,7 @@ export function DesignationEditForm({
                               label="Require Delegation"
 
                             />
-                            <label>Delegation Required</label>
+                            <label className="ml-2">Delegation Required</label>
                           </div>
 
                           {/* <div className="col-12 col-md-4 mt-3">
@@ -3064,7 +3065,7 @@ export function DesignationEditForm({
                           checked={values.all_deligationId}
                           label="Show All"
                         />
-                        <label className="ml-1">Show All</label>
+                        <label className="ml-2">Show All</label>
                         <ErrorMessage className="form-feedBack" name="all_deligationId" component="div" />
                         <SearchSelect
                           name="deligationId"
@@ -3201,7 +3202,7 @@ export function DesignationEditForm({
                               name="laborCardNo"
                               maxLength="20"
                               component={Input}
-                              placeholder="Enter "
+                              placeholder="Enter Labour Card No"
                               label={<span> Labour Card No</span>}
                               autoComplete="off"
                             />
@@ -3214,7 +3215,7 @@ export function DesignationEditForm({
                               name="emiratesNo"
                               maxLength="20"
                               component={Input}
-                              placeholder="Enter "
+                              placeholder="Enter Emirates Id Number"
                               label={<span> Emirates Id Number</span>}
                               autoComplete="off"
                             />
@@ -3226,7 +3227,7 @@ export function DesignationEditForm({
                               name="routingCode"
                               maxLength="20"
                               component={Input}
-                              placeholder="Enter "
+                              placeholder="Enter Routing Code"
                               label={<span> Routing Code</span>}
                               autoComplete="off"
                             />

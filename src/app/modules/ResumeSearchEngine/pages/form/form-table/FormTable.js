@@ -164,7 +164,7 @@ export function FormTable() {
         const month = String(latestDate.getMonth() + 1).padStart(2, "0");
         const year = latestDate.getFullYear();
 
-        return `${day}/${month}/${year}`;
+        return `${day}-${month}-${year}`;
       },
       sort: false,
       sortCaret: sortCaret,

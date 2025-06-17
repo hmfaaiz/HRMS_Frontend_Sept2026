@@ -225,6 +225,7 @@ const InterviewSchedule = lazy(() =>
 const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
 const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
 const JobOfferModule = lazy(() => import("./modules/Job_Offer/page/index"));
+const RecruitmentDashboardModule = lazy(() => import("./modules/RecruitmentDashboard/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -321,6 +322,7 @@ const ROUTES = {
   applicant_profile:ApplicantProfileModule,
   resume_search_engine:ResumeSearchEngineModule,
   job_offer:JobOfferModule,
+  recruitment_dashboard:RecruitmentDashboardModule,
   
  
 };
