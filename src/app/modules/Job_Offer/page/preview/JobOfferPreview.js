@@ -47,6 +47,8 @@ const JobOfferPreview = () => {
         }
     }, [formUIProps2]);
 
+
+
     if (!data) return <p>No data found. Please go back...</p>;
 
 

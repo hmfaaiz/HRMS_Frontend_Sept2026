@@ -202,6 +202,7 @@ export const rootReducer = combineReducers({
   applicant_profile: ApplicantProfileSlice?.reducer,
   interview_schedule: InterviewScheduleSlice.reducer,
   resume_search_engine:ResumeSearchEngineSlice.reducer,
+  job_offer:JobOfferSlice.reducer,
   recruitment_dashboard:RecruitmentDashboardSlice.reducer,
  
  

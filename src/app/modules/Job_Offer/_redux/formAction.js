@@ -5,6 +5,19 @@ import { toast } from "react-toastify";
 import React from 'react';
 const { actions } = JobOfferSlice;
 
+export const fetchAllFInalizeJobVacancy = () => async (dispatch) => {
+
+    return requestFromServer
+      .finalizeJobVacancy()
+      .then((response) => {
+        dispatch(actions.AllFinalizeJobVacancyFetched(response?.data?.data));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Job Vacancy";
+        dispatch(actions.AllFinalizeJobVacancyFetched([]));
+      });
+  
+};
 
 export const fetchJobVacancy = (Id) => async (dispatch) => {
   if (Id) {
@@ -167,3 +180,11 @@ export const SendJobOfferEmail = (body) => (dispatch) => {
  dispatch(actions.stopCall());
     });
 };
+
+export const Clear=()=>(dispatch)=>{
+   dispatch(actions.AllFinalizeJobVacancyFetched([]));
+   setTimeout(() => {
+        window.location.reload();
+    }, 2000); 
+
+}

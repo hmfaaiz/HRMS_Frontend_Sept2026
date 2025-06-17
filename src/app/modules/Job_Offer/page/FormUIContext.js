@@ -13,6 +13,7 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 export function FormUIProvider({ FormUIEvents, children }) {
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [signatoryisShow, setSignatoryisShow] = useState(false);
   const [applicantVacancyId, setApplicantVacancyId] = useState(null);
   const [headOfHrId, setHeadOfHrId] = useState(null);
   const [hrId, setHrId] = useState(null);
@@ -33,15 +34,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
   const initUser = {
-    // Id: "",
-    // interview_date: "",
-    // interview_time: "",
-    // locationId: "",
-    // interview_detail: "",
-    // interview_remarks: "",
-    // interview_recommendation: "",
-    // recommendedApplicantStatusId: null,
-    // interviewers: [],
+ 
   };
 
   const value = {
@@ -63,11 +56,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setHeadOfHrId,
     headOfHrId,
     initUser,
-    newFormButtonClick: FormUIEvents.newFormButtonClick,
-    openEditFormDialog: FormUIEvents.openEditFormDialog,
-    openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
-    openActiveFormDialog: FormUIEvents.openActiveFormDialog,
-    openReadFormDialog: FormUIEvents.openReadFormDialog,
+    setSignatoryisShow,signatoryisShow
+    
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

@@ -11,6 +11,7 @@ const initialState = {
   previewJobOfferLetterwData: null,
   pdfGenerateLoading: false,
   emailSendLoading: false,
+  allFinalizeJobVacancyList: [],
 
 };
 
@@ -62,7 +63,13 @@ export const JobOfferSlice = createSlice({
         state.emailSendLoading = false;
 
     },
-    JobVacancyFetched: (state, action) => {
+    
+    AllFinalizeJobVacancyFetched: (state, action) => {
+      state.error = null;
+      state.allFinalizeJobVacancyList = action.payload;
+   
+    }
+    , JobVacancyFetched: (state, action) => {
       state.error = null;
       state.jobData = action.payload;
     },
