@@ -28,42 +28,37 @@ export function FormTable() {
       setIds: formUIContext.setIds,
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
-      openEditFormDialog: formUIContext.openEditFormDialog,
-      openDeleteFormDialog: formUIContext.openDeleteFormDialog,
-      openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
-      openPostingFormDialog: formUIContext.openPostingFormDialog,
-      openHoldFormDialog: formUIContext.openHoldFormDialog,
-      openCloseFormDialog: formUIContext.openCloseFormDialog,
+      openApplicantReadFormDialog:formUIContext.openApplicantReadFormDialog,
     };
   }, [formUIContext]);
 
 
-  const { currentState, userAccess } = useSelector(
+  const { currentState, userAccess, userApplicantAccess } = useSelector(
     (state) => {
       return {
 
 
         currentState: state.recruitment_dashboard,
         userAccess: state?.auth?.userAccess["recruitment_dashboard"],
+        userApplicantAccess: state?.auth?.userAccess["applicant_profile"],
       }
     },
     shallowEqual
   );
 
 
-  
+
   const { totalCount, dataForEdit, listLoading } = currentState;
-console.log("table1111",dataForEdit)
+
   //totalCount = 10
 
   const dispatch = useDispatch();
 
 
-  const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadResumeSearchEngine"
+  const isAccessForView = userApplicantAccess?.find(
+    (item) => item.componentName === "ReadApplicantProfile"
   );
-
 
 
 
@@ -96,7 +91,7 @@ console.log("table1111",dataForEdit)
     },
 
     {
-      dataField: "JobTitle",
+      dataField: "",
       text: "Job Title",
       sort: false,
       sortCaret: sortCaret,
@@ -121,7 +116,7 @@ console.log("table1111",dataForEdit)
       }
     },
     {
-      dataField: "AppliedOn",
+      dataField: "",
       text: "Applied On",
       formatter: (cell, row) => {
         if (!row.details_applicant_vacancy || row.details_applicant_vacancy.length === 0) return "-";
@@ -137,7 +132,7 @@ console.log("table1111",dataForEdit)
         const month = String(latestDate.getMonth() + 1).padStart(2, "0");
         const year = latestDate.getFullYear();
 
-        return `${day}/${month}/${year}`;
+        return `${day}-${month}-${year}`;
       },
       sort: false,
       sortCaret: sortCaret,
@@ -187,41 +182,25 @@ console.log("table1111",dataForEdit)
       },
     },
 
-    // {
-    //   dataField: "InterviewRecommendations",
-    //   text: "Interview Recommendations",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-
-    // {
-    //   dataField: "action",
-    //   text: "Actions",
-    //   isDummyField: true,
-    //   formatter: ActionsColumnFormatter,
-    //   formatExtraData: {
-    //     openEditFormDialog: formUIProps.openEditFormDialog,
-    //     openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-    //     openActiveFormDialog: formUIProps.openActiveFormDialog,
-    //     openReadFormDialog: formUIProps.openReadFormDialog,
-    //     isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
-
-
-
-    //   },
-
-    //   classes: "text-center pr-0",
-    //   headerClasses: "text-center pr-3",
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    // },
+  
   ];
-
+  if (isAccessForView?.isAccess) {
+    columns.push({
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        openApplicantReadFormDialog: formUIProps.openApplicantReadFormDialog,
+        isAccessForView: true,
+      },
+      classes: "text-center ",
+      headerClasses: "text-center",
+      style: {
+        minWidth: "10px",
+      },
+    });
+  }
   //Table pagination properties
   const paginationOptions = {
     custom: true,
@@ -247,7 +226,7 @@ console.log("table1111",dataForEdit)
                 bootstrap4
                 remote
                 keyField="Id"
-                 data={dataForEdit || []}
+                data={dataForEdit || []}
                 // data={dataForEdit === null ? [] : dataForEdit}
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}

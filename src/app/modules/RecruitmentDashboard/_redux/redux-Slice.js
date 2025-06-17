@@ -55,7 +55,7 @@ export const RecruitmentDashboardSlice = createSlice({
             state.error = null;
             const totalResult = action.payload.data?.data.totalResults;
             state.totalCount = totalResult;
-            console.log("dat11111",state.dataForEdit)
+      
         },
 
 

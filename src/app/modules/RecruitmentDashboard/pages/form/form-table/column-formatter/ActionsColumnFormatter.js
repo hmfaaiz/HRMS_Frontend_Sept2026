@@ -10,39 +10,40 @@ export function ActionsColumnFormatter(
   rowIndex,
 
   {
- 
+
     isAccessForView,
-    openReadFormDialog,
+    openApplicantReadFormDialog,
 
 
   }
 ) {
-  const isUserRead = false;
+;
+
   return (
-  
+
 
     <div className="d-flex flex-nowrap align-items-center">
 
 
 
 
-  {/* View */}
-  {isAccessForView && (
-    <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
-      <a
-        className="btn btn-icon view-button"
-        onClick={() => openReadFormDialog()}
-      >
-        <span className="svg-icon svg-icon-md svg-icon-primary">
-          <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
-        </span>
-      </a>
-    </OverlayTrigger>
-  )}
+   
+      {/* View */}
+        {isAccessForView && (
+          <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
+            <a
+              className="btn btn-icon view-button"
+              onClick={() => openApplicantReadFormDialog(row.Id)}
+            >
+              <span className="svg-icon svg-icon-md svg-icon-primary">
+                <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
+              </span>
+            </a>
+          </OverlayTrigger>
+        )}
 
 
-
-</div>
+    </div>
 
   );
 }

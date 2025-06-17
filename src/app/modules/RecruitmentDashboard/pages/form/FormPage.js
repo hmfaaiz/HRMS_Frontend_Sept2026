@@ -16,7 +16,7 @@ import { DashboardSummary } from "./dashboard-summary/dashboardSummary";
 
 
 export function FormPage({ history }) {
-  console.log("aaaa1")
+
   const dispatch = useDispatch();
   const FormUIEvents = {
 
@@ -27,6 +27,9 @@ export function FormPage({ history }) {
     openReadFormDialog: (id) => {
       history.push(`/recruitment_dashboard/read-all-recruitment-dashboard/${id}/read`);
     },
+      openApplicantReadFormDialog: (id) => {
+  window.open(`/applicant_profile/read-all-applicant-profile/${id}/read`, "_blank");
+},
 
 
   };
@@ -49,8 +52,7 @@ export function FormPage({ history }) {
           />
         )}
       </Route>
-
-
+  
 
 
 

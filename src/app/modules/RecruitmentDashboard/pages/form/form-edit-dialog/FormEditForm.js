@@ -31,7 +31,7 @@ export function FormEditForm({
   
 
   const { totalCount, dataForEdit, listLoading } = currentState;
-  console.log("form1111",dataForEdit)
+
 
   return (
    <>

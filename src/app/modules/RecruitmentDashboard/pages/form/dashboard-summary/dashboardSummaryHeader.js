@@ -23,12 +23,8 @@ export function DashboardSummaryHeader() {
             queryParams: formUIContext.queryParams,
             setQueryParams: formUIContext.setQueryParams,
             openEditFormDialog: formUIContext.openEditFormDialog,
-            openDeleteFormDialog: formUIContext.openDeleteFormDialog,
-            openActiveFormDialog: formUIContext.openActiveFormDialog,
             openReadFormDialog: formUIContext.openReadFormDialog,
-            openPostingFormDialog: formUIContext.openPostingFormDialog,
-            openHoldFormDialog: formUIContext.openHoldFormDialog,
-            openCloseFormDialog: formUIContext.openCloseFormDialog,
+           
         };
     }, [formUIContext]);
 
@@ -57,7 +53,12 @@ export function DashboardSummaryHeader() {
 
 
         dispatch(actions.fetchRecruitmentDashboard(formUIProps.queryParams));
-    }, [formUIProps.queryParams, dispatch, totalCount]);
+    }, []);
+    // useEffect(() => {
+    //     formUIProps.setIds([]);
+
+    //     dispatch(actions.FetchRecruitmentDashboardFetched(formUIProps.queryParams));
+    // }, [formUIProps.queryParams, dispatch, totalCount]);
 
 
 

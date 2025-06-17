@@ -14,7 +14,7 @@ export const fetchRecruitmentDashboard = (queryparm) => async (dispatch) => {
 
     .then((response) => {
 
-console.log("response111",response)
+
       dispatch(actions.RecruitmentDashboardFetched(response));
     })
     .catch((error) => {
@@ -25,17 +25,18 @@ console.log("response111",response)
 };
 
 
-export const FetchRecruitmentDashboardFetched = (id) => (dispatch) => {
+export const FetchRecruitmentDashboardDetail = (queryparm,Id) => (dispatch) => {
 
-console.log("FetchRecruitmentDashboardFetched11111")
-  if (!id) {
+// formUIProps.queryParams
+
+  if (!Id) {
     return dispatch(actions.RecruitmentDashboardFetchedDetail({ dataForEdit: undefined }));
   }
-
+  const { filter, ...restQueryParams } = queryparm;
   return requestFromServer
-    .getRecruitment_dashboardDetailById({ Id: id })
+    .getRecruitment_dashboardDetailById({...restQueryParams,Id })
     .then((response) => {
-      console.log("respinse111",response)
+     
       const entities = response.data?.data;
 
 

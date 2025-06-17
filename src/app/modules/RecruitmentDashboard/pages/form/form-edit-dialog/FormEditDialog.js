@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show,dataForRead, onHide }) {
+export function FormEditDialog({ id, show, dataForRead, onHide }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -37,29 +37,29 @@ export function FormEditDialog({ id, show,dataForRead, onHide }) {
     setLoading(false);
   };
 
-  const dispatch=useDispatch();
- const {
-  actionsLoading,
-  dataForEdit,
-  isdataForRead,
-} = useSelector((state) => {
+  const dispatch = useDispatch();
+  const {
+    actionsLoading,
+    dataForEdit,
+    isdataForRead,
+  } = useSelector((state) => {
 
-  return {
-    actionsLoading: state.users.actionsLoading,
-    dataForEdit: state.recruitment_dashboard.dataForEdit,
-    isdataForRead: state.recruitment_dashboard.dataForRead,
-  };
-});
+    return {
+      actionsLoading: state.users.actionsLoading,
+      dataForEdit: state.recruitment_dashboard.dataForEdit,
+      isdataForRead: state.recruitment_dashboard.dataForRead,
+    };
+  });
 
 
-console.log("modal1111",id)
 
-useEffect(() => {
-  if (id) {
-    console.log("hitting1111");
-    dispatch(actions.FetchRecruitmentDashboardFetched(id));
-  }
-}, [id,dispatch]);
+
+  useEffect(() => {
+    if (id) {
+
+      dispatch(actions.FetchRecruitmentDashboardDetail(formUIProps.queryParams,id));
+    }
+  }, [id,formUIProps.queryParams, dispatch]);
 
 
 
@@ -71,13 +71,21 @@ useEffect(() => {
       aria-labelledby="example-modal-sizes-title-lg"
     >
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
-      <FormEditForm
+      {/* <FormEditForm
         onHide={onHide}
 
         enableLoading={enableLoading}
         loading={loading}
 
-      />
+      /> */}
+
+      <Modal.Body className="p-4"> {/* Apply padding here */}
+        <FormEditForm
+          onHide={onHide}
+          enableLoading={enableLoading}
+          loading={loading}
+        />
+      </Modal.Body>
       <ToastContainer
         position="top-right"
         autoClose={5000}

@@ -95,7 +95,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
   const applyFilter = (values) => {
-    console.log("values1111", values)
+
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
 
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
@@ -226,7 +226,7 @@ export function FormFIlter({ listLoading, user }) {
                                 name="vacancyStatusId"
                                 label="Vacancy Status"
                                 onChange={(e) => {
-                                  console.log("Selected value:", e.value);
+                
                                   setFieldValue("vacancyStatusId", e.value !== undefined ? e.value : null);
                                   handleSubmit();
                                 }}
@@ -344,7 +344,7 @@ export function FormFIlter({ listLoading, user }) {
                                 onChange={(e) => {
                                   const selectedCountryId = e.value || null;
                                   setFieldValue("countryId", selectedCountryId);
-                                  console.log("selectedCountryId1111", selectedCountryId)
+                                
                                   setFieldValue("cityId", null); // Reset city on country change
                                   handleSubmit();
                                 }}
