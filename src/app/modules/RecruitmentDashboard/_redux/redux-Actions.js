@@ -25,7 +25,7 @@ export const fetchRecruitmentDashboard = (queryparm) => async (dispatch) => {
 };
 
 
-export const FetchRecruitmentDashboardDetail = (queryparm,Id) => (dispatch) => {
+export const FetchRecruitmentDashboardDetail = (queryparm,Id,jobId) => (dispatch) => {
 
 // formUIProps.queryParams
 
@@ -34,7 +34,7 @@ export const FetchRecruitmentDashboardDetail = (queryparm,Id) => (dispatch) => {
   }
   const { filter, ...restQueryParams } = queryparm;
   return requestFromServer
-    .getRecruitment_dashboardDetailById({...restQueryParams,Id })
+    .getRecruitment_dashboardDetailById({...restQueryParams,Id ,jobId})
     .then((response) => {
      
       const entities = response.data?.data;
