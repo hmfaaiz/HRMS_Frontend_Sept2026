@@ -75,13 +75,14 @@ useEffect(() => {
 
   (leaveCalendar || []).forEach((leave) => {
     const details = leave?.t_leave_application_details || [];
+    const isSandwich = leave?.isSandwich;
 
     if (details.length === 0) return;
 
     const allCancelled = details.every(d => d.isCancel === true);
     const allNotCancelled = details.every(d => d.isCancel === false);
 
-    if (allCancelled) return; // ❌ skip fully cancelled leave
+    if (allCancelled) return; // 
 
     // ✅ Use non-cancelled days only
     const validDates = details
