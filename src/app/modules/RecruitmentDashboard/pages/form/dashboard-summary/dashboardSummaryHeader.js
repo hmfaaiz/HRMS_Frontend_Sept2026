@@ -232,7 +232,7 @@ export function DashboardSummaryHeader() {
                                                             <div key={idx}
                                                                 //  className="d-flex justify-content-between pointer"  onClick={() => formUIProps.openReadFormDialog(step.interviewStatusId)}>
                                                                 className={`d-flex justify-content-between }`}
-                                                                onClick={step.count > 0 ? () => formUIProps.openReadFormDialog(step.interviewStatusId) : undefined}>
+                                                                onClick={step.count > 0 ? () => formUIProps.openReadFormDialog(job.id,step.interviewStatusId) : undefined}>
                                                                 <span>{step.title}</span>
                                                                 <span className={`${phase.textColor}`}>{step.count}</span>
                                                               

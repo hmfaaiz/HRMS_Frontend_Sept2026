@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, dataForRead, onHide }) {
+export function FormEditDialog({ id,jobId, show, dataForRead, onHide }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -55,17 +55,18 @@ export function FormEditDialog({ id, show, dataForRead, onHide }) {
 
 
   useEffect(() => {
-    if (id) {
+    if (id,jobId) {
 
-      dispatch(actions.FetchRecruitmentDashboardDetail(formUIProps.queryParams,id));
+      dispatch(actions.FetchRecruitmentDashboardDetail(formUIProps.queryParams,id,jobId));
     }
-  }, [id,formUIProps.queryParams, dispatch]);
+  }, [id,jobId,formUIProps.queryParams, dispatch]);
 
 
 
   return (
     <Modal
-      size="xl"
+      size="lg"
+      dialogClassName="modal-75vw"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
