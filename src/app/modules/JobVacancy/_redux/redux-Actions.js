@@ -73,7 +73,7 @@ export const createJobVacancy = (jobVacancyForCreation, disbaleLoading, onHide) 
   dispatch
 ) => {
 
-console.log("onhide111",onHide)
+
   return requestFromServer
     .createJobVacancy(jobVacancyForCreation)
     .then((res) => {
