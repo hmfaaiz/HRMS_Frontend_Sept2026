@@ -52,8 +52,8 @@ const profileValidation = Yup.object().shape(
       }),
     codeAuto: Yup.string()
       .nullable()
-      .matches(/^\d{6}$/, 'Must be exactly 6 digits')
-      .required('Required*'),
+      .matches(/^\d{6}$/, 'Must be exactly 6 digits'),
+      // .required('Required*'),
     firstName: Yup.string()
       .required("Required*"),
     lastName: Yup.string()
@@ -175,6 +175,7 @@ const profileValidation = Yup.object().shape(
       .required('Required*'),
 
     passportNo: Yup.string()
+    .nullable()
     .max(15, 'Passport number must be at most 15 characters'),
     // on instruction of Mr. Mubin
       // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
