@@ -46,7 +46,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     religionId: "",
 
     countryId: null,
-    cityId:null,
+    cityId: null,
     additional_summary: "",
     phone_official: "",
     phone_cell: "",
@@ -74,7 +74,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
 
     email: "",
     password: "",
-profile_image:"",
+    profile_image: "",
   };
 
 
@@ -91,9 +91,8 @@ profile_image:"",
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
-    openPostingFormDialog: FormUIEvents.openPostingFormDialog,
-    openHoldFormDialog: FormUIEvents.openHoldFormDialog,
-    openCloseFormDialog: FormUIEvents.openCloseFormDialog,
+    openConvertFormDialog: FormUIEvents.openConvertFormDialog,
+  
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

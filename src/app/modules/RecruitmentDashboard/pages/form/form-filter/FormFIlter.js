@@ -97,7 +97,7 @@ export function FormFIlter({ listLoading, user }) {
   const applyFilter = (values) => {
 
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
-
+console.log("value111", newQueryParams, formUIProps.queryParams)
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1
 

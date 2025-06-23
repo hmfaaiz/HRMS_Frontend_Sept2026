@@ -32,9 +32,8 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
-      openPostingFormDialog: formUIContext.openPostingFormDialog,
-      openHoldFormDialog: formUIContext.openHoldFormDialog,
-      openCloseFormDialog: formUIContext.openCloseFormDialog,
+      openConvertFormDialog: formUIContext.openConvertFormDialog,
+   
     };
   }, [formUIContext]);
 
@@ -77,20 +76,11 @@ export function FormTable() {
     (item) => item.componentName === "DeleteApplicantProfile"
   );
 
+  const isAccessForConvert = userAccess?.find(
+    (item) => item.componentName === "ConvertApplicantEmployee"
+  );
 
 
-  // Posting
-
-  const isAccessForPost = userAccess?.find(
-    (item) => item.componentName === "PostApplicantProfile"
-  );
-  const isAccessForHold = userAccess?.find(
-    (item) => item.componentName === "HoldApplicantProfile"
-  );
-  const isAccessForClose = userAccess?.find(
-    (item) => item.componentName === "CloseApplicantProfile"
-  );
-  // Table columns
 
 
 
@@ -185,6 +175,8 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openConvertFormDialog: formUIProps.openConvertFormDialog,
+        isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete

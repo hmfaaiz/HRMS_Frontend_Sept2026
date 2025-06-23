@@ -30,7 +30,7 @@ export function updateApplicantProfile(body) {
 //Delete
 export function deleteApplicantProfile(body) {
 
-  return axios.patch(`${USERS_URL}/applicant_profile/delete-applicant-profile`, body);
+  return axios.delete(`${USERS_URL}/applicant_profile/delete-applicant-profile`, body);
 }
 
 //delete Applicant cancancy
@@ -40,4 +40,10 @@ export function deleteApplicantVacancyDetailById(body) {
 
 export function uploadFile(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
+}
+
+
+export function convertApplicantToEmployee(body) {
+   
+  return axios.put(`${USERS_URL}/applicant_profile/convert-applicant-employee`, body);
 }
