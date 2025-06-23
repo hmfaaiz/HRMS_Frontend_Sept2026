@@ -9,7 +9,7 @@ import axios from "axios";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import * as actions from "../../../../Dashboard/_redux/dashboardActions";
+import * as actions from "../../../_redux/redux-Actions";
 import DatePicker from "react-datepicker";
 import { fetchAllCity, fetchAllCountry, fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
@@ -97,11 +97,12 @@ export function FormFIlter({ listLoading, user }) {
   const applyFilter = (values) => {
 
     const newQueryParams = prepareFilter(formUIProps.queryParams, values)
-console.log("value111", newQueryParams, formUIProps.queryParams)
+
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1
 
       formUIProps.setQueryParams(newQueryParams)
+      dispatch(actions.fetchRecruitmentDashboard(newQueryParams));
 
     }
   }
