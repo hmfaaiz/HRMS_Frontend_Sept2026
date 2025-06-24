@@ -47,3 +47,13 @@ export function convertApplicantToEmployee(body) {
    
   return axios.put(`${USERS_URL}/applicant_profile/convert-applicant-employee`, body);
 }
+
+export function generatejob_offer_letter(body) {
+
+  const config = {
+    responseType:  'arraybuffer', 
+  };
+
+  return axios.post(`${USERS_URL}/applicant_profile/generate-offer-letter`, body,config);
+}
+

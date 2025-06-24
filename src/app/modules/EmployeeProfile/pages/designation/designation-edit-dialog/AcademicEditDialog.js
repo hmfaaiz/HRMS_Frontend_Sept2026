@@ -125,7 +125,8 @@ export function AcademicEditDialog({ id, show, onHide, userForRead }) {
         defaultShiftId: user.defaultShiftId,
         attendanceType: user.attendanceType,
         dateOfBirth: user.dateOfBirth,
-        dateOfRetirement: user.dateOfRetirement
+        dateOfRetirement: user.dateOfRetirement,
+        relation_name: user.relation_name,
       };
 
 

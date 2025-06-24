@@ -38,12 +38,13 @@ export function FormTable() {
   }, [formUIContext]);
 
 
-  const { currentState, userAccess } = useSelector(
+  const { currentState, userAccess,pdfGenerateLoading } = useSelector(
     (state) => {
       return {
 
 
         currentState: state.applicant_profile,
+        pdfGenerateLoading: state.applicant_profile.pdfGenerateLoading,
         userAccess: state?.auth?.userAccess["applicant_profile"],
       }
     },
@@ -171,6 +172,8 @@ export function FormTable() {
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
+        dispatch,
+        pdfGenerateLoading,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
