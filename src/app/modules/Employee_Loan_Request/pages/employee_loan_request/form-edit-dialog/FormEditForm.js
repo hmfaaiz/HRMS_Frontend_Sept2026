@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 import { format, parse } from "date-fns";
-import CustomFormLoanDialog  from "./CustomFormLoanDialog"
+import CustomFormLoanDialog from "./CustomFormLoanDialog";
 import {
   DatePickerField,
   Input,
@@ -26,7 +26,10 @@ import {
   fetchPayrollConfigApproverPermission,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { updateApprovedStatus, fetchEmployeeLoanRequest } from "../../../_redux/redux-Actions";
+import {
+  updateApprovedStatus,
+  fetchEmployeeLoanRequest,
+} from "../../../_redux/redux-Actions";
 
 const EmployeeLoanRequestSchema = Yup.object().shape({
   loan_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -61,7 +64,8 @@ export function FormEditForm({
   isEdit,
   isFileReq,
   setIsFileReq,
-  disbaleLoading, formUIProps
+  disbaleLoading,
+  formUIProps,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -69,10 +73,13 @@ export function FormEditForm({
   const minDate = new Date(2024, 10, 6);
   useEffect(() => {
     if (!user.Id) {
-
       dispatch(actions.getAllLoanType());
       dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
-      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
+      dispatch(
+        fetchPayrollConfigApproverPermission(
+          "allPayrollConfigApproverPermissionList"
+        )
+      );
     }
     //allPayrolGroupList
   }, [dispatch, user.Id]);
@@ -89,9 +96,10 @@ export function FormEditForm({
   const [startDatePolicy, setStartDatePolicy] = useState();
   const [startDateLimit, setStartDateLimit] = useState();
   const [subsidiaryid, setSubsidiaryid] = useState();
-  const [payrollConfigApproverPermission, setPayrollConfigApproverPermission] = useState(false);
-
-
+  const [
+    payrollConfigApproverPermission,
+    setPayrollConfigApproverPermission,
+  ] = useState(false);
 
   const { currentState, userAccess, auth, entities } = useSelector((state) => {
     return {
@@ -110,14 +118,14 @@ export function FormEditForm({
     setMonthlyInstallments(userForEdit?.monthly_installment);
     setChangeLoanType(userForEdit?.loan_typeId);
     setIsClear(false);
-    checkPermission()
+    checkPermission();
   }, [userForEdit]);
-
 
   const policyLoadByLoanType = (changeLoanType) => {
     if (changeLoanType) {
-
-      setSubsidiaryid(currentState?.loan_config_details_permission?.loanDetails.subsidiaryId)
+      setSubsidiaryid(
+        currentState?.loan_config_details_permission?.loanDetails.subsidiaryId
+      );
       let loandetails = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
         (item) => item.loan_typeId === changeLoanType
       );
@@ -135,72 +143,72 @@ export function FormEditForm({
       let monthlySalarySuggest;
 
       //calculation for monthly amount suggestion limit by installment deduction basis type
-      if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type == 1) {
-        monthlySalarySuggest = (salary?.gross *
-          parseFloat(
-            currentState?.loan_config_details_permission?.loanDetails
-              ?.installment_deduction_percentage
-          )) / 100
-
-      } else if (currentState?.loan_config_details_permission?.loanDetails?.installment_deduction_basis_type === 0) {
-        monthlySalarySuggest = (salary?.basic *
-          parseFloat(
-            currentState?.loan_config_details_permission?.loanDetails
-              ?.installment_deduction_percentage
-          )) / 100;
+      if (
+        currentState?.loan_config_details_permission?.loanDetails
+          ?.installment_deduction_basis_type == 1
+      ) {
+        monthlySalarySuggest =
+          (salary?.gross *
+            parseFloat(
+              currentState?.loan_config_details_permission?.loanDetails
+                ?.installment_deduction_percentage
+            )) /
+          100;
+      } else if (
+        currentState?.loan_config_details_permission?.loanDetails
+          ?.installment_deduction_basis_type === 0
+      ) {
+        monthlySalarySuggest =
+          (salary?.basic *
+            parseFloat(
+              currentState?.loan_config_details_permission?.loanDetails
+                ?.installment_deduction_percentage
+            )) /
+          100;
       } else {
-        monthlySalarySuggest = 0
+        monthlySalarySuggest = 0;
       }
 
       //no. of installments
       if (loandetails?.max_no_of_installment_for_loan) {
-        monthlyInstallment = loandetails?.max_no_of_installment_for_loan
-
+        monthlyInstallment = loandetails?.max_no_of_installment_for_loan;
       }
 
-      setMonthlyInstallmentsLimit(monthlyInstallment)
+      setMonthlyInstallmentsLimit(monthlyInstallment);
 
       //start date policy for loan deduction
       if (loandetails?.installment_start_date_policy) {
-        setStartDatePolicy(loandetails?.installment_start_date_policy)
-
+        setStartDatePolicy(loandetails?.installment_start_date_policy);
       }
 
-
       //if already loan taken ,running balanace
-      const currentLoan = entities.filter(item => item?.loan_typeId === changeLoanType && item.isLoanContinuing);
+      const currentLoan = entities.filter(
+        (item) => item?.loan_typeId === changeLoanType
+      );
 
-      let runningBalance = 0
-      currentLoan.forEach(loan => {
-
-
-        loan.details.forEach(detail => {
+      let runningBalance = 0;
+      currentLoan.forEach((loan) => {
+        loan.details.forEach((detail) => {
           // Add the payment amount from the running balance
 
           if (!detail?.is_deducted) {
-
             runningBalance += detail.amount_received;
           }
-
         });
       });
 
-
-
       //max loan amount
       if (loandetails?.basis == null) {
-
-
         setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
       } else {
         // set min value salary or loan limit
 
-        setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance);
+        setMaxAmountLimit(
+          Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance
+        );
       }
 
-
       setMaxMonthlyAmountSuggest(monthlySalarySuggest);
-
 
       if (employee?.dateOfJoining) {
         const joiningDate = new Date(employee?.dateOfJoining);
@@ -209,7 +217,6 @@ export function FormEditForm({
       }
       setPayrollMonth(null);
       if (payroll?.startDate) {
-
         const payrollDate = new Date(payroll?.startDate);
         payrollDate.setHours(0, 0, 0, 0);
         setPayrollMonth(payrollDate); // Update state with the valid date
@@ -218,12 +225,12 @@ export function FormEditForm({
       setMaxAmountLimit("");
       setMaxMonthlyAmountSuggest("");
       setTotalInstallments("");
-      setMonthlyInstallmentsLimit("")
+      setMonthlyInstallmentsLimit("");
     }
-  }
+  };
 
   useEffect(() => {
-    policyLoadByLoanType(changeLoanType)
+    policyLoadByLoanType(changeLoanType);
   }, [changeLoanType, isEdit]);
 
   // useEffect(() => {
@@ -279,13 +286,11 @@ export function FormEditForm({
 
   //     }
 
-
   //     //if already loan taken ,running balanace
   //     const currentLoan = entities.filter(item => item?.loan_typeId === changeLoanType && item.isLoanContinuing);
 
   //     let runningBalance = 0
   //     currentLoan.forEach(loan => {
-
 
   //       loan.details.forEach(detail => {
   //         // Add the payment amount from the running balance
@@ -298,11 +303,8 @@ export function FormEditForm({
   //       });
   //     });
 
-
-
   //     //max loan amount
   //     if (loandetails?.basis == null) {
-
 
   //       setMaxAmountLimit(loandetails?.max_loan_amount - runningBalance);
   //     } else {
@@ -311,9 +313,7 @@ export function FormEditForm({
   //       setMaxAmountLimit(Math.min(loandetails?.max_loan_amount, salaryAmount) - runningBalance);
   //     }
 
-
   //     setMaxMonthlyAmountSuggest(monthlySalarySuggest);
-
 
   //     if (employee?.dateOfJoining) {
   //       const joiningDate = new Date(employee?.dateOfJoining);
@@ -348,85 +348,90 @@ export function FormEditForm({
   //   )
   // );
 
-
-
-
   // Function to get the last payroll month
   const getLastPayrollMonth = (loanDeductionDate) => {
-
     // Get the payroll month dates from the account details
-    const payrollDates = loanDeductionDate.map(detail => new Date(detail.payroll_month_date));
+    const payrollDates = loanDeductionDate.map(
+      (detail) => new Date(detail.payroll_month_date)
+    );
 
     // Sort the payroll dates in descending order and get the most recent one
     const latestDate = payrollDates.sort((a, b) => b - a)[0];
 
     // Return the most recent payroll date as a string
-    return latestDate.toLocaleDateString('en-GB'); // Format it as 'dd/mm/yyyy'
-
-  }
+    return latestDate.toLocaleDateString("en-GB"); // Format it as 'dd/mm/yyyy'
+  };
 
   const formatDateString = (dateString) => {
-    const [month, day, year] = dateString.split('/');
-    const paddedMonth = month.padStart(2, '0');
-    const paddedDay = day.padStart(2, '0');
+    const [month, day, year] = dateString.split("/");
+    const paddedMonth = month.padStart(2, "0");
+    const paddedDay = day.padStart(2, "0");
     return `${paddedMonth}/${paddedDay}/${year}`;
-  }
-
-
+  };
 
   const filteredOptions = loan_type?.map((option) => {
-
-
     //check eleigibility according to joining
     let currentDropDownLoan = currentState?.loan_config_details_permission?.loanDetails?.details?.find(
-      (item) => item?.loan_typeId === option?.value);
-
+      (item) => item?.loan_typeId === option?.value
+    );
 
     let eligibilityMonth;
 
     const today = new Date();
-    const dateOfJoining = new Date(currentState?.loan_config_details_permission?.employee?.dateOfJoining);
+    const dateOfJoining = new Date(
+      currentState?.loan_config_details_permission?.employee?.dateOfJoining
+    );
 
-    if (currentDropDownLoan?.eligibilityPolicy <= getDateDiffInMonths(dateOfJoining, today)) {
+    if (
+      currentDropDownLoan?.eligibilityPolicy <=
+      getDateDiffInMonths(dateOfJoining, today)
+    ) {
       eligibilityMonth = true;
     }
 
     //if multiple loans are not allowed
-    if (!currentDropDownLoan?.isAllowMultipleLoans && entities?.some(item => item?.loan_typeId === option?.value && item.isLoanContinuing)) {
+    if (
+      !currentDropDownLoan?.isAllowMultipleLoans &&
+      entities?.some(
+        (item) => item?.loan_typeId === option?.value && item.isLoanContinuing
+      )
+    ) {
       eligibilityMonth = false;
     }
 
     //if loan completed then how many months are  required to take it again
     if (currentDropDownLoan?.monthsToApplyForNewLoan > 0) {
-      const matchingEntities = entities.filter(item => item?.loan_typeId === option?.value && !item.isLoanContinuing);
+      const matchingEntities = entities.filter(
+        (item) => item?.loan_typeId === option?.value && !item.isLoanContinuing
+      );
       let monthsRequiredForLoan = false;
       if (matchingEntities.length > 0) {
-
-        matchingEntities.forEach(entity => {
-
+        matchingEntities.forEach((entity) => {
           const lastLoanDeduction = getLastPayrollMonth(entity?.details);
 
           if (lastLoanDeduction) {
             const formattedDateString = formatDateString(lastLoanDeduction);
-            const lastLoanDeductionDate = parse(formattedDateString, 'dd/MM/yyyy', new Date());
-            if (currentDropDownLoan?.monthsToApplyForNewLoan <= getDateDiffInMonths(new Date(lastLoanDeductionDate), today)) {
+            const lastLoanDeductionDate = parse(
+              formattedDateString,
+              "dd/MM/yyyy",
+              new Date()
+            );
+            if (
+              currentDropDownLoan?.monthsToApplyForNewLoan <=
+              getDateDiffInMonths(new Date(lastLoanDeductionDate), today)
+            ) {
               eligibilityMonth = true;
-
-
             } else {
-              monthsRequiredForLoan = true
+              monthsRequiredForLoan = true;
               eligibilityMonth = false;
-
             }
           }
-
-        })
-
-
-
+        });
       }
 
-      const matchingCurrentLoans = entities.filter(item => item?.loan_typeId === option?.value && item.isLoanContinuing);
+      const matchingCurrentLoans = entities.filter(
+        (item) => item?.loan_typeId === option?.value && item.isLoanContinuing
+      );
       if (matchingCurrentLoans.length > 0) {
         eligibilityMonth = false;
       }
@@ -434,7 +439,6 @@ export function FormEditForm({
       if (monthsRequiredForLoan) {
         eligibilityMonth = false;
       }
-
     }
     const isDisabled = !eligibilityMonth; // Disable option if not eligible or not in filteredOptions
 
@@ -444,23 +448,18 @@ export function FormEditForm({
     };
   });
 
-const isLoanCompleted=()=>{
- 
-
-}
+  const isLoanCompleted = () => {};
 
   const clearCustomeData = () => {
     setMaxAmountLimit("");
     setMaxMonthlyAmountSuggest("");
     setTotalInstallments("");
-    setMonthlyInstallmentsLimit("")
+    setMonthlyInstallmentsLimit("");
   };
 
-
   useEffect(() => {
-
-    clearCustomeData()
-  }, [currentState])
+    clearCustomeData();
+  }, [currentState]);
   const statusOptions = [
     { value: 0, label: "Inactive" },
     { value: 1, label: "Active" },
@@ -469,31 +468,23 @@ const isLoanCompleted=()=>{
 
   //update status
   const UpdateApprovedStatus = async (Id, approved_status) => {
-
     if (Id && approved_status) {
       let data = {
-        Id, approved_status,
-
-      }
+        Id,
+        approved_status,
+      };
       await dispatch(updateApprovedStatus(data, disbaleLoading, onHide));
-   
+
       await dispatch(fetchEmployeeLoanRequest(formUIProps));
       setIds("");
-
     }
-
-  }
-
+  };
 
   const addMonthsToDate = (dateStr, months) => {
-
     const date = new Date(dateStr);
     date.setMonth(date.getMonth() + months);
 
-
     date.setHours(0, 0, 0, 0);
-
-
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Reset time to midnight (00:00:00)
@@ -505,36 +496,33 @@ const isLoanCompleted=()=>{
       date.setHours(0, 0, 0, 0); // Ensure time is reset to 00:00:00
     }
 
-
     setStartDateLimit(date);
 
     return date;
   };
 
-
-  //approval permission 
+  //approval permission
   const checkPermission = () => {
-
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
-      entity => entity.subsidiaryId === Number(userForEdit?.subsidiaryId)
+      (entity) => entity.subsidiaryId === Number(userForEdit?.subsidiaryId)
     );
-
 
     if (filteredPermission?.length > 0) {
       const permission = filteredPermission[0];
       const roleId = String(auth?.roleId).trim();
-      const loanApproverIds = permission?.loanApproverId?.map(id => String(id).trim());
+      const loanApproverIds = permission?.loanApproverId?.map((id) =>
+        String(id).trim()
+      );
 
       const isRoleLoanApprover = loanApproverIds?.includes(roleId);
       setPayrollConfigApproverPermission(isRoleLoanApprover);
-
     }
-  }
+  };
 
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
   const handleCheckboxClick = () => {
-    isLoanCompleted()
+    isLoanCompleted();
     setShowModal(true); // Open the modal when checkbox is clicked
   };
 
@@ -542,8 +530,7 @@ const isLoanCompleted=()=>{
     setShowModal(false); // Close the modal
   };
 
-  const{    activeFiscalYear
-    } = useSelector((state) => state.dashboard);
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
   return (
     <Formik
@@ -556,7 +543,6 @@ const isLoanCompleted=()=>{
 
         const clearForm = () => {
           resetForm();
-
         };
         saveForm(
           values,
@@ -566,7 +552,9 @@ const isLoanCompleted=()=>{
           setMaxMonthlyAmountSuggest,
           setMaxAmountLimit,
           clearForm,
-          monthlyInstallmentsLimit, setMonthlyInstallmentsLimit, subsidiaryid,
+          monthlyInstallmentsLimit,
+          setMonthlyInstallmentsLimit,
+          subsidiaryid
         );
       }}
     >
@@ -586,7 +574,11 @@ const isLoanCompleted=()=>{
               </div>
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
-              <fieldset disabled={isUserForRead}>
+              <fieldset
+                disabled={
+                  isUserForRead || !currentState?.loan_config_details_permission
+                }
+              >
                 <div className="form-group row">
                   {/* <div className="col-12 col-md-12  p-0 m-0"> */}
                   <div className="col-12 col-md-6 ">
@@ -598,11 +590,14 @@ const isLoanCompleted=()=>{
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isEdit}
+                      isDisabled={
+                        isUserForRead ||
+                        !currentState?.loan_config_details_permission
+                      }
                       onChange={(e) => {
                         setFieldValue("loan_typeId", e.value || null);
                         setChangeLoanType(e.value);
-                        policyLoadByLoanType(e.value)
+                        policyLoadByLoanType(e.value);
                       }}
                       value={
                         loan_type?.find(
@@ -610,36 +605,32 @@ const isLoanCompleted=()=>{
                         ) || null
                       }
                       options={filteredOptions}
-
                       error={errors.loan_typeId}
                       touched={touched.loan_typeId}
                     />
                   </div>
                   {/* </div> */}
 
-
                   {/* Active payroll month */}
 
-
-
-            <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
-
-  {activeFiscalYear ? (() => {
-
-    return (
-      <>
-        <div>
-          <b>Active Fiscal Year -</b>{" "}
-          {activeFiscalYear?.label}
-        </div>
-        <div>
-          <b>Active Payroll Month -</b>{" "}
-          {activeFiscalYear?.payrollMonthLabel}
-        </div>
-      </>
-    );
-  })() : null}
-</div>
+                  <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+                    {activeFiscalYear
+                      ? (() => {
+                          return (
+                            <>
+                              <div>
+                                <b>Active Fiscal Year -</b>{" "}
+                                {activeFiscalYear?.label}
+                              </div>
+                              <div>
+                                <b>Active Payroll Month -</b>{" "}
+                                {activeFiscalYear?.payrollMonthLabel}
+                              </div>
+                            </>
+                          );
+                        })()
+                      : null}
+                  </div>
 
                   <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
@@ -670,7 +661,11 @@ const isLoanCompleted=()=>{
                       }))}
                       error={errors.employee_loan_accountId}
                       touched={touched.employee_loan_accountId}
-                      isDisabled={userForEdit || userForEdit?.details[0]?.is_deducted}
+                      isDisabled={
+                        userForEdit ||
+                        userForEdit?.details[0]?.is_deducted ||
+                        !currentState?.loan_config_details_permission
+                      }
                     />
                   </div>
 
@@ -685,17 +680,17 @@ const isLoanCompleted=()=>{
                       placeholder="Select Date"
                       type="date"
                       onChange={(e) => {
-                        setFieldValue(
-                          "applied_date",
-                          e || null
-                        );
+                        setFieldValue("applied_date", e || null);
 
-                        addMonthsToDate(payrollMonth, startDatePolicy)
-
+                        addMonthsToDate(payrollMonth, startDatePolicy);
                       }}
                       minDate={dateOfJoining}
                       maxDate={new Date()}
-                      disabled={userForEdit || userForEdit?.details[0]?.is_deducted || !values.loan_typeId}
+                      disabled={
+                        userForEdit ||
+                        userForEdit?.details[0]?.is_deducted ||
+                        !values.loan_typeId
+                      }
                     />
                   </div>
 
@@ -716,7 +711,13 @@ const isLoanCompleted=()=>{
                       // minDate={new Date(values.applied_date) < new Date() ? new Date() : values.applied_date}
                       maxDate={startDateLimit}
                       // disabled={!payrollMonth || userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date}
-                      disabled={userForEdit || userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date || !payrollMonth}
+                      disabled={
+                        userForEdit ||
+                        userForEdit?.details[0]?.is_deducted ||
+                        !values.loan_typeId ||
+                        !values.applied_date ||
+                        !payrollMonth
+                      }
                     />
                   </div>
 
@@ -768,13 +769,13 @@ const isLoanCompleted=()=>{
                         <div className="d-flex">
                           <div className="d-flex"> Monthly Installment </div>
                           <div className="d-flex ml-3">
-                            {maxMonthlyAmountSuggest ? (<span>
-                              (Max Suggested Installment Based on Salary :{" "}
-                              {maxMonthlyAmountSuggest?.toLocaleString() || 0})
-
-                            </span>) : (null
-
-                            )}
+                            {maxMonthlyAmountSuggest ? (
+                              <span>
+                                (Max Suggested Installment Based on Salary :{" "}
+                                {maxMonthlyAmountSuggest?.toLocaleString() || 0}
+                                )
+                              </span>
+                            ) : null}
                             <span style={{ color: "red" }}>*</span>
                           </div>
                         </div>
@@ -806,10 +807,9 @@ const isLoanCompleted=()=>{
                       name="total_installment"
                       component={Input}
                       placeholder="Total installments"
-
                       label={
                         <div className="d-flex">
-                          <div className="d-flex">    Total installments</div>
+                          <div className="d-flex"> Total installments</div>
                           <div className="d-flex ml-3">
                             <span>
                               (Max installments :{" "}
@@ -836,7 +836,9 @@ const isLoanCompleted=()=>{
                         </span>
                       }
                       type="text"
-                      disabled={userForEdit || userForEdit?.details[0]?.is_deducted}
+                      disabled={
+                        userForEdit || userForEdit?.details[0]?.is_deducted
+                      }
                     />
                   </div>
 
@@ -865,7 +867,6 @@ const isLoanCompleted=()=>{
                     />
                   </div>
 
-
                   <div className="col-12 col-md-6 mt-3">
                     {/* Your Field component (Checkbox) */}
                     <Field
@@ -875,27 +876,27 @@ const isLoanCompleted=()=>{
                       id="isLoanContinuing"
                       checked={!values.isLoanContinuing && userForEdit}
                       onClick={handleCheckboxClick} // Trigger modal on checkbox click
-                      disabled={!userForEdit || !userForEdit?.isLoanContinuing }
+                      disabled={!userForEdit || !userForEdit?.isLoanContinuing}
                     />
-                    <label className="ml-2 mb-2" htmlFor="isLoanContinuing">Loan Completed</label>
+                    <label className="ml-2 mb-2" htmlFor="isLoanContinuing">
+                      Loan Completed
+                    </label>
 
                     {/* CustomFormLoanDialog component is rendered here and controlled by the state */}
 
-                    <CustomFormLoanDialog showModal={showModal} handleClose={handleCloseModal}  
-                
-                userForEdit={userForEdit}
-                
-                message={userForEdit && userForEdit.loan_amount_remaining == 0? "Are you sure to close this loan?":"Are you sure to close this loan, this loan is not completed?"}
-                handleReset={handleReset}
-                setIds={ setIds}
-                
-                />
-
-
+                    <CustomFormLoanDialog
+                      showModal={showModal}
+                      handleClose={handleCloseModal}
+                      userForEdit={userForEdit}
+                      message={
+                        userForEdit && userForEdit.loan_amount_remaining == 0
+                          ? "Are you sure to close this loan?"
+                          : "Are you sure to close this loan, this loan is not completed?"
+                      }
+                      handleReset={handleReset}
+                      setIds={setIds}
+                    />
                   </div>
-
-
-
                 </div>
               </fieldset>
             </Form>
@@ -943,15 +944,10 @@ const isLoanCompleted=()=>{
                   {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
-
-
                 </button>
 
-
-
-
-                {payrollConfigApproverPermission && (
-                  userForEdit ? (
+                {payrollConfigApproverPermission &&
+                  (userForEdit ? (
                     userForEdit?.approved_status === 2 ? (
                       <button
                         type="button"
@@ -962,6 +958,7 @@ const isLoanCompleted=()=>{
                       </button>
                     ) : userForEdit?.approved_status === 1 ? (
                       <></>
+                    ) : (
                       // for temporary purpose
                       // <button
                       //   type="button"
@@ -970,7 +967,6 @@ const isLoanCompleted=()=>{
                       // >
                       //   Reject
                       // </button>
-                    ) : (
                       <>
                         <button
                           type="button"
@@ -990,11 +986,7 @@ const isLoanCompleted=()=>{
                         </button> */}
                       </>
                     )
-                  ) : null
-                )}
-
-
-
+                  ) : null)}
               </>
             )}
           </Modal.Footer>

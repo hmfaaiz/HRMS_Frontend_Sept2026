@@ -56,60 +56,60 @@ export function LeaveBalanceTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "allocatedCount",
-      text: "Allocated Leave Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "availedCount",
-      text: "Availed",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "allocatedCount",
+    //   text: "Allocated Leave Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "availedCount",
+    //   text: "Availed",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
     
-    {
-      dataField: "carryForwardCount",
-      text: "Carry Forward Leave Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "lateCount",
-      text: "Late Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "encashmentCount",
-      text: "Encashment Leaves Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "carryForwardCount",
+    //   text: "Carry Forward Leave Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "lateCount",
+    //   text: "Late Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "encashmentCount",
+    //   text: "Encashment Leaves Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
     {
       dataField: "remainingCount",
-      text: "Remaining",
+      text: "Available Balance",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

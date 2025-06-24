@@ -4,7 +4,6 @@ import { Switch, Redirect } from "react-router-dom";
 import { InterviewSchedulePage } from "./page/InterviewSchedulePage";
 
 export default function InterviewScheduleMangement() {
-  console.log("InterviewScheduleMangementInterviewScheduleMangement");
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

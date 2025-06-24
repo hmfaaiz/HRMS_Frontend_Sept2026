@@ -118,20 +118,20 @@ export function FormTable() {
       },
       formatter: (cell) => formatNumberWithCommas(cell),
     },
-    {
-      dataField: "applied_date",
-      text: "applied date",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        // Format the date without timestamp
-        return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
-      },
-    },
+    // {
+    //   dataField: "applied_date",
+    //   text: "applied date",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    //   formatter: (cell) => {
+    //     // Format the date without timestamp
+    //     return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
+    //   },
+    // },
     {
       dataField: "request_status",
       text: "Status",
@@ -142,62 +142,63 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         let text = "";
         let style = {};
-
         if (cell === "P") {
-          text = "Pending";
+          text = "Pending (Portal)";
+          style = { color: "green", fontWeight: "bold" };
+        } else if (cell === "A" && row?.approved_status === 0) {
+          text = "Pending (HRMS)";
           style = { color: "green", fontWeight: "bold" };
         } else if (cell === "A") {
-          text = "Approved";
+          text = !row?.isLoanContinuing ? "Completed" : "Active";
           style = { color: "black", fontWeight: "bold" };
         } else if (cell === "R") {
           text = "Rejected";
           style = { color: "red", fontWeight: "bold" };
         }
-
         return <span style={style}>{text}</span>;
       },
     },
-    {
-      dataField: "workflowAuthorties",
-      text: "Pending At",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        if (!Array.isArray(cell)) return "";
+    // {
+    //   dataField: "workflowAuthorties",
+    //   text: "Pending At",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!Array.isArray(cell)) return "";
 
-        // Find the first pending step
-        const pendingStep = cell.find((step) => step.authorityStatus === "P");
+    //     // Find the first pending step
+    //     const pendingStep = cell.find((step) => step.authorityStatus === "P");
 
-        if (pendingStep && pendingStep.approvalAuthorityEmp) {
-          const {
-            firstName,
-            middleName,
-            lastName,
-          } = pendingStep.approvalAuthorityEmp;
-          const fullName = [firstName, middleName, lastName]
-            .filter(Boolean)
-            .join(" ");
-          return `${fullName}`;
-        }
-      },
-    },
-    {
-      dataField: "request_remarks",
-      text: "Final Authority Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "220px",
-      },
-    },
+    //     if (pendingStep && pendingStep.approvalAuthorityEmp) {
+    //       const {
+    //         firstName,
+    //         middleName,
+    //         lastName,
+    //       } = pendingStep.approvalAuthorityEmp;
+    //       const fullName = [firstName, middleName, lastName]
+    //         .filter(Boolean)
+    //         .join(" ");
+    //       return `${fullName}`;
+    //     }
+    //   },
+    // },
+    // {
+    //   dataField: "request_remarks",
+    //   text: "Final Authority Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "220px",
+    //   },
+    // },
     {
       dataField: "action",
       text: "Actions",

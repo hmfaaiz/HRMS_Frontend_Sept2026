@@ -126,7 +126,7 @@ export function WorkflowTable({ onHide, show }) {
         maxWidth: "160px",
       },
       formatter: (cell) => {
-        return cell ? format(new Date(cell), "dd/MMM/yyyy:HH:mm:ss") : "";
+        return cell ? format(new Date(cell), "dd-MMM-yyyy:HH:mm:ss") : "";
       },
     },
     {
@@ -196,9 +196,12 @@ export function WorkflowTable({ onHide, show }) {
             <div className="col-3">
               Applied Date :{" "}
               <span className="font-weight-bold">
-                {new Date(
+                {/* {new Date(
                   formUIProps?.currentData?.parentData?.applied_date
-                ).toDateString() || ""}
+                ).toDateString() || ""} */}
+                {formUIProps?.currentData?.parentData?.applied_date ? format(new Date(
+                  formUIProps?.currentData?.parentData?.applied_date
+                ) , "dd-MMM-yyyy") : ""}
               </span>
             </div>
             <div className="col-3">

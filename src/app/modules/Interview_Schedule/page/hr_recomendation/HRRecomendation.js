@@ -37,6 +37,12 @@ const validationSchema = Yup.object().shape({
   dateOfJoining: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
+  probationPeriod: Yup.number()
+    .nullable()
+    .oneOf(
+      [1, 2, 3, 4, 5, 6],
+      "Probation period must be between 1 to 6 months"
+    ),
 });
 
 export default function HRRecomendation() {
@@ -56,10 +62,10 @@ export default function HRRecomendation() {
     };
   });
 
-  console.log("formUIProps", formUIProps.applicantDetail);
-  const { applicantStatusList, dashboard } = useSelector((state) => {
+  const { applicantStatusList, dashboard, entities } = useSelector((state) => {
     return {
       applicantStatusList: state?.interview_schedule?.applicantStatusList,
+      entities: state?.interview_schedule?.entities,
       dashboard: state?.dashboard,
     };
   }, shallowEqual);
@@ -169,22 +175,7 @@ export default function HRRecomendation() {
                                   />
                                 </div>
                               </div>
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-12">
-                                  <label>
-                                    <span>
-                                      HR Remarks{" "}
-                                      <span style={{ color: "red" }}>*</span>{" "}
-                                    </span>
-                                  </label>
-                                  <Field
-                                    name="hr_remarks"
-                                    component={TextArea}
-                                    placeholder="HR Remarks"
-                                    type="text"
-                                  />
-                                </div>
-                              </div>
+
                               <div className="row mt-2">
                                 <div className="col-12 col-md-4">
                                   <SearchSelect
@@ -196,7 +187,6 @@ export default function HRRecomendation() {
                                       </span>
                                     }
                                     onChange={(e) => {
-                                      console.log(e);
                                       setFieldValue(
                                         "locationId",
                                         e.value || null
@@ -222,9 +212,11 @@ export default function HRRecomendation() {
                                   </label>
                                   <Field
                                     name="monthlySalary"
+                                    value={values.monthlySalary}
                                     component={Input}
                                     placeholder="Monthly Salary"
                                     type="number"
+                                    amountFormat={true}
                                   />
                                 </div>
                               </div>
@@ -239,7 +231,6 @@ export default function HRRecomendation() {
                                       </span>
                                     }
                                     onChange={(e) => {
-                                      console.log(e);
                                       setFieldValue(
                                         "appointmentTypeId",
                                         e.value || null
@@ -267,7 +258,6 @@ export default function HRRecomendation() {
                                       </span>
                                     }
                                     onChange={(e) => {
-                                      console.log(e);
                                       setFieldValue(
                                         "jobPreferencesId",
                                         e.value || null
@@ -300,6 +290,11 @@ export default function HRRecomendation() {
                                     value={values?.dateOfJoining || ""}
                                     placeholder="Date of Joining"
                                     type="date"
+                                    minDate={
+                                      entities?.length > 0
+                                        ? new Date(entities[0].interview_date)
+                                        : ""
+                                    }
                                   />
                                 </div>
                                 <div className="col-12 col-md-4">
@@ -311,6 +306,22 @@ export default function HRRecomendation() {
                                     component={Input}
                                     placeholder="Probation Period"
                                     type="number"
+                                  />
+                                </div>
+                              </div>
+                              <div className="row mt-2">
+                                <div className="col-12 col-md-12">
+                                  <label>
+                                    <span>
+                                      HR Remarks{" "}
+                                      <span style={{ color: "red" }}>*</span>{" "}
+                                    </span>
+                                  </label>
+                                  <Field
+                                    name="hr_remarks"
+                                    component={TextArea}
+                                    placeholder="HR Remarks"
+                                    type="text"
                                   />
                                 </div>
                               </div>

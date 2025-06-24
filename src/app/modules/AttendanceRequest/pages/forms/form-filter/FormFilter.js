@@ -152,7 +152,7 @@ export function FormFilter() {
                 <Form className="form form-label-right">
                   <fieldset>
                     <div className="from-group row">
-                      <div className="col-12 col-md-12 row p-0 m-0">
+                      {/* <div className="col-12 col-md-12 row p-0 m-0">
                         <div className="col-12 col-md-3 mt-3">
                           <Field
                             name="currentLevel"
@@ -208,9 +208,9 @@ export function FormFilter() {
                               </div>
                             )}
                         </div>
-                      </div>
+                      </div> */}
                       {/* Employee Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
+                      {/* <div className="col-12 col-md-4 mt-3">
                         <Field
                           name="employeeId"
                           component={SearchSelect}
@@ -234,7 +234,7 @@ export function FormFilter() {
                           autoComplete="off"
                           options={employeeList}
                         />
-                      </div>
+                      </div> */}
                       {/* Employee Field End */}
                     </div>
 

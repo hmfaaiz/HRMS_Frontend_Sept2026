@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory, {
@@ -6,7 +5,7 @@ import paginationFactory, {
 } from "react-bootstrap-table2-paginator";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -25,13 +24,12 @@ import { formatNumberWithCommas } from "../../../../../utils/common";
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
- 
-  const formUIProps = useMemo(() => {
 
+  const formUIProps = useMemo(() => {
     return {
       ids: formUIContext.ids,
       setIds: formUIContext.setIds,
-      setIsFileReq:formUIContext.setIsFileReq,
+      setIsFileReq: formUIContext.setIsFileReq,
       employeeId: formUIContext.employeeId,
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
@@ -41,43 +39,35 @@ export function FormTable() {
       openReadFormDialog: formUIContext.openReadFormDialog,
     };
   }, [formUIContext]);
- 
 
-  const { currentState, userAccess } = useSelector(
-    (state) => {  return {
-     
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
       currentState: state.employee_loan_request,
       userAccess: state?.auth?.userAccess["employee_loan_request"],
-    }},
-    shallowEqual
-  );
-
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
- 
+
   //totalCount = 10
- 
+
   const dispatch = useDispatch();
- 
+
   useEffect(() => {
-  
     formUIProps.setIds("");
- 
- 
+
     dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
-  }, [formUIProps.queryParams, dispatch, totalCount,formUIProps.employeeId]);
- 
+  }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]);
+
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateEmployeeLoanRequest"
   );
- 
+
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteEmployeeLoanRequest"
   );
   // Table columns
   const columns = [
-
     {
       dataField: "LoanType.name",
       text: "Loan Type",
@@ -89,67 +79,53 @@ export function FormTable() {
       },
     },
 
-    
+    {
+      dataField: "total_loan_amount",
+      text: "total loan amount",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center", // Align header text to the left
+      },
+      formatter: (cell) => formatNumberWithCommas(cell),
+    },
 
- 
-{
-  dataField: "total_loan_amount",
-  text: "total loan amount",
-  sort: false,
-  sortCaret: sortCaret,
-  headerSortingClasses,
-  style: {
-    minWidth: "10px",
-    textAlign: "center",
-  },
-  headerStyle: {
-    textAlign: "center", // Align header text to the left
-  },
-  formatter: (cell) => formatNumberWithCommas(cell), 
+    {
+      dataField: "monthly_installment",
+      text: "monthly installment",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center", // Align header text to the left
+      },
+      formatter: (cell) => formatNumberWithCommas(cell),
+    },
+    {
+      dataField: "total_installment",
+      text: "total installments",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center", // Align header text to the left
+      },
+      formatter: (cell) => formatNumberWithCommas(cell),
+    },
 
- 
-},
- 
-
-
- 
-{
-  dataField: "monthly_installment",
-  text: "monthly installment",
-  sort: false,
-  sortCaret: sortCaret,
-  headerSortingClasses,
-  style: {
-    minWidth: "10px",
-    textAlign: "center",
-  },
-  headerStyle: {
-    textAlign: "center", // Align header text to the left
-  },
-  formatter: (cell) => formatNumberWithCommas(cell), 
-
- 
-},
-{
-  dataField: "total_installment",
-  text: "total installments",
-  sort: false,
-  sortCaret: sortCaret,
-  headerSortingClasses,
-  style: {
-    minWidth: "10px",
-    textAlign: "center",
-  },
-  headerStyle: {
-    textAlign: "center", // Align header text to the left
-  },
-  formatter: (cell) => formatNumberWithCommas(cell), 
-
- 
-},
- 
-
- 
     {
       dataField: "applied_date",
       text: "applied date",
@@ -161,42 +137,47 @@ export function FormTable() {
       },
       formatter: (cell) => {
         // Format the date without timestamp
-        return format(new Date(cell), 'dd-MMM-yyyy'); // Customize format as needed
+        return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
       },
     },
 
-
     {
       dataField: "approved_status",
-      text: "approved status",
+      text: "Status",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "160px",
       },
-      formatter: (cell) => {
-        switch(cell) {
-          case 0:
-            return "Pending";
-          case 1:
-            return "Approved";
-          case 2:
-            return "Rejected";
-          default:
-            return "Unknown"; // Default case if status is outside 0, 1, 2.
+      formatter: (cell, row) => {
+        let text = "";
+        let style = {};
+        if (cell === 0 && !row?.isLoanContinuing) {
+          text = "Pending (Portal)";
+          style = { color: "green", fontWeight: "bold" };
+        } else if (cell === 0) {
+          text = "Pending (HRMS)";
+          style = { color: "green", fontWeight: "bold" };
+        } else if (cell === 1) {
+          text = !row?.isLoanContinuing ? "Completed" : "Active";
+          style = { color: "black", fontWeight: "bold" };
+        } else if (cell === 2) {
+          text = "Rejected";
+          style = { color: "red", fontWeight: "bold" };
         }
+        return <span style={style}>{text}</span>;
+      },
     },
-  },
- 
-       {
+
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
-        setIds:formUIProps.setIds,
-        setIsFileReq:formUIProps.setIsFileReq,
+        setIds: formUIProps.setIds,
+        setIsFileReq: formUIProps.setIsFileReq,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         // openActiveFormDialog: formUIProps.openActiveFormDialog,
@@ -210,11 +191,10 @@ export function FormTable() {
       headerClasses: "text-right pr-3",
       style: {
         minWidth: "10px",
-       
       },
     },
   ];
- 
+
   //Table pagination properties
   const paginationOptions = {
     custom: true,
@@ -224,65 +204,63 @@ export function FormTable() {
     page: formUIProps.queryParams.pageNumber,
   };
 
-  
- 
-    return (
+  return (
     <>
-  
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header className="d-flex justify-content-center">
-        <div className='accordion-header-btn w-100  d-flex justify-content-center'>
-          <Accordion.Toggle as={Button} eventKey="0" className="flex-between-center text-bold" >
-          Employee Loan Request
-            <KeyboardArrowDown />
-          </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-          <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
- 
-                // })}
-                {...paginationTableProps}
+      <Accordion defaultActiveKey="">
+        <Card>
+          <Card.Header className="d-flex justify-content-center">
+            <div className="accordion-header-btn w-100  d-flex justify-content-center">
+              <Accordion.Toggle
+                as={Button}
+                eventKey="0"
+                className="flex-between-center text-bold"
               >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
-            </Pagination>
-          );
-        }}
-      </PaginationProvider>
+                Employee Loan Request
+                <KeyboardArrowDown />
+              </Accordion.Toggle>
+            </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+              <PaginationProvider
+                pagination={paginationFactory(paginationOptions)}
+              >
+                {({ paginationProps, paginationTableProps }) => {
+                  return (
+                    <Pagination
+                      isLoading={listLoading}
+                      paginationProps={paginationProps}
+                    >
+                      <BootstrapTable
+                        wrapperClasses="table-responsive"
+                        bordered={false}
+                        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                        bootstrap4
+                        remote
+                        keyField="Id"
+                        data={entities === null ? [] : entities}
+                        columns={columns}
+                        defaultSorted={uiHelpers.defaultSorted}
+                        onTableChange={getHandlerTableChange(
+                          formUIProps.setQueryParams
+                        )}
+                        // selectRow={getSelectRow({
+                        //   entities,
 
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
- 
-
-   
+                        // })}
+                        {...paginationTableProps}
+                      >
+                        <PleaseWaitMessage entities={entities} />
+                        <NoRecordsFoundMessage entities={entities} />
+                      </BootstrapTable>
+                    </Pagination>
+                  );
+                }}
+              </PaginationProvider>
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
     </>
   );
 }
- 

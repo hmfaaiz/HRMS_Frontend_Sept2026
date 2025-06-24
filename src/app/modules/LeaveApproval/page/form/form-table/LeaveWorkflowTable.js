@@ -126,8 +126,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
         maxWidth: "160px",
       },
       formatter: (cell) => {
-        return cell ? format(new Date(cell) , "dd/MMM/yyyy:HH:mm:ss") : "";
-       
+        return cell ? format(new Date(cell), "dd-MMM-yyyy:HH:mm:ss") : "";
       },
     },
     {
@@ -204,13 +203,23 @@ export function LeaveWorkflowTable({ onHide, show }) {
             <div className="col-3">
               From Date :{" "}
               <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.from}
+                {formUIProps?.leaveData?.parentData?.from
+                  ? format(
+                      new Date(formUIProps?.leaveData?.parentData?.from),
+                      "dd-MMM-yyyy"
+                    )
+                  : ""}
               </span>
             </div>
             <div className="col-3">
               To Date :{" "}
               <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.to}
+                {formUIProps?.leaveData?.parentData?.to
+                  ? format(
+                      new Date(formUIProps?.leaveData?.parentData?.to),
+                      "dd-MMM-yyyy"
+                    )
+                  : ""}
               </span>
             </div>
             <div className="col-3">

@@ -19,10 +19,13 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import { TimePickerField } from "../../../../../_metronic/_partials/controls/forms/TimePickerField";
 
 const formValidation = Yup.object().shape({
-  interview_date: Yup.date().required(VALIDATION_MESSAGES.required),
+  interview_date: Yup.date()
+    .typeError("Please select the date")
+    .required(VALIDATION_MESSAGES.required),
   interview_time: Yup.string()
-    .nullable()
     .required(VALIDATION_MESSAGES.required)
+    .trim()
+    .min(1, VALIDATION_MESSAGES.required) // catches empty string
     .matches(
       /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i,
       "Enter time as hh:mm AM/PM"
@@ -117,6 +120,7 @@ export default function MasterEditForm({
   isUserForRead,
   loading,
   actionsLoading,
+  minDate,
 }) {
   const dispatch = useDispatch();
   const [employeeDetails, setEmployeeDetails] = useState({});
@@ -164,9 +168,18 @@ export default function MasterEditForm({
       enableReinitialize={true}
       initialValues={data}
       validationSchema={formValidation}
-      onSubmit={(values) => saveForm(values)}
+      onSubmit={(values) => {
+        saveForm(values);
+      }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        setFieldTouched,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -185,34 +198,39 @@ export default function MasterEditForm({
                       <Field
                         name="interview_date"
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         value={
-                          data?.interview_date
-                            ? new Date(data?.interview_date)
-                            : null
+                          values?.interview_date
+                            ? new Date(values?.interview_date)
+                            : ""
                         }
                         type="date"
                         onChange={(e) => {
                           setFieldValue("interview_date", e ? e : "");
                         }}
+                        minDate={new Date(minDate)}
                       />
                     </div>
                     <div className="col-12 col-md-4 mt-3">
                       <TimePickerField
                         name="interview_time"
-                        label="Interview Time"
-                        value={values.interview_time}
+                        label={
+                          <span>
+                            {" "}
+                            Interview Time{" "}
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={
+                          values?.interview_time ? values.interview_time : ""
+                        }
                         onChange={(val) => {
                           setFieldValue("interview_time", val);
                         }}
+                        onBlur={() => setFieldTouched("interview_time", true)}
                         touched={touched.interview_time}
                         errors={errors.interview_time}
                       />
-                      {errors.interview_time && (
-                        <span className="text-danger">
-                          {errors.interview_time}
-                        </span>
-                      )}
                     </div>
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
@@ -273,7 +291,7 @@ export default function MasterEditForm({
                                   <th className="col-2">Department</th>
                                   <th className="col-2">Designation</th>
                                   <th className="col-2">Grade</th>
-                                  <th className="col-2">EmployeeType</th>
+                                  <th className="col-2">Employee Type</th>
                                   <th className="col-2">Subsidiary</th>
                                   <th className="col-2">Location</th>
                                 </tr>
@@ -422,7 +440,9 @@ export default function MasterEditForm({
             {!isUserForRead && (
               <button
                 type="submit"
-                onClick={() => handleSubmit()}
+                onClick={() => {
+                  handleSubmit();
+                }}
                 className="btn btn-primary btn-elevate"
               >
                 Save

@@ -7,6 +7,7 @@ import * as actions from "../../_redux/formAction";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { format } from "date-fns";
+import { amountFormat } from "../../../../utils/common";
 
 export default function ApplicationSection() {
   const dispatch = useDispatch();
@@ -59,7 +60,6 @@ export default function ApplicationSection() {
           options={applicants}
           label="Applicant Name"
           onChange={(e) => {
-            console.log("e", e);
             formUIProps.setSelectedApplicant(e?.value);
             formUIProps.setApplicantVacancyId(e?.applicantVacancyId);
             formUIProps.setApplicantDetail(e?.applicantDetail);
@@ -79,7 +79,7 @@ export default function ApplicationSection() {
           <Card.Header>
             <div className="accordion-header-btn ">
               <Accordion.Toggle eventKey="0" className="flex-between-center">
-                Applicant Detail
+                Applicant Details
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>
@@ -104,7 +104,7 @@ export default function ApplicationSection() {
                         {applicantProfile?.dateOfBirth
                           ? format(
                               new Date(applicantProfile?.dateOfBirth),
-                              "dd/MM/yyyy"
+                              "dd-MMM-yyyy"
                             )
                           : "N/A"}
                       </Col>
@@ -177,8 +177,13 @@ export default function ApplicationSection() {
                         <strong>Expected Salary Range : </strong>
                         {applicantProfile?.ExpectedSalaryCurrency?.formName ||
                           ""}{" "}
-                        {applicantProfile?.expectedSalaryRangeFrom || ""} to
-                        {applicantProfile?.expectedSalaryRangeTo || ""}
+                        {amountFormat(
+                          applicantProfile?.expectedSalaryRangeFrom
+                        ) || ""}{" "}
+                        to{" "}
+                        {amountFormat(
+                          applicantProfile?.expectedSalaryRangeTo
+                        ) || ""}
                       </Col>
                       <Col md={6}>
                         <strong>Other Information: </strong>

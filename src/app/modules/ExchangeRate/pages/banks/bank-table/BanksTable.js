@@ -17,6 +17,7 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useBanksUIContext } from "../BanksUIContext";
 import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/last-trips-vehicles-table/column-formatter/CreatedColumnFormatter";
+import { format } from "date-fns";
 
 export function BanksTable() {
   //Users UI Context
@@ -140,10 +141,11 @@ export function BanksTable() {
         minWidth: "10px",
         textAlign: "center",
       },
-      formatter: (cell) => {
-        const date = new Date(cell);
-        return date.toLocaleDateString("en-GB"); // This will format as dd-mm-yyyy
-      },
+      // formatter: (cell) => {
+      //   const date = new Date(cell);
+      //   return date.toLocaleDateString("en-GB"); // This will format as dd-mm-yyyy
+      // },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""},
       headerStyle: {
         textAlign: "center", // Align header text to the left
       },

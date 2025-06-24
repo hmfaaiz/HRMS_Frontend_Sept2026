@@ -3,7 +3,16 @@ import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import { DateObject } from "react-multi-date-picker";
 
-export const TimePickerField = ({ label, value, onChange, name, disabled }) => {
+export const TimePickerField = ({
+  label,
+  value,
+  onChange,
+  name,
+  disabled,
+  onBlur,
+  errors,
+  touched,
+}) => {
   // Convert "hh:mm A" string to a DateObject
   const parseTimeStringToDateObject = (timeStr) => {
     if (!timeStr) return null;
@@ -44,15 +53,15 @@ export const TimePickerField = ({ label, value, onChange, name, disabled }) => {
           value={parseTimeStringToDateObject(value)}
           format="hh:mm A"
           onChange={(date) => {
-            if (date) {
-              onChange(date.format("hh:mm A")); 
-            } else {
-              onChange(null);
-            }
+            onChange(date ? date.format("hh:mm A") : "");
+            if (onBlur) onBlur();
           }}
           plugins={[<TimePicker hideSeconds position="bottom" />]}
           disabled={disabled}
         />
+        {errors && touched ? (
+          <div className="form-feedBack">{errors}</div>
+        ) : null}
       </div>
     </div>
   );

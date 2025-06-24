@@ -17,6 +17,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { format } from "date-fns";
 
 export function LeaveApplicationTable() {
   //Users UI Context
@@ -65,6 +66,9 @@ export function LeaveApplicationTable() {
       style: {
         minWidth: "160px",
       },
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "to",
@@ -74,6 +78,9 @@ export function LeaveApplicationTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+      },
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
     {
@@ -86,16 +93,16 @@ export function LeaveApplicationTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "remarks",
-      text: "Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "remarks",
+    //   text: "Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
     {
       dataField: "leave_modification_status",
       text: "Modification Remarks",
@@ -103,7 +110,8 @@ export function LeaveApplicationTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "250px",
+        maxWidth: "250px",
       },
     },
     {

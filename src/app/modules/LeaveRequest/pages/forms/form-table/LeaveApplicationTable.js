@@ -17,6 +17,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { format } from "date-fns";
 
 export function LeaveApplicationTable() {
   //Users UI Context
@@ -74,6 +75,7 @@ export function LeaveApplicationTable() {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "to",
@@ -84,6 +86,7 @@ export function LeaveApplicationTable() {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "days",
@@ -95,26 +98,26 @@ export function LeaveApplicationTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "remarks",
-      text: "Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "leave_modification_status",
-      text: "Modification Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "260px",
-      },
-    },
+    // {
+    //   dataField: "remarks",
+    //   text: "Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "leave_modification_status",
+    //   text: "Modification Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "260px",
+    //   },
+    // },
     {
       dataField: "request_status",
       text: "Status",
@@ -143,44 +146,44 @@ export function LeaveApplicationTable() {
         return <span style={style}>{text}</span>;
       },
     },
-    {
-      dataField: "workflowAuthorties",
-      text: "Pending At",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        if (!Array.isArray(cell)) return "";
+    // {
+    //   dataField: "workflowAuthorties",
+    //   text: "Pending At",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!Array.isArray(cell)) return "";
 
-        // Find the first pending step
-        const pendingStep = cell.find((step) => step.authorityStatus === "P");
+    //     // Find the first pending step
+    //     const pendingStep = cell.find((step) => step.authorityStatus === "P");
 
-        if (pendingStep && pendingStep.approvalAuthorityEmp) {
-          const {
-            firstName,
-            middleName,
-            lastName,
-          } = pendingStep.approvalAuthorityEmp;
-          const fullName = [firstName, middleName, lastName]
-            .filter(Boolean)
-            .join(" ");
-          return `${fullName}`;
-        }
-      },
-    },
-    {
-      dataField: "request_remarks",
-      text: "Final Authority Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "220px",
-      },
-    },
+    //     if (pendingStep && pendingStep.approvalAuthorityEmp) {
+    //       const {
+    //         firstName,
+    //         middleName,
+    //         lastName,
+    //       } = pendingStep.approvalAuthorityEmp;
+    //       const fullName = [firstName, middleName, lastName]
+    //         .filter(Boolean)
+    //         .join(" ");
+    //       return `${fullName}`;
+    //     }
+    //   },
+    // },
+    // {
+    //   dataField: "request_remarks",
+    //   text: "Final Authority Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "220px",
+    //   },
+    // },
     {
       dataField: "action",
       text: "Actions",

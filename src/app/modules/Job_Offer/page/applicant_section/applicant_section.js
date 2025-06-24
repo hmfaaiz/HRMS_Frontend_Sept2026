@@ -94,7 +94,7 @@ export default function ApplicationSection() {
                         {applicantProfile?.dateOfBirth
                           ? format(
                               new Date(applicantProfile?.dateOfBirth),
-                              "dd/MM/yyyy"
+                              "dd-MMM-yyyy"
                             )
                           : "N/A"}
                       </Col>

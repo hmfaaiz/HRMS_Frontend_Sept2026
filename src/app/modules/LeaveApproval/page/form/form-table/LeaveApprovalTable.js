@@ -18,6 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../../FormUIContext";
 import { Card } from "react-bootstrap";
 import { ActionsColumnFormatter } from "./column-formatter/ActionCloumnFormatter";
+import { format } from "date-fns";
 
 export function LeaveApprovalFormTable() {
   //Users UI Context
@@ -64,8 +65,8 @@ export function LeaveApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "140px",
-        maxWidth: "140px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
       formatter: (cell) => {
         let text = "";
@@ -92,8 +93,8 @@ export function LeaveApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "140px",
-        maxWidth: "140px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
       formatter: (cell) => {
         let text = "";
@@ -153,28 +154,28 @@ export function LeaveApprovalFormTable() {
         return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
       },
     },
-    {
-      dataField: "requestBelongToEmp.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
-    {
-      dataField: "requestBelongToEmp.designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "requestBelongToEmp.department.deptName",
+    //   text: "Department",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp.designation.formName",
+    //   text: "Designation",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
     {
       dataField: "parentData.t_leave_type.name",
       text: "Leave Type",
@@ -196,6 +197,7 @@ export function LeaveApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "parentData.to",
@@ -207,6 +209,7 @@ export function LeaveApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "parentData.days",
@@ -219,31 +222,31 @@ export function LeaveApprovalFormTable() {
         maxWidth: "100px",
       },
     },
-    {
-      dataField: "parentData.remarks",
-      text: "Reason",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "250px",
-        maxWidth: "250px",
-      },
-    },
-    {
-      dataField: "parentData.file",
-      text: "Attachments",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
-        maxWidth: "120px",
-      },
-      formatter: (cell, row) => {
-        return <span>{cell !== null ? "Yes" : "No"}</span>;
-      },
-    },
+    // {
+    //   dataField: "parentData.remarks",
+    //   text: "Reason",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "250px",
+    //     maxWidth: "250px",
+    //   },
+    // },
+    // {
+    //   dataField: "parentData.file",
+    //   text: "Attachments",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "120px",
+    //     maxWidth: "120px",
+    //   },
+    //   formatter: (cell, row) => {
+    //     return <span>{cell !== null ? "Yes" : "No"}</span>;
+    //   },
+    // },
   ];
 
   //Table pagination properties

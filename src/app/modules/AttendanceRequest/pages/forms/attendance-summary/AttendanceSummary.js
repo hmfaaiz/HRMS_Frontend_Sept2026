@@ -17,7 +17,7 @@ export const AttendanceSummary = () => {
       <h4>Attendance Summary</h4>
       <div className="row">
         <div className="col-1">
-          <span className="font-weight-bold">Present Days</span>
+          <span className="font-weight-bold">Present</span>
         </div>
         <div className="col-1">{attendanceSummary?.PresentDays || 0} </div>
         <div className="col-1">

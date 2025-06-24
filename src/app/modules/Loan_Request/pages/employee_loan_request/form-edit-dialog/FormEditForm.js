@@ -179,9 +179,8 @@ export function FormEditForm({
 
       //if already loan taken ,running balanace
       const currentLoan = entities.filter(
-        (item) => item?.loan_typeId === changeLoanType && item.isLoanContinuing
+        (item) => item?.loan_typeId === changeLoanType
       );
-
       let runningBalance = 0;
       currentLoan.forEach((loan) => {
         loan.details.forEach((detail) => {
@@ -263,12 +262,10 @@ export function FormEditForm({
       (item) => item?.loan_typeId === option?.value
     );
     let eligibilityMonth;
-
     const today = new Date();
     const dateOfJoining = new Date(
       currentState?.loan_config_details_permission?.employee?.dateOfJoining
     );
-
     if (
       currentDropDownLoan?.eligibilityPolicy <=
       getDateDiffInMonths(dateOfJoining, today)
@@ -457,12 +454,13 @@ export function FormEditForm({
                 disabled={
                   isUserForRead ||
                   formUIProps?.employeeId?.level > 1 ||
+                  !currentState?.loan_config_details_permission ||
                   empAuthorityList?.length === 0
                 }
               >
                 <div className="form-group row">
                   {/* <div className="col-12 col-md-12  p-0 m-0"> */}
-                  <div className="col-12 col-md-6 ">
+                  <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="loan_typeId"
                       label={
@@ -471,11 +469,23 @@ export function FormEditForm({
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      // isDisabled={isEdit}
+                      isDisabled={
+                        isUserForRead ||
+                        formUIProps?.employeeId?.level > 1 ||
+                        !currentState?.loan_config_details_permission ||
+                        empAuthorityList?.length === 0
+                      }
                       onChange={(e) => {
                         setFieldValue("loan_typeId", e.value || null);
                         setChangeLoanType(e.value);
                         policyLoadByLoanType(e.value);
+                        setFieldValue("applied_date", "");
+                        setFieldValue("installment_start_date", "");
+                        setFieldValue("total_loan_amount", "");
+                        setFieldValue("monthly_installment", "");
+                        setFieldValue("total_installment", "");
+                        setFieldValue("reason", "");
+                        setTotalInstallments("");
                       }}
                       value={
                         loan_type?.find(

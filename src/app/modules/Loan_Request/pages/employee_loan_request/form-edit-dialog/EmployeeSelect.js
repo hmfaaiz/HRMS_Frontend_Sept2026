@@ -122,7 +122,7 @@ export function EmployeeSelect() {
             <Form className="form form-label-right">
               <fieldset>
                 <div className="from-group row">
-                  <div className="col-12 col-md-12 row p-0 m-0">
+                  {/* <div className="col-12 col-md-12 row p-0 m-0">
                     <div className="col-12 col-md-3 mt-3">
                       <Field
                         name="currentLevel"
@@ -215,7 +215,7 @@ export function EmployeeSelect() {
                         error={VALIDATION_MESSAGES.required}
                       />
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </fieldset>
             </Form>

@@ -27,13 +27,15 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
   };
 
   const dispatch = useDispatch();
-  const { userForEdit, actionsLoading } = useSelector(
+  const { userForEdit, actionsLoading  , entities} = useSelector(
     (state) => ({
       userForEdit: state.interview_schedule.userForEdit,
+      entities: state.interview_schedule.entities,
       actionsLoading: state.interview_schedule.actionsLoading,
     }),
     shallowEqual
   );
+
 
   useEffect(() => {
     if (id) {
@@ -64,7 +66,8 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
 
   return (
     <Modal
-      size="xl"
+      size="lg"
+      dialogClassName="modal-70vw"
       show={show && formUIProps?.selectedJob && formUIProps?.selectedApplicant}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
@@ -72,11 +75,12 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
       <FormEditDialogHeader id={id} isUserForRead={isUserForRead} />
       <MasterEditForm
         saveForm={saveForm}
-        data={userForEdit || formUIProps.initUser}
+        data={id ? userForEdit : formUIProps.initUser}
         onHide={onHide}
         isUserForRead={isUserForRead}
         actionsLoading={actionsLoading}
         loading={loading}
+        minDate={entities?.length > 0 ? entities[0].interview_date : ""}
       />
       <ToastContainer
         position="top-right"

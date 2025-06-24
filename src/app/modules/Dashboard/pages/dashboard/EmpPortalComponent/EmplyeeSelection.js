@@ -79,7 +79,7 @@ export const EmployeeSelection = ({
                   <div className="from-group row">
                     {/* Reporting Level */}
                     <div className="col-12 col-md-12 row">
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="col-12 col-md-8 mt-3">
                           <Field
                             component={SearchSelect}
@@ -120,7 +120,7 @@ export const EmployeeSelection = ({
                             options={employeeList}
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </fieldset>

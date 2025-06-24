@@ -16,6 +16,7 @@ import * as uiHelpers from "../FormUIHelper";
 import { ActionsColumnFormatter } from "./column-formatter/ActionColumnFormatter";
 import { useFormUIContext } from "../FormUIContext";
 import { Pagination } from "../../../../../_metronic/_partials/controls";
+import { format } from "date-fns";
 
 export function FormTable() {
   //Users UI Context
@@ -84,6 +85,9 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+      },
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
     {

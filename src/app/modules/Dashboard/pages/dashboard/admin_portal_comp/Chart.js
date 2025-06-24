@@ -56,6 +56,8 @@ const options = {
 const percentage = (value, total) =>
   total ? `${Math.round((value / total) * 100)}%` : "0%";
 
+const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+
 const ChartData = ({ data }) => {
   const departmentData = {
     labels: data?.data?.length > 0 ? data?.data.map((item) => item?.label) : [],
@@ -132,23 +134,23 @@ const ChartData = ({ data }) => {
                   2 *
                   Math.PI;
                 const radius = 80;
-                const x = 100 + radius * Math.cos(angle - Math.PI / 2);
-                const y = 100 + radius * Math.sin(angle - Math.PI / 2);
+                const x = clamp(100 + radius * Math.cos(angle - Math.PI / 2), 0, 188);
+                const y = clamp(100 + radius * Math.sin(angle - Math.PI / 2), 0, 188);
                 return (
                   <div
                     key={idx}
                     style={{
                       position: "absolute",
-                      left: x - 14,
+                      left: x - 7,
                       top: y - 8,
                       color: "#fff",
                       fontWeight: 400,
-                      fontSize: 12,
+                      fontSize: "9px",
                       pointerEvents: "none",
                       textShadow: "0 1px 4px rgba(0,0,0,0.2)",
                     }}
                   >
-                    {percentage(value, total)}
+                    {Math.round((value / total) * 100) > 2 && percentage(value, total)}
                   </div>
                 );
               })}
@@ -163,7 +165,7 @@ const ChartData = ({ data }) => {
               }}
             >
               {departmentData.labels.map((label, idx) => (
-                <div key={label} className="d-flex align-items-center">
+                <div key={label} className="d-flex align-items-start">
                   <span
                     style={{
                       display: "inline-block",
@@ -172,7 +174,7 @@ const ChartData = ({ data }) => {
                       borderRadius: "50%",
                       background:
                         departmentData.datasets[0].backgroundColor[idx],
-                      marginRight: 5,
+                      margin: 5,
                     }}
                   />
                   <span style={{ fontSize: "10px" }}>{label}</span>

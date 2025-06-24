@@ -18,6 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { format } from "date-fns";
 
 export function FormTable() {
   //Users UI Context
@@ -92,6 +93,7 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "to",
@@ -102,6 +104,7 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "action",

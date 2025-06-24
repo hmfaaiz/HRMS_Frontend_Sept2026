@@ -8,6 +8,7 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { format } from "date-fns";
 export function HolidayTable({ entities, activeFiscalYear }) {
   const columns = [
     {
@@ -26,6 +27,7 @@ export function HolidayTable({ entities, activeFiscalYear }) {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
       // style: {
       //   minWidth: "10px",
       //   textAlign: "center",
@@ -44,6 +46,7 @@ export function HolidayTable({ entities, activeFiscalYear }) {
       style: {
         minWidth: "10px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
   ];
 
