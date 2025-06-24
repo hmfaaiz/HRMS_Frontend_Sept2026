@@ -161,7 +161,7 @@ export const uploadFile = async (file) => {
     })
     .catch((error) => {
 
-      toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail , {
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -170,7 +170,7 @@ export const uploadFile = async (file) => {
         draggable: true,
         progress: undefined,
       });
-    
+
     });
 
 };
@@ -180,8 +180,8 @@ export const deleteApplicantVacancyDetail = (data) => (dispatch) => {
   return requestFromServer
     .deleteApplicantVacancyDetailById(data)
     .then((response) => {
-   
-     
+
+
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -195,5 +195,76 @@ export const deleteApplicantVacancyDetail = (data) => (dispatch) => {
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       toast.error(SERVER_MESSAGES.deletedFail);
+    });
+};
+
+export const convertApplicantProfile = (id) => (dispatch) => {
+  return requestFromServer
+    .convertApplicantToEmployee({ Id: id })
+    .then((response) => {
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+
+    })
+    .catch((error) => {
+
+      //error.clientMessage = "Can't update User"
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const Generatejob_offer_letter = (body) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.pdfGenerate }));
+  return requestFromServer.generatejob_offer_letter({applicantId:body})
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'job_offer_letter.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.pdfFetched({}));
+      document.body.removeChild(link);
+      dispatch(actions.stopCall());
+    })
+    .catch((error) => {
+      const status = error?.response?.status;
+      const contentType = error?.response?.headers?.['content-type'];
+
+      if (contentType?.includes('application/json') && error?.response?.data instanceof ArrayBuffer) {
+        try {
+          const text = new TextDecoder('utf-8').decode(error.response.data);
+          const parsed = JSON.parse(text);
+          error.response.data = parsed; // Replace data with JSON object
+        } catch (e) {
+          console.error('Failed to parse JSON error:', e);
+        }
+      }
+
+      if (status === 404) {
+        toast.error(error?.response?.data?.message || "Not found");
+      } else if (status === 500) {
+        toast.error(SERVER_MESSAGES.pdfFail);
+      }
+      dispatch(actions.stopCall());
     });
 };

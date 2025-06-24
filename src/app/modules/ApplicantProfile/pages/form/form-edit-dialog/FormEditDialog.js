@@ -172,7 +172,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
   return (
     <Modal
-      size="xl"
+        size="lg"
+      dialogClassName="modal-75vw"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

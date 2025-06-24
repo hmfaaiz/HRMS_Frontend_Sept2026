@@ -152,12 +152,14 @@ export function FormPage() {
   const editMatch = useRouteMatch("/applicant_profile/read-all-applicant-profile/:id/edit");
   const newMatch = useRouteMatch("/applicant_profile/read-all-applicant-profile/new");
   const deleteMatch = useRouteMatch("/applicant_profile/read-all-applicant-profile/:id/:status/delete");
+  const convertMatch = useRouteMatch("/applicant_profile/read-all-applicant-profile/:id/convert");
 
   const FormUIEvents = {
     newFormButtonClick: () => history.push("/applicant_profile/read-all-applicant-profile/new"),
     openEditFormDialog: (id) => history.push(`/applicant_profile/read-all-applicant-profile/${id}/edit`),
     openReadFormDialog: (id) => history.push(`/applicant_profile/read-all-applicant-profile/${id}/read`),
-    openDeleteFormDialog: (id, status) => history.push(`/applicant_profile/read-all-applicant-profile/${id}/${status}/delete`)
+    openDeleteFormDialog: (id, status) => history.push(`/applicant_profile/read-all-applicant-profile/${id}/${status}/delete`),
+    openConvertFormDialog: (id) => history.push(`/applicant_profile/read-all-applicant-profile/${id}/convert`)
   };
 
   return (
@@ -193,6 +195,18 @@ export function FormPage() {
           confirmButtonText="Delete Record"
           onHide={() => history.push("/applicant_profile/read-all-applicant-profile")}
           actionName="deleteApplicantProfile"
+        />
+      )} 
+      {convertMatch && (
+        <FormDynamicDialogModal
+          show={true}
+          id={convertMatch.params.id}
+          status=""
+          title="Convert Record"
+          message="Are you sure you want to convert this record?"
+          confirmButtonText="Convert Record"
+          onHide={() => history.push("/applicant_profile/read-all-applicant-profile")}
+          actionName="convertApplicantProfile"
         />
       )}
 
