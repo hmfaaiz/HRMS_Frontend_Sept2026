@@ -12,7 +12,7 @@ export function getAllRecruitment_dashboard(body) {
 }
 
 // View
-export function getRecruitment_dashboardDetailById(id) {
+export function getRecruitment_dashboardDetailById(body) {
 
-  return axios.post(`${USERS_URL}/recruitment_dashboard/read-recruitment-dashboard-detail`, id);
+  return axios.post(`${USERS_URL}/recruitment_dashboard/read-recruitment-dashboard-detail`, body);
 }

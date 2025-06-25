@@ -91,6 +91,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     codePrefix:"",
     additional_summary:"",
     deligationId:"",
+    relation_name:"",
   };
 
  

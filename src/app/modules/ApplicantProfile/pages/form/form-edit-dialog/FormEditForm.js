@@ -2281,8 +2281,8 @@ export function FormEditForm({
                           <td className="col-2">Institution</td>
                           <td className="col-2">Degree</td>
                           <td className="col-2">Country</td>
-                          <td className="col-1">City</td>
-                          <td className="col-1">CGPA</td>
+                          <td className="col-2">City</td>
+                          <td className="">CGPA</td>
                           <td className="col-2">Start Date</td>
                           <td className="col-2">End Date</td>
                         </tr>

@@ -172,6 +172,7 @@ if(user?.requireDeligation && !user?.deligationId){
         employeeStatusId:user.employeeStatusId,
         approvedForPayroll:user.approvedForPayroll,
         deligationId:user?.deligationId,
+        relation_name: user?.relation_name,
       };
 
     

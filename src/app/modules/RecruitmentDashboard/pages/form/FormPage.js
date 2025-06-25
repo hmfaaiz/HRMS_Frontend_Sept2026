@@ -24,8 +24,8 @@ export function FormPage({ history }) {
     //   history.push(`/recruitment_dashboard/read-all-resume-search-engine/${id}/read`);
     // },
 
-    openReadFormDialog: (id) => {
-      history.push(`/recruitment_dashboard/read-all-recruitment-dashboard/${id}/read`);
+    openReadFormDialog: (jobId,id) => {
+      history.push(`/recruitment_dashboard/read-all-recruitment-dashboard/${jobId}/${id}/read`);
     },
       openApplicantReadFormDialog: (id) => {
   window.open(`/applicant_profile/read-all-applicant-profile/${id}/read`, "_blank");
@@ -40,10 +40,12 @@ export function FormPage({ history }) {
 
 
   
-      <Route path="/recruitment_dashboard/read-all-recruitment-dashboard/:id/read">
+      <Route path="/recruitment_dashboard/read-all-recruitment-dashboard/:jobId/:id/read">
         {({ history, match }) => (
           <FormEditDialog
            id={match && match.params.id}
+           jobId={match && match.params.jobId}
+
             show={match != null}
             dataForRead={true}
             onHide={() => {
