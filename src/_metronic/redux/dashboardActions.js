@@ -56,7 +56,7 @@ export const fetchEmpSalaryRevisionByEmployeeId = (employeeId) => async (
       const formatDates = (dataArray) => {
         return dataArray.map((item) => ({
           ...item,
-          label: format(new Date(item.label), "dd/MM/yyyy"), // Format to 'Month Year'
+          label: format(new Date(item.label), "dd-MMM-yyyy"), // Format to 'Month Year'
         }));
       };
 

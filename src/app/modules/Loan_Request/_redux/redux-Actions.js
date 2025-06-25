@@ -108,18 +108,7 @@ export const getAllLoanConfigDetail = (employeeId) => (dispatch) => {
     .getAllLoanConfigDetail(employeeId)
     .then((res) => {
       const user = res.data?.data;
-
       dispatch(actions.getLoanConfigDetails(user));
-
-      // toast.success("Successfully", {
-      //   position: "top-right",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      // });
     })
     .catch((error) => {
       error.clientMessage = "Can't create user";

@@ -18,7 +18,7 @@ const formValidation = Yup.object().shape({
     Yup.object().shape({
       day: Yup.number()
         .required(VALIDATION_MESSAGES.required)
-        .oneOf([1, 0.5], "Days must be either 1 or 0.5"),
+        .oneOf([1, 0.5, 0], "Days must be either 1 or 0.5"),
     })
   ),
 });
@@ -174,6 +174,23 @@ export const LeaveApplicationDetailTable = ({
                                         index
                                       ]?.isOldCancel
                                     }
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        form.setFieldValue(
+                                          `leaveApplicationDetail[${index}].day`,
+                                          0
+                                        );
+                                      } else {
+                                        form.setFieldValue(
+                                          `leaveApplicationDetail[${index}].day`,
+                                          1
+                                        );
+                                      }
+                                      form.setFieldValue(
+                                        `leaveApplicationDetail[${index}].isCancel`,
+                                        e.target.checked
+                                      );
+                                    }}
                                     className="form-check-input"
                                   />
                                 )}
@@ -189,6 +206,16 @@ export const LeaveApplicationDetailTable = ({
             </Modal.Body>
 
             <Modal.Footer>
+              <button
+                type="submit"
+                onClick={() => {
+                  onHide();
+                }}
+                // disabled={detailUpdateLoading}
+                className="btn btn-danger btn-elevate"
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
                 onClick={handleSubmit}

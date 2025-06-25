@@ -17,6 +17,7 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Modal } from "react-bootstrap";
+import { format } from "date-fns";
 
 export function FormTable() {
   //Users UI Context
@@ -127,6 +128,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },
 
     {
@@ -139,6 +141,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "ReportTo.reportName",

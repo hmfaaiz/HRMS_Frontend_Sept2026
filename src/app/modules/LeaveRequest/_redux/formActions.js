@@ -107,13 +107,7 @@ export const fetchEditRecord = (id) => (dispatch) => {
 export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
   dispatch
 ) => {
-  console.log(
-    "data, employeeId, disableLoading, resetForm",
-    data,
-    employeeId,
-    disableLoading,
-    resetForm
-  );
+  
   if (employeeId) {
     if (!data.Id) {
       return requestFromServer

@@ -152,31 +152,31 @@ export function ApprovalFormTable() {
         return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
       },
     },
-    {
-      dataField: "requestBelongToEmp.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
-    {
-      dataField: "requestBelongToEmp.designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "requestBelongToEmp.department.deptName",
+    //   text: "Department",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp.designation.formName",
+    //   text: "Designation",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
     {
       dataField: "parentData.attDate",
-      text: "Leave Type",
+      text: "Att Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -184,9 +184,7 @@ export function ApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
-      formatter: (cell) => {
-        return new Date(cell).toDateString();
-      },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "parentData.timeIn",
@@ -210,45 +208,45 @@ export function ApprovalFormTable() {
         maxWidth: "130px",
       },
     },
-    {
-      dataField: "parentData.isLateComing",
-      text: "Late Arrival",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
-        maxWidth: "120px",
-      },
-      formatter: (cell, row) => {
-        return <span>{cell ? "Yes" : "No"}</span>;
-      },
-    },
-    {
-      dataField: "parentData.isHalfDay",
-      text: "Half Day",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
-        maxWidth: "120px",
-      },
-      formatter: (cell, row) => {
-        return <span>{cell ? "Yes" : "No"}</span>;
-      },
-    },
-    {
-      dataField: "parentData.comments",
-      text: "Reason",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "250px",
-        maxWidth: "250px",
-      },
-    },
+    // {
+    //   dataField: "parentData.isLateComing",
+    //   text: "Late Arrival",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "120px",
+    //     maxWidth: "120px",
+    //   },
+    //   formatter: (cell, row) => {
+    //     return <span>{cell ? "Yes" : "No"}</span>;
+    //   },
+    // },
+    // {
+    //   dataField: "parentData.isHalfDay",
+    //   text: "Half Day",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "120px",
+    //     maxWidth: "120px",
+    //   },
+    //   formatter: (cell, row) => {
+    //     return <span>{cell ? "Yes" : "No"}</span>;
+    //   },
+    // },
+    // {
+    //   dataField: "parentData.comments",
+    //   text: "Reason",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "250px",
+    //     maxWidth: "250px",
+    //   },
+    // },
   ];
 
   return (

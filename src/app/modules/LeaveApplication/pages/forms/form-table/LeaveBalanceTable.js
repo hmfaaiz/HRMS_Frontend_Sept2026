@@ -58,6 +58,10 @@ export function LeaveBalanceTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+        minWidth: "160px",
+      },
+      headerStyle: {
+        width: "120px",
       },
     },
     {
@@ -72,12 +76,19 @@ export function LeaveBalanceTable() {
     },
     {
       dataField: "allocatedCount",
-      text: "Allocated Leave Count",
+      text: "Balance Allocated",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "160px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center",
+      },
+      formatter: (cell, row) => {
+        return row?.allocatedCount + row?.carryForwardCount;
       },
     },
     {
@@ -88,38 +99,45 @@ export function LeaveBalanceTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center",
+      },
+      formatter: (cell, row) => {
+        return row?.availedCount + row?.lateCount + row?.encashmentCount;
       },
     },
-    {
-      dataField: "carryForwardCount",
-      text: "Carry Forward Leave Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "lateCount",
-      text: "Late Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "encashmentCount",
-      text: "Encashment Leaves Count",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "carryForwardCount",
+    //   text: "Carry Forward Leave Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "lateCount",
+    //   text: "Late Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "encashmentCount",
+    //   text: "Encashment Leaves Count",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    // },
     {
       dataField: "remainingCount",
       text: "Remaining",
@@ -127,7 +145,11 @@ export function LeaveBalanceTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "10px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center",
       },
     },
   ];

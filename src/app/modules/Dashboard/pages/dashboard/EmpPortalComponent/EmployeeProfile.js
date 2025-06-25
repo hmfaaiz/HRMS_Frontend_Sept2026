@@ -2,7 +2,7 @@ import React from "react";
 import { Accordion, Card, Row, Col } from "react-bootstrap";
 import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { formatDates } from "../../../../../utils/common";
+import { format } from "date-fns";
 
 const EmployeeProfile = ({ data }) => {
   return (
@@ -28,11 +28,11 @@ const EmployeeProfile = ({ data }) => {
                   border: "none",
                 }}
               >
-                <div className="d-flex justify-content-between flex-column flex-md-row align-items-center">
+                {/* <div className="d-flex justify-content-between flex-column flex-md-row align-items-center"> */}
                   {/* Employee Information Sections */}
-                  <h2 className="text-bold">Employee Information</h2>
+                  {/* <h2 className="text-bold">Employee Information</h2> */}
 
-                  {Object.keys(data).length ? (
+                  {/* {Object.keys(data).length ? (
                     <div className="form-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <img
@@ -61,8 +61,8 @@ const EmployeeProfile = ({ data }) => {
                   ) : (
                     <p></p>
                   )}
-                </div>
-                <hr />
+                </div> */}
+                {/* <hr /> */}
 
                 <div style={{ marginBottom: "2%" }}>
                   <h5 className="text-bold mb-5 custom_color_1">
@@ -150,15 +150,15 @@ const EmployeeProfile = ({ data }) => {
                     </Col>
                     <Col md={3}>
                       <strong>Date of joining: </strong>
-                      {formatDates(data?.dateOfJoining) || "N/A"}
+                      {data?.dateOfJoining ? format(new Date(data?.dateOfJoining) , "yy-MMM-yyyy") : "N/A"}
                     </Col>
                     <Col md={3}>
                       <strong>Date of Confirmation: </strong>
-                      {formatDates(data?.dateOfConfirmation) || "N/A"}
+                      {data?.dateOfConfirmation ? format(new Date(data?.dateOfConfirmation) , "yy-MMM-yyyy") : "N/A"}
                     </Col>
                     <Col md={3}>
                       <strong>Date of Birth: </strong>
-                      {formatDates(data?.dateOfBirth) || "N/A"}
+                      {data?.dateOfBirth ? format(new Date(data?.dateOfBirth) , "yy-MMM-yyyy") : "N/A"}
                     </Col>
                     <Col md={3}>
                       <strong>Id Card No: </strong>

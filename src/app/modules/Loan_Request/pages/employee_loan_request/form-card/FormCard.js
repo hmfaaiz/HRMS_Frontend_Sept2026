@@ -78,14 +78,14 @@ export function FormCard() {
         <CardBody>
           <CardHeader title={CurrentModuleName()} />
           <EmployeeSelect />
-          <br />
+          {/* <br />
           <hr />
 
-          <EmployeeProfile employeeId={FormUIProps.employeeId?.value} />
+          <EmployeeProfile employeeId={FormUIProps.employeeId?.value} /> */}
           {/* EmployeeProfile Ends */}
 
-          <br />
-          <hr />
+          {/* <br />
+          <hr /> */}
           {/* FormEditDialog Starts */}
           <FormEditDialog
             id={FormUIProps.id}

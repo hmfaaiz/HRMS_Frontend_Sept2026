@@ -119,7 +119,7 @@ export function FormFilter({ dispatch, pdfLoading }) {
                     <h6>Employee Filters</h6>
                     <div className="from-group row">
                       {/* Subsidiary Field Start */}
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="col-12 col-md-4 mt-3">
                           <Field
                             name="currentLevel"
@@ -141,11 +141,11 @@ export function FormFilter({ dispatch, pdfLoading }) {
                             options={levelList}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       {/* Subsidiary Field End */}
 
                       {/* Employee Field Start */}
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="col-12 col-md-4 mt-3">
                           <Field
                             name="employeeId"
@@ -168,7 +168,7 @@ export function FormFilter({ dispatch, pdfLoading }) {
                             options={employeeList}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       {/* Employee Field End */}
 
                       {/* Payroll Month Field Start */}

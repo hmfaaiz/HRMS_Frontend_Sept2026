@@ -22,7 +22,6 @@ export default function FormCard() {
   const accessToCreate = userAccess.find(
     (item) => item?.componentName === "CreateInterviewSchedule"
   );
-  console.log("userAccess", userAccess);
 
   const accessToHRRecommendation = userAccess.find(
     (item) => item?.componentName === "UpdateApplicantStatus"

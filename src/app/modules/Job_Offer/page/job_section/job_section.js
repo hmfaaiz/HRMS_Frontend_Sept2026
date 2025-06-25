@@ -129,14 +129,14 @@ export default function JobSection() {
                         {jobData?.jobPostingDateFrom
                           ? format(
                               new Date(jobData?.jobPostingDateFrom),
-                              "dd/MM/yyyy"
+                              "dd-MMM-yyyy"
                             )
                           : "N/A"}{" "}
                         to{" "}
                         {jobData?.jobPostingDateTo
                           ? format(
                               new Date(jobData?.jobPostingDateTo),
-                              "dd/MM/yyyy"
+                              "dd-MMM-yyyy"
                             )
                           : "N/A"}
                       </Col>

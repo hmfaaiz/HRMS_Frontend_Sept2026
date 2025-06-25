@@ -120,7 +120,7 @@ export function FormCard() {
         <CardHeader title={CurrentModuleName()}></CardHeader>
 
         <div className="justify-content-between align-items-center gap-3 m-4">
-          <div className="pt-5">
+          {/* <div className="pt-5"> */}
             {/* EmployeeSelect Starts */}
             <EmployeeSelect
               setId={formUIProps.setId}
@@ -132,15 +132,15 @@ export function FormCard() {
             />
             {/* EmployeeSelect Ends */}
 
-            <br />
-            <hr />
-          </div>
+            {/* <br /> */}
+            {/* <hr /> */}
+          {/* </div> */}
 
           {/* EmployeeProfile Starts */}
-          <EmployeeProfile employeeId={formUIProps.employeeId.value} />
+          {/* <EmployeeProfile employeeId={formUIProps.employeeId.value} /> */}
           {/* EmployeeProfile Ends */}
-          <br />
-          <hr />
+          {/* <br /> */}
+          {/* <hr /> */}
 
           {/* FormEditDialog Starts */}
           <FormEditDialog

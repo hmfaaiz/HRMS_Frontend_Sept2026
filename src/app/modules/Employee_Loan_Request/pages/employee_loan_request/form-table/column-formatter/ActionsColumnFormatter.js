@@ -17,27 +17,23 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
-    setIds,setIsFileReq,
+    setIds,
+    setIsFileReq,
   }
 ) {
-
-
   const isUserRead = false;
   return (
     <>
-
-      {isAccessForEdit && row.isActive && (
+      {isAccessForEdit && row.isActive && row?.isLoanContinuing && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
           <a
             title=""
-           className="btn btn-icon edit-button"
-            onClick={() =>{
-        
-              setIds(row.Id)}
-            }
-            
+            className="btn btn-icon edit-button"
+            onClick={() => {
+              setIds(row.Id);
+            }}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
               <SVG
@@ -61,7 +57,7 @@ export function ActionsColumnFormatter(
           {row.isActive ? (
             <a
               title=""
-             className="btn btn-icon  delete-button"
+              className="btn btn-icon  delete-button"
               onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
             >
               <span className="svg-icon svg-icon-md svg-icon-danger">

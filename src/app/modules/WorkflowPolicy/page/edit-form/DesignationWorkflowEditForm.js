@@ -182,7 +182,7 @@ const DesignationWorkflowEditForm = ({
                     />
                   </div>
                   {/* check for default approver workflow */}
-                  <div className="row col-12 col-md-12 m-0 p-0">
+                  {/* <div className="row col-12 col-md-12 m-0 p-0">
                     <div className="col-12 col-md-4 mt-4">
                       <input
                         name="isCustomApprover"
@@ -214,9 +214,9 @@ const DesignationWorkflowEditForm = ({
                         component="div"
                       />
                     </div>
-                  </div>
+                  </div> */}
                   {/* default approver area  */}
-                  <div
+                  {/* <div
                     className="col-12 col-md-12 mt-3"
                     style={{
                       backgroundColor: "rgb(235 243 255)",
@@ -322,9 +322,9 @@ const DesignationWorkflowEditForm = ({
                         />
                       </div>
                     </fieldset>
-                  </div>
+                  </div> */}
                   {/* check for custom approver workflow  */}
-                  <div className="row col-12 col-md-12 m-0 p-0">
+                  {/* <div className="row col-12 col-md-12 m-0 p-0">
                     <div className="col-12 col-md-4 mt-4">
                       <input
                         name="isCustomApprover"
@@ -356,7 +356,7 @@ const DesignationWorkflowEditForm = ({
                         component="div"
                       />
                     </div>
-                  </div>
+                  </div> */}
                   {/* custom approver workflow area  */}
                   <div
                     className="col-12 col-md-12 mt-3"

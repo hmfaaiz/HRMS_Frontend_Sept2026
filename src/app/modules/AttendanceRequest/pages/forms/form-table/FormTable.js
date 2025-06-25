@@ -81,7 +81,7 @@ export function FormTable() {
     },
     {
       dataField: "shiftCode",
-      text: "Shift Code with Description",
+      text: "Shift",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -93,17 +93,17 @@ export function FormTable() {
         return `${row.shiftCode}(${row.shiftDescription})`;
       },
     },
-    {
-      dataField: "formattedDateIn",
-      text: "Date In",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "formattedDateIn",
+    //   text: "Date In",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
     {
       dataField: "timeIn",
       text: "Time In",
@@ -128,17 +128,17 @@ export function FormTable() {
       },
     },
 
-    {
-      dataField: "formattedDateOut",
-      text: "Date Out",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "formattedDateOut",
+    //   text: "Date Out",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
     {
       dataField: "attendanceStatus",
       text: "Attendance Status",
@@ -201,8 +201,8 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "70px",
+        maxWidth: "70px",
       },
     },
     {
@@ -212,22 +212,22 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "70px",
+        maxWidth: "70px",
       },
     },
 
-    {
-      dataField: "finalRemarks",
-      text: "Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "finalRemarks",
+    //   text: "Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
     {
       dataField: "request_status",
       text: "Status",
@@ -256,45 +256,45 @@ export function FormTable() {
         return <span style={style}>{text}</span>;
       },
     },
-    {
-      dataField: "workflowAuthorties",
-      text: "Pending At",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        if (!Array.isArray(cell)) return "";
+    // {
+    //   dataField: "workflowAuthorties",
+    //   text: "Pending At",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!Array.isArray(cell)) return "";
 
-        // Find the first pending step
-        const pendingStep = cell.find((step) => step.authorityStatus === "P");
+    //     // Find the first pending step
+    //     const pendingStep = cell.find((step) => step.authorityStatus === "P");
 
-        if (pendingStep && pendingStep.approvalAuthorityEmp) {
-          const {
-            firstName,
-            middleName,
-            lastName,
-          } = pendingStep.approvalAuthorityEmp;
-          const fullName = [firstName, middleName, lastName]
-            .filter(Boolean)
-            .join(" ");
-          return `${fullName}`;
-        }
-      },
-    },
-    {
-      dataField: "request_remarks",
-      text: "Authority Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    //     if (pendingStep && pendingStep.approvalAuthorityEmp) {
+    //       const {
+    //         firstName,
+    //         middleName,
+    //         lastName,
+    //       } = pendingStep.approvalAuthorityEmp;
+    //       const fullName = [firstName, middleName, lastName]
+    //         .filter(Boolean)
+    //         .join(" ");
+    //       return `${fullName}`;
+    //     }
+    //   },
+    // },
+    // {
+    //   dataField: "request_remarks",
+    //   text: "Authority Remarks",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
   ];
 
   const handleNavigateToLeavePage = (attDate) => {

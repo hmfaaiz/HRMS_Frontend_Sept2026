@@ -17,6 +17,7 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/last-trips-vehicles-table/column-formatter/CreatedColumnFormatter";
+import { format } from "date-fns";
 
 export function DesignationTable() {
   //Users UI Context
@@ -139,6 +140,7 @@ export function DesignationTable() {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },
 
     

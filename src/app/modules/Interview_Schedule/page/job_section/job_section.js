@@ -26,7 +26,6 @@ export default function JobSection() {
     };
   }, shallowEqual);
 
-  console.log(jobList, "jobList");
 
   useEffect(() => {
     dispatch(actions.fetchJobVacancyList());
@@ -64,7 +63,7 @@ export default function JobSection() {
           <Card.Header>
             <div className="accordion-header-btn ">
               <Accordion.Toggle eventKey="0" className="flex-between-center">
-                Job Detail
+                Job Details
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>
@@ -120,14 +119,14 @@ export default function JobSection() {
                         {jobData?.jobPostingDateFrom
                           ? format(
                               new Date(jobData?.jobPostingDateFrom),
-                              "dd/MM/yyyy"
+                              "dd-MMM-yyyy"
                             )
                           : "N/A"}{" "}
                         to{" "}
                         {jobData?.jobPostingDateTo
                           ? format(
                               new Date(jobData?.jobPostingDateTo),
-                              "dd/MM/yyyy"
+                              "dd-MMM-yyyy"
                             )
                           : "N/A"}
                       </Col>

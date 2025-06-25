@@ -10,6 +10,7 @@ import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
+import { format } from "date-fns";
 export function LeaveApplicationTable({ entities, payrollData }) {
   const columns = [
     {
@@ -31,6 +32,7 @@ export function LeaveApplicationTable({ entities, payrollData }) {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "to",
@@ -41,6 +43,7 @@ export function LeaveApplicationTable({ entities, payrollData }) {
       style: {
         minWidth: "160px",
       },
+      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
     {
       dataField: "days",

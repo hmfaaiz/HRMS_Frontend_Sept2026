@@ -139,6 +139,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         monthly_installment: updatedData.monthly_installment,
         total_loan_amount: updatedData.total_loan_amount,
         isLoanContinuing: updatedData.isLoanContinuing,
+        total_installment: totalInstallments,
       };
       await dispatch(
         actions.updateEmployeeLoanRequest(
@@ -161,7 +162,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
   return (
     <>
-      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      {/* <FormEditDialogHeader id={id} isUserForRead={userForRead} /> */}
       <FormEditForm
         saveForm={saveForm}
         user={userForEdit || formUIProps.initUser}

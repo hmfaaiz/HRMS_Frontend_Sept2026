@@ -64,8 +64,8 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "140px",
-        maxWidth: "140px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
       formatter: (cell) => {
         let text = "";
@@ -92,8 +92,8 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "140px",
-        maxWidth: "140px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
       formatter: (cell) => {
         let text = "";
@@ -145,35 +145,35 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "190px",
-        maxWidth: "190px",
+        minWidth: "150px",
+        maxWidth: "150px",
       },
       formatter: (cell) => {
         return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
       },
     },
-    {
-      dataField: "requestBelongToEmp.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
-    {
-      dataField: "requestBelongToEmp.designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "requestBelongToEmp.department.deptName",
+    //   text: "Department",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
+    // {
+    //   dataField: "requestBelongToEmp.designation.formName",
+    //   text: "Designation",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
     {
       dataField: "parentData.LoanType.name",
       text: "Loan Type",
@@ -192,8 +192,8 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "180px",
-        maxWidth: "180px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
     },
     {
@@ -203,8 +203,8 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "180px",
-        maxWidth: "180px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
     },
     {
@@ -214,32 +214,32 @@ export function ApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "180px",
-        maxWidth: "180px",
+        minWidth: "90px",
+        maxWidth: "90px",
       },
     },
-    {
-      dataField: "parentData.applied_date",
-      text: "Applied Date",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "130px",
-        maxWidth: "130px",
-      },
-    },
-    {
-      dataField: "parentData.reason",
-      text: "Reason",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "200px",
-        maxWidth: "200px",
-      },
-    },
+    // {
+    //   dataField: "parentData.applied_date",
+    //   text: "Applied Date",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "130px",
+    //     maxWidth: "130px",
+    //   },
+    // },
+    // {
+    //   dataField: "parentData.reason",
+    //   text: "Reason",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "200px",
+    //     maxWidth: "200px",
+    //   },
+    // },
   ];
 
   return (

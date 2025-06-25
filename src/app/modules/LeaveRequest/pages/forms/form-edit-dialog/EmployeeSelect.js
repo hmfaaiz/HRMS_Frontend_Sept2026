@@ -140,7 +140,7 @@ export function EmployeeSelect({
             {/* Form Starts */}
             <Form className="form form-label-right">
               <fieldset>
-                <div className="from-group row">
+                {/* <div className="from-group row">
                   <div className="col-12 col-md-12 row p-0 m-0">
                     <div className="col-12 col-md-3 mt-3">
                       <Field
@@ -235,9 +235,8 @@ export function EmployeeSelect({
                       />
                     )}
                   </div>
-                </div>
-                <div className="from-group row">
-                  {/* Date from Field Start */}
+                </div> */}
+                {/* <div className="from-group row">
                   <div className="col-12 col-md-4  mt-3">
                     <Field
                       name="from"
@@ -257,9 +256,6 @@ export function EmployeeSelect({
                       autoComplete="off"
                     />
                   </div>
-                  {/* Date from Field End */}
-                  <span></span>
-                  {/* Date to Field Start */}
                   <div className="col-12 col-md-4 mt-3">
                     <Field
                       name="to"
@@ -280,7 +276,7 @@ export function EmployeeSelect({
                       autoComplete="off"
                     />
                   </div>
-                </div>
+                </div> */}
                 {/* Date to Field End */}
                 {/* Employee Id Dropdown Ends */}
               </fieldset>

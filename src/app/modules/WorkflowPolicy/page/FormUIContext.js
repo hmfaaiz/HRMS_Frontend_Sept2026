@@ -65,7 +65,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isHODFinalAuthority: false,
     isEmpFinalAuthority: false,
     empFinalAuthorityId: null,
-    isCustomApprover: false,
+    isCustomApprover: true,
     customApprovalList : [],
   };
 
