@@ -28,11 +28,11 @@ const EmployeeProfile = ({ data }) => {
                   border: "none",
                 }}
               >
-                <div className="d-flex justify-content-between flex-column flex-md-row align-items-center">
+                {/* <div className="d-flex justify-content-between flex-column flex-md-row align-items-center"> */}
                   {/* Employee Information Sections */}
-                  <h2 className="text-bold">Employee Information</h2>
+                  {/* <h2 className="text-bold">Employee Information</h2> */}
 
-                  {Object.keys(data).length ? (
+                  {/* {Object.keys(data).length ? (
                     <div className="form-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <img
@@ -61,8 +61,8 @@ const EmployeeProfile = ({ data }) => {
                   ) : (
                     <p></p>
                   )}
-                </div>
-                <hr />
+                </div> */}
+                {/* <hr /> */}
 
                 <div style={{ marginBottom: "2%" }}>
                   <h5 className="text-bold mb-5 custom_color_1">
