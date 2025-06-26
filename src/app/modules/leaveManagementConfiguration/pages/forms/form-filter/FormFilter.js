@@ -70,7 +70,7 @@ export function FormFilter() {
                   type="text"
                   className="form-control"
                   name="searchText"
-                  placeholder="Search By Name"
+                  placeholder="Search By Subsidiary"
                   onBlur={handleBlur}
                   value={values.searchText}
                   onChange={(e) => {
@@ -79,7 +79,7 @@ export function FormFilter() {
                   }}
                 />
                 <small className="form-text text-muted">
-                  {/* <b>Search</b> in Type field */}
+                  <b>Search</b> in subsidiary
                 </small>
               </div>
             </div>

@@ -78,8 +78,8 @@ export function FormFilter() {
                       handleSubmit()
                   }}
                 />
-                <small className="form-text text-muted">
-                  {/* <b>Search</b> in Type field */}
+                 <small className="form-text text-muted">
+                  <b>Search</b> in name
                 </small>
               </div>
             </div>
