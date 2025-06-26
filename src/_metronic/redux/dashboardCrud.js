@@ -277,3 +277,9 @@ export function getAllPostedJobVacancy(body) {
     body
   );
 };
+
+export const getAllParentDepartment = async (Id) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-parent-dept`, {
+    Id: Id,
+  });
+};
