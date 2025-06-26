@@ -8,11 +8,10 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import {
   fetchAllCity,
   fetchAllCountry,
-  fetchAllDept,
   fetchAllFormsMenu,
 
   fetchAllSubsidiaryData,
-  getLatestTableId,
+  getLatestTableId,fetchAllParentDept,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
@@ -250,7 +249,7 @@ const [jobCode, setJobCode ] = useState("");
       dispatch(fetchAllFormsMenu(187, "allGenderList"));
       dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
       dispatch(fetchAllFormsMenu(416, "allJobIndustryList"));
-      dispatch(fetchAllDept());
+      dispatch(fetchAllParentDept());
 
     }
   }, [dispatch, formData.Id]);
@@ -702,12 +701,12 @@ const [jobCode, setJobCode ] = useState("");
                           setFieldValue("departmentId", e.value || null);
                         }}
                         value={
-                          dashboard?.allDept?.find(
+                          dashboard?.allParentDept?.find(
                             (option) => option.value === values.departmentId
                           ) || null
                         }
 
-                        options={dashboard?.allDept}
+                        options={dashboard?.allParentDept}
 
                         error={errors.departmentId}
                         touched={touched.departmentId}
