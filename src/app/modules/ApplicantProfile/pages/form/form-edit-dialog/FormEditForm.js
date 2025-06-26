@@ -508,6 +508,7 @@ export function FormEditForm({
 
       dispatch(fetchAllFormsMenu(109, "allInstitution"));
       dispatch(fetchAllFormsMenu(108, "allDegreeTitle"));
+      dispatch(fetchAllFormsMenu(128, "allNationalities"));
     }
   }, [dispatch, formData.Id]);
 
@@ -1464,7 +1465,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* <div className="col-12 col-md-4 mt-3">
                       <Select
                         label={<span> Nationality</span>}
                         name="nationality"
@@ -1479,6 +1480,34 @@ export function FormEditForm({
                       {errors.nationality && touched.nationality && (
                         <div className="invalid-text">{errors.nationality}</div>
                       )}
+                    </div> */}
+
+                        <div className="col-12 col-md-4 mt-3">
+                      <SearchSelect
+                        name="nationality"
+                        label={
+                          <span>
+                            {" "}
+                            Nationality<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isdataForRead}
+                        onChange={(e) => {
+                          setFieldValue(
+                            "nationality",
+                            e.value || null
+                          );
+                        }}
+                        value={
+                          dashboard.allNationalities?.find(
+                            (option) =>
+                              option.value === values.nationality
+                          ) || null
+                        }
+                        error={errors.nationality}
+                        touched={touched.nationality}
+                        options={dashboard.allNationalities}
+                      />
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
