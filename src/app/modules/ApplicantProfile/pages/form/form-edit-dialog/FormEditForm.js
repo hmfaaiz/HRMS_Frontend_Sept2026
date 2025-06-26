@@ -20,6 +20,7 @@ import {
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
   getAllJobVacancy,
+  getLatestTableId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import {
@@ -42,8 +43,8 @@ export const getApplicantProfileEditSchema = (formData) => {
       title: Yup.string().required(VALIDATION_MESSAGES.required),
 
       applicantCode: Yup.string()
-        .min(5, "Job code must be  5 characters")
-        .max(10, "Job code must be  10 characters")
+        .min(6, "Job code must be  6 characters")
+        .max(6, "Job code must be  6 characters")
         .required(VALIDATION_MESSAGES.required),
 
       firstName: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -487,6 +488,7 @@ export function FormEditForm({
   );
   const inputFile = useRef(null);
   const [file, setFile] = useState("");
+  const [applicantCode, setApplicantCode] = useState("");
 
   //drop down
   useEffect(() => {
@@ -509,14 +511,34 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess } = useSelector((state) => {
+
+
+  const { currentState, userAccess ,currentUser} = useSelector((state) => {
     return {
       currentState: state.applicant_profile,
       userAccess: state?.auth?.userAccess["applicant_profile"],
+         currentUser:state.auth.user,
     };
   }, shallowEqual);
 
   const { dataForEdit } = currentState;
+    const fetchData = async (setApplicantCode) => {
+      
+      if (!formData.Id) {
+  
+        dispatch(
+          getLatestTableId(
+            "r_applicant_profile",
+            "applicantCode",
+            "companyId =" + currentUser.companyId,
+            setApplicantCode
+          )
+        );
+      }
+    };
+    useEffect(()=>{
+      fetchData(setApplicantCode)
+    },[])
 
   const filteredCities = (countryId) => {
     return dashboard?.allCity?.filter((city) => city.code === countryId) || [];
@@ -575,7 +597,7 @@ export function FormEditForm({
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={formData}
+      initialValues={{ ...formData ,applicantCode:formData.applicantCode ? formData?.applicantCode : applicantCode}}
       validationSchema={getApplicantProfileEditSchema(formData)}
       onSubmit={async (values) => {
         enableLoading();
@@ -639,10 +661,10 @@ export function FormEditForm({
                             name="applicantCode"
                             component={Input}
                             placeholder="Enter code"
-                            // disabled={true}
+                            disabled={true}
                             type="text"
-                            minLength={5}
-                            maxLength={10}
+                            minLength={6}
+                            maxLength={6}
                             // error={ errors.applicantCode}
                           />
                         </div>
