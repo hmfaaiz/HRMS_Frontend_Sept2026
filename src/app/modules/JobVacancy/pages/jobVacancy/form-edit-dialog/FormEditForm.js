@@ -1268,7 +1268,7 @@ const [jobCode, setJobCode ] = useState("");
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-                      Preferred Job Skills<span style={{ color: "red" }}>*</span>
+                      Mandatory Job Skills<span style={{ color: "red" }}>*</span>
                       <div
                         style={{
                           backgroundColor: "#ffffff",
@@ -1317,6 +1317,58 @@ const [jobCode, setJobCode ] = useState("");
                         </div>
                       </div>
                     </div>
+
+                         <div className="col-12 col-md-4 mt-3">
+                      Optional Skills
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allJobSkillList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="optionalJobSkillsId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.optionalJobSkillsId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.optionalJobSkillsId &&
+                              touched.optionalJobSkillsId && (
+                                <div className="invalid-text">
+                                  {errors.optionalJobSkillsId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
 
 
                     <div className="col-12 col-md-4 mt-3">
