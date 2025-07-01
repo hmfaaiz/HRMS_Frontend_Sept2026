@@ -96,7 +96,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
     },
     {
@@ -106,7 +106,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "150px",
       },
     },
     {
@@ -116,7 +116,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "100px",
       },
       formatter: (cell) => {
         if (!cell) return "";
@@ -133,7 +133,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
       },
     },
 
@@ -155,7 +155,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
       },
       formatter: (cell, row) => (
         <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
@@ -165,7 +165,26 @@ export function FormTable() {
     },
 
 
+  {
+      dataField: "Job Completion",
+      text: "Job Completion",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        dispatch,
+        pdfGenerateLoading,
+        
+        openConvertFormDialog: formUIProps.openConvertFormDialog,
+        isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
+        
+      },
 
+      classes: "text-end pr-0",
+      headerClasses: "text-end pr-3",
+      style: {
+        minWidth: "100px",
+      },
+    },
     {
       dataField: "action",
       text: "Actions",
@@ -178,8 +197,8 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
-        openConvertFormDialog: formUIProps.openConvertFormDialog,
-        isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
+     
+       
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
