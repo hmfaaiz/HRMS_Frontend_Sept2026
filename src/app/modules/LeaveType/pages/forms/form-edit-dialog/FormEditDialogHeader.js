@@ -17,7 +17,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "Edit Leave Type" : "New Leave Type";
+    let _title = id ? "Edit Leave Type" : "Add Leave Type";
     setTitle(_title);
   }, [userForEdit, actionsLoading]);
 

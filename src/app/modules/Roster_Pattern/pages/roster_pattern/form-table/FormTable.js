@@ -36,7 +36,7 @@ export function FormTable() {
 
  
   const { currentState, userAccess } = useSelector(
-    (state) => { console.log("state111",state); return {
+    (state) => {  return {
       
       // currentState: state.salarypolicy,
       currentState: state.roster_pattern,

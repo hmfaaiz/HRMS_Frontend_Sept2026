@@ -376,7 +376,7 @@ export const getApplicantProfileEditSchema = (formData) => {
             // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
             statusDate: Yup.date()
               .nullable(),
-              // .required(VALIDATION_MESSAGES.required),
+            // .required(VALIDATION_MESSAGES.required),
             appointmentTypeId: Yup.number()
               .nullable()
               .required(VALIDATION_MESSAGES.required),
@@ -506,6 +506,8 @@ export function FormEditForm({
   const [file, setFile] = useState("");
   const [applicantCode, setApplicantCode] = useState("");
   const [allSkillNames, setAllSkillNames] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState("");
+
   // At top of your component
   const [skillsAutoAdded, setSkillsAutoAdded] = useState(false);
 
@@ -604,71 +606,6 @@ export function FormEditForm({
       .map((skill) => skill.label);
   };
 
-  // const printSkills = async (formData, vacancyArray,jobVacancyId) => {
-  //   const collectedSkillNames = [];
-
-  //   vacancyArray.forEach((item) => {
-  //     const selectedVacancy = dashboard?.allJobVacancyList?.find(
-  //       (x) => x.value === item.jobVacancyId
-  //     );
-
-  //     const skillIds = selectedVacancy?.preferredJobSkillsId || [];
-
-  //     const skillNames = getSkillNamesFromIds(skillIds);
-
-  //     collectedSkillNames.push(...skillNames);
-  //   });
-
-  //   // ✅ Remove duplicates
-  //   const uniqueSkillNames = [...new Set(collectedSkillNames)];
-
-  //   // ✅ Update state
-  //   setAllSkillNames(uniqueSkillNames);
-  //   let result = updateApplicantSkills(formData, uniqueSkillNames,jobVacancyId)
-  //   return result
-
-  // };
-
-
-
-  // 888888888
-  // const printSkills = async (formData, vacancyArray,forDelete) => {
-  //   const collected = [];
-
-  //   vacancyArray.forEach((item) => {
-  //     const selectedVacancy = dashboard?.allJobVacancyList?.find(
-  //       (x) => x.value === item.jobVacancyId
-  //     );
-
-  //     const skillIds = selectedVacancy?.preferredJobSkillsId || [];
-  //     const skillNames = getSkillNamesFromIds(skillIds);
-
-  //     skillNames.forEach((name) => {
-  //       collected.push({
-  //         skillName: name,
-  //         jobVacancyId: selectedVacancy?.value,
-  //       });
-  //     });
-  //   });
-
-  //   const uniqueBySkill = [];
-  //   const seen = new Set();
-
-  //   collected.forEach((item) => {
-  //     const key = item.skillName.toLowerCase();
-  //     if (!seen.has(key)) {
-  //       uniqueBySkill.push(item);
-  //       seen.add(key);
-  //     }
-  //   });
-
-  //   console.log("✅ All Skills with Job Reference:", uniqueBySkill);
-
-  //   // You can still keep names for dropdown etc if needed
-  //   setAllSkillNames(uniqueBySkill.map((s) => s.skillName));
-
-  //   return updateApplicantSkills(formData, uniqueBySkill);
-  // };
 
   const printSkills = async (formData, vacancyArray, forDelete = null) => {
     const collected = [];
@@ -701,7 +638,7 @@ export function FormEditForm({
       }
     });
 
-    console.log("✅ All Skills with Job Reference:", uniqueBySkill);
+
 
     // ✅ Set for UI dropdown or tracking
     setAllSkillNames(uniqueBySkill.map((s) => s.skillName));
@@ -752,44 +689,6 @@ export function FormEditForm({
 
 
 
-  // const updateApplicantSkills = (formData, allSkillNames,jobVacancyId) => {
-  //   console.log("All Skill Names:", formData, allSkillNames);
-  //   const existingSkills = formData.details_applicant_skills || [];
-
-  //   // Convert existing skill names to lowercase for comparison
-  //   const existingSkillNames = existingSkills.map((s) => s.skill?.toLowerCase());
-
-  //   const newSkills = allSkillNames
-  //     .filter((skillName) => !existingSkillNames.includes(skillName.toLowerCase()))
-  //     .map((skillName, index) => ({
-  //       Id: null, // New skill, no ID yet
-  //       applicantId: formData.Id,
-  //       skill: skillName,
-  //       description: '',
-  //       ratingScale: null,
-  //       startDate: null,
-  //       endDate: null,
-  //       isActive: true,
-  //       createdBy: null,
-  //       updatedBy: null,
-  //       createdAt: new Date().toISOString(),
-  //       updatedAt: new Date().toISOString(),
-  //       isAutoFilled: jobVacancyId, // ✅ NEW FLAG
-  //     }));
-
-  //   return {
-  //     details_applicant_skills: [...existingSkills, ...newSkills],
-  //   };
-  // };
-
-  // useEffect(() => {
-  //   if (formData?.details_applicant_vacancy && formData?.details_applicant_vacancy.length > 0) {
-  //     printSkills(formData.details_applicant_vacancy);
-  //   } else {
-  //     setAllSkillNames([]);
-  //   }
-  //   console.log("All Skill Names:", allSkillNames);
-  // }, [formData?.details_applicant_vacancy,formData?.details_applicant_vacancy]);
 
 
   const updateApplicantSkills = (formData, skillWithJobList) => {
@@ -823,24 +722,6 @@ export function FormEditForm({
     };
   };
 
-
-  const setSkillsFunc = (details_applicant_vacancy) => {
-    if (details_applicant_vacancy && details_applicant_vacancy.length > 0) {
-      printSkills(details_applicant_vacancy);
-    } else {
-      setAllSkillNames([]);
-    }
-    console.log("All Skill Names:", allSkillNames);
-  };
-
-  // useEffect(() => {
-  //   setSkillsFunc(formData?.details_applicant_vacancy)
-  // }, [formData?.details_applicant_vacancy]);
-
-
-  const enrichedFormData = allSkillNames.length > 0
-    ? updateApplicantSkills(formData, allSkillNames)
-    : formData;
 
   return (
     <Formik
@@ -1016,7 +897,7 @@ export function FormEditForm({
                     <div className="col-12 col-md-2 ">
                       <div>
                         <div>
-                          <div>
+                          {/* <div>
                             <img
                               name="profile_image"
                               width={120}
@@ -1035,7 +916,74 @@ export function FormEditForm({
                               name="myImage"
                               component="div"
                             />
+                          </div> */}
+
+                          <div className="text-center" style={{
+                            height: "220px",          // Fixed height
+                            width: "120px",          // Fixed height
+                            overflow: "hidden",       // Prevent stretching
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            // justifyContent: "space-between",
+                          }}>
+                            <img
+                              name="profile_image"
+                              width={120}
+                              height={120}
+                              src={profile_image || formData?.profile_image}
+                              alt="Profile"
+                              // className="img-thumbnail"
+                              style={{
+                                objectFit: "cover",
+                                borderRadius: "50%",
+                                // flexShrink: 0,           // Prevent image from shrinking
+                              }}
+                            />
+
+                            <h5 className="mt-2">Select Image</h5>
+
+                            {/* Custom upload button */}
+                            <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+                              Upload Image
+                            </label>
+
+                            {/* Hidden file input */}
+                            <input
+                              id="myImage"
+                              type="file"
+                              name="myImage"
+                              accept=".jpg, .jpeg, .png"
+                              onChange={onImageChange}
+                              style={{ display: "none" }}
+                            />
+
+                            {/* File name truncation */}
+                            {selectedFileName && (
+                              <div
+                                style={{
+                                  maxWidth: "100%",
+                                  height: "100%",
+                                  overflow: "hidden",
+                                  // textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  fontSize: "0.8rem",
+                                  marginTop: "5px",
+                                }}
+                                title={selectedFileName} // Tooltip on hover
+                              >
+                                {selectedFileName}
+                              </div>
+                            )}
+
+                            {/* Formik error display */}
+                            <ErrorMessage
+                              className="form-feedBack text-danger"
+                              name="myImage"
+                              component="div"
+                            />
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -1121,7 +1069,7 @@ export function FormEditForm({
                                       }}
 
                                     >
-                                      Delete {values.details_applicant_vacancy[index].jobVacancyId}
+                                      Delete
                                     </button>
                                   </td>
                                   {/* job vacancy selection */}
@@ -1154,7 +1102,7 @@ export function FormEditForm({
                                       //   );
                                       //   const result = await printSkills(formData, values.details_applicant_vacancy);
 
-                                      //   console.log("✅ aaa1", result);
+
 
                                       //   // ✅ Make sure result exists before setting
                                       //   if (result?.details_applicant_skills) {
@@ -2963,10 +2911,7 @@ export function FormEditForm({
                                         date,
                                         "yyyy-MM-dd"
                                       ); // or use date.toISOString().split('T')[0]
-                                      console.log(
-                                        "selectedDate1111",
-                                        selectedDate
-                                      );
+
                                       setFieldValue(
                                         `details_applicant_academic_info[${index}].endDate`,
                                         selectedDate
@@ -3079,7 +3024,7 @@ export function FormEditForm({
                                       remove(index);
                                     }}
                                   >
-                                    Delete {values.details_applicant_skills[index].jobVacancyId}
+                                    Delete
                                   </button>
                                 </td>
 

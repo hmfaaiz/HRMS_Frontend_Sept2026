@@ -47,7 +47,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
     userStatusTypes,
     isdataForRead,
   } = useSelector((state) => {
-    console.log("state222", state); // Log the state for debugging purposes
+   
   
     return {
       actionsLoading: state.users.actionsLoading,

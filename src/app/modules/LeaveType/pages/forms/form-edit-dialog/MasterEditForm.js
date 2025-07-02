@@ -14,7 +14,7 @@ const formValidation = Yup.object().shape({
   .required(VALIDATION_MESSAGES.required)
   .min(1, "At least one subsidiary ID is required"),
   type: Yup.number().required(VALIDATION_MESSAGES.required),
-  name: Yup.string().required(VALIDATION_MESSAGES.required),
+  name: Yup.string().trim().required(VALIDATION_MESSAGES.required),
   code: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^[A-Za-z]{1,3}$/, 'Code must contain only letters (A-Z)'),
 });
 
@@ -99,25 +99,9 @@ export function MasterEditForm({
                   </div>
 
                   <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="name"
-                        component={Input}
-                        placeholder=""
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label={
-                          <span>
-                            {" "}
-                            Name<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.name}
-                        autoComplete="off"
-                      />
-                    </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    
+                    <div className="col-12 col-md-6 mt-3">
                       <Field
                         name="code"
                         component={Input}
@@ -136,7 +120,32 @@ export function MasterEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    
+                    <div className="col-12 col-md-6 mt-3">
+                      <Field
+                        name="name"
+                        component={Input}
+                        placeholder=""
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        label={
+                          <span>
+                            {" "}
+                            Name<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={values.name}
+                        autoComplete="off"
+                      />
+                    </div>
+
+
+             
+
+                  </div>
+
+                    <div className="from-group row">
+                         <div className="col-12 col-md-6 mt-3">
                       <Field
                         name="type"
                         component={Select}
@@ -160,7 +169,6 @@ export function MasterEditForm({
                         errors.type && !values.type && <CustomErrorLabel touched={true} error={errors.type} />
                       }
                     </div>
-
                   </div>
                 </fieldset>
               </Form>

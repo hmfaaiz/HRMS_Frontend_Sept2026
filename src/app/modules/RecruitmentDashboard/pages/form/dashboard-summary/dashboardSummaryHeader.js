@@ -170,14 +170,14 @@ export function DashboardSummaryHeader() {
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-4">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Calendar.svg")} />
                             </span>
-                            <span>Posted {job.postedDate}</span>
+                            <span>Posted: {job.postedDate}</span>
                         </div>
 
                         <div className="d-flex mb-2">
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-4">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Calendar.svg")} />
                             </span>
-                            <span>Expiry {job.expiryDate}</span>
+                            <span>Expiry: {job.expiryDate}</span>
                         </div>
 
                         <div className="d-flex mb-2" style={{ width: '30%' }}>
