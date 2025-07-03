@@ -959,7 +959,7 @@ export function FormEditForm({
                             />
 
                             {/* File name truncation */}
-                            {selectedFileName && (
+                            {/* {selectedFileName && (
                               <div
                                 style={{
                                   maxWidth: "100%",
@@ -974,7 +974,7 @@ export function FormEditForm({
                               >
                                 {selectedFileName}
                               </div>
-                            )}
+                            )} */}
 
                             {/* Formik error display */}
                             <ErrorMessage
