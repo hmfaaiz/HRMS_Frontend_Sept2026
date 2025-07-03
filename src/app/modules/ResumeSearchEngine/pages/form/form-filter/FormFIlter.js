@@ -548,7 +548,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("desireToDateOfApp", selectedDate);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="desireFromDateOfApp"
                         autoComplete="off"
                       />
@@ -569,7 +569,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("desireToDateOfApp", date);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="desireToDateOfApp"
                         autoComplete="off"
                         minDate={values?.desireFromDateOfApp ? new Date(values.desireFromDateOfApp) : new Date()}
@@ -600,7 +600,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("applicationToDate", selectedDate);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="applicationFromDate"
                         autoComplete="off"
                       />
@@ -621,7 +621,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("applicationToDate", date);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="applicationToDate"
                         autoComplete="off"
                         minDate={values?.applicationFromDate ? new Date(values.applicationFromDate) : new Date()}

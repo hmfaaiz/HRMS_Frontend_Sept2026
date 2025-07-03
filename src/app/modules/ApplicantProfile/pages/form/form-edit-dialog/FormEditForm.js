@@ -924,7 +924,7 @@ export function FormEditForm({
                                           selectedDate
                                         );
                                       }}
-                                      dateFormat="dd/MM/yyyy"
+                                      dateFormat="dd-MMM-yyyy"
                                       name={`details_applicant_vacancy[${index}].applicationDate`}
                                       disabled={
                                         isdataForRead ||
@@ -1040,7 +1040,7 @@ export function FormEditForm({
                                           selectedDate
                                         );
                                       }}
-                                      dateFormat="dd/MM/yyyy"
+                                      dateFormat="dd-MMM-yyyy"
                                       name={`details_applicant_vacancy[${index}].statusDate`}
                                       autoComplete="off"
                                       disabled={isdataForRead || true}
@@ -1301,7 +1301,7 @@ export function FormEditForm({
                           let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("dateOfBirth", selectedDate);
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="dateOfBirth"
                         autoComplete="off"
                         maxDate={new Date()}
@@ -2136,7 +2136,7 @@ export function FormEditForm({
                                         selectedDate
                                       );
                                     }}
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     name={`details_applicant_work_experience[${index}].startDate`}
                                     autoComplete="off"
                                     disabled={isdataForRead}
@@ -2194,7 +2194,7 @@ export function FormEditForm({
                                         selectedDate
                                       );
                                     }}
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     name={`details_applicant_work_experience[${index}].endDate`}
                                     autoComplete="off"
                                     disabled={isdataForRead}
@@ -2560,7 +2560,7 @@ export function FormEditForm({
                                         selectedDate
                                       );
                                     }}
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     name={`details_applicant_academic_info[${index}].startDate`}
                                     autoComplete="off"
                                     disabled={isdataForRead}
@@ -2621,7 +2621,7 @@ export function FormEditForm({
                                         selectedDate
                                       );
                                     }}
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     name={`details_applicant_academic_info[${index}].endDate`}
                                     autoComplete="off"
                                     disabled={isdataForRead}
@@ -2846,7 +2846,7 @@ export function FormEditForm({
                                         selectedDate
                                       );
                                     }}
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     name={`details_applicant_skills[${index}].startDate`}
                                     autoComplete="off"
                                     disabled={isdataForRead}
@@ -2898,7 +2898,7 @@ export function FormEditForm({
                                         selectedDate
                                       );
                                     }}
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     name={`details_applicant_skills[${index}].endDate`}
                                     autoComplete="off"
                                     disabled={isdataForRead}

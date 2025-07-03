@@ -415,7 +415,7 @@ const setEndDate = (year,month,date, setFieldValue) => {
                         }}
 
                         timeInputLabel="Time:"
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="startDate"
                         disabled={isUserForRead || flag || !values.year}
@@ -438,7 +438,7 @@ const setEndDate = (year,month,date, setFieldValue) => {
 
 
                         timeInputLabel="Time:"
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="endDate"
                         disabled={true}

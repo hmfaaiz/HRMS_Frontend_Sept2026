@@ -506,7 +506,7 @@ export function FormEditForm({
                     <Field
                       name="applied_date"
                       component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
                       type="date"
                       onChange={(e) => {
@@ -532,7 +532,7 @@ export function FormEditForm({
                     <Field
                       name="installment_start_date"
                       component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
                       type="date"
                       // maxDate={new Date()}

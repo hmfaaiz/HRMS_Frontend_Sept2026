@@ -432,7 +432,7 @@ console.log("hit11",user?.accOpeningDate)
                       <Field
                         name="accOpeningDate"
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         placeholder="Select Date"
                         type="date"
 
