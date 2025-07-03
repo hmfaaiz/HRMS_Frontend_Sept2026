@@ -72,12 +72,24 @@ export const fetchDashboardAlert = () => async (dispatch) => {
   return await requestFromServer
     .getDashboardAlert()
     .then((response) => {
-      console.log("response", response?.data?.data);
       const entities = response.data?.data;
       dispatch(actions.AllDashboardAlertsFetch(entities));
     })
     .catch((error) => {
       dispatch(actions.AllDashboardAlertsFetch([]));
+    });
+};
+
+export const fetchEmployeeSummary = (filter) => async (dispatch) => {
+  return await requestFromServer
+    .getEmployeeSummary(filter)
+    .then((response) => {
+      console.log("response ", response.data);
+      const entities = response.data?.data;
+      dispatch(actions.EmployeeSummaryFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.EmployeeSummaryFetch({}));
     });
 };
 

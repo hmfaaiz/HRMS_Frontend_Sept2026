@@ -754,7 +754,7 @@ export function BankEditForm({
                             setGrauityDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="gratuity_startDate"
                           autoComplete="off"
@@ -842,7 +842,7 @@ export function BankEditForm({
                             setEOBIDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="eobi_reg_date"
                           autoComplete="off"
@@ -890,7 +890,7 @@ export function BankEditForm({
                             setProvidentFundDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="pf_reg_date"
                           autoComplete="off"
@@ -948,7 +948,7 @@ export function BankEditForm({
                             setSocialSecurityDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="social_security_reg_date"
                           autoComplete="off"
@@ -992,7 +992,7 @@ export function BankEditForm({
                             setPensionDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="pension_reg_date"
                           autoComplete="off"

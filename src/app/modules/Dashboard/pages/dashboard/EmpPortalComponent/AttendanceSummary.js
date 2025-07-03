@@ -47,19 +47,19 @@ export const AttendanceSummary = ({ payrollData, attendanceSummary }) => {
               }}
             >
               <div className="row">
-                <div className="col-2">
-                  <span className="font-weight-bold">Present Days</span>
+                <div className="col-1">
+                  <span className="font-weight-bold">Present</span>
                 </div>
                 <div className="col-1">
                   {attendanceSummary?.PresentDays || 0}{" "}
                 </div>
-                <div className="col-2">
+                <div className="col-1">
                   <span className="font-weight-bold">Absent Days</span>
                 </div>
                 <div className="col-1">
                   {attendanceSummary?.AbsentDays || 0}{" "}
                 </div>
-                <div className="col-1">
+                <div className="col-3">
                   <span className="font-weight-bold">Holidays</span>
                 </div>
                 <div className="col-1">{attendanceSummary?.Holidays || 0} </div>

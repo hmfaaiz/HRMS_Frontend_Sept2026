@@ -2363,7 +2363,7 @@ export function DesignationEditForm({
 
                             }}
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd-MMM-yyyy"
                             // showTimeInput
                             name="dateOfBirth"
                             disabled={isUserForRead || !values?.subsidiaryId}
@@ -2417,7 +2417,7 @@ export function DesignationEditForm({
                             showYearDropdown
                             scrollableMonthYearDropdown
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd-MMM-yyyy"
                             // showTimeInput
                             autoComplete="off"
                             name="dateOfJoining"
@@ -2444,7 +2444,7 @@ export function DesignationEditForm({
                               setConfirmationDate(date);
                             }}
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd-MMM-yyyy"
                             // showTimeInput
                             name="dateOfConfirmation"
                             // disabled={disabledConfirmationDateSelected}
@@ -2470,7 +2470,7 @@ export function DesignationEditForm({
                             setConfirmationDueDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="dateOfConfirmationDue"
                           disabled={disableConfDueDate}
@@ -2493,7 +2493,7 @@ export function DesignationEditForm({
                             setContractExpiryDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="dateOfContractExpiry"
                           // disabled={disabledContractExpirtyDateSelected}
@@ -2518,7 +2518,7 @@ export function DesignationEditForm({
                             setDRetirmentDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="dateOfRetirement"
                           disabled={isUserForRead || !values?.subsidiaryId}
@@ -2714,7 +2714,7 @@ export function DesignationEditForm({
                             setlicenseExpiryDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="licenseExpiryDate"
 
@@ -2860,7 +2860,7 @@ export function DesignationEditForm({
                                 setConfirmationEnterDate(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="dateOfConfirmationEnter"
                               disabled={disableConfDueDate}
@@ -2887,7 +2887,7 @@ export function DesignationEditForm({
                                 setlastReviewDate(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="lastReviewDate"
                               disabled={isUserForRead}
@@ -2912,7 +2912,7 @@ export function DesignationEditForm({
                                 setnextReviewDate(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="nextReviewDate"
                               minDate={new Date()}
@@ -3169,7 +3169,7 @@ export function DesignationEditForm({
                                 setpassportExpiry(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="passportExpiry"
 
@@ -3194,7 +3194,7 @@ export function DesignationEditForm({
                                 setdrivingLicenseExpiry(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="drivingLicenseExpiry"
 
@@ -3536,7 +3536,7 @@ export function DesignationEditForm({
                                   }
                                   id={"endDate_W-" + rightindex}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   // showTimeInput
                                   name="startDate"
                                   disabled={isUserForRead}
@@ -3561,7 +3561,7 @@ export function DesignationEditForm({
                                   }
                                   id={"endDate_W" + rightindex}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   // showTimeInput
                                   name="endDate"
                                   disabled={isUserForRead}
@@ -3704,7 +3704,7 @@ export function DesignationEditForm({
                                     onChange={(el) => handleDatePickerAcademic(el, 'startDate', rightindex, '')}
                                     id={"startDate_A-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="startDate"
                                     disabled={isUserForRead}
@@ -3725,7 +3725,7 @@ export function DesignationEditForm({
                                     onChange={(el) => handleDatePickerAcademic(el, 'endDate', rightindex, '')}
                                     id={"endDate_A-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="endDate"
                                     disabled={isUserForRead}
@@ -3824,7 +3824,7 @@ export function DesignationEditForm({
                                     onChange={(el) => handleDatePickerSkills(el, 'startDate', rightindex, '')}
                                     id={"startDate-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="startDate"
                                     disabled={isUserForRead}
@@ -3845,7 +3845,7 @@ export function DesignationEditForm({
                                     onChange={(el) => handleDatePickerSkills(el, 'endDate', rightindex, '')}
                                     id={"endDate-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="endDate"
                                     disabled={isUserForRead}
@@ -3947,7 +3947,7 @@ export function DesignationEditForm({
                                     onChange={(el) => handleDatePickerIncident(el, 'incidentDate', rightindex, '')}
                                     id={"incidentDate-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="incidentDate"
                                     disabled={isUserForRead}

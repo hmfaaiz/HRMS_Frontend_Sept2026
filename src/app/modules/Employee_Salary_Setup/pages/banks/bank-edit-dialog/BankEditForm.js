@@ -1397,7 +1397,7 @@ useEffect(()=>{
                                     setGrauityDate(date);
                                   }}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   showTimeInput
                                   name="gratuity_startDate"
                                   autoComplete="off"
@@ -1522,7 +1522,6 @@ useEffect(()=>{
                                   value={values.eobi_member}
                                   checked={values.eobi_member}
                                 /> EOBI Member
-
                               </div>
                               <div className="col-12 col-md-4 mt-5">
                                 {<span> Date Of Registration{Boolean(values.eobi_member) && <span style={{ color: 'red' }}>*</span>} </span>}
@@ -1538,7 +1537,7 @@ useEffect(()=>{
                                     setEOBIDate(date);
                                   }}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   showTimeInput
                                   name="eobi_reg_date"
                                   autoComplete="off"
@@ -1591,7 +1590,7 @@ useEffect(()=>{
                             setProvidentFundDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="pf_reg_date"
                           autoComplete="off"
@@ -1659,7 +1658,7 @@ useEffect(()=>{
                                     setSocialSecurityDate(date);
                                   }}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   showTimeInput
                                   name="social_security_reg_date"
                                   autoComplete="off"
@@ -1710,7 +1709,7 @@ useEffect(()=>{
                             setPensionDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="pension_reg_date"
                           autoComplete="off"

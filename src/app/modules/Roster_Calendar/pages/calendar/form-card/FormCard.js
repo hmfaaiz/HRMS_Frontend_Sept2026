@@ -237,7 +237,7 @@ const setInitialValues=(firstSubsidiary)=>{
                             <Field
                               name="from_date"
                               component={DatePickerField}
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               className="form-control"
                               label={<span>Date From<span style={{ color: "red" }}>*</span></span>}
                               onChange={(date) => {
@@ -255,7 +255,7 @@ const setInitialValues=(firstSubsidiary)=>{
                               component={DatePickerField}
                               onBlur={handleBlur}
                               className="form-control"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               label={<span>Date To<span style={{ color: "red" }}>*</span></span>}
                               onChange={(date) => {
                                 setFieldValue("to_date", date);
@@ -279,7 +279,7 @@ const setInitialValues=(firstSubsidiary)=>{
                           
                                                         }}
                                                         timeInputLabel="Time:"
-                                                        dateFormat="dd/MM/yyyy"
+                                                        dateFormat="dd-MMM-yyyy"
                                                         // showTimeInput
                                                         name="from_date"
                           
@@ -306,7 +306,7 @@ const setInitialValues=(firstSubsidiary)=>{
                           
                                                         }}
                                                         timeInputLabel="Time:"
-                                                        dateFormat="dd/MM/yyyy"
+                                                        dateFormat="dd-MMM-yyyy"
                                                         // showTimeInput
                                                         name="to_date"
                           

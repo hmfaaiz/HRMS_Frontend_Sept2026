@@ -387,7 +387,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                       <Field
                         name="from"
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         className="form-control"
                         label={
                           <span>
@@ -411,7 +411,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         component={DatePickerField}
                         onBlur={handleBlur}
                         className="form-control"
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         label={
                           <span>
                             {" "}

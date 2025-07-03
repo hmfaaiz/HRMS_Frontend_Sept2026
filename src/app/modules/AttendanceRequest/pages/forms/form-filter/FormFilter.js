@@ -244,7 +244,7 @@ export function FormFilter() {
                         <Field
                           name="from"
                           component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           className="form-control"
                           label={<span> Date From</span>}
                           onChange={(date) => {
@@ -268,7 +268,7 @@ export function FormFilter() {
                           component={DatePickerField}
                           onBlur={handleBlur}
                           className="form-control"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           label={<span> Date To</span>}
                           onChange={(date) => {
                             setFieldValue("to", date ? date : "");

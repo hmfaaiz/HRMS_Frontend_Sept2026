@@ -341,7 +341,7 @@ export function BankEditForm({
                             setStartDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="startDate"
                            autoComplete="off"
@@ -363,7 +363,7 @@ export function BankEditForm({
                             setEndDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="endDate"
                            autoComplete="off"

@@ -282,7 +282,7 @@ export function FormCard() {
                           
                                                         }}
                                                         timeInputLabel="Time:"
-                                                        dateFormat="dd/MM/yyyy"
+                                                        dateFormat="dd-MMM-yyyy"
                                                         // showTimeInput
                                                         name="from_date"
                           
@@ -309,7 +309,7 @@ export function FormCard() {
                           
                                                         }}
                                                         timeInputLabel="Time:"
-                                                        dateFormat="dd/MM/yyyy"
+                                                        dateFormat="dd-MMM-yyyy"
                                                         // showTimeInput
                                                         name="to_date"
                           

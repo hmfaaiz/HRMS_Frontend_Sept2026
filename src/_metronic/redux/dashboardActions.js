@@ -654,3 +654,15 @@ export const getAllPostedJobVacancy = (body) => async (dispatch) => {
     });
 };
 
+export const fetchAllParentDept = (id) => async (dispatch) => {
+  return await requestFromServer
+    .getAllParentDepartment(id)
+    .then((response) => {
+      const entities = response.data?.data;
+
+      dispatch(actions.AllParentDeptFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
