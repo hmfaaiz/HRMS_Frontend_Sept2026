@@ -8,10 +8,10 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import {
   fetchAllCity,
   fetchAllCountry,
-  fetchAllDept,
   fetchAllFormsMenu,
 
   fetchAllSubsidiaryData,
+  getLatestTableId,fetchAllParentDept,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
@@ -225,7 +225,7 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-
+const [jobCode, setJobCode ] = useState("");
 
   //drop down
   useEffect(() => {
@@ -249,16 +249,17 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(187, "allGenderList"));
       dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
       dispatch(fetchAllFormsMenu(416, "allJobIndustryList"));
-      dispatch(fetchAllDept());
+      dispatch(fetchAllParentDept());
 
     }
   }, [dispatch, formData.Id]);
 
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const { currentState, userAccess ,currentUser} = useSelector((state) => {
     return {
       currentState: state.job_vacancy,
       userAccess: state?.auth?.userAccess["job_vacancy"],
+         currentUser:state.auth.user,
     };
   }, shallowEqual);
 
@@ -279,18 +280,32 @@ export function FormEditForm({
     return formData;
   }, [formData]);
 
+ const fetchData = async (setJobCode) => {
+      
+      if (!formData.Id) {
+  
+        dispatch(
+          getLatestTableId(
+            "r_jobvacancy",
+            "jobCode",
+            "companyId =" + currentUser.companyId,
+            setJobCode
+          )
+        );
+      }
+    };
+    useEffect(()=>{
+      fetchData(setJobCode)
+    },[])
 
   return (
     <Formik
       enableReinitialize={true}
 
 
-      // initialValues={{
-      //   ...formData,
-      //   jobDate: formData?.jobDate ? formData.jobDate : formatDates(new Date(), 'yyyy-MM-dd'), // set to today if not provided
-      // }}
+
       initialValues={{
-        ...cleanedFormData,
+        ...cleanedFormData,jobCode:cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
         jobDate: cleanedFormData?.jobDate ? cleanedFormData?.jobDate : formatDates(new Date(), 'yyyy-MM-dd'),
       }}
       validationSchema={jobVacancyEditSchema}
@@ -336,7 +351,7 @@ export function FormEditForm({
                         name="jobCode"
                         component={Input}
                         placeholder="Enter code"
-                        // disabled={true}
+                        disabled={true}
                         type="text"
                         minLength={5}
                         maxLength={10}
@@ -686,12 +701,12 @@ export function FormEditForm({
                           setFieldValue("departmentId", e.value || null);
                         }}
                         value={
-                          dashboard?.allDept?.find(
+                          dashboard?.allParentDept?.find(
                             (option) => option.value === values.departmentId
                           ) || null
                         }
 
-                        options={dashboard?.allDept}
+                        options={dashboard?.allParentDept}
 
                         error={errors.departmentId}
                         touched={touched.departmentId}
