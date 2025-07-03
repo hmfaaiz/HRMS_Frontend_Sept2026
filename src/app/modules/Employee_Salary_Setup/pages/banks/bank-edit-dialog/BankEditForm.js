@@ -1522,7 +1522,6 @@ useEffect(()=>{
                                   value={values.eobi_member}
                                   checked={values.eobi_member}
                                 /> EOBI Member
-
                               </div>
                               <div className="col-12 col-md-4 mt-5">
                                 {<span> Date Of Registration{Boolean(values.eobi_member) && <span style={{ color: 'red' }}>*</span>} </span>}
