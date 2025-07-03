@@ -1834,7 +1834,7 @@ export function DesignationEditForm({
                     <div className="from-group row">
                       {
 
-                        <div className="col-12 col-md-2 mt-3">
+                        <div className="col-12 col-md-3 mt-3">
                           <Select
                             label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
                             name="title"
