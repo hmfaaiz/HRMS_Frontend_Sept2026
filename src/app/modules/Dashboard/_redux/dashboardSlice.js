@@ -315,5 +315,10 @@ export const dashboardSlice = createSlice({
     AllParentDeptFetch: (state, action) => {
       state.allParentDept = action.payload;
     },
+    AllParentDeptFetch: (state, action) => {
+      state.allParentDept = action.payload;
+    },
+
+
   },
 });
