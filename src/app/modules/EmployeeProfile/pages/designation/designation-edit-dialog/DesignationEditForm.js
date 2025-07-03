@@ -1942,9 +1942,26 @@ export function DesignationEditForm({
 
                       </div>
                       <div className="col-12 col-md-4 mt-3">
+                             <label className="mr-4"><span> Department<span style={{ color: 'red' }}>*</span></span></label>
+                        <input
+                          name="hod"
+                          type="checkbox"
+                          onChange={() => setFieldValue("hod", !values?.hod)}
+                          onBlur={handleBlur}
+                          value={values.hod}
+                          checked={values.hod}
+                          label="HOD"
+                          disabled={
+                           dashboard.allEmployeesWithNoPermissionList?.some(
+                           (x) => x.departmentId == values.departmentId && x.hod == true && x.value != user.Id
+                              )
+                          }
+                        />
+
+                          <label className="ml-2">HOD</label>
                         <SearchSelect
                           name="departmentId"
-                          label={<span> Department<span style={{ color: 'red' }}>*</span></span>}
+                      
                           isDisabled={isUserForRead && true}
                           onBlur={() => {
                             // handleBlur({ target: { name: "countryId" } });
