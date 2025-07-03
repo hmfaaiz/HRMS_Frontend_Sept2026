@@ -370,7 +370,10 @@ export function DesignationEditForm({
   const [defpassportExpiry, setpassportExpiry] = useState(null);
   const [deflicenseExpiryDate, setlicenseExpiryDate] = useState(null);
 
-  const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
+  // const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
+    const [profile_image, setImage] = useState(
+      user?.profile_image || toAbsoluteUrl("/media/logos/defaultImg.png")
+    );
   const [file, setFile] = useState('');
   // ================ Getting list from DB Stored Procedure
 
@@ -891,14 +894,20 @@ export function DesignationEditForm({
     );
   }, [user?.cityId, dashboard.allCity]);
 
-  useEffect(() => {
-    if (user.cityId) {
+  // useEffect(() => {
+  //   if (user.cityId) {
 
 
-      setImage(user.profile_image || '');
+  //     setImage(user.profile_image || '');
 
-    }
-  }, [user.cityId, dispatch]);
+  //   }
+  // }, [user.cityId, dispatch]);
+
+    useEffect(() => {
+      if (user?.profile_image) {
+        setImage(user.profile_image);
+      }
+    }, [user?.profile_image]);
 
   const onImageChange = async event => {
     if (event.target.files && event.target.files[0]) {
@@ -910,6 +919,8 @@ export function DesignationEditForm({
       setImgAlreadySet(true)
     }
   };
+
+
 
   // For Edit Form
   useEffect(() => {
@@ -1681,7 +1692,7 @@ export function DesignationEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                     <h6>Basic Information</h6>
-                    <div className="from-group row">
+                    {/* <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <div>
                           <div>
@@ -1695,7 +1706,62 @@ export function DesignationEditForm({
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
+
+                    <div className="form-group row">
+  <div className="col-12 col-md-4 mt-3">
+    <div className="text-center"
+      style={{
+        height: "220px",
+        width: "120px",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <img
+        name="profile_image"
+        width={120}
+        height={120}
+        src={profile_image}
+
+        alt="Profile"
+        style={{
+          objectFit: "cover",
+          borderRadius: "50%",
+        }}
+      />
+
+      <h5 className="mt-2">
+        Select Image {imagePolicy && <span style={{ color: "red" }}>*</span>}
+      </h5>
+
+      {/* Custom upload button */}
+      <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+        Upload Image
+      </label>
+
+      {/* Hidden file input */}
+      <input
+        id="myImage"
+        type="file"
+        name="myImage"
+        accept=".jpg, .jpeg, .png"
+        onChange={onImageChange}
+        style={{ display: "none" }}
+      />
+
+      {/* Formik error display */}
+      <ErrorMessage
+        className="form-feedBack text-danger"
+        name="myImage"
+        component="div"
+      />
+    </div>
+  </div>
+</div>
+
 
 
 
