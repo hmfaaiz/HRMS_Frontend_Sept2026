@@ -33,12 +33,12 @@ export function FormTable() {
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       openConvertFormDialog: formUIContext.openConvertFormDialog,
-   
+
     };
   }, [formUIContext]);
 
 
-  const { currentState, userAccess,pdfGenerateLoading } = useSelector(
+  const { currentState, userAccess, pdfGenerateLoading } = useSelector(
     (state) => {
       return {
 
@@ -116,11 +116,11 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 50 ? cell.substring(0, 50) + "..." : cell;
+        return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
       }
     },
 
@@ -157,15 +157,27 @@ export function FormTable() {
       style: {
         minWidth: "100px",
       },
-      formatter: (cell, row) => (
-        <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-          <span>{getFileName(cell)}</span>
-        </a>
-      )
+      // formatter: (cell, row) => (
+
+      //   <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+      //     <span>{getFileName(cell)}</span>
+      //   </a>
+      // )
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        return (
+          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+            View CV
+          </a>
+        );
+      }
+
+
     },
 
 
-  {
+    {
       dataField: "Job Completion",
       text: "Job Completion",
       isDummyField: true,
@@ -173,10 +185,10 @@ export function FormTable() {
       formatExtraData: {
         dispatch,
         pdfGenerateLoading,
-        
+
         openConvertFormDialog: formUIProps.openConvertFormDialog,
         isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
-        
+
       },
 
       classes: "text-end pr-0",
@@ -197,8 +209,8 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
-     
-       
+
+
         isAccessForView: isAccessForView ? isAccessForView.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete

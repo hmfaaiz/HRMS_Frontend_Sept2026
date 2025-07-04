@@ -668,10 +668,14 @@ export function FormEditForm({
   };
 
   useEffect(() => {
-    if (formData?.profile_image) {
+    if (formData.Id && formData?.profile_image) {
       setImage(formData.profile_image);
     }
-  }, [formData?.profile_image]);
+    else{
+       setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
+        
+    }
+  }, [formData.Id,formData?.profile_image]);
 
   const deleteApplicantVacancyDetail = (Id) => {
     // server request for deleting customer by id
@@ -1530,12 +1534,13 @@ export function FormEditForm({
                         )}
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <Field
                         name="applicantStatusReason"
                         component={TextArea}
                         placeholder="Enter applicant status reason"
                         label={<span>Applicant Status Reason</span>}
+                        className="form-control h-100"  // Force full height
                         autoComplete="off"
                       />
                     </div>
@@ -1827,11 +1832,12 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3"style={{ height: '150px' }}>
                       <Field
                         name="additional_summary"
                         component={TextArea}
                         placeholder="Enter Address"
+                        className="form-control h-100"  // Force full height
                         label={
                           <span>
                             {" "}
@@ -2105,12 +2111,13 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <Field
                         name="otherInformation"
                         component={TextArea}
                         placeholder="Enter other information"
                         label={<span> Other Information</span>}
+                        className="form-control h-100"  // Force full height
                         autoComplete="off"
                       />
                     </div>

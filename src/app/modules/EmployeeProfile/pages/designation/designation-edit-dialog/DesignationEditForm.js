@@ -371,9 +371,12 @@ export function DesignationEditForm({
   const [deflicenseExpiryDate, setlicenseExpiryDate] = useState(null);
 
   // const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
-    const [profile_image, setImage] = useState(
-      user?.profile_image || toAbsoluteUrl("/media/logos/defaultImg.png")
-    );
+  
+const [profile_image, setImage] = useState(
+  user?.id && user?.profile_image
+    ? user.profile_image
+    : toAbsoluteUrl("/media/logos/defaultImg.png")
+);
   const [file, setFile] = useState('');
   // ================ Getting list from DB Stored Procedure
 
@@ -903,11 +906,20 @@ export function DesignationEditForm({
   //   }
   // }, [user.cityId, dispatch]);
 
+    // useEffect(() => {
+    //   if (user?.profile_image) {
+    //     setImage(user.profile_image);
+    //   }
+    // }, [user?.profile_image]);
+
+
     useEffect(() => {
-      if (user?.profile_image) {
-        setImage(user.profile_image);
-      }
-    }, [user?.profile_image]);
+  if (id && user?.profile_image) {
+    setImage(user.profile_image); // edit/view case
+  } else {
+    setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
+  }
+}, [id, user?.profile_image]);
 
   const onImageChange = async event => {
     if (event.target.files && event.target.files[0]) {
@@ -1396,6 +1408,8 @@ export function DesignationEditForm({
         setIsImageReq(true)
       }
 
+    }else{
+      setImagePolicy(false)
     }
 
   };
@@ -1691,7 +1705,210 @@ export function DesignationEditForm({
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>Basic Information</h6>
+                   
+
+
+ <div className="form-group row col-12 col-md-12  p-0 m-0 " style={{ height: '250px' }}>
+
+  <div className="form-group row col-12 col-md-10  p-0 m-0 mt-5">
+    <div className="form-group row col-12 col-md-12 p-0 m-0 mt-5 mb-5">    <h3>Basic Information</h3></div>
+
+                    {/* code */}
+
+                    <div ref={scrollRef} className="form-group row col-12 col-md-12 p-0 m-0 mt-5">
+                      <div className="col-12 col-md-3 px-0">
+                        <SearchSelect
+                          name="subsidiaryId"
+                          label={<span> Subsidiary<span style={{ color: 'red' }}>*</span></span>}
+                          isDisabled={isUserForRead && true}
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                            setDefualtSubsidiaryList(e);
+
+                            if (!id) {
+                              setEmployeeCode(" ")
+                              setFieldValue("employeeCode", "")
+                              setFieldValue("codeAuto", "");
+                              setFieldValue("codePrefix", "");
+
+                              setFieldValue("dateOfBirth", null);
+                              setDOBDate(null);
+                              setFieldValue("dateOfJoining", null);
+                              setJoiningDate(null);
+                              setFieldValue("dateOfRetirement", null);
+                              setDRetirmentDate(null);
+                              setFieldValue("dateOfConfirmation", null);
+                              setConfirmationDate(null);
+                              setFieldValue("dateOfConfirmationDue", null);
+                              setConfirmationDueDate(null);
+                              setFieldValue("dateOfConfirmationEnter", null);
+                              setConfirmationEnterDate(null);
+                              setFieldValue("lastReviewDate", null);
+                              setlastReviewDate(null);
+                              setFieldValue("nextReviewDate", null);
+                              setnextReviewDate(null);
+                              setFieldValue("dateOfContractExpiry", null);
+                              setContractExpiryDate(null);
+
+                              fetchEmployeePolicyBySubsidiaryId(e.value, setFieldValue);
+
+                            }
+
+                            //handlePaymenModeChanged(e)
+                            fetchDepartment(e.value)
+                            setFieldValue("defaultShiftId", null);
+
+                          }}
+
+                          value={(defSubsidiary || null)}
+                          error={errors.subsidiaryId}
+                          touched={touched.subsidiaryId}
+                          options={dashboard.allSubsidiaryList}
+                        />
+
+                      </div>
+
+                      {id || profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto ? (<div className="col-12 col-md-3 ml-3 ">
+                        <Field
+                          name="employeeCode"
+                          component={Input}
+                          maxLength="10"
+                          placeholder=" Employee Code"
+                          label={<span> Employee Code<span style={{ color: 'red' }}>*</span></span>}
+                          autoComplete="off"
+                          onChange={(e) => {
+                            setFieldValue("employeeCode", e.target.value || null);
+                            setEmployeeCode(e.target.value || defEmployeeCode);
+
+
+                          }}
+                          value={defEmployeeCode || null}
+
+                          disabled={true}
+                        />
+                      </div>) : (
+
+                        <>
+                          <div className="col-12 col-md-3 ml-3 ">
+                            <Field
+                              name="codePrefix"
+                              component={Input}
+                              maxLength="10"
+                              placeholder="Employee code prefix"
+                              label={<span>Employee Code Prefix<span style={{ color: 'red' }}>*</span></span>}
+                              autoComplete="off"
+                              onChange={(e) => {
+                                setFieldValue("codePrefix", e.target.value || null);
+                                // setEmployeeCode(e.target.value || defEmployeeCode);
+
+
+                              }}
+                              // value={defEmployeeCode || null}
+
+                              disabled={true}
+                            />
+                          </div>
+
+
+                          <div className="col-12 col-md-3">
+                            <Field
+                              name="codeAuto"
+                              component={Input}
+                              maxLength="6"
+                              placeholder="Eg. 000001"
+                              label={<span>Employee Code <span style={{ color: 'red' }}>*</span></span>}
+                              autoComplete="off"
+                              onChange={(e) => {
+                                setFieldValue("codeAuto", e.target.value || null);
+                                // setEmployeeCode(e.target.value || defEmployeeCode);
+                                // setFieldValue("employeeCode", response?.data?.data[0]?.codePrefix + "-" +setEmployee )
+                                // setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" +setEmployee);
+                                setEmployeeCode(profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value);
+                                setFieldValue("employeeCode", profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value)
+                                setFieldValue("codePrefix", profilePolicy?.data?.data[0]?.codePrefix);
+
+                              }}
+                              // value={defEmployeeCode || null}
+
+                              disabled={isUserForRead || id || profilePolicy?.data?.data[0]?.isEmployeeCodeGenerationAuto}
+                            />
+                          </div>
+
+                        </>
+                      )
+
+                      }
+
+
+
+
+                    </div>
+
+
+                      {/* name */}
+                    <div className="form-group row col-12 col-md-12  p-0 m-0">
+                      {
+
+                        <div className="col-12 col-md-2 px-0 ">
+                          <Select
+                            label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
+                            name="title"
+                            value={values.title}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            style={{ display: "block" }}
+                          >
+                            <option label="Select Title" />
+                            <option value="Mr." label="Mr." />
+                            <option value="Mrs." label="Mrs." />
+                            <option value="Ms." label="Ms." />
+                            <option value="Dr." label="Dr." />
+                            <option value="Professor." label="Professor." />
+
+
+                          </Select>
+                          {errors.title && touched.title && (
+                            <div className="invalid-text">{errors.title}</div>
+                          )}
+                        </div>
+
+                      }
+                      <div className="col-12 col-md-3 ml-3">
+                        <Field
+                          name="firstName"
+                          component={Input}
+                          placeholder=" first name"
+                          label={<span> First Name<span style={{ color: 'red' }}>*</span></span>}
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="col-12 col-md-3 ">
+                        <Field
+                          name="middleName"
+                          component={Input}
+                          placeholder=" middle name"
+                          label={<span> Middle Name</span>}
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="col-12 col-md-3 ">
+                        <Field
+                          name="lastName"
+                          component={Input}
+                          placeholder=" last name"
+                          label={<span> Last Name<span style={{ color: 'red' }}>*</span></span>}
+                          autoComplete="off"
+                        />
+                      </div>
+
+                    </div>
+</div>
+                    {/* image */}
+                   <div className="col-12 col-md-2 mt-5">
+                       {/* <h6>Basic Information</h6>?\ */}
                     {/* <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <div>
@@ -1763,196 +1980,13 @@ export function DesignationEditForm({
 </div>
 
 
-
-
-
-                    <div ref={scrollRef} className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
-                        <SearchSelect
-                          name="subsidiaryId"
-                          label={<span> Subsidiary<span style={{ color: 'red' }}>*</span></span>}
-                          isDisabled={isUserForRead && true}
-                          onBlur={() => {
-                            // handleBlur({ target: { name: "countryId" } });
-                          }}
-                          onChange={(e) => {
-                            setFieldValue("subsidiaryId", e.value || null);
-                            setDefualtSubsidiaryList(e);
-
-                            if (!id) {
-                              setEmployeeCode(" ")
-                              setFieldValue("employeeCode", "")
-                              setFieldValue("codeAuto", "");
-                              setFieldValue("codePrefix", "");
-
-                              setFieldValue("dateOfBirth", null);
-                              setDOBDate(null);
-                              setFieldValue("dateOfJoining", null);
-                              setJoiningDate(null);
-                              setFieldValue("dateOfRetirement", null);
-                              setDRetirmentDate(null);
-                              setFieldValue("dateOfConfirmation", null);
-                              setConfirmationDate(null);
-                              setFieldValue("dateOfConfirmationDue", null);
-                              setConfirmationDueDate(null);
-                              setFieldValue("dateOfConfirmationEnter", null);
-                              setConfirmationEnterDate(null);
-                              setFieldValue("lastReviewDate", null);
-                              setlastReviewDate(null);
-                              setFieldValue("nextReviewDate", null);
-                              setnextReviewDate(null);
-                              setFieldValue("dateOfContractExpiry", null);
-                              setContractExpiryDate(null);
-
-                              fetchEmployeePolicyBySubsidiaryId(e.value, setFieldValue);
-
-                            }
-
-                            //handlePaymenModeChanged(e)
-                            fetchDepartment(e.value)
-                            setFieldValue("defaultShiftId", null);
-
-                          }}
-
-                          value={(defSubsidiary || null)}
-                          error={errors.subsidiaryId}
-                          touched={touched.subsidiaryId}
-                          options={dashboard.allSubsidiaryList}
-                        />
-
-                      </div>
-
-                      {id || profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto ? (<div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="employeeCode"
-                          component={Input}
-                          maxLength="10"
-                          placeholder=" Employee Code"
-                          label={<span> Employee Code<span style={{ color: 'red' }}>*</span></span>}
-                          autoComplete="off"
-                          onChange={(e) => {
-                            setFieldValue("employeeCode", e.target.value || null);
-                            setEmployeeCode(e.target.value || defEmployeeCode);
-
-
-                          }}
-                          value={defEmployeeCode || null}
-
-                          disabled={true}
-                        />
-                      </div>) : (
-
-                        <>
-                          <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="codePrefix"
-                              component={Input}
-                              maxLength="10"
-                              placeholder="Employee code prefix"
-                              label={<span>Employee Code Prefix<span style={{ color: 'red' }}>*</span></span>}
-                              autoComplete="off"
-                              onChange={(e) => {
-                                setFieldValue("codePrefix", e.target.value || null);
-                                // setEmployeeCode(e.target.value || defEmployeeCode);
-
-
-                              }}
-                              // value={defEmployeeCode || null}
-
-                              disabled={true}
-                            />
-                          </div>
-
-
-                          <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="codeAuto"
-                              component={Input}
-                              maxLength="6"
-                              placeholder="Eg. 000001"
-                              label={<span>Employee Code <span style={{ color: 'red' }}>*</span></span>}
-                              autoComplete="off"
-                              onChange={(e) => {
-                                setFieldValue("codeAuto", e.target.value || null);
-                                // setEmployeeCode(e.target.value || defEmployeeCode);
-                                // setFieldValue("employeeCode", response?.data?.data[0]?.codePrefix + "-" +setEmployee )
-                                // setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" +setEmployee);
-                                setEmployeeCode(profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value);
-                                setFieldValue("employeeCode", profilePolicy?.data?.data[0]?.codePrefix + "-" + e.target.value)
-                                setFieldValue("codePrefix", profilePolicy?.data?.data[0]?.codePrefix);
-
-                              }}
-                              // value={defEmployeeCode || null}
-
-                              disabled={isUserForRead || id || profilePolicy?.data?.data[0]?.isEmployeeCodeGenerationAuto}
-                            />
-                          </div>
-
-                        </>
-                      )
-
-                      }
-
-
-
-
                     </div>
-                    <div className="from-group row">
-                      {
 
-                        <div className="col-12 col-md-3 mt-3">
-                          <Select
-                            label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
-                            name="title"
-                            value={values.title}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            style={{ display: "block" }}
-                          >
-                            <option label="Select Title" />
-                            <option value="Mr." label="Mr." />
-                            <option value="Mrs." label="Mrs." />
-                            <option value="Ms." label="Ms." />
-                            <option value="Dr." label="Dr." />
-                            <option value="Professor." label="Professor." />
+</div>
+                 
 
 
-                          </Select>
-                          {errors.title && touched.title && (
-                            <div className="invalid-text">{errors.title}</div>
-                          )}
-                        </div>
 
-                      }
-                      <div className="col-12 col-md-3 mt-3">
-                        <Field
-                          name="firstName"
-                          component={Input}
-                          placeholder=" first name"
-                          label={<span> First Name<span style={{ color: 'red' }}>*</span></span>}
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="col-12 col-md-3 mt-3">
-                        <Field
-                          name="middleName"
-                          component={Input}
-                          placeholder=" middle name"
-                          label={<span> Middle Name</span>}
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="col-12 col-md-3 mt-3">
-                        <Field
-                          name="lastName"
-                          component={Input}
-                          placeholder=" last name"
-                          label={<span> Last Name<span style={{ color: 'red' }}>*</span></span>}
-                          autoComplete="off"
-                        />
-                      </div>
-
-                    </div>
                     <div className="from-group row">
 
 
@@ -2770,13 +2804,14 @@ export function DesignationEditForm({
 
                     </div>
                     <div className="from-group row">
-                      <div className="col-12 col-md-12 mt-3">
+                      <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
                         <Field
                           name="additional_summary"
                           component={TextArea}
                           placeholder="Enter Address"
                           label={<span> Address<span style={{ color: 'red' }}>*</span></span>}
                           autoComplete="off"
+                          className="form-control h-100"  // Force full height
                         />
                       </div>
 
@@ -3390,13 +3425,14 @@ export function DesignationEditForm({
                         <div className="from-group row">
 
 
-                          <div className="col-12 col-md-12 mt-3">
+                          <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
                             <Field
                               name="professional_summary"
                               component={TextArea}
                               placeholder="Enter Professional Summary"
                               label="Professional Summary"
                               autoComplete="off"
+                               className="form-control h-100"  // Force full height
                             />
                           </div>
                         </div>

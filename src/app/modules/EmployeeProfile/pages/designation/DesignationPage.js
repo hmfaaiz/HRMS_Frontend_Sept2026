@@ -82,7 +82,10 @@ export function ProfilePage({ history }) {
   return (
     
     <DesignationUIProvider DesignationUIEvents={DesignationUIEvents}>
-       <Route exact path="/contact/read-all-contact/new">
+
+         <ReligionCard />
+         
+       {/* <Route exact path="/contact/read-all-contact/new">
         {({ history, match }) => (
           <AcademicEditDialog
             show={match != null}
@@ -101,8 +104,11 @@ export function ProfilePage({ history }) {
             }}
           />
         )}
-      </Route>
-      <Route exact path="/profile/read-all-profile/new">
+      </Route> */}
+
+
+
+      {/* <Route exact path="/profile/read-all-profile/new">
         {({ history, match }) => (
           <DesignationEditDialog
             show={match != null}
@@ -111,8 +117,8 @@ export function ProfilePage({ history }) {
             }}
           />
         )}
-      </Route>
-      <Route path="/profile/read-all-profile/:id/edit">
+      </Route> */}
+      {/* <Route path="/profile/read-all-profile/:id/edit">
         {({ history, match }) => (
           <DesignationEditDialog
             show={match != null}
@@ -122,8 +128,8 @@ export function ProfilePage({ history }) {
             }}
           />
         )}
-      </Route>
-      <Route path="/profile/read-all-profile/:id/read">
+      </Route> */}
+      {/* <Route path="/profile/read-all-profile/:id/read">
         {({ history, match }) => (
           <DesignationEditDialog
             show={match != null}
@@ -134,7 +140,41 @@ export function ProfilePage({ history }) {
             }}
           />
         )}
-      </Route>
+      </Route> */}
+
+
+      {/* <Route exact path="/profile/read-all-profile/new" component={DesignationEditDialog} />
+       */}
+             {/* <Route exact path="/profile/read-all-profile/new">
+        {({ history, match }) => (
+          <DesignationEditDialog
+            show={match != null}
+            onHide={() => {
+              history.push("/profile/read-all-profile");
+            }}
+          />
+        )}
+      </Route> */}
+         <Route path="/profile/read-all-profile/new" render={({ match, history }) => (
+              <DesignationEditDialog
+            
+             onHide={() => history.push("/profile/read-all-profile")}
+            />
+             )} />
+                 <Route path="/profile/read-all-profile/:id/edit" render={({ match, history }) => (
+              <DesignationEditDialog
+             id={match.params.id}
+             onHide={() => history.push("/profile/read-all-profile")}
+            />
+             )} />
+          <Route path="/profile/read-all-profile/:id/read" render={({ match, history }) => (
+           <DesignationEditDialog
+        id={match.params.id}
+            userForRead={true}
+             onHide={() => history.push("/profile/read-all-profile")}
+              />
+)}         />
+
       <Route path="/profile/read-all-profile/:id/:status/delete">
         {({ history, match }) => (
           <BankDeleteDialog
@@ -162,7 +202,7 @@ export function ProfilePage({ history }) {
 
 
 
-      <ReligionCard />
+   
       <ToastContainer
         position="top-right"
         autoClose={5000}
