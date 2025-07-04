@@ -170,32 +170,32 @@ export function DashboardSummaryHeader() {
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-4">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Calendar.svg")} />
                             </span>
-                            <span>Posted {job.postedDate}</span>
+                            <b style={{ textDecoration: "underline", textDecorationColor: "red" }}>Posted: {job.postedDate}</b>
                         </div>
 
                         <div className="d-flex mb-2">
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-4">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Calendar.svg")} />
                             </span>
-                            <span>Expiry {job.expiryDate}</span>
+                            <b style={{ textDecoration: "underline", textDecorationColor: "red" }}>Expiry: {job.expiryDate}</b>
                         </div>
 
                         <div className="d-flex mb-2" style={{ width: '30%' }}>
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-3">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Map.svg")} />
                             </span>
-                            <span className="ml-3 text-truncate" title={job.cityNames?.map(city => city.name).join(', ')}>
+                            <b className="ml-3 text-truncate" style={{ textDecoration: "underline", textDecorationColor: "red" }} title={job.cityNames?.map(city => city.name).join(', ')}>
                                 {Array.isArray(job.cityNames)
                                     ? job.cityNames.map(city => city.name).join(', ')
                                     : 'N/A'}
-                            </span>
+                            </b>
                         </div>
 
                         <div className="d-flex mb-2">
                             <span className="svg-icon svg-icon-md svg-icon-primary mr-5">
                                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Salary.svg")} />
                             </span>
-                            <span className="ml-3">{job.salaryRange}</span>
+                            <b className="ml-3" style={{ textDecoration: "underline", textDecorationColor: "red" }}>{job.salaryRange}</b>
                         </div>
                     </div>
 

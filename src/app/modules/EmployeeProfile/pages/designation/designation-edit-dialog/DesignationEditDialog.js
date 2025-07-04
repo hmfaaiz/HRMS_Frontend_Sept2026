@@ -8,6 +8,10 @@ import * as actions from "../../../_redux/designationActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDesignationUIContext } from "../DesignationUIContext";
+import { Accordion, Button, Card } from "react-bootstrap";
+import { KeyboardArrowDown } from "@material-ui/icons";
+
+
 
 export function DesignationEditDialog({ id, show, onHide, userForRead }) {
   const [action, setaction] = useState(false);
@@ -173,6 +177,7 @@ if(user?.requireDeligation && !user?.deligationId){
         approvedForPayroll:user.approvedForPayroll,
         deligationId:user?.deligationId,
         relation_name: user?.relation_name,
+        hod: user?.hod,
       };
 
     
@@ -182,13 +187,32 @@ if(user?.requireDeligation && !user?.deligationId){
   };
 
   return (
-    <Modal
-      size="xl"
-      show={show}
-      onHide={onHide}
-      aria-labelledby="example-modal-sizes-title-lg"
-      backdrop="static"
-    >
+    // <Modal
+    //   size="xl"
+    //   show={show}
+    //   onHide={onHide}
+    //   aria-labelledby="example-modal-sizes-title-lg"
+    //   backdrop="static"
+    // >
+
+
+     <Accordion defaultActiveKey="">
+        <Card>
+          <Card.Header className="d-flex justify-content-center">
+            <div className="accordion-header-btn w-100  d-flex justify-content-center">
+              <Accordion.Toggle
+                as={Button}
+                eventKey="0"
+                className="flex-between-center text-bold"
+              >
+                Employee Profile
+                <KeyboardArrowDown />
+              </Accordion.Toggle>
+            </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+         <>
       <DesignationEditDialogHeader id={id} isUserForRead={userForRead} />
       <DesignationEditForm
         saveEmployeeProfile={saveEmployeeProfile}
@@ -213,6 +237,14 @@ if(user?.requireDeligation && !user?.deligationId){
         draggable
         pauseOnHover
       />
-    </Modal>
+      </>
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+
+
+
+    // </Modal>
   );
 }

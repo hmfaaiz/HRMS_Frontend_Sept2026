@@ -71,7 +71,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     incentivePackages: "",
     otherBenefits: "",
     jobSummary: "",
-
+    optionalJobSkillsId:"",
 
   };
 

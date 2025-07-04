@@ -48,10 +48,10 @@ export const fetchApplicantProfileById = (id) => (dispatch) => {
 export const deleteApplicantProfile = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteApplicantProfile({ Id: id })
+    .deleteApplicantProfile(id)
     .then((response) => {
 
-      dispatch(actions.ApplicantProfileDeleted({ Id: id }));
+      dispatch(actions.ApplicantProfileDeleted( id));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,

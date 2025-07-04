@@ -37,6 +37,6 @@ export const initialFilter = {
 
 
   sortOrder: "asc",
-  pageSize: 10,
+  pageSize: 5,
   pageNumber: 1
 }

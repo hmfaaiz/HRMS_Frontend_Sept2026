@@ -104,7 +104,6 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
   relationshipWithReportTo: Yup.string()
     .min(5, "Must be  5 characters")
-    .max(50, "Must be  50 characters")
     .required(VALIDATION_MESSAGES.required),
   noOfPosition: Yup.number()
     .required(VALIDATION_MESSAGES.required)
@@ -809,7 +808,7 @@ const [jobCode, setJobCode ] = useState("");
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Key relationship with Report To<span style={{ color: "red" }}>*</span>
@@ -820,7 +819,7 @@ const [jobCode, setJobCode ] = useState("");
                         component={TextArea}
                         placeholder="Enter relationship"
                         type="text"
-
+                        className="form-control h-100"  
                       />
                     </div>
 
@@ -1062,7 +1061,7 @@ const [jobCode, setJobCode ] = useState("");
 
 
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Comments
@@ -1072,7 +1071,7 @@ const [jobCode, setJobCode ] = useState("");
                         name="comment"
                         component={TextArea}
                         placeholder="Enter comments"
-
+                        className="form-control h-100"  // Force full height
                         type="text"
 
                       />
@@ -1268,7 +1267,7 @@ const [jobCode, setJobCode ] = useState("");
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-                      Preferred Job Skills<span style={{ color: "red" }}>*</span>
+                      Mandatory Job Skills<span style={{ color: "red" }}>*</span>
                       <div
                         style={{
                           backgroundColor: "#ffffff",
@@ -1317,6 +1316,58 @@ const [jobCode, setJobCode ] = useState("");
                         </div>
                       </div>
                     </div>
+
+                         <div className="col-12 col-md-4 mt-3">
+                      Optional Skills
+                      <div
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: "170px",
+                          padding: "10px",
+                          overflow: "scroll",
+                        }}
+                      >
+                        <div className="multi-select">
+                          <div className="dropdown-label"></div>
+                          <div
+                            className="dropdown-options"
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            {dashboard?.allJobSkillList?.map((option) => (
+                              <div
+                                key={option?.value}
+                                className="dropdown-option"
+                              >
+                                <input
+                                  style={{ width: "25px" }}
+                                  name="optionalJobSkillsId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.optionalJobSkillsId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </div>
+                            ))}
+                            {errors.optionalJobSkillsId &&
+                              touched.optionalJobSkillsId && (
+                                <div className="invalid-text">
+                                  {errors.optionalJobSkillsId}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
 
 
                     <div className="col-12 col-md-4 mt-3">
@@ -1388,7 +1439,7 @@ const [jobCode, setJobCode ] = useState("");
 
 
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Work Experience Detail
@@ -1398,13 +1449,13 @@ const [jobCode, setJobCode ] = useState("");
                         name="workExpDetail"
                         component={TextArea}
                         placeholder="Enter work experience detail"
-
+                        className="form-control h-100"
                         type="text"
 
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-5" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Additional Requirement
@@ -1414,7 +1465,7 @@ const [jobCode, setJobCode ] = useState("");
                         name="additionalReq"
                         component={TextArea}
                         placeholder="Enter additional requirement"
-
+                        className="form-control h-100"
                         type="text"
 
                       />
@@ -1480,7 +1531,7 @@ const [jobCode, setJobCode ] = useState("");
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Incentive Packages
@@ -1490,13 +1541,13 @@ const [jobCode, setJobCode ] = useState("");
                         name="incentivePackages"
                         component={TextArea}
                         placeholder="Enter incentive packages"
-
+                        className="form-control h-100"
                         type="text"
 
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-5"  style={{ height: '150px' }}>
                       <label>
                         <span>
                           Other Benefits
@@ -1506,7 +1557,7 @@ const [jobCode, setJobCode ] = useState("");
                         name="otherBenefits"
                         component={TextArea}
                         placeholder="Enter other benefits"
-
+                        className="form-control h-100"
                         type="text"
 
                       />
@@ -1524,7 +1575,7 @@ const [jobCode, setJobCode ] = useState("");
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
 
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Job Summary <span style={{ color: "red" }}>*</span>
@@ -1534,7 +1585,7 @@ const [jobCode, setJobCode ] = useState("");
                         name="jobSummary"
                         component={TextArea}
                         placeholder="Enter job summary"
-
+                        className="form-control h-100"
                         type="text"
 
                       />

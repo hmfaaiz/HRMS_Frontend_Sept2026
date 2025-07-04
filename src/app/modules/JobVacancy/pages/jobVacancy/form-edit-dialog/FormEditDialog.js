@@ -127,7 +127,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         incentivePackages: formData.incentivePackages,
         otherBenefits: formData.otherBenefits,
         jobSummary: formData.jobSummary,
-
+        optionalJobSkillsId:formData.optionalJobSkillsId
       };
 
 

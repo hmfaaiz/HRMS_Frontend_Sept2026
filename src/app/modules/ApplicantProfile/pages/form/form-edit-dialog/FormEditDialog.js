@@ -8,6 +8,8 @@ import * as actions from "../../../_redux/redux-Actions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
+import { Accordion, Button, Card } from "react-bootstrap";
+import { KeyboardArrowDown } from "@material-ui/icons";
 
 
 export function FormEditDialog({ id, show, onHide, dataForRead }) {
@@ -171,14 +173,31 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
   };
 
   return (
-    <Modal
-        size="lg"
-      dialogClassName="modal-75vw"
-      show={show}
-      onHide={onHide}
-      aria-labelledby="example-modal-sizes-title-lg"
-      backdrop="static"
-    >
+    // <Modal
+    //     size="lg"
+    //   dialogClassName="modal-75vw"
+    //   show={show}
+    //   onHide={onHide}
+    //   aria-labelledby="example-modal-sizes-title-lg"
+    //   backdrop="static"
+    // >
+         <Accordion defaultActiveKey="">
+        <Card>
+          <Card.Header className="d-flex justify-content-center">
+            <div className="accordion-header-btn w-100  d-flex justify-content-center">
+              <Accordion.Toggle
+                as={Button}
+                eventKey="0"
+                className="flex-between-center text-bold"
+              >
+                Applicant Profile
+                <KeyboardArrowDown />
+              </Accordion.Toggle>
+            </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+     <>
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
@@ -204,6 +223,13 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         draggable
         pauseOnHover
       />
-    </Modal>
+      </>
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+
+
+  // </Modal> */}
   );
 }

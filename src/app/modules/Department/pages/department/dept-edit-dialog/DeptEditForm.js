@@ -18,6 +18,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DeptManagement from "../..";
 import CheckBox from "@material-ui/icons/CheckBox";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -29,12 +30,13 @@ const userEditSchema_2 = Yup.object().shape({
   // parentDept: Yup.string().required("Please select parent department"),
   // deptCode: Yup.string().required("*Required"),
   deptName: Yup.string()
-    .matches(/^[A-Za-z\s\:-]*$/, "Name must only contain letters.")
-    .required("*Required"),
+    // .matches(/^[A-Za-z\s\:-]*$/, "Name must only contain letters.")
+     .trim()
+     .required(VALIDATION_MESSAGES.required),
   budgetStrength: Yup.string()
     .matches(/^\d+$/, "Must contain only digits")
-    .required("*Required"),
-  subsidiaryId: Yup.string().required("*Required"),
+      .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
   // parentDept: Yup.string().required("*Required"),
   // parentDept: Yup.string().nullable().required("*Required"),
 });
@@ -253,7 +255,7 @@ export function DeptEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-8 mt-3">
                       <Field
                         name="deptName"
                         maxLength={100}
@@ -269,8 +271,26 @@ export function DeptEditForm({
                       />
                     </div>
 
-                    {
+                       {
                       <div className="col-12 col-md-4 mt-3">
+                        <Field
+                          name="budgetStrength"
+                          maxLength={6}
+                          component={Input}
+                          placeholder="Enter budgetStrength"
+                          label={
+                            <span>
+                              {" "}
+                              Bugdet Strength
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                        />
+                      </div>
+                    }
+
+                    {
+                      <div className="col-12 col-md-8 mt-3">
                         <SearchSelect
                           name="parentDept"
                           label={<span> Parent Department</span>}
@@ -302,23 +322,7 @@ export function DeptEditForm({
                         />
                       </div>
                     }
-                    {
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="budgetStrength"
-                          maxLength={6}
-                          component={Input}
-                          placeholder="Enter budgetStrength"
-                          label={
-                            <span>
-                              {" "}
-                              Bugdet Strength
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                        />
-                      </div>
-                    }
+                 
                   </div>
 
                   <div className="form-group row"></div>
