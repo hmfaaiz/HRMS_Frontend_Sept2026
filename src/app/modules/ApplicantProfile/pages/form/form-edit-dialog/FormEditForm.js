@@ -1942,11 +1942,11 @@ export function FormEditForm({
                       <Field
                         name="lastDawnSalary"
                         component={Input}
-                        placeholder="Enter last dawn salary"
+                        placeholder="Enter last drawn salary"
                         label={
                           <span>
                             {" "}
-                            Last Dawn Salary
+                            Last Drawn Salary
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
