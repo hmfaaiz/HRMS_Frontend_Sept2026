@@ -204,7 +204,7 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         dispatch,
-        pdfGenerateLoading,
+        // pdfGenerateLoading,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,

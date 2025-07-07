@@ -28,12 +28,12 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
 
   return (
     <>
-      {actionsLoading && <ModalProgressBar />}
+      {/* {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
           {!isdataForRead ? title : "View Job Vacancy"}
         </Modal.Title>
-      </Modal.Header>
+      </Modal.Header> */}
     </>
   );
 }
