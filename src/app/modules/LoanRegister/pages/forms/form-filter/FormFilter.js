@@ -380,7 +380,7 @@ const [endDate,setEndDate]=useState()
 
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="from"
 
@@ -410,7 +410,7 @@ const [endDate,setEndDate]=useState()
 
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="to"
 

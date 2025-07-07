@@ -192,7 +192,7 @@ export function FormEditForm({
                     <Field
                       name="from_date"
                       component={DatePickerField} // Custom component
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
                       type="date"
                       onChange={(e) => {
@@ -212,7 +212,7 @@ export function FormEditForm({
                     <Field
                       name="to_date"
                       component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
 
                       // type="date"

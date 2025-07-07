@@ -224,7 +224,7 @@ export function MasterEditForm({
                         name="from"
                         disabled={isEdit}
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         label={
                           <span>
                             {" "}
@@ -245,7 +245,7 @@ export function MasterEditForm({
                         name="to"
                         disabled={isEdit}
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         label={
                           <span>
                             {" "}

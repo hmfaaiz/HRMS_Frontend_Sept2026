@@ -601,7 +601,7 @@ export function BankEditForm({
                                     setDateOfTransferDate(date);
                                   }}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   showTimeInput
                                   name="transferDate"
                                   disabled={isUserForRead}
@@ -620,7 +620,7 @@ export function BankEditForm({
                                   }}
                                   disabled={values.transferType == "Permanent"}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   showTimeInput
                                   name="tillTransferDate"
 

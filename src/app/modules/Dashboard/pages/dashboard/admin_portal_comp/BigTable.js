@@ -56,7 +56,6 @@ export function BigTable({ data }) {
         typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
       let employee_code = key === "Employee_Code";
       let isAmount = typeof value === "number" || !isNaN(Number(value));
-
       return {
         dataField: key,
         text: key.split("_").join(" "),
@@ -64,7 +63,7 @@ export function BigTable({ data }) {
           textAlign:
             isDate || employee_code ? "center" : isAmount ? "right" : "left",
           minWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
-          maxWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
+          // maxWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
         },
         headerStyle: {
           textAlign:
@@ -76,23 +75,24 @@ export function BigTable({ data }) {
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {
-            return <div>{format(new Date(cell), "dd/MMM/yyyy")}</div>;
+            return <div>{cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}</div>;
           }
 
           // For amount formatting
           if (isAmount) {
             return (
               <div>
-                {Number(cell).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {cell || "0"}
+                {/* {Number(cell).toLocaleString("en-US", {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                })} */}
               </div>
             );
           }
 
           // For all other text fields
-          return <div>{cell}</div>;
+          return <div>{cell || ""}</div>;
         },
       };
     }
