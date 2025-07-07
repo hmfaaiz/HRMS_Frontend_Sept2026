@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -10,6 +10,7 @@ import {
 
   fetchAllEmployeeShifts,
   fetchAllSubsidiaryData,
+  getLatestTableId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
@@ -23,12 +24,16 @@ const roster_patternEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   patternCode: Yup.string()
+  .trim()
     .required(VALIDATION_MESSAGES.required),
 
-  patternName: Yup.string()
-  .matches(/^[A-Za-z\s.-]+$/, 'Pattern Name must only contain letters.')
-  .required(VALIDATION_MESSAGES.required),
+  // patternName: Yup.string()
+  // // .matches(/^[A-Za-z\s.-]+$/, 'Pattern Name must only contain letters.')
+  // .required(VALIDATION_MESSAGES.required),
 
+   patternName: Yup.string()
+  .trim()
+  .required(VALIDATION_MESSAGES.required),
 
     list: Yup.array().of(
       Yup.object().shape({
@@ -50,8 +55,14 @@ export function FormEditForm({
   loading,
 }) {
   const dispatch = useDispatch();
-  const { dashboard } = useSelector((state) => state);
-
+  const { dashboard} = useSelector((state) => state);
+    const { currentUser } = useSelector((state) => {
+      return {
+      
+        currentUser: state.auth.user,
+      };
+    }, shallowEqual);
+const [patternCode, setpatternCode] = useState("");
   useEffect(() => {
 
     if (!data.Id) {
@@ -63,7 +74,23 @@ export function FormEditForm({
   }, [dispatch, data.Id]);
 
 
+  const fetchData = async (setpatternCode) => {
 
+    if (!data.Id) {
+
+      dispatch(
+        getLatestTableId(
+          "t_roster_pattern",
+          "patternCode",
+          "companyId =" + currentUser.companyId,
+          setpatternCode
+        )
+      );
+    }
+  };
+  useEffect(() => {
+    fetchData(setpatternCode)
+  }, [])
   
 
 
@@ -71,7 +98,7 @@ export function FormEditForm({
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={data}
+      initialValues={{...data, patternCode: data.patternCode ? data?.patternCode : patternCode}}
       validationSchema={roster_patternEditSchema}
       onSubmit={(values) => {
 
@@ -90,7 +117,8 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 <div className="form-group row">
-                  <div className="col-12 col-md-6 mt-3">
+             <div className="form-group row col-12 col-md-12  p-0 m-0">
+ <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="subsidiaryId"
                       label={
@@ -116,6 +144,8 @@ export function FormEditForm({
                       touched={touched.subsidiaryId}
                     />
                   </div>
+                  </div>
+                 
 
 
                   <div className="col-12 col-md-6 mt-3">
@@ -128,7 +158,7 @@ export function FormEditForm({
                       name="patternCode"
                       component={Input}
                       placeholder="Enter Pattern Code"
-
+                      disabled={true}
                       type="text"
                        onInput={(e) => {
                                                 e.target.value = amountLimitDynamic(e.target.value,30); // Limit to 30 digits

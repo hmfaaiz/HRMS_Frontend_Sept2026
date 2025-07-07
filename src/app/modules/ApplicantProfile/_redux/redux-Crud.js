@@ -30,7 +30,7 @@ export function updateApplicantProfile(body) {
 //Delete
 export function deleteApplicantProfile(body) {
 
-  return axios.delete(`${USERS_URL}/applicant_profile/delete-applicant-profile`, body);
+  return axios.delete(`${USERS_URL}/applicant_profile/delete-applicant-profile/${body}`);
 }
 
 //delete Applicant cancancy

@@ -14,6 +14,7 @@ import { useModal } from '../../../../../../context/ModalContext';
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 import { initialFilter } from "../ReligionUIHelpers"
 import * as actions from "../../../_redux/designationActions";
+import { DesignationEditDialog } from "../designation-edit-dialog/DesignationEditDialog"
 
 export function ReligionCard() {
   const designationUIContext = useDesignationUIContext()
@@ -167,7 +168,7 @@ export function ReligionCard() {
 
 
           <DesignationTable />
-
+          {/* <DesignationEditDialog/> */}
         </CardBody>
 
       </Card>

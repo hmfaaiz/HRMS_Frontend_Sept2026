@@ -370,7 +370,13 @@ export function DesignationEditForm({
   const [defpassportExpiry, setpassportExpiry] = useState(null);
   const [deflicenseExpiryDate, setlicenseExpiryDate] = useState(null);
 
-  const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
+  // const [profile_image, setImage] = useState(toAbsoluteUrl("/media/logos/defaultImg.png"));
+  
+const [profile_image, setImage] = useState(
+  user?.id && user?.profile_image
+    ? user.profile_image
+    : toAbsoluteUrl("/media/logos/defaultImg.png")
+);
   const [file, setFile] = useState('');
   // ================ Getting list from DB Stored Procedure
 
@@ -891,14 +897,29 @@ export function DesignationEditForm({
     );
   }, [user?.cityId, dashboard.allCity]);
 
-  useEffect(() => {
-    if (user.cityId) {
+  // useEffect(() => {
+  //   if (user.cityId) {
 
 
-      setImage(user.profile_image || '');
+  //     setImage(user.profile_image || '');
 
-    }
-  }, [user.cityId, dispatch]);
+  //   }
+  // }, [user.cityId, dispatch]);
+
+    // useEffect(() => {
+    //   if (user?.profile_image) {
+    //     setImage(user.profile_image);
+    //   }
+    // }, [user?.profile_image]);
+
+
+    useEffect(() => {
+  if (id && user?.profile_image) {
+    setImage(user.profile_image); // edit/view case
+  } else {
+    setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
+  }
+}, [id, user?.profile_image]);
 
   const onImageChange = async event => {
     if (event.target.files && event.target.files[0]) {
@@ -910,6 +931,8 @@ export function DesignationEditForm({
       setImgAlreadySet(true)
     }
   };
+
+
 
   // For Edit Form
   useEffect(() => {
@@ -1385,6 +1408,8 @@ export function DesignationEditForm({
         setIsImageReq(true)
       }
 
+    }else{
+      setImagePolicy(false)
     }
 
   };
@@ -1680,28 +1705,18 @@ export function DesignationEditForm({
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    <h6>Basic Information</h6>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
-                        <div>
-                          <div>
-                            <div>
-
-                              <img name='profile_image' width={120} height={120} src={user?.profile_image || profile_image} />
-                              <h4>Select Image {imagePolicy && <span style={{ color: "red" }}>*</span>}</h4>
-                              <input type="file" name="myImage" accept=".jpg, .jpeg, .png" onChange={onImageChange} />
-                              <ErrorMessage className="form-feedBack" name="myImage" component="div" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                   
 
 
+ <div className="form-group row col-12 col-md-12  p-0 m-0 " style={{ height: '250px' }}>
 
+  <div className="form-group row col-12 col-md-10  p-0 m-0 mt-5">
+    <div className="form-group row col-12 col-md-12 p-0 m-0 mt-5 mb-5">    <h3>Basic Information</h3></div>
 
-                    <div ref={scrollRef} className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
+                    {/* code */}
+
+                    <div ref={scrollRef} className="form-group row col-12 col-md-12 p-0 m-0 mt-5">
+                      <div className="col-12 col-md-3 px-0">
                         <SearchSelect
                           name="subsidiaryId"
                           label={<span> Subsidiary<span style={{ color: 'red' }}>*</span></span>}
@@ -1756,7 +1771,7 @@ export function DesignationEditForm({
 
                       </div>
 
-                      {id || profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto ? (<div className="col-12 col-md-4 mt-3">
+                      {id || profilePolicy?.data?.data[0].isEmployeeCodeGenerationAuto ? (<div className="col-12 col-md-3 ml-3 ">
                         <Field
                           name="employeeCode"
                           component={Input}
@@ -1777,7 +1792,7 @@ export function DesignationEditForm({
                       </div>) : (
 
                         <>
-                          <div className="col-12 col-md-4 mt-3">
+                          <div className="col-12 col-md-3 ml-3 ">
                             <Field
                               name="codePrefix"
                               component={Input}
@@ -1798,7 +1813,7 @@ export function DesignationEditForm({
                           </div>
 
 
-                          <div className="col-12 col-md-4 mt-3">
+                          <div className="col-12 col-md-3">
                             <Field
                               name="codeAuto"
                               component={Input}
@@ -1831,10 +1846,13 @@ export function DesignationEditForm({
 
 
                     </div>
-                    <div className="from-group row">
+
+
+                      {/* name */}
+                    <div className="form-group row col-12 col-md-12  p-0 m-0">
                       {
 
-                        <div className="col-12 col-md-2 mt-3">
+                        <div className="col-12 col-md-2 px-0 ">
                           <Select
                             label={<span> Title<span style={{ color: 'red' }}>*</span></span>}
                             name="title"
@@ -1858,7 +1876,7 @@ export function DesignationEditForm({
                         </div>
 
                       }
-                      <div className="col-12 col-md-3 mt-3">
+                      <div className="col-12 col-md-3 ml-3">
                         <Field
                           name="firstName"
                           component={Input}
@@ -1867,7 +1885,7 @@ export function DesignationEditForm({
                           autoComplete="off"
                         />
                       </div>
-                      <div className="col-12 col-md-3 mt-3">
+                      <div className="col-12 col-md-3 ">
                         <Field
                           name="middleName"
                           component={Input}
@@ -1876,7 +1894,7 @@ export function DesignationEditForm({
                           autoComplete="off"
                         />
                       </div>
-                      <div className="col-12 col-md-3 mt-3">
+                      <div className="col-12 col-md-3 ">
                         <Field
                           name="lastName"
                           component={Input}
@@ -1887,6 +1905,88 @@ export function DesignationEditForm({
                       </div>
 
                     </div>
+</div>
+                    {/* image */}
+                   <div className="col-12 col-md-2 mt-5">
+                       {/* <h6>Basic Information</h6>?\ */}
+                    {/* <div className="from-group row">
+                      <div className="col-12 col-md-4 mt-3">
+                        <div>
+                          <div>
+                            <div>
+
+                              <img name='profile_image' width={120} height={120} src={user?.profile_image || profile_image} />
+                              <h4>Select Image {imagePolicy && <span style={{ color: "red" }}>*</span>}</h4>
+                              <input type="file" name="myImage" accept=".jpg, .jpeg, .png" onChange={onImageChange} />
+                              <ErrorMessage className="form-feedBack" name="myImage" component="div" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> */}
+
+                    <div className="form-group row">
+  <div className="col-12 col-md-4 mt-3">
+    <div className="text-center"
+      style={{
+        height: "220px",
+        width: "120px",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <img
+        name="profile_image"
+        width={120}
+        height={120}
+        src={profile_image}
+
+        alt="Profile"
+        style={{
+          objectFit: "cover",
+          borderRadius: "50%",
+        }}
+      />
+
+      <h5 className="mt-2">
+        Select Image {imagePolicy && <span style={{ color: "red" }}>*</span>}
+      </h5>
+
+      {/* Custom upload button */}
+      <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+        Upload Image
+      </label>
+
+      {/* Hidden file input */}
+      <input
+        id="myImage"
+        type="file"
+        name="myImage"
+        accept=".jpg, .jpeg, .png"
+        onChange={onImageChange}
+        style={{ display: "none" }}
+      />
+
+      {/* Formik error display */}
+      <ErrorMessage
+        className="form-feedBack text-danger"
+        name="myImage"
+        component="div"
+      />
+    </div>
+  </div>
+</div>
+
+
+                    </div>
+
+</div>
+                 
+
+
+
                     <div className="from-group row">
 
 
@@ -1942,9 +2042,26 @@ export function DesignationEditForm({
 
                       </div>
                       <div className="col-12 col-md-4 mt-3">
+                             <label className="mr-4"><span> Department<span style={{ color: 'red' }}>*</span></span></label>
+                        <input
+                          name="hod"
+                          type="checkbox"
+                          onChange={() => setFieldValue("hod", !values?.hod)}
+                          onBlur={handleBlur}
+                          value={values.hod}
+                          checked={values.hod}
+                          label="HOD"
+                          disabled={
+                           dashboard.allEmployeesWithNoPermissionList?.some(
+                           (x) => x.departmentId == values.departmentId && x.hod == true && x.value != user.Id
+                              )
+                          }
+                        />
+
+                          <label className="ml-2">HOD</label>
                         <SearchSelect
                           name="departmentId"
-                          label={<span> Department<span style={{ color: 'red' }}>*</span></span>}
+                      
                           isDisabled={isUserForRead && true}
                           onBlur={() => {
                             // handleBlur({ target: { name: "countryId" } });
@@ -2687,13 +2804,14 @@ export function DesignationEditForm({
 
                     </div>
                     <div className="from-group row">
-                      <div className="col-12 col-md-12 mt-3">
+                      <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
                         <Field
                           name="additional_summary"
                           component={TextArea}
                           placeholder="Enter Address"
                           label={<span> Address<span style={{ color: 'red' }}>*</span></span>}
                           autoComplete="off"
+                          className="form-control h-100"  // Force full height
                         />
                       </div>
 
@@ -3307,13 +3425,14 @@ export function DesignationEditForm({
                         <div className="from-group row">
 
 
-                          <div className="col-12 col-md-12 mt-3">
+                          <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
                             <Field
                               name="professional_summary"
                               component={TextArea}
                               placeholder="Enter Professional Summary"
                               label="Professional Summary"
                               autoComplete="off"
+                               className="form-control h-100"  // Force full height
                             />
                           </div>
                         </div>

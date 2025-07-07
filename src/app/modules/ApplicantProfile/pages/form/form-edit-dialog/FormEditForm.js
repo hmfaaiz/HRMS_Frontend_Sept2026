@@ -132,7 +132,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "is-greater",
           'Expected salary range "To" must be greater than "From"',
-          function(value) {
+          function (value) {
             const { expectedSalaryRangeFrom } = this.parent;
             return value > expectedSalaryRangeFrom;
           }
@@ -212,6 +212,7 @@ export const getApplicantProfileEditSchema = (formData) => {
 
               .min(1, "Minimum rating is 1")
               .max(10, "Maximum rating is 5")
+              .nullable()
               .required(VALIDATION_MESSAGES.required),
             startDate: Yup.date()
               .nullable()
@@ -228,7 +229,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "unique-skill",
           "Duplicate skill names are not allowed.",
-          function(skills) {
+          function (skills) {
             if (!Array.isArray(skills)) return true; // ✅ safely skip if not an array
 
             const skillNames = skills.map((s) => s.skill?.trim().toLowerCase());
@@ -270,7 +271,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "no-overlapping-dates",
           "Work experience dates must not overlap.",
-          function(entries) {
+          function (entries) {
             if (!entries || entries.length <= 1) return true;
 
             // Filter out invalid dates
@@ -337,7 +338,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "no-overlapping-academic-dates",
           "Academic date ranges must not overlap.",
-          function(entries) {
+          function (entries) {
             if (!entries || entries.length <= 1) return true;
 
             // Filter out entries without valid dates
@@ -374,8 +375,8 @@ export const getApplicantProfileEditSchema = (formData) => {
               .required(VALIDATION_MESSAGES.required),
             // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
             statusDate: Yup.date()
-              .nullable()
-              .required(VALIDATION_MESSAGES.required),
+              .nullable(),
+            // .required(VALIDATION_MESSAGES.required),
             appointmentTypeId: Yup.number()
               .nullable()
               .required(VALIDATION_MESSAGES.required),
@@ -384,7 +385,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "unique-jobVacancyId",
           "Each Job Vacancy must be unique.",
-          function(vacancies) {
+          function (vacancies) {
             if (!vacancies) return true;
 
             const jobVacancyIds = vacancies.map((v) => v.jobVacancyId);
@@ -401,13 +402,28 @@ export const getApplicantProfileEditSchema = (formData) => {
 
             return true;
           }
+        )
+        .test(
+          "only-one-activeCV",
+          "Only one Active Vacancy can be selected.",
+          function (vacancies) {
+            if (!vacancies) return true;
+            const activeCount = vacancies.filter((v) => v.activeCV === true).length;
+            if (activeCount > 1) {
+              return this.createError({
+                path: `details_applicant_vacancy`,
+                message: `Only one record can be marked as Active Vacancy.`,
+              });
+            }
+            return true;
+          }
         ),
     })
 
     .test(
       "check-marital-status",
       "Invalid marital status for selected title",
-      function(value) {
+      function (value) {
         // if (title === 'Mrs.' && maritalStatus === '261') {
         const { title, maritalStatus, gender } = value;
 
@@ -479,7 +495,7 @@ export function FormEditForm({
   onHide,
   isdataForRead,
   enableLoading,
-  loading,disbaleLoading,
+  loading, disbaleLoading,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -489,6 +505,11 @@ export function FormEditForm({
   const inputFile = useRef(null);
   const [file, setFile] = useState("");
   const [applicantCode, setApplicantCode] = useState("");
+  const [allSkillNames, setAllSkillNames] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  // At top of your component
+  const [skillsAutoAdded, setSkillsAutoAdded] = useState(false);
 
   //drop down
   useEffect(() => {
@@ -509,37 +530,38 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(109, "allInstitution"));
       dispatch(fetchAllFormsMenu(108, "allDegreeTitle"));
       dispatch(fetchAllFormsMenu(128, "allNationalities"));
+      dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
     }
   }, [dispatch, formData.Id]);
 
 
 
-  const { currentState, userAccess ,currentUser} = useSelector((state) => {
+  const { currentState, userAccess, currentUser } = useSelector((state) => {
     return {
       currentState: state.applicant_profile,
       userAccess: state?.auth?.userAccess["applicant_profile"],
-         currentUser:state.auth.user,
+      currentUser: state.auth.user,
     };
   }, shallowEqual);
 
   const { dataForEdit } = currentState;
-    const fetchData = async (setApplicantCode) => {
-      
-      if (!formData.Id) {
-  
-        dispatch(
-          getLatestTableId(
-            "r_applicant_profile",
-            "applicantCode",
-            "companyId =" + currentUser.companyId,
-            setApplicantCode
-          )
-        );
-      }
-    };
-    useEffect(()=>{
-      fetchData(setApplicantCode)
-    },[])
+  const fetchData = async (setApplicantCode) => {
+
+    if (!formData.Id) {
+
+      dispatch(
+        getLatestTableId(
+          "r_applicant_profile",
+          "applicantCode",
+          "companyId =" + currentUser.companyId,
+          setApplicantCode
+        )
+      );
+    }
+  };
+  useEffect(() => {
+    fetchData(setApplicantCode)
+  }, [])
 
   const filteredCities = (countryId) => {
     return dashboard?.allCity?.filter((city) => city.code === countryId) || [];
@@ -564,6 +586,75 @@ export function FormEditForm({
     { value: "10", label: "10" },
   ];
 
+
+  const getSkillNamesFromIds = (skillIds) => {
+    if (!Array.isArray(skillIds)) {
+      if (typeof skillIds === 'string') {
+        skillIds = skillIds.split(',').map((s) => s.trim());
+      } else {
+        return [];
+      }
+    }
+
+    return skillIds
+      .map((id) =>
+        dashboard?.allJobSkillList?.find(
+          (skill) => String(skill.value) === String(id)
+        )
+      )
+      .filter(Boolean)
+      .map((skill) => skill.label);
+  };
+
+
+  const printSkills = async (formData, vacancyArray, forDelete = null) => {
+    const collected = [];
+    console.log("printSkills called with vacancyArray:", vacancyArray.length);
+    vacancyArray.forEach((item) => {
+      const selectedVacancy = dashboard?.allJobVacancyList?.find(
+        (x) => x.value === item.jobVacancyId
+      );
+
+      const skillIds = selectedVacancy?.preferredJobSkillsId || [];
+      const skillNames = getSkillNamesFromIds(skillIds);
+
+      skillNames.forEach((name) => {
+        collected.push({
+          skillName: name,
+          jobVacancyId: selectedVacancy?.value,
+        });
+      });
+    });
+
+    // ✅ Filter out duplicate skill names
+    const uniqueBySkill = [];
+    const seen = new Set();
+
+    collected.forEach((item) => {
+      const key = item.skillName.toLowerCase();
+      if (!seen.has(key)) {
+        uniqueBySkill.push(item);
+        seen.add(key);
+      }
+    });
+
+
+
+    // ✅ Set for UI dropdown or tracking
+    setAllSkillNames(uniqueBySkill.map((s) => s.skillName));
+
+    // ✅ Remove existing skills related to the deleted jobVacancyId
+    let cleanedFormData = { ...formData };
+    if (forDelete) {
+      cleanedFormData.details_applicant_skills = (formData.details_applicant_skills || []).filter(
+        (skill) => skill.jobVacancyId !== forDelete
+      );
+    }
+
+    // ✅ Add new skills
+    return updateApplicantSkills(cleanedFormData, uniqueBySkill);
+  };
+
   const selectedJobVacancy = (values) =>
     dashboard?.allJobVacancyList?.find((x) => x.value === values?.jobVacancyId);
 
@@ -577,28 +668,69 @@ export function FormEditForm({
   };
 
   useEffect(() => {
-    if (formData?.profile_image) {
+    if (formData.Id && formData?.profile_image) {
       setImage(formData.profile_image);
     }
-  }, [formData?.profile_image]);
+    else{
+       setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
+        
+    }
+  }, [formData.Id,formData?.profile_image]);
 
   const deleteApplicantVacancyDetail = (Id) => {
     // server request for deleting customer by id
     enableLoading();
 
- if(Id){
-    dispatch(actions.deleteApplicantVacancyDetail(Id)).then(() => {
-      disbaleLoading();
-      onHide();
-    });
- }
+    if (Id) {
+      dispatch(actions.deleteApplicantVacancyDetail(Id)).then(() => {
+        disbaleLoading();
+        onHide();
+      });
+    }
     disbaleLoading();
 
   };
+
+
+
+
+
+  const updateApplicantSkills = (formData, skillWithJobList) => {
+    const existingSkills = formData.details_applicant_skills || [];
+    const existingSkillNames = existingSkills.map((s) => s.skill?.toLowerCase());
+
+    const newSkills = skillWithJobList
+      .filter(
+        (item) =>
+          item?.skillName &&
+          !existingSkillNames.includes(item.skillName.toLowerCase())
+      )
+      .map((item) => ({
+        Id: null,
+        applicantId: formData.Id,
+        skill: item.skillName || '',
+        description: '',
+        ratingScale: null,
+        startDate: null,
+        endDate: null,
+        isActive: true,
+        createdBy: null,
+        updatedBy: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        jobVacancyId: item.jobVacancyId,
+      }));
+
+    return {
+      details_applicant_skills: [...existingSkills, ...newSkills],
+    };
+  };
+
+
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={{ ...formData ,applicantCode:formData.applicantCode ? formData?.applicantCode : applicantCode}}
+      initialValues={{ ...formData, applicantCode: formData.applicantCode ? formData?.applicantCode : applicantCode }}
       validationSchema={getApplicantProfileEditSchema(formData)}
       onSubmit={async (values) => {
         enableLoading();
@@ -666,7 +798,7 @@ export function FormEditForm({
                             type="text"
                             minLength={6}
                             maxLength={6}
-                            // error={ errors.applicantCode}
+                          // error={ errors.applicantCode}
                           />
                         </div>
 
@@ -769,7 +901,7 @@ export function FormEditForm({
                     <div className="col-12 col-md-2 ">
                       <div>
                         <div>
-                          <div>
+                          {/* <div>
                             <img
                               name="profile_image"
                               width={120}
@@ -788,7 +920,74 @@ export function FormEditForm({
                               name="myImage"
                               component="div"
                             />
+                          </div> */}
+
+                          <div className="text-center" style={{
+                            height: "220px",          // Fixed height
+                            width: "120px",          // Fixed height
+                            overflow: "hidden",       // Prevent stretching
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            // justifyContent: "space-between",
+                          }}>
+                            <img
+                              name="profile_image"
+                              width={120}
+                              height={120}
+                              src={profile_image || formData?.profile_image}
+                              alt="Profile"
+                              // className="img-thumbnail"
+                              style={{
+                                objectFit: "cover",
+                                borderRadius: "50%",
+                                // flexShrink: 0,           // Prevent image from shrinking
+                              }}
+                            />
+
+                            <h5 className="mt-2">Select Image</h5>
+
+                            {/* Custom upload button */}
+                            <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+                              Upload Image
+                            </label>
+
+                            {/* Hidden file input */}
+                            <input
+                              id="myImage"
+                              type="file"
+                              name="myImage"
+                              accept=".jpg, .jpeg, .png"
+                              onChange={onImageChange}
+                              style={{ display: "none" }}
+                            />
+
+                            {/* File name truncation */}
+                            {/* {selectedFileName && (
+                              <div
+                                style={{
+                                  maxWidth: "100%",
+                                  height: "100%",
+                                  overflow: "hidden",
+                                  // textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  fontSize: "0.8rem",
+                                  marginTop: "5px",
+                                }}
+                                title={selectedFileName} // Tooltip on hover
+                              >
+                                {selectedFileName}
+                              </div>
+                            )} */}
+
+                            {/* Formik error display */}
+                            <ErrorMessage
+                              className="form-feedBack text-danger"
+                              name="myImage"
+                              component="div"
+                            />
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -840,16 +1039,39 @@ export function FormEditForm({
                                         isdataForRead ||
                                         selectedJobVacancy(
                                           values.details_applicant_vacancy[
-                                            index
+                                          index
                                           ]
                                         )?.jobPostingStatus == 3
                                       }
                                       className="btn btn-danger btn-elevate"
                                       type="button"
-                                      onClick={() => {
-                                        deleteApplicantVacancyDetail(detail.Id)
-                                        remove(index);
+                                      // onClick={async () => {
+                                      //   deleteApplicantVacancyDetail(detail.Id)
+                                      //   remove(index);
+
+                                      //   const result = await printSkills(formData, values.details_applicant_vacancy, { delete: detail.Id });
+
+
+
+                                      //   // ✅ Make sure result exists before setting
+                                      //   if (result?.details_applicant_skills) {
+                                      //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                      //   }
+                                      // }}
+
+                                      onClick={async () => {
+                                        deleteApplicantVacancyDetail(detail.Id);
+                                        const updatedVacancies = values.details_applicant_vacancy.filter((_, i) => i !== index); // ❗️ manually filter
+
+                                        remove(index); // update Formik
+
+                                        const result = await printSkills(formData, updatedVacancies, detail.Id); // ❗️ directly pass updated
+
+                                        if (result?.details_applicant_skills) {
+                                          setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                        }
                                       }}
+
                                     >
                                       Delete
                                     </button>
@@ -864,7 +1086,7 @@ export function FormEditForm({
                                         isdataForRead ||
                                         selectedJobVacancy(
                                           values.details_applicant_vacancy[
-                                            index
+                                          index
                                           ]
                                         )?.jobPostingStatus == 3
                                       }
@@ -877,12 +1099,42 @@ export function FormEditForm({
                                             ]?.jobVacancyId
                                         ) || null
                                       }
-                                      onChange={(e) => {
+                                      // onChange={async (e) => {
+                                      //   setFieldValue(
+                                      //     `details_applicant_vacancy[${index}].jobVacancyId`,
+                                      //     e?.value
+                                      //   );
+                                      //   const result = await printSkills(formData, values.details_applicant_vacancy);
+
+
+
+                                      //   // ✅ Make sure result exists before setting
+                                      //   if (result?.details_applicant_skills) {
+                                      //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                      //   }
+
+                                      // }}
+
+                                      onChange={async (e) => {
+                                        // Step 1: Update the field
                                         setFieldValue(
                                           `details_applicant_vacancy[${index}].jobVacancyId`,
                                           e?.value
                                         );
+
+                                        // Step 2: Manually construct updated array
+                                        const updatedVacancyArray = values.details_applicant_vacancy.map((item, i) =>
+                                          i === index ? { ...item, jobVacancyId: e?.value } : item
+                                        );
+
+                                        // Step 3: Call with updated array
+                                        const result = await printSkills(formData, updatedVacancyArray);
+
+                                        if (result?.details_applicant_skills) {
+                                          setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                        }
                                       }}
+
                                       options={
                                         dashboard?.allJobVacancyList
                                           ?.filter(
@@ -890,7 +1142,7 @@ export function FormEditForm({
                                               x?.jobPostingStatus === 1 && // ✅ Only include items where jobPostingStatus === 1
                                               (!values?.subsidiaryId ||
                                                 x?.subsidiaryId ===
-                                                  values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
+                                                values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
                                           )
                                           .map((x) => ({
                                             label: x.label,
@@ -931,10 +1183,10 @@ export function FormEditForm({
                                           index
                                         ]?.applicationDate
                                           ? new Date(
-                                              values.details_applicant_vacancy[
-                                                index
-                                              ].applicationDate
-                                            )
+                                            values.details_applicant_vacancy[
+                                              index
+                                            ].applicationDate
+                                          )
                                           : null
                                       }
                                       onChange={(date) => {
@@ -953,7 +1205,7 @@ export function FormEditForm({
                                         isdataForRead ||
                                         selectedJobVacancy(
                                           values.details_applicant_vacancy[
-                                            index
+                                          index
                                           ]
                                         )?.jobPostingStatus == 3
                                       }
@@ -986,7 +1238,7 @@ export function FormEditForm({
                                         isdataForRead ||
                                         selectedJobVacancy(
                                           values.details_applicant_vacancy[
-                                            index
+                                          index
                                           ]
                                         )?.jobPostingStatus == 3
                                       }
@@ -1047,10 +1299,10 @@ export function FormEditForm({
                                           index
                                         ]?.statusDate
                                           ? new Date(
-                                              values.details_applicant_vacancy[
-                                                index
-                                              ].statusDate
-                                            )
+                                            values.details_applicant_vacancy[
+                                              index
+                                            ].statusDate
+                                          )
                                           : null
                                       }
                                       onChange={(date) => {
@@ -1095,7 +1347,7 @@ export function FormEditForm({
                                         isdataForRead ||
                                         selectedJobVacancy(
                                           values.details_applicant_vacancy[
-                                            index
+                                          index
                                           ]
                                         )?.jobPostingStatus == 3
                                       }
@@ -1144,7 +1396,7 @@ export function FormEditForm({
                                         isdataForRead ||
                                         selectedJobVacancy(
                                           values.details_applicant_vacancy[
-                                            index
+                                          index
                                           ]
                                         )?.jobPostingStatus == 3
                                       }
@@ -1282,12 +1534,13 @@ export function FormEditForm({
                         )}
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <Field
                         name="applicantStatusReason"
                         component={TextArea}
                         placeholder="Enter applicant status reason"
                         label={<span>Applicant Status Reason</span>}
+                        className="form-control h-100"  // Force full height
                         autoComplete="off"
                       />
                     </div>
@@ -1482,7 +1735,7 @@ export function FormEditForm({
                       )}
                     </div> */}
 
-                        <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="nationality"
                         label={
@@ -1579,11 +1832,12 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3"style={{ height: '150px' }}>
                       <Field
                         name="additional_summary"
                         component={TextArea}
                         placeholder="Enter Address"
+                        className="form-control h-100"  // Force full height
                         label={
                           <span>
                             {" "}
@@ -1857,12 +2111,13 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3">
+                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <Field
                         name="otherInformation"
                         component={TextArea}
                         placeholder="Enter other information"
                         label={<span> Other Information</span>}
+                        className="form-control h-100"  // Force full height
                         autoComplete="off"
                       />
                     </div>
@@ -1987,7 +2242,7 @@ export function FormEditForm({
                       <tbody>
                         {values?.details_applicant_work_experience &&
                           values?.details_applicant_work_experience?.length >
-                            0 &&
+                          0 &&
                           values?.details_applicant_work_experience?.map(
                             (detail, index) => (
                               <tr key={index}>
@@ -2171,10 +2426,10 @@ export function FormEditForm({
                                         index
                                       ]?.startDate
                                         ? new Date(
-                                            values.details_applicant_work_experience[
-                                              index
-                                            ].startDate
-                                          )
+                                          values.details_applicant_work_experience[
+                                            index
+                                          ].startDate
+                                        )
                                         : null
                                     }
                                     onChange={(date) => {
@@ -2229,10 +2484,10 @@ export function FormEditForm({
                                         index
                                       ]?.endDate
                                         ? new Date(
-                                            values.details_applicant_work_experience[
-                                              index
-                                            ].endDate
-                                          )
+                                          values.details_applicant_work_experience[
+                                            index
+                                          ].endDate
+                                        )
                                         : null
                                     }
                                     onChange={(date) => {
@@ -2595,10 +2850,10 @@ export function FormEditForm({
                                         index
                                       ]?.startDate
                                         ? new Date(
-                                            values.details_applicant_academic_info[
-                                              index
-                                            ].startDate
-                                          )
+                                          values.details_applicant_academic_info[
+                                            index
+                                          ].startDate
+                                        )
                                         : null
                                     }
                                     onChange={(date) => {
@@ -2652,10 +2907,10 @@ export function FormEditForm({
                                         index
                                       ]?.endDate
                                         ? new Date(
-                                            values.details_applicant_academic_info[
-                                              index
-                                            ].endDate
-                                          )
+                                          values.details_applicant_academic_info[
+                                            index
+                                          ].endDate
+                                        )
                                         : null
                                     }
                                     onChange={(date) => {
@@ -2663,10 +2918,7 @@ export function FormEditForm({
                                         date,
                                         "yyyy-MM-dd"
                                       ); // or use date.toISOString().split('T')[0]
-                                      console.log(
-                                        "selectedDate1111",
-                                        selectedDate
-                                      );
+
                                       setFieldValue(
                                         `details_applicant_academic_info[${index}].endDate`,
                                         selectedDate
@@ -2772,7 +3024,7 @@ export function FormEditForm({
                               <tr key={index}>
                                 <td>
                                   <button
-                                    disabled={isdataForRead}
+                                    disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
                                     className="btn btn-danger btn-elevate"
                                     type="button"
                                     onClick={() => {
@@ -2789,7 +3041,7 @@ export function FormEditForm({
                                   <Field
                                     name={`details_applicant_skills[${index}].skill`}
                                     component={Input}
-                                    disabled={isdataForRead}
+                                    disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
                                     placeholder="Enter skill"
                                     autoComplete="off"
                                   />
@@ -2816,6 +3068,10 @@ export function FormEditForm({
                                     disabled={isdataForRead}
                                     placeholder="Enter description"
                                     autoComplete="off"
+                                    onChange={(e) => {
+                                      setFieldValue(`details_applicant_skills[${index}].jobVacancyId`, values.details_applicant_skills?.[index]?.jobVacancyId)
+                                      setFieldValue(`details_applicant_skills[${index}].description`, e.target.value)
+                                    }}
                                   />
 
                                   {errors.details_applicant_skills?.[index]
@@ -2881,10 +3137,10 @@ export function FormEditForm({
                                       values?.details_applicant_skills?.[index]
                                         ?.startDate
                                         ? new Date(
-                                            values.details_applicant_skills[
-                                              index
-                                            ].startDate
-                                          )
+                                          values.details_applicant_skills[
+                                            index
+                                          ].startDate
+                                        )
                                         : null
                                     }
                                     onChange={(date) => {
@@ -2933,10 +3189,10 @@ export function FormEditForm({
                                       values?.details_applicant_skills?.[index]
                                         ?.endDate
                                         ? new Date(
-                                            values.details_applicant_skills[
-                                              index
-                                            ].endDate
-                                          )
+                                          values.details_applicant_skills[
+                                            index
+                                          ].endDate
+                                        )
                                         : null
                                     }
                                     onChange={(date) => {
@@ -2983,15 +3239,51 @@ export function FormEditForm({
                     {!isdataForRead && (
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={() => {
                           push({
                             skill: "",
                             description: "",
                             ratingScale: "",
                             startDate: "",
                             endDate: "",
+                            jobVacancyId: "",
                           })
-                        }
+                          //  printSkills(values.details_applicant_vacancy)
+
+                        }}
+
+                        // onClick={() => {
+                        //   if (!skillsAutoAdded && Array.isArray(allSkillNames) && allSkillNames.length > 0) {
+                        //     allSkillNames.forEach((name) => {
+                        //       const alreadyExists = values.details_applicant_skills.some(
+                        //         (item) => item.skill === name
+                        //       );
+
+                        //       if (!alreadyExists) {
+                        //         push({
+                        //           skill: name,
+                        //           description: "",
+                        //           ratingScale: "",
+                        //           startDate: "",
+                        //           endDate: "",
+                        //         });
+                        //       }
+                        //     });
+
+                        //     setSkillsAutoAdded(true); // prevent repeating auto-add
+                        //   } else {
+                        //     // Just manually add empty row
+                        //     push({
+                        //       skill: "",
+                        //       description: "",
+                        //       ratingScale: "",
+                        //       startDate: "",
+                        //       endDate: "",
+                        //     });
+                        //   }
+                        // }}
+
+
                         className="btn btn-primary btn-sm"
                       >
                         + Add Detail

@@ -456,6 +456,9 @@ console.log("user111",user)
         setFieldValue("overtime_off_day", response?.data?.data[0]?.overtime_off_day || 1);
         setFieldValue("overtime_holiday", response?.data?.data[0]?.overtime_holiday || 1);
         setFieldValue("overtime_allowance", Boolean(response?.data?.data[0]?.overtime_allowance));
+        setFieldValue("gratuity_member", Boolean(response?.data?.data[0]?.gratuity_member));
+        setFieldValue("eobi_member", Boolean(response?.data?.data[0]?.eobi_member));
+        setFieldValue("social_security_member", Boolean(response?.data?.data[0]?.social_security_member));
         setFieldValue("currencyId", currencyId || '');
         setDefualtCurrencyCodeList(
           dashboard.allCurrencyCodeList &&
@@ -1644,7 +1647,7 @@ useEffect(()=>{
                                   onBlur={handleBlur}
                                   value={values.social_security_member}
                                   checked={values.social_security_member}
-                                /> Social Security Member
+                                /> Social Security Member 11333{values.social_security_member}
 
                               </div>
                               <div className="col-12 col-md-4 mt-5">

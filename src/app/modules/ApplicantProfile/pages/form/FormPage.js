@@ -164,6 +164,7 @@ export function FormPage() {
 
   return (
     <FormUIProvider FormUIEvents={FormUIEvents}>
+     <FormCard />
       {newMatch && (
         <FormEditDialog
           show={true}
@@ -210,7 +211,7 @@ export function FormPage() {
         />
       )}
 
-      <FormCard />
+
 
       <ToastContainer position="top-right" autoClose={5000} />
     </FormUIProvider>

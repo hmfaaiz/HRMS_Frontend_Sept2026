@@ -23,6 +23,7 @@ const holidaysEditSchema = Yup.object().shape({
   // to_amount: Yup.string().required("Required*"),
 
   name: Yup.string()
+     .trim()
     .required(VALIDATION_MESSAGES.required),
 
 
@@ -125,7 +126,7 @@ export function FormEditForm({
               <fieldset disabled={isUserForRead}>
                 <div className="form-group row">
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-5 mt-3">
+                    <div className="col-12 col-md-6 mt-3">
                       <SearchSelect
                         name="subsidiaryId"
                         label={
@@ -158,7 +159,7 @@ export function FormEditForm({
 
 
 
-<div className="col-12 col-md-7 mt-3 d-flex flex-column align-items-end">
+<div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
 
 {values?.subsidiaryId ? (() => {
   const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
@@ -184,7 +185,7 @@ export function FormEditForm({
 
             
 
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <label>
                       From Date <span style={{ color: "red" }}>*</span>
                     </label>
@@ -204,7 +205,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <label>
                       To Date <span style={{ color: "red" }}>*</span>
                     </label>
@@ -225,7 +226,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <label>
                       <span>
                         Holiday Name<span style={{ color: "red" }}>*</span>
@@ -241,7 +242,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <label>
                       <span>
                         Number of days<span style={{ color: "red" }}>*</span>
@@ -261,7 +262,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="holiday_typeId"
                       label={
@@ -289,7 +290,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="religionId"
                       label={

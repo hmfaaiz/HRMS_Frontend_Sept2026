@@ -29,7 +29,7 @@ export function TextArea({
       {label && <label> {label}</label>}
       <textarea
         type={type}
-        maxLength={250}
+        maxLength={1000}
         className={getFieldCSSClasses(touched[field.name], errors[field.name])}
         {...field}
         {...props}

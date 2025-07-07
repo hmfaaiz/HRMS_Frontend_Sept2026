@@ -26,7 +26,8 @@ const bankEditSchema = Yup.object().shape(
   {
     Name: Yup.string()
       // .matches(/^[A-Za-z\s]+$/, 'Only alphabetic characters allowed')
-      .matches(/^[A-Za-z\s.-]+$/, 'Name must only contain letters.')
+      // .matches(/^[A-Za-z\s.-]+$/, 'Name must only contain letters.')
+      .trim()
       .required(VALIDATION_MESSAGES.required),
     subsidiaryId: Yup.string()
       .nullable()
@@ -126,7 +127,7 @@ export function BankEditForm({
                         options={dashboard.allSubsidiaryList}
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-8 mt-3">
                       <Field
                         name="Name"
                         MaxLength={40}

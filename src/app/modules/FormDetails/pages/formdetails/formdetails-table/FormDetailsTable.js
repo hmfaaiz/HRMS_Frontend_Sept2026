@@ -205,7 +205,10 @@ formUIProps.setQueryParams(updatedQueryParams);
     
     if (newdata) {
 
-      const firstMatchingObj = newdata?.find(obj => obj?.Id);
+      // const firstMatchingObj = newdata?.find(obj => obj?.Id);
+      // 2-7-2025
+      const firstMatchingObj = newdata?.find(obj => obj?.isActive === true);
+
 
       if (firstMatchingObj && !paginationOptions.parentId) {
       

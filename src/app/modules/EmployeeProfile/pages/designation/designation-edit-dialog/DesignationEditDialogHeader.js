@@ -26,7 +26,7 @@ export function DesignationEditDialogHeader({ id ,isUserForRead}) {
 
   return (
     <>
-      <Modal.Header closeButton>
+      <Modal.Header >
         <Modal.Title id="example-modal-sizes-title-lg">
         {!isUserForRead ? title : "View Employee Profile"}
           </Modal.Title>
