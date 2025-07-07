@@ -136,3 +136,7 @@ export function getDashboardAlert() {
 export function getEmployeeSummary(filter) {
   return axios.post(`${USERS_URL}/dashboard/employee-summary`, filter );
 }
+
+export function getRecruitmentSummary(filter) {
+  return axios.post(`${USERS_URL}/dashboard/recruitment-summary`, filter );
+}

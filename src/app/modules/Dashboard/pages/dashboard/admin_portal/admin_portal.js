@@ -13,7 +13,7 @@ import {
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { Users } from "lucide-react";
+import { BriefcaseBusiness, Users } from "lucide-react";
 
 const panels = [
   {
@@ -36,14 +36,26 @@ const panels = [
     key: "Payroll",
     resourceId: 252,
   },
+  {
+    title: "Recruitment Management",
+    key: "Recruitment",
+    resourceId: 1893,
+  },
 ];
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
   const [activeKey, setActiveKey] = useState("0"); // Default to Employee
-  const [filter, setFilter] = useState({
+  const [empSummaryFilter, setEmpSummaryFilter] = useState({
     subsidiaryId: "",
     gradeId: "",
+    departmentId: "",
+    locationId: "",
+  });
+
+  const [recruitmentSummaryFilter, setRecruitmentSummaryFilter] = useState({
+    subsidiaryId: "",
+    designationId: "",
     departmentId: "",
     locationId: "",
   });
@@ -57,28 +69,38 @@ export const AdminPortal = () => {
     allSubsidiaryList,
     allEmployeegradeList,
     allLocationChildMenus,
+    allDesignations,
     allParentDept,
+    recruitmentSummary,
+    employeeSummary,
   } = dashboard;
+
+  console.log("Dashboard Data:", recruitmentSummary);
 
   const filteredPanels = panels.filter((panel) =>
     Object.keys(userAccess).includes(panel.key)
   );
 
   const handleToggle = (key) => {
-    setActiveKey(key === activeKey ? null : key);
+    setActiveKey(key === activeKey ? "1" : key);
   };
 
   useEffect(() => {
     dispatch(actions.fetchDashboardAlert());
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
+    dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllParentDept());
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, []);
 
   useEffect(() => {
-    dispatch(actions.fetchEmployeeSummary(filter));
-  }, [filter]);
+    dispatch(actions.fetchEmployeeSummary(empSummaryFilter));
+  }, [empSummaryFilter]);
+
+  useEffect(() => {
+    dispatch(actions.fetchRecruitmentSummary(recruitmentSummaryFilter));
+  }, [recruitmentSummaryFilter]);
 
   return (
     <div className="mt-3">
@@ -88,12 +110,12 @@ export const AdminPortal = () => {
           const isActive = activeKey === key;
 
           return (
-            <div className="col-md-3 mb-2" key={key}>
+            <div className="col-md-2-5 mb-2" key={key}>
               <Card onClick={() => handleToggle(key)}>
                 <Card.Header
                   style={{
                     cursor: "pointer",
-                    backgroundColor: isActive ? "#0093dd" : "#333333",
+                    backgroundColor: isActive ? "#0093dd" : "gray",
                     color: "#ffffff",
                     padding: "1rem",
                     borderRadius: "5px",
@@ -127,137 +149,397 @@ export const AdminPortal = () => {
                 {/* Left Side: Filters + BigTable */}
                 <div className="col-md-9">
                   {/* Filters */}
-                  <div
-                    className="row mb-3"
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "0px 10px",
-                      borderRadius: "5px",
-                      margin: "0px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
-                    <div className="col-md-3 mb-2">
-                      <SearchSelect
-                        name="subsidiaryId"
-                        isDisabled={!allSubsidiaryList}
-                        label={<span>Subsidiary</span>}
-                        onChange={(e) =>
-                          setFilter({ ...filter, subsidiaryId: e.value })
-                        }
-                        value={
-                          allSubsidiaryList?.find(
-                            (e) => e?.value === filter?.subsidiaryId
-                          ) || ""
-                        }
-                        options={allSubsidiaryList}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-2">
-                      <SearchSelect
-                        name="gradeId"
-                        isDisabled={!allEmployeegradeList}
-                        label={<span>Grade</span>}
-                        onChange={(e) =>
-                          setFilter({ ...filter, gradeId: e.value })
-                        }
-                        value={
-                          allEmployeegradeList?.find(
-                            (e) => e?.value === filter?.gradeId
-                          ) || ""
-                        }
-                        options={allEmployeegradeList}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-2">
-                      <SearchSelect
-                        name="departmentId"
-                        isDisabled={!allParentDept}
-                        label={<span>Department</span>}
-                        onChange={(e) =>
-                          setFilter({ ...filter, departmentId: e.value })
-                        }
-                        value={
-                          allParentDept?.find(
-                            (e) => e?.value === filter?.departmentId
-                          ) || ""
-                        }
-                        options={allParentDept}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-2">
-                      <SearchSelect
-                        name="locationId"
-                        isDisabled={!allLocationChildMenus}
-                        label={<span>Location</span>}
-                        onChange={(e) =>
-                          setFilter({ ...filter, locationId: e.value })
-                        }
-                        value={
-                          allLocationChildMenus?.find(
-                            (e) => e?.value === filter?.locationId
-                          ) || ""
-                        }
-                        options={allLocationChildMenus}
-                      />
-                    </div>
-                    <div className="col-md-3 mb-2">
-                      <div
-                        style={{
-                          background: "#ffffff",
-                          borderRadius: "10px",
-                          margin: "4px 5px",
-                          padding: "10px",
-                        }}
-                      >
-                        <Users size={"25px"} />
-                        <p class="h3 my-2">500</p>
-                        <p>Total Employee</p>
+                  {panel.key == "Employee" && (
+                    <div
+                      className="row my-3"
+                      style={{
+                        backgroundColor: "rgb(235 243 255)",
+                        padding: "0px 10px",
+                        borderRadius: "5px",
+                        margin: "0px",
+                        border: "2px solid #adceff",
+                      }}
+                    >
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="subsidiaryId"
+                          isDisabled={!allSubsidiaryList}
+                          label={<span>Subsidiary</span>}
+                          onChange={(e) =>
+                            setEmpSummaryFilter({
+                              ...empSummaryFilter,
+                              subsidiaryId: e.value,
+                            })
+                          }
+                          value={
+                            allSubsidiaryList?.find(
+                              (e) => e?.value === empSummaryFilter?.subsidiaryId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allSubsidiaryList)
+                              ? allSubsidiaryList
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="gradeId"
+                          isDisabled={!allEmployeegradeList}
+                          label={<span>Grade</span>}
+                          onChange={(e) =>
+                            setEmpSummaryFilter({
+                              ...empSummaryFilter,
+                              gradeId: e.value,
+                            })
+                          }
+                          value={
+                            allEmployeegradeList?.find(
+                              (e) => e?.value === empSummaryFilter?.gradeId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allEmployeegradeList)
+                              ? allEmployeegradeList
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="departmentId"
+                          isDisabled={!allParentDept}
+                          label={<span>Department</span>}
+                          onChange={(e) =>
+                            setEmpSummaryFilter({
+                              ...empSummaryFilter,
+                              departmentId: e.value,
+                            })
+                          }
+                          value={
+                            allParentDept?.find(
+                              (e) => e?.value === empSummaryFilter?.departmentId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allParentDept)
+                              ? allParentDept
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="locationId"
+                          isDisabled={!allLocationChildMenus}
+                          label={<span>Location</span>}
+                          onChange={(e) =>
+                            setEmpSummaryFilter({
+                              ...empSummaryFilter,
+                              locationId: e.value,
+                            })
+                          }
+                          value={
+                            allLocationChildMenus?.find(
+                              (e) => e?.value === empSummaryFilter?.locationId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allLocationChildMenus)
+                              ? allLocationChildMenus
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {employeeSummary?.activeEmployee || 0}
+                          </p>
+                          <p>Total Employees</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {" "}
+                            {employeeSummary?.inActiveEmployee || 0}
+                          </p>
+                          <p>Inactive Employees</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {employeeSummary?.newEmployee || 0}
+                          </p>
+                          <p>New Joiners</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {employeeSummary?.employeeOnLeave || 0}
+                          </p>
+                          <p>Employees on Leave</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="col-md-3 mb-2">
-                      <div
-                        style={{
-                          background: "#ffffff",
-                          borderRadius: "10px",
-                          margin: "4px 5px",
-                          padding: "10px",
-                        }}
-                      >
-                        <Users size={"25px"} />
-                        <p class="h3 my-2">500</p>
-                        <p>Total Employee</p>
+                  )}
+
+                  {panel.key == "Recruitment" && (
+                    <div
+                      className="row my-3"
+                      style={{
+                        backgroundColor: "rgb(235 243 255)",
+                        padding: "0px 10px",
+                        borderRadius: "5px",
+                        margin: "0px",
+                        border: "2px solid #adceff",
+                      }}
+                    >
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="subsidiaryId"
+                          isDisabled={!allSubsidiaryList}
+                          label={<span>Subsidiary</span>}
+                          onChange={(e) =>
+                            setRecruitmentSummaryFilter({
+                              ...recruitmentSummaryFilter,
+                              subsidiaryId: e.value,
+                            })
+                          }
+                          value={
+                            allSubsidiaryList?.find(
+                              (e) =>
+                                e?.value ===
+                                recruitmentSummaryFilter?.subsidiaryId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allSubsidiaryList)
+                              ? allSubsidiaryList
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="designationId"
+                          isDisabled={!allDesignations}
+                          label={<span>Designation</span>}
+                          onChange={(e) =>
+                            setRecruitmentSummaryFilter({
+                              ...recruitmentSummaryFilter,
+                              designationId: e.value,
+                            })
+                          }
+                          value={
+                            allDesignations?.find(
+                              (e) =>
+                                e?.value ===
+                                recruitmentSummaryFilter?.designationId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allDesignations)
+                              ? allDesignations
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="departmentId"
+                          isDisabled={!allParentDept}
+                          label={<span>Department</span>}
+                          onChange={(e) =>
+                            setRecruitmentSummaryFilter({
+                              ...recruitmentSummaryFilter,
+                              departmentId: e.value,
+                            })
+                          }
+                          value={
+                            allParentDept?.find(
+                              (e) =>
+                                e?.value ===
+                                recruitmentSummaryFilter?.departmentId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allParentDept)
+                              ? allParentDept
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <SearchSelect
+                          name="locationId"
+                          isDisabled={!allLocationChildMenus}
+                          label={<span>Location</span>}
+                          onChange={(e) =>
+                            setRecruitmentSummaryFilter({
+                              ...recruitmentSummaryFilter,
+                              locationId: e.value,
+                            })
+                          }
+                          value={
+                            allLocationChildMenus?.find(
+                              (e) =>
+                                e?.value ===
+                                recruitmentSummaryFilter?.locationId
+                            ) || ""
+                          }
+                          options={[
+                            { value: "", label: "All" },
+                            ...(Array.isArray(allLocationChildMenus)
+                              ? allLocationChildMenus
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <BriefcaseBusiness size={"25px"} />
+                          <p class="h3 my-2">
+                            {recruitmentSummary?.openJobs || 0}
+                          </p>
+                          <p>Open Jobs</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {" "}
+                            {recruitmentSummary?.applicant || 0}
+                          </p>
+                          <p>Total Applicant</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {recruitmentSummary?.applicantInApplicationPhase ||
+                              0}
+                          </p>
+                          <p>Application Phase</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {recruitmentSummary?.applicantInEvaluationPhase ||
+                              0}
+                          </p>
+                          <p>Evaluation Phase</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {recruitmentSummary?.applicantInFinalPhase || 0}
+                          </p>
+                          <p>Final Phase</p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 mb-2">
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            borderRadius: "10px",
+                            margin: "4px 5px",
+                            padding: "10px",
+                          }}
+                        >
+                          <Users size={"25px"} />
+                          <p class="h3 my-2">
+                            {recruitmentSummary?.applicantHiredThisYear || 0}
+                          </p>
+                          <p>Hired This Year</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="col-md-3 mb-2">
-                      <div
-                        style={{
-                          background: "#ffffff",
-                          borderRadius: "10px",
-                          margin: "4px 5px",
-                          padding: "10px",
-                        }}
-                      >
-                        <Users size={"25px"} />
-                        <p class="h3 my-2">500</p>
-                        <p>Total Employee</p>
-                      </div>
-                    </div>
-                    <div className="col-md-3 mb-2">
-                      <div
-                        style={{
-                          background: "#ffffff",
-                          borderRadius: "10px",
-                          margin: "4px 5px",
-                          padding: "10px",
-                        }}
-                      >
-                        <Users size={"25px"} />
-                        <p class="h3 my-2">500</p>
-                        <p>Total Employee</p>
-                      </div>
-                    </div>
-                  </div>
+                  )}
 
                   {/* Big Table */}
                   {allDashboardAlerts.map((e, alertIdx) => {

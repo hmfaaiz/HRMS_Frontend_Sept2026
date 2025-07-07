@@ -64,7 +64,7 @@ export function BigTable({ data }) {
           textAlign:
             isDate || employee_code ? "center" : isAmount ? "right" : "left",
           minWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
-          maxWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
+          // maxWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
         },
         headerStyle: {
           textAlign:
@@ -76,7 +76,7 @@ export function BigTable({ data }) {
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {
-            return <div>{format(new Date(cell), "dd/MMM/yyyy")}</div>;
+            return <div>{format(new Date(cell), "dd-MMM-yyyy")}</div>;
           }
 
           // For amount formatting

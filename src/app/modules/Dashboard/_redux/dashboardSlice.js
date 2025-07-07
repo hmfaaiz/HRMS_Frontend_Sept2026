@@ -77,6 +77,7 @@ const initialDashboardState = {
   employeeSummary: {},
   allPostedJobVacancyList: [],
   allParentDept: [],
+  recruitmentSummary: {},
 };
 
 export const callTypes = {
@@ -308,6 +309,9 @@ export const dashboardSlice = createSlice({
     },
     EmployeeSummaryFetch: (state, action) => {
       state.employeeSummary = action.payload;
+    },
+    RecruitmentSummaryFetch: (state, action) => {
+      state.recruitmentSummary = action.payload;
     },
     AllPostedJobVacancyFetch: (state, action) => {
       state.allPostedJobVacancyList = action.payload;

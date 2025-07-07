@@ -93,6 +93,20 @@ export const fetchEmployeeSummary = (filter) => async (dispatch) => {
     });
 };
 
+
+export const fetchRecruitmentSummary = (filter) => async (dispatch) => {
+  return await requestFromServer
+    .getRecruitmentSummary(filter)
+    .then((response) => {
+      console.log("response ", response.data);
+      const entities = response.data?.data;
+      dispatch(actions.RecruitmentSummaryFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.RecruitmentSummaryFetch({}));
+    });
+};
+
 export const fetchStandByVehicles = (body) => async (dispatch) => {
   return await requestFromServer
     .getVehiclesByCenterAndSubcenterId(body)
