@@ -74,6 +74,10 @@ export function DesignationTable() {
 
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteProfile"
+  ); 
+  
+  const isAccessForRead= userAccess?.find(
+    (item) => item.componentName === "ReadProfile"
   );
   // Table columns
   const columns = [
@@ -155,6 +159,7 @@ export function DesignationTable() {
         openDeleteDesignationDialog: religionUIProps.openDeleteDesignationDialog,
         openActiveDesignationDialog: religionUIProps.openActiveDesignationDialog,
         openReadDesignationDialog: religionUIProps.openReadDesignationDialog,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess

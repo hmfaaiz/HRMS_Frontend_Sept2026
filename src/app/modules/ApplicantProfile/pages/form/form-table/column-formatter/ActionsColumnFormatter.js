@@ -38,9 +38,9 @@ export function ActionsColumnFormatter(
             className="btn btn-icon posting-button"
             onClick={() => openConvertFormDialog(row.Id)}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/vacancyPost.svg")} />
-            </span>
+             <span className="svg-icon svg-icon-md svg-icon-primary">
+                     <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/vacancyPost.svg")} />
+                   </span>
           </a>
         </OverlayTrigger>
       )}
@@ -56,11 +56,11 @@ export function ActionsColumnFormatter(
             }}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/vacancyPost.svg")} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/offerletter.svg")} />
             </span>
           </button>
         </OverlayTrigger>
-      )}
+      )} 
 
       {/* View */}
       {isAccessForView && (

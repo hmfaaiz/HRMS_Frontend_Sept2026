@@ -11,6 +11,7 @@ import { BankDeleteDialog } from "./bank-delete-dialog/BankDeleteDialog";
 import { DesignationActiveDialog } from "./bank-active-dialog/BankActiveDialog";
 import { ReligionCard } from "./religion-card/ReligionCard";
 import { fetchAllCountry } from "../../../../../_metronic/redux/dashboardActions";
+import { useSelector, shallowEqual } from "react-redux"
 import {
   fetchUserStatusTypes,
   fetchRoles,
@@ -79,6 +80,27 @@ export function ProfilePage({ history }) {
       history.push(`/profile/read-all-profile/${id}/read`);
     },
   };
+  const { userAccess } = useSelector(
+    (state) => ({
+      userAccess: state.auth.userAccess.Profile
+    }),
+    shallowEqual
+  )
+
+    const isAccessForEdit = userAccess?.find(
+    (item) => item.componentName === "UpdateProfile"
+  );
+
+  const isAccessForDelete = userAccess?.find(
+    (item) => item.componentName === "DeleteProfile"
+  );
+
+   const accessUser = userAccess.find(
+    (item) => item.componentName === "CreateProfile"
+  )
+    const isAccessForRead= userAccess?.find(
+    (item) => item.componentName === "ReadProfile"
+  );
   return (
     
     <DesignationUIProvider DesignationUIEvents={DesignationUIEvents}>
@@ -155,26 +177,35 @@ export function ProfilePage({ history }) {
           />
         )}
       </Route> */}
+      {accessUser && (
          <Route path="/profile/read-all-profile/new" render={({ match, history }) => (
               <DesignationEditDialog
-            
+            status="new"
              onHide={() => history.push("/profile/read-all-profile")}
             />
              )} />
+
+            )}
+             {isAccessForEdit && (
                  <Route path="/profile/read-all-profile/:id/edit" render={({ match, history }) => (
               <DesignationEditDialog
              id={match.params.id}
+             status="edit"
              onHide={() => history.push("/profile/read-all-profile")}
             />
              )} />
+            )}
+            {isAccessForRead && (
           <Route path="/profile/read-all-profile/:id/read" render={({ match, history }) => (
            <DesignationEditDialog
         id={match.params.id}
+        status="read"
             userForRead={true}
              onHide={() => history.push("/profile/read-all-profile")}
               />
 )}         />
-
+)}
+{isAccessForDelete && (
       <Route path="/profile/read-all-profile/:id/:status/delete">
         {({ history, match }) => (
           <BankDeleteDialog
@@ -187,12 +218,13 @@ export function ProfilePage({ history }) {
           />
         )}
       </Route>
+      )}
       <Route path="/profile/read-all-profile/:id/active">
         {({ history, match }) => (
           <DesignationActiveDialog
             show={match != null}
             id={match && match.params.id}
-            //status={match && match.params.status}
+            status={match && match.params.status}
             onHide={() => {
               history.push("/profile/read-all-profile");
             }}
