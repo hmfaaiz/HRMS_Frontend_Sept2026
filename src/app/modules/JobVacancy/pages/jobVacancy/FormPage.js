@@ -12,7 +12,14 @@ import { FormCard } from "./form-card/FormCard";
 import { } from "../../_redux/redux-Actions";
 import { FormFIlter } from "./form-filter/FormFIlter";
 import { Switch } from "react-router-dom";
-
+import { Accordion, Button, Card } from "react-bootstrap";
+import { KeyboardArrowDown } from "@material-ui/icons";
+import {
+  Card as CardHeadeing,
+  CardHeader,
+  Input,
+} from "../../../../../_metronic/_partials/controls"
+import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 
 export function FormPage({ history }) {
 
@@ -170,7 +177,36 @@ export function FormPage({ history }) {
 
 
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <FormFIlter />
+        <CardHeadeing>
+                <CardHeader title={CurrentModuleName()} />
+              </CardHeadeing>
+
+      <Accordion defaultActiveKey="">
+        <Card>
+          <Card.Header className="d-flex justify-content-center">
+            <div className="accordion-header-btn w-100  d-flex justify-content-center">
+              <Accordion.Toggle
+                as={Button}
+                eventKey="0"
+                className="flex-between-center text-bold"
+              >
+                Filter
+                <KeyboardArrowDown />
+              </Accordion.Toggle>
+            </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+              <>
+                <FormFIlter />
+
+              </>
+
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+
       <FormCard />
 
       <Switch>

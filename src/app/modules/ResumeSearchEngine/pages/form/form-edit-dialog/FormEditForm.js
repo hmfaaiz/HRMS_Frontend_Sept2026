@@ -1330,8 +1330,8 @@ export function FormEditForm({
                       <Field
                         name="lastDawnSalary"
                         component={Input}
-                        placeholder="Enter last dawn salary"
-                        label={<span> Last Dawn Salary<span style={{ color: 'red' }}>*</span></span>}
+                        placeholder="Enter last drawn salary"
+                        label={<span> Last Drawn Salary<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
                         type="number"
                       />
