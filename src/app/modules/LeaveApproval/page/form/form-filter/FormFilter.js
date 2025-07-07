@@ -219,7 +219,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                             <Field
                               name="leaveDate.from"
                               component={DatePickerField}
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               className="form-control"
                               label={<span>Date From</span>}
                               onChange={(date) => {
@@ -238,7 +238,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                               component={DatePickerField}
                               onBlur={handleBlur}
                               className="form-control"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               label={<span>Date To</span>}
                               onChange={(date) => {
                                 setFieldValue("leaveDate.to", date ? date : "");
@@ -257,7 +257,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                             <Field
                               name="requestDate.from"
                               component={DatePickerField}
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               className="form-control"
                               label={<span> Date From</span>}
                               onChange={(date) => {
@@ -276,7 +276,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                               component={DatePickerField}
                               onBlur={handleBlur}
                               className="form-control"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               label={<span> Date To</span>}
                               onChange={(date) => {
                                 setFieldValue(

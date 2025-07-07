@@ -366,7 +366,7 @@ export function BankEditForm({
                       <Field
                         name="effective_date"
                         component={DatePickerField}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         placeholder="Select Date"
                         type="date"
                         minDate={
@@ -376,7 +376,7 @@ export function BankEditForm({
                         }
                         disabled={isUserForRead || id}
                         // value={values.effective_date ? format(new Date(values.effective_date), 'dd-MM-yyyy') : setFieldValue("effective_date",new Date ())}
-                        value={values.effective_date ? format(new Date(values.effective_date), 'dd-MM-yyyy') : " "}
+                        value={values.effective_date ? format(new Date(values.effective_date), 'dd-MMM-yyyy') : " "}
                       />
                       
                     </div>

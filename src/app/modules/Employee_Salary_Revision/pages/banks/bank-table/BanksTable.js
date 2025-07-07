@@ -830,7 +830,7 @@ export function BanksTable(save_salary_revision,
                         handleReviewChange(e);
                       }}
                       timeInputLabel="Time:"
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MMM-yyyy"
                       showTimeInput
                       name="reviewDate"
                       autoComplete="off"

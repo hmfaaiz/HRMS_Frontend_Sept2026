@@ -189,7 +189,7 @@ export function MasterEditForm({
 
                         }}
                         timeInputLabel="Time:"
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="startDate"
                         disabled={isUserForRead}
@@ -211,7 +211,7 @@ export function MasterEditForm({
                         }}
 
                         timeInputLabel="Time:"
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="endDate"
                         disabled={true}

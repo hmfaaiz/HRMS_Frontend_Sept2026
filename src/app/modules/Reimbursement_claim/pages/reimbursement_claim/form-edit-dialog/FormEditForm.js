@@ -278,7 +278,7 @@ export function FormEditForm({
                     <Field
                       name="date"
                       component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
                       // label="Date"
                       type="date"

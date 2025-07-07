@@ -373,7 +373,7 @@ export function FormEditForm({
                         selected={values?.jobDate ? new Date(values.jobDate) : null}
                         disabled={true}
 
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobDate"
                         autoComplete="off"
                         minDate={new Date()}
@@ -731,7 +731,7 @@ export function FormEditForm({
                           let selectedDate = formatDates(date, 'yyyy-MM-dd')
                           setFieldValue("jobPostingDateFrom", selectedDate);
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobPostingDateFrom"
                         autoComplete="off"
                         minDate={new Date()}
@@ -758,7 +758,7 @@ export function FormEditForm({
                           let selectedDate = formatDates(date, 'yyyy-MM-dd')
                           setFieldValue("jobPostingDateTo", selectedDate);
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobPostingDateTo"
                         autoComplete="off"
                         minDate={values.jobPostingDateFrom || new Date()}
@@ -918,7 +918,7 @@ export function FormEditForm({
                           let selectedDate = formatDates(date, 'yyyy-MM-dd')
                           setFieldValue("jobPeriodStart", selectedDate);
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobPeriodStart"
                         autoComplete="off"
                         minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}
@@ -946,7 +946,7 @@ export function FormEditForm({
                           let selectedDate = formatDates(date, 'yyyy-MM-dd')
                           setFieldValue("jobPeriodEnd", selectedDate);
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobPeriodEnd"
                         autoComplete="off"
                         minDate={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : new Date()}
@@ -976,7 +976,7 @@ export function FormEditForm({
                           console.log("selectedDate111", selectedDate)
                           setFieldValue("desireDateOfApp", selectedDate);
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="desireDateOfApp"
                         autoComplete="off"
                         minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}

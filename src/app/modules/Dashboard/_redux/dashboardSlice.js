@@ -72,11 +72,12 @@ const initialDashboardState = {
   reportingEmployee: null,
   loanList: [],
   holidayList: [],
-  allJobVacancyList:[],
+  allJobVacancyList: [],
   allDashboardAlerts: [],
-  allPostedJobVacancyList:[],
+  employeeSummary: {},
+  allPostedJobVacancyList: [],
   allParentDept: [],
-
+  recruitmentSummary: {},
 };
 
 export const callTypes = {
@@ -301,14 +302,22 @@ export const dashboardSlice = createSlice({
 
     AllJobVacancyFetch: (state, action) => {
       state.allJobVacancyList = action.payload;
-     },
- 
+    },
+
     AllDashboardAlertsFetch: (state, action) => {
       state.allDashboardAlerts = action.payload;
     },
-     AllPostedJobVacancyFetch: (state, action) => {
+    EmployeeSummaryFetch: (state, action) => {
+      state.employeeSummary = action.payload;
+    },
+    RecruitmentSummaryFetch: (state, action) => {
+      state.recruitmentSummary = action.payload;
+    },
+    AllPostedJobVacancyFetch: (state, action) => {
       state.allPostedJobVacancyList = action.payload;
-     
+    },
+    AllParentDeptFetch: (state, action) => {
+      state.allParentDept = action.payload;
     },
     AllParentDeptFetch: (state, action) => {
       state.allParentDept = action.payload;

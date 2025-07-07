@@ -360,7 +360,7 @@ export function BankEditForm({
                           showYearDropdown
                           scrollableMonthYearDropdown
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="startDate"
                           autoComplete="off"
@@ -376,7 +376,7 @@ export function BankEditForm({
                         {<span> End Date<span style={{ color: 'red' }}>*</span></span>}
                         <DatePicker
                           className="form-control"
-                          placeholder="Enter End Date (dd/MM/yyyy)"
+                          placeholder="Enter End Date (dd-MMM-yyyy)"
                           selected={endDate}
                           showYearDropdown
                           scrollableMonthYearDropdown
@@ -385,7 +385,7 @@ export function BankEditForm({
                             setEndDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="endDate"
                            autoComplete="off"

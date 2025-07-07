@@ -295,7 +295,7 @@ export function BankEditForm({
                             setIncidentDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="date"
                           autoComplete="off"

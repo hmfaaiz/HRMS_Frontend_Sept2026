@@ -402,7 +402,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                         <Field
                           name="dojFrom"
                           component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           className="form-control"
                           label={
                             <span>
@@ -426,7 +426,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           component={DatePickerField}
                           onBlur={handleBlur}
                           className="form-control"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           label={
                             <span>
                               {" "}
@@ -461,7 +461,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                         <Field
                           name="docFrom"
                           component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           className="form-control"
                           label={
                             <span>
@@ -482,7 +482,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           component={DatePickerField}
                           onBlur={handleBlur}
                           className="form-control"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           label={
                             <span>
                               {" "}
@@ -512,7 +512,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                         <Field
                           name="dobFrom"
                           component={DatePickerField}
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           className="form-control"
                           label={
                             <span>
@@ -535,7 +535,7 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           component={DatePickerField}
                           onBlur={handleBlur}
                           className="form-control"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           label={
                             <span>
                               {" "}

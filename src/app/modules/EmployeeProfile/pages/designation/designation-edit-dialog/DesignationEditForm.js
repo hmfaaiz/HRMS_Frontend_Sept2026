@@ -2509,7 +2509,7 @@ const [profile_image, setImage] = useState(
 
                             }}
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd-MMM-yyyy"
                             // showTimeInput
                             name="dateOfBirth"
                             disabled={isUserForRead || !values?.subsidiaryId}
@@ -2563,7 +2563,7 @@ const [profile_image, setImage] = useState(
                             showYearDropdown
                             scrollableMonthYearDropdown
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd-MMM-yyyy"
                             // showTimeInput
                             autoComplete="off"
                             name="dateOfJoining"
@@ -2590,7 +2590,7 @@ const [profile_image, setImage] = useState(
                               setConfirmationDate(date);
                             }}
                             timeInputLabel="Time:"
-                            dateFormat="dd/MM/yyyy"
+                            dateFormat="dd-MMM-yyyy"
                             // showTimeInput
                             name="dateOfConfirmation"
                             // disabled={disabledConfirmationDateSelected}
@@ -2616,7 +2616,7 @@ const [profile_image, setImage] = useState(
                             setConfirmationDueDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="dateOfConfirmationDue"
                           disabled={disableConfDueDate}
@@ -2639,7 +2639,7 @@ const [profile_image, setImage] = useState(
                             setContractExpiryDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="dateOfContractExpiry"
                           // disabled={disabledContractExpirtyDateSelected}
@@ -2664,7 +2664,7 @@ const [profile_image, setImage] = useState(
                             setDRetirmentDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           // showTimeInput
                           name="dateOfRetirement"
                           disabled={isUserForRead || !values?.subsidiaryId}
@@ -2861,7 +2861,7 @@ const [profile_image, setImage] = useState(
                             setlicenseExpiryDate(date);
                           }}
                           timeInputLabel="Time:"
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           showTimeInput
                           name="licenseExpiryDate"
 
@@ -3007,7 +3007,7 @@ const [profile_image, setImage] = useState(
                                 setConfirmationEnterDate(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="dateOfConfirmationEnter"
                               disabled={disableConfDueDate}
@@ -3034,7 +3034,7 @@ const [profile_image, setImage] = useState(
                                 setlastReviewDate(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="lastReviewDate"
                               disabled={isUserForRead}
@@ -3059,7 +3059,7 @@ const [profile_image, setImage] = useState(
                                 setnextReviewDate(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="nextReviewDate"
                               minDate={new Date()}
@@ -3316,7 +3316,7 @@ const [profile_image, setImage] = useState(
                                 setpassportExpiry(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="passportExpiry"
 
@@ -3341,7 +3341,7 @@ const [profile_image, setImage] = useState(
                                 setdrivingLicenseExpiry(date);
                               }}
                               timeInputLabel="Time:"
-                              dateFormat="dd/MM/yyyy"
+                              dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="drivingLicenseExpiry"
 
@@ -3684,7 +3684,7 @@ const [profile_image, setImage] = useState(
                                   }
                                   id={"endDate_W-" + rightindex}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   // showTimeInput
                                   name="startDate"
                                   disabled={isUserForRead}
@@ -3709,7 +3709,7 @@ const [profile_image, setImage] = useState(
                                   }
                                   id={"endDate_W" + rightindex}
                                   timeInputLabel="Time:"
-                                  dateFormat="dd/MM/yyyy"
+                                  dateFormat="dd-MMM-yyyy"
                                   // showTimeInput
                                   name="endDate"
                                   disabled={isUserForRead}
@@ -3852,7 +3852,7 @@ const [profile_image, setImage] = useState(
                                     onChange={(el) => handleDatePickerAcademic(el, 'startDate', rightindex, '')}
                                     id={"startDate_A-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="startDate"
                                     disabled={isUserForRead}
@@ -3873,7 +3873,7 @@ const [profile_image, setImage] = useState(
                                     onChange={(el) => handleDatePickerAcademic(el, 'endDate', rightindex, '')}
                                     id={"endDate_A-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="endDate"
                                     disabled={isUserForRead}
@@ -3972,7 +3972,7 @@ const [profile_image, setImage] = useState(
                                     onChange={(el) => handleDatePickerSkills(el, 'startDate', rightindex, '')}
                                     id={"startDate-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="startDate"
                                     disabled={isUserForRead}
@@ -3993,7 +3993,7 @@ const [profile_image, setImage] = useState(
                                     onChange={(el) => handleDatePickerSkills(el, 'endDate', rightindex, '')}
                                     id={"endDate-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="endDate"
                                     disabled={isUserForRead}
@@ -4095,7 +4095,7 @@ const [profile_image, setImage] = useState(
                                     onChange={(el) => handleDatePickerIncident(el, 'incidentDate', rightindex, '')}
                                     id={"incidentDate-" + rightindex}
                                     timeInputLabel="Time:"
-                                    dateFormat="dd/MM/yyyy"
+                                    dateFormat="dd-MMM-yyyy"
                                     // showTimeInput
                                     name="incidentDate"
                                     disabled={isUserForRead}

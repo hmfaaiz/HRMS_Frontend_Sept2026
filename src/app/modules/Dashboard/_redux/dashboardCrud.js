@@ -130,5 +130,13 @@ export function getPayrollMonth(body) {
 }
 
 export function getDashboardAlert() {
-  return axios.get(`${USERS_URL}/dashboard/dashboard-alert`);
+  return axios.get(`${USERS_URL}/dashboard/dashboard-alert` );
+}
+
+export function getEmployeeSummary(filter) {
+  return axios.post(`${USERS_URL}/dashboard/employee-summary`, filter );
+}
+
+export function getRecruitmentSummary(filter) {
+  return axios.post(`${USERS_URL}/dashboard/recruitment-summary`, filter );
 }

@@ -317,7 +317,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("desireToDateOfApp", selectedDate);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="desireFromDateOfApp"
                         autoComplete="off"
                       />
@@ -338,7 +338,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("desireToDateOfApp", date);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="desireToDateOfApp"
                         autoComplete="off"
                            minDate={values?.desireFromDateOfApp ? new Date(values.desireFromDateOfApp) : new Date()}
@@ -369,7 +369,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("jobFinalizedToDate", selectedDate);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobFinalizedFromDate"
                         autoComplete="off"
                       />
@@ -390,7 +390,7 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("jobFinalizedToDate", date);
                           handleSubmit();
                         }}
-                        dateFormat="dd/MM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         name="jobFinalizedToDate"
                         autoComplete="off"
                         minDate={values?.jobFinalizedFromDate ? new Date(values.jobFinalizedFromDate) : new Date()}
