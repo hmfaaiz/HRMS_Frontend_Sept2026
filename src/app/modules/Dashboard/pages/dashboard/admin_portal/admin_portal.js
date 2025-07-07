@@ -75,12 +75,10 @@ export const AdminPortal = () => {
     employeeSummary,
   } = dashboard;
 
-  console.log("Dashboard Data:", recruitmentSummary);
-
   const filteredPanels = panels.filter((panel) =>
     Object.keys(userAccess).includes(panel.key)
   );
-
+  console.log("filteredPanelsfilteredPanels", filteredPanels);
   const handleToggle = (key) => {
     setActiveKey(key === activeKey ? "1" : key);
   };
@@ -556,9 +554,27 @@ export const AdminPortal = () => {
                 {/* Right Side: Charts + Small Tables */}
                 <div className="col-md-3">
                   {allDashboardAlerts.map((e, alertIdx) => {
-                    if (e?.dashlet_type === "chart") {
+                    if (
+                      e?.dashlet_type === "chart" &&
+                      e?.master_Id === panels[activeKey]?.resourceId &&
+                      panel?.key == "Recruitment"
+                    ) {
                       return <ChartData key={`chart-${alertIdx}`} data={e} />;
-                    } else if (e?.dashlet_type === "small_table") {
+                    }
+                    return null;
+                  })}
+                  {allDashboardAlerts.map((e, alertIdx) => {
+                    if (
+                      e?.dashlet_type === "chart" &&
+                      panel?.key !== "Recruitment" &&
+                      e?.master_Id != "1893"
+                    ) {
+                      return <ChartData key={`chart-${alertIdx}`} data={e} />;
+                    } else if (
+                      e?.dashlet_type === "small_table" &&
+                      panel?.key !== "Recruitment" &&
+                      e?.master_Id != "1893"
+                    ) {
                       return <SmallTable key={`small-${alertIdx}`} data={e} />;
                     }
                     return null;

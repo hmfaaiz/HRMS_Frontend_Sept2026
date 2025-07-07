@@ -84,7 +84,6 @@ export const fetchEmployeeSummary = (filter) => async (dispatch) => {
   return await requestFromServer
     .getEmployeeSummary(filter)
     .then((response) => {
-      console.log("response ", response.data);
       const entities = response.data?.data;
       dispatch(actions.EmployeeSummaryFetch(entities));
     })
@@ -98,7 +97,6 @@ export const fetchRecruitmentSummary = (filter) => async (dispatch) => {
   return await requestFromServer
     .getRecruitmentSummary(filter)
     .then((response) => {
-      console.log("response ", response.data);
       const entities = response.data?.data;
       dispatch(actions.RecruitmentSummaryFetch(entities));
     })
