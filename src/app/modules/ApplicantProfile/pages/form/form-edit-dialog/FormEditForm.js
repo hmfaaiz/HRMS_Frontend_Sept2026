@@ -775,7 +775,7 @@ export function FormEditForm({
                     borderBottom: "2px solid rgb(194, 194, 194)",
                   }}
                 >
-                  <h6>Applicant Profile</h6>
+                  {/* <h6>Applicant Profile</h6> */}
 
                   {/* Code Name Image */}
                   <div className="form-group row col-12 col-md-12  p-0 m-0">

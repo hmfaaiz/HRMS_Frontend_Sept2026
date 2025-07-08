@@ -338,7 +338,7 @@ export function FormEditForm({
 
                 {/* Job */}
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
-                  <h6>Job</h6>
+                  {/* <h6>Job</h6> */}
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
                     <div className="col-12 col-md-4 mt-3">
                       <label>
