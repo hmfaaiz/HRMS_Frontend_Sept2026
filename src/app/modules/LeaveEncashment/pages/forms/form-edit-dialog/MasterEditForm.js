@@ -9,11 +9,37 @@ import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 //Validations for Form
-const formValidation = Yup.object().shape({
-  leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
-  days: Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.minOneValue).max(99, VALIDATION_MESSAGES.maxTwoDigits),
-  reason: Yup.string().required(VALIDATION_MESSAGES.required),
-});
+// const formValidation = Yup.object().shape({
+//   leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
+//   days: Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.minOneValue).max(99, VALIDATION_MESSAGES.maxTwoDigits),
+//   reason: Yup.string().required(VALIDATION_MESSAGES.required),
+// });
+const getValidationSchema = (allLeaveTypes, leaveBalances) =>
+  Yup.object().shape({
+    leaveType: Yup.number()
+      .required(VALIDATION_MESSAGES.required),
+
+    days: Yup.number()
+      .required(VALIDATION_MESSAGES.required)
+      .min(1, VALIDATION_MESSAGES.minOneValue)
+      .test(
+        'max-dynamic-leave-limit',
+        'Entered days exceed allowed encashable limit.',
+        function (value) {
+          const { leaveType } = this.parent;
+          const leaveTypeObj = allLeaveTypes?.find(el => el.value == leaveType);
+          const balanceObj = leaveBalances?.find(el => el.leaveType == leaveType);
+
+          if (!leaveTypeObj || balanceObj == null) return true;
+
+          const remaining = leaveTypeObj.limit - balanceObj.encashmentCount;
+          return value <= remaining;
+        }
+      ),
+
+    reason: Yup.string()
+      .required(VALIDATION_MESSAGES.required),
+  });
 
 export function MasterEditForm({
   submitForm,
@@ -63,7 +89,8 @@ export function MasterEditForm({
       <Formik
         enableReinitialize={true}
         initialValues={user}
-        validationSchema={formValidation}
+        // validationSchema={formValidation}
+        validationSchema={getValidationSchema(allLeaveTypes, leaveBalances)}
         onSubmit={(values, { resetForm }) => {
           enableLoading();
           //This clearForm function is created to clear form as well as clear any uploaded file as well.

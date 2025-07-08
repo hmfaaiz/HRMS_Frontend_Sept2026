@@ -119,19 +119,23 @@ function LeaveTypePolicyTable({ values, setFieldValue, createDropdown, errors, t
 
                     {/* Encashable Field Starts */}
                     <td>
-                      <Field
+                        <div className="d-flex align-items-center">
+                           <div className="mr-3">
+                      <input
                         name={`leavetypePolicies[${index}].encashable`}
-                        component={Checkbox}
+                        type="checkbox"
+                        // component={Checkbox}
                         onChange={(e) => {
                           setFieldValue(
                             `leavetypePolicies[${index}].encashable`,
                             e.target.checked
                           )
                         }}
-                        isSelected={row.encashable}
+                        checked={row.encashable}
                         disabled={!Boolean(allLeaveTypeMap?.get(row?.leaveType || '')?.type == 1)}
+                         style={'white' ? { width: '20px', height: '20px' } : {}}
                       />
-
+                      </div>
                       <Field
                         name={`leavetypePolicies[${index}].encashableCount`}
                         component={Input}
@@ -151,24 +155,30 @@ function LeaveTypePolicyTable({ values, setFieldValue, createDropdown, errors, t
                         touched.leavetypePolicies?.[index]?.encashableCount &&
                         <CustomErrorLabel touched={true} error={errors.leavetypePolicies?.[index]?.encashableCount} />
                       }
+                      </div>
                     </td>
                     {/* Encashable Field End */}
 
                     {/* Carry Forwardable Field Starts */}
                     <td>
-                      <Field
+                             <div className="d-flex align-items-center">
+                                  <div className="mr-3">
+                      <input
+                        type="checkbox"
                         name={`leavetypePolicies[${index}].carryForwardable`}
-                        component={Checkbox}
+                        // component={Checkbox}
                         onChange={(e) => {
                           setFieldValue(
                             `leavetypePolicies[${index}].carryForwardable`,
                             e.target.checked
                           )
                         }}
-                        isSelected={row.carryForwardable}
+                        checked={row.carryForwardable}
                         disabled={!Boolean(allLeaveTypeMap?.get(row?.leaveType || '')?.type == 1)}
+                         style={'white' ? { width: '20px', height: '20px' } : {}}
+                    
                       />
-
+                        </div>
                       <Field
                         name={`leavetypePolicies[${index}].carryForwardableCount`}
                         component={Input}
@@ -188,12 +198,15 @@ function LeaveTypePolicyTable({ values, setFieldValue, createDropdown, errors, t
                         touched.leavetypePolicies?.[index]?.carryForwardableCount &&
                         <CustomErrorLabel touched={true} error={errors.leavetypePolicies?.[index]?.carryForwardableCount} />
                       }
+                      </div>
                     </td>
                     {/* Carry Forwardable Field End */}
 
                     {/* Attachement Required Field Starts */}
                     <td>
-                      <Field
+                      <input
+                        type="checkbox"
+                        // component={Checkbox}
                         name={`leavetypePolicies[${index}].attachmentRequired`}
                         component={Checkbox}
                         onChange={(e) => {
@@ -202,7 +215,10 @@ function LeaveTypePolicyTable({ values, setFieldValue, createDropdown, errors, t
                             e.target.checked
                           )
                         }}
-                        isSelected={row.attachmentRequired}
+                        checked={row.attachmentRequired}
+                            disabled={!Boolean(allLeaveTypeMap?.get(row?.leaveType || '')?.type == 1)}
+                         style={'white' ? { width: '20px', height: '20px' } : {}}
+                  
                       />
                     </td>
                     {/* Attachement Required Field End */}
