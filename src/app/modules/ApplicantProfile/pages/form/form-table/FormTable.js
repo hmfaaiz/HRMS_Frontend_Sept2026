@@ -188,7 +188,7 @@ export function FormTable() {
 
         openConvertFormDialog: formUIProps.openConvertFormDialog,
         isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
-
+        isAccessForOfferLetter: true,
       },
 
       classes: "text-end pr-0",

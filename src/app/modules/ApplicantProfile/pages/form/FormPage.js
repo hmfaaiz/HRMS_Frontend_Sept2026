@@ -57,7 +57,7 @@ export function FormPage() {
   );
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateJobVacancy"
+    (item) => item.componentName === "CreateApplicantProfile"
   )
 
   return (

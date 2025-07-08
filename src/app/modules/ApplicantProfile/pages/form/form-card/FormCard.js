@@ -34,7 +34,7 @@ export function FormCard() {
 
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateJobVacancy"
+    (item) => item.componentName === "CreateApplicantProfile"
   )
 
   const { currentState } = useSelector(

@@ -415,7 +415,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                 }}
                 className="btn btn-danger btn-elevate"
               >
-                Cancel
+               Clear Filter
               </button>
 
               <button
