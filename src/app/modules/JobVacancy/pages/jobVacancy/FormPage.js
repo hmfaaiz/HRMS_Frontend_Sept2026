@@ -7,7 +7,7 @@ import { FormUIProvider } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormDynamicDialogModal } from "./form-delete-dialog/FormDynamicDialogModal";
-
+import { useSelector, shallowEqual } from "react-redux"
 import { FormCard } from "./form-card/FormCard";
 import { } from "../../_redux/redux-Actions";
 import { FormFIlter } from "./form-filter/FormFIlter";
@@ -50,6 +50,46 @@ export function FormPage({ history }) {
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/${status}/close`);
     },
   };
+
+
+  const { userAccess } = useSelector(
+    (state) => {
+
+      return {
+        userAccess: state.auth.userAccess.job_vacancy,
+      };
+    },
+    shallowEqual
+  );
+
+  const accessUser = userAccess.find(
+    (item) => item.componentName === "CreateJobVacancy"
+  )
+
+
+
+  const isAccessForView = userAccess?.find(
+    (item) => item.componentName === "ReadJobVacancy"
+  );
+
+  const isAccessForEdit = userAccess?.find((item) => {
+    return item.componentName === "UpdateJobVacancy";
+  });
+  const isAccessForDelete = userAccess?.find(
+    (item) => item.componentName === "DeleteJobVacancy"
+  );
+
+
+    const isAccessForPost = userAccess?.find(
+    (item) => item.componentName === "PostJobVacancy"
+  );
+  const isAccessForHold = userAccess?.find(
+    (item) => item.componentName === "HoldJobVacancy"
+  );
+  const isAccessForClose = userAccess?.find(
+    (item) => item.componentName === "CloseJobVacancy"
+  );
+
   return (
 
 
@@ -177,9 +217,9 @@ export function FormPage({ history }) {
 
 
     <FormUIProvider FormUIEvents={FormUIEvents}>
-        <CardHeadeing>
-                <CardHeader title={CurrentModuleName()} />
-              </CardHeadeing>
+      <CardHeadeing>
+        <CardHeader title={CurrentModuleName()} />
+      </CardHeadeing>
 
       <Accordion defaultActiveKey="">
         <Card>
@@ -211,64 +251,76 @@ export function FormPage({ history }) {
 
       <Switch>
         {/* NEW */}
-        <Route exact path="/job_vacancy/read-all-job-vacancy/new">
+        {accessUser && (<Route exact path="/job_vacancy/read-all-job-vacancy/new">
           {({ history, match }) => (
             <FormEditDialog
               show={match != null}
+              status="new"
+
               onHide={() =>
                 history.push("/job_vacancy/read-all-job-vacancy")
               }
             />
           )}
-        </Route>
+        </Route>)
+        }
 
         {/* EDIT */}
-        <Route path="/job_vacancy/read-all-job-vacancy/:id/edit">
-          {({ history, match }) => (
-            <FormEditDialog
-              show={match != null}
-              id={match?.params?.id}
-              onHide={() =>
-                history.push("/job_vacancy/read-all-job-vacancy")
-              }
-            />
-          )}
-        </Route>
-
+        {isAccessForEdit && (
+          <Route path="/job_vacancy/read-all-job-vacancy/:id/edit">
+            {({ history, match }) => (
+              <FormEditDialog
+                show={match != null}
+                id={match?.params?.id}
+                status="edit"
+                onHide={() =>
+                  history.push("/job_vacancy/read-all-job-vacancy")
+                }
+              />
+            )}
+          </Route>
+        )}
         {/* READ */}
-        <Route path="/job_vacancy/read-all-job-vacancy/:id/read">
-          {({ history, match }) => (
-            <FormEditDialog
-              show={match != null}
-              id={match?.params?.id}
-              dataForRead={true}
-              onHide={() =>
-                history.push("/job_vacancy/read-all-job-vacancy")
-              }
-            />
-          )}
-        </Route>
+        {isAccessForView && (
+          <Route path="/job_vacancy/read-all-job-vacancy/:id/read">
+            {({ history, match }) => (
+              <FormEditDialog
+                show={match != null}
+                id={match?.params?.id}
+                status="read"
+                dataForRead={true}
+                onHide={() =>
+                  history.push("/job_vacancy/read-all-job-vacancy")
+                }
+              />
+            )}
+          </Route>
+        )}
+
+
 
         {/* DELETE */}
-        <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/delete">
-          {({ history, match }) => (
-            <FormDeleteDialog
-              show={match != null}
-              id={match?.params?.id}
-              status={match?.params?.status}
-              onHide={() =>
-                history.push("/job_vacancy/read-all-job-vacancy")
-              }
-            />
-          )}
-        </Route>
-
+        {isAccessForDelete && (
+          <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/delete">
+            {({ history, match }) => (
+              <FormDeleteDialog
+                show={match != null}
+                id={match?.params?.id}
+                status={match?.params?.status}
+                onHide={() =>
+                  history.push("/job_vacancy/read-all-job-vacancy")
+                }
+              />
+            )}
+          </Route>
+        )}
         {/* DYNAMIC ACTIONS */}
 
 
-          //   {/* dynamic rendering */}
+           {/* dynamic rendering */}
 
         {/* posting */}
+        {isAccessForPost && (
         <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/posting">
           {({ history, match }) => (
             <FormDynamicDialogModal
@@ -285,8 +337,9 @@ export function FormPage({ history }) {
             />
           )}
         </Route>
-
+)}
         {/* hold */}
+        {isAccessForHold && (
         <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/hold">
           {({ history, match }) => (
             <FormDynamicDialogModal
@@ -303,9 +356,10 @@ export function FormPage({ history }) {
             />
           )}
         </Route>
-
+        )}
 
         {/* close */}
+        {isAccessForClose && (
         <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/close">
           {({ history, match }) => (
             <FormDynamicDialogModal
@@ -322,7 +376,7 @@ export function FormPage({ history }) {
             />
           )}
         </Route>
-
+        )}
       </Switch>
 
       <ToastContainer

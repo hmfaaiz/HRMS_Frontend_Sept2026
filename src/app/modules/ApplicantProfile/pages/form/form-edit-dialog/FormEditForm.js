@@ -775,7 +775,7 @@ export function FormEditForm({
                     borderBottom: "2px solid rgb(194, 194, 194)",
                   }}
                 >
-                  <h6>Applicant Profile</h6>
+                  {/* <h6>Applicant Profile</h6> */}
 
                   {/* Code Name Image */}
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
@@ -1832,7 +1832,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3"style={{ height: '150px' }}>
+                    <div className="col-12 col-md-12 mt-3 mb-5"style={{ height: '150px' }}>
                       <Field
                         name="additional_summary"
                         component={TextArea}
@@ -1848,7 +1848,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-4 mt-5">
                       <Field
                         name="phone_official"
                         component={Input}
@@ -1858,7 +1858,7 @@ export function FormEditForm({
                         autoComplete="off"
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-4 mt-5">
                       <Field
                         name="phone_cell"
                         component={Input}
@@ -1869,7 +1869,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-4 mt-5">
                       <label>
                         Personal Email<span style={{ color: "red" }}>*</span>
                       </label>

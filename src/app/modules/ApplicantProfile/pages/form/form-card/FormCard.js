@@ -22,15 +22,15 @@ export function FormCard() {
     }
   }, [FormUIContext])
 
-const { userAccess } = useSelector(
-  (state) => {
-  
-    return {
-      userAccess: state.auth.userAccess.applicant_profile,
-    };
-  },
-  shallowEqual
-);
+  const { userAccess } = useSelector(
+    (state) => {
+
+      return {
+        userAccess: state.auth.userAccess.applicant_profile,
+      };
+    },
+    shallowEqual
+  );
 
 
   const accessUser = userAccess.find(
@@ -58,28 +58,30 @@ const { userAccess } = useSelector(
 
       <Card>
 
-      <CardHeader title={CurrentModuleName()} >
+        <CardHeader title={CurrentModuleName()} >
           <div className="d-flex justify-content-between align-items-center gap-3 m-4">
 
-      <div className="pt-5">
-      <FormFIlter />
-      </div>
-      <div className=" p-2">
-      <CardHeaderToolbar>
-    
-    <button
-      type="button"
-      className="btn btn-primary "
-      onClick={FormUIProps .newFormButtonClick}
-    >
-     + Applicant Profile
+            <div className="pt-5">
+              <FormFIlter />
+            </div>
+            <div className=" p-2">
+              <CardHeaderToolbar>
 
-    </button>
-  
+                {accessUser && (
+                  <>
+                <button
+                  type="button"
+                  className="btn btn-primary "
+                  onClick={FormUIProps.newFormButtonClick}
+                >
+                  + Applicant Profile
 
-</CardHeaderToolbar>
-      </div>
-       
+                </button>
+</>)}
+
+              </CardHeaderToolbar>
+            </div>
+
           </div>
         </CardHeader>
 

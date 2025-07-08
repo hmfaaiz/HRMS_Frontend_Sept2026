@@ -192,7 +192,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         }
                         value={allDeptMap?.get(values?.departmentId || '') || ''}
                         autoComplete="off"
-                        options={allDept}
+                        // options={allDept}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
                       />
                     </div>
                     {/* Deparment Field End */}
@@ -204,7 +205,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
 
                                                               <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
 
-{values?.subsidiaryId ? (() => {
+                                          { values?.subsidiaryId ? (() => {
  const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
   return (
     <>
@@ -218,8 +219,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
       </div>
     </>
   );
-})() : null}
-</div>
+                                      } )() : null}
+                                            </div>
 
                     {/* Report To Field Start */}
                     <div className="col-12 col-md-4 mt-3">
@@ -239,7 +240,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         }
                         value={allEmployeesMap?.get(values?.reportTo || '') || ''}
                         autoComplete="off"
-                        options={allEmployees}
+                        // options={allEmployees}
+                            options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
                       />
                     </div>
                     {/* Report To Field End */}
@@ -262,7 +264,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         }
                         value={allGradeMap?.get(values?.gradeId || '') || ''}
                         autoComplete="off"
-                        options={allEmployeeGradeList}
+                        // options={allEmployeeGradeList}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployeeGradeList) ? allEmployeeGradeList : []),]}
                       />
                     </div>
                     {/* Grade Field End */}
@@ -285,7 +288,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         }
                         value={allDesignationsMap?.get(values?.designationId || '') || ''}
                         autoComplete="off"
-                        options={allDesignations}
+                        // options={allDesignations}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDesignations) ? allDesignations : []),]}
                       />
                     </div>
                     {/* Designation Field End */}
@@ -308,7 +312,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         }
                         value={allLocationMap?.get(values?.locationId || '') || ''}
                         autoComplete="off"
-                        options={allLocationChildMenus}
+                        // options={allLocationChildMenus}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLocationChildMenus) ? allLocationChildMenus : []),]}
                       />
                     </div>
                     {/* Location Field End */}
@@ -359,7 +364,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                         autoComplete="off"
                         // options={allEmployees}
                         options={
-                          allEmployees.filter(emp => {
+                          [{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees.filter(emp => {
                             const attendanceMatch =
                               values?.attendanceType === undefined || values?.attendanceType === ''
                                 ? true
@@ -371,7 +376,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                                 : emp.departmentId === Number(values.departmentId);
                         
                             return attendanceMatch && departmentMatch;
-                          })
+                          }) : []),]
+                          
                         }
                         
                

@@ -11,7 +11,7 @@ import {
   fetchAllFormsMenu,
 
   fetchAllSubsidiaryData,
-  getLatestTableId,fetchAllParentDept,
+  getLatestTableId, fetchAllParentDept,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
@@ -224,7 +224,7 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-const [jobCode, setJobCode ] = useState("");
+  const [jobCode, setJobCode] = useState("");
 
   //drop down
   useEffect(() => {
@@ -254,11 +254,11 @@ const [jobCode, setJobCode ] = useState("");
   }, [dispatch, formData.Id]);
 
 
-  const { currentState, userAccess ,currentUser} = useSelector((state) => {
+  const { currentState, userAccess, currentUser } = useSelector((state) => {
     return {
       currentState: state.job_vacancy,
       userAccess: state?.auth?.userAccess["job_vacancy"],
-         currentUser:state.auth.user,
+      currentUser: state.auth.user,
     };
   }, shallowEqual);
 
@@ -279,23 +279,23 @@ const [jobCode, setJobCode ] = useState("");
     return formData;
   }, [formData]);
 
- const fetchData = async (setJobCode) => {
-      
-      if (!formData.Id) {
-  
-        dispatch(
-          getLatestTableId(
-            "r_jobvacancy",
-            "jobCode",
-            "companyId =" + currentUser.companyId,
-            setJobCode
-          )
-        );
-      }
-    };
-    useEffect(()=>{
-      fetchData(setJobCode)
-    },[])
+  const fetchData = async (setJobCode) => {
+
+    if (!formData.Id) {
+
+      dispatch(
+        getLatestTableId(
+          "r_jobvacancy",
+          "jobCode",
+          "companyId =" + currentUser.companyId,
+          setJobCode
+        )
+      );
+    }
+  };
+  useEffect(() => {
+    fetchData(setJobCode)
+  }, [])
 
   return (
     <Formik
@@ -304,7 +304,7 @@ const [jobCode, setJobCode ] = useState("");
 
 
       initialValues={{
-        ...cleanedFormData,jobCode:cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
+        ...cleanedFormData, jobCode: cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
         jobDate: cleanedFormData?.jobDate ? cleanedFormData?.jobDate : formatDates(new Date(), 'yyyy-MM-dd'),
       }}
       validationSchema={jobVacancyEditSchema}
@@ -338,7 +338,7 @@ const [jobCode, setJobCode ] = useState("");
 
                 {/* Job */}
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
-                  <h6>Job</h6>
+                  {/* <h6>Job</h6> */}
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
                     <div className="col-12 col-md-4 mt-3">
                       <label>
@@ -409,6 +409,7 @@ const [jobCode, setJobCode ] = useState("");
                         isDisabled={isdataForRead}
                         onChange={(e) => {
                           setFieldValue("designationId", e.value || null);
+                          setFieldValue("jobTitle", e.label || ""); // Set job title based on designation
                         }}
                         value={
                           dashboard?.allDesignations?.find(
@@ -819,7 +820,7 @@ const [jobCode, setJobCode ] = useState("");
                         component={TextArea}
                         placeholder="Enter relationship"
                         type="text"
-                        className="form-control h-100"  
+                        className="form-control h-100"
                       />
                     </div>
 
@@ -1064,13 +1065,13 @@ const [jobCode, setJobCode ] = useState("");
                     <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
                       <label>
                         <span>
-                          Comments
+                          Job Vacancy Detail
                         </span>
                       </label>
                       <Field
                         name="comment"
                         component={TextArea}
-                        placeholder="Enter comments"
+                        placeholder="Enter job vacancy detail"
                         className="form-control h-100"  // Force full height
                         type="text"
 
@@ -1163,109 +1164,111 @@ const [jobCode, setJobCode ] = useState("");
 
 
 
+                    <div className="form-group row col-12 col-md-12  p-0 m-0">
 
-                    <div className="col-12 col-md-4 mt-3">
-                      Preferred Shift<span style={{ color: "red" }}>*</span>
-                      <div
-                        style={{
-                          backgroundColor: "#ffffff",
-                          height: "170px",
-                          padding: "10px",
-                          overflow: "scroll",
-                        }}
-                      >
-                        <div className="multi-select">
-                          <div className="dropdown-label"></div>
-                          <div
-                            className="dropdown-options"
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: "bold",
-                              padding: "5px",
-                            }}
-                          >
-                            {dashboard?.allJobShiftList?.map((option) => (
-                              <div
-                                key={option?.value}
-                                className="dropdown-option"
-                              >
-                                <input
-                                  style={{ width: "25px" }}
-                                  name="preferredShiftId"
-                                  type="checkbox"
-                                  value={option?.value}
-                                  checked={Boolean(
-                                    values?.preferredShiftId?.includes(
-                                      option?.value?.toString()
-                                    )
-                                  )}
-                                  onChange={handleChange}
-                                />
-                                {option?.label}
-                              </div>
-                            ))}
-                            {errors.preferredShiftId &&
-                              touched.preferredShiftId && (
-                                <div className="invalid-text">
-                                  {errors.preferredShiftId}
+
+                      <div className="col-12 col-md-4 mt-3">
+                        Preferred Shift<span style={{ color: "red" }}>*</span>
+                        <div
+                          style={{
+                            backgroundColor: "#ffffff",
+                            height: "170px",
+                            padding: "10px",
+                            overflow: "scroll",
+                          }}
+                        >
+                          <div className="multi-select">
+                            <div className="dropdown-label"></div>
+                            <div
+                              className="dropdown-options"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                                padding: "5px",
+                              }}
+                            >
+                              {dashboard?.allJobShiftList?.map((option) => (
+                                <div
+                                  key={option?.value}
+                                  className="dropdown-option"
+                                >
+                                  <input
+                                    style={{ width: "25px" }}
+                                    name="preferredShiftId"
+                                    type="checkbox"
+                                    value={option?.value}
+                                    checked={Boolean(
+                                      values?.preferredShiftId?.includes(
+                                        option?.value?.toString()
+                                      )
+                                    )}
+                                    onChange={handleChange}
+                                  />
+                                  {option?.label}
                                 </div>
-                              )}
+                              ))}
+                              {errors.preferredShiftId &&
+                                touched.preferredShiftId && (
+                                  <div className="invalid-text">
+                                    {errors.preferredShiftId}
+                                  </div>
+                                )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-12 col-md-4 mt-3">
+                        Preferred Gender<span style={{ color: "red" }}>*</span>
+                        <div
+                          style={{
+                            backgroundColor: "#ffffff",
+                            height: "170px",
+                            padding: "10px",
+                            overflow: "scroll",
+                          }}
+                        >
+                          <div className="multi-select">
+                            <div className="dropdown-label"></div>
+                            <div
+                              className="dropdown-options"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "bold",
+                                padding: "5px",
+                              }}
+                            >
+                              {dashboard?.allGenderList?.map((option) => (
+                                <div
+                                  key={option?.value}
+                                  className="dropdown-option"
+                                >
+                                  <input
+                                    style={{ width: "25px" }}
+                                    name="preferredGenderId"
+                                    type="checkbox"
+                                    value={option?.value}
+                                    checked={Boolean(
+                                      values?.preferredGenderId?.includes(
+                                        option?.value?.toString()
+                                      )
+                                    )}
+                                    onChange={handleChange}
+                                  />
+                                  {option?.label}
+                                </div>
+                              ))}
+                              {errors.preferredGenderId &&
+                                touched.preferredGenderId && (
+                                  <div className="invalid-text">
+                                    {errors.preferredGenderId}
+                                  </div>
+                                )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      Preferred Gender<span style={{ color: "red" }}>*</span>
-                      <div
-                        style={{
-                          backgroundColor: "#ffffff",
-                          height: "170px",
-                          padding: "10px",
-                          overflow: "scroll",
-                        }}
-                      >
-                        <div className="multi-select">
-                          <div className="dropdown-label"></div>
-                          <div
-                            className="dropdown-options"
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: "bold",
-                              padding: "5px",
-                            }}
-                          >
-                            {dashboard?.allGenderList?.map((option) => (
-                              <div
-                                key={option?.value}
-                                className="dropdown-option"
-                              >
-                                <input
-                                  style={{ width: "25px" }}
-                                  name="preferredGenderId"
-                                  type="checkbox"
-                                  value={option?.value}
-                                  checked={Boolean(
-                                    values?.preferredGenderId?.includes(
-                                      option?.value?.toString()
-                                    )
-                                  )}
-                                  onChange={handleChange}
-                                />
-                                {option?.label}
-                              </div>
-                            ))}
-                            {errors.preferredGenderId &&
-                              touched.preferredGenderId && (
-                                <div className="invalid-text">
-                                  {errors.preferredGenderId}
-                                </div>
-                              )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                     <div className="col-12 col-md-4 mt-3">
                       Mandatory Job Skills<span style={{ color: "red" }}>*</span>
                       <div
@@ -1317,7 +1320,7 @@ const [jobCode, setJobCode ] = useState("");
                       </div>
                     </div>
 
-                         <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-4 mt-3">
                       Optional Skills
                       <div
                         style={{
@@ -1547,7 +1550,7 @@ const [jobCode, setJobCode ] = useState("");
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-5"  style={{ height: '150px' }}>
+                    <div className="col-12 col-md-12 mt-5" style={{ height: '150px' }}>
                       <label>
                         <span>
                           Other Benefits

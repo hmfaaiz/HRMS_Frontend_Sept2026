@@ -13,13 +13,20 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 
 
 
-export function FormEditDialog({ id, show, onHide, dataForRead }) {
+export function FormEditDialog({ id, show, onHide, dataForRead,status }) {
+
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
+ const [activeKey, setActiveKey] = useState("0");
 
+  useEffect(() => {
+  
+      setActiveKey("0"); // jab new user aaye to accordion open kar do
+   
+  }, [id,status]);
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
@@ -130,7 +137,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
         incentivePackages: formData.incentivePackages,
         otherBenefits: formData.otherBenefits,
         jobSummary: formData.jobSummary,
-        optionalJobSkillsId:formData.optionalJobSkillsId
+        optionalJobSkillsId: formData.optionalJobSkillsId
       };
 
 
@@ -150,54 +157,57 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
     // >
 
 
-        <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
-              <Accordion.Toggle
-                as={Button}
-                eventKey="0"
-                className="flex-between-center text-bold"
-              >
-                Job Vacancy
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
-              <>
-               <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
-      <FormEditForm
-        saveForm={saveForm}
-        formData={dataForEdit || formUIProps.initUser}
-        onHide={onHide}
-        roles={roles}
-        centers={centers}
-        userStatusTypes={userStatusTypes}
-        isdataForRead={dataForRead}
-        enableLoading={enableLoading}
-        loading={loading}
+    <Accordion activeKey={activeKey}>
+      <Card>
+        <Card.Header className="d-flex justify-content-center">
+          <div className="accordion-header-btn w-100  d-flex justify-content-center">
+            <Accordion.Toggle
+              as={Button}
+              eventKey="0"
+              className="flex-between-center text-bold"
+               onClick={() =>
+                setActiveKey(activeKey === "0" ? null : "0")
+              }
+            >
+              Job Vacancy 
+              <KeyboardArrowDown />
+            </Accordion.Toggle>
+          </div>
+        </Card.Header>
+        <Accordion.Collapse eventKey="0">
+          <Card.Body>
+            <>
+              <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
+              <FormEditForm
+                saveForm={saveForm}
+                formData={dataForEdit || formUIProps.initUser}
+                onHide={onHide}
+                roles={roles}
+                centers={centers}
+                userStatusTypes={userStatusTypes}
+                isdataForRead={dataForRead}
+                enableLoading={enableLoading}
+                loading={loading}
 
-      />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      </>
-  
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-     
+              />
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </>
+
+          </Card.Body>
+        </Accordion.Collapse>
+      </Card>
+    </Accordion>
+
     // </Modal>
   );
 }

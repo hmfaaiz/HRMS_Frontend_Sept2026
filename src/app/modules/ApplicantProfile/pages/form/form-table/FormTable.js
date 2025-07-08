@@ -188,7 +188,7 @@ export function FormTable() {
 
         openConvertFormDialog: formUIProps.openConvertFormDialog,
         isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
-
+        isAccessForOfferLetter: true,
       },
 
       classes: "text-end pr-0",
@@ -204,7 +204,7 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         dispatch,
-        pdfGenerateLoading,
+        // pdfGenerateLoading,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,

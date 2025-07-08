@@ -12,12 +12,19 @@ import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 
 
-export function FormEditDialog({ id, show, onHide, dataForRead }) {
+export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
+ const [activeKey, setActiveKey] = useState("0");
+
+  useEffect(() => {
+  
+      setActiveKey("0"); // jab new user aaye to accordion open kar do
+   
+  }, [id,status]);
 
   const usersUIProps = useMemo(() => {
     return {
@@ -181,7 +188,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
     //   aria-labelledby="example-modal-sizes-title-lg"
     //   backdrop="static"
     // >
-         <Accordion defaultActiveKey="">
+         <Accordion activeKey={activeKey}>
         <Card>
           <Card.Header className="d-flex justify-content-center">
             <div className="accordion-header-btn w-100  d-flex justify-content-center">
@@ -189,6 +196,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
                 as={Button}
                 eventKey="0"
                 className="flex-between-center text-bold"
+                 onClick={() =>
+                setActiveKey(activeKey === "0" ? null : "0")
+              }
               >
                 Applicant Profile
                 <KeyboardArrowDown />

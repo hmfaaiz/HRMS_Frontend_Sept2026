@@ -98,6 +98,7 @@ export const saveRecord = (data, employeeId, yearId, disableLoading, resetForm) 
           if (LeaveEncashmentData) {
             dispatch(actions.LeaveEncashmentCreated(LeaveEncashmentData));
             disableLoading();
+            dispatch(fetchLeaveBalances(employeeId))
             resetForm()
             toast.success(SERVER_MESSAGES.insertedSuccess, {
               position: "top-right",

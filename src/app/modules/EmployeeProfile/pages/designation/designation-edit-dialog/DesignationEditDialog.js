@@ -13,13 +13,19 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 
 
 
-export function DesignationEditDialog({ id, show, onHide, userForRead }) {
+export function DesignationEditDialog({ id, show, onHide, userForRead,status }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "EmployeeProfileEditDialog";
   const DesignationUIContext = useDesignationUIContext();
 
+ const [activeKey, setActiveKey] = useState("0");
 
+  useEffect(() => {
+  
+      setActiveKey("0"); // jab new user aaye to accordion open kar do
+   
+  }, [id,status]);
   const usersUIProps = useMemo(() => {
     return {
       queryParams: DesignationUIContext.queryParams,
@@ -196,7 +202,7 @@ if(user?.requireDeligation && !user?.deligationId){
     // >
 
 
-     <Accordion defaultActiveKey="">
+     <Accordion activeKey={activeKey}>
         <Card>
           <Card.Header className="d-flex justify-content-center">
             <div className="accordion-header-btn w-100  d-flex justify-content-center">
@@ -204,6 +210,9 @@ if(user?.requireDeligation && !user?.deligationId){
                 as={Button}
                 eventKey="0"
                 className="flex-between-center text-bold"
+                onClick={() =>
+                setActiveKey(activeKey === "0" ? null : "0")
+              }
               >
                 Employee Profile
                 <KeyboardArrowDown />

@@ -162,7 +162,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
                         autoComplete="off"
-                        options={allSubsidiaryList}
+                        // options={allSubsidiaryList}
+                        options={[{ label: '--Select--', value: '' },...(Array.isArray(allSubsidiaryList) ? allSubsidiaryList : []),]}
                       />
                     </div>
                     {/* Subsidiary Field End */}
@@ -208,7 +209,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allDeptMap?.get(values?.departmentId || '') || ''}
                         autoComplete="off"
-                        options={allDept}
+                        // options={allDept}
+                          options={[{ label: '--Select--', value: '' },...(Array.isArray(allDept) ? allDept : []),]}
                       />
                     </div>
                     {/* Deparment Field End */}
@@ -231,7 +233,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allEmployeesMap?.get(values?.reportTo || '') || ''}
                         autoComplete="off"
-                        options={allEmployees}
+                        // options={allEmployees}
+                         options={[{ label: '--Select--', value: '' },...(Array.isArray(allEmployees) ? allEmployees : []),]}
                       />
                     </div>
                     {/* Report To Field End */}
@@ -254,7 +257,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allGradeMap?.get(values?.gradeId || '') || ''}
                         autoComplete="off"
-                        options={allEmployeeGradeList}
+                        // options={allEmployeeGradeList}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployeeGradeList) ? allEmployeeGradeList : []),]}
                       />
                     </div>
                     {/* Grade Field End */}
@@ -277,7 +281,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allDesignationsMap?.get(values?.designationId || '') || ''}
                         autoComplete="off"
-                        options={allDesignations}
+                        // options={allDesignations}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDesignations) ? allDesignations : []),]}
                       />
                     </div>
                     {/* Designation Field End */}
@@ -300,7 +305,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allLocationMap?.get(values?.locationId || '') || ''}
                         autoComplete="off"
-                        options={allLocationChildMenus}
+                        // options={allLocationChildMenus}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLocationChildMenus) ? allLocationChildMenus : []),]}
                       />
                     </div>
                     {/* Location Field End */}
@@ -349,7 +355,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         }
                         value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                         autoComplete="off"
-                        options={allEmployees}
+                        // options={allEmployees}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
                       />
                     </div>
                     {/* Employee Field End */}
@@ -415,7 +422,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                 }}
                 className="btn btn-danger btn-elevate"
               >
-                Cancel
+               Clear Filter
               </button>
 
               <button

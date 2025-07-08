@@ -26,11 +26,11 @@ export function DesignationEditDialogHeader({ id ,isUserForRead}) {
 
   return (
     <>
-      <Modal.Header >
+      {/* <Modal.Header >
         <Modal.Title id="example-modal-sizes-title-lg">
         {!isUserForRead ? title : "View Employee Profile"}
           </Modal.Title>
-      </Modal.Header>
+      </Modal.Header> */}
     </>
   )
 }

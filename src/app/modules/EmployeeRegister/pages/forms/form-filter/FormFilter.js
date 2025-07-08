@@ -285,7 +285,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           }
                           value={allDeptMap?.get(values?.departmentId || '') || ''}
                           autoComplete="off"
-                          options={allDept}
+                          // options={allDept}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
                         />
                       </div>
                       {/* Deparment Field End */}
@@ -308,7 +309,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           }
                           value={allEmployeesMap?.get(values?.reportTo || '') || ''}
                           autoComplete="off"
-                          options={allEmployees}
+                          // options={allEmployees}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
                         />
                       </div>
                       {/* Report To Field End */}
@@ -331,7 +333,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           }
                           value={allGradeMap?.get(values?.gradeId || '') || ''}
                           autoComplete="off"
-                          options={allEmployeeGradeList}
+                          // options={allEmployeeGradeList}
+                            options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployeeGradeList) ? allEmployeeGradeList : []),]}
                         />
                       </div>
                       {/* Grade Field End */}
@@ -354,7 +357,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           }
                           value={allDesignationsMap?.get(values?.designationId || '') || ''}
                           autoComplete="off"
-                          options={allDesignations}
+                          // options={allDesignations}
+                            options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDesignations) ? allDesignations : []),]}
                         />
                       </div>
                       {/* Designation Field End */}
@@ -377,7 +381,8 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                           }
                           value={allLocationMap?.get(values?.locationId || '') || ''}
                           autoComplete="off"
-                          options={allLocationChildMenus}
+                          // options={allLocationChildMenus}
+                            options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLocationChildMenus) ? allLocationChildMenus : []),]}
                         />
                       </div>
                       {/* Location Field End */}
