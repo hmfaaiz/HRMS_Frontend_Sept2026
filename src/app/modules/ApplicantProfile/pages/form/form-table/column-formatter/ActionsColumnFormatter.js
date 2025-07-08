@@ -18,7 +18,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForView,
     isAccessForDelete,
-    isAccessForConvert,
+    isAccessForConvert,isAccessForOfferLetter
 
   }
 ) {
@@ -45,18 +45,18 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {(isAccessForConvert && row.isToShowOfferLetter) && (
-        <OverlayTrigger overlay={<Tooltip id="emp-convert-tooltip">Download Offer Letter</Tooltip>}>
+      {(isAccessForOfferLetter && row.isToShowOfferLetter) && (
+        <OverlayTrigger overlay={<Tooltip id="emp-letter-tooltip">Download Offer Letter</Tooltip>}>
           <button
           disabled={pdfGenerateLoading}
             className="btn btn-icon posting-button"
             onClick={() => {
-              console.log("Button clicked for row:", row.Id);
+            
               dispatch(Generatejob_offer_letter(row.Id));
             }}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/offerletter.svg")} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
             </span>
           </button>
         </OverlayTrigger>

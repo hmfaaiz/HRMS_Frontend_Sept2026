@@ -157,3 +157,25 @@
     background-color: #05457d !important;
     transform: translateY(-2px); /* Slightly move the button upwards on hover */
   }
+
+
+
+   .convertToEmp-button{
+
+    background-color: #ff0202 !important;; 
+    // fill: rgb(255, 255, 255); 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+    margin-right:7px !important;
+}
+  
+  .convertToEmp-button:hover {
+    background-color: #05457d !important;
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
