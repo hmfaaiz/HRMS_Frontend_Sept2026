@@ -198,7 +198,7 @@ export function MasterEditForm({
                   {/* First Row End */}
 
                   {/* Label to Show Max Count */}
-                  <b>{!readOnly && getLabel(allLeaveTypes, values.leaveType)}</b>
+                  {/* <b>{!readOnly && getLabel(allLeaveTypes, values.leaveType)}</b> */}
                   {/* Label to Show Max Count */}
                   
                   {/* Second Row Start */}
@@ -215,7 +215,7 @@ export function MasterEditForm({
                         label={
                           <span>
                             {" "}
-                            Days<span style={{ color: "red" }}>*</span>
+                            Days<span style={{ color: "red" }}>* </span> <b>{!readOnly && getLabel(allLeaveTypes, values.leaveType)}</b>
                           </span>
                         }
                       />
