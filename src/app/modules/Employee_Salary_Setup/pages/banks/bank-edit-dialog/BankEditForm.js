@@ -1647,7 +1647,7 @@ useEffect(()=>{
                                   onBlur={handleBlur}
                                   value={values.social_security_member}
                                   checked={values.social_security_member}
-                                /> Social Security Member 11333{values.social_security_member}
+                                /> Social Security Member{values.social_security_member}
 
                               </div>
                               <div className="col-12 col-md-4 mt-5">
