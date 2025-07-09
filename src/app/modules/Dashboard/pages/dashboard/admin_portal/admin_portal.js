@@ -17,27 +17,27 @@ import { BriefcaseBusiness, Users } from "lucide-react";
 
 const panels = [
   {
-    title: "Employee Management",
+    title: "Employee",
     key: "Employee",
     resourceId: 1784,
   },
   {
-    title: "Leave Management",
+    title: "Leave",
     key: "Leave Management",
     resourceId: 308,
   },
   {
-    title: "Attendance Management",
+    title: "Attendance",
     key: "Attendance Management",
     resourceId: 1726,
   },
   {
-    title: "Payroll Management",
+    title: "Payroll",
     key: "Payroll",
     resourceId: 252,
   },
   {
-    title: "Recruitment Management",
+    title: "Recruitment",
     key: "Recruitment",
     resourceId: 1893,
   },
