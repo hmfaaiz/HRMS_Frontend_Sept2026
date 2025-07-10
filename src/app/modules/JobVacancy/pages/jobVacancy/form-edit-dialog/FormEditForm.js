@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { DatePickerField, Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
@@ -781,7 +781,7 @@ export function FormEditForm({
 
                 {/* Position Detail */}
 
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", }}>
                   <h6>Position Detail</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
 
@@ -822,6 +822,7 @@ export function FormEditForm({
                         type="text"
                         className="form-control h-100"
                       />
+                      <ErrorMessage className="form-feedBack" name="relationshipWithReportTo" component="div" />
                     </div>
 
 
@@ -1318,6 +1319,7 @@ export function FormEditForm({
                           </div>
                         </div>
                       </div>
+                      <ErrorMessage className="form-feedBack" name="preferredJobSkillsId" component="div" />
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
@@ -1573,7 +1575,7 @@ export function FormEditForm({
 
 
                 {/*  Job Summary */}
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px",  }}>
                   <h6>Job Summary</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
 
@@ -1592,6 +1594,7 @@ export function FormEditForm({
                         type="text"
 
                       />
+                          <ErrorMessage className="form-feedBack " name="jobSummary" component="div" />
                     </div>
 
                   </div>
