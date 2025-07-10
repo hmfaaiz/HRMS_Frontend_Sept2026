@@ -79,7 +79,7 @@ export function FormFilter() {
                   }}
                 />
                 <small className="form-text text-muted">
-                  {/* <b>Search</b> in Type field */}
+                  <b>Search</b> in Payment Mode
                 </small>
               </div>
             </div>

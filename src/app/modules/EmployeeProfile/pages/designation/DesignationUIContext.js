@@ -92,7 +92,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     additional_summary:"",
     deligationId:"",
     relation_name:"",
-    hod:"",
+    hod:0,
   };
 
  
