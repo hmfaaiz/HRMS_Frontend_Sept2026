@@ -2052,10 +2052,14 @@ const [profile_image, setImage] = useState(
                           checked={values.hod}
                           label="HOD"
                           disabled={
-                           dashboard.allEmployeesWithNoPermissionList?.some(
-                           (x) => x.departmentId == values.departmentId && x.hod == true && x.value != user.Id
-                              )
-                          }
+  dashboard.allEmployeesWithNoPermissionList?.some(
+    (x) =>
+      x.departmentId === values.departmentId &&
+      x.hod === 1 &&
+      x.value !== user.Id
+  )
+}
+
                         />
 
                           <label className="ml-2">HOD</label>
@@ -2069,6 +2073,7 @@ const [profile_image, setImage] = useState(
                           onChange={(e) => {
                             setFieldValue("departmentId", e.value || null);
                             setDefaultDept(e);
+                            setFieldValue("hod", false);
                             // dispatch(fetchAllDept(e.value));
                           }}
                           // value={(defDept || null)}
