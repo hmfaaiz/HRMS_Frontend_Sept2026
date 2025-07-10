@@ -264,7 +264,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allDeptMap?.get(values?.departmentId || '') || ''}
                           autoComplete="off"
-                          options={allDept}
+                          // options={allDept}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
                         />
                       </div>
                       {/* Deparment Field End */}
@@ -285,7 +286,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                           autoComplete="off"
-                          options={allEmployees}
+                          // options={allEmployees}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
 
 
 
@@ -315,7 +317,8 @@ const [endDate,setEndDate]=useState()
                             ) || null
                           }
                           autoComplete="off"
-                          options={allLoanTypeList}
+                          // options={allLoanTypeList}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLoanTypeList) ? allLoanTypeList : []),]}
 
 
 
