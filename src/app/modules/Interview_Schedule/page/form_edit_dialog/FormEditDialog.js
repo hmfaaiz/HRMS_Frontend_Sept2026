@@ -68,9 +68,9 @@ export function FormEditDialog({ id, show, onHide, isUserForRead }) {
     <Modal
       size="lg"
       dialogClassName="modal-70vw"
+      aria-labelledby="example-modal-sizes-title-lg"
       show={show && formUIProps?.selectedJob && formUIProps?.selectedApplicant}
       onHide={onHide}
-      aria-labelledby="example-modal-sizes-title-lg"
     >
       <FormEditDialogHeader id={id} isUserForRead={isUserForRead} />
       <MasterEditForm

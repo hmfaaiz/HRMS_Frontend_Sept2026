@@ -14,15 +14,16 @@ export function AmountInput({
   form: { touched, errors, setFieldValue, setFieldTouched },
   label,
   withFeedbackLabel = true,
+  placeholder = "",
   customFeedbackLabel,
+  max = 99999999,
   onChange,
-  value, // external controlled value (like defBasicSalary)
+  value,
   ...props
 }) {
   const fieldName = field.name;
   const inputClass = getFieldCSSClasses(touched[fieldName], errors[fieldName]);
 
-  // Sync external value with Formik state if value is passed
   useEffect(() => {
     if (value !== undefined && value !== field.value) {
       setFieldValue(fieldName, value);
@@ -32,16 +33,17 @@ export function AmountInput({
   return (
     <>
       {label && <label>{label}</label>}
-
       <NumericFormat
         {...props}
+        placeholder={placeholder}
         className={inputClass}
-        value={value !== undefined ? value : field.value} // prefer external value if given
+        value={value !== undefined ? value : field.value}
         thousandSeparator
         allowNegative={false}
+        isAllowed={({ value }) => value === "" || Number(value) <= max}
         onValueChange={({ value: raw }) => {
-          setFieldValue(fieldName, raw); // update Formik
-          if (onChange) onChange(raw);   // also call external handler
+          setFieldValue(fieldName, raw);
+          if (onChange) onChange(raw); // yahan aapka local state update hoga
         }}
         onBlur={() => setFieldTouched(fieldName, true)}
       />
