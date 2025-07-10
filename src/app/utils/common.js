@@ -149,3 +149,9 @@ export const amountFormat = (val, isDecimal = false) => {
     maximumFractionDigits: isDecimal ? 2 : 0,
   });
 };
+
+export const formatTime = (value) => {
+  const cleaned = value.replace(/\D/g, "").slice(0, 4); // keep digits only
+  if (cleaned.length <= 2) return cleaned;
+  return `${cleaned.slice(0, 2)}:${cleaned.slice(2)}`;
+};

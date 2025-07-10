@@ -19,6 +19,7 @@ import { useFormUIContext } from "../../FormUIContext";
 import { Card } from "react-bootstrap";
 import { ActionsColumnFormatter } from "./column-formatter/ActionCloumnFormatter";
 import { format } from "date-fns";
+import { formatTime } from "../../../../../utils/common";
 
 export function ApprovalFormTable() {
   //Users UI Context
@@ -196,6 +197,7 @@ export function ApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
+      formatter : (cell) => formatTime(cell)
     },
     {
       dataField: "parentData.timeOut",
@@ -207,6 +209,7 @@ export function ApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
+      formatter : (cell) => formatTime(cell)
     },
     // {
     //   dataField: "parentData.isLateComing",

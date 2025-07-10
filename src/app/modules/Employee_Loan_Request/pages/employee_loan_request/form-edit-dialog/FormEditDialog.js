@@ -67,8 +67,6 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
   }, [id, dispatch, show]);
 
-
-
   const saveForm = async (
     data,
     totalInstallments,
@@ -82,17 +80,16 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     subsidiaryid
   ) => {
     // Enable loading if needed
-    // enableLoading(); 
- 
-  
+    // enableLoading();
+
     // Create a new object to avoid mutating the original 'data' object
     const updatedData = {
-      ...data,  // Spread the original data
-      subsidiaryId: subsidiaryid  // Override the subsidiaryId
+      ...data, // Spread the original data
+      subsidiaryId: subsidiaryid, // Override the subsidiaryId
     };
-  
+
     // Validate the form based on various conditions
-    if (maxAmountLimit < updatedData.total_loan_amount) {
+    if (maxAmountLimit < Number(updatedData.total_loan_amount)) {
       disbaleLoading();
       toast.error("Loan amount exceeds the limit.", {
         position: "top-right",
@@ -105,16 +102,22 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       });
     } else if (monthlyInstallmentsLimit < totalInstallments) {
       disbaleLoading();
-      toast.error("The total installments must not exceed monthly installments limit.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else if (updatedData.total_loan_amount < updatedData.monthly_installment) {
+      toast.error(
+        "The total installments must not exceed monthly installments limit.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+    } else if (
+      Number(updatedData.total_loan_amount) <
+      Number(updatedData.monthly_installment)
+    ) {
       disbaleLoading();
       toast.error("The monthly installment must not exceed loan amount.", {
         position: "top-right",
@@ -129,12 +132,17 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       // Handle creating a new loan request
       formUIProps.setIds("");
       updatedData.total_installment = totalInstallments;
-  
+      updatedData.total_loan_amount = Number(updatedData.total_loan_amount);
+      updatedData.monthly_installment = Number(updatedData.monthly_installment);
       await dispatch(
-        actions.createEmployeeLoanRequest(updatedData, disbaleLoading, resetForm)
+        actions.createEmployeeLoanRequest(
+          updatedData,
+          disbaleLoading,
+          resetForm
+        )
       );
       await dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
-  
+
       // Reset the form and limits
       setTotalInstallments("");
       setMaxAmountLimit("");
@@ -143,7 +151,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     } else {
       // Handle updating an existing loan request
       formUIProps.setIds("");
-  
+
       const formUpdatedFields = {
         Id: updatedData.Id,
         // employee_loan_accountId: updatedData.employee_loan_accountId,
@@ -158,9 +166,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         // loan_amount_remaining: updatedData.total_loan_amount,
         // loan_amount_paid: 0,
         // subsidiaryId: subsidiaryid, // Using the updated value for subsidiaryId
-        isLoanContinuing:updatedData.isLoanContinuing
+        isLoanContinuing: updatedData.isLoanContinuing,
       };
-  
+
       await dispatch(
         actions.updateEmployeeLoanRequest(
           formUpdatedFields,
@@ -169,12 +177,12 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         )
       );
       await dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
-  
+
       // Reset the total installments
       setTotalInstallments("");
     }
   };
-  
+
   return (
     <>
       <FormEditDialogHeader id={id} isUserForRead={userForRead} />

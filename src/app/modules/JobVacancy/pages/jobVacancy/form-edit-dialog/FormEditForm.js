@@ -2,26 +2,32 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import {
+  DatePickerField,
+  Input,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
   fetchAllCountry,
   fetchAllFormsMenu,
-
   fetchAllSubsidiaryData,
-  getLatestTableId, fetchAllParentDept,
+  getLatestTableId,
+  fetchAllParentDept,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
+import {
+  amountLimit,
+  amountLimitDynamic,
+  formatDates,
+} from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
-
-
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 const jobVacancyEditSchema = Yup.object().shape({
-  subsidiaryId: Yup.string()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
 
   jobCode: Yup.string()
     .min(5, "Job code must be  5 characters")
@@ -37,13 +43,12 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   gradeId: Yup.string().required(VALIDATION_MESSAGES.required),
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
-  countryId: Yup.number()
-    .nullable(), // optional banane ke liye
+  countryId: Yup.number().nullable(), // optional banane ke liye
 
   cityId: Yup.string()
     .nullable() // <- apply globally
-    .when('countryId', {
-      is: (val) => val !== undefined && val !== null && val !== '',
+    .when("countryId", {
+      is: (val) => val !== undefined && val !== null && val !== "",
       then: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
 
@@ -86,18 +91,18 @@ const jobVacancyEditSchema = Yup.object().shape({
     .when("jobPeriodEnd", (jobPeriodEnd, schema) =>
       jobPeriodEnd
         ? schema.max(
-          Yup.ref("jobPeriodEnd"),
-          "Job Posting To date must be before Job Period End"
-        )
+            Yup.ref("jobPeriodEnd"),
+            "Job Posting To date must be before Job Period End"
+          )
         : schema
     ),
 
   reportToDesignationId: Yup.number()
     .required(VALIDATION_MESSAGES.required)
     .test(
-      'not-same-as-designation',
-      'Designation and Reporting Designation cannot be the same',
-      function (value) {
+      "not-same-as-designation",
+      "Designation and Reporting Designation cannot be the same",
+      function(value) {
         const { designationId } = this.parent;
         return value !== designationId;
       }
@@ -116,52 +121,47 @@ const jobVacancyEditSchema = Yup.object().shape({
   // criticalDays: Yup.number()
   //   .min(1, VALIDATION_MESSAGES.minOneValue)
   //   .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
-  jobPeriodStart: Yup.date().nullable()
-    .min(
-      Yup.ref('jobPostingDateTo'),
-      'Start date must be after posting date'
-    ),
-  jobPeriodEnd: Yup.date().nullable()
-    .min(
-      Yup.ref('jobPeriodStart'),
-      'End date must be after start date'
-    ),
+  jobPeriodStart: Yup.date()
+    .nullable()
+    .min(Yup.ref("jobPostingDateTo"), "Start date must be after posting date"),
+  jobPeriodEnd: Yup.date()
+    .nullable()
+    .min(Yup.ref("jobPeriodStart"), "End date must be after start date"),
   comment: Yup.string(),
-
-
 
   desireDateOfApp: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required)
     .min(
-      Yup.ref('jobPostingDateFrom'),
-      'Desire Date of Appointment must be after Job Posting Date From'
+      Yup.ref("jobPostingDateFrom"),
+      "Desire Date of Appointment must be after Job Posting Date From"
     )
 
     .test(
-      'within-job-period',
-      'Desired Date of Appointment must be within the Job Period range',
-      function (value) {
+      "within-job-period",
+      "Desired Date of Appointment must be within the Job Period range",
+      function(value) {
         const { jobPeriodStart, jobPeriodEnd } = this.parent;
 
         if (!value) return true; // Already handled by .required()
 
         if (jobPeriodStart && value > jobPeriodStart) {
           return this.createError({
-            message: 'Desired Date of Appointment must be before or same as Job Period Start',
+            message:
+              "Desired Date of Appointment must be before or same as Job Period Start",
           });
         }
 
         if (jobPeriodEnd && value > jobPeriodEnd) {
           return this.createError({
-            message: 'Desired Date of Appointment must be before or same as Job Period End',
+            message:
+              "Desired Date of Appointment must be before or same as Job Period End",
           });
         }
 
         return true;
       }
     ),
-
 
   preferredAgeFrom: Yup.number()
     .nullable()
@@ -173,8 +173,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(15, VALIDATION_MESSAGES.minAgeFifteenValue)
     .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
     .moreThan(
-      Yup.ref('preferredAgeFrom'),
-      'Preferred age (to) must be greater than age (from)'
+      Yup.ref("preferredAgeFrom"),
+      "Preferred age (to) must be greater than age (from)"
     ),
   preferredShiftId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredGenderId: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -190,8 +190,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
-      Yup.ref('workExpFrom'),
-      'Experience (to) must be greater than experience from'
+      Yup.ref("workExpFrom"),
+      "Experience (to) must be greater than experience from"
     ),
   // workExpDetail: Yup.string().required(VALIDATION_MESSAGES.required),
   // additionalReq: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -203,15 +203,13 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
-      Yup.ref('salaryRangeFrom'),
-      'Salary To must be greater than Salary From'
+      Yup.ref("salaryRangeFrom"),
+      "Salary To must be greater than Salary From"
     ),
   // incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
   // otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
   jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
-
 });
-
 
 export function FormEditForm({
   saveForm,
@@ -229,7 +227,6 @@ export function FormEditForm({
   //drop down
   useEffect(() => {
     if (!formData.Id) {
-
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(158, "allDesignations"));
       dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
@@ -249,10 +246,8 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
       dispatch(fetchAllFormsMenu(416, "allJobIndustryList"));
       dispatch(fetchAllParentDept());
-
     }
   }, [dispatch, formData.Id]);
-
 
   const { currentState, userAccess, currentUser } = useSelector((state) => {
     return {
@@ -262,10 +257,7 @@ export function FormEditForm({
     };
   }, shallowEqual);
 
-
-
   const { dataForEdit } = currentState;
-
 
   const filteredCities = (countryId) => {
     return dashboard?.allCity?.filter((city) => city.code === countryId) || [];
@@ -273,16 +265,25 @@ export function FormEditForm({
 
   const cleanedFormData = useMemo(() => {
     if (formData && !isdataForRead && formData.jobPostingStatus === 3) {
-      const { Id, jobCode, jobFinalizedeDate, jobPostingStatus, createdBy, updatedBy, createdAt, updatedAt, jobDate, ...rest } = formData;
+      const {
+        Id,
+        jobCode,
+        jobFinalizedeDate,
+        jobPostingStatus,
+        createdBy,
+        updatedBy,
+        createdAt,
+        updatedAt,
+        jobDate,
+        ...rest
+      } = formData;
       return rest;
     }
     return formData;
   }, [formData]);
 
   const fetchData = async (setJobCode) => {
-
     if (!formData.Id) {
-
       dispatch(
         getLatestTableId(
           "r_jobvacancy",
@@ -294,28 +295,28 @@ export function FormEditForm({
     }
   };
   useEffect(() => {
-    fetchData(setJobCode)
-  }, [])
+    fetchData(setJobCode);
+  }, []);
 
   return (
     <Formik
       enableReinitialize={true}
-
-
-
       initialValues={{
-        ...cleanedFormData, jobCode: cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
-        jobDate: cleanedFormData?.jobDate ? cleanedFormData?.jobDate : formatDates(new Date(), 'yyyy-MM-dd'),
+        ...cleanedFormData,
+        jobCode: cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
+        jobDate: cleanedFormData?.jobDate
+          ? cleanedFormData?.jobDate
+          : formatDates(new Date(), "yyyy-MM-dd"),
       }}
       validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
         values.preferredAgeFrom =
-          values.preferredAgeFrom === '' || values.preferredAgeFrom === null
+          values.preferredAgeFrom === "" || values.preferredAgeFrom === null
             ? null
             : Number(values.preferredAgeFrom);
 
         values.preferredAgeTo =
-          values.preferredAgeTo === '' || values.preferredAgeTo === null
+          values.preferredAgeTo === "" || values.preferredAgeTo === null
             ? null
             : Number(values.preferredAgeTo);
         enableLoading();
@@ -323,7 +324,15 @@ export function FormEditForm({
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue, handleChange }) => (
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        handleChange,
+        setFieldTouched,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -333,11 +342,16 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
-
-
-
                 {/* Job */}
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div
+                  style={{
+                    padding: "10px 0 40px 0px",
+                    marginBottom: "15px",
+                    marginTop: "15px",
+                    borderRadius: "5px",
+                    borderBottom: "2px solid rgb(194, 194, 194)",
+                  }}
+                >
                   {/* <h6>Job</h6> */}
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
                     <div className="col-12 col-md-4 mt-3">
@@ -354,50 +368,53 @@ export function FormEditForm({
                         type="text"
                         minLength={5}
                         maxLength={10}
-
-
                       />
                       {/* {errors.jobCode && (
                         <div className="invalid-feedback d-block">{errors.jobCode}</div>
                       )} */}
                     </div>
 
-
                     <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Job Date<span style={{ color: "red" }}>*</span></label>
+                      <label>
+                        {" "}
+                        Job Date<span style={{ color: "red" }}>*</span>
+                      </label>
                       <DatePicker
                         className="form-control"
                         placeholder="Job Date"
-                        selected={values?.jobDate ? new Date(values.jobDate) : null}
+                        selected={
+                          values?.jobDate ? new Date(values.jobDate) : null
+                        }
                         disabled={true}
-
                         dateFormat="dd-MMM-yyyy"
                         name="jobDate"
                         autoComplete="off"
                         minDate={new Date()}
                         maxDate={new Date()}
-
-
                       />
 
                       {touched.jobDate && errors.jobDate && (
-                        <div className="invalid-feedback d-block">{errors.jobDate}</div>
+                        <div className="invalid-feedback d-block">
+                          {errors.jobDate}
+                        </div>
                       )}
                     </div>
-
                   </div>
-
-
                 </div>
 
                 {/* Request For */}
 
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", marginTop: "15px", borderRadius: "5px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div
+                  style={{
+                    padding: "10px 0 40px 0px",
+                    marginBottom: "15px",
+                    marginTop: "15px",
+                    borderRadius: "5px",
+                    borderBottom: "2px solid rgb(194, 194, 194)",
+                  }}
+                >
                   <h6>Request For</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="designationId"
@@ -416,9 +433,7 @@ export function FormEditForm({
                             (option) => option.value === values.designationId
                           ) || null
                         }
-
                         options={dashboard?.allDesignations}
-
                         error={errors.designationId}
                         touched={touched.designationId}
                       />
@@ -434,9 +449,7 @@ export function FormEditForm({
                         name="jobTitle"
                         component={Input}
                         placeholder="Enter job title"
-
                         type="text"
-
                       />
                     </div>
 
@@ -457,13 +470,11 @@ export function FormEditForm({
                             (option) => option.value === values.gradeId
                           ) || null
                         }
-
                         options={dashboard?.allEmployeegradeList}
                         error={errors.gradeId}
                         touched={touched.gradeId}
                       />
                     </div>
-
 
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
@@ -482,9 +493,7 @@ export function FormEditForm({
                             (option) => option.value === values.subsidiaryId
                           ) || null
                         }
-
                         options={dashboard?.allSubsidiaryList}
-
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                       />
@@ -570,18 +579,15 @@ export function FormEditForm({
                                 {option?.label}
                               </div>
                             ))}
-                            {errors.cityId &&
-                              touched.cityId && (
-                                <div className="invalid-text">
-                                  {errors.cityId}
-                                </div>
-                              )}
+                            {errors.cityId && touched.cityId && (
+                              <div className="invalid-text">
+                                {errors.cityId}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
                     </div>
-
-
 
                     <div className="col-12 col-md-4 mt-3">
                       Location<span style={{ color: "red" }}>*</span>
@@ -623,12 +629,11 @@ export function FormEditForm({
                                 {option?.label}
                               </div>
                             ))}
-                            {errors.locationId &&
-                              touched.locationId && (
-                                <div className="invalid-text">
-                                  {errors.locationId}
-                                </div>
-                              )}
+                            {errors.locationId && touched.locationId && (
+                              <div className="invalid-text">
+                                {errors.locationId}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -637,25 +642,23 @@ export function FormEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="employeeTypeId"
-                        label={
-                          <span>
-                            Employee Type
-                          </span>
-                        }
+                        label={<span>Employee Type</span>}
                         isDisabled={isdataForRead}
                         onChange={(e) => {
                           setFieldValue("employeeTypeId", e.value || null);
                         }}
                         value={
-                          [...(dashboard?.allEmpTypeDynamicChildMenus || []), ...(dashboard?.allEmpTypeChildMenus || [])]
-                            .find((option) => option.value === values.employeeTypeId) || null
+                          [
+                            ...(dashboard?.allEmpTypeDynamicChildMenus || []),
+                            ...(dashboard?.allEmpTypeChildMenus || []),
+                          ].find(
+                            (option) => option.value === values.employeeTypeId
+                          ) || null
                         }
-
                         options={[
                           ...dashboard.allEmpTypeDynamicChildMenus,
-                          ...dashboard.allEmpTypeChildMenus
+                          ...dashboard.allEmpTypeChildMenus,
                         ]}
-
                         error={errors.employeeTypeId}
                         touched={touched.employeeTypeId}
                       />
@@ -664,11 +667,7 @@ export function FormEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="employeeStatusId"
-                        label={
-                          <span>
-                            Employee Status
-                          </span>
-                        }
+                        label={<span>Employee Status</span>}
                         isDisabled={isdataForRead}
                         onChange={(e) => {
                           setFieldValue("employeeStatusId", e.value || null);
@@ -678,15 +677,11 @@ export function FormEditForm({
                             (option) => option.value === values.employeeStatusId
                           ) || null
                         }
-
                         options={dashboard?.allEmployeeStatus}
-
                         error={errors.employeeStatusId}
                         touched={touched.employeeStatusId}
                       />
                     </div>
-
-
 
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
@@ -705,30 +700,28 @@ export function FormEditForm({
                             (option) => option.value === values.departmentId
                           ) || null
                         }
-
                         options={dashboard?.allParentDept}
-
                         error={errors.departmentId}
                         touched={touched.departmentId}
-
-
-
                       />
                     </div>
 
-
-
                     <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Job Posting Date (From)<span style={{ color: "red" }}>*</span></label>
+                      <label>
+                        {" "}
+                        Job Posting Date (From)
+                        <span style={{ color: "red" }}>*</span>
+                      </label>
                       <DatePicker
                         className="form-control"
                         placeholder="Job Posting Date"
-                        selected={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : null}
-
+                        selected={
+                          values?.jobPostingDateFrom
+                            ? new Date(values.jobPostingDateFrom)
+                            : null
+                        }
                         onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("jobPostingDateFrom", selectedDate);
                         }}
                         dateFormat="dd-MMM-yyyy"
@@ -736,83 +729,89 @@ export function FormEditForm({
                         autoComplete="off"
                         minDate={new Date()}
                         maxDate={values.jobPostingDateTo}
-
-
-
                       />
 
-                      {touched.jobPostingDateFrom && errors.jobPostingDateFrom && (
-                        <div className="invalid-feedback d-block">{errors.jobPostingDateFrom}</div>
-                      )}
+                      {touched.jobPostingDateFrom &&
+                        errors.jobPostingDateFrom && (
+                          <div className="invalid-feedback d-block">
+                            {errors.jobPostingDateFrom}
+                          </div>
+                        )}
                     </div>
                     <div className="col-12 col-md-4 mt-3">
-
-
-                      <label> Job Posting Date (To)<span style={{ color: "red" }}>*</span></label>
+                      <label>
+                        {" "}
+                        Job Posting Date (To)
+                        <span style={{ color: "red" }}>*</span>
+                      </label>
                       <DatePicker
                         className="form-control"
                         placeholder="Job Posting Date"
-                        selected={values?.jobPostingDateTo ? new Date(values.jobPostingDateTo) : null}
-
+                        selected={
+                          values?.jobPostingDateTo
+                            ? new Date(values.jobPostingDateTo)
+                            : null
+                        }
                         onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("jobPostingDateTo", selectedDate);
                         }}
                         dateFormat="dd-MMM-yyyy"
                         name="jobPostingDateTo"
                         autoComplete="off"
                         minDate={values.jobPostingDateFrom || new Date()}
-
-
                       />
 
                       {touched.jobPostingDateTo && errors.jobPostingDateTo && (
-                        <div className="invalid-feedback d-block">{errors.jobPostingDateTo}</div>
+                        <div className="invalid-feedback d-block">
+                          {errors.jobPostingDateTo}
+                        </div>
                       )}
                     </div>
-
                   </div>
-
-
                 </div>
-
-
-
 
                 {/* Position Detail */}
 
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", }}>
                   <h6>Position Detail</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="reportToDesignationId"
                         label={
                           <span>
-                            Report To (Designation)<span style={{ color: "red" }}>*</span>
+                            Report To (Designation)
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isdataForRead}
                         onChange={(e) => {
-                          setFieldValue("reportToDesignationId", e.value || null);
+                          setFieldValue(
+                            "reportToDesignationId",
+                            e.value || null
+                          );
                         }}
                         value={
                           dashboard?.allDesignations?.find(
-                            (option) => option.value === values.reportToDesignationId
+                            (option) =>
+                              option.value === values.reportToDesignationId
                           ) || null
                         }
-
                         options={dashboard?.allDesignations}
                         error={errors.reportToDesignationId}
                         touched={touched.reportToDesignationId}
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-3"
+                      style={{ height: "150px" }}
+                    >
                       <label>
                         <span>
-                          Key relationship with Report To<span style={{ color: "red" }}>*</span>
+                          Key relationship with Report To
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       </label>
                       <Field
@@ -824,27 +823,27 @@ export function FormEditForm({
                       />
                       <ErrorMessage className="form-feedBack" name="relationshipWithReportTo" component="div" />
                     </div>
-
-
                   </div>
-
-
                 </div>
-
-
 
                 {/* Job Vacany Detail */}
 
-
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div
+                  style={{
+                    padding: "10px 0 40px 0px",
+                    marginBottom: "15px",
+                    borderRadius: "5px",
+                    marginTop: "15px",
+                    borderBottom: "2px solid rgb(194, 194, 194)",
+                  }}
+                >
                   <h6>Job Vacany Detail</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-
                     <div className="col-12 col-md-4 mt-3">
                       <label>
                         <span>
-                          No.of Positions <span style={{ color: "red" }}>*</span>
+                          No.of Positions{" "}
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       </label>
                       <Field
@@ -852,7 +851,6 @@ export function FormEditForm({
                         component={Input}
                         placeholder="Enter no of position"
                         type="number"
-
                       />
                     </div>
 
@@ -873,9 +871,7 @@ export function FormEditForm({
                             (option) => option.value === values.hiringReasonId
                           ) || null
                         }
-
                         options={dashboard?.allHiringReasonList}
-
                         error={errors.hiringReasonId}
                         touched={touched.hiringReasonId}
                       />
@@ -886,7 +882,8 @@ export function FormEditForm({
                         name="jobPreferenceId"
                         label={
                           <span>
-                            Job Preference<span style={{ color: "red" }}>*</span>
+                            Job Preference
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isdataForRead}
@@ -898,108 +895,123 @@ export function FormEditForm({
                             (option) => option.value === values.jobPreferenceId
                           ) || null
                         }
-
                         options={dashboard?.alljobPreferenceList}
-
                         error={errors.jobPreferenceId}
                         touched={touched.jobPreferenceId}
                       />
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-
-
                       <label> Job Period Start</label>
                       <DatePicker
                         className="form-control"
                         placeholder="Job period start"
-                        selected={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : null}
-
+                        selected={
+                          values?.jobPeriodStart
+                            ? new Date(values.jobPeriodStart)
+                            : null
+                        }
                         onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("jobPeriodStart", selectedDate);
                         }}
                         dateFormat="dd-MMM-yyyy"
                         name="jobPeriodStart"
                         autoComplete="off"
-                        minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}
-                        maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : null}
-
-
-
+                        minDate={
+                          values?.jobPostingDateFrom
+                            ? new Date(values.jobPostingDateFrom)
+                            : new Date()
+                        }
+                        maxDate={
+                          values?.jobPeriodEnd
+                            ? new Date(values.jobPeriodEnd)
+                            : null
+                        }
                       />
 
                       {touched.jobPeriodStart && errors.jobPeriodStart && (
-                        <div className="invalid-feedback d-block">{errors.jobPeriodStart}</div>
+                        <div className="invalid-feedback d-block">
+                          {errors.jobPeriodStart}
+                        </div>
                       )}
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-
-
                       <label> Job Period End</label>
                       <DatePicker
                         className="form-control"
                         placeholder="Job period end"
-                        selected={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : null}
-
+                        selected={
+                          values?.jobPeriodEnd
+                            ? new Date(values.jobPeriodEnd)
+                            : null
+                        }
                         onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("jobPeriodEnd", selectedDate);
                         }}
                         dateFormat="dd-MMM-yyyy"
                         name="jobPeriodEnd"
                         autoComplete="off"
-                        minDate={values?.jobPeriodStart ? new Date(values.jobPeriodStart) : new Date()}
-
-
-
-
+                        minDate={
+                          values?.jobPeriodStart
+                            ? new Date(values.jobPeriodStart)
+                            : new Date()
+                        }
                       />
 
                       {touched.jobPeriodEnd && errors.jobPeriodEnd && (
-                        <div className="invalid-feedback d-block">{errors.jobPeriodEnd}</div>
+                        <div className="invalid-feedback d-block">
+                          {errors.jobPeriodEnd}
+                        </div>
                       )}
                     </div>
 
-
                     <div className="col-12 col-md-4 mt-3">
-
-
-                      <label>  Desire Date of Appointment<span style={{ color: "red" }}>*</span></label>
+                      <label>
+                        {" "}
+                        Desire Date of Appointment
+                        <span style={{ color: "red" }}>*</span>
+                      </label>
                       <DatePicker
                         className="form-control"
                         placeholder="Desire Date of Appointment"
-                        selected={values?.desireDateOfApp ? new Date(values.desireDateOfApp) : null}
-
+                        selected={
+                          values?.desireDateOfApp
+                            ? new Date(values.desireDateOfApp)
+                            : null
+                        }
                         onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                          console.log("selectedDate111", selectedDate)
+                          let selectedDate = formatDates(date, "yyyy-MM-dd");
+                          console.log("selectedDate111", selectedDate);
                           setFieldValue("desireDateOfApp", selectedDate);
                         }}
                         dateFormat="dd-MMM-yyyy"
                         name="desireDateOfApp"
                         autoComplete="off"
-                        minDate={values?.jobPostingDateFrom ? new Date(values.jobPostingDateFrom) : new Date()}
-                      //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
-
-
-
+                        minDate={
+                          values?.jobPostingDateFrom
+                            ? new Date(values.jobPostingDateFrom)
+                            : new Date()
+                        }
+                        //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
                       />
 
                       {touched.desireDateOfApp && errors.desireDateOfApp && (
-                        <div className="invalid-feedback d-block">{errors.desireDateOfApp}</div>
+                        <div className="invalid-feedback d-block">
+                          {errors.desireDateOfApp}
+                        </div>
                       )}
                     </div>
-
-
 
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="appointmentTypeId"
                         label={
                           <span>
-                            Appointment Type<span style={{ color: "red" }}>*</span>
+                            Appointment Type
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isdataForRead}
@@ -1008,12 +1020,11 @@ export function FormEditForm({
                         }}
                         value={
                           dashboard?.allAppointmentTypeList?.find(
-                            (option) => option.value === values.appointmentTypeId
+                            (option) =>
+                              option.value === values.appointmentTypeId
                           ) || null
                         }
-
                         options={dashboard?.allAppointmentTypeList}
-
                         error={errors.appointmentTypeId}
                         touched={touched.appointmentTypeId}
                       />
@@ -1036,9 +1047,7 @@ export function FormEditForm({
                             (option) => option.value === values.priorityTypeId
                           ) || null
                         }
-
                         options={dashboard?.allPriorityTypeList}
-
                         error={errors.priorityTypeId}
                         touched={touched.priorityTypeId}
                       />
@@ -1060,51 +1069,45 @@ export function FormEditForm({
                       />
                     </div> */}
 
-
-
-
-                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-3"
+                      style={{ height: "150px" }}
+                    >
                       <label>
-                        <span>
-                          Job Vacancy Detail
-                        </span>
+                        <span>Job Vacancy Detail</span>
                       </label>
                       <Field
                         name="comment"
                         component={TextArea}
                         placeholder="Enter job vacancy detail"
-                        className="form-control h-100"  // Force full height
+                        className="form-control h-100" // Force full height
                         type="text"
-
                       />
                     </div>
-
                   </div>
-
-
                 </div>
-
-
 
                 {/* Position Preferences */}
 
-
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div
+                  style={{
+                    padding: "10px 0 40px 0px",
+                    marginBottom: "15px",
+                    borderRadius: "5px",
+                    marginTop: "15px",
+                    borderBottom: "2px solid rgb(194, 194, 194)",
+                  }}
+                >
                   <h6>Position Preferences</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-
                     <div className="col-12 col-md-4 mt-3">
                       <label>
-                        <span>
-                          Preferred Age From
-                        </span>
+                        <span>Preferred Age From</span>
                       </label>
                       <Field
                         name="preferredAgeFrom"
                         component={Input}
                         placeholder="Enter preferred age (from)"
-
                         type="number"
                         onInput={(e) => {
                           e.target.value = amountLimitDynamic(
@@ -1112,16 +1115,12 @@ export function FormEditForm({
                             2
                           );
                         }}
-
                       />
-
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
                       <label>
-                        <span>
-                          Preferred Age To
-                        </span>
+                        <span>Preferred Age To</span>
                       </label>
                       <Field
                         name="preferredAgeTo"
@@ -1134,7 +1133,6 @@ export function FormEditForm({
                             2
                           );
                         }}
-
                       />
                     </div>
 
@@ -1143,31 +1141,30 @@ export function FormEditForm({
                         name="preferredQualificationId"
                         label={
                           <span>
-                            Preferred Qualification<span style={{ color: "red" }}>*</span>
+                            Preferred Qualification
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isdataForRead}
                         onChange={(e) => {
-                          setFieldValue("preferredQualificationId", e.value || null);
+                          setFieldValue(
+                            "preferredQualificationId",
+                            e.value || null
+                          );
                         }}
                         value={
                           dashboard?.allQualificationList?.find(
-                            (option) => option.value === values.preferredQualificationId
+                            (option) =>
+                              option.value === values.preferredQualificationId
                           ) || null
                         }
-
                         options={dashboard?.allQualificationList}
-
                         error={errors.preferredQualificationId}
                         touched={touched.preferredQualificationId}
                       />
                     </div>
 
-
-
                     <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-
                       <div className="col-12 col-md-4 mt-3">
                         Preferred Shift<span style={{ color: "red" }}>*</span>
                         <div
@@ -1271,7 +1268,8 @@ export function FormEditForm({
                       </div>
                     </div>
                     <div className="col-12 col-md-4 mt-3">
-                      Mandatory Job Skills<span style={{ color: "red" }}>*</span>
+                      Mandatory Job Skills
+                      <span style={{ color: "red" }}>*</span>
                       <div
                         style={{
                           backgroundColor: "#ffffff",
@@ -1373,28 +1371,29 @@ export function FormEditForm({
                       </div>
                     </div>
 
-
-
                     <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         name="preferredJobIndustryId"
                         label={
                           <span>
-                            Preferred Job Industry<span style={{ color: "red" }}>*</span>
+                            Preferred Job Industry
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isdataForRead}
                         onChange={(e) => {
-                          setFieldValue("preferredJobIndustryId", e.value || null);
+                          setFieldValue(
+                            "preferredJobIndustryId",
+                            e.value || null
+                          );
                         }}
                         value={
                           dashboard?.allJobIndustryList?.find(
-                            (option) => option.value === values.preferredJobIndustryId
+                            (option) =>
+                              option.value === values.preferredJobIndustryId
                           ) || null
                         }
-
                         options={dashboard?.allJobIndustryList}
-
                         error={errors.preferredJobIndustryId}
                         touched={touched.preferredJobIndustryId}
                       />
@@ -1403,14 +1402,14 @@ export function FormEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <label>
                         <span>
-                          Work Experience From <span style={{ color: "red" }}>*</span>
+                          Work Experience From{" "}
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       </label>
                       <Field
                         name="workExpFrom"
                         component={Input}
                         placeholder="Enter work experience (from)"
-
                         type="number"
                         onInput={(e) => {
                           e.target.value = amountLimitDynamic(
@@ -1424,14 +1423,14 @@ export function FormEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <label>
                         <span>
-                          Work Experience To <span style={{ color: "red" }}>*</span>
+                          Work Experience To{" "}
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       </label>
                       <Field
                         name="workExpTo"
                         component={Input}
                         placeholder="Enter work experience (to)"
-
                         type="number"
                         onInput={(e) => {
                           e.target.value = amountLimitDynamic(
@@ -1442,13 +1441,12 @@ export function FormEditForm({
                       />
                     </div>
 
-
-
-                    <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-3 mb-5"
+                      style={{ height: "150px" }}
+                    >
                       <label>
-                        <span>
-                          Work Experience Detail
-                        </span>
+                        <span>Work Experience Detail</span>
                       </label>
                       <Field
                         name="workExpDetail"
@@ -1456,15 +1454,15 @@ export function FormEditForm({
                         placeholder="Enter work experience detail"
                         className="form-control h-100"
                         type="text"
-
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-5" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-5"
+                      style={{ height: "150px" }}
+                    >
                       <label>
-                        <span>
-                          Additional Requirement
-                        </span>
+                        <span>Additional Requirement</span>
                       </label>
                       <Field
                         name="additionalReq"
@@ -1472,33 +1470,27 @@ export function FormEditForm({
                         placeholder="Enter additional requirement"
                         className="form-control h-100"
                         type="text"
-
                       />
                     </div>
-
-
-
                   </div>
-
-
                 </div>
-
-
 
                 {/* Compensation & Benefits */}
 
-                <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px", borderBottom: '2px solid rgb(194, 194, 194)' }}>
+                <div
+                  style={{
+                    padding: "10px 0 40px 0px",
+                    marginBottom: "15px",
+                    borderRadius: "5px",
+                    marginTop: "15px",
+                    borderBottom: "2px solid rgb(194, 194, 194)",
+                  }}
+                >
                   <h6>Compensation & Benefits</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-
                     <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Salary Range (Per Month) From <span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
+                      
+                      {/* <Field
                         name="salaryRangeFrom"
                         component={Input}
                         placeholder="Enter salary range (from)"
@@ -1511,36 +1503,58 @@ export function FormEditForm({
                           );
                         }}
 
+                      /> */}
+                      <AmountInput
+                        field={{
+                          name: `salaryRangeFrom`,
+                          value: values?.salaryRangeFrom,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={isdataForRead}
+                        placeholder="Enter salary range (from)"
+                        label={
+                          <span>
+                            Salary Range (Per Month) From{" "}
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                       />
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Salary Range (Per Month) To <span style={{ color: "red" }}>*</span>
-                        </span>
-                      </label>
-                      <Field
-                        name="salaryRangeTo"
-                        component={Input}
-                        placeholder="Enter salary range (to)"
-
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimit(
-                            e.target.value
-
-                          );
+                      <AmountInput
+                        field={{
+                          name: `salaryRangeTo`,
+                          value: values?.salaryRangeTo,
                         }}
-
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        placeholder="Enter salary range (to)"
+                        disabled={isdataForRead}
+                        label={
+                          <span>
+                            Salary Range (Per Month) To{" "}
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-3 mb-5"
+                      style={{ height: "150px" }}
+                    >
                       <label>
-                        <span>
-                          Incentive Packages
-                        </span>
+                        <span>Incentive Packages</span>
                       </label>
                       <Field
                         name="incentivePackages"
@@ -1548,15 +1562,15 @@ export function FormEditForm({
                         placeholder="Enter incentive packages"
                         className="form-control h-100"
                         type="text"
-
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-5" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-5"
+                      style={{ height: "150px" }}
+                    >
                       <label>
-                        <span>
-                          Other Benefits
-                        </span>
+                        <span>Other Benefits</span>
                       </label>
                       <Field
                         name="otherBenefits"
@@ -1564,23 +1578,19 @@ export function FormEditForm({
                         placeholder="Enter other benefits"
                         className="form-control h-100"
                         type="text"
-
                       />
                     </div>
-
                   </div>
-
-
                 </div>
-
 
                 {/*  Job Summary */}
                 <div style={{ padding: "10px 0 40px 0px", marginBottom: "15px", borderRadius: "5px", marginTop: "15px",  }}>
                   <h6>Job Summary</h6>
                   <div className="form-group row col-12 col-md-12  p-0 m-0">
-
-
-                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
+                    <div
+                      className="col-12 col-md-12 mt-3"
+                      style={{ height: "150px" }}
+                    >
                       <label>
                         <span>
                           Job Summary <span style={{ color: "red" }}>*</span>
@@ -1592,17 +1602,11 @@ export function FormEditForm({
                         placeholder="Enter job summary"
                         className="form-control h-100"
                         type="text"
-
                       />
                           <ErrorMessage className="form-feedBack " name="jobSummary" component="div" />
                     </div>
-
                   </div>
-
-
                 </div>
-
-
               </fieldset>
             </Form>
           </Modal.Body>
@@ -1650,8 +1654,7 @@ export function FormEditForm({
             )}
           </Modal.Footer>
         </>
-      )
-      }
-    </Formik >
+      )}
+    </Formik>
   );
 }

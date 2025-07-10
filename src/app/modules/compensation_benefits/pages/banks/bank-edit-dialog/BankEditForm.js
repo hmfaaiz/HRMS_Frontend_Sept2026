@@ -17,6 +17,7 @@ import axios from 'axios';
 import { amountLimit } from "../../../../../utils/common";
 import { DROPDOWN, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -703,29 +704,33 @@ export function BankEditForm({
                                 </td>
 
                                 <td>
-                                  <input
-                                    disabled={
-                                      obj.calculation_type == "% Of Gross" ||
-                                      obj.calculation_type == "% Of Basic"
-                                    }
-                                    style={{ width: "80px" }}
-                                    type="number"
-                                    onChange={(e) => {
-                                      handleFieldChanged(e);
-                                      setErrors((prev) => ({
-                                        ...prev,
-                                        [`amount-${rightindex}`]: "",
-                                      })); // Clear error on change
-                                    }}
-                                    onInput={(e) => {
-                                      e.target.value = amountLimit(
-                                        e.target.value
-                                      ); // Limit to 3 digits
-                                    }}
-                                    maxLength={8}
-                                    value={obj.amount}
-                                    id={"amount-" + rightindex}
-                                  ></input>
+ 
+                                      <AmountInput
+                              field={{
+                                name: `amount-${rightindex}`,
+                                value: obj.amount,
+                                onBlur: () => {},
+                                onChange: () => {},
+                              }}
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {
+                                  setDefaultEarningList(list =>
+                                    list.map((item, idx) =>
+                                      idx === rightindex ? { ...item, amount: value } : item
+                                    )
+                                  );
+                                  setErrors(prev => ({ ...prev, [`amount-${rightindex}`]: '' }));
+                                },
+                                setFieldTouched: () => {},
+                              }}
+                              label={null}
+                              disabled={                                     
+                                 obj.calculation_type == "% Of Gross" ||
+                                obj.calculation_type == "% Of Basic"}
+                              value={obj.amount}
+                            />
                                   {deferrors[`amount-${rightindex}`] && (
                                     <div className="form-feedBack">
                                       {deferrors[`amount-${rightindex}`]}
@@ -772,7 +777,7 @@ export function BankEditForm({
                   >
                     <h6>Deductions</h6>
                     {/* {<a onClick={ModalUIProps.newButtonDeductionTran} href='javascript:void(0)'>+ Add New </a>} */}
-                    <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                    <table class=" table table-head-custom table-vertical-center overflow-hidden table-hover">
                       <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
                         {/* <td>Employee</td> */}
                         <td></td>
@@ -887,23 +892,32 @@ export function BankEditForm({
                                   )}
                                 </td>
                                 <td>
-                                  <input
-                                    maxLength={8}
-                                    type="number"
-                                    onInput={(e) => {
-                                      e.target.value = amountLimit(
-                                        e.target.value
-                                      ); // Limit to 3 digits
-                                    }}
-                                    disabled={
-                                      obj.calculation_type == "% Of Gross" ||
-                                      obj.calculation_type == "% Of Basic"
-                                    }
-                                    style={{ width: "80px" }}
-                                    onChange={handleFieldChanged}
-                                    value={obj.amount}
-                                    id={"amount-" + rightindex}
-                                  ></input>
+                                <AmountInput
+                              field={{
+                                name: `amount-${rightindex}`,
+                                value: obj.amount,
+                                onBlur: () => {},
+                                onChange: () => {},
+                              }}
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {
+                                  setDefaultEarningList(list =>
+                                    list.map((item, idx) =>
+                                      idx === rightindex ? { ...item, amount: value } : item
+                                    )
+                                  );
+                                  setErrors(prev => ({ ...prev, [`amount-${rightindex}`]: '' }));
+                                },
+                                setFieldTouched: () => {},
+                              }}
+                              label={null}
+                              disabled={                                     
+                                       obj.calculation_type == "% Of Gross" ||
+                                      obj.calculation_type == "% Of Basic"}
+                              value={obj.amount}
+                            />
                                 {deferrors[`amount-${rightindex}`] && (
                                   <div className="form-feedBack">
                                     {deferrors[`amount-${rightindex}`]}

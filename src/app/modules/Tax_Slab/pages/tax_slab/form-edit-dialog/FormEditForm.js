@@ -4,11 +4,15 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { useDispatch, useSelector } from "react-redux";
-import { amountLimit, formatNumberWithCommas } from "../../../../../utils/common"
+import {
+  amountLimit,
+  formatNumberWithCommas,
+} from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../_redux/redux-Actions";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 // percentage: Yup.string().required("Required*"),
 const tax_slabEditSchema = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
@@ -23,17 +27,19 @@ const tax_slabEditSchema = Yup.object().shape({
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .required(VALIDATION_MESSAGES.required),
 
-  // percentage: Yup.number() 
-  //   .min(0,VALIDATION_MESSAGES.minZeroValue) 
-  //   .max(100,VALIDATION_MESSAGES.maxHundredValue) 
+  // percentage: Yup.number()
+  //   .min(0,VALIDATION_MESSAGES.minZeroValue)
+  //   .max(100,VALIDATION_MESSAGES.maxHundredValue)
 
   //   .required(VALIDATION_MESSAGES.required),
 
-  percentage: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).test(
-    'max-decimals',
-    VALIDATION_MESSAGES.minZeroValue,
-    (value) => /^\d{1,4}(\.\d{1,2})?$/.test(value?.toString())
-  ).required(VALIDATION_MESSAGES.required),
+  percentage: Yup.number()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
+    .max(100, VALIDATION_MESSAGES.maxHundredValue)
+    .test("max-decimals", VALIDATION_MESSAGES.minZeroValue, (value) =>
+      /^\d{1,4}(\.\d{1,2})?$/.test(value?.toString())
+    )
+    .required(VALIDATION_MESSAGES.required),
 
   // fixed_amount: Yup.string().required("Required*"),
 
@@ -41,7 +47,6 @@ const tax_slabEditSchema = Yup.object().shape({
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .required(VALIDATION_MESSAGES.required),
 });
-
 
 export function FormEditForm({
   saveForm,
@@ -52,31 +57,24 @@ export function FormEditForm({
   enableLoading,
   loading,
 }) {
-
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
 
   useEffect(() => {
     if (!user.Id) {
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"))
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(actions.fetchgetAllTaxYearSetup());
-
     }
   }, [dispatch, user.Id]);
 
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.tax_slab,
+      userAccess: state?.auth?.userAccess["tax_slab"],
+    };
+  });
 
-    const { currentState, userAccess } = useSelector(
-      (state) => { return {
-        
-        currentState: state.tax_slab,
-        userAccess: state?.auth?.userAccess["tax_slab"],
-      }},
-   
-    );
-  
-    
-    const { taxYearSetup,  } = currentState;
-
+  const { taxYearSetup } = currentState;
 
   return (
     <Formik
@@ -92,12 +90,11 @@ export function FormEditForm({
       initialValues={user}
       validationSchema={tax_slabEditSchema}
       onSubmit={(values) => {
-
         enableLoading();
         saveForm(values);
       }}
     >
-      {({ handleSubmit,errors,touched, values, setFieldValue }) => (
+      {({ handleSubmit, errors, touched, values, setFieldValue, setFieldTouched }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -108,50 +105,51 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="form-group row">
-
-
-
-
                   <div className="col-12 col-md-4 mt-3">
-                    <label>
-                      From Amount{" "}
-                      <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="from_amount"
-                      component={Input}
+                    <AmountInput
+                      field={{
+                        name: `from_amount`,
+                        value: values?.from_amount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
                       placeholder="Enter From Amount"
-                      // label="From Amount"
-                      type="number"
-                      // min={0}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                      }}
+                      label={
+                        <>
+                          From Amount <span style={{ color: "red" }}>*</span>
+                        </>
+                      }
                     />
                   </div>
 
                   <div className="col-12 col-md-4 mt-3">
-                    <label>
-                      To Amount{" "}
-                      <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="to_amount"
-                      component={Input}
+                    <AmountInput
+                      field={{
+                        name: `to_amount`,
+                        value: values?.to_amount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
                       placeholder="Enter To Amount"
-                      // label="To Amount"
-                      type="number"
-                      min={0}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                      }}
+                      label={
+                        <>
+                          To Amount <span style={{ color: "red" }}>*</span>
+                        </>
+                      }
                     />
                   </div>
 
                   <div className="col-12 col-md-4 mt-3">
                     <label>
-                      Percentage{" "}
-                      <span style={{ color: "red" }}>*</span>
+                      Percentage <span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="percentage"
@@ -159,55 +157,54 @@ export function FormEditForm({
                       placeholder="Enter Percentage"
                       // label="Percentage"
                       type="number"
-
-
                       onChange={(e) => {
                         if (Number(e.target.value) <= 100) {
                           // e.target.value = e.target.value.slice(0,5);
-                          if (/^\d{0,3}(\.\d{1,2})?$/.test(e.target.value?.toString())) {
-                            setFieldValue("percentage", e.target.value)
-
+                          if (
+                            /^\d{0,3}(\.\d{1,2})?$/.test(
+                              e.target.value?.toString()
+                            )
+                          ) {
+                            setFieldValue("percentage", e.target.value);
                           }
                         }
                       }}
 
-                    // onInput={(e) => {
-                    //   const inputValue = e.target.value;
+                      // onInput={(e) => {
+                      //   const inputValue = e.target.value;
 
-                    //   // Allow the decimal point and check the format
-                    //   const regex = /^(?:100(?:\.0(?:0)?)?|\d{1,2}(?:\.\d{1,2})?)$/;
+                      //   // Allow the decimal point and check the format
+                      //   const regex = /^(?:100(?:\.0(?:0)?)?|\d{1,2}(?:\.\d{1,2})?)$/;
 
-                    //   // If the input matches the regex, accept it
-                    //   if (regex.test(inputValue)) {
-                    //     e.target.value = inputValue;
-                    //   } else {
-                    //     // If it doesn't match, find the last valid input
-                    //     const lastValidMatch = inputValue.match(/^(?:100(?:\.0(?:0)?)?|\d{1,2}(?:\.\d{1,2})?)$/);
-                    //     e.target.value = lastValidMatch ? lastValidMatch[0] : '';
-                    //   }
-                    // }}
-
-
-
-
-
+                      //   // If the input matches the regex, accept it
+                      //   if (regex.test(inputValue)) {
+                      //     e.target.value = inputValue;
+                      //   } else {
+                      //     // If it doesn't match, find the last valid input
+                      //     const lastValidMatch = inputValue.match(/^(?:100(?:\.0(?:0)?)?|\d{1,2}(?:\.\d{1,2})?)$/);
+                      //     e.target.value = lastValidMatch ? lastValidMatch[0] : '';
+                      //   }
+                      // }}
                     />
                   </div>
                   <div className="col-12 col-md-4 mt-3">
-                    <label>
-                      Fixed Amount{" "}
-                      <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="fixed_amount"
-                      component={Input}
-                      placeholder="Enter Fixed Amount"
-                      // label="Fixed Amount"
-                      type="number"
-                      min={0}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
+                    <AmountInput
+                      field={{
+                        name: `fixed_amount`,
+                        value: values?.fixed_amount,
                       }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      placeholder="Enter Fixed Amount"
+                      label={
+                        <>
+                          Fixed Amount <span style={{ color: "red" }}>*</span>
+                        </>
+                      }
                     />
                   </div>
                 </div>
@@ -232,8 +229,6 @@ export function FormEditForm({
                 Ok
               </button>
             )}
-
-
 
             {!isUserForRead && (
               <button

@@ -12,6 +12,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { formatDates } from "../../../../../utils/common";
 import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
+import { TimeInput } from "../../../../../../_metronic/_partials/controls/forms/TimeInput";
 
 export function MasterEditForm({
   submitForm,
@@ -240,7 +241,7 @@ export function MasterEditForm({
                         <Field
                           name="attDate"
                           component={DatePickerField}
-                          dateFormat="dd/MMM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           onChange={(date) => {
                             setFieldValue("attDate", date);
                           }}
@@ -262,7 +263,7 @@ export function MasterEditForm({
                         <Field
                           name="attDateIn"
                           component={DatePickerField}
-                          dateFormat="dd/MMM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           onChange={(date) => {
                             setFieldValue("attDateIn", date);
                           }}
@@ -281,8 +282,8 @@ export function MasterEditForm({
                       <div className="col-12 col-md-6 mt-3">
                         <Field
                           name="timeIn"
-                          component={Input}
-                          maxlength="4"
+                          component={TimeInput}
+                          // maxlength="4"
                           label={
                             <span>
                               {" "}
@@ -301,7 +302,7 @@ export function MasterEditForm({
                         <Field
                           name="attDateOut"
                           component={DatePickerField}
-                          dateFormat="dd/MMM/yyyy"
+                          dateFormat="dd-MMM-yyyy"
                           label={
                             <span>
                               {" "}
@@ -317,8 +318,8 @@ export function MasterEditForm({
                       <div className="col-12 col-md-6 mt-3">
                         <Field
                           name="timeOut"
-                          component={Input}
-                          maxlength="4"
+                          component={TimeInput}
+                          // maxlength="4"
                           label={
                             <span>
                               {" "}
@@ -336,7 +337,7 @@ export function MasterEditForm({
                       <div className="col-12 col-md-6 mt-3">
                         <Field
                           name="workedHours"
-                          component={Input}
+                          component={TimeInput}
                           className="form-control"
                           disabled
                           label={<span> Worked Hours</span>}

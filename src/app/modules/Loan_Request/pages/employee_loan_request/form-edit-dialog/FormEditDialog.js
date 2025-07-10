@@ -70,7 +70,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     };
 
     // Validate the form based on various conditions
-    if (maxAmountLimit < updatedData.total_loan_amount) {
+    if (maxAmountLimit < Number(updatedData.total_loan_amount)) {
       disbaleLoading();
       toast.error("Loan amount exceeds the limit.", {
         position: "top-right",
@@ -96,7 +96,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         }
       );
     } else if (
-      updatedData.total_loan_amount < updatedData.monthly_installment
+      Number(updatedData.total_loan_amount) <
+      Number(updatedData.monthly_installment)
     ) {
       disbaleLoading();
       toast.error("The monthly installment must not exceed loan amount.", {
@@ -112,7 +113,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       // Handle creating a new loan request
       formUIProps.setIds("");
       updatedData.total_installment = totalInstallments;
-
+      updatedData.total_loan_amount = Number(updatedData.total_loan_amount);
+      updatedData.monthly_installment = Number(updatedData.monthly_installment);
       await dispatch(
         actions.createEmployeeLoanRequest(
           { ...updatedData, authortiesList: empAuthorityList },
@@ -136,8 +138,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       const formUpdatedFields = {
         Id: updatedData.Id,
         loan_typeId: updatedData.loan_typeId,
-        monthly_installment: updatedData.monthly_installment,
-        total_loan_amount: updatedData.total_loan_amount,
+        monthly_installment: Number(updatedData.monthly_installment),
+        total_loan_amount: Number(updatedData.total_loan_amount),
         isLoanContinuing: updatedData.isLoanContinuing,
         total_installment: totalInstallments,
       };

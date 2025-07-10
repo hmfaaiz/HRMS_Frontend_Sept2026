@@ -12,6 +12,7 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import { format } from "date-fns";
+import { formatTime } from "../../../../../utils/common";
 export function WorkflowTable({ onHide, show }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
@@ -208,13 +209,13 @@ export function WorkflowTable({ onHide, show }) {
             <div className="col-3">
               Time In :{" "}
               <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.timeIn}
+                {formatTime(formUIProps?.currentData?.parentData?.timeIn)}
               </span>
             </div>
             <div className="col-3">
               Time Out :{" "}
               <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.timeOut}
+              {formatTime(formUIProps?.currentData?.parentData?.timeOut)}
               </span>
             </div>
             <div className="col-3">

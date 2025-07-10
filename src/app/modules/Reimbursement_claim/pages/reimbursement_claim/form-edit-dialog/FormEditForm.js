@@ -25,7 +25,11 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getEmployeeProfileById } from "../../../../../../_metronic/redux/dashboardCrud";
-import { updateApprovedStatus ,fetchReimbursementClaim} from "../../../_redux/redux-Actions";
+import {
+  updateApprovedStatus,
+  fetchReimbursementClaim,
+} from "../../../_redux/redux-Actions";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 const ReimbursementSchema = Yup.object().shape({
   reimbursement_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -58,7 +62,9 @@ export function FormEditForm({
   isEdit,
   isFileReq,
   setIsFileReq,
-  employeeId,disbaleLoading,formUIProps
+  employeeId,
+  disbaleLoading,
+  formUIProps,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -70,10 +76,15 @@ export function FormEditForm({
   useEffect(() => {
     if (!user.Id) {
       dispatch(fetchAllFormsMenu(202, "allReimbursementTypeList"));
-      const key = "allPayrollMonthYearList";  // The key parameter
+      const key = "allPayrollMonthYearList"; // The key parameter
       if (employeeId) {
         // dispatch(fetchAllPayrollMonthYearList(employeeId, key));
-        dispatch(fetchAllPayrollMonthYearList({ subsidiaryId: null, employeeId: employeeId }, key));
+        dispatch(
+          fetchAllPayrollMonthYearList(
+            { subsidiaryId: null, employeeId: employeeId },
+            key
+          )
+        );
       }
 
       // dispatch(fetchAllPayrollMonthYearList("allPayrollMonthYearList"));
@@ -112,14 +123,19 @@ export function FormEditForm({
     }
   }, [employeeId]);
 
-
-  const calculateRemainingAmount = (reimbursementTypeId, payrollForId, policies, values) => {
+  const calculateRemainingAmount = (
+    reimbursementTypeId,
+    payrollForId,
+    policies,
+    values
+  ) => {
     // Find the max amount allowed for the reimbursement type
     // let employee = currentState?.loan_config_details_permission?.employee;
 
-
     const maxAmount =
-      policies?.find((item) => item.reimbursement_typeId === reimbursementTypeId)?.max_amount || 0;
+      policies?.find(
+        (item) => item.reimbursement_typeId === reimbursementTypeId
+      )?.max_amount || 0;
 
     // Calculate the claimed amount for the selected reimbursement type and payroll
 
@@ -127,16 +143,16 @@ export function FormEditForm({
       ?.filter(
         (entity) =>
           entity.reimbursement_typeId === reimbursementTypeId &&
-          entity.pay_in_payroll_forId === payrollForId 
-          // && entity.approved_status == 1
+          entity.pay_in_payroll_forId === payrollForId
+        // && entity.approved_status == 1
       )
       ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
 
     // Return the remaining amount
 
     let finalMaxAmount = (maxAmount || 0) - (claimedAmount || 0);
-    if (isEdit & values.approved_status == 1) {
-      finalMaxAmount += values.amount
+    if (isEdit & (values.approved_status == 1)) {
+      finalMaxAmount += values.amount;
     }
     return finalMaxAmount;
   };
@@ -147,27 +163,19 @@ export function FormEditForm({
     { value: 2, label: "Rejected" },
   ];
 
-
-
- const UpdateApprovedStatus = async (Id, approved_status) => {
-
+  const UpdateApprovedStatus = async (Id, approved_status) => {
     if (Id && approved_status) {
       let data = {
-        Id, approved_status,
-
-      }
+        Id,
+        approved_status,
+      };
       await dispatch(updateApprovedStatus(data, disbaleLoading, onHide));
       await dispatch(fetchReimbursementClaim(formUIProps));
       setIds("");
-
     }
+  };
 
-  }
-
-
-  const{    activeFiscalYear
-    } = useSelector((state) => state.dashboard);
-
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
   return (
     <Formik
@@ -178,11 +186,11 @@ export function FormEditForm({
       onSubmit={(values, { resetForm }) => {
         enableLoading();
 
-
         const finalAmountLimit = calculateRemainingAmount(
           values?.reimbursement_typeId,
           values?.pay_in_payroll_forId,
-          currentState?.reimbursement_config_policies_permission?.policies, values
+          currentState?.reimbursement_config_policies_permission?.policies,
+          values
         );
         const clearForm = () => {
           resetForm();
@@ -190,7 +198,7 @@ export function FormEditForm({
             inputFile.current.value = "";
           }
         };
-        saveForm(values, finalAmountLimit, isFileReq, clearForm,);
+        saveForm(values, finalAmountLimit, isFileReq, clearForm);
       }}
     >
       {({
@@ -200,7 +208,7 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleReset,
-
+        setFieldTouched,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -221,7 +229,6 @@ export function FormEditForm({
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-
                       isDisabled={isEdit}
                       onChange={(e) => {
                         setFieldValue("reimbursement_typeId", e.value || null);
@@ -232,7 +239,6 @@ export function FormEditForm({
                         setIsFileReq(
                           policy?.attachment_required && !values.file
                         );
-
                       }}
                       value={
                         dashboard.allReimbursementTypeList.find(
@@ -246,30 +252,26 @@ export function FormEditForm({
                     />
                   </div>
 
+                  {/* Active payroll month */}
 
-                   {/* Active payroll month */}
-
-
-
-            <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
-
-  {activeFiscalYear ? (() => {
-
-    return (
-      <>
-        <div>
-          <b>Active Fiscal Year -</b>{" "}
-          {activeFiscalYear?.label}
-        </div>
-        <div>
-          <b>Active Payroll Month -</b>{" "}
-          {activeFiscalYear?.payrollMonthLabel}
-        </div>
-      </>
-    );
-  })() : null}
-</div>
-
+                  <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+                    {activeFiscalYear
+                      ? (() => {
+                          return (
+                            <>
+                              <div>
+                                <b>Active Fiscal Year -</b>{" "}
+                                {activeFiscalYear?.label}
+                              </div>
+                              <div>
+                                <b>Active Payroll Month -</b>{" "}
+                                {activeFiscalYear?.payrollMonthLabel}
+                              </div>
+                            </>
+                          );
+                        })()
+                      : null}
+                  </div>
 
                   <div className="col-12 col-md-6 mt-3">
                     <label>
@@ -283,19 +285,19 @@ export function FormEditForm({
                       // label="Date"
                       type="date"
                       maxDate={new Date()}
-                      minDate={data.dateOfJoining ? new Date(data.dateOfJoining) : null}
+                      minDate={
+                        data.dateOfJoining ? new Date(data.dateOfJoining) : null
+                      }
                       // disabled={!isActiveMonth}
                       // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
                       //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
                       disabled={isEdit}
-
                     />
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">
                     <SearchSelect
                       name="pay_in_payroll_forId"
-
                       label={
                         <span>
                           Reimbursement Month
@@ -328,7 +330,7 @@ export function FormEditForm({
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">
-                    <Field
+                    {/* <Field
                       name="amount"
                       component={Input}
                       placeholder="Enter Amount"
@@ -340,19 +342,19 @@ export function FormEditForm({
                         const finalAmountLimit = calculateRemainingAmount(
                           values?.reimbursement_typeId,
                           values?.pay_in_payroll_forId,
-                          currentState?.reimbursement_config_policies_permission?.policies, values
+                          currentState?.reimbursement_config_policies_permission
+                            ?.policies,
+                          values
                         );
                         return (
-
-
                           <div className="d-flex">
                             <div className="d-flex">Total Amount </div>
                             <div className="d-flex ml-3">
-                              ( Amount Limit: {finalAmountLimit?.toLocaleString()} )<span style={{ color: "red" }}>*</span>
+                              ( Amount Limit:{" "}
+                              {finalAmountLimit?.toLocaleString()} )
+                              <span style={{ color: "red" }}>*</span>
                             </div>
                           </div>
-
-
                         );
                       })()}
                       type="number"
@@ -363,7 +365,9 @@ export function FormEditForm({
                         const finalAmountLimit = calculateRemainingAmount(
                           values?.reimbursement_typeId,
                           values?.pay_in_payroll_forId,
-                          currentState?.reimbursement_config_policies_permission?.policies, values
+                          currentState?.reimbursement_config_policies_permission
+                            ?.policies,
+                          values
                         );
 
                         const value = Number(e.target.value);
@@ -377,6 +381,65 @@ export function FormEditForm({
 
                         setFieldValue("amount", value);
                       }}
+                    /> */}
+                    <AmountInput
+                      field={{
+                        name: `amount`,
+                        value: values?.amount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      max={calculateRemainingAmount(
+                        values?.reimbursement_typeId,
+                        values?.pay_in_payroll_forId,
+                        currentState?.reimbursement_config_policies_permission
+                          ?.policies,
+                        values
+                      )}
+                      onChange={(e) => {
+                        const finalAmountLimit = calculateRemainingAmount(
+                          values?.reimbursement_typeId,
+                          values?.pay_in_payroll_forId,
+                          currentState?.reimbursement_config_policies_permission
+                            ?.policies,
+                          values
+                        );
+                        const value = Number(e);
+
+                        if (
+                          finalAmountLimit !== undefined &&
+                          value > finalAmountLimit
+                        ) {
+                          return; // Prevent setting value above max
+                        }
+
+                        setFieldValue("amount", value);
+                      }}
+                      placeholder="Enter Amount"
+                      disabled={isEdit}
+                      label={(() => {
+                        const finalAmountLimit = calculateRemainingAmount(
+                          values?.reimbursement_typeId,
+                          values?.pay_in_payroll_forId,
+                          currentState?.reimbursement_config_policies_permission
+                            ?.policies,
+                          values
+                        );
+                        return (
+                          <div className="d-flex">
+                            <div className="d-flex">Total Amount </div>
+                            <div className="d-flex ml-3">
+                              ( Amount Limit:{" "}
+                              {finalAmountLimit?.toLocaleString()} )
+                              <span style={{ color: "red" }}>*</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     />
                   </div>
                   {/* {isEdit ? (<div className="col-12 col-md-6 mt-3">
@@ -417,8 +480,6 @@ export function FormEditForm({
                   </div>
                   ) : null} */}
 
-
-
                   <div className="col-12 col-md-6 mt-3">
                     <Field
                       name="details"
@@ -428,7 +489,6 @@ export function FormEditForm({
                       // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
                       //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
                       disabled={isEdit}
-
                       label={
                         <span>
                           Details <span style={{ color: "red" }}>*</span>
@@ -437,7 +497,6 @@ export function FormEditForm({
                       type="text"
                     />
                   </div>
-
 
                   <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
                     <label
@@ -450,7 +509,6 @@ export function FormEditForm({
                       {isFileReq && <span style={{ color: "red" }}>*</span>}
                     </label>
                     <input
-
                       name="file"
                       type="file"
                       accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
@@ -510,7 +568,6 @@ export function FormEditForm({
               </button>
             )}
 
-       
             {/* { true && (
                 <button
                   type="submit"
@@ -532,40 +589,35 @@ export function FormEditForm({
                 </button>
               )} */}
 
+            <button
+              type="submit"
+              // onClick={() => handleSubmit()}
+              onClick={() => {
+                handleSubmit();
+              }}
+              className="btn btn-primary btn-elevate"
+              // disabled={loading}
+              // disabled={loading || (isEdit && !dashboard?.allPayrollMonthYearList.some(
+              //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true
+              // ))}
+              disabled={loading || isEdit}
+            >
+              Save
+              {loading && (
+                <span className="ml-3 mr-3 spinner spinner-white"></span>
+              )}
+            </button>
 
-                <button
-                  type="submit"
-                  // onClick={() => handleSubmit()}
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                  className="btn btn-primary btn-elevate"
-                  // disabled={loading}
-                  // disabled={loading || (isEdit && !dashboard?.allPayrollMonthYearList.some(
-                  //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true
-                  // ))}
-                  disabled={loading || isEdit}
-                >
-                  Save
-                  {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
-           
-
-               {
-                  user?.approved_status ==0 ? (
-                    <button
-                      type="button"
-                      className="btn btn-green"
-                      // disabled={user?.approved_status  == 1}
-                      onClick={() => UpdateApprovedStatus(user.Id, 1)}
-                    >
-                      Approve
-                    </button>
-                  ) : ( null
-                  )
-                }
+            {user?.approved_status == 0 ? (
+              <button
+                type="button"
+                className="btn btn-green"
+                // disabled={user?.approved_status  == 1}
+                onClick={() => UpdateApprovedStatus(user.Id, 1)}
+              >
+                Approve
+              </button>
+            ) : null}
           </Modal.Footer>
         </>
       )}
