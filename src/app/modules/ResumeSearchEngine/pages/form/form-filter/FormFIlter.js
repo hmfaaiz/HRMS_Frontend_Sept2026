@@ -314,7 +314,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.departmentId
                           ) || null
                         }
-                        options={dashboard?.allDept}
+                        // options={dashboard?.allDept}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                       />
                     </div>
 
@@ -332,7 +333,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.designationId
                           ) || null
                         }
-                        options={dashboard?.allDesignations}
+                        // options={dashboard?.allDesignations}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations: []),]}
                       />
                     </div>
 
@@ -351,7 +353,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.gradeId
                           ) || null
                         }
-                        options={dashboard?.allEmployeegradeList}
+                        // options={dashboard?.allEmployeegradeList}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList: []),]}
                       />
                     </div>
 
@@ -370,7 +373,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.locationId
                           ) || null
                         }
-                        options={dashboard.allLocationChildMenus}
+                        // options={dashboard.allLocationChildMenus}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus: []),]}
                       />
                     </div>
 
@@ -392,7 +396,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.countryId
                           ) || null
                         }
-                        options={dashboard?.allCountry}
+                        // options={dashboard?.allCountry}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry: []),]}
                       />
                     </div>
 
@@ -411,7 +416,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.cityId
                           ) || null
                         }
-                        options={filteredCities(values.countryId)}
+                        // options={filteredCities(values.countryId)}
+                               options={[{ label: '--Select--', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId): []),]}
 
                       />
                     </div>
@@ -436,7 +442,8 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
 
-                        options={dashboard?.allAppointmentTypeList}
+                        // options={dashboard?.allAppointmentTypeList}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList: []),]}
 
                       />
                     </div>
@@ -498,7 +505,8 @@ export function FormFIlter({ listLoading, user }) {
 
                         }}
 
-                        options={dashboard?.allApplicationStatusList || []}
+                        // options={dashboard?.allApplicationStatusList || []}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allApplicationStatusList) ? dashboard?.allApplicationStatusList: []),]}
                         getOptionLabel={(x) => x.label} // optional: customize label rendering
                         getOptionValue={(x) => x.value} // optional: customize value extraction
                         placeholder="Select Status"
@@ -523,7 +531,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.priorityTypeId
                           ) || null
                         }
-                        options={dashboard?.allPriorityTypeList}
+                        // options={dashboard?.allPriorityTypeList}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList: []),]}
                       />
                     </div>
                     {/* Job Status */}
@@ -765,7 +774,8 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
 
-                        options={dashboard.allCurrencyCodeList}
+                        // options={dashboard.allCurrencyCodeList}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList: []),]}
                       />
                     </div>
 
@@ -787,7 +797,8 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
-                        options={salaryPayTypeIdOptions}
+                        // options={salaryPayTypeIdOptions}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(salaryPayTypeIdOptions) ? salaryPayTypeIdOptions: []),]}
                       />
                     </div>
 
@@ -832,7 +843,8 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
 
-                        options={dashboard?.allQualificationList}
+                        // options={dashboard?.allQualificationList}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allQualificationList) ? dashboard?.allQualificationList: []),]}
 
 
                       />
@@ -947,7 +959,8 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
 
-                        options={dashboard.allMaritalStatus}
+                        // options={dashboard.allMaritalStatus}
+                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus: []),]}
                       />
                     </div>
                     <div className="col-12 col-md-4 mt-3">
@@ -990,7 +1003,8 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
 
-                        options={dashboard.allReligionChildMenus}
+                        // options={dashboard.allReligionChildMenus}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus: []),]}
                       />
                     </div>
 
@@ -1004,7 +1018,8 @@ export function FormFIlter({ listLoading, user }) {
                           setFieldValue("nationality", e?.value ?? null);
                           handleSubmit();
                         }}
-                        options={nationalityOptions}
+                        // options={nationalityOptions}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions: []),]}
                         placeholder="Select Nationality"
                       />
 

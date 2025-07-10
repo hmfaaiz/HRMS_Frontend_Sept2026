@@ -124,7 +124,7 @@ export function DeptEditForm({
   useEffect(() => {
     fetchData(setDefaultDepartmentCode);
   }, []);
-  console.log("user", user);
+
   return (
     <>
       <Formik
@@ -306,13 +306,20 @@ export function DeptEditForm({
                           value={defDept || null}
                           error={errors.parentDept}
                           touched={touched.parentDept}
-                          options={
-                            user?.deptId
-                              ? dashboard.allDept.filter(
-                                  (e) => e?.value !== user?.deptId
-                                )
-                              : dashboard.allDept
-                          }
+                          // options={
+                          //   user?.deptId
+                          //     ? dashboard.allDept.filter(
+                          //         (e) => e?.value !== user?.deptId
+                          //       )
+                          //     : dashboard.allDept
+                          // }
+                          options={[
+                           { label: '--Select--', value: '' },
+                             ...(user?.deptId
+                             ? dashboard.allDept.filter((e) => e?.value !== user?.deptId)
+                               : dashboard.allDept || [])
+                              ]}
+
                           // options={
 
                           //   dashboard?.allDept?.filter(

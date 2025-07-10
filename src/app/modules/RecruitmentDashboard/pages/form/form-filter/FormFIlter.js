@@ -237,6 +237,7 @@ export function FormFIlter({ listLoading, user }) {
                                   ) || null
                                 }
                                 options={vacancyStatusOptions}
+                          
                               />
                             </div>
                           </div>
@@ -276,7 +277,8 @@ export function FormFIlter({ listLoading, user }) {
                                     (option) => option.value === values.departmentId
                                   ) || null
                                 }
-                                options={dashboard?.allDept}
+                                // options={dashboard?.allDept}
+                                     options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                               />
                             </div>
 
@@ -294,7 +296,8 @@ export function FormFIlter({ listLoading, user }) {
                                     (option) => option.value === values.designationId
                                   ) || null
                                 }
-                                options={dashboard?.allDesignations}
+                                // options={dashboard?.allDesignations}
+                                  options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                               />
                             </div>
 
@@ -313,7 +316,8 @@ export function FormFIlter({ listLoading, user }) {
                                     (option) => option.value === values.gradeId
                                   ) || null
                                 }
-                                options={dashboard?.allEmployeegradeList}
+                                // options={dashboard?.allEmployeegradeList}
+                                options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
                               />
                             </div>
 
@@ -332,7 +336,9 @@ export function FormFIlter({ listLoading, user }) {
                                     (option) => option.value === values.locationId
                                   ) || null
                                 }
-                                options={dashboard.allLocationChildMenus}
+                                // options={dashboard.allLocationChildMenus}
+                                options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
+                                
                               />
                             </div>
 
@@ -398,7 +404,8 @@ export function FormFIlter({ listLoading, user }) {
                                   ) || null
                                 }
 
-                                options={dashboard?.allAppointmentTypeList}
+                                // options={dashboard?.allAppointmentTypeList}
+                                 options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
 
                               />
                             </div>
