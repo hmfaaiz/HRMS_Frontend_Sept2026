@@ -17,6 +17,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { Modal } from "react-bootstrap";
 import { format } from "date-fns";
+import { formatTime } from "../../../../../utils/common";
 
 export function FormTable() {
   //Users UI Context
@@ -29,14 +30,11 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState } = useSelector(
-    (state) => {
-      return {
-        currentState: state.attendance,
-      }
-    },
-    shallowEqual
-  );
+  const { currentState } = useSelector((state) => {
+    return {
+      currentState: state.attendance,
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -83,9 +81,9 @@ export function FormTable() {
         maxWidth: "160px",
       },
       formatter: (cell) => {
-              // Format the date without timestamp
-              return format(new Date(cell), 'dd-MMM-yyyy'); // Customize format as needed
-            },
+        // Format the date without timestamp
+        return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
+      },
     },
     {
       dataField: "formattedDateIn",
@@ -108,6 +106,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter: (cell) => formatTime(cell),
     },
 
     {
@@ -120,6 +119,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => formatTime(cell)
     },
 
     {
@@ -133,8 +133,7 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
-   
-   
+
     {
       dataField: "workedHours",
       text: "Worked Hours",
@@ -145,6 +144,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => formatTime(cell)
     },
     {
       dataField: "oT",
@@ -156,6 +156,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => formatTime(cell)
     },
     {
       dataField: "attendanceStatus",
@@ -179,7 +180,6 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
-
   ];
 
   //Table pagination properties
@@ -202,7 +202,7 @@ export function FormTable() {
                 paginationProps={paginationProps}
               >
                 <BootstrapTable
-                responsive
+                  responsive
                   noDataIndication={NoRecordsFoundMessage({ entities })}
                   wrapperClasses="table-responsive"
                   bordered={false}
@@ -222,7 +222,6 @@ export function FormTable() {
                   // })}
                   {...paginationTableProps}
                 >
-
                   <PleaseWaitMessage entities={entities} />
                   <NoRecordsFoundMessage entities={entities} />
                 </BootstrapTable>
