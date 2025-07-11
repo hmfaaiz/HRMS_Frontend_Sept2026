@@ -226,6 +226,12 @@ const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pag
 const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
 const JobOfferModule = lazy(() => import("./modules/Job_Offer/page/index"));
 const RecruitmentDashboardModule = lazy(() => import("./modules/RecruitmentDashboard/pages/index"));
+const LeaveWorkflowStatus = lazy(()=> import('./modules/LeaveWorkflowStatus/page/index'))
+const LoanWorkflowStatus = lazy(()=> import("./modules/LoanWorkflowStatus/page/index"))
+const AttendanceWorkflowStatus = lazy(()=> import("./modules/AttendanceWorkflowStatus/page/index"))
+const TeamLeaveCalender = lazy(()=> import("./modules/Leave_Calendar_Team/pages/index"))
+const TeamAttendanceCalender = lazy(()=> import("./modules/Attendance_Calendar_Team/pages/index"))
+const PortalHolidayCalendar = lazy(()=> import("./modules/PortalHolidayCalendar/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -323,8 +329,12 @@ const ROUTES = {
   resume_search_engine:ResumeSearchEngineModule,
   job_offer:JobOfferModule,
   recruitment_dashboard:RecruitmentDashboardModule,
-  
- 
+  leaveworkflowstatus: LeaveWorkflowStatus,
+  loanworkflowstatus : LoanWorkflowStatus,
+  attendanceworkflowstatus: AttendanceWorkflowStatus,
+  leave_calendar_team : TeamLeaveCalender,
+  attendance_calendar_team : TeamAttendanceCalender,
+  holiday_calendar : PortalHolidayCalendar
 };
 
 export default function BasePage() {
@@ -334,7 +344,6 @@ export default function BasePage() {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
   const SettingsAccess = auth?.userAccess?.Settings;
-
   // );
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
@@ -347,7 +356,6 @@ export default function BasePage() {
             .join("-")
             .toLowerCase();
           if (ROUTES[accessName]) {
-   
             return (
               <Route
                 key={key}

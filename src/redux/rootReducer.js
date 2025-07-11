@@ -103,6 +103,12 @@ import { InterviewScheduleSlice } from "../app/modules/Interview_Schedule/_redux
 import { ResumeSearchEngineSlice } from "../app/modules/ResumeSearchEngine/_redux/redux-Slice";
 import { JobOfferSlice } from "../app/modules/Job_Offer/_redux/formSlice";
 import { RecruitmentDashboardSlice } from "../app/modules/RecruitmentDashboard/_redux/redux-Slice";
+import { LeaveWorkflowStatusSlice } from "../app/modules/LeaveWorkflowStatus/redux/formSlice";
+import { LoanWorkflowStatusSlice } from "../app/modules/LoanWorkflowStatus/redux/formSlice";
+import { AttendanceWorkflowStatusSlice } from "../app/modules/AttendanceWorkflowStatus/redux/formSlice";
+import { TeamLeaveCalendarSlice } from "../app/modules/Leave_Calendar_Team/_redux/redux-Slice";
+import { TeamAttendanceCalendarSlice } from "../app/modules/Attendance_Calendar_Team/_redux/redux-Slice";
+import { PortalHolidayCalendarSlice } from "../app/modules/PortalHolidayCalendar/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -204,8 +210,12 @@ export const rootReducer = combineReducers({
   resume_search_engine:ResumeSearchEngineSlice.reducer,
   job_offer:JobOfferSlice.reducer,
   recruitment_dashboard:RecruitmentDashboardSlice.reducer,
- 
- 
+  LeaveWorkflowStatus : LeaveWorkflowStatusSlice.reducer,
+  loan_workflow_status : LoanWorkflowStatusSlice.reducer,
+  attendance_workflow_status : AttendanceWorkflowStatusSlice.reducer,
+  team_leave_calender : TeamLeaveCalendarSlice.reducer,
+  attendance_calendar_team : TeamAttendanceCalendarSlice.reducer,
+  portal_holiday_calendar : PortalHolidayCalendarSlice.reducer,
 });
 
 export function* rootSaga() {
