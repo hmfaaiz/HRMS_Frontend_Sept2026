@@ -8,6 +8,8 @@ import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { format } from "date-fns";
 import { amountFormat } from "../../../../utils/common";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 export default function ApplicationSection() {
   const dispatch = useDispatch();
@@ -22,6 +24,8 @@ export default function ApplicationSection() {
       setQueryParams: FormUIContext?.setQueryParams,
       setQueryParamsBase: FormUIContext?.setQueryParamsBase,
       setApplicantDetail: FormUIContext?.setApplicantDetail,
+      panelMode2: FormUIContext.panelMode2,
+      setPanelMode2: FormUIContext.setPanelMode2,
     };
   });
 
@@ -52,9 +56,10 @@ export default function ApplicationSection() {
   }, [formUIProps?.applicantVacancyId, formUIProps?.selectedApplicant]);
 
   return (
-    <div className="col-12">
+    <>
       {/* job selection area  */}
-      <div className="col-12 col-md-3 mt-4">
+       <div className="d-flex">
+      <div className="col-12 col-md-4 mt-4">
         <SearchSelect
           name="cityId"
           options={applicants}
@@ -72,21 +77,39 @@ export default function ApplicationSection() {
           isClearable={false}
         />
       </div>
+ <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
+                <span
+                  className="svg-icon svg-icon-md svg-icon-primary"
+                  onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
+                >
+                  <SVG
+                    src={toAbsoluteUrl(
+                      formUIProps.panelMode2
+                        ? "/media/svg/icons/Communication/CancelButton.svg"
+                        : "/media/svg/icons/Communication/AddButton.svg"
+                    )}
+                  />
+                </span>
+      
+      
+      </div>
+      </div>
       <br />
       {/* job detail collapsable panel  */}
-      <Accordion defaultActiveKey="">
+        {formUIProps.panelMode2 && (
+      <Accordion defaultActiveKey="0"  className="mx-4">
         <Card>
-          <Card.Header>
+          {/* <Card.Header>
             <div className="accordion-header-btn ">
               <Accordion.Toggle eventKey="0" className="flex-between-center">
                 Applicant Details
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>
-          </Card.Header>
+          </Card.Header> */}
           <Accordion.Collapse eventKey="0">
-            {applicantProfile && Object?.keys(applicantProfile)?.length > 0 ? (
-              <Card.Body>
+            {formUIProps.selectedApplicant && applicantProfile && Object?.keys(applicantProfile)?.length > 0 ? (
+              <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
                 <div
                   style={{
                     backgroundColor: "#E6F8FF",
@@ -95,7 +118,7 @@ export default function ApplicationSection() {
                     border: "none",
                   }}
                 >
-                  <hr />
+                  {/* <hr /> */}
                   <div style={{ marginBottom: "2%" }}>
                     <h2>Applicant Detail</h2>
                     <Row>
@@ -199,6 +222,7 @@ export default function ApplicationSection() {
           </Accordion.Collapse>
         </Card>
       </Accordion>
-    </div>
+        )}
+    </>
   );
 }

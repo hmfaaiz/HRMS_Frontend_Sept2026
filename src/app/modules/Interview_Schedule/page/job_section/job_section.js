@@ -7,6 +7,8 @@ import * as actions from "../../_redux/formAction";
 import { Accordion, Card, Col, Row } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { format } from "date-fns";
+import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 export default function JobSection() {
   const dispatch = useDispatch();
@@ -16,6 +18,8 @@ export default function JobSection() {
       selectedJob: FormUIContext?.selectedJob,
       setSelectedJob: FormUIContext?.setSelectedJob,
       setSelectedApplicant: FormUIContext?.setSelectedApplicant,
+      panelMode: FormUIContext.panelMode,
+      setPanelMode: FormUIContext.setPanelMode,
     };
   });
 
@@ -39,9 +43,10 @@ export default function JobSection() {
   }, [formUIProps?.selectedJob]);
 
   return (
-    <div className="col-12">
+   <>
       {/* job selection area  */}
-      <div className="col-12 col-md-3">
+       <div className="d-flex">
+      <div className="col-12 col-md-4">
         <SearchSelect
           name="selectedJob"
           options={jobList}
@@ -56,21 +61,39 @@ export default function JobSection() {
           isClearable={false}
         />
       </div>
+      <div className="col-12 col-md-4 d-flex  align-items-center pt-7">
+                <span
+                  className="svg-icon svg-icon-md svg-icon-primary"
+                  onClick={() => formUIProps.setPanelMode(!formUIProps.panelMode)}
+                >
+                  <SVG
+                    src={toAbsoluteUrl(
+                      formUIProps.panelMode
+                        ? "/media/svg/icons/Communication/CancelButton.svg"
+                        : "/media/svg/icons/Communication/AddButton.svg"
+                    )}
+                  />
+                </span>
+      
+      
+      </div>
+       </div>
       <br />
       {/* job detail collapsable panel  */}
-      <Accordion defaultActiveKey="">
+          {formUIProps.panelMode && (
+      <Accordion defaultActiveKey="0"  className="mx-4">
         <Card>
-          <Card.Header>
+          {/* <Card.Header>
             <div className="accordion-header-btn ">
               <Accordion.Toggle eventKey="0" className="flex-between-center">
                 Job Details
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
+          </Card.Header> */}
+          <Accordion.Collapse eventKey="0" >
             {jobData && Object?.keys(jobData)?.length > 0 ? (
-              <Card.Body>
+              <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
                 <div
                   style={{
                     backgroundColor: "#E6F8FF",
@@ -79,7 +102,7 @@ export default function JobSection() {
                     border: "none",
                   }}
                 >
-                  <hr />
+             
                   <div style={{ marginBottom: "2%" }}>
                     <h2>Job Detail</h2>
                     <Row>
@@ -147,7 +170,7 @@ export default function JobSection() {
             )}
           </Accordion.Collapse>
         </Card>
-      </Accordion>
-    </div>
+      </Accordion>)}
+    </>
   );
 }

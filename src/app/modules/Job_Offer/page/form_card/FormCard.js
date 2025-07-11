@@ -36,7 +36,7 @@ export default function FormCard() {
         <CardBody>
           <CardHeader title={CurrentModuleName()}></CardHeader>
           <br />
-          <hr />
+          {/* <hr /> */}
           <JobSection />
           <br />
           <hr />

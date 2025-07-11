@@ -15,6 +15,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [applicantDetail, setApplicantDetail] = useState(null);
   const [applicantVacancyId, setApplicantVacancyId] = useState(null);
+  const [panelMode, setPanelMode] = useState(false);
+  const [panelMode2, setPanelMode2] = useState(false);
 
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const setQueryParams = useCallback((nextQueryParams) => {
@@ -56,6 +58,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setQueryParamsBase,
     setQueryParams,
     initUser,
+    panelMode,
+    setPanelMode,
+    panelMode2,
+    setPanelMode2,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>
