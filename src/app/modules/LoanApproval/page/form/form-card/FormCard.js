@@ -43,11 +43,11 @@ export const FormCard = () => {
   return (
     <Card>
       <CardHeader title={CurrentModuleName()}></CardHeader>
-      <FormFilter loading={listLoading} queryParams={formUIProps.queryParams} />
+      {/* <FormFilter loading={listLoading} queryParams={formUIProps.queryParams} /> */}
       <div
         style={{
           backgroundColor: "rgb(235 243 255)",
-          marginTop: "15px",
+          // marginTop: "15px",
           padding: "20px",
           borderRadius: "5px",
           border: "2px solid #adceff",
