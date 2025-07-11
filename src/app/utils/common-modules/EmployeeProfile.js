@@ -283,7 +283,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                           )}
                         </Row>
 
-                        <hr />
+                        {/* <hr /> */}
                       </div>
                     ))
                   ) : (
