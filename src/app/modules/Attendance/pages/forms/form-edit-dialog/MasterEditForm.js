@@ -13,6 +13,8 @@ import { addDays } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 //Validations for Form
 const formValidation = Yup.object().shape({
@@ -37,7 +39,7 @@ export function MasterEditForm({
   isUserForRead,
   enableLoading,
   loading,
-  setfilters
+  setfilters, setPanelMode, panelMode
 }) {
 
   const { allEmployees, allEmployeeShifts, payrollData } = useSelector(
@@ -197,7 +199,7 @@ export function MasterEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="from-group row">
                     {/* Employee Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-8 col-md-4 mt-3 ml-7">
                       <Field
                         name="employeeId"
                         component={SearchSelect}
@@ -229,7 +231,8 @@ export function MasterEditForm({
                           allEmployeesMap?.get(values?.employeeId || "") || ""
                         }
                         autoComplete="off"
-                        options={allEmployees}
+                        // options={allEmployees}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
                       />
                       {errors.employeeId && touched.employeeId && (
                         <CustomErrorLabel
@@ -239,8 +242,24 @@ export function MasterEditForm({
                       )}
                     </div>
                     {/* Employee Field End */}
-
-                    <div className="col-12 col-md-2 mt-3"></div>
+           
+   <div className="col-2 col-md-3 d-flex  align-items-center pt-10">
+                                        <span
+                                          className="svg-icon svg-icon-md svg-icon-primary"
+                                          onClick={() => setPanelMode(!panelMode)}
+                                        >
+                                          <SVG
+                                            src={toAbsoluteUrl(
+                                              panelMode
+                                                ? "/media/svg/icons/Communication/CancelButton.svg"
+                                                : "/media/svg/icons/Communication/AddButton.svg"
+                                            )}
+                                          />
+                                        </span>
+                    
+                    
+                                      </div>
+       
 
                     {/* {payrollData &&
                       payrollData.startDate &&
@@ -267,7 +286,7 @@ export function MasterEditForm({
 
 
 
-            <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+            <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
 
   {activeFiscalYear ? (() => {
 
@@ -287,17 +306,17 @@ export function MasterEditForm({
 </div>
                   </div>
 
+                         
+
                   <br />
-                  <hr />
+             
 
                   {/* EmployeeProfile Starts */}
-                  <EmployeeProfile employeeId={values.employeeId} />
+                  <EmployeeProfile employeeId={values.employeeId} panelMode={panelMode}/>
                   {/* EmployeeProfile Ends */}
 
-                  <hr />
-                  <br />
-
-                  <div className="from-group row">
+            
+                  <div className="from-group row ml-5">
                     {/* Date In Field Start */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field
@@ -340,7 +359,7 @@ export function MasterEditForm({
                     {/* Time In Field End */}
                   </div>
 
-                  <div className="from-group row">
+                  <div className="from-group row ml-5">
                     {/* Date Out Field Start */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field
@@ -376,7 +395,7 @@ export function MasterEditForm({
                     {/* Time Out Field End */}
                   </div>
 
-                  <div className="from-group row">
+                  <div className="from-group row ml-5">
                     {/* Worked Hours Field Start */}
                     <div className="col-12 col-md-4 mt-3">
                       <Field
@@ -404,7 +423,7 @@ export function MasterEditForm({
                     {/* Attendance Status Field End */}
                   </div>
 
-                  <div className="from-group row">
+                  <div className="from-group row ml-5">
                     {/* Comments Field Start */}
                     <div className="col-12 col-md-8 mt-3">
                       <Field
