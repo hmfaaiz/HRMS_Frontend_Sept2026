@@ -26,6 +26,8 @@ export function FormCard() {
       setemployeeId: FormUIContext.setemployeeId,
       queryParamsLeaveApp: FormUIContext.queryParamsLeaveApp,
       id: FormUIContext.ids,
+      panelMode:FormUIContext.panelMode,
+      setPanelMode:FormUIContext.setPanelMode,
     }
   }, [FormUIContext])
 
@@ -91,17 +93,17 @@ export function FormCard() {
       
 
         <CardBody>
-        <EmployeeSelect setemployeeId={FormUIProps.setemployeeId} />
+          <EmployeeSelect setemployeeId={FormUIProps.setemployeeId} setPanelMode={FormUIProps.setPanelMode} panelMode={FormUIProps.panelMode}/>
         <br />
-        <hr />
+        
         
 
 
-<EmployeeProfile employeeId={FormUIProps.employeeId} />
+        <EmployeeProfile employeeId={FormUIProps.employeeId} panelMode={FormUIProps.panelMode} />
         {/* EmployeeProfile Ends */}
 
-        <br />
-        <hr />
+        {/* <br /> */}
+      
    {/* FormEditDialog Starts */}
    <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
         {/* FormEditDialog Ends */}

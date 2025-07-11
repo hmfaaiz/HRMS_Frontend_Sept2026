@@ -55,7 +55,7 @@ export const getApplicantProfileEditSchema = (formData) => {
       applicantStatusId: Yup.number()
         .nullable()
         .required(VALIDATION_MESSAGES.required),
-
+      nationality: Yup.string().required(VALIDATION_MESSAGES.required),
       dateOfBirth: Yup.date()
         .nullable()
         .typeError("Invalid date format")
@@ -1834,7 +1834,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3 mb-5"style={{ height: '150px' }}>
+                    <div className="col-12 col-md-12 mt-3 mb-9"style={{ height: '150px' }}>
                       <Field
                         name="additional_summary"
                         component={TextArea}
@@ -1848,6 +1848,13 @@ export function FormEditForm({
                         }
                         autoComplete="off"
                       />
+                         <div className="ml-1 mt-1">
+    <ErrorMessage
+      name="additional_summary"
+      component="div"
+      className="form-feedBack text-danger"
+    />
+  </div>
                     </div>
 
                     <div className="col-12 col-md-4 mt-5">

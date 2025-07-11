@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/formActions";
+import { useFormUIContext } from "../FormUIContext";
 
 export function FormDeleteDialog({ id, show, onHide }) {
   const [loading, setLoading] = useState(false);
+
+const FormUIContext = useFormUIContext()
+  const formUIProps = useMemo(() => {
+      return {
+        employeeId: FormUIContext.employeeId,
+      }
+    }, [FormUIContext])
+  
 
   // Customers Redux state
   const dispatch = useDispatch();
@@ -33,7 +42,7 @@ export function FormDeleteDialog({ id, show, onHide }) {
   //Delete Record
   const deleteLeaveEncashment = ()=> {
     enableLoading();
-    dispatch(actions.deleteRecord(id, disableLoading, onHide))
+    dispatch(actions.deleteRecord(id, disableLoading, onHide,formUIProps.employeeId))
   }
   return (
     <Modal

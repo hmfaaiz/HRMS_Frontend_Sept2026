@@ -172,11 +172,12 @@ export const saveRecord = (data, employeeId, yearId, disableLoading, resetForm) 
  * @param {Function} onHide 
  * @returns 
  */
-export const deleteRecord = (id, disableLoading, onHide) => (dispatch) => {
+export const deleteRecord = (id, disableLoading, onHide,employeeId) => (dispatch) => {
   return requestFromServer.deleteLeaveEncashmentSetup(id)
     .then((res) => {
       dispatch(actions.LeaveEncashmentDeleted({ id }));
       disableLoading();
+      dispatch(fetchLeaveBalances(employeeId))
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,

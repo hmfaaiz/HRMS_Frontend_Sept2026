@@ -13,6 +13,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [employeeId, setemployeeId] = useState('');
   const [yearId, setyearId] = useState('');
   const [id, setId] = useState('');
+  const [panelMode, setPanelMode] = useState(false);
   const setQueryParamsLeaveEnc = useCallback((nextQueryParams) => {
     setQueryParamsLeaveEncBaseLeaveEnc((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -51,6 +52,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     editRecord,
     initUser,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
+    panelMode,
+    setPanelMode,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>
