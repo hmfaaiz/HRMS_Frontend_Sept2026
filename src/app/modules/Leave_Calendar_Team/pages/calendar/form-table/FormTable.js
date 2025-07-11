@@ -21,7 +21,6 @@ export function FormTable() {
 
   const { leaveCalendar, dateRange } = currentState;
 
-  console.log("leaveCalendarleaveCalendar", leaveCalendar);
 
   const getEarliestDate = (data) => {
     if (!data || data.length === 0) return new Date(); // fallback
@@ -110,12 +109,10 @@ export function FormTable() {
     });
 
     const earliestDate = getEarliestDate(leaveCalendar);
-    console.log("earliestDateearliestDate", earliestDate);
     setDefaultCalendarDate(earliestDate);
     setCurrentDate(earliestDate);
   }, [leaveCalendar, dispatch]);
 
-  console.log("eventsevents", events);
 
   return (
     <div style={{ height: "1500px" }}>

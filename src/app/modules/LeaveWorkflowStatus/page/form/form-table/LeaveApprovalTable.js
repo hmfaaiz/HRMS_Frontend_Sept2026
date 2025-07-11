@@ -44,7 +44,6 @@ export function LeaveApprovalFormTable() {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
-  console.log("entitiesentities" , entities); 
   const dispatch = useDispatch();
 
   useEffect(() => {

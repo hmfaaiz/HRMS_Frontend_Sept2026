@@ -12,7 +12,6 @@ export const fetchLeaveApprovalApplication = (queryparm, employeeId) => async (
     return requestFromServer
       .getAllLeaveApproval({ ...queryparm, employeeId })
       .then((response) => {
-        console.log("response" , response);
         dispatch(actions.LeaveApprovalApplicationFetched(response));
       })
       .catch((error) => {
