@@ -3,17 +3,19 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Select } from "../../../../../../_metronic/_partials/controls";
-import { useSelector, shallowEqual,useDispatch } from "react-redux"
+import { useSelector, shallowEqual, useDispatch } from "react-redux"
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 export function EmployeeSelect({
   actionsLoading,
-  setemployeeId
+  setemployeeId, setPanelMode, panelMode
 }) {
   const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
@@ -30,9 +32,9 @@ export function EmployeeSelect({
 
   return (
     <>
- 
-     <CardHeader title={CurrentModuleName()} >
-     </CardHeader>
+
+      <CardHeader title={CurrentModuleName()} >
+      </CardHeader>
       {/* Formik Starts */}
       <Formik
         enableReinitialize={true}
@@ -57,66 +59,67 @@ export function EmployeeSelect({
                 <div className="from-group row">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-4 mt-3">
-                    {/* <Field
+                  <div className="col-12 col-md-4 mt-3 ml-7">
+
+
+                    <SearchSelect
                       name="employeeId"
-                      component={Select}
                       className={!values.employeeId ? 'form-control is-invalid' : 'form-control'}
                       placeholder=""
                       onBlur={handleBlur}
                       onChange={(e) => {
-                        const value = e.target.value == '--Select--' ? null : Number(e.target.value)
-                        setFieldValue('employeeId', value)
-                        setemployeeId(value)
+                        const value = e.value === '--Select--' ? null : Number(e.value);
+                        setFieldValue('employeeId', value);
+                        setemployeeId(value);
+                        const selectedEmp = allEmployees.find(emp => emp.value === value);
+                        dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
                       }}
                       label={
                         <span>
-                          {" "}
-                          Employee<span style={{ color: "red" }}>*</span>
+                          Employee <span style={{ color: 'red' }}>*</span>
                         </span>
                       }
-                      value={values.employeeId}
+                      value={
+                        allEmployees.find(
+                          (option) =>
+                            option.value === values.employeeId
+                        ) || null
+                      }
+                      // value={values.employeeId}
                       autoComplete="off"
-                      children={CustomDropdown({ data: allEmployees, firstElement: { label: '--Select--', value: '' } })}
-                    /> */}
-
-                        <SearchSelect
-                                          name="employeeId"
-                                          className={!values.employeeId ? 'form-control is-invalid' : 'form-control'}
-                                          placeholder=""
-                                          onBlur={handleBlur}
-                                          onChange={(e) => {
-                                            const value = e.value === '--Select--' ? null : Number(e.value);
-                                            setFieldValue('employeeId', value);
-                                            setemployeeId(value);
-                                             const selectedEmp = allEmployees.find(emp => emp.value === value);
-                                             dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
-                                          }}
-                                          label={
-                                            <span>
-                                              Employee <span style={{ color: 'red' }}>*</span>
-                                            </span>
-                                          }
-                                          value={
-                                            allEmployees.find(
-                                              (option) =>
-                                                option.value === values.employeeId
-                                            ) || null
-                                          }
-                                          // value={values.employeeId}
-                                          autoComplete="off"
-                                          options={allEmployees.map((emp) => ({
-                                            label: emp.label, // Adjust according to your data
-                                            value: emp.value, // Adjust according to your data
-                                          }))}
-                                          isSearchable={true} // Ensure search functionality is enabled
-                                        />
+                      // options={allEmployees.map((emp) => ({
+                      //   label: emp.label, // Adjust according to your data
+                      //   value: emp.value, // Adjust according to your data
+                      // }))}
+                      options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees.map((emp) => ({
+                        label: emp.label, // Adjust according to your data
+                        value: emp.value, // Adjust according to your data
+                      })) : []),]}
+                      isSearchable={true} // Ensure search functionality is enabled
+                    />
                     {
                       !values.employeeId && <CustomErrorLabel touched={true} error={'Required'} />
                     }
                   </div>
+
+                  <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
+                    <span
+                      className="svg-icon svg-icon-md svg-icon-primary"
+                      onClick={() => setPanelMode(!panelMode)}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          panelMode
+                            ? "/media/svg/icons/Communication/CancelButton.svg"
+                            : "/media/svg/icons/Communication/AddButton.svg"
+                        )}
+                      />
+                    </span>
+
+
+                  </div>
                   {/* Employee Id Dropdown Ends */}
-                  
+
                 </div>
               </fieldset>
             </Form>

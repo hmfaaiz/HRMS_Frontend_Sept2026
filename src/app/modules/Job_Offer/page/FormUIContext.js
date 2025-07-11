@@ -17,7 +17,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [applicantVacancyId, setApplicantVacancyId] = useState(null);
   const [headOfHrId, setHeadOfHrId] = useState(null);
   const [hrId, setHrId] = useState(null);
-
+  const [panelMode, setPanelMode] = useState(false);
+  const [panelMode2, setPanelMode2] = useState(false);
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds] = useState([]);
   const setQueryParams = useCallback((nextQueryParams) => {
@@ -56,7 +57,11 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setHeadOfHrId,
     headOfHrId,
     initUser,
-    setSignatoryisShow,signatoryisShow
+    setSignatoryisShow,signatoryisShow,
+    panelMode,
+    setPanelMode,
+    panelMode2,
+    setPanelMode2,
     
   };
   return (

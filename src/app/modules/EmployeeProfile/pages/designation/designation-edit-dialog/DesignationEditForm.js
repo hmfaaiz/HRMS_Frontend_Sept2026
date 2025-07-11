@@ -86,8 +86,8 @@ const profileValidation = Yup.object().shape(
       .required("Required*"),
     religionId: Yup.string()
       .required("Required*"),
-    // nationality: Yup.string()
-    //   .required("Required*"),
+    nationality: Yup.string()
+      .required("Required*"),
 
     gender: Yup.string()
       .required("Required*"),
@@ -104,6 +104,9 @@ const profileValidation = Yup.object().shape(
 
 
     employeeTypeId: Yup.string()
+      .required("Required*"),
+      
+    employeeStatusId: Yup.string()
       .required("Required*"),
 
     dateOfJoining: Yup.date()
@@ -2809,7 +2812,7 @@ const [profile_image, setImage] = useState(
 
                     </div>
                     <div className="from-group row">
-                      <div className="col-12 col-md-12 mt-3 mb-5" style={{ height: '150px' }}>
+                      <div className="col-12 col-md-12 mt-3 mb-9" style={{ height: '150px' }}>
                         <Field
                           name="additional_summary"
                           component={TextArea}
@@ -2819,7 +2822,13 @@ const [profile_image, setImage] = useState(
                           className="form-control h-100"  // Force full height
                         />
                       </div>
-
+                      <div className="ml-3 mt-1">
+                          <ErrorMessage
+                            name="additional_summary"
+                            component="div"
+                            className="form-feedBack text-danger"
+                          />
+                        </div>
                     </div>
 
                     {/* 

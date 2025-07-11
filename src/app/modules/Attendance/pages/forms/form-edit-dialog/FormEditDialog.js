@@ -17,7 +17,9 @@ export function FormEditDialog({ onHide, userForRead }) {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
       setfilters: FormUIContext.setfilters,
-      filters: FormUIContext.filters
+      filters: FormUIContext.filters,
+      panelMode:FormUIContext.panelMode,
+      setPanelMode:FormUIContext.setPanelMode,
     };
   }, [FormUIContext]);
 
@@ -68,6 +70,8 @@ export function FormEditDialog({ onHide, userForRead }) {
         enableLoading={enableLoading}
         loading={loading}
         setfilters={formUIProps.setfilters}
+        panelMode={formUIProps.panelMode}
+        setPanelMode={formUIProps.setPanelMode}
       />
       <ToastContainer
         position="top-right"
