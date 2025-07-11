@@ -13,6 +13,7 @@ import {
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit } from "../../../../../utils/common";
 import { toast } from "react-toastify";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 // Define the validation schema for the main form and the policies
 const ReimbursementSchema = Yup.object().shape({
@@ -34,12 +35,10 @@ const ReimbursementSchema = Yup.object().shape({
   accounts: Yup.array().of(
     Yup.object().shape({
       reimbursement_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
-         expense_accountId: Yup.number()
-         .required(VALIDATION_MESSAGES.required),
-        bank_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
-
+      expense_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
+      bank_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
     })
-  )
+  ),
 });
 
 export function FormEditForm({
@@ -49,7 +48,9 @@ export function FormEditForm({
   onHide,
   isUserForRead,
   enableLoading,
-  loading,disableLoading,id
+  loading,
+  disableLoading,
+  id,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -74,9 +75,8 @@ export function FormEditForm({
     }
     //allPayrolGroupList
   }, [dispatch, user.Id]);
- 
-  const { currentState, userAccess } = useSelector((state) => {
 
+  const { currentState, userAccess } = useSelector((state) => {
     return {
       currentState: state.reimbursement_configuration,
       userAccess: state?.auth?.userAccess["reimbursement_configuration"],
@@ -98,26 +98,28 @@ export function FormEditForm({
     });
   };
 
- const deleteReimbursementConfigPolicy = (Id,reimbursement_typeId,subsidiaryId) => {
+  const deleteReimbursementConfigPolicy = (
+    Id,
+    reimbursement_typeId,
+    subsidiaryId
+  ) => {
     // server request for deleting customer by id
     enableLoading();
-    let data={
-     Id, reimbursement_typeId,subsidiaryId
-    }
+    let data = {
+      Id,
+      reimbursement_typeId,
+      subsidiaryId,
+    };
     dispatch(actions.deleteReimbursementConfigPolicy(data)).then(() => {
       onHide();
-     
+
       disableLoading();
     });
   };
 
-    const deleteNotification = () => {
-      toast("Reimbursement policy cannot be empty.");
-
-    };
-
-
-
+  const deleteNotification = () => {
+    toast("Reimbursement policy cannot be empty.");
+  };
 
   return (
     <Formik
@@ -125,12 +127,11 @@ export function FormEditForm({
       initialValues={user}
       validationSchema={ReimbursementSchema}
       onSubmit={(values) => {
- 
         enableLoading();
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+      {({ handleSubmit, errors, touched, values, setFieldValue , setFieldTouched }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -242,9 +243,7 @@ export function FormEditForm({
                         <tr
                           style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
                         >
-                          <th > {!isUserForRead && (
-                               <p> Action</p>
-                                )}</th>
+                          <th> {!isUserForRead && <p> Action</p>}</th>
                           <th>Reimbursement Type</th>
                           <th>Max Amount Allowed</th>
                           <th>Attachment Required</th>
@@ -262,14 +261,22 @@ export function FormEditForm({
                                     type="button"
                                     // onClick={() => remove(index)}
                                     onClick={() => {
-                                      if (values.policies[index]?.Id && values.policies.length>1 ) {
-                                        deleteReimbursementConfigPolicy(values.policies[index]?.Id,values.policies[index]?.reimbursement_typeId, values.subsidiaryId);
-                                      }
-                                      else if(values.policies[index]?.Id && values.policies.length==1){
-                                        deleteNotification()
-                                      }
-                                      
-                                      else {
+                                      if (
+                                        values.policies[index]?.Id &&
+                                        values.policies.length > 1
+                                      ) {
+                                        deleteReimbursementConfigPolicy(
+                                          values.policies[index]?.Id,
+                                          values.policies[index]
+                                            ?.reimbursement_typeId,
+                                          values.subsidiaryId
+                                        );
+                                      } else if (
+                                        values.policies[index]?.Id &&
+                                        values.policies.length == 1
+                                      ) {
+                                        deleteNotification();
+                                      } else {
                                         remove(index);
                                       }
                                     }}
@@ -285,10 +292,12 @@ export function FormEditForm({
                                   name={`policies[${index}].reimbursement_typeId`}
                                   as="select"
                                   className="form-control"
-                                  disabled={isUserForRead || values.policies[index]?.Id}
-                                  
+                                  disabled={
+                                    isUserForRead || values.policies[index]?.Id
+                                  }
                                 >
-                                    <option value="">Select...</option> {/* Default "Select..." option */}
+                                  <option value="">Select...</option>{" "}
+                                  {/* Default "Select..." option */}
                                   {dashboard.allReimbursementTypeList?.map(
                                     (x) => {
                                       return (
@@ -323,18 +332,35 @@ export function FormEditForm({
                                     </div>
                                   )}
                               </td>
-
+                             
                               <td>
-                                <Field
+                              <AmountInput
+                                field={{
+                                  name: `policies[${index}].max_amount`,
+                                  value: values?.policies[index].max_amount,
+                                }}
+                                form={{
+                                  touched,
+                                  errors,
+                                  setFieldValue,
+                                  setFieldTouched,
+                                }}
+                                label={null}
+                                disabled={isUserForRead}
+                                placeholder="Write amount"
+                              />
+                                {/* <Field
                                   name={`policies[${index}].max_amount`}
                                   type="number"
                                   placeholder="Write amount"
                                   className="form-control"
                                   disabled={isUserForRead}
                                   onInput={(e) => {
-                                    e.target.value = amountLimit(e.target.value); // Limit to 3 digits
+                                    e.target.value = amountLimit(
+                                      e.target.value
+                                    ); // Limit to 3 digits
                                   }}
-                                />
+                                /> */}
                                 {errors.policies?.[index]?.max_amount &&
                                   touched.policies?.[index]?.max_amount && (
                                     <div className="text-danger">
@@ -357,7 +383,6 @@ export function FormEditForm({
                                       ); // Use the raw value
                                     }}
                                   >
-                                    
                                     <option value="">Select</option>
                                     {basisOptions.map((option) => (
                                       <option
@@ -376,20 +401,21 @@ export function FormEditForm({
                                       </div>
                                     )} */}
 
-{errors.policies?.[index]?.attachment_required &&
-                                  touched.policies?.[index]?.attachment_required && (
-                                    <div className="text-danger">
-                                      {errors.policies[index].attachment_required}
-                                    </div>
-                                  )}
-
-                              
+                                  {errors.policies?.[index]
+                                    ?.attachment_required &&
+                                    touched.policies?.[index]
+                                      ?.attachment_required && (
+                                      <div className="text-danger">
+                                        {
+                                          errors.policies[index]
+                                            .attachment_required
+                                        }
+                                      </div>
+                                    )}
                                 </div>
                               </td>
 
-                              <td
-                              
-                              >
+                              <td>
                                 <div
                                   style={{
                                     maxHeight: "90px", // Set maxHeight for scrolling
@@ -485,13 +511,8 @@ export function FormEditForm({
                                         <label className="form-check-label ms-2">
                                           {option.label}
                                         </label>
-
-                             
                                       </div>
                                     ))}
-
-
-                                    
                                 </div>
                                 {errors.policies?.[index]?.grades &&
                                   touched.policies?.[index]?.grades && (
@@ -542,9 +563,7 @@ export function FormEditForm({
                         <tr
                           style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
                         >
-                           <th > {!isUserForRead && (
-                               <p> Action</p>
-                                )}</th>
+                          <th> {!isUserForRead && <p> Action</p>}</th>
                           <th>Reimbursement Type</th>
                           <th>Expense Account</th>
                           <th>Bank Account</th>
@@ -574,7 +593,8 @@ export function FormEditForm({
                                   className="form-control"
                                   disabled={isUserForRead}
                                 >
-                                    <option value="">Select...</option> {/* Default "Select..." option */}
+                                  <option value="">Select...</option>{" "}
+                                  {/* Default "Select..." option */}
                                   {dashboard.allReimbursementTypeList?.map(
                                     (x) => {
                                       return (
@@ -617,7 +637,8 @@ export function FormEditForm({
                                   className="form-control"
                                   disabled={isUserForRead}
                                 >
-                                    <option value="">Select...</option> {/* Default "Select..." option */}
+                                  <option value="">Select...</option>{" "}
+                                  {/* Default "Select..." option */}
                                   {dashboard.allAccountList?.map((x) => {
                                     return (
                                       <option
@@ -653,7 +674,8 @@ export function FormEditForm({
                                   className="form-control"
                                   disabled={isUserForRead}
                                 >
-                                    <option value="">Select...</option> {/* Default "Select..." option */}
+                                  <option value="">Select...</option>{" "}
+                                  {/* Default "Select..." option */}
                                   {dashboard.allAccountList?.map((x) => {
                                     return (
                                       <option
@@ -736,8 +758,8 @@ export function FormEditForm({
                 // disabled={loading}
                 disabled={
                   loading ||
-                  values?.policies?.length === 0 &&
-                  values?.accounts?.length === 0
+                  (values?.policies?.length === 0 &&
+                    values?.accounts?.length === 0)
                 }
               >
                 Save

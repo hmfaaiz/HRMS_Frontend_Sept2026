@@ -14,6 +14,7 @@ import {
   WEEK_DAY_STRING,
 } from "../../../../utils/constants";
 import * as Yup from "yup";
+import { TimeInput } from "../../../../../_metronic/_partials/controls/forms/TimeInput";
 
 const validationSchema = Yup.object().shape({
   subsidiaryId: Yup.string()
@@ -537,13 +538,13 @@ const WorkflowEditForm = ({
                     <label>Time</label>
                     <Field
                       name="emailTime"
-                      component={Input}
-                      value={values?.emailTime}
+                      component={TimeInput}
+                      // value={values?.emailTime}
                       disabled={!values?.emailPendingToApprovers}
                       placeholder="Enter HHMM"
                       error={errors.emailTime}
                       autoComplete="off"
-                      maxLength={4}
+                      // maxLength={4}
                     />
                   </div>
                 </div>

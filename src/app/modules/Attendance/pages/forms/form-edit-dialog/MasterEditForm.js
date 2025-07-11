@@ -15,6 +15,7 @@ import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActiveP
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
+import { TimeInput } from "../../../../../../_metronic/_partials/controls/forms/TimeInput";
 
 //Validations for Form
 const formValidation = Yup.object().shape({
@@ -322,7 +323,7 @@ export function MasterEditForm({
                       <Field
                         name="attDateIn"
                         component={DatePickerField}
-                        dateFormat="dd/MMM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         onChange={(date) => {
                           setFieldValue("attDateIn", date);
                           setfilters((prevState) => ({
@@ -345,8 +346,8 @@ export function MasterEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <Field
                         name="timeIn"
-                        component={Input}
-                        maxlength="4"
+                        component={TimeInput}
+                        // maxlength="4"
                         label={
                           <span>
                             {" "}
@@ -365,7 +366,7 @@ export function MasterEditForm({
                       <Field
                         name="attDateOut"
                         component={DatePickerField}
-                        dateFormat="dd/MMM/yyyy"
+                        dateFormat="dd-MMM-yyyy"
                         label={
                           <span>
                             {" "}
@@ -381,8 +382,8 @@ export function MasterEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <Field
                         name="timeOut"
-                        component={Input}
-                        maxlength="4"
+                        component={TimeInput}
+                        // maxlength="4"
                         label={
                           <span>
                             {" "}
@@ -400,7 +401,7 @@ export function MasterEditForm({
                     <div className="col-12 col-md-4 mt-3">
                       <Field
                         name="workedHours"
-                        component={Input}
+                        component={TimeInput}
                         className="form-control"
                         disabled
                         label={<span> Worked Hours</span>}
@@ -477,7 +478,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftStartTime"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> Shift Start Time</span>}
@@ -490,7 +491,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftEndTime"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> Shift End Time</span>}
@@ -503,7 +504,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftWorkingHours"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> Shift Hours</span>}
@@ -516,7 +517,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftLateIn"
-                                component={Input}
+                                component={TimeInput}
                                 disabled
                                 className="form-control"
                                 label={<span> Late In Time</span>}
@@ -529,7 +530,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftEarlyOut"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> Early Out Time</span>}
@@ -542,7 +543,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftHalfDayStart"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> Half day Start</span>}
@@ -555,7 +556,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="shiftHalfDayEnd"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> Half Day End</span>}
@@ -601,7 +602,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="interShifGap"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 disabled
                                 label={<span> inter Shift Gap</span>}
@@ -614,7 +615,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="lateInHours"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 label={<span> Late By Hours</span>}
                                 disabled
@@ -627,7 +628,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="overtimeStart"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 label={<span> Overtime Start Time</span>}
                                 disabled
@@ -640,7 +641,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="oT"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 label={<span> Overtime Hours</span>}
                                 disabled
@@ -653,7 +654,7 @@ export function MasterEditForm({
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="approvedOT"
-                                component={Input}
+                                component={TimeInput}
                                 className="form-control"
                                 label={<span> Actual Overtime</span>}
                                 disabled

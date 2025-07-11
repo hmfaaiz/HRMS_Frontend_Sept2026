@@ -24,6 +24,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 export function FormTable(user) {
   //Users UI Context
@@ -685,6 +686,7 @@ export function FormTable(user) {
           handleBlur,
           handleChange,
           setFieldValue,
+          setFieldTouched,
           formik,
         }) => (
           <>  <Form className="form form-label-right">
@@ -1499,14 +1501,20 @@ Payroll Approver
                   </div>
 
                   <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      disabled={!Boolean(values.isEnableEOBI)}
-                      name="eobi_basis"
-                      component={Input}
-                      type="number"
+                  <AmountInput
+                      field={{
+                        name: `eobi_basis`,
+                        value: values?.eobi_basis,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
                       placeholder="Minimum Wage"
                       label={<span>Minimum Wage{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
+                      disabled={!Boolean(values.isEnableEOBI)}
                     />
                   </div>
 
@@ -1610,14 +1618,20 @@ Payroll Approver
                   </div>
 
                   <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      name="sessi_basis"
-                      component={Input}
+                  <AmountInput
+                      field={{
+                        name: `sessi_basis`,
+                        value: values?.sessi_basis,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
                       disabled={!Boolean(values.isEnableSESSI)}
-                      type="number"
                       placeholder="Minimum Wage"
                       label={<span>Minimum Wage{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
                     />
                   </div>
 

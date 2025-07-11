@@ -23,7 +23,8 @@ import DatePicker from "react-datepicker";
 import axios from 'axios';
 import { amountLimit, amountLimitDynamic } from "../../../../../utils/common";
 import { DEFAULT_CALCULATION_TYPE_DROPDOWN, DROPDOWN, VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { KeyboardArrowDown } from "@material-ui/icons";
+import { KeyboardArrowDown, Tune } from "@material-ui/icons";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape(
@@ -279,7 +280,6 @@ export function BankEditForm({
       setGrauityDate(new Date(user.gratuity_startDate));
     }
   }, [user.gratuity_startDate]);
-console.log("user111",user)
   useEffect(() => {
     const emp_bankId = defBank?.value ? defBank.value : user.emp_bankId;
     setDefaultBanks(
@@ -507,15 +507,12 @@ console.log("user111",user)
 
 
 
-  const calculateEmployeeSalaryPolicy = async (el, setFieldValue) => {
-
-
+  const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
     const basicSalaryInputFactor = el.target.form.elements['basicSalaryFactor'].value;
-    let grossSalaryInput = el.target.form.elements['grossSalary'].value;
-    let basicSalaryInput = el.target.form.elements['basicSalary'].value;
+    let grossSalaryInput = values.grossSalary;
+    let basicSalaryInput = values.basicSalary;
 
     if (currentSalaryMethod == 'Gross to Basic') {
-
       setGrossSalary(grossSalaryInput);
 
       const result = await Promise.all(
@@ -526,23 +523,19 @@ console.log("user111",user)
           return grossSalaryInput; // Return the updated grossSalaryInput
         })
       );
-
       const totalBasicWithFactorVal = ((Number(grossSalaryInput) * Number(basicSalaryInputFactor)) / 100)
 
       setFieldValue("basicSalary", totalBasicWithFactorVal)
       setBasicSalary(totalBasicWithFactorVal);
 
-
       // fetchEmployeeSalaryEarningList(employeeId,basicSalary)
       if (Number(basicSalaryInputFactor)) {
-
         setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == '% Of Gross') {
             x.amount = ((grossSalaryInput * x.factorValue) / 100);
           }
           return x;
         })]);
-
       }
     }
     else if (currentSalaryMethod == 'Basic to Gross') {
@@ -598,18 +591,18 @@ console.log("user111",user)
 // So I have updated the below code"
 
 const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
-  return item.transactionType === 'Earning' ? sum + item.amount : sum;
+  return item.transactionType === 'Earning' ? sum + Number(item.amount) : sum;
 }, 0);
 
 
 
   const totalGross = defMapEarningDeductionList?.reduce((prev, curr) => {
-    return curr.transactionType == 'Earning' && curr.isPartOfGrossSalary == false ? prev + curr.amount : prev
+    return curr.transactionType == 'Earning' && curr.isPartOfGrossSalary == false ? prev + Number(curr.amount) : prev
   }, 0) || 0;
 
 
   const totalDeduction = defMapEarningDeductionList?.reduce((prev, curr) => {
-    return curr.transactionType == 'Deduction' ? prev + curr.amount : prev
+    return curr.transactionType == 'Deduction' ? prev + Number(curr.amount) : prev
   }, 0) || 0;
 
 
@@ -693,6 +686,7 @@ useEffect(()=>{
           touched,
           values,
           handleBlur,
+          setFieldTouched,
           handleChange,
           setFieldValue,
           formik,
@@ -757,7 +751,35 @@ useEffect(()=>{
                   {<div className="from-group row">
 
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
+                    <AmountInput
+                    field={{
+                      name: "grossSalary",
+                      value: values.grossSalary,
+                      onBlur: () => setFieldTouched("grossSalary", true),
+                      onChange: () => {},
+                    }}
+                    form={{
+                      touched,
+                      errors,
+                      setFieldValue,
+                      setFieldTouched,
+                    }}
+                    label={
+                      <span> Gross Salary<span style={{ color: 'red' }}>*</span></span>
+                    }
+                    placeholder="Enter Gross Salary"
+                    autoComplete="off"
+                    disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
+                    value={defGrossSalaryDB || ''}
+                    onChange={(e) => {
+                      setGrossSalaryDB(e);
+                      setFieldValue("grossSalary", e);
+                    }}
+                  />
+
+
+
+                      {/* <Field
                         name="grossSalary"
                         type="number"
                         maxLength={8}
@@ -774,27 +796,37 @@ useEffect(()=>{
                         placeholder="Enter Gross Salary"
                         label={<span> Gross Salary<span style={{ color: 'red' }}>*</span></span>}
                         autoComplete="off"
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="basicSalary"
-                        type="number"
-                        disabled={currentSalaryMethod == 'Gross to Basic'}
-                        onInput={(e) => {
-                          e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                        }}
-                        onChange={(e) => {
-                          setBasicSalary(e.target.value);
-                          setFieldValue("basicSalary", e.target.value);
-                        }}
-                        value={defBasicSalary || defBasicSalaryDB}
-                        component={Input}
-                        placeholder="Enter Basic Salary"
-                        label={<span> Basic Salary<span style={{ color: 'red' }}>*</span></span>}
-                        autoComplete="off"
-                      />
+                  <AmountInput
+                    field={{
+                      name: "basicSalary",
+                      value: values.basicSalary,
+                      onBlur: () => setFieldTouched("basicSalary", true),
+                      onChange: () => {},
+                    }}
+                    form={{
+                      touched,
+                      errors,
+                      setFieldValue,
+                      setFieldTouched,
+                    }}
+                    label={
+                      <span>
+                        Basic Salary<span style={{ color: 'red' }}>*</span>
+                      </span>
+                    }
+                    placeholder="Enter Basic Salary"
+                    autoComplete="off"
+                    disabled={currentSalaryMethod === 'Gross to Basic'}
+                    value={values.basicSalary}
+                    onChange={(value) => {
+                      setBasicSalary(value);           // Local state update
+                      setFieldValue("basicSalary", value); // Formik update
+                    }}
+                  />
                     </div>
                     <div className="col-12 col-md-4 mt-3">
                       <Field
@@ -809,7 +841,7 @@ useEffect(()=>{
                       />
                     </div>
                     <div className="col-12 col-md-4 mt-12">
-                      <input type="button" class="btn btn-success" onClick={(e) => calculateEmployeeSalaryPolicy(e, setFieldValue)} id="btnSalaryPolicyCalc" value="Calculate"></input>
+                      <input type="button" class="btn btn-success" onClick={(e) => calculateEmployeeSalaryPolicy(e, setFieldValue, values)} id="btnSalaryPolicyCalc" value="Calculate"></input>
                     </div>
                   </div>}
                   { /* For Earning WIth Payroll Include ByDefault Yes  */}
@@ -819,7 +851,7 @@ useEffect(()=>{
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                     <h6>Earnings </h6>
                     {/* {<a onClick={ModalUIProps.newButtonEarningTran} href='javascript:void(0)'>+ Add New </a>} */}
-                    <table id='testtable' class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                    <table id='testtable' class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                       <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
                         {/* <td>Employee</td> */}
                         <td>Action</td>
@@ -884,20 +916,32 @@ useEffect(()=>{
                             {deferrors[`factorValue-${rightindex}`] && <div className="form-feedBack">{deferrors[`factorValue-${rightindex}`]}</div>}
                           </td>
                           <td>
-                            <input
-                              type="number"
-                              onInput={(e) => {
-                                e.target.value = amountLimit(e.target.value); // Limit to 3 digits
+                                <AmountInput
+                              field={{
+                                name: `amount-${rightindex}`,
+                                value: obj.amount,
+                                onBlur: () => {},
+                                onChange: () => {},
                               }}
-                              disabled={Boolean(currentSalaryMethod)}
-                              style={{ width: "100px" }}
-
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({ ...prev, [`amount-${rightindex}`]: '' })); // Clear error on change
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {
+                                  setDefaultMapEarningDeductionList(list =>
+                                    list.map((item, idx) =>
+                                      idx === rightindex ? { ...item, amount: value } : item
+                                    )
+                                  );
+                                  setErrors(prev => ({ ...prev, [`amount-${rightindex}`]: '' }));
+                                },
+                                setFieldTouched: () => {},
                               }}
-                              value={obj.amount} id={'amount-' + rightindex}></input>
+                              label={null}
+                              disabled={true}
+                              value={obj.amount}
+                            />
                             {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
+                            
                           </td>
 
                         </tr>
@@ -924,7 +968,7 @@ useEffect(()=>{
                   <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
                     <h6> Other Earnings </h6>
                     {/* {<a onClick={ModalUIProps.newButtonEarningTran} href='javascript:void(0)'>+ Add New </a>} */}
-                    <table id='testtable' class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                    <table id='testtable' class="table table-head-custom table-vertical-center overflow-hidden table-hover">
                       <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
                         {/* <td>Employee</td> */}
                         <td>Action</td>
@@ -990,7 +1034,7 @@ useEffect(()=>{
                           </td>
 
                           <td>
-                            <input
+                            {/* <input
 
                               type="number"
                               onInput={(e) => {
@@ -999,7 +1043,32 @@ useEffect(()=>{
 
                               disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'} style={{ width: "100px" }}
                               onChange={handleFieldChanged}
-                              value={obj.amount} id={'amount-' + rightindex}></input>
+                              value={obj.amount} id={'amount-' + rightindex}></input> */}
+                               <AmountInput
+                              field={{
+                                name: `amount-${rightindex}`,
+                                value: obj.amount,
+                                onBlur: () => {},
+                                onChange:(e) => {},
+                              }}
+                              id={'amount-' + rightindex}
+                              onChange={(e)=> {
+                               setDefaultMapEarningDeductionList(list =>
+                                list.map((item, idx) =>
+                                  idx === rightindex ? { ...item, amount : Number(e) } : item
+                                )
+                              );
+                              }}
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {},
+                                setFieldTouched: () => {},
+                              }}
+                              label={null}
+                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
+                              value={obj.amount}
+                            />
                             {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
                           </td>
 
@@ -1087,7 +1156,32 @@ useEffect(()=>{
                             {deferrors[`factorValue-${rightindex}`] && <div className="form-feedBack">{deferrors[`factorValue-${rightindex}`]}</div>}
                           </td>
                           <td>
-                            <input
+                          <AmountInput
+                              field={{
+                                name: `amount-${rightindex}`,
+                                value: obj.amount,
+                                onBlur: () => {},
+                                onChange:(e) => {},
+                              }}
+                              id={'amount-' + rightindex}
+                              onChange={(e)=> {
+                               setDefaultMapEarningDeductionList(list =>
+                                list.map((item, idx) =>
+                                  idx === rightindex ? { ...item, amount : Number(e) } : item
+                                )
+                              );
+                              }}
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {},
+                                setFieldTouched: () => {},
+                              }}
+                              label={null}
+                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
+                              value={obj.amount}
+                            />
+                            {/* <input
                               type="number"
                               onInput={(e) => {
                                 e.target.value = amountLimit(e.target.value); // Limit to 3 digits
@@ -1098,7 +1192,7 @@ useEffect(()=>{
                                 setErrors((prev) => ({ ...prev, [`amount-${rightindex}`]: '' })); // Clear error on change
                               }}
                               value={obj.amount} id={'amount-' + rightindex} >
-                            </input>
+                            </input> */}
                             {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
                           </td>
                         </tr>
@@ -1130,11 +1224,45 @@ useEffect(()=>{
                       <div className="col-12 col-md-4 mt-3">
                       </div>
                       <div className="col-12 col-md-4 mt-3">
-                        Total Allowance <input type="number" disabled="true" value={totalAllowance} id="txtTotalAllowance"></input>
+                      <AmountInput
+                              field={{
+                                name: `totalAllowance`,
+                                value: totalAllowance,
+                                onBlur: () => {},
+                                onChange:(e) => {},
+                              }}
+                              
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {},
+                                setFieldTouched: () => {},
+                              }}
+                              label={"Total Allowance"}
+                              disabled={true}
+                              value={totalAllowance}
+                            />
+                        {/* Total Allowance <input type="number" disabled="true" value={totalAllowance} id="txtTotalAllowance"></input> */}
                       </div>
                       <div className="col-12 col-md-4 mt-3">
-                        Gross Package <input disabled="true" value={values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input>
-                      </div>
+                      <AmountInput
+                              field={{
+                                name: `grossSalary`,
+                                value: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross),
+                                onBlur: () => {},
+                                onChange:(e) => {},
+                              }}
+                              
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {},
+                                setFieldTouched: () => {},
+                              }}
+                              label={"Gross Package"}
+                              disabled={true}
+                              value={values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)}
+                            /></div>
                     </div>
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
@@ -1142,10 +1270,46 @@ useEffect(()=>{
                       </div>
 
                       <div className="col-12 col-md-4 mt-3">
-                        Total Deductions <input disabled="true" type="number" value={totalDeduction} id="txtTotalDeductions"></input>
+                      <AmountInput
+                              field={{
+                                name: `totalDeduction`,
+                                value: {totalDeduction},
+                                onBlur: () => {},
+                                onChange:(e) => {},
+                              }}
+                              
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {},
+                                setFieldTouched: () => {},
+                              }}
+                              label={"Total Deductions"}
+                              disabled={true}
+                              value={totalDeduction}
+                            />
+                        {/* Total Deductions <input disabled="true" type="number" value={totalDeduction} id="txtTotalDeductions"></input> */}
                       </div>
                       <div className="col-12 col-md-4 mt-3">
-                        Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input>
+                      <AmountInput
+                              field={{
+                                name: `netSalary`,
+                                value: values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross),
+                                onBlur: () => {},
+                                onChange:(e) => {},
+                              }}
+                              
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {},
+                                setFieldTouched: () => {},
+                              }}
+                              label={"Net Salary"}
+                              disabled={true}
+                              value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} 
+                            />
+                        {/* Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input> */}
                       </div>
                     </div>
                     <div className="from-group row">
