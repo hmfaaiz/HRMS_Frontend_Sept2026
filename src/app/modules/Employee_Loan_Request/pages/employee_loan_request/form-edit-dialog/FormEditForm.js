@@ -360,7 +360,7 @@ export function FormEditForm({
     const latestDate = payrollDates.sort((a, b) => b - a)[0];
 
     // Return the most recent payroll date as a string
-    return latestDate.toLocaleDateString("en-GB"); // Format it as 'dd/mm/yyyy'
+    return latestDate?.toLocaleDateString("en-GB"); // Format it as 'dd/mm/yyyy'
   };
 
   const formatDateString = (dateString) => {
@@ -828,7 +828,7 @@ export function FormEditForm({
                       placeholder="Enter monthly installment"
                       label={
                         <div className="d-flex">
-                          <div className="d-flex"> Monthly Installment </div>
+                          <div className="d-flex"> Monthly Installment</div>
                           <div className="d-flex ml-3">
                             {maxMonthlyAmountSuggest ? (
                               <span>
