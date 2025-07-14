@@ -3,6 +3,9 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useFormUIContext } from "../FormUIContext";
 import * as actions from "../../_redux/formAction";
 import { ToastContainer } from 'react-toastify';
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
+
 const JobOfferPreview = () => {
     const [data, setData] = useState(null);
 
@@ -127,7 +130,12 @@ const JobOfferPreview = () => {
                                     formUIProps2 == null || pdfGenerateLoading || emailSendLoading
                                 }
                             >
-                                Generate Offer Letter
+                                Generate Offer Letter  
+                                  <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                <SVG
+                                                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                />
+                                              </span>
                                 {pdfGenerateLoading && (
                                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                                 )}

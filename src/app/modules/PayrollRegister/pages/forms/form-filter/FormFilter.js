@@ -13,7 +13,8 @@ import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetc
 import { Select } from "../../../../../../_metronic/_partials/controls";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { useHistory } from "react-router-dom";
-
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 
 //Validation for date fields
@@ -392,6 +393,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           className="btn btn-primary btn-elevate"
                         >
                           Generate Register (PDF)
+                          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                          <SVG
+                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                          />
+                                                        </span>
                           {registerLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -406,6 +412,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           className="btn btn-primary btn-elevate"
                         >
                           Generate Register (Excel)
+                            <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                          <SVG
+                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                          />
+                                                        </span>
                           {registerExcelLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -426,6 +437,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           className="btn btn-primary btn-elevate"
                         >
                           Generate Payment Advice
+                            <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                          <SVG
+                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                          />
+                                                        </span>
                           {adviceLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -492,6 +508,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           className="btn btn-primary btn-elevate"
                         >
                           Generate Payslip
+                            <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                          <SVG
+                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                          />
+                                                        </span>
                           {pdfLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -579,6 +600,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                               className="btn btn-primary btn-elevate"
                             >
                               Generate JV Report (Payables)
+                                <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                          <SVG
+                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                          />
+                                                        </span>
                               {registerExcelLoading && (
                                 <span className="ml-3 mr-3 spinner spinner-white"></span>
                               )}
@@ -591,6 +617,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                               className="btn btn-primary btn-elevate ml-4"
                             >
                               Generate JV Report (Bank Transfer)
+                                <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                          <SVG
+                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                          />
+                                                        </span>
                               {registerExcelLoading && (
                                 <span className="ml-3 mr-3 spinner spinner-white"></span>
                               )}

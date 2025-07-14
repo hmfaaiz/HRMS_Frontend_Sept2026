@@ -154,11 +154,21 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter: (cell, row) => (
-        <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-          <span>{getFileName(cell)}</span>
-        </a>
-      )
+      // formatter: (cell, row) => (
+      //   <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+      //     <span>{getFileName(cell)}</span>
+      //   </a>
+      // )
+         formatter: (cell) => {
+                    if (!cell) return "";
+            
+                    return (
+                      <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+                        View CV
+                      </a>
+                    );
+                  },
+         
     },
 
     {

@@ -15,7 +15,8 @@ import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetc
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
 import { parse } from "date-fns";
-
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -425,6 +426,11 @@ const [endDate,setEndDate]=useState()
                   className="btn btn-primary btn-elevate"
                 >
                   Reimbursement Report
+                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                                          <SVG
+                                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                                          />
+                                                                        </span>
                   {reimbursementLoading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}

@@ -13,6 +13,9 @@ import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
 import { formatDates } from "../../../../../utils/common";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
+
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -440,9 +443,14 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
               <button
                 onClick={() => { getPdf(values) }}
                 disabled={pdfLoading}
-                className="btn btn-secondary"
+                className="btn btn-primary btn-elevate"
               >
                 Generate Report
+                    <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                                        <SVG
+                                                                          src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                                        />
+                                                                      </span>
                 {pdfLoading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
