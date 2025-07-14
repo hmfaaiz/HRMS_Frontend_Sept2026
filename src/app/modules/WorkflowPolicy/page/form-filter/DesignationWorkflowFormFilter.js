@@ -7,6 +7,7 @@ import { SearchSelect } from "../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllFormsMenu } from "../../../../../_metronic/redux/dashboardActions";
 import { Select } from "../../../../../_metronic/_partials/controls";
 import CustomDropdown from "../../../../utils/common-modules/CustomDropdown";
+import { InputSearch } from "../../../../utils/common-modules/InputSearch";
 
 const DesignationWorkflowFormFilter = () => {
   const { queryParamsDesig, setQueryParamsDesig } = useFormUIContext();
@@ -34,7 +35,7 @@ const DesignationWorkflowFormFilter = () => {
       {({ values, handleSubmit, handleBlur, setFieldValue }) => (
         <form onSubmit={handleSubmit} className="form form-label-right">
           {/* <div className="row"> */}
-            <div className="col-12 col-md-12">
+            {/* <div className="col-12 col-md-12">
               <input
                 type="text"
                 className="form-control"
@@ -50,7 +51,14 @@ const DesignationWorkflowFormFilter = () => {
                   });
                 }}
               />
-            </div>
+            </div> */}
+                  <InputSearch
+                                        values={values}
+                                        fieldName="searchQuery"
+                                        setFieldValue={setFieldValue}
+                                        handleBlur={handleBlur}
+                                        handleSubmit={handleSubmit}
+                                      />
             {/* <div className="col-12 col-md-6">
               <Field
                 name="workflowType"

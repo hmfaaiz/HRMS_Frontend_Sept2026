@@ -19,10 +19,15 @@ const WorkflowFormCard = ({ accessPage }) => {
   return (
     <Card>
       <CardHeader title={CurrentModuleName()}>
+        <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
+           <div className="col-6">
+
+              <WorkflowFormFilter />
+           </div>
         <CardHeaderToolbar>
-          <div className="pr-5">
+          {/* <div className="pr-5">
             <WorkflowFormFilter />
-            </div>
+            </div> */}
           {accessPage && (
             <button
               type="button"
@@ -33,6 +38,7 @@ const WorkflowFormCard = ({ accessPage }) => {
             </button>
           )}
         </CardHeaderToolbar>
+              </div>
       </CardHeader>
       <CardBody>
         <WorkflowPolicyTable />
