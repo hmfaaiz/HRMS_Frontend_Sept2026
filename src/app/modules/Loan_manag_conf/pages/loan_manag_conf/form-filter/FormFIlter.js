@@ -1,21 +1,8 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react"
+import React, { useMemo } from "react"
 import { Formik } from "formik"
 import { isEqual } from "lodash"
 import { useFormUIContext } from "../FormUIContext"
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-import axios from "axios";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { useDispatch, useSelector } from "react-redux";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import * as actions from "../../../../Dashboard/_redux/dashboardActions";
-import DatePicker from "react-datepicker";
-import {} from "../../../../../../_metronic/redux/dashboardActions";
-import { debounce } from "redux-saga/effects";
-
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-const API_URL = process.env.REACT_APP_API_URL;
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch"
 
 
 const prepareFilter = (queryParams, values) => {
@@ -34,12 +21,8 @@ const prepareFilter = (queryParams, values) => {
 export function FormFIlter({ listLoading,user }) {
 
 
-  const dispatch = useDispatch();
   const FormUIContext = useFormUIContext()
-  const [Loading, setLoading] = useState(false)
-
-
-
+ 
   const formUIProps  = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
@@ -48,21 +31,6 @@ export function FormFIlter({ listLoading,user }) {
   }, [FormUIContext])
 
 
-
-
-  function addCommas(nStr) {
-    nStr += '';
-    let x = nStr.split('.');
-    let x1 = x[0];
-    let x2 = x.length > 1 ? '.' + x[1] : '';
-    let rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-  }
-
-  // queryParams, setQueryParams,
   const applyFilter = (values) => {
 
     const newQueryParams = prepareFilter(formUIProps .queryParams, values)
@@ -74,10 +42,7 @@ export function FormFIlter({ listLoading,user }) {
   }
 
 
-  // const waitapplyFilter = useCallback(
-  //   debounce((values) => applyFilter(values), 500),
-  //   []
-  // );
+
   return (
     <>
       <Formik
@@ -106,7 +71,7 @@ export function FormFIlter({ listLoading,user }) {
           <form onSubmit={handleSubmit} className="form form-label-right">
             <div className="row">
 
-              <div className="col-12 col-md-12">
+              {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -122,49 +87,22 @@ export function FormFIlter({ listLoading,user }) {
                 <small className="form-text text-muted">
                   <b>Search</b> in all fields
                 </small>
-              </div>
+              </div> */}
+              <InputSearch
+  values={values}
+  fieldName="searchText"
+  setFieldValue={setFieldValue}
+  handleBlur={handleBlur}
+  handleSubmit={handleSubmit}
+/>
+
+
+
             </div>
-          </form>
-        )}
-      </Formik>
-
-      <Formik
-        enableReinitialize={true}
-
-        onSubmit={(values) => {
-        
-
-        }}
-      >
-        {({
-          values,
-          handleSubmit,
-          handleBlur,
-          handleChange,
-          setFieldValue,
-          errors,
-          touched,
-
-        }) => (
-          <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
-           
-
-             
-            </div>
-            <div className="row">
-           
-            </div>
-            
           </form>
         )}
       </Formik>
     </>
   )
 
-  return (
-    <>
-
-    </>
-  )
 }

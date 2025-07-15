@@ -15,7 +15,7 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
 export function FormCard() {
   const FormUIContext = useFormUIContext()
 
-  const FormUIProps  = useMemo(() => {
+  const FormUIProps = useMemo(() => {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
       openEditFormDialog: FormUIContext.openEditFormDialog,
@@ -23,9 +23,9 @@ export function FormCard() {
   }, [FormUIContext])
 
   const { userAccess } = useSelector(
-   
+
     (state) => ({
-      
+
       userAccess: state.auth.userAccess.accrue_gratuity_configuration,
     }),
     shallowEqual
@@ -36,44 +36,48 @@ export function FormCard() {
   )
 
   const { currentState } = useSelector(
-    (state) => { return {
-      
-      currentState: state.accrue_gratuity_configuration,
-      userAccess: state?.auth?.userAccess["accrue_gratuity_configuration"],
-    }},
+    (state) => {
+      return {
+
+        currentState: state.accrue_gratuity_configuration,
+        userAccess: state?.auth?.userAccess["accrue_gratuity_configuration"],
+      }
+    },
     shallowEqual
   );
 
-  // const { currentState } = useSelector();
-  
-  const {entities } = currentState;
+
 
   return (
     <>
 
-<Card>
+      <Card>
         <CardHeader title={CurrentModuleName()} >
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
 
-      <div className="pt-5">
-      <FormFIlter />
-      </div>
-      <div className=" p-2">
-      <CardHeaderToolbar>
-    
-    <button
-      type="button"
-      className="btn btn-primary "
-      onClick={FormUIProps .newFormButtonClick}
-    >
-     + Add Accrue Gratuity Configuration
+           <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8 col-12">
 
-    </button>
-  
 
-</CardHeaderToolbar>
-      </div>
-       
+
+            <div className="col-4">
+              <FormFIlter />
+            </div>
+            <div className=" p-2">
+              <CardHeaderToolbar>
+                {accessUser && <button
+                  type="button"
+                  className="btn btn-primary "
+                  onClick={FormUIProps.newFormButtonClick}
+                >
+                  + Add Accrue Gratuity Configuration
+
+                </button>}
+
+
+
+              </CardHeaderToolbar>
+              <div></div>
+            </div>
+
           </div>
         </CardHeader>
 
