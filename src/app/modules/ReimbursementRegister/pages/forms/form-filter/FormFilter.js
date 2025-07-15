@@ -15,7 +15,8 @@ import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetc
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
 import { parse } from "date-fns";
-
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -242,7 +243,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allDeptMap?.get(values?.departmentId || '') || ''}
                           autoComplete="off"
-                          options={allDept}
+                          // options={allDept}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
                         />
                       </div>
                       {/* Deparment Field End */}
@@ -263,7 +265,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                           autoComplete="off"
-                          options={allEmployees}
+                          // options={allEmployees}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
 
 
 
@@ -292,7 +295,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allReimbursementTypeMap?.get(values?.reimbursement_typeId || '') || ''}
                           autoComplete="off"
-                          options={allReimbursementTypeList}
+                          // options={allReimbursementTypeList}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allReimbursementTypeList) ? allReimbursementTypeList : []),]}
                         />
                       </div>
                     </div>
@@ -318,7 +322,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
                           autoComplete="off"
-                          options={allPayrollMonthYearList}
+                          // options={allPayrollMonthYearList}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allPayrollMonthYearList) ? allPayrollMonthYearList : []),]}
                         />
                       </div>
 
@@ -421,6 +426,11 @@ const [endDate,setEndDate]=useState()
                   className="btn btn-primary btn-elevate"
                 >
                   Reimbursement Report
+                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                                          <SVG
+                                                                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                                          />
+                                                                        </span>
                   {reimbursementLoading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}

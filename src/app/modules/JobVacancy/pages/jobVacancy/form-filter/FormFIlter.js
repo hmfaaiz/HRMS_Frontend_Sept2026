@@ -240,7 +240,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.departmentId
                           ) || null
                         }
-                        options={dashboard?.allDept}
+                        // options={dashboard?.allDept}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                       />
                     </div>
 
@@ -258,7 +259,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.designationId
                           ) || null
                         }
-                        options={dashboard?.allDesignations}
+                        // options={dashboard?.allDesignations}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                       />
                     </div>
 
@@ -276,7 +278,8 @@ export function FormFIlter({ listLoading, user }) {
                             (option) => option.value === values.priorityTypeId
                           ) || null
                         }
-                        options={dashboard?.allPriorityTypeList}
+                        // options={dashboard?.allPriorityTypeList}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList : []),]}
                       />
                     </div>
                   </div>

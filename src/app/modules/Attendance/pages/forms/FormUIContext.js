@@ -10,6 +10,7 @@ export function useFormUIContext() {
 
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
+  const [panelMode, setPanelMode] = useState(false);
   const initFilters = {
     employeeId: '',
     attDateIn: "",
@@ -64,6 +65,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setfilters,
     initUser,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
+    panelMode,
+    setPanelMode,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

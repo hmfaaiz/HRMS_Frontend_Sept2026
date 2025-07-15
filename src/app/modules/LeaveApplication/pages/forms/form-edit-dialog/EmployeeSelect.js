@@ -7,11 +7,13 @@ import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLab
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 
 export function EmployeeSelect({
   actionsLoading,
   setemployeeId,
-  setId
+  setId,setPanelMode, panelMode
 }) {
   const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
@@ -55,7 +57,7 @@ export function EmployeeSelect({
                 <div className="from-group row">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="col-12 col-md-4 mt-3 ml-7">
                     <Field
                       name="employeeId"
                       component={SearchSelect}
@@ -76,13 +78,31 @@ export function EmployeeSelect({
                       }
                       value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                       autoComplete="off"
-                      options={allEmployees}
+                      // options={allEmployees}
+                      options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : [])]}
+
                     />
                     {
                       !values.employeeId && <CustomErrorLabel touched={true} error={VALIDATION_MESSAGES.required} />
                     }
                   </div>
                   {/* Employee Id Dropdown Ends */}
+                      <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
+                                      <span
+                                        className="svg-icon svg-icon-md svg-icon-primary"
+                                        onClick={() => setPanelMode(!panelMode)}
+                                      >
+                                        <SVG
+                                          src={toAbsoluteUrl(
+                                            panelMode
+                                              ? "/media/svg/icons/Communication/CancelButton.svg"
+                                              : "/media/svg/icons/Communication/AddButton.svg"
+                                          )}
+                                        />
+                                      </span>
+                  
+                  
+                                    </div>
 
                 </div>
               </fieldset>

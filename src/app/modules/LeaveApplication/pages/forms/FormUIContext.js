@@ -15,6 +15,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [employeeId, setemployeeId] = useState("");
   const [id, setId] = useState("");
   const [leaveId, setLeaveId] = useState(null);
+  const [panelMode, setPanelMode] = useState(false);
   const setQueryParamsLeaveApp = useCallback((nextQueryParams) => {
     setQueryParamsLeaveAppBaseLeaveApp((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -57,6 +58,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setLeaveId,
     initUser,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
+    panelMode,
+    setPanelMode,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

@@ -12,7 +12,8 @@ import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
-
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import SVG from "react-inlinesvg";
 //Validation for date fields
 const formValidation = Yup.object().shape({
   from: Yup.date().optional(),
@@ -449,6 +450,14 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
           disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
         >
           Employee wise Sheet
+          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                <SVG
+                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                />
+              </span>
+    {/* {consolidatedLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )} */}
           {empWiseLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )}
@@ -466,6 +475,11 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
     disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
   >
     Consolidated Sheet
+     <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                <SVG
+                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                />
+              </span>
     {consolidatedLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )}

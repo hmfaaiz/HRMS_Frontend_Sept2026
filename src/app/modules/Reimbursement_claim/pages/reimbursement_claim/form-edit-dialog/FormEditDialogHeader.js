@@ -28,12 +28,12 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
 
   return (
     <>
-      {actionsLoading && <ModalProgressBar />}
+      {/* {actionsLoading && <ModalProgressBar />}
       <Modal.Header>
         <Modal.Title id="example-modal-sizes-title-lg " className="text-bold">
           {!isUserForRead ? title : "View"}
         </Modal.Title>
-      </Modal.Header>
+      </Modal.Header> */}
     </>
   );
 }

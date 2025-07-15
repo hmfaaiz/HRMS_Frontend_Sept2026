@@ -18,6 +18,7 @@ import { useFormUIContext } from "../FormUIContext";
 import { Modal } from "react-bootstrap";
 import { format } from "date-fns";
 import { useHistory } from "react-router-dom";
+import { formatTime } from "../../../../../utils/common";
 
 const isValidMonthRequest = (monthStartDate, monthEndDate, attDate) => {
   const start = new Date(monthStartDate);
@@ -114,6 +115,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => formatTime(cell)
     },
 
     {
@@ -126,6 +128,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter : (cell) => formatTime(cell)
     },
 
     // {
@@ -204,6 +207,7 @@ export function FormTable() {
         minWidth: "70px",
         maxWidth: "70px",
       },
+      formatter : (cell) => formatTime(cell)
     },
     {
       dataField: "oT",
@@ -215,6 +219,7 @@ export function FormTable() {
         minWidth: "70px",
         maxWidth: "70px",
       },
+      formatter : (cell) => formatTime(cell)
     },
 
     // {

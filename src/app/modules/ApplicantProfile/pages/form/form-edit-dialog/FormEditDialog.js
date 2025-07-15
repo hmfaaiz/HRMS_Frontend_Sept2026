@@ -96,6 +96,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
 
 
         dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
+        dispatch(actions.fetchApplicantProfile(formUIProps.queryParams));
 
 
 

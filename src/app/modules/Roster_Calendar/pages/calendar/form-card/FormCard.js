@@ -198,9 +198,10 @@ const setInitialValues=(firstSubsidiary)=>{
                                                             (option) => option?.value === values?.departmentId
                                                           ) || null
                                                         }
-                                                        options={dashboard?.allDept}
+                                                        // options={dashboard?.allDept}
                                                         error={errors.departmentId}
                                                         touched={touched.departmentId}
+                                                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                                                       />
                                                     </div>
                         </div>
@@ -220,13 +221,15 @@ const setInitialValues=(firstSubsidiary)=>{
                                 ) || null
                               }
                               // options={dashboard?.allEmployees}
-                              options={
-                                values?.departmentId
+                              options={[
+                                { label: '--Select--', value: '' },
+                           
+                                ...(values?.departmentId
                                   ? dashboard?.allEmployees?.filter(
                                       (emp) => emp?.departmentId === values.departmentId
                                     )
-                                  : dashboard?.allEmployees
-                              }
+                                  : dashboard?.allEmployees)
+                                ] }
                               error={errors.employeeId}
                               touched={touched.employeeId}
                             />

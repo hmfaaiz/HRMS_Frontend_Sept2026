@@ -56,7 +56,7 @@ export function ActionsColumnFormatter(
             }}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")} />
             </span>
           </button>
         </OverlayTrigger>

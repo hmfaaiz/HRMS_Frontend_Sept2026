@@ -16,12 +16,12 @@ export function FormEditDialogHeader() {
 
   return (
     <>
-      {actionsLoading && <ModalProgressBar />}
+      {/* {actionsLoading && <ModalProgressBar />}
       <Modal.Header>
         <Modal.Title id="example-modal-sizes-title-lg">
           Leave Entry
         </Modal.Title>
-      </Modal.Header>
+      </Modal.Header> */}
     </>
   );
 }

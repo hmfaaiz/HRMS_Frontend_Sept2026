@@ -6,20 +6,18 @@ import {
   CardHeader,
   CardHeaderToolbar,
 } from "../../../../../../_metronic/_partials/controls"
-import { DesignationTable, ReligionTable } from "../designation-table/DesignationTable"
+import { DesignationTable } from "../designation-table/DesignationTable"
 import { useDesignationUIContext } from "../DesignationUIContext"
 import { BanksFilter } from "../bank-filter/BanksFIlter"
 import { useSelector, shallowEqual, useDispatch } from "react-redux"
-import { useModal } from '../../../../../../context/ModalContext';
+
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
-import { initialFilter } from "../ReligionUIHelpers"
+
 import * as actions from "../../../_redux/designationActions";
-import { DesignationEditDialog } from "../designation-edit-dialog/DesignationEditDialog"
 
 export function ReligionCard() {
   const designationUIContext = useDesignationUIContext()
-  const empUIContext = useDesignationUIContext()
-  const { openModal } = useModal();
+
   const dispatch = useDispatch();
   const DesignationUIProps = useMemo(() => {
     return {
@@ -81,27 +79,18 @@ export function ReligionCard() {
 
   }
 
-
-  const handleOpenModal = () => {
-    openModal(
-      <div>
-        <h2>Home Page Modal</h2>
-        <p>This modal was opened from the HomePage.</p>
-      </div>
-    );
-  };
-
   return (
     <>
       <Card>
 
         <CardHeader title={CurrentModuleName() + (usersUIProps.queryParams.isActive ? "  ( Active )" : "  ( Inactive )")}>
 
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
+          
+ <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
 
 
 
-            <div className="pt-5">
+            <div className="col-6">
 
               <BanksFilter />
 

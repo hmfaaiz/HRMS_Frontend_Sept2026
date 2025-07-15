@@ -33,6 +33,7 @@ import {
 import DatePicker from "react-datepicker";
 import { subYears } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
@@ -54,7 +55,7 @@ export const getApplicantProfileEditSchema = (formData) => {
       applicantStatusId: Yup.number()
         .nullable()
         .required(VALIDATION_MESSAGES.required),
-
+      nationality: Yup.string().required(VALIDATION_MESSAGES.required),
       dateOfBirth: Yup.date()
         .nullable()
         .typeError("Invalid date format")
@@ -755,6 +756,7 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleChange,
+        setFieldTouched
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -1832,7 +1834,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3 mb-5"style={{ height: '150px' }}>
+                    <div className="col-12 col-md-12 mt-3 mb-9"style={{ height: '150px' }}>
                       <Field
                         name="additional_summary"
                         component={TextArea}
@@ -1846,6 +1848,13 @@ export function FormEditForm({
                         }
                         autoComplete="off"
                       />
+                         <div className="ml-1 mt-1">
+    <ErrorMessage
+      name="additional_summary"
+      component="div"
+      className="form-feedBack text-danger"
+    />
+  </div>
                     </div>
 
                     <div className="col-12 col-md-4 mt-5">
@@ -1939,7 +1948,28 @@ export function FormEditForm({
                       </div>
                     </div>
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
+                    <AmountInput
+                        field={{
+                          name: `lastDawnSalary`,
+                          value: values?.lastDawnSalary,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={isdataForRead}
+                        placeholder="Enter last drawn salary"
+                        label={
+                          <span>
+                            {" "}
+                            Last Drawn Salary
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                      />
+                      {/* <Field
                         name="lastDawnSalary"
                         component={Input}
                         placeholder="Enter last drawn salary"
@@ -1955,7 +1985,7 @@ export function FormEditForm({
                         onInput={(e) => {
                           e.target.value = amountLimit(e.target.value);
                         }}
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
@@ -2015,7 +2045,28 @@ export function FormEditForm({
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
+                    <AmountInput
+                        field={{
+                          name: `expectedSalaryRangeFrom`,
+                          value: values?.expectedSalaryRangeFrom,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={isdataForRead}
+                        placeholder="Enter expected salary range(from)"
+                        label={
+                          <span>
+                            {" "}
+                            Expected Salary Range(From)
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                      />
+                      {/* <Field
                         name="expectedSalaryRangeFrom"
                         component={Input}
                         placeholder="Enter expected salary range(from)"
@@ -2031,13 +2082,22 @@ export function FormEditForm({
                         onInput={(e) => {
                           e.target.value = amountLimit(e.target.value);
                         }}
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="expectedSalaryRangeTo"
-                        component={Input}
+                    <AmountInput
+                        field={{
+                          name: `expectedSalaryRangeTo`,
+                          value: values?.expectedSalaryRangeTo,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={isdataForRead}
                         placeholder="Enter expected salary range(to)"
                         label={
                           <span>
@@ -2046,11 +2106,6 @@ export function FormEditForm({
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        autoComplete="off"
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimit(e.target.value);
-                        }}
                       />
                     </div>
 

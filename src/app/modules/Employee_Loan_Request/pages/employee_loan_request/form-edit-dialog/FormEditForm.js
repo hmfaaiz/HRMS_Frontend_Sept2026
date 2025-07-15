@@ -30,6 +30,7 @@ import {
   updateApprovedStatus,
   fetchEmployeeLoanRequest,
 } from "../../../_redux/redux-Actions";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 const EmployeeLoanRequestSchema = Yup.object().shape({
   loan_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -359,7 +360,7 @@ export function FormEditForm({
     const latestDate = payrollDates.sort((a, b) => b - a)[0];
 
     // Return the most recent payroll date as a string
-    return latestDate.toLocaleDateString("en-GB"); // Format it as 'dd/mm/yyyy'
+    return latestDate?.toLocaleDateString("en-GB"); // Format it as 'dd/mm/yyyy'
   };
 
   const formatDateString = (dateString) => {
@@ -565,6 +566,7 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleReset,
+        setFieldTouched,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -722,7 +724,7 @@ export function FormEditForm({
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">
-                    <Field
+                    {/* <Field
                       name="total_loan_amount"
                       component={Input}
                       placeholder="Enter total loan amount"
@@ -757,17 +759,76 @@ export function FormEditForm({
                       }}
                       // disabled={userForEdit?.details[0]?.is_deducted}
                       disabled={userForEdit}
+                    /> */}
+                    <AmountInput
+                      field={{
+                        name: `total_loan_amount`,
+                        value: values?.total_loan_amount,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      onChange={(e) => {
+                        const value = Number(e);
+                        if (
+                          maxAmountLimit !== undefined &&
+                          value > maxAmountLimit
+                        ) {
+                          return; // Prevent setting value above max
+                        }
+                        // setFieldValue("total_loan_amount", value);
+                        setTotalLoanAmount(value);
+                      }}
+                      disabled={userForEdit}
+                      max={maxAmountLimit}
+                      placeholder="Enter total loan amount"
+                      label={
+                        <div className="d-flex">
+                          <div className="d-flex">Total Loan Amount </div>
+                          <div className="d-flex ml-3">
+                            <span>
+                              ( Amount Limit :
+                              {maxAmountLimit?.toLocaleString() || 0})
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          </div>
+                        </div>
+                      }
                     />
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">
-                    <Field
-                      name="monthly_installment"
-                      component={Input}
+                    <AmountInput
+                      field={{
+                        name: `monthly_installment`,
+                        value: values?.monthly_installment,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      max={maxAmountLimit}
+                      onChange={(e) => {
+                        const value = Number(e);
+                        if (
+                          totalLoanAmount !== undefined &&
+                          value > totalLoanAmount
+                        ) {
+                          return; // Prevent setting value above max
+                        }
+                        // setFieldValue("monthly_installment", value);
+                        setMonthlyInstallments(value);
+                      }}
+                      disabled={userForEdit}
                       placeholder="Enter monthly installment"
                       label={
                         <div className="d-flex">
-                          <div className="d-flex"> Monthly Installment </div>
+                          <div className="d-flex"> Monthly Installment</div>
                           <div className="d-flex ml-3">
                             {maxMonthlyAmountSuggest ? (
                               <span>
@@ -780,25 +841,6 @@ export function FormEditForm({
                           </div>
                         </div>
                       }
-                      type="number"
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-
-                        if (
-                          totalLoanAmount !== undefined &&
-                          value > totalLoanAmount
-                        ) {
-                          return; // Prevent setting value above max
-                        }
-
-                        setFieldValue("monthly_installment", value);
-                        setMonthlyInstallments(value);
-                      }}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                      }}
-                      // disabled={userForEdit?.details[0]?.is_deducted}
-                      disabled={userForEdit}
                     />
                   </div>
 
@@ -843,19 +885,47 @@ export function FormEditForm({
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">
-                    <Field
+                  <AmountInput
+                      field={{
+                        name: `loan_amount_paid`,
+                        value: values?.loan_amount_paid,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      label={<span>Loan Amount Paid</span>}
+                      disabled={true}
+                    />
+                    {/* <Field
                       name="loan_amount_paid"
                       component={Input}
                       placeholder=""
                       label={<span>Loan Amount Paid</span>}
+                      disabled={true}
                       type="number"
                       // value={""}
-                      disabled={true}
-                    />
+                    /> */}
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">
-                    <Field
+                  <AmountInput
+                      field={{
+                        name: `loan_amount_remaining`,
+                        value: values?.loan_amount_remaining,
+                      }}
+                      form={{
+                        touched,
+                        errors,
+                        setFieldValue,
+                        setFieldTouched,
+                      }}
+                      label={<span>Loan Amount Remaining</span>}
+                      disabled={true}
+                    />
+                    {/* <Field
                       name="loan_amount_remaining"
                       component={Input}
                       placeholder=""
@@ -864,7 +934,7 @@ export function FormEditForm({
                       // value={""}
                       // value={totalLoanAmount}
                       disabled={true}
-                    />
+                    /> */}
                   </div>
 
                   <div className="col-12 col-md-6 mt-3">

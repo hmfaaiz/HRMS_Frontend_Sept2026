@@ -15,6 +15,8 @@ import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetch
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
 import { parse } from "date-fns";
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 
 
 //Validation for date fields
@@ -264,7 +266,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allDeptMap?.get(values?.departmentId || '') || ''}
                           autoComplete="off"
-                          options={allDept}
+                          // options={allDept}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
                         />
                       </div>
                       {/* Deparment Field End */}
@@ -285,7 +288,8 @@ const [endDate,setEndDate]=useState()
                           }
                           value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                           autoComplete="off"
-                          options={allEmployees}
+                          // options={allEmployees}
+                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
 
 
 
@@ -315,7 +319,8 @@ const [endDate,setEndDate]=useState()
                             ) || null
                           }
                           autoComplete="off"
-                          options={allLoanTypeList}
+                          // options={allLoanTypeList}
+                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLoanTypeList) ? allLoanTypeList : []),]}
 
 
 
@@ -434,7 +439,12 @@ const [endDate,setEndDate]=useState()
                         disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !isValid }
                         className="btn btn-primary btn-elevate"
                       >
-                        Loan Request Report
+                        Loan Request Report 
+                          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                        <SVG
+                                                          src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                        />
+                                                      </span>
                         {loanReqLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -484,6 +494,11 @@ const [endDate,setEndDate]=useState()
                         className="btn btn-primary btn-elevate"
                       >
                         Loan Position Report
+                          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                                        <SVG
+                                                          src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                                        />
+                                                      </span>
                         {LoanPositionLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}

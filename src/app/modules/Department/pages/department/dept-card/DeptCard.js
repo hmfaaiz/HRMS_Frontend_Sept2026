@@ -82,11 +82,11 @@ export function DeptCard() {
 
         <CardHeader title={CurrentModuleName()} >
 
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
+          <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
 
 
 
-            <div className="pt-5">
+            <div className="col-6">
 
               <DeptFilter />
 
