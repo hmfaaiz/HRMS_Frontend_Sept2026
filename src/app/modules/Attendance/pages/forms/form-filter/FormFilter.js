@@ -438,7 +438,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
               </Form>
 
              
-              <div className="d-flex justify-content-end">
+              <div className="d-flex justify-content-end mt-5">
             <button
           
           className=" btn btn-primary btn-elevate"
@@ -449,7 +449,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
             generateReport(values,true)}}
           disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
         >
-          Employee wise Sheet
+           Attendance Sheet (Employee Wise)
           <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
                 <SVG
                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
@@ -474,7 +474,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
       generateReport(values,false)}}
     disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
   >
-    Consolidated Sheet
+     Attendance Sheet (Date Wise)
      <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
                 <SVG
                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
