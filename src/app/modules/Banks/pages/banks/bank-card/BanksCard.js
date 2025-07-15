@@ -83,11 +83,11 @@ export function BanksCard() {
 
         <CardHeader title={CurrentModuleName()} >
 
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
+          <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
 
 
 
-            <div className="pt-5">
+            <div className="col-6">
 
               <BanksFilter />
 
@@ -129,7 +129,7 @@ export function BanksCard() {
                       <span className="file-button">
                         <SVG
                         
-                          src={toAbsoluteUrl("/media/svg/icons/Communication/Download-PDF-01.svg")}
+                          src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")}
                         />
                       </span>
                       {/* {pdfLoading && (
@@ -152,7 +152,7 @@ export function BanksCard() {
 
                       <span className=" file-button">
                         <SVG
-                          src={toAbsoluteUrl("/media/svg/icons/Communication/Download-CSV.svg")}
+                          src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")}
                         />
                       </span>
                       {/* {csvLoading && (
@@ -177,7 +177,7 @@ export function BanksCard() {
 
                       <span className="file-button">
                         <SVG
-                          src={toAbsoluteUrl("/media/svg/icons/Communication/Download-Excel.svg")}
+                          src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")}
                         />
                       </span>
                       {/* {excelLoading && (

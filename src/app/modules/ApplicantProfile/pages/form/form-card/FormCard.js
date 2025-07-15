@@ -59,9 +59,12 @@ export function FormCard() {
       <Card>
 
         <CardHeader title={CurrentModuleName()} >
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
 
-            <div className="pt-5">
+          <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
+
+
+
+            <div className="col-6">
               <FormFIlter />
             </div>
             <div className=" p-2">
@@ -69,15 +72,15 @@ export function FormCard() {
 
                 {accessUser && (
                   <>
-                <button
-                  type="button"
-                  className="btn btn-primary "
-                  onClick={FormUIProps.newFormButtonClick}
-                >
-                  + Applicant Profile
+                    <button
+                      type="button"
+                      className="btn btn-primary "
+                      onClick={FormUIProps.newFormButtonClick}
+                    >
+                      + Applicant Profile
 
-                </button>
-</>)}
+                    </button>
+                  </>)}
 
               </CardHeaderToolbar>
             </div>

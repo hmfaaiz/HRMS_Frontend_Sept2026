@@ -13,7 +13,8 @@ import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
 import { formatDates } from "../../../../../utils/common";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
-
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 //Validation for date fields
 const formValidation = Yup.object().shape({
    subsidiaryId: Yup.number()
@@ -765,6 +766,11 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                 className="btn btn-primary btn-elevate"
               >
                 Generate Report (PDF)
+                 <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                <SVG
+                                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                />
+                              </span>
                 {pdfLoading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
@@ -779,6 +785,11 @@ export function FormFilter({ loading, dispatch, pdfLoading ,registerExcelLoading
                 className="btn btn-primary btn-elevate"
               >
                 Generate Register (Excel)
+                 <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                                <SVG
+                                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                                />
+                              </span>
                 {registerExcelLoading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
