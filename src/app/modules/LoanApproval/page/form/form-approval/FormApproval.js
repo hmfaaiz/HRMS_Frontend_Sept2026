@@ -8,9 +8,14 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import { initialFilter } from "../../FormUIHelper";
+import { toast } from "react-toastify";
 
 const formValidation = Yup.object().shape({
-  authorityRemarks: Yup.string().required(VALIDATION_MESSAGES.required),
+  authorityRemarks: Yup.string().when('request_status', {
+    is: (val) => val === 'R',
+    then: Yup.string().required(VALIDATION_MESSAGES.required),
+    otherwise: Yup.string(),
+  }),
 });
 
 export const FormApproval = () => {
@@ -48,6 +53,19 @@ export const FormApproval = () => {
       setLoading(false);
     }
   };
+
+  const handleRejectClick = (setFieldValue, handleSubmit, values) => {
+    setFieldValue("request_status", "R");
+    
+    // Check if remarks are empty when rejecting
+    if (!values.authorityRemarks || values.authorityRemarks.trim() === "") {
+      toast.error("Remarks are required when rejecting a request");
+      return;
+    }
+    
+    handleSubmit();
+  };
+
   const intVal = {
     authorityRemarks: "",
     request_status: "",
@@ -59,7 +77,12 @@ export const FormApproval = () => {
         initialValues={intVal}
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
-          handleRequestSubmit({ ...values, Ids: formUIProps.Ids }, resetForm);
+          let submitValues = { ...values, Ids: formUIProps.Ids };
+          if (submitValues.request_status === 'A' && !submitValues.authorityRemarks) {
+            submitValues.authorityRemarks = 'Approved';
+          }
+          handleRequestSubmit(submitValues, resetForm);
+          // resetForm({ values: intVal });
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
@@ -79,10 +102,7 @@ export const FormApproval = () => {
               <button
                 type="button"
                 disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                onClick={() => {
-                  setFieldValue("request_status", "R");
-                  handleSubmit();
-                }}
+                onClick={() => handleRejectClick(setFieldValue, handleSubmit, values)}
                 className="btn btn-danger btn-elevate mx-2"
               >
                 Reject Request
