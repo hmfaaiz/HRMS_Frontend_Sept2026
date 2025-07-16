@@ -36,8 +36,11 @@ export function BanksCard() {
 
       <Card>
         <CardHeader title={CurrentModuleName()}>
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
-            <div className="pt-5">
+           <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
+
+
+
+            <div className="col-6">
               <BanksFilter />
             </div>
             <div className=" p-2">
@@ -53,22 +56,7 @@ export function BanksCard() {
                 ) : (
                   <></>
                 )}
-                {/* {userAccess.find((item) => {
-              if (
-                item.componentName === "CreateUser" ||
-                item.isAccess === true
-              ) {
-                return (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={BanksUIProps.newUserButtonClick}
-                  >
-                    Add New User
-                  </button>
-                )
-              }
-            })} */}
+     
               </CardHeaderToolbar>
             </div>
           </div>

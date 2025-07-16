@@ -14,6 +14,7 @@ import {
   fetchAllCity,
   fetchAllSubCenter,
 } from "../../../../../../_metronic/redux/dashboardActions";
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -47,24 +48,8 @@ export function BanksFilter({ listLoading, user, setCity,
   const [defCity, setDefaultCity] = useState({});
   const dispatch = useDispatch();
   const banksUIContext = useBanksUIContext()
-  const [Loading, setLoading] = useState(false)
-  const { countryId, cityId } = useSelector((state) => state.auth.user);
-  const dashboard = useSelector((state) => state.dashboard);
-  const [defCenter, setDefaultCenter] = useState({});
-  const [defSubcenter, setDefaultSubCenter] = useState({});
-  const [receiptDateFrom, setReceiptDateFrom] = useState(null);
-  const [receiptDateTo, setReceiptDateTo] = useState(null);
-  useEffect(() => {
-    if (countryId) {
-      dispatch(fetchAllCity(1));
-    }
-  }, [countryId, dispatch]);
 
-  useEffect(() => {
-    if (cityId) {
 
-    }
-  }, [cityId, dispatch]);
 
   const banksUIProps = useMemo(() => {
     return {
@@ -73,243 +58,9 @@ export function BanksFilter({ listLoading, user, setCity,
     }
   }, [banksUIContext])
 
-  async function fetchDonationReport(filterVal) {
-    try {
-      const response = await axios.post(`${API_URL}/edrs/donation-report`, {
-        bookNo: filterVal.txtBookNo,
-        cityId: filterVal.cityId || "0",
-        centerId: filterVal.centerId || "0",
-        subCenterId: filterVal.subCenterId || "0",
-        dateFrom: filterVal.receiptDateFrom || "",
-        dateTo: filterVal.receiptDateTo,
-               
-      });
-      return response?.data?.data;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
 
-  function getBase64ImageFromURL(url) {
-    return new Promise((resolve, reject) => {
-      var img = new Image();
-      img.setAttribute("crossOrigin", "anonymous");
 
-      img.onload = () => {
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
 
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-
-        var dataURL = canvas.toDataURL("image/png");
-
-        resolve(dataURL);
-      };
-
-      img.onerror = (error) => {
-        reject(error);
-      };
-
-      img.src = url;
-    });
-  }
-
-  async function createPdf(filterVal) {
-    // setStartDate(e);
-    // const getYear = moment(e).format("yyyy");
-    //pbookNo = e;
-    const pbookNo = filterVal.txtBookNo;
-    if (filterVal != null) {
-      setLoading(true);
-      const data = await fetchDonationReport(filterVal);
-      
-      const table = {
-        headerRow: [
-          "SNo",
-          "Receipt#",
-          "Donor Name",
-          "Amount",
-          "Donation Type",
-          "Clerk",
-          "Center",
-          "Circle",
-          "Date",
-        ],
-        body: [],
-        footer: {
-          columns: [
-            'test123',
-            {
-              alignment: 'right',
-              text: 'Footer text'
-            }
-          ],
-          margin: [10, 0]
-        },
-      };
-
-      let total = 0;
-      let t = 0;
-      data &&
-        data.forEach((item, index) => {
-
-          if (data.length - 1 == index) {
-            data.forEach((item) => { total += parseFloat(item.amount) })
-
-          }
-          const row = [
-            index+1,
-            item.receiptNo,
-            item.donorName,
-            item.amount,
-            item.type,
-            // item.city,
-
-            item.clerkName,
-            item.center,
-            item.subcenter,
-            item.createdon
-
-          ];
-          table.body.push(row);
-        });
-
-      // Add Row For Total Amount
-      const totall = [
-        "",
-        "",
-        "Total",
-        "RS." + addCommas(total),
-        "",
-        "",
-        "",
-        "",
-        ""
-      ]
-
-      table.body.push(totall); // For Adding Total Amount in ROW
-
-      function GetDate() {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
-
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
-
-        const formattedToday = dd + '/' + mm + '/' + yyyy;
-        return formattedToday;
-        // document.getElementById('DATE').value = formattedToday;
-      }
-
-      const documentDefinition = {
-        pageSize: 'A4',
-        pageOrientation: 'landscape',
-        fontSize: 6,
-        margin: [5, 0, 0, 30],
-        width:250,
-        content: [
-          {
-            alignment: "justify",
-            columns: [
-              // {
-              //   width: 80,
-              //   image: await getBase64ImageFromURL(
-              //     `${toAbsoluteUrl("/media/logos/abdul-start-edhi (1).png")}`
-              //     //`${toAbsoluteUrl("/media/logos/edhi1.png")}`
-              //   ),
-              // },
-              {
-                width: "*",
-                alignment: "center",
-                margin:[5,0,0,30],
-                top:[50],
-                text: [
-                  `DONATION REPORT\n 20-Receipt(s)
-                  BookNo# ${pbookNo} KARACHI`,
-                ],
-                style: "header",
-              },
-              {
-                width: 200,
-                image: await getBase64ImageFromURL(
-                  `${toAbsoluteUrl("/media/logos/edhi1.png")}`
-                ),
-              },
-            ],
-          },
-          {
-            table: {
-              headerRows:1,
-              body: [table.headerRow, ...table.body],
-              fontSize: 2,
-              style: {
-                body: {
-                  fontSize: 1,
-                  margin: [10, 0]
-                  
-                },
-              }
-            },
-          },
-        ],
-        footer: {
-          columns: [
-            'Date: ' + GetDate(),
-            {
-              alignment: 'right',
-              text: 'Signature________________________ \n Zonal Office                \xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\ '
-            }
-          ],
-          margin: [10, 0]
-        },
-        styles: {
-          header: {
-            fontSize: 12,
-            bold: false,
-            margin: [50, 0, 0, 60],
-            alignment: "center",
-          },
-          body: {
-            fontSize: 2,
-            bold: false,
-            pageSize: 'A4',
-            pageOrientation: 'landscape'
-          }
-        },
-
-        defaultStyle: {
-          columnGap: 20,
-          pageSize: 'A4',
-          pageOrientation: 'landscape'
-        },
-      };
-
-      setLoading(false);
-
-      try {
-        pdfMake.createPdf(documentDefinition).download();
-      } catch (error) {
-        // Handle the error
-        console.error(error);
-      }
-    }
-  }
-
-  function addCommas(nStr) {
-    nStr += '';
-    var x = nStr.split('.');
-    var x1 = x[0];
-    var x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-  }
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
@@ -327,13 +78,7 @@ export function BanksFilter({ listLoading, user, setCity,
       <Formik
         enableReinitialize={true}
         initialValues={{
-          donorName: "", // values => All=""/Susspended=0/Active=1/Pending=2
-          receiptNo: "", // values => All=""/Business=0/Individual=1
-          searchText: "",
-          cityId: [],
-          centerId: [],
-          subCenterId: [],
-          alarmTimeId: [],
+    
         }}
         onSubmit={(values) => {
           // createPdf(values);
@@ -353,7 +98,7 @@ export function BanksFilter({ listLoading, user, setCity,
           <form onSubmit={handleSubmit} className="form form-label-right">
             <div className="row">
 
-              <div className="col-12 col-md-12">
+              {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -369,7 +114,17 @@ export function BanksFilter({ listLoading, user, setCity,
                 <small className="form-text text-muted">
                   <b>Search</b> in all fields
                 </small>
-              </div>
+              </div> */}
+
+              
+              <InputSearch
+  values={values}
+  fieldName="searchText"
+  setFieldValue={setFieldValue}
+  handleBlur={handleBlur}
+  handleSubmit={handleSubmit}
+/>
+
             </div>
           </form>
         )}
