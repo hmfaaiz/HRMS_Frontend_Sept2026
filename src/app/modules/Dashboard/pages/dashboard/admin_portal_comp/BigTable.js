@@ -75,7 +75,9 @@ export function BigTable({ data }) {
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {
-            return <div>{cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}</div>;
+            return (
+              <div>{cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}</div>
+            );
           }
 
           // For amount formatting
@@ -120,7 +122,9 @@ export function BigTable({ data }) {
               fontWeight: "700",
             }}
           >
-            {data?.dashlet_name}
+            {data?.days
+              ? data?.dashlet_name?.replace("${days}", data?.days)
+              : data?.dashlet_name}
           </span>
           <span
             style={{

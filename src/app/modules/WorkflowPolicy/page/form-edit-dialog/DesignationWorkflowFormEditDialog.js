@@ -46,15 +46,14 @@ const DesignationWorkFlowFormEditDailog = ({ show, onHide, isUserForRead }) => {
     try {
       enableLoading();
       if (!id) {
-        await dispatch(createRecord(val, disbaleLoading, "DWP"));
+        await dispatch(createRecord(val, disbaleLoading, "DWP", onHide()));
       } else {
-        dispatch(updateRecord(val, disbaleLoading, "DWP"));
+        dispatch(updateRecord(val, disbaleLoading, "DWP", onHide()));
       }
-      onHide();
     } catch (error) {
       console.error(error);
     } finally {
-      disbaleLoading();
+      // disbaleLoading();
     }
   };
   return (

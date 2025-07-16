@@ -103,14 +103,14 @@ export function EmployeeSelect({
     }
     // Only apply filter when we have all required data
     if (payrollData?.startDate && payrollData?.endDate) {
-      const values = {
-        ...initialFilter.filter,
-        employeeId: formUIProps.employeeId?.value,
-        from: payrollData.startDate,
-        to: payrollData.endDate,
-      };
-      applyFilter(values);
-      dispatch(actions.fetchLeaveApplication(values));
+      // const values = {
+      //   ...initialFilter.filter,
+      //   employeeId: formUIProps.employeeId?.value,
+      //   from: payrollData.startDate,
+      //   to: payrollData.endDate,
+      // };
+      // applyFilter(values);
+      // dispatch(actions.fetchLeaveApplication(values));
       dispatch(
         getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
       );

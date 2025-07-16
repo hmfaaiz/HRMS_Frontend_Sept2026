@@ -23,6 +23,9 @@ const validationSchema = Yup.object().shape({
   workflowTypeId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
   designationId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -102,6 +105,7 @@ const DesignationWorkflowEditForm = ({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   useEffect(() => {
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(380, "allEmployeeRequestTypeList"));
     dispatch(fetchAllActiveEmployees());
     dispatch(action.fetchRoles());
@@ -112,10 +116,21 @@ const DesignationWorkflowEditForm = ({
     dispatch(fetchAllActiveEmployees());
   }, [dispatch]);
 
+  const allOption = { value: "all", label: "All" };
+  const options = [allOption, ...dashboard?.allDesignations];
+
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={data}
+      initialValues={
+        data?.Id
+          ? {
+              ...data,
+              designationId:
+                data?.designationId !== null ? data?.designationId : "all",
+            }
+          : data
+      }
       validationSchema={validationSchema}
       onSubmit={(values) => {
         handleSubmit(values);
@@ -135,8 +150,32 @@ const DesignationWorkflowEditForm = ({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="from-group row">
+                  <div className="col-12 col-md-4 mt-3">
+                    <SearchSelect
+                      isDisabled={isUserForRead}
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          {" "}
+                          Subsidiary
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("subsidiaryId", value);
+                      }}
+                      value={
+                        dashboard?.allSubsidiaryList?.find(
+                          (e) => e.value === values?.subsidiaryId
+                        ) || null
+                      }
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      options={dashboard?.allSubsidiaryList}
+                    />
+                  </div>
                   {/* designation workflow set  */}
-                  <div className="col-12 col-md-5 mt-3">
+                  <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="workflowTypeId"
@@ -159,7 +198,8 @@ const DesignationWorkflowEditForm = ({
                       options={dashboard.allEmployeeRequestTypeList}
                     />
                   </div>
-                  <div className="col-12 col-md-5 mt-3">
+                  {console.log("dataaa", data)}
+                  <div className="col-12 col-md-4 mt-3">
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="designationId"
@@ -172,13 +212,21 @@ const DesignationWorkflowEditForm = ({
                         setFieldValue("designationId", value);
                       }}
                       value={
-                        dashboard?.allDesignations.find(
+                        options.find(
                           (e) => e.value === values?.designationId
-                        ) || null
+                        ) || (data?.Id ? allOption : null)
                       }
                       error={errors.designationId}
                       touched={touched.designationId}
-                      options={dashboard.allDesignations}
+                      options={
+                        dashboard?.allDesignations &&
+                        Array.isArray(dashboard?.allDesignations)
+                          ? [
+                              { value: "all", label: "All" },
+                              ...dashboard?.allDesignations,
+                            ]
+                          : []
+                      }
                     />
                   </div>
                   {/* check for default approver workflow */}
@@ -370,7 +418,7 @@ const DesignationWorkflowEditForm = ({
                   >
                     <fieldset disabled={!values?.isCustomApprover}>
                       <CustomApprovalWorkflowTable
-                      isUserForRead={isUserForRead}
+                        isUserForRead={isUserForRead}
                         values={values}
                         setFieldValue={setFieldValue}
                         errors={errors}

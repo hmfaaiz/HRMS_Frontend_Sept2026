@@ -65,6 +65,16 @@ export function DesignationWorkflowPolicyTable() {
   // Table columns
   const columns = [
     {
+      dataField: "Subsidiary.name",
+      text: "Subsidiary",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
+    {
       dataField: "designation.formName",
       text: "Designation",
       sort: false,
@@ -73,6 +83,7 @@ export function DesignationWorkflowPolicyTable() {
       style: {
         minWidth: "160px",
       },
+      formatter: (cell) => (cell ? cell : "All"),
     },
     {
       dataField: "workflowType.formName",
@@ -85,19 +96,8 @@ export function DesignationWorkflowPolicyTable() {
       },
     },
     {
-      dataField: "reportToLevel",
-      text: "Report Level",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "80px",
-        textAlign: "center",
-      },
-    },
-    {
       dataField: "customApprover",
-      text: "Custom Approver",
+      text: "Approver Levels",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

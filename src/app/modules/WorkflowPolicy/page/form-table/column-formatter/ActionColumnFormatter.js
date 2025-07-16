@@ -57,7 +57,7 @@ export function ActionsColumnFormatter(
 
       <> </>
 
-      {isAccessForDelete && (
+      {isAccessForDelete && row?.designationId !== null && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
@@ -65,7 +65,7 @@ export function ActionsColumnFormatter(
             </Tooltip>
           }
         >
-          {row.isActive ? (
+          {row.isActive  ? (
             <a
               title=""
               className="btn btn-icon delete-button"
@@ -90,7 +90,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForCreatingMultiple && (
+      {isAccessForCreatingMultiple && row?.designationId !== null && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">

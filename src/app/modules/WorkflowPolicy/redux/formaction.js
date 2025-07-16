@@ -34,25 +34,32 @@ export const fetchRecordById = (id, type) => (dispatch) => {
     });
 };
 
-export const createRecord = (data, disableLoading, type) => (dispatch) => {
+export const createRecord = (data, disableLoading, type, hide) => (
+  dispatch
+) => {
   return requestFromServer
     .createRecord(data, type)
     .then((res) => {
+      console.log("resres", res);
       const createdData = res.data?.data;
       if (createdData) {
         dispatch(actions.RecordCreated(createdData));
         disableLoading();
         toast.success(SERVER_MESSAGES.insertedSuccess);
+        hide();
       }
     })
     .catch((error) => {
-      disableLoading();
+      console.log("errorerror", error);
+      // disableLoading();
       error.clientMessage = "Can't Create Workflow Record";
       toast.error(error?.response?.data?.message);
     });
 };
 
-export const updateRecord = (data, disableLoading, type) => (dispatch) => {
+export const updateRecord = (data, disableLoading, type, hide) => (
+  dispatch
+) => {
   return requestFromServer
     .updateRecord(data, type)
     .then((res) => {
@@ -61,6 +68,7 @@ export const updateRecord = (data, disableLoading, type) => (dispatch) => {
         dispatch(actions.RecordUpdated(updatedData));
         disableLoading();
         toast.success(SERVER_MESSAGES.updatedSuccess);
+        hide();
       }
     })
     .catch((error) => {
