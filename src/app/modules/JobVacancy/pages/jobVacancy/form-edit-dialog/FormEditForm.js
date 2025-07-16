@@ -179,7 +179,26 @@ const jobVacancyEditSchema = Yup.object().shape({
   preferredShiftId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredGenderId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
-  preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
+  // preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
+   preferredJobSkillsId: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .test(
+      'no-duplicate-skills',
+      'Preferred and optional skills must not have overlapping values.',
+      function (value) {
+        const { optionalJobSkillsId } = this.parent;
+
+        if (!value || !optionalJobSkillsId) return true;
+
+        const preferredIds = value.split(',').map(id => id.trim());
+        const optionalIds = optionalJobSkillsId.split(',').map(id => id.trim());
+
+        const hasCommon = preferredIds.some(id => optionalIds.includes(id));
+        return !hasCommon;
+      }
+    ),
+
+  optionalJobSkillsId: Yup.string(),
   preferredJobIndustryId: Yup.number().required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
     .min(0, VALIDATION_MESSAGES.minZeroValue)

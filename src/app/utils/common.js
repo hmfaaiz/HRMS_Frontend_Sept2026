@@ -1,5 +1,6 @@
 import moment from "moment";
 import { DateTimeFormats } from "./constants";
+import { toAbsoluteUrl } from "../../_metronic/_helpers";
 const {
   differenceInDays,
   format,
@@ -155,3 +156,5 @@ export const formatTime = (value) => {
   if (cleaned.length <= 2) return cleaned;
   return `${cleaned.slice(0, 2)}:${cleaned.slice(2)}`;
 };
+
+
