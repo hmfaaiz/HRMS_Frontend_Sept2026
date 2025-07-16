@@ -115,7 +115,12 @@ export function BanksCard() {
                       + Add Bank
 
                     </button>
-                    <button
+                
+
+                  </>
+                )}
+
+    <button
 
                       type="button"
 
@@ -184,11 +189,6 @@ export function BanksCard() {
                         <span className="ml-3 mr-3 spinner spinner-white"></span>
                       )} */}
                     </button>
-
-                  </>
-                )}
-
-
 
 
 
