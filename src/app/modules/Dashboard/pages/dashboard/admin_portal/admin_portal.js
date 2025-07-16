@@ -45,24 +45,27 @@ const panels = [
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
+
+  const userAccess = useSelector((state) => state.auth?.userAccess || {});
+  const user = useSelector((state) => state.auth?.user || {});
+  const dashboard = useSelector((state) => state.dashboard || []);
+
+  console.log("useruser" , user);
+
   const [activeKey, setActiveKey] = useState("0"); // Default to Employee
   const [empSummaryFilter, setEmpSummaryFilter] = useState({
-    subsidiaryId: "",
+    subsidiaryId: user?.EmployeeMapping?.subsidiaryId || "",
     gradeId: "",
     departmentId: "",
     locationId: "",
   });
 
   const [recruitmentSummaryFilter, setRecruitmentSummaryFilter] = useState({
-    subsidiaryId: "",
+    subsidiaryId: user?.EmployeeMapping?.subsidiaryId || "",
     designationId: "",
     departmentId: "",
     locationId: "",
   });
-
-  const userAccess = useSelector((state) => state.auth?.userAccess || {});
-
-  const dashboard = useSelector((state) => state.dashboard || []);
 
   const {
     allDashboardAlerts,
@@ -78,7 +81,6 @@ export const AdminPortal = () => {
   const filteredPanels = panels.filter((panel) =>
     Object.keys(userAccess).includes(panel.key)
   );
-  console.log("filteredPanelsfilteredPanels", filteredPanels);
   const handleToggle = (key) => {
     setActiveKey(key === activeKey ? "1" : key);
   };

@@ -115,7 +115,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell),
     },
 
     {
@@ -128,7 +128,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell),
     },
 
     // {
@@ -207,7 +207,7 @@ export function FormTable() {
         minWidth: "70px",
         maxWidth: "70px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell),
     },
     {
       dataField: "oT",
@@ -219,7 +219,7 @@ export function FormTable() {
         minWidth: "70px",
         maxWidth: "70px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell),
     },
 
     // {
@@ -321,6 +321,29 @@ export function FormTable() {
   return (
     <>
       <Modal.Body className="overlay overlay-block cursor-default">
+        <div className="d-flex justify-content-left ">
+          <div className="d-flex align-items-center m-3">
+            <span className="dot bg_custom_color_25 me-2"></span> Present
+          </div>
+          <div className="d-flex align-items-center m-3">
+            <span className="dot bg_custom_color_15 me-2"></span> Absent
+          </div>
+          <div className="d-flex align-items-center m-3">
+            <span className="dot bg_custom_color_16 me-2"></span> Half day
+          </div>
+          <div className="d-flex align-items-center m-3">
+            <span className="dot bg_custom_color_1 me-2"></span> Leave
+          </div>
+
+          <div className="d-flex align-items-center m-3">
+            <span className="dot bg_custom_color_22 me-2"></span> Day Off /
+            Holiday
+          </div>
+          <div className="d-flex align-items-center m-3">
+            <span className="dot bg_custom_color_26 me-2"></span> Late In /
+            Early Out
+          </div>
+        </div>
         <PaginationProvider pagination={paginationFactory(paginationOptions)}>
           {({ paginationProps, paginationTableProps }) => {
             return (

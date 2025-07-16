@@ -92,7 +92,9 @@ const ChartData = ({ data }) => {
               fontWeight: "700",
             }}
           >
-            {data?.dashlet_name}
+            {data?.days
+              ? data?.dashlet_name?.replace("${days}", data?.days)
+              : data?.dashlet_name}
           </span>
           <span
             style={{
@@ -134,8 +136,16 @@ const ChartData = ({ data }) => {
                   2 *
                   Math.PI;
                 const radius = 80;
-                const x = clamp(100 + radius * Math.cos(angle - Math.PI / 2), 0, 188);
-                const y = clamp(100 + radius * Math.sin(angle - Math.PI / 2), 0, 188);
+                const x = clamp(
+                  100 + radius * Math.cos(angle - Math.PI / 2),
+                  0,
+                  188
+                );
+                const y = clamp(
+                  100 + radius * Math.sin(angle - Math.PI / 2),
+                  0,
+                  188
+                );
                 return (
                   <div
                     key={idx}
@@ -150,7 +160,8 @@ const ChartData = ({ data }) => {
                       textShadow: "0 1px 4px rgba(0,0,0,0.2)",
                     }}
                   >
-                    {Math.round((value / total) * 100) > 2 && percentage(value, total)}
+                    {Math.round((value / total) * 100) > 2 &&
+                      percentage(value, total)}
                   </div>
                 );
               })}
