@@ -35,9 +35,10 @@ export function MasterEditForm({
 }) {
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
-  const { allLeaveTypes, userAccess } = useSelector(
+  const { allLeaveTypes, userAccess, leaveBalances } = useSelector(
     (state) => ({
       allLeaveTypes: state.dashboard.allLeaveTypes,
+      leaveBalances: state.leave_request?.leaveBalances,
       userAccess: state?.auth?.userAccess["Leave Request"],
     }),
     shallowEqual
@@ -158,8 +159,48 @@ export function MasterEditForm({
                 >
                   {/* First Row Start */}
                   <div className="from-group row">
+                    {/* Leave Type Field Start */}
+                    <div className="col-12 col-md-3 mt-3">
+                      <Field
+                        name="leaveType"
+                        component={Select}
+                        disabled={isReaply || !employeeId?.value}
+                        className={
+                          errors?.leaveType && touched?.leaveType
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
+                        placeholder=""
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.target.value == "--Select--"
+                              ? ""
+                              : Number(e.target.value);
+                          setFieldValue("leaveType", value);
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Leave Type<span style={{ color: "red" }}>
+                              *
+                            </span>{" "}
+                          </span>
+                        }
+                        value={values.leaveType}
+                        autoComplete="off"
+                        children={CustomDropdown({ data: allLeaveTypes })}
+                      />
+                      {errors.leaveType && touched.leaveType && (
+                        <CustomErrorLabel
+                          touched={true}
+                          error={errors.leaveType}
+                        />
+                      )}
+                    </div>
+                    {/* Leave Type Field End */}
                     {/* Date from Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3 mt-3">
                       <Field
                         name="from"
                         component={DatePickerField}
@@ -184,7 +225,7 @@ export function MasterEditForm({
                     {/* Date from Field End */}
 
                     {/* Date to Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3 mt-3">
                       <Field
                         name="to"
                         component={DatePickerField}
@@ -207,9 +248,8 @@ export function MasterEditForm({
                       />
                     </div>
                     {/* Date to Field End */}
-
                     {/* Days Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3 mt-3">
                       <Field
                         name="days"
                         component={Input}
@@ -236,47 +276,29 @@ export function MasterEditForm({
 
                   {/* Second Row Start */}
                   <div className="from-group row">
-                    {/* Leave Type Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* Days Field Start */}
+                    <div className="col-12 col-md-3 mt-3">
                       <Field
-                        name="leaveType"
-                        component={Select}
-                        disabled={isReaply || !employeeId?.value}
-                        className={
-                          errors?.leaveType && touched?.leaveType
-                            ? "form-control is-invalid"
-                            : "form-control"
+                        name="days"
+                        component={Input}
+                        className={"form-control"} //throw validation error if the difference in days is 1 day
+                        disabled={true}
+                        type="number"
+                        min="0"
+                        value={
+                          values?.leaveType
+                            ? leaveBalances?.find(
+                                (el) => el?.leaveType === values.leaveType
+                              )?.remainingCount || ""
+                            : ""
                         }
-                        placeholder=""
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.target.value == "--Select--"
-                              ? ""
-                              : Number(e.target.value);
-                          setFieldValue("leaveType", value);
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Leave Type<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.leaveType}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: allLeaveTypes })}
+                        onChange={handleChange}
+                        label={<span>Balance</span>}
                       />
-                      {errors.leaveType && touched.leaveType && (
-                        <CustomErrorLabel
-                          touched={true}
-                          error={errors.leaveType}
-                        />
-                      )}
                     </div>
-                    {/* Leave Type Field End */}
-
+                    {/* Days Field End */}
                     {/* Remarks Field Start */}
-                    <div className="col-12 col-md-8 mt-3">
+                    <div className="col-12 col-md-9 mt-3">
                       <Field
                         name="remarks"
                         component={TextArea}

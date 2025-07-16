@@ -80,6 +80,12 @@ export function MasterEditForm({
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
             "Time must be in HHMM format and valid 24-hour format"
           ),
+          oT: Yup.string()
+          .required(VALIDATION_MESSAGES.required)
+          .matches(
+            /^(?:[01]\d|2[0-3])[0-5]\d$/,
+            "Time must be in HHMM format and valid 24-hour format"
+          ),
         timeOut: Yup.string()
           .required(VALIDATION_MESSAGES.required)
           .matches(
@@ -237,7 +243,7 @@ export function MasterEditForm({
                     <p className="font-weight-bold">Time Request</p>
                     <div className="from-group row">
                       {/* Date In Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="col-12 col-md-4 mt-3">
                         <Field
                           name="attDate"
                           component={DatePickerField}
@@ -259,7 +265,7 @@ export function MasterEditForm({
                     </div>
                     <div className="from-group row">
                       {/* Date In Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="col-12 col-md-3 mt-3">
                         <Field
                           name="attDateIn"
                           component={DatePickerField}
@@ -279,7 +285,7 @@ export function MasterEditForm({
                       {/* Date In Field End */}
 
                       {/* Time In Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="col-12 col-md-3 mt-3">
                         <Field
                           name="timeIn"
                           component={TimeInput}
@@ -294,11 +300,8 @@ export function MasterEditForm({
                         />
                       </div>
                       {/* Time In Field End */}
-                    </div>
-
-                    <div className="from-group row">
                       {/* Date Out Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="col-12 col-md-3 mt-3">
                         <Field
                           name="attDateOut"
                           component={DatePickerField}
@@ -315,7 +318,7 @@ export function MasterEditForm({
                       {/* Date Out Field End */}
 
                       {/* Time Out Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="col-12 col-md-3 mt-3">
                         <Field
                           name="timeOut"
                           component={TimeInput}
@@ -333,8 +336,24 @@ export function MasterEditForm({
                     </div>
 
                     <div className="from-group row">
+                      {/* OT Hours Field start  */}
+                      <div className="col-12 col-md-3 mt-3">
+                        <Field
+                          name="oT"
+                          component={TimeInput}
+                          // maxlength="4"
+                          label={
+                            <span>
+                              {" "}
+                              OT Hours<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
+                      </div>
+                      {/* OT Hours Field end  */}
                       {/* Worked Hours Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="col-12 col-md-3 mt-3">
                         <Field
                           name="workedHours"
                           component={TimeInput}

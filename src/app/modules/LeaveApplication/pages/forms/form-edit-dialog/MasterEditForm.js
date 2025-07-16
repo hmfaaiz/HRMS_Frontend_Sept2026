@@ -25,9 +25,10 @@ export function MasterEditForm({
 
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
-  const { allLeaveTypes, userAccess } = useSelector(
+  const { allLeaveTypes, userAccess ,leaveBalances} = useSelector(
     (state) => ({
       allLeaveTypes: state.dashboard.allLeaveTypes,
+      leaveBalances: state.leave_application?.leaveBalances,
       userAccess: state?.auth?.userAccess["Leave_Application"],
     }),
     shallowEqual
@@ -154,78 +155,8 @@ export function MasterEditForm({
     );
   })() : null}
 </div>
-
-                    {/* Date from Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="from"
-                        component={DatePickerField}
-                        disabled={isEdit}
-                        dateFormat="dd-MMM-yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date From<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('from', date)
-                          setFieldValue('days', getDateDiffInDays(date, values.to)) //Set difference in to from days in days key
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Date from Field End */}
-
-                    {/* Date to Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="to"
-                        component={DatePickerField}
-                        disabled={isEdit}
-                        dateFormat="dd-MMM-yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date To<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue('to', date)
-                          setFieldValue('days', getDateDiffInDays(values.from, date)) //Set difference in to from days in days key
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Date to Field End */}
-
-                    {/* Days Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="days"
-                        component={Input}
-                        className={errors?.days && touched?.days && getDateDiffInDays(values.from, values.to) === 1 ? 'form-control is-invalid' : 'form-control'} //throw validation error if the difference in days is 1 day
-                        disabled={isEdit || getDateDiffInDays(values.from, values.to) !== 1} //disable field if the difference in dates is more than 1 days
-                        type="number"
-                        min="0"
-                        onChange={handleChange}
-                        label={
-                          <span>
-                            {" "}
-                            Days
-                          </span>
-                        }
-                      />
-                    </div>
-                    {/* Days Field End */}
-                  </div>
-                  {/* First Row End */}
-
-                  {/* Second Row Start */}
-                  <div className="from-group row">
-
                     {/* Leave Type Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3 mt-3">
                       <Field
                         name="leaveType"
                         component={Select}
@@ -252,9 +183,96 @@ export function MasterEditForm({
                       }
                     </div>
                     {/* Leave Type Field End */}
+                    {/* Date from Field Start */}
+                    <div className="col-12 col-md-3 mt-3">
+                      <Field
+                        name="from"
+                        component={DatePickerField}
+                        disabled={isEdit}
+                        dateFormat="dd-MMM-yyyy"
+                        label={
+                          <span>
+                            {" "}
+                            Date From<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(date) => {
+                          setFieldValue('from', date)
+                          setFieldValue('days', getDateDiffInDays(date, values.to)) //Set difference in to from days in days key
+                        }}
+                        autoComplete="off"
+                      />
+                    </div>
+                    {/* Date from Field End */}
+
+                    {/* Date to Field Start */}
+                    <div className="col-12 col-md-3 mt-3">
+                      <Field
+                        name="to"
+                        component={DatePickerField}
+                        disabled={isEdit}
+                        dateFormat="dd-MMM-yyyy"
+                        label={
+                          <span>
+                            {" "}
+                            Date To<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(date) => {
+                          setFieldValue('to', date)
+                          setFieldValue('days', getDateDiffInDays(values.from, date)) //Set difference in to from days in days key
+                        }}
+                        autoComplete="off"
+                      />
+                    </div>
+                    {/* Date to Field End */}
+
+                    {/* Days Field Start */}
+                    <div className="col-12 col-md-3 mt-3">
+                      <Field
+                        name="days"
+                        component={Input}
+                        className={errors?.days && touched?.days && getDateDiffInDays(values.from, values.to) === 1 ? 'form-control is-invalid' : 'form-control'} //throw validation error if the difference in days is 1 day
+                        disabled={isEdit || getDateDiffInDays(values.from, values.to) !== 1} //disable field if the difference in dates is more than 1 days
+                        type="number"
+                        min="0"
+                        onChange={handleChange}
+                        label={
+                          <span>
+                            {" "}
+                            Days
+                          </span>
+                        }
+                      />
+                    </div>
+                    {/* Days Field End */}
+                  </div>
+                  {/* First Row End */}
+
+                  {/* Second Row Start */}
+                  <div className="from-group row">
+                  <div className="col-12 col-md-3 mt-3">
+                      <Field
+                        name="days"
+                        component={Input}
+                        className={"form-control"} //throw validation error if the difference in days is 1 day
+                        disabled={true}
+                        type="number"
+                        min="0"
+                        value={
+                          values?.leaveType
+                            ? leaveBalances?.find(
+                                (el) => el?.leaveType === values.leaveType
+                              )?.remainingCount || ""
+                            : ""
+                        }
+                        onChange={handleChange}
+                        label={<span>Balance</span>}
+                      />
+                    </div>
 
                     {/* Remarks Field Start */}
-                    <div className="col-12 col-md-8 mt-3">
+                    <div className="col-12 col-md-9 mt-3">
                       <Field
                         name="remarks"
                         component={TextArea}

@@ -35,6 +35,7 @@ export const savingFields = [
   "isLateComing",
   "isEarlyGoing",
   "isHalfDay",
+  "oT",
 ];
 
 export const attendanceStatusMap = {

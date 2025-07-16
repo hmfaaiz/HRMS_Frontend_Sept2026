@@ -25,6 +25,9 @@ const formSchema = Yup.object().shape({
   name: Yup.string()
     .matches(/^[A-Za-z\s.-]+$/, "Name must only contain letters.")
     .required(VALIDATION_MESSAGES.required),
+  companyLegalName: Yup.string()
+    .matches(/^[A-Za-z\s.-]+$/, "Legal Name must only contain letters.")
+    .required(VALIDATION_MESSAGES.required),
   companyCode: Yup.string().required(VALIDATION_MESSAGES.required),
   phone: Yup.string()
     .nullable()
@@ -280,7 +283,6 @@ export const EditForm = ({
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
-                      
                       label={<span>Phone</span>}
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 15);
