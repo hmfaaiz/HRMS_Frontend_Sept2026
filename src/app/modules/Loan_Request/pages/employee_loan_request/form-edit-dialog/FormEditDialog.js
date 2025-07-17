@@ -145,7 +145,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       };
       await dispatch(
         actions.updateEmployeeLoanRequest(
-          formUpdatedFields,
+          { ...formUpdatedFields, authortiesList: empAuthorityList },
           disbaleLoading,
           resetForm
         )

@@ -45,7 +45,16 @@ function CustomApprovalWorkflowTable({
 
   return (
     <fieldset>
-      <h6>Employee Custom Approval List</h6>
+      <h6>
+        Employee Custom Approval List{"  "}
+        {errors?.customApprovalList && (
+          <span className="form-feedBack">
+            {typeof errors?.customApprovalList === "string"
+              ? errors?.customApprovalList
+              : ""}
+          </span>
+        )}
+      </h6>
       <FieldArray name="customApprovalList">
         {({ insert, remove, push }) => (
           <>

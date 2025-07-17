@@ -25,7 +25,9 @@ const SingleCard = ({ data }) => {
               textAlign: "left",
             }}
           >
-            {data?.dashlet_name}
+            {data?.days
+              ? data?.dashlet_name?.replace("${days}", data?.days)
+              : data?.dashlet_name}
           </span>
           <span>
             <KeyboardArrowDown
