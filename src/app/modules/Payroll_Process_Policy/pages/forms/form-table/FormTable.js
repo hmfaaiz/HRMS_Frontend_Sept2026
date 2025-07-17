@@ -17,7 +17,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Input, Pagination, Select } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
-import { fetchAllActiveEmployees, fetchAllActiveEmployeesSalaryForDDL, fetchAllBanks, fetchAllDeductionList, fetchAllEarningList, fetchAllFormsMenu, fetchAllLeaveTypeBySubsidiary, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployees, fetchAllActiveEmployeesSalaryForDDL, fetchAllBankBranch, fetchAllBanks, fetchAllDeductionList, fetchAllEarningList, fetchAllFormsMenu, fetchAllLeaveTypeBySubsidiary, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-bootstrap";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
@@ -112,7 +112,8 @@ export function FormTable(user) {
 
   useEffect(() => {
     if (!user.formid) {
-      dispatch(fetchAllBanks(1));
+      dispatch(fetchAllBanks());
+       dispatch(fetchAllBankBranch(true));
     }
   }, [user.journalBankAccountId, dispatch]);
 
@@ -596,8 +597,14 @@ export function FormTable(user) {
       }
 
       // Check if amount is required
-      if (!objValidate.bankName) {
-        newErrors[`bankName-${index}`] = VALIDATION_MESSAGES.required;
+      // if (!objValidate.bankName) {
+      //   newErrors[`bankName-${index}`] = VALIDATION_MESSAGES.required;
+      // }  
+       if (!objValidate.bankId || objValidate.journalBankAccountId == "-1") {
+        newErrors[`bankId-${index}`] = VALIDATION_MESSAGES.required;
+      }
+         if (!objValidate.branchId ||  objValidate.branchId == "-1")  {
+        newErrors[`branchId-${index}`] = VALIDATION_MESSAGES.required;
       }
     });
 
@@ -619,6 +626,18 @@ export function FormTable(user) {
   };
 
 
+    const filteredBranches = (bankId) => {
+    return dashboard?.allBankBranch?.filter((branch) => branch.bankId == bankId) || [];
+  };
+
+  // useEffect(() => {
+    
+  //     // dispatch(fetchAllBanks(1));
+  //     dispatch(fetchAllBanks(null));
+  //     dispatch(fetchAllBankBranch(null));
+
+   
+  // }, [dispatch]);
   return (
     <>
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
@@ -1687,21 +1706,22 @@ Payroll Approver
                 </div>
               </div>
               <br></br>
-              <br></br> <h6>Other </h6>
+              <br></br> <h6> Journal Accounts & Bank Information</h6>
               <div style={{ height: "350px", overflow: "scroll", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
                 <div className="from-group row">
                   <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
-                    <h7><b>Journal Accounts & Bank Info</b>
-                    </h7>
+                    {/* <h7 ><b>Journal Accounts & Bank Info</b>
+                    </h7> */}
                     <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
                       {/* <td>Employee</td> */}
                       <td>Action</td>
-                      <td>Journal Bank Acc#</td>
-                      <td>Bank Code Employer</td>
-                      <td>Bank Account No</td>
-                      <td>Default</td>
-                      <td>Bank Name</td>
+                      <td className="col-2">Journal Bank Acc#</td>
+                      <td className="col-2">Bank Code Employer</td>
+                      <td className="col-2">Bank Account No</td>
+                      <td className="col-1">Default</td>
+                      <td className="col-2">Bank Name</td>
+                      <td className="col-2">Branch Name</td>
                     </tr>
                     {defBankInfoList?.map((obj, rightindex) => (
 
@@ -1712,9 +1732,7 @@ Payroll Approver
 
                           <select value={obj.journalBankAccountId} className="form-control" onChange={handleFieldChanged} id={"journalBankAccountId-" + rightindex}>
                             <option value="-1">--SELECT--</option>
-                            {/* <option value="1">Journal-Natioal-099883311</option>
-                          <option value="2">Journal-Allied-A88-001</option>
-                          <option value="3">Journal-TMP-SILK-018-001</option> */}
+                 
                             {
                               dashboard.allPayrollAccounts?.map((x) => {
                                 return <option value={x.value}> {x.label} </option>
@@ -1723,38 +1741,14 @@ Payroll Approver
 
                           {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
 
-                          {/* <SearchSelect
-                              name="journalBankAccountId"
-                              label={<span>Journal Bank Acc<span style={{ color: 'red' }}>*</span></span>}
-                            //  isDisabled={isUserForRead && true}
-                              onBlur={() => {
-                                // handleBlur({ target: { name: "countryId" } });
-                              }}
-                              onChange={(e) => {
-                                setFieldValue("journalBankAccountId", e.value);
-                                setDefaultBanks(e);
-                                dispatch(fetchAllBanks(e.value));
-                              }}
-                              value={obj.journalBankAccountId}
-                              error={errors.BankId}
-                              touched={touched.BankId}
-                              options={dashboard.allBanks}
-                            /> */}
+                        
 
 
 
                         </td>
 
                         <td>
-                          {/* <Field
-                            name="bankCode"
-                            component={Input}
-                            placeholder="Bank Code"
-                            onChange={handleFieldChanged}
-                            // label={<span>Bank Code<span style={{ color: 'red' }}>*</span></span>}
-                            autoComplete="off"
-                            type="number" id={"bankCode-" + rightindex}
-                          /> */}
+             
                           <input className="form-control" onChange={handleFieldChanged} placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
 
                           {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
@@ -1775,11 +1769,68 @@ Payroll Approver
                         />
                         </td>
 
-                        <td>
+                        {/* <td>
                           <input type="text" className="form-control" placeholder="Enter Bank Name" onChange={handleFieldChanged} value={obj.bankName} id={'bankName-' + rightindex}></input>
 
                           {otherErrors[`bankName-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankName-${rightindex}`]}</div>}
-                        </td>
+                        </td> */}
+
+
+                                <td>
+
+                          <select value={obj.bankId} className="form-control"  
+                          
+                          onChange={(e) => {
+    const bankId = e.target.value;
+
+    // Update the field
+    handleFieldChanged(e);
+
+    // Fetch branches for selected bank
+    if (bankId && bankId !== "-1") {
+      filteredBranches(bankId);
+     
+   
+    }
+  
+  }} 
+  
+  
+  id={"bankId-" + rightindex}>
+                            <option value="">--SELECT--</option>
+                
+                            {
+                              dashboard.allBanks?.map((x) => {
+                                return <option value={x.value}> {x.label} </option>
+                              })}
+                          </select>
+
+                          {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
+
+                     </td>   
+<td>
+  <select
+    value={obj.branchId}
+    className="form-control"
+    onChange={handleFieldChanged}
+    id={"branchId-" + rightindex}
+  >
+    <option value="">--SELECT--</option>
+
+    {filteredBranches(obj.bankId)?.map((x) => (
+    <option key={x.value} value={x.value}>
+      {x.label}
+    </option>
+  ))}
+  </select>
+
+  {otherErrors[`branchId-${rightindex}`] && (
+    <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
+  )}
+</td>
+
+
+
 
                       </tr>
                       </>

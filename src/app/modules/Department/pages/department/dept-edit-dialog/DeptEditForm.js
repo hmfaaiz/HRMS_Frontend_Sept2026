@@ -277,7 +277,7 @@ export function DeptEditForm({
                           name="budgetStrength"
                           maxLength={6}
                           component={Input}
-                          placeholder="Enter budgetStrength"
+                          placeholder="Enter Budget Strength"
                           label={
                             <span>
                               {" "}
