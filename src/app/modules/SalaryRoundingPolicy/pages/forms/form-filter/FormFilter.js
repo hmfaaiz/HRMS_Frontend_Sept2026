@@ -4,6 +4,7 @@ import { isEqual } from "lodash"
 import { useFormUIContext } from "../FormUIContext"
 import { debounce } from "lodash";
 import { useCallback } from "react";
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 const prepareFilter = (queryParams, values) => {
   const { searchText } = values
@@ -65,7 +66,7 @@ export function FormFilter() {
         }) => (
           <form className="form form-label-right" style={{margin: '0.8rem 0'}}>
             <div className="row">
-              <div className="col-12 col-md-12">
+              {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -81,7 +82,17 @@ export function FormFilter() {
                 <small className="form-text text-muted">
                   <b>Search</b> in Payment Mode
                 </small>
-              </div>
+              </div> */}
+
+                            <InputSearch
+  values={values}
+  fieldName="searchText"
+  setFieldValue={setFieldValue}
+  handleBlur={handleBlur}
+  handleSubmit={handleSubmit}
+/>
+
+
             </div>
           </form>
         )}

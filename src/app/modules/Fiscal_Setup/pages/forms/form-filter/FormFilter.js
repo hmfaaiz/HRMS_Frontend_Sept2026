@@ -1,23 +1,14 @@
-import React, { useMemo, useState, useEffect } from "react"
+import React, { useMemo } from "react"
 import { Formik } from "formik"
 import { isEqual } from "lodash"
 import { useFormUIContext } from "../FormUIContext"
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-import axios from "axios";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { useDispatch, useSelector } from "react-redux";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import * as actions from "../../../../Dashboard/_redux/dashboardActions";
-import DatePicker from "react-datepicker";
-import {
-  fetchAllCity,
-  fetchAllSubCenter,
-} from "../../../../../../_metronic/redux/dashboardActions";
+import { useDispatch } from "react-redux";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-const API_URL = process.env.REACT_APP_API_URL;
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
+
+
+
 
 
 const prepareFilter = (queryParams, values) => {
@@ -44,23 +35,11 @@ export function FormFilter({ listLoading, user, setCity,
   setAlarmTime,
   setVehicle, }) {
 
-  const [defCity, setDefaultCity] = useState({});
+
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext()
-  const [Loading, setLoading] = useState(false)
-  const { countryId, cityId } = useSelector((state) => state.auth.user);
-  const dashboard = useSelector((state) => state.dashboard);
-  const [defCenter, setDefaultCenter] = useState({});
-  const [defSubcenter, setDefaultSubCenter] = useState({});
-  const [receiptDateFrom, setReceiptDateFrom] = useState(null);
-  const [receiptDateTo, setReceiptDateTo] = useState(null);
-  useEffect(() => {
-    
-    if (countryId) {
-     
-      dispatch(fetchAllCity(1));
-    }
-  }, [countryId, dispatch]);
+
+
 
 
 
@@ -75,17 +54,7 @@ export function FormFilter({ listLoading, user, setCity,
 
 
 
-  function addCommas(nStr) {
-    nStr += '';
-    let x = nStr.split('.');
-    let x1 = x[0];
-    let x2 = x.length > 1 ? '.' + x[1] : '';
-    let rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-  }
+
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
@@ -105,13 +74,7 @@ export function FormFilter({ listLoading, user, setCity,
       <Formik
         enableReinitialize={true}
         initialValues={{
-          donorName: "", // values => All=""/Susspended=0/Active=1/Pending=2
-          receiptNo: "", // values => All=""/Business=0/Individual=1
-          searchText: "",
-          cityId: [],
-          centerId: [],
-          subCenterId: [],
-          alarmTimeId: [],
+        
         }}
         onSubmit={(values) => {
  
@@ -132,7 +95,7 @@ export function FormFilter({ listLoading, user, setCity,
           <form onSubmit={handleSubmit} className="form form-label-right">
             <div className="row">
 
-              <div className="col-12 col-md-12">
+              {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -148,7 +111,15 @@ export function FormFilter({ listLoading, user, setCity,
                 <small className="form-text text-muted">
                   <b>Search</b> field by year eg:2024
                 </small>
-              </div>
+              </div> */}
+
+                            <InputSearch
+  values={values}
+  fieldName="searchText"
+  setFieldValue={setFieldValue}
+  handleBlur={handleBlur}
+  handleSubmit={handleSubmit}
+/>
             </div>
           </form>
         )}

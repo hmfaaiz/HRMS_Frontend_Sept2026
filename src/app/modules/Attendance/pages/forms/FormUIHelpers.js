@@ -27,4 +27,30 @@ export const initialFilter = {
   pageNumber: 1
 }
 
-export const savingFields = ['employeeId', 'comments', 'attDateIn', 'attDateOut', 'timeIn', 'timeOut', 'Id']
+export const savingFields = ['employeeId', 'comments', 'attDateIn', 'attDateOut', 'timeIn', 'timeOut', 'Id',]
+
+
+export const attendanceStatusMap = {
+  "Absent (Shift is yet to start)": "att-absent-att",
+  "Absent (Off Day)": "att-absent-att",
+  "Absent (Holiday)": "att-absent-att",
+  Absent: "att-absent-att",
+  "H.D('LeaveCode') + H.D(A)": "att-HD",
+  "H.D(P) + H.D(A)": "att-HD",
+  "H.D(P) + H.D('LeaveCode')": "att-HD",
+  "Holiday (H.D(Present))": "att-HD",
+  "Day Off (H.D(Present))": "att-HD",
+  // LeaveCode: "",
+  "Holiday (Present)": "att-dayoff",
+  "Day Off (Present)": "att-dayoff",
+  "Day Off": "att-dayoff",
+  Holiday: "att-dayoff",
+  Present: "att-present",
+  "Present (On-Time)": "att-present",
+  "Present (On Time, Early-Out)": "att-presents",
+  "Present (Early Out)": "att-presents",
+  "Present (Late-In)(Holiday)": "att-presents",
+  "Present (Late-In)(Day Off)": "att-presents",
+  "Present (Late-In, Early-Out)": "att-presents",
+  "Present (Late-In)": "att-presents",
+};

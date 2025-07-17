@@ -12,6 +12,7 @@ import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import {} from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -106,7 +107,7 @@ export function FormFIlter({ listLoading,user }) {
           <form onSubmit={handleSubmit} className="form form-label-right">
             <div className="row">
 
-              <div className="col-12 col-md-12">
+              {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -122,7 +123,18 @@ export function FormFIlter({ listLoading,user }) {
                 <small className="form-text text-muted">
                   <b>Search</b> in holiday
                 </small>
-              </div>
+              </div> */}
+
+              
+              <InputSearch
+  values={values}
+  fieldName="searchText"
+  setFieldValue={setFieldValue}
+  handleBlur={handleBlur}
+  handleSubmit={handleSubmit}
+/>
+
+
             </div>
           </form>
         )}

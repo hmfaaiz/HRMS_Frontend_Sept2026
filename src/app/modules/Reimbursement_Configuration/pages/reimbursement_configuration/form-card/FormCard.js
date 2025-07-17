@@ -44,24 +44,23 @@ export function FormCard() {
     shallowEqual
   );
 
-  // const { currentState } = useSelector();
-  
-  const {entities } = currentState;
 
 
   return (
     <>
 <Card>
         <CardHeader title={CurrentModuleName()} >
-          <div className="d-flex justify-content-between align-items-center gap-3 m-4">
+     <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-12">
 
-      <div className="pt-5">
+
+
+            <div className="col-4">
       <FormFIlter />
       </div>
       <div className=" p-2">
       <CardHeaderToolbar>
     
-    <button
+  {accessUser &&  <button
       type="button"
       className="btn btn-primary "
       onClick={FormUIProps .newFormButtonClick}
@@ -69,7 +68,7 @@ export function FormCard() {
       + Add Reimbursement Configuration
     </button>
   
-
+  }
 </CardHeaderToolbar>
       </div>
        

@@ -63,6 +63,15 @@ export function FormTable() {
   const columns = [
 
     {
+      dataField: "Subsidiary.name",
+      text: "Subsidiary",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },    {
       dataField: "formName",
       text: "Payment Mode",
       sort: false,

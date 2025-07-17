@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../_metronic/redux/dashboardActions";
 import { CardHeader } from "../../../../../_metronic/_partials/controls";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
+import ReportButton from "./AttendanceReportButton";
 
 export function AttendanceViewPage() {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ export function AttendanceViewPage() {
         {/* Filter Form Ends */}
 
         {/* Table Starts */}
+        <ReportButton/>
         <FormTable />
         {/* Table Ends */}
 
