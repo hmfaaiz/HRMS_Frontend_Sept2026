@@ -3,7 +3,8 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import { Accordion, Card } from "react-bootstrap";
 import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
 import { Link } from "react-router-dom";
-export const AttendanceSummary = ({ payrollData, attendanceSummary }) => {
+import BarChart from "./BarChart";
+export const AttendanceSummary = ({ payrollData, attendanceSummary , attRecord }) => {
   return (
     <Accordion defaultActiveKey="0">
       <span className="col-6 text-underline cursor-pointer">
@@ -38,6 +39,31 @@ export const AttendanceSummary = ({ payrollData, attendanceSummary }) => {
                 />
               </strong>
             )}
+            <div className="d-flex justify-content-left ">
+              <div className="d-flex align-items-center m-3">
+                <span className="dot bg_custom_color_25 me-2"></span> Present
+              </div>
+              <div className="d-flex align-items-center m-3">
+                <span className="dot bg_custom_color_15 me-2"></span> Absent
+              </div>
+              <div className="d-flex align-items-center m-3">
+                <span className="dot bg_custom_color_16 me-2"></span> Half day
+              </div>
+              <div className="d-flex align-items-center m-3">
+                <span className="dot bg_custom_color_1 me-2"></span> Leave
+              </div>
+
+              <div className="d-flex align-items-center m-3">
+                <span className="dot bg_custom_color_22 me-2"></span> Day Off /
+                Holiday
+              </div>
+              <div className="d-flex align-items-center m-3">
+                <span className="dot bg_custom_color_26 me-2"></span> Late In /
+                Early Out
+              </div>
+            </div>
+            <BarChart data={attRecord} />
+
             <div
               style={{
                 backgroundColor: "rgb(235 243 255)",

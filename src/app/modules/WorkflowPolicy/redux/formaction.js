@@ -40,7 +40,6 @@ export const createRecord = (data, disableLoading, type, hide) => (
   return requestFromServer
     .createRecord(data, type)
     .then((res) => {
-      console.log("resres", res);
       const createdData = res.data?.data;
       if (createdData) {
         dispatch(actions.RecordCreated(createdData));
@@ -50,7 +49,6 @@ export const createRecord = (data, disableLoading, type, hide) => (
       }
     })
     .catch((error) => {
-      console.log("errorerror", error);
       // disableLoading();
       error.clientMessage = "Can't Create Workflow Record";
       toast.error(error?.response?.data?.message);

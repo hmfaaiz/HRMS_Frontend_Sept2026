@@ -118,7 +118,7 @@ export function BigTable({ data }) {
           <span
             className=""
             style={{
-              fontSize: "1.3rem",
+              fontSize: "1rem",
               fontWeight: "700",
             }}
           >

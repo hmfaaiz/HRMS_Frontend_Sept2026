@@ -50,7 +50,7 @@ export const AdminPortal = () => {
   const user = useSelector((state) => state.auth?.user || {});
   const dashboard = useSelector((state) => state.dashboard || []);
 
-  console.log("useruser" , user);
+  console.log("useruser", user);
 
   const [activeKey, setActiveKey] = useState("0"); // Default to Employee
   const [empSummaryFilter, setEmpSummaryFilter] = useState({
@@ -540,21 +540,6 @@ export const AdminPortal = () => {
                       </div>
                     </div>
                   )}
-
-                  {/* Big Table */}
-                  {allDashboardAlerts.map((e, alertIdx) => {
-                    if (
-                      e?.master_Id === panels[activeKey]?.resourceId &&
-                      e?.dashlet_type === "big_table"
-                    ) {
-                      return <BigTable key={`big-${alertIdx}`} data={e} />;
-                    }
-                    return null;
-                  })}
-                </div>
-
-                {/* Right Side: Charts + Small Tables */}
-                <div className="col-md-3">
                   {allDashboardAlerts.map((e, alertIdx) => {
                     if (
                       e?.dashlet_type === "chart" &&
@@ -572,7 +557,25 @@ export const AdminPortal = () => {
                       e?.master_Id != "1893"
                     ) {
                       return <ChartData key={`chart-${alertIdx}`} data={e} />;
-                    } else if (
+                    }
+                    return null;
+                  })}
+                  {/* Big Table */}
+                  {allDashboardAlerts.map((e, alertIdx) => {
+                    if (
+                      e?.master_Id === panels[activeKey]?.resourceId &&
+                      e?.dashlet_type === "big_table"
+                    ) {
+                      return <BigTable key={`big-${alertIdx}`} data={e} />;
+                    }
+                    return null;
+                  })}
+                </div>
+
+                {/* Right Side: Charts + Small Tables */}
+                <div className="col-md-3">
+                  {allDashboardAlerts.map((e, alertIdx) => {
+                    if (
                       e?.dashlet_type === "small_table" &&
                       panel?.key !== "Recruitment" &&
                       e?.master_Id != "1893"

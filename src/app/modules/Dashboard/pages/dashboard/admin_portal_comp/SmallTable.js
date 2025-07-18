@@ -20,7 +20,7 @@ const SingleCard = ({ data }) => {
         >
           <span
             style={{
-              fontSize: "1.3rem",
+              fontSize: "1rem",
               fontWeight: "700",
               textAlign: "left",
             }}
