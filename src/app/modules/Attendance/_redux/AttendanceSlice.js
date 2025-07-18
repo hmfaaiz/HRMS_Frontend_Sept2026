@@ -17,7 +17,9 @@ const initialState = {
     payrollData: null,
     consolidatedLoading: false,
     empWiseLoading: false,
-
+    pdfLoading: false,
+    csvLoading: false,
+    excelLoading: false
 };
 
 export const callTypes = {
@@ -51,6 +53,22 @@ export const AttendanceSlice = createSlice({
             else if(action.payload.callType === callTypes.empWise){
                 state.empWiseLoading = false;
             }
+             if (action.payload.callType === callTypes.list) {
+                            state.listLoading = false;
+            
+                        }
+                        else if (action.payload.callType === callTypes.pdf) {
+                            state.pdfLoading = false;
+                        }
+            
+                        else if (action.payload.callType === callTypes.csv) {
+                            state.csvLoading = false;
+                        }
+                        else if (action.payload.callType === callTypes.xlsx) {
+                            state.excelLoading = false;
+                        }
+            
+                       
             else {
                 state.actionsLoading = false;
             }
@@ -72,6 +90,23 @@ export const AttendanceSlice = createSlice({
             else if(action.payload.callType === callTypes.empWise){
                 state.empWiseLoading = true;
             }
+               else if (action.payload.callType === callTypes.pdf) {
+                          
+                            state.pdfLoading = true;
+            
+            
+                        }
+            
+                        else if (action.payload.callType === callTypes.csv) {
+                            state.csvLoading = true;
+            
+            
+                        }
+                        else if (action.payload.callType === callTypes.xlsx) {
+                            state.excelLoading = true;
+            
+            
+                        }
 
             else {
                 state.actionsLoading = true;
@@ -160,6 +195,16 @@ export const AttendanceSlice = createSlice({
         },
         pdfFetched: (state, action) => {
             state.pdfLoading = false;
+        },
+
+    
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
         },
 
     },

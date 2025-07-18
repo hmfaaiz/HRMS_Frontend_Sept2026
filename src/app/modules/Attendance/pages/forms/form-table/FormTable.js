@@ -168,7 +168,15 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter: (cell,row)=>{return(<span
+                className={`${
+                  uiHelpers.attendanceStatusMap[row?.attendanceStatus]
+                } font-weight-bold `}
+              >
+                {cell}
+              </span>)}
     },
+   
     {
       dataField: "finalRemarks",
       text: "Remarks",

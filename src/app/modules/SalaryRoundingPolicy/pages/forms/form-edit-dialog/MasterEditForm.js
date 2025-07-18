@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -6,11 +6,15 @@ import { Input, Select } from "../../../../../../_metronic/_partials/controls";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { getClassName } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 
 //Validation for Form
 const formValidation = Yup.object().shape({
   paymentMode: Yup.string().required(VALIDATION_MESSAGES.required),
-  amount: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber)
+  amount: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
+  subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required)
 });
 
 export function MasterEditForm({
@@ -23,8 +27,16 @@ export function MasterEditForm({
   enableLoading,
   loading,
 }) {
-
+  const { dashboard } = useSelector((state) => state);
+    const dispatch = useDispatch();
+    useEffect(() => {
+      if (!user.Id) {
+        // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
+        dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+        }
+  }, [dispatch, user.Id]);
   const dropdown = (data) => {
+  
     return [{ Id: "", formName: "--Select Mode--" }, ...data].map((el) => {
       return (<>
         <option value={el.Id}>{el.formName}</option>
@@ -49,7 +61,7 @@ export function MasterEditForm({
           values,
           handleBlur,
           handleChange,
-          setFieldValue,
+          setFieldValue,touched,
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
@@ -61,6 +73,34 @@ export function MasterEditForm({
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div className="from-group row">
+
+                        <div className="col-12 col-md-4 mt-3">
+  <SearchSelect
+    name="subsidiaryId"
+    label={
+      <span>
+        Subsidiary<span style={{ color: "red" }}>*</span>
+      </span>
+    }
+    isDisabled={isUserForRead}
+    onChange={(e) => {
+      setFieldValue("subsidiaryId", e?.value || "");
+    }}
+    value={
+      dashboard?.allSubsidiaryList?.find(
+        (option) => option.value === values.subsidiaryId
+      ) || null
+    }
+    options={dashboard?.allSubsidiaryList}
+  />
+  {errors.subsidiaryId && (
+    <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+      {errors.subsidiaryId}
+    </div>
+  )}
+</div>
+
+                    
                     <div className="col-12 col-md-4 mt-3">
                       <Field
                         name="paymentMode"

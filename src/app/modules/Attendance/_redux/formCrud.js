@@ -20,7 +20,12 @@ export function createAttendanceSetup(body) {
  * @returns res
  */
 export async function getAllAttendanceSetup(body) {
-  return axios.post(`${USERS_URL}/attendance/read-all-attendance`, body);
+  // return axios.post(`${USERS_URL}/attendance/read-all-attendance`, body);
+    const config = {
+    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+  };
+
+  return axios.post(`${USERS_URL}/attendance/read-all-attendance`, body, config);
 }
 
 /**

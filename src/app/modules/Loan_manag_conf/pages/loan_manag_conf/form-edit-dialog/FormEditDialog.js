@@ -126,7 +126,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
  
   return (
     <Modal
-      size="xl"
+      size="lg"
       // style={{ maxWidth: '90%' }} // Customize width here
     dialogClassName="modal-75vw"
       show={show}

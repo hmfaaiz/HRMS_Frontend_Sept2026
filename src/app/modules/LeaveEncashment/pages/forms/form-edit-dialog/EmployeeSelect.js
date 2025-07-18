@@ -33,7 +33,7 @@ export function EmployeeSelect({
   const allEmployeesMap = useMemo(() => {
     return new Map(allEmployees?.map(item => [item.value, item]));
   }, [allEmployees]);
-
+   const{    activeFiscalYear} = useSelector((state) => state.dashboard);
   return (
     <>
       {/* Formik Starts */}
@@ -60,7 +60,7 @@ export function EmployeeSelect({
                 <div className="from-group row">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-4 mt-3 ml-7 ">
+                  <div className="col-12 col-md-3   ">
                     <Field
                       name="employeeId"
                       component={SearchSelect}
@@ -92,7 +92,7 @@ export function EmployeeSelect({
     
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="col-12 col-md-3 ">
                     <Field
                       name="yearId"
                       component={Select}
@@ -134,7 +134,7 @@ export function EmployeeSelect({
                   </div>
                   {/* Employee Id Dropdown Ends */}
 
-                                 <div className="col-1 col-md-1 d-flex  align-items-center pt-10">
+                                 <div className="col-1 col-md-1 d-flex  align-items-center pt-7">
                                                         <span
                                                           className="svg-icon svg-icon-md svg-icon-primary"
                                                           onClick={() => setPanelMode(!panelMode)}
@@ -150,6 +150,25 @@ export function EmployeeSelect({
                                     
                                     
                                                       </div>
+
+                                                                  <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
+
+  {activeFiscalYear ? (() => {
+
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {activeFiscalYear?.label}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {activeFiscalYear?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
                  
 
                 </div>

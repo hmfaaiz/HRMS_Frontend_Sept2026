@@ -77,11 +77,16 @@ export function MasterEditForm({
   const getLabel = (leaveTypeArr, leaveType) => {
     const balance = leaveType && leaveBalances?.find(el => el.leaveType == leaveType)?.encashmentCount;
     const limit = leaveType && leaveTypeArr.find(el => el.value == leaveType)?.limit;
-    return limit && balance != null ? `(Max : ${limit - balance})` : ''
+    return limit && balance != null ? `(Max. Encashment Days : ${limit - balance})` : ''
   }
 
-   const{    activeFiscalYear
-      } = useSelector((state) => state.dashboard);
+
+    const getLeaveBalanceLabel = (leaveTypeArr, leaveType) => {
+    const balance = leaveType && leaveBalances?.find(el => el.leaveType == leaveType)?.remainingCount;
+    return balance != null ? `${balance}` : ''
+  }
+
+   const{    activeFiscalYear} = useSelector((state) => state.dashboard);
 
   return (
     <>
@@ -110,7 +115,7 @@ export function MasterEditForm({
         }) => (
           <>
             {/* Modal Body Start */}
-            <Modal.Body className="overlay overlay-block cursor-default">
+            <div className="overlay overlay-block cursor-default">
               {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
                   <div className="spinner spinner-lg spinner-success" />
@@ -124,7 +129,7 @@ export function MasterEditForm({
                   <div className="from-group row">
 
                     {/* Leave Type Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3">
                       <Field
                         name="leaveType"
                         component={Select}
@@ -139,7 +144,7 @@ export function MasterEditForm({
                         label={
                           <span>
                             {" "}
-                            Leave Type<span style={{ color: "red" }}>*</span>
+                            Leave Type<span style={{ color: "red" }}>* </span>
                           </span>
                         }
                         value={values.leaveType}
@@ -150,33 +155,41 @@ export function MasterEditForm({
                         errors.leaveType && touched.leaveType && <CustomErrorLabel touched={true} error={errors.leaveType} />
                       }
                     </div>
-                    {/* Leave Type Field End */}
 
-                      {/* Active payroll month */}
-
-
-
-            <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
-
-  {activeFiscalYear ? (() => {
-
-    return (
-      <>
-        <div>
-          <b>Active Fiscal Year -</b>{" "}
-          {activeFiscalYear?.label}
-        </div>
-        <div>
-          <b>Active Payroll Month -</b>{" "}
-          {activeFiscalYear?.payrollMonthLabel}
-        </div>
-      </>
-    );
-  })() : null}
+<div className="col-12 col-md-3">
+  {!readOnly && (
+    <label className="form-label">
+    Balance
+    </label>
+  )}
+  <input
+    type="number"
+    className="form-control"
+    disabled={true}
+    value={getLeaveBalanceLabel(allLeaveTypes, values.leaveType)}
+    placeholder="Balance"
+  />
 </div>
 
-                    {/* Remarks Field Start */}
-                    <div className="col-12 col-md-12 mt-3">
+
+                        <div className="col-12 col-md-3">
+                      <Field
+                        name="days"
+                        component={Input}
+                        type="number"
+                        className={errors?.days && touched?.days ? 'form-control is-invalid' : 'form-control'}
+                        onChange={handleChange}
+                        label={
+                          <span>
+                            {" "}
+                            Days<span style={{ color: "red" }}>* </span> <b>{!readOnly && getLabel(allLeaveTypes, values.leaveType)}</b>
+                          </span>
+                        }
+                      />
+                    </div>
+
+
+                       <div className="col-12 col-md-12 mt-5">
                       <Field
                         name="reason"
                         component={TextArea}
@@ -193,6 +206,33 @@ export function MasterEditForm({
                         autoComplete="off"
                       />
                     </div>
+                    {/* Leave Type Field End */}
+
+                      {/* Active payroll month */}
+
+
+
+            {/* <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
+
+  {activeFiscalYear ? (() => {
+
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {activeFiscalYear?.label}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {activeFiscalYear?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div> */}
+
+                    {/* Remarks Field Start */}
+                 
                     {/* Reason Field End */}
                   </div>
                   {/* First Row End */}
@@ -205,21 +245,7 @@ export function MasterEditForm({
                   <div className="from-group row">
 
                     {/* Days Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="days"
-                        component={Input}
-                        type="number"
-                        className={errors?.days && touched?.days ? 'form-control is-invalid' : 'form-control'}
-                        onChange={handleChange}
-                        label={
-                          <span>
-                            {" "}
-                            Days<span style={{ color: "red" }}>* </span> <b>{!readOnly && getLabel(allLeaveTypes, values.leaveType)}</b>
-                          </span>
-                        }
-                      />
-                    </div>
+                
                     {/* Days Field End */}
                   </div>
                   {/* Second Row End */}
@@ -227,7 +253,7 @@ export function MasterEditForm({
                 </fieldset>
               </Form>
               {/* Form End */}
-            </Modal.Body>
+            </div>
             {/* Modal Body End */}
 
             <Modal.Footer>
