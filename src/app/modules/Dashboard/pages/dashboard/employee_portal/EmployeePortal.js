@@ -14,14 +14,16 @@ import {
   loanDetailFilter,
 } from "../EmpUIHelper";
 import { fetchAttendanceApprovalApplication } from "../../../../AttendanceApproval/redux/formAction";
-import { fetchEmployeeLoanRequest } from "../../../../Employee_Loan_Request/_redux/redux-Actions";
 import { EmployeeLoanDetail } from "../EmpPortalComponent/LoanDetailTable";
 import { fetchLeaveApplication } from "../../../../LeaveRequest/_redux/formActions";
 import { LeaveApplicationTable } from "../EmpPortalComponent/LeaveApplicationTable";
 import EmployeeProfile from "../EmpPortalComponent/EmployeeProfile";
 import { EmployeeExtendedInfo } from "../EmpPortalComponent/EmployeeExtendedInfo";
 import { ReportingEmpTable } from "../EmpPortalComponent/ReportingEmpTable";
-import { fetchAttendanceSheetConsolidated } from "../../../../AttendanceRequest/_redux/formActions";
+import {
+  fetchAttendance,
+  fetchAttendanceSheetConsolidated,
+} from "../../../../AttendanceRequest/_redux/formActions";
 import { AttendanceSummary } from "../EmpPortalComponent/AttendanceSummary";
 import { HolidayTable } from "../EmpPortalComponent/HolidayTable";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
@@ -61,6 +63,7 @@ export const EmployeePortal = () => {
     holidayList,
     activeFiscalYear,
     loanApprovalCount,
+    attRecord,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
@@ -82,6 +85,7 @@ export const EmployeePortal = () => {
       payrollData: state?.dashboard?.payrollData,
       reportingEmployee: state?.dashboard?.reportingEmployee,
       attendanceSummary: state?.attendance_request?.attendanceSummary,
+      attRecord: state?.attendance_request?.entities,
       activeFiscalYear: state?.dashboard?.activeFiscalYear,
     }),
     shallowEqual
@@ -168,6 +172,18 @@ export const EmployeePortal = () => {
         })
       );
       dispatch(
+        fetchAttendance({
+          pageSize: 50,
+          pageNumber: 1,
+          sortOrder: "asc",
+          filter: {
+            employeeId: formUIProps.selectedEmp.value,
+            from: payrollData.startDate,
+            to: payrollData.endDate,
+          },
+        })
+      );
+      dispatch(
         getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
       );
     }
@@ -200,6 +216,7 @@ export const EmployeePortal = () => {
       <AttendanceSummary
         payrollData={payrollData}
         attendanceSummary={attendanceSummary}
+        attRecord={attRecord}
       />
       <br />
       <hr />
