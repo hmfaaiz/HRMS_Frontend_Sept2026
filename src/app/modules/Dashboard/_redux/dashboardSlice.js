@@ -78,6 +78,7 @@ const initialDashboardState = {
   allPostedJobVacancyList: [],
   allParentDept: [],
   recruitmentSummary: {},
+  allPayrollAccountList: [],
 };
 
 export const callTypes = {
@@ -321,6 +322,9 @@ export const dashboardSlice = createSlice({
     },
     AllParentDeptFetch: (state, action) => {
       state.allParentDept = action.payload;
+    },
+      AllPayrollAccountListFetch: (state, action) => {
+      state.allPayrollAccountList = action.payload;
     },
 
 

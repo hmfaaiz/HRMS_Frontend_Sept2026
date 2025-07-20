@@ -12,6 +12,7 @@ import {
   fetchAllPayrollMonthYearList,
   fetchAllSubsidiaryData,
   fetchPayrollConfigApproverPermission,
+  getAllPayrollAccount,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getDateDiffInDays } from "../../../../../utils/common";
@@ -67,7 +68,7 @@ export function FormEditForm({
 
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(127, "allPayrolGroupList"));
-  dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
+      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
 
 
     }
@@ -253,7 +254,7 @@ export function FormEditForm({
 
     }
   }
-
+  console.log("das111", dashboard.allPayrollAccountList)
 
   return (
     <Formik
@@ -453,66 +454,67 @@ export function FormEditForm({
               <fieldset disabled={isUserForRead}>
 
                 <div className="form-group row">
-                  
-                    <div className="col-12 col-md-6 mt-3">
-                      <SearchSelect
-                        name="subsidiaryId"
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isUserForRead || isAfterResult}
-                        onChange={(e) => {
-                          dispatch(actions.clearReduxData())
-                          setFieldValue("subsidiaryId", e.value || null);
-                          // payrollGroupDetails(e.value, values.payroll_groupId, values.payroll_monthId)
-                          setFieldValue("payroll_monthId", null);
-                          getPayroll(e.value)
-                          checkPayroll_Employees(setFieldValue, e.value, values.payroll_groupId, values.payroll_monthId)
-                          setIsAfterResult(false)
-                          checkPermission(e.value)
-                        }}
-                        value={
-                          dashboard?.allSubsidiaryList?.find(
-                            (option) => option.value === values.subsidiaryId
-                          ) || null
-                        }
 
-                        options={dashboard?.allSubsidiaryList}
-                        // options={dashboard.allSubidiaryList.map(option => ({
-                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
-                        //   value: option.value,
-                        // }))}
-                        error={errors.subsidiaryId}
-                        touched={touched.subsidiaryId}
-                      />
-                    </div>
-                 
-{/* Active payroll month */}
+                  <div className="col-12 col-md-6 mt-3">
+                    <SearchSelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isUserForRead || isAfterResult}
+                      onChange={(e) => {
+                        dispatch(actions.clearReduxData())
+                        setFieldValue("subsidiaryId", e.value || null);
+                        // payrollGroupDetails(e.value, values.payroll_groupId, values.payroll_monthId)
+                        setFieldValue("payroll_monthId", null);
+                        getPayroll(e.value)
+                        checkPayroll_Employees(setFieldValue, e.value, values.payroll_groupId, values.payroll_monthId)
+                        setIsAfterResult(false)
+                        checkPermission(e.value)
+                        dispatch(getAllPayrollAccount(e.value))
+                      }}
+                      value={
+                        dashboard?.allSubsidiaryList?.find(
+                          (option) => option.value === values.subsidiaryId
+                        ) || null
+                      }
+
+                      options={dashboard?.allSubsidiaryList}
+                      // options={dashboard.allSubidiaryList.map(option => ({
+                      //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                      //   value: option.value,
+                      // }))}
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                    />
+                  </div>
+
+                  {/* Active payroll month */}
 
 
 
-<div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+                  <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
 
-  {values?.subsidiaryId ? (() => {
-    const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-      (option) => option.value === values.subsidiaryId
-    );
-    return (
-      <>
-        <div>
-          <b>Active Fiscal Year -</b>{" "}
-          {selectedSubsidiary?.fiscalYearLabel}
-        </div>
-        <div>
-          <b>Active Payroll Month -</b>{" "}
-          {selectedSubsidiary?.payrollMonthLabel}
-        </div>
-      </>
-    );
-  })() : null}
-</div>
+                    {values?.subsidiaryId ? (() => {
+                      const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                        (option) => option.value === values.subsidiaryId
+                      );
+                      return (
+                        <>
+                          <div>
+                            <b>Active Fiscal Year -</b>{" "}
+                            {selectedSubsidiary?.fiscalYearLabel}
+                          </div>
+                          <div>
+                            <b>Active Payroll Month -</b>{" "}
+                            {selectedSubsidiary?.payrollMonthLabel}
+                          </div>
+                        </>
+                      );
+                    })() : null}
+                  </div>
 
 
 
@@ -592,6 +594,33 @@ export function FormEditForm({
                     />
                   </div>
 
+                  <div className="col-12 col-md-6 mt-3">
+                    <SearchSelect
+                      name="payroll_accountId"
+                      label={
+                        <span>
+                          Account<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+
+                      isDisabled={isUserForRead || isAfterResult}
+                      onChange={(e) => {
+                        setFieldValue("payroll_accountId", e.value || null);
+
+                      }}
+                      value={
+                        dashboard?.allPayrollAccountList?.find(
+                          (option) => Number(option.value) === Number(values.payroll_accountId)
+                        ) || null
+                      }
+                      options={dashboard?.allPayrollAccountList || []}
+
+                      error={errors.payroll_accountId}
+                      touched={touched.payroll_accountId}
+                    />
+                  </div>
+
+
 
                   {currentState?.payroll_group_details && (
                     <>
@@ -599,7 +628,7 @@ export function FormEditForm({
                         type="button"
                         onClick={() => handleModalYes()}
                         className="m-3 btn btn-red"
-                        disabled={  isAfterResult}
+                        disabled={isAfterResult}
                       >
                         Stop Salary
                         {loading && (
@@ -611,7 +640,7 @@ export function FormEditForm({
                         onClick={() => handleLoanModalYes()}
                         type="button"
                         className="m-3 btn btn-red"
-disabled={  isAfterResult}
+                        disabled={isAfterResult}
                       >
                         Stop Loan
                         {loading && (
@@ -650,7 +679,7 @@ disabled={  isAfterResult}
 
                   <div className="col-12 col-md-6 mt-3">
                     <label>
-                    Stop Salary : <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
+                      Stop Salary : <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
                     </label>
 
                   </div>
@@ -731,46 +760,46 @@ disabled={  isAfterResult}
             <>
               {payrollConfigApproverPermission && (
                 <>
-                <button
+                  <button
 
-                onClick={() => {
-                  checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, false, true);
-                  setIds("");
-                  handleReset();
-                  dispatch(actions.clearReduxData())
-                }}
-                className="btn btn-green"
-                // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.finalize)}
-                disabled={loading ||  (!checkPayroll_EmployeesExist?.finalize && !resultAfterPayrollProcess?.finalize)}
-              >
-                Finalize
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
+                    onClick={() => {
+                      checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, false, true);
+                      setIds("");
+                      handleReset();
+                      dispatch(actions.clearReduxData())
+                    }}
+                    className="btn btn-green"
+                    // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.finalize)}
+                    disabled={loading || (!checkPayroll_EmployeesExist?.finalize && !resultAfterPayrollProcess?.finalize)}
+                  >
+                    Finalize
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
 
 
 
-              <button
+                  <button
 
-                onClick={() => {
-                  checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, true, false);
-                  setIds("");
-                  handleReset();
-                  dispatch(actions.clearReduxData())
-                }}
-                className="btn btn-red"
-           
-                // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.revert)}
-                disabled={loading ||  !checkPayroll_EmployeesExist?.revert  }
-              >
-                Revert
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
-              
-              </>
+                    onClick={() => {
+                      checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, true, false);
+                      setIds("");
+                      handleReset();
+                      dispatch(actions.clearReduxData())
+                    }}
+                    className="btn btn-red"
+
+                    // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.revert)}
+                    disabled={loading || !checkPayroll_EmployeesExist?.revert}
+                  >
+                    Revert
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+
+                </>
               )}
 
             </>
@@ -783,9 +812,9 @@ disabled={  isAfterResult}
                   setIds("");
                   handleReset();
                   dispatch(actions.clearReduxData())
-         
-                    setIsAfterResult(false)
-            
+
+                  setIsAfterResult(false)
+
 
                 }}
                 className="btn btn-light btn-elevate"
@@ -796,9 +825,10 @@ disabled={  isAfterResult}
               <button
                 type="button"
                 // onClick={onHide}
-                
 
-                onClick={()=>{ onHide(); 
+
+                onClick={() => {
+                  onHide();
                   setIsAfterResult(false)
                 }}
                 className="btn btn-primary btn-elevate"
@@ -810,23 +840,23 @@ disabled={  isAfterResult}
             {/* Save Button */}
             {/* {(!isUserForRead || !currentState?.payroll_group_details?.slary_setup_not_created>0 )&&( */}
 
-{/* { currentState?.payroll_group_details?.slary_setup_not_created > 0  && ( */}
-             { <button
-                type="submit"
-                onClick={() => {
-                  handleSubmit();
-                  // dispatch(actions.clearReduxData())
-                  setIsAfterResult(true)
-                }}
-                className="btn btn-primary btn-elevate"
-                disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0 ||      !checkPayroll_EmployeesExist?.execute}
-                
-              >
-                Execute
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>}
+            {/* { currentState?.payroll_group_details?.slary_setup_not_created > 0  && ( */}
+            {<button
+              type="submit"
+              onClick={() => {
+                handleSubmit();
+                // dispatch(actions.clearReduxData())
+                setIsAfterResult(true)
+              }}
+              className="btn btn-primary btn-elevate"
+              disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0 || !checkPayroll_EmployeesExist?.execute}
+
+            >
+              Execute
+              {loading && (
+                <span className="ml-3 mr-3 spinner spinner-white"></span>
+              )}
+            </button>}
             {/* )} */}
 
 
