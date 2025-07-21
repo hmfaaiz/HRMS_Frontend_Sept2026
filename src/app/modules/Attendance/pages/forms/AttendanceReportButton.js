@@ -5,7 +5,8 @@ import * as actions from "../../_redux/formActions";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 
-const ReportButton = () => {
+const ReportButton = (values) => {
+  const filterValues = values?.values || {};
   const dispatch = useDispatch();
   const formUIContext = useFormUIContext();
 
@@ -16,18 +17,28 @@ const ReportButton = () => {
     };
   }, [formUIContext]);
 
-  const { pdfLoading, csvLoading, excelLoading } = useSelector(
-    (state) => ({
-      pdfLoading: state?.attendance?.pdfLoading,
-      csvLoading: state?.attendance?.csvLoading,
-      excelLoading: state?.attendance?.excelLoading,
-    }),
-    shallowEqual
-  );
+  const { pdf2Loading, pdfLoading, csvLoading, excelLoading, listLoading,
+    processLoading, consolidatedLoading, empWiseLoading } = useSelector(
+      (state) => ({
+        pdf2Loading: state?.attendance?.pdf2Loading,
+        pdfLoading: state?.attendance?.pdfLoading,
+        csvLoading: state?.attendance?.csvLoading,
+        excelLoading: state?.attendance?.excelLoading,
+        listLoading: state.attendance.listLoading,
+        processLoading: state.attendance.processLoading,
+        consolidatedLoading: state.attendance.consolidatedLoading,
+        empWiseLoading: state.attendance.empWiseLoading,
+      }),
+      shallowEqual
+    );
 
   const print = async (value) => {
     let updatedQueryParams = {
       ...FormUIProps.queryParams,
+      filter: {
+        ...FormUIProps.queryParams.filter,
+        ...filterValues, // ✅ set actual form fields inside filter
+      }, // ✅ Push filter values into context
       csv: false,
       excel: false,
       pdf: false,
@@ -35,10 +46,15 @@ const ReportButton = () => {
     };
 
     FormUIProps.setQueryParams(updatedQueryParams);
-    await dispatch(actions.fetchAttendance(FormUIProps.queryParams));
+   console.log("print called", updatedQueryParams);
+    await dispatch(actions.fetchAttendanceReport(updatedQueryParams));
 
     updatedQueryParams = {
       ...FormUIProps.queryParams,
+      filter: {
+        ...FormUIProps.queryParams.filter,
+        ...filterValues, // ✅ set actual form fields inside filter
+      },
       csv: false,
       excel: false,
       pdf: false,
@@ -50,42 +66,43 @@ const ReportButton = () => {
 
   return (
     <>
-    <div className=" d-flex  justify-content-end mr-10">
+      <div className=" d-flex  justify-content-end mr-10">
 
 
-      <button
-        type="button"
-        className="att-file-button" 
-        disabled={pdfLoading}
-        onClick={() => print("pdf")}
-      >
-        <span className="att-file-button">
-          <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")} />
-        </span>
-      </button>
+        <button
+          type="button"
+          className="att-file-button"
+          // disabled={pdfLoading}
+          disabled={pdfLoading || pdf2Loading || csvLoading || excelLoading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
+          onClick={() => print("pdf")}
+        >
+          <span className="att-file-button">
+            <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")} />
+          </span>
+        </button>
 
-      <button
-        type="button"
-        className="att-file-button"
-        disabled={csvLoading}
-        onClick={() => print("csv")}
-      >
-        <span className="att-file-button">
-          <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")} />
-        </span>
-      </button>
+        <button
+          type="button"
+          className="att-file-button"
+          disabled={csvLoading || excelLoading || pdfLoading || pdf2Loading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
+          onClick={() => print("csv")}
+        >
+          <span className="att-file-button">
+            <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")} />
+          </span>
+        </button>
 
-      <button
-        type="button"
-        className="att-file-button"
-        disabled={excelLoading}
-        onClick={() => print("excel")}
-      >
-        <span className="att-file-button">
-          <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")} />
-        </span>
-      </button>
-        </div>
+        <button
+          type="button"
+          className="att-file-button"
+          disabled={excelLoading || listLoading || pdfLoading || pdf2Loading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
+          onClick={() => print("excel")}
+        >
+          <span className="att-file-button">
+            <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")} />
+          </span>
+        </button>
+      </div>
     </>
   );
 };
