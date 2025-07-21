@@ -19,6 +19,7 @@ import { getDateDiffInDays } from "../../../../../utils/common";
 import * as actions from "../../../_redux/redux-Actions";
 import { checkPayroll_EmployeesByIds, fetchPayrollProcess } from "../../../_redux/redux-Actions";
 import { payroll_processSlice, callTypes } from "../../../_redux/redux-Slice";
+import { toast } from "react-toastify";
 // const { actions } = payroll_processSlice;
 // percentage: Yup.string().required("Required*"),
 const payroll_processEditSchema = Yup.object().shape({
@@ -34,6 +35,10 @@ const payroll_processEditSchema = Yup.object().shape({
   // .required(VALIDATION_MESSAGES.required),
 
   payroll_monthId: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  payroll_accountId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
@@ -254,7 +259,10 @@ export function FormEditForm({
 
     }
   }
-  console.log("das111", dashboard.allPayrollAccountList)
+
+ const accountNotify = () => {
+    toast("Account needs to be selected!");
+  };
 
   return (
     <Formik
@@ -453,6 +461,29 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
 
+
+                <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end ">
+
+                  {values?.subsidiaryId ? (() => {
+                    const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                      (option) => option.value === values.subsidiaryId
+                    );
+                    return (
+                      <>
+                        <div>
+                          <b>Active Fiscal Year -</b>{" "}
+                          {selectedSubsidiary?.fiscalYearLabel}
+                        </div>
+                        <div>
+                          <b>Active Payroll Month -</b>{" "}
+                          {selectedSubsidiary?.payrollMonthLabel}
+                        </div>
+                      </>
+                    );
+                  })() : null}
+                </div>
+
+
                 <div className="form-group row">
 
                   <div className="col-12 col-md-6 mt-3">
@@ -491,30 +522,45 @@ export function FormEditForm({
                     />
                   </div>
 
+
+                  <div className="col-12 col-md-6 mt-3">
+                    <SearchSelect
+                      name="payroll_accountId"
+                      label={
+                        <span>
+                          Account<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+
+                      isDisabled={isUserForRead || isAfterResult}
+                      onChange={(e) => {
+                        setFieldValue("payroll_accountId", e.value || null);
+
+                      }}
+                      value={
+                        dashboard?.allPayrollAccountList?.find(
+                          (option) =>
+                            Number(option.value) === Number(values.payroll_accountId)
+                        ) ||
+                        dashboard?.allPayrollAccountList?.find(
+                          (option) => option.isDefault === true && values.subsidiaryId
+                        ) ||
+                        null
+                      }
+                      options={dashboard?.allPayrollAccountList || []}
+
+                    error={errors.payroll_accountId}
+                    touched={touched.payroll_accountId}
+
+                    />
+             
+
+                  </div>
+
+
                   {/* Active payroll month */}
 
 
-
-                  <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
-
-                    {values?.subsidiaryId ? (() => {
-                      const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-                        (option) => option.value === values.subsidiaryId
-                      );
-                      return (
-                        <>
-                          <div>
-                            <b>Active Fiscal Year -</b>{" "}
-                            {selectedSubsidiary?.fiscalYearLabel}
-                          </div>
-                          <div>
-                            <b>Active Payroll Month -</b>{" "}
-                            {selectedSubsidiary?.payrollMonthLabel}
-                          </div>
-                        </>
-                      );
-                    })() : null}
-                  </div>
 
 
 
@@ -594,31 +640,6 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
-                    <SearchSelect
-                      name="payroll_accountId"
-                      label={
-                        <span>
-                          Account<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-
-                      isDisabled={isUserForRead || isAfterResult}
-                      onChange={(e) => {
-                        setFieldValue("payroll_accountId", e.value || null);
-
-                      }}
-                      value={
-                        dashboard?.allPayrollAccountList?.find(
-                          (option) => Number(option.value) === Number(values.payroll_accountId)
-                        ) || null
-                      }
-                      options={dashboard?.allPayrollAccountList || []}
-
-                      error={errors.payroll_accountId}
-                      touched={touched.payroll_accountId}
-                    />
-                  </div>
 
 
 
@@ -843,10 +864,16 @@ export function FormEditForm({
             {/* { currentState?.payroll_group_details?.slary_setup_not_created > 0  && ( */}
             {<button
               type="submit"
-              onClick={() => {
+              onClick={ () => {
                 handleSubmit();
+               
+                if(values.payroll_accountId === null || values.payroll_accountId === undefined || values.payroll_accountId === "") {
+                  accountNotify();
+                  return;
+                }
                 // dispatch(actions.clearReduxData())
                 setIsAfterResult(true)
+
               }}
               className="btn btn-primary btn-elevate"
               disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0 || !checkPayroll_EmployeesExist?.execute}
