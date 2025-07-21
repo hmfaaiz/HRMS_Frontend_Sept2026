@@ -260,7 +260,7 @@ export function FormEditForm({
     }
   }
 
- const accountNotify = () => {
+  const accountNotify = () => {
     toast("Account needs to be selected!");
   };
 
@@ -549,11 +549,11 @@ export function FormEditForm({
                       }
                       options={dashboard?.allPayrollAccountList || []}
 
-                    error={errors.payroll_accountId}
-                    touched={touched.payroll_accountId}
+                      error={errors.payroll_accountId}
+                      touched={touched.payroll_accountId}
 
                     />
-             
+
 
                   </div>
 
@@ -864,13 +864,19 @@ export function FormEditForm({
             {/* { currentState?.payroll_group_details?.slary_setup_not_created > 0  && ( */}
             {<button
               type="submit"
-              onClick={ () => {
-                handleSubmit();
-               
-                if(values.payroll_accountId === null || values.payroll_accountId === undefined || values.payroll_accountId === "") {
-                  accountNotify();
-                  return;
+              onClick={() => {
+                
+                if (!values.payroll_accountId) {
+                  
+                  const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
+                    (option) => option.isDefault === true
+                  );
+                 
+                  setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
+
                 }
+                handleSubmit();
+
                 // dispatch(actions.clearReduxData())
                 setIsAfterResult(true)
 
