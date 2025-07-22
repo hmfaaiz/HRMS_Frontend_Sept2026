@@ -189,7 +189,7 @@ export default function ApplicationSection() {
 
                         <Col md={3}>
                           <strong>Expected Salary Range : </strong>
-                          {applicantProfile?.expectedSalaryRangeFrom || ""} to
+                          {applicantProfile?.expectedSalaryRangeFrom || ""} to {" "}
                           {applicantProfile?.expectedSalaryRangeTo || ""}
                         </Col>
                         <Col md={6}>

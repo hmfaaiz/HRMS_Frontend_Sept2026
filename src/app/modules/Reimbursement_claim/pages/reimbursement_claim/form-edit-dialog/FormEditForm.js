@@ -220,7 +220,7 @@ export function FormEditForm({
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
                 <div className="form-group row">
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-6">
                     <SearchSelect
                       name="reimbursement_typeId"
                       label={
@@ -254,7 +254,7 @@ export function FormEditForm({
 
                   {/* Active payroll month */}
 
-                  <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+                  {/* <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
                     {activeFiscalYear
                       ? (() => {
                           return (
@@ -271,9 +271,9 @@ export function FormEditForm({
                           );
                         })()
                       : null}
-                  </div>
+                  </div> */}
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-6">
                     <label>
                       Date <span style={{ color: "red" }}>*</span>
                     </label>

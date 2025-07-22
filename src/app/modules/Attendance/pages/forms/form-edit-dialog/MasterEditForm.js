@@ -200,7 +200,7 @@ export function MasterEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="from-group row">
                     {/* Employee Field Start */}
-                    <div className="col-8 col-md-4 mt-3 ml-7">
+                    <div className="col-8 col-md-3  ml-9">
                       <Field
                         name="employeeId"
                         component={SearchSelect}
@@ -244,7 +244,7 @@ export function MasterEditForm({
                     </div>
                     {/* Employee Field End */}
            
-   <div className="col-2 col-md-3 d-flex  align-items-center pt-10">
+   <div className="col-2 col-md-4 d-flex  align-items-center pt-10">
                                         <span
                                           className="svg-icon svg-icon-md svg-icon-primary"
                                           onClick={() => setPanelMode(!panelMode)}
@@ -287,7 +287,7 @@ export function MasterEditForm({
 
 
 
-            <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
+            <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
 
   {activeFiscalYear ? (() => {
 
@@ -566,7 +566,7 @@ export function MasterEditForm({
                             {/* Half Day End Field End */}
 
                             {/* Allow OverTime Field Starts */}
-                            <div className="col-12 col-md-4 mt-3">
+                            <div className="d-flex col-12 col-md-4 mt-3">
                               <Field
                                 name={`isOverTime`}
                                 component={Checkbox}
@@ -576,12 +576,12 @@ export function MasterEditForm({
                                 }}
                                 isSelected={values.isOverTime}
                               />
-                              <span>Allow OverTime</span>
+                              <span className="mt-7 ml-3"> Allow OverTime</span>
                             </div>
                             {/* Allow OverTime Field End */}
 
                             {/* Include Inter-Shift Gap Field Starts */}
-                            <div className="col-12 col-md-4 mt-3">
+                            <div className="d-flex col-12 col-md-4 mt-3">
                               <Field
                                 name={`isIncludeInterShifGap`}
                                 component={Checkbox}
@@ -594,7 +594,7 @@ export function MasterEditForm({
                                 disabled
                                 isSelected={values.isIncludeInterShifGap}
                               />
-                              <span>Include Inter-Shift Gap</span>
+                              <span className="mt-7 ml-3">Include Inter-Shift Gap</span>
                             </div>
                             {/* Include Inter-Shift Gap Field End */}
 

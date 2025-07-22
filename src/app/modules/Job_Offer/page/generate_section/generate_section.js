@@ -69,8 +69,8 @@ export default function GenerateSection() {
                     <div className="col-12">
 
 
-                        <div className="col-12 col-md-12 mt-3 row">
-                            <div className="col-12 col-md-4 mt-3">
+                        <div className="col-12 col-md-12  row  m-0 p-0">
+                            <div className="col-12 col-md-4 m-0 p-0">
                                 <SearchSelect
                                     name="headOfHrId"
                                     label={<span>Signatory 1</span>}
@@ -100,7 +100,7 @@ export default function GenerateSection() {
                                 />
                             </div>
 
-                            <div className="col-12 col-md-4 mt-3">
+                            <div className="col-12 col-md-4 ">
                                 <SearchSelect
                                     name="hrId"
                                     label={<span>Signatory 2</span>}
