@@ -334,7 +334,6 @@ export function MasterEditForm({
                       </div>
                       {/* Time Out Field End */}
                     </div>
-
                     <div className="from-group row">
                       {/* OT Hours Field start  */}
                       <div className="col-12 col-md-3 mt-3">

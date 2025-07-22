@@ -44,7 +44,7 @@ export function LeaveApplicationTable() {
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateLeaveDetail"
   );
-
+console.log("isAccessForEdit"  , isAccessForEdit);
   // Table columns
   const columns = [
     {
