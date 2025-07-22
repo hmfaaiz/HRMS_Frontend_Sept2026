@@ -615,7 +615,7 @@ export function FormEditForm({
 
                   {/* Active payroll month */}
 
-                  <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
+                  {/* <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
                     {activeFiscalYear
                       ? (() => {
                           return (
@@ -632,9 +632,9 @@ export function FormEditForm({
                           );
                         })()
                       : null}
-                  </div>
+                  </div> */}
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-12 col-md-6 ">
                     <SearchSelect
                       name="employee_loan_accountId"
                       label={

@@ -137,7 +137,7 @@ export function MasterEditForm({
 
 
 
-            <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end">
+            {/* <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end">
 
   {activeFiscalYear ? (() => {
 
@@ -154,9 +154,9 @@ export function MasterEditForm({
       </>
     );
   })() : null}
-</div>
+</div> */}
                     {/* Leave Type Field Start */}
-                    <div className="col-12 col-md-3 mt-3">
+                    <div className="col-12 col-md-3 ">
                       <Field
                         name="leaveType"
                         component={Select}
@@ -184,7 +184,7 @@ export function MasterEditForm({
                     </div>
                     {/* Leave Type Field End */}
                     {/* Date from Field Start */}
-                    <div className="col-12 col-md-3 mt-3">
+                    <div className="col-12 col-md-3 ">
                       <Field
                         name="from"
                         component={DatePickerField}
@@ -206,7 +206,7 @@ export function MasterEditForm({
                     {/* Date from Field End */}
 
                     {/* Date to Field Start */}
-                    <div className="col-12 col-md-3 mt-3">
+                    <div className="col-12 col-md-3 ">
                       <Field
                         name="to"
                         component={DatePickerField}
@@ -228,7 +228,7 @@ export function MasterEditForm({
                     {/* Date to Field End */}
 
                     {/* Days Field Start */}
-                    <div className="col-12 col-md-3 mt-3">
+                    <div className="col-12 col-md-3 ">
                       <Field
                         name="days"
                         component={Input}

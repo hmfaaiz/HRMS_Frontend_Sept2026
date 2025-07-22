@@ -594,6 +594,10 @@ const [profile_image, setImage] = useState(
     }
   }, [user.lastReviewDate]);
 
+    useEffect(() => {
+     dispatch(fetchAllEmployeesWithNoPermissionData('allEmployeesWithNoPermissionList'));
+  }, []);
+
   //===== lastReviewDate
   useEffect(() => {
 
@@ -1648,7 +1652,7 @@ const [profile_image, setImage] = useState(
     toast('Date of Confirmation, Date of Confirmation Due & Contract Expiry Date needs to be updated!');
   };
 
-
+console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
   return (
     <>
       <Formik
@@ -2046,7 +2050,7 @@ const [profile_image, setImage] = useState(
                       </div>
                       <div className="col-12 col-md-4 mt-3">
                              <label className="mr-4"><span> Department<span style={{ color: 'red' }}>*</span></span></label>
-                        <input
+                        {/* <input
                           name="hod"
                           type="checkbox"
                           onChange={() => setFieldValue("hod", !values?.hod)}
@@ -2063,7 +2067,29 @@ const [profile_image, setImage] = useState(
   )
 }
 
-                        />
+                        /> */}
+
+                        <input
+  name="hod"
+  type="checkbox"
+  onChange={() => setFieldValue("hod", !values?.hod)}
+  onBlur={handleBlur}
+  value={values.hod}
+  checked={!!values.hod}  // 🔴 Force boolean
+  label="HOD"
+  disabled={
+    dashboard?.allEmployeesWithNoPermissionList &&
+    values?.departmentId
+      ? dashboard.allEmployeesWithNoPermissionList.some(
+          (x) =>
+            x.departmentId === values.departmentId &&
+            x.hod === 1 &&
+            x.value !== user.Id
+        )
+      : false
+  }
+/>
+
 
                           <label className="ml-2">HOD</label>
                         <SearchSelect
@@ -4174,6 +4200,7 @@ const [profile_image, setImage] = useState(
                         behavior: "smooth"
                       });
                     }
+                  
 
                   }}
                   className="btn btn-primary btn-elevate"

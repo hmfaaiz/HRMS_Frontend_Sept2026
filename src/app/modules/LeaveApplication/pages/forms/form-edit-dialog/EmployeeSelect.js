@@ -30,7 +30,8 @@ export function EmployeeSelect({
     return new Map(allEmployees?.map(item => [item.value, item]));
   }, [allEmployees]);
 
-
+  const{    activeFiscalYear
+    } = useSelector((state) => state.dashboard);
   return (
     <>
       {/* Formik Starts */}
@@ -57,7 +58,7 @@ export function EmployeeSelect({
                 <div className="from-group row">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-4 mt-3 ml-7">
+                  <div className="col-12 col-md-3  ml-7">
                     <Field
                       name="employeeId"
                       component={SearchSelect}
@@ -103,6 +104,26 @@ export function EmployeeSelect({
                   
                   
                                     </div>
+
+
+                                         <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
+
+  {activeFiscalYear ? (() => {
+
+    return (
+      <>
+        <div>
+          <b>Active Fiscal Year -</b>{" "}
+          {activeFiscalYear?.label}
+        </div>
+        <div>
+          <b>Active Payroll Month -</b>{" "}
+          {activeFiscalYear?.payrollMonthLabel}
+        </div>
+      </>
+    );
+  })() : null}
+</div>
 
                 </div>
               </fieldset>
