@@ -53,85 +53,154 @@ export function UserProfileDropdown() {
     };
   }, [uiService]);
 
-  return (
-    <Dropdown drop="down" alignRight>
-      <Dropdown.Toggle
-        as={DropdownTopbarItemToggler}
-        id="dropdown-toggle-user-profile"
-      >
-        <div className={"w-auto d-flex align-items-center btn-lg px-2"}>
-          <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
-            Hi,
-          </span>{" "}
-          <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-            {user?.EmployeeMapping?.fullName
-              ? user?.EmployeeMapping?.fullName
-              : user?.email}
-            {" - "}({user?.role?.name})
-          </span>
-          <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
-            <span>
-              <img
-                width={36}
-                height={36}
-                src={
-                  user?.EmployeeMapping?.profile_image
-                    ? user?.EmployeeMapping?.profile_image
-                    : "/media/users/user.svg"
-                }
-                alt="User"
-              />
-            </span>
-          </span>
-          {portalRoutesLength > 0 &&
-            HRMSRoutesLength > 0 &&
-            user?.employeeIdMapping && (
-              <span>
-                <OverlayTrigger
-                  placement="bottom"
-                  overlay={
-                    <Tooltip id="products-edit-tooltip">
-                      Switch Application
-                    </Tooltip>
-                  }
-                >
-                  <button
-                    onClick={handleSwitch}
-                    className="btn"
-                    style={{ border: "none" }}
-                  >
-                    <img
-                      width={36}
-                      height={36}
-                      src={toAbsoluteUrl(
-                        "/media/users/Profile-Switch-Icon.png"
-                      )}
-                      alt="User"
-                    />
-                  </button>
-                </OverlayTrigger>
-              </span>
-            )}
-          <span className="ml-3">
-            <Link
-              to="/password/reset-password"
-              className="btn btn-light-primary font-weight-bold"
-            >
-              <LockOpenIcon />
-              <span className="ml-3">Reset Password</span>
-            </Link>
-          </span>
-          <span className="ml-3">
-            <Link
-              to="/logout"
-              className="btn btn-light-primary font-weight-bold"
-            >
-              <ExitToAppIcon />
-              <span className="ml-3">Sign Out</span>
-            </Link>
-          </span>
-        </div>
-      </Dropdown.Toggle>
-    </Dropdown>
-  );
+  // return (
+  //   <Dropdown drop="down" alignRight>
+  //     <Dropdown.Toggle
+  //       as={DropdownTopbarItemToggler}
+  //       id="dropdown-toggle-user-profile"
+  //     >
+  //       <div className={"w-auto d-flex align-items-center btn-lg px-2"}>
+  //         <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
+  //           Hi,
+  //         </span>{" "}
+  //         <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
+  //           {user?.EmployeeMapping?.fullName
+  //             ? user?.EmployeeMapping?.fullName
+  //             : user?.email}
+  //           {" - "}({user?.role?.name})
+  //         </span>
+  //         <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
+  //           <span>
+  //             <img
+  //               width={36}
+  //               height={36}
+  //               src={
+  //                 user?.EmployeeMapping?.profile_image
+  //                   ? user?.EmployeeMapping?.profile_image
+  //                   : "/media/users/user.svg"
+  //               }
+  //               alt="User"
+  //             />
+  //           </span>
+  //         </span>
+  //         {portalRoutesLength > 0 &&
+  //           HRMSRoutesLength > 0 &&
+  //           user?.employeeIdMapping && (
+  //             <span>
+  //               <OverlayTrigger
+  //                 placement="bottom"
+  //                 overlay={
+  //                   <Tooltip id="products-edit-tooltip">
+  //                     Switch Application
+  //                   </Tooltip>
+  //                 }
+  //               >
+  //                 <button
+  //                   onClick={handleSwitch}
+  //                   className="btn"
+  //                   style={{ border: "none" }}
+  //                 >
+  //                   <img
+  //                     width={36}
+  //                     height={36}
+  //                     src={toAbsoluteUrl(
+  //                       "/media/users/Profile-Switch-Icon.png"
+  //                     )}
+  //                     alt="User"
+  //                   />
+  //                 </button>
+  //               </OverlayTrigger>
+  //             </span>
+  //           )}
+  //         <span className="ml-3">
+  //           <Link
+  //             to="/password/reset-password"
+  //             className="btn btn-light-primary font-weight-bold"
+  //           >
+  //             <LockOpenIcon />
+  //             <span className="ml-3">Reset Password</span>
+  //           </Link>
+  //         </span>
+  //         <span className="ml-3">
+  //           <Link
+  //             to="/logout"
+  //             className="btn btn-light-primary font-weight-bold"
+  //           >
+  //             <ExitToAppIcon />
+  //             <span className="ml-3">Sign Out</span>
+  //           </Link>
+  //         </span>
+  //       </div>
+  //     </Dropdown.Toggle>
+  //   </Dropdown>
+  // );
+
+
+
+return (
+  <Dropdown style={{ position: "relative" }} align="end">
+    <Dropdown.Toggle
+      as="div"
+      id="dropdown-toggle-user-profile"
+      style={{ cursor: "pointer" }}
+    >
+      <div className="w-auto d-flex align-items-center btn-lg px-2">
+        <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
+          Hi,
+        </span>
+        <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
+          {user?.EmployeeMapping?.fullName || user?.email}{" "}
+          ({user?.role?.name})
+        </span>
+        <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
+          <img
+            width={36}
+            height={36}
+            src={
+              user?.EmployeeMapping?.profile_image
+                ? user?.EmployeeMapping?.profile_image
+                : "/media/users/user.svg"
+            }
+            alt="User"
+          />
+        </span>
+      </div>
+    </Dropdown.Toggle>
+
+<Dropdown.Menu
+  className="ml-40 mt-5 p-0 m-0 dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround"
+  style={{
+    minWidth: "200px",
+    // marginTop: "10px",
+    // position: "absolute",
+    // inset: "100% 0 auto auto", // Top, Right, Bottom, Left
+    // zIndex: 9999,
+  }}
+>
+      {portalRoutesLength > 0 &&
+        HRMSRoutesLength > 0 &&
+        user?.employeeIdMapping && (
+          <Dropdown.Item as="button" onClick={handleSwitch}>
+            <img
+              width={20}
+              height={20}
+              className="mr-2"
+              src={toAbsoluteUrl("/media/users/Profile-Switch-Icon.png")}
+              alt="Switch"
+            />
+            Switch Application
+          </Dropdown.Item>
+        )}
+      <Dropdown.Item as={Link} to="/password/reset-password">
+        <LockOpenIcon fontSize="small" className="mr-2" />
+        Reset Password
+      </Dropdown.Item>
+      <Dropdown.Item as={Link} to="/logout">
+        <ExitToAppIcon fontSize="small" className="mr-2" />
+        Sign Out
+      </Dropdown.Item>
+    </Dropdown.Menu>
+  </Dropdown>
+);
+
 }

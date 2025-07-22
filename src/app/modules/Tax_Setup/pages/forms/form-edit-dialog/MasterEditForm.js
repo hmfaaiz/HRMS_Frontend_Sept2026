@@ -109,6 +109,15 @@ export function MasterEditForm({
 
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
 
+
+  const formatDateToYMD = (date) => {
+  if (!date) return null;
+  const year = date.getFullYear();
+  const month = (`0${date.getMonth() + 1}`).slice(-2);
+  const day = (`0${date.getDate()}`).slice(-2);
+  return `${year}-${month}-${day}`; // => "2025-07-01"
+};
+
   return (
     <>
       <Formik
@@ -116,9 +125,14 @@ export function MasterEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
+           const formattedValues = {
+      ...values,
+      startDate: formatDateToYMD(values.startDate),
+      endDate: formatDateToYMD(values.endDate),
+    };
        
           enableLoading();
-          SaveTaxSetup(values);
+          SaveTaxSetup(formattedValues);
         }}
       >
         {({
@@ -163,7 +177,7 @@ export function MasterEditForm({
                     </div>
                   </div>
                   <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
+                    {/* <div className="col-12 col-md-4 mt-3">
 
                       <span> Start Date<span style={{ color: 'red' }}>*</span></span>
                       <DatePicker
@@ -197,9 +211,47 @@ export function MasterEditForm({
                       // value = {values.dateOfJoining}
                       />
                       <ErrorMessage className="form-feedBack" name="startDate" component="div" />
+                    </div> */}
+       <div className="col-12 col-md-4 mt-3">
+
+                      <span> Start Date<span style={{ color: 'red' }}>*</span></span>
+                      <DatePicker
+  className="form-control"
+  placeholder="Enter Start Date"
+  selected={defstartDate}
+  onChange={(date) => {
+  // Ensure it's exactly midnight (local time)
+  const localDate = new Date(date);
+  localDate.setHours(0, 0, 0, 0);
+
+  setFieldValue("startDate", localDate);
+  setDefaultStartDate(localDate);
+
+  const endDate = new Date(localDate);
+  endDate.setFullYear(endDate.getFullYear() + 1);
+  endDate.setDate(endDate.getDate() - 1);
+  endDate.setHours(0, 0, 0, 0);
+
+  setFieldValue("endDate", endDate);
+  setDefaultEndDate(endDate);
+}}
+
+  dateFormat="dd-MMM-yyyy"
+  name="startDate"
+  disabled={isUserForRead}
+  autoComplete="off"
+/>
+
+                      <ErrorMessage className="form-feedBack" name="startDate" component="div" />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+
+
+
+
+
+
+                    {/* <div className="col-12 col-md-4 mt-3">
                       <span> End Date<span style={{ color: 'red' }}>*</span></span>
                       <DatePicker
                         className="form-control"
@@ -219,7 +271,36 @@ export function MasterEditForm({
                       // value = {values.dateOfJoining}
                       />
                       <ErrorMessage className="form-feedBack" name="endDate" component="div" />
-                    </div>
+                    </div> */}
+                 
+                 <div className="col-12 col-md-4 mt-3">
+  <label htmlFor="endDate">
+    End Date<span style={{ color: 'red' }}>*</span>
+  </label>
+  <DatePicker
+    id="endDate"
+    className="form-control"
+    placeholderText="Enter End Date"
+    selected={defendDate || null}
+    onChange={(date) => {
+      setFieldValue("endDate", date);
+      setDefaultEndDate(date);
+    }}
+    dateFormat="dd-MMM-yyyy"
+    showTimeInput
+    timeInputLabel="Time:"
+    name="endDate"
+    autoComplete="off"
+    disabled={true} // change to false if needed
+  />
+  <ErrorMessage
+    className="form-feedBack"
+    name="endDate"
+    component="div"
+  />
+</div>
+
+                 
                   </div>
 
 

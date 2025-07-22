@@ -14,10 +14,11 @@ import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess } from ".
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
+import ReportButton from "../AttendanceReportButton";
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date().optional(),
-  to: Yup.date().optional().min(Yup.ref('from'), 'Date to date cannot be before Date from date'),
+  from: Yup.date().nullable().optional(),
+  to: Yup.date().nullable().optional().min(Yup.ref('from'), 'Date to date cannot be before Date from date'),
 })
 
 //Prepare new Filter
@@ -28,7 +29,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading}) {
+export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading}) {
 
   const FormUIContext = useFormUIContext()
 
@@ -79,7 +80,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
       // update list by queryParams
       formUIProps.setQueryParams(newQueryParams)
     }
-    
+    console.log("from report222")
     dispatch(fetchAttendance(newQueryParams));
 
 
@@ -99,7 +100,7 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
   },[allSubsidiaryList])
 
   const getLabels = (values) => {
-    console.log("aaa111",allDeptMap?.get(values.departmentId || '')?.label,)
+   
     return {
       departmentLabel: allDeptMap?.get(values.departmentId || '')?.label,
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || '')?.label,
@@ -434,6 +435,11 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                     {/* Date to Field End */}
 
                   </div>
+                   {(!values.from || !values.to) && (
+  <div className="text-danger mt-3">
+    <span>Dates are required</span>
+  </div>
+)}
                 </fieldset>
               </Form>
 
@@ -486,6 +492,8 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
   </button> 
 
             </div>
+          
+
               </div>
             </Modal.Body>
             <Modal.Footer>
@@ -505,11 +513,11 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+                disabled={loading ||  pdf2Loading ||  processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
                 className="btn btn-success btn-elevate"
               >
                 Filter Records
-                {loading && (
+                {loading  && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
@@ -527,9 +535,12 @@ export function FormFilter({ loading, dispatch, processLoading ,consolidatedLoad
                 )}
               </button>
 
+
+          
             </Modal.Footer>
 
-         
+               <ReportButton values={values} />
+
         
 
 

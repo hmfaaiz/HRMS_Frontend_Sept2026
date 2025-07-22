@@ -283,3 +283,9 @@ export const getAllParentDepartment = async (Id) => {
     Id: Id,
   });
 };
+
+export const getAllPayrollAccount = async (Id) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-payroll-account`, {
+    Id: Id,
+  });
+};

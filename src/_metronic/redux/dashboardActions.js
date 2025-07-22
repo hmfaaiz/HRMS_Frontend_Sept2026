@@ -666,3 +666,37 @@ export const fetchAllParentDept = (id) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
+
+
+
+export const getAllPayrollAccount = (body) => async (dispatch) => {
+  return await requestFromServer
+    .getAllPayrollAccount(body)
+    .then((response) => {
+    
+
+      const bankInfoList = response?.data?.data?.tran_payroll_policy_bank_infos;
+
+      if (!Array.isArray(bankInfoList)) {
+        console.error("tran_payroll_policy_bank_infos is not an array", bankInfoList);
+        toast.error("Unexpected response format");
+        return;
+      }
+
+      // const entities = [...bankInfoList];
+      const entities = bankInfoList.map((item) => ({
+  value: item.Id, // or whatever uniquely identifies the account
+  label: `${item.bankCode} - ${item.journalBankAccount.formName}`, // customize as needed
+  isDefault: item.isDefault, // or use some condition if needed
+  ...item, // keep original data if needed
+}));
+
+dispatch(actions.AllPayrollAccountListFetch(entities));
+    
+
+      dispatch(actions.AllPayrollAccountListFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};

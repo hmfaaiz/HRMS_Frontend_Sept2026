@@ -19,7 +19,8 @@ const initialState = {
     empWiseLoading: false,
     pdfLoading: false,
     csvLoading: false,
-    excelLoading: false
+    excelLoading: false,
+    pdfLoading2:false,
 };
 
 export const callTypes = {
@@ -27,6 +28,9 @@ export const callTypes = {
     action: "action",
     process: "process",
     pdf:"pdf",
+    pdf2:"pdf2",
+    csv:"pdf2",
+    xlsx:"pdf2",
     consolidated:"consolidated",
     empWise:"empWise"
 };
@@ -60,6 +64,9 @@ export const AttendanceSlice = createSlice({
                         else if (action.payload.callType === callTypes.pdf) {
                             state.pdfLoading = false;
                         }
+                        else if (action.payload.callType === callTypes.pdf2) {
+                            state.pdfLoading2 = false;
+                        }
             
                         else if (action.payload.callType === callTypes.csv) {
                             state.csvLoading = false;
@@ -73,12 +80,16 @@ export const AttendanceSlice = createSlice({
                 state.actionsLoading = false;
             }
         },
-        startCall: (state, action) => {
+            startLoader: (state, action) => {
             state.error = null;
             if (action.payload.callType === callTypes.list) {
+                console.log("startLoader called for list");
                 state.listLoading = true;
             } 
-            else if(action.payload.callType === callTypes.process){
+        },
+        startCall: (state, action) => {
+            state.error = null;
+          if(action.payload.callType === callTypes.process){
                 state.processLoading = true;
             }
 
@@ -93,6 +104,13 @@ export const AttendanceSlice = createSlice({
                else if (action.payload.callType === callTypes.pdf) {
                           
                             state.pdfLoading = true;
+            
+            
+                        }
+                        
+                        else if (action.payload.callType === callTypes.pdf2) {
+                          
+                            state.pdfLoading2 = true;
             
             
                         }
@@ -195,6 +213,9 @@ export const AttendanceSlice = createSlice({
         },
         pdfFetched: (state, action) => {
             state.pdfLoading = false;
+        },
+        pdf2Fetched: (state, action) => {
+            state.pdfLoading2 = false;
         },
 
     

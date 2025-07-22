@@ -41,8 +41,9 @@ export function FormTable() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+   
     dispatch(actions.fetchAttendance(FormUIProps.queryParams));
-  }, [FormUIProps.queryParams, dispatch]);
+  }, [FormUIProps.queryParams.pageSize,FormUIProps.queryParams.pageNumber, dispatch]);
 
   // Table columns
   const columns = [

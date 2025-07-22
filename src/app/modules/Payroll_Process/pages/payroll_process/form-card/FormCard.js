@@ -84,14 +84,14 @@ export function FormCard() {
 
         <CardBody>
        
-        <br />
-        <hr />
+        {/* <br /> */}
+        {/* <hr /> */}
    {/* FormEditDialog Starts */}
    <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
         {/* FormEditDialog Ends */}
 
         <br />
-        <hr />
+        {/* <hr /> */}
           <FormTable />
         </CardBody>
       </Card>
