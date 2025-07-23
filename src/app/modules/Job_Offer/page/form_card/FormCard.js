@@ -33,16 +33,18 @@ export default function FormCard() {
   return (
     <>
       <Card>
+        
+         <CardHeader title={CurrentModuleName()}></CardHeader>
         <CardBody>
-          <CardHeader title={CurrentModuleName()}></CardHeader>
+         
           <br />
           {/* <hr /> */}
           <JobSection />
           <br />
-          <hr />
+          {/* <hr /> */}
           <ApplicationSection />
           <br />
-          <hr />
+          {/* <hr /> */}
          <GenerateSection />
 
     

@@ -26,7 +26,7 @@ export function EmployeeSelect({
     shallowEqual
   )
 
-
+ const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
 
 
@@ -59,7 +59,7 @@ export function EmployeeSelect({
                 <div className="from-group row">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-4 mt-3 ml-7">
+                  <div className="col-12 col-md-3  ml-7">
 
 
                     <SearchSelect
@@ -102,7 +102,7 @@ export function EmployeeSelect({
                     }
                   </div>
 
-                  <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
+                  <div className="col-4 col-md-4 d-flex  align-items-center pt-10">
                     <span
                       className="svg-icon svg-icon-md svg-icon-primary"
                       onClick={() => setPanelMode(!panelMode)}
@@ -119,6 +119,25 @@ export function EmployeeSelect({
 
                   </div>
                   {/* Employee Id Dropdown Ends */}
+
+                          <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
+                    {activeFiscalYear
+                      ? (() => {
+                          return (
+                            <>
+                              <div>
+                                <b>Active Fiscal Year -</b>{" "}
+                                {activeFiscalYear?.label}
+                              </div>
+                              <div>
+                                <b>Active Payroll Month -</b>{" "}
+                                {activeFiscalYear?.payrollMonthLabel}
+                              </div>
+                            </>
+                          );
+                        })()
+                      : null}
+                  </div>
 
                 </div>
               </fieldset>

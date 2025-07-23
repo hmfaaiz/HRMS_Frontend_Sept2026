@@ -151,7 +151,7 @@ export function EmployeeSelect({
                                     
                                                       </div>
 
-                                                                  <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
+                                                                  <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
 
   {activeFiscalYear ? (() => {
 

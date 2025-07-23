@@ -223,6 +223,7 @@ export function FormTable(user) {
 
 
   const handleFieldChanged = (el) => {
+    setotherErrors(validate());
     const index = el.target.id.split('-')[1];
     const key = el.target.id.split('-')[0];
 
@@ -576,7 +577,7 @@ export function FormTable(user) {
     dispatch(fetchAllDeductionList(2, currentState?.userForEdit?.subsidiaryId || '', ''));
     dispatch(fetchAllEarningList(1, currentState?.userForEdit?.subsidiaryId || '', ''));
   }, [currentState?.userForEdit?.subsidiaryId])
-
+let defaultCount = 0;
   const validate = () => {
     const newErrors = {};
 
@@ -606,7 +607,17 @@ export function FormTable(user) {
          if (!objValidate.branchId ||  objValidate.branchId == "-1")  {
         newErrors[`branchId-${index}`] = VALIDATION_MESSAGES.required;
       }
+
+       // Count how many are checked as default
+  if (objValidate.isDefault) {
+    defaultCount++;
+  }
     });
+
+    // ✅ Check if exactly one default is selected
+ if (defaultCount > 1) {
+  newErrors["isDefault"] = "Only one row can be marked as default.";
+}
 
     return newErrors;
   };
@@ -685,6 +696,8 @@ export function FormTable(user) {
           if (Object.keys(validationErrors).length > 0) {
             setotherErrors(validationErrors);
           } else {
+            defaultCount=0
+            setotherErrors(validate());
             SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances);
 
             if (user.formid) {
@@ -1730,7 +1743,11 @@ Payroll Approver
                           <button id={rightindex} className="btn btn-danger btn-sm" onClick={deleteRowBankInfo}>Delete</button></td>
                         <td>
 
-                          <select value={obj.journalBankAccountId} className="form-control" onChange={handleFieldChanged} id={"journalBankAccountId-" + rightindex}>
+                          <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
+  handleFieldChanged(e);
+  setotherErrors(validate());
+}}
+ id={"journalBankAccountId-" + rightindex}>
                             <option value="-1">--SELECT--</option>
                  
                             {
@@ -1749,13 +1766,21 @@ Payroll Approver
 
                         <td>
              
-                          <input className="form-control" onChange={handleFieldChanged} placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
+                          <input className="form-control" onChange={(e) => {
+  handleFieldChanged(e);
+  setotherErrors(validate());
+}}
+ placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
 
                           {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
                         </td>
 
                         <td>
-                          <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={handleFieldChanged} id={"bankAccountNo-" + rightindex}></input>
+                          <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
+  handleFieldChanged(e);
+  setotherErrors(validate());
+}}
+ id={"bankAccountNo-" + rightindex}></input>
 
                           {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
                         </td>
@@ -1763,10 +1788,17 @@ Payroll Approver
 
                           type="checkbox"
                           id={"isDefault-" + rightindex}
-                          onChange={handleFieldChanged}
+                          onChange={(e) => {
+  handleFieldChanged(e);
+  setotherErrors(validate());
+  
+}}
+
                           checked={obj.isDefault}
 
                         />
+                    
+
                         </td>
 
                         {/* <td>
@@ -1786,12 +1818,16 @@ Payroll Approver
     // Update the field
     handleFieldChanged(e);
 
+    
+
     // Fetch branches for selected bank
     if (bankId && bankId !== "-1") {
       filteredBranches(bankId);
      
    
     }
+  
+    setotherErrors(validate());
   
   }} 
   
@@ -1812,7 +1848,11 @@ Payroll Approver
   <select
     value={obj.branchId}
     className="form-control"
-    onChange={handleFieldChanged}
+    onChange={(e) => {
+  handleFieldChanged(e);
+  setotherErrors(validate());
+}}
+
     id={"branchId-" + rightindex}
   >
     <option value="">--SELECT--</option>
@@ -1846,7 +1886,13 @@ Payroll Approver
                   </div>
                 </div>
               </div>
-
+  {otherErrors["isDefault"] && (
+  <tr>
+    <td colSpan={6}>
+      <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
+    </td>
+  </tr>
+)}
 
             </fieldset>
 

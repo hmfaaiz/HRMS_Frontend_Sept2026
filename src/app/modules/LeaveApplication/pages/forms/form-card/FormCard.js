@@ -84,12 +84,12 @@ export function FormCard() {
   return (
     <Card>
       {/* Card Starts */}
-
+  <CardHeader title={CurrentModuleName()}></CardHeader>
       <CardBody>
-        <CardHeader title={CurrentModuleName()}></CardHeader>
+      
 
-        <div className="justify-content-between align-items-center gap-3 m-4">
-          <div className="pt-5">
+        <div className="justify-content-between align-items-center gap-3 ">
+          <div className="">
             {/* EmployeeSelect Starts */}
             <EmployeeSelect
               setId={formUIProps.setId}
