@@ -1,26 +1,29 @@
 import React from "react";
 import { Field, Formik } from "formik";
 import { Form } from "react-bootstrap";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+// import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { PendingRequestSelf } from "./PendingRequest";
+import SVG from "react-inlinesvg";
 export const EmployeeSelection = ({
   currentLevel,
   setCurrentLevel,
   selectedEmp,
   setSelectedEmp,
   employeeList,
+  setShowEmpDetail,
+  showEmpDetail,
   levelList,
   logedInEmpoyee,
   leaveApprovalCount,
   attendanceApprovalCount,
-  loanApprovalCount
+  loanApprovalCount,
 }) => {
   return (
-    <div className="row">
+    <div className="row justify-content-between">
       <div
         className="col-12 col-md-5"
-        style={{ marginTop: "10px", marginBottom: "10px" }}
+        style={{ marginTop: "5px", marginBottom: "5px" }}
       >
         <div className="">
           <div
@@ -32,6 +35,7 @@ export const EmployeeSelection = ({
               width: "fit-content",
             }}
             className="mt-3"
+            onClick={() => setShowEmpDetail(!showEmpDetail)}
           >
             <img
               name="profile_image"
@@ -41,8 +45,8 @@ export const EmployeeSelection = ({
                   : toAbsoluteUrl("/media/users/profileImage.png")
               } // Fallback if no image
               alt="Profile"
-              width={200}
-              height={200}
+              width={130}
+              height={130}
               style={{
                 borderRadius: "50%", // Make the image circular
                 objectFit: "cover", // Ensure the image covers the entire area without distortion
@@ -53,15 +57,25 @@ export const EmployeeSelection = ({
               }}
             />
           </div>
-          <h2 style={{ color: "green", marginTop: "10px" }}>
-            {new Date().getHours() < 12
-              ? "Good Morning"
-              : new Date().getHours() < 18
-              ? "Good Afternoon"
-              : "Good Evening"}{" "}
+          <h2 style={{ marginTop: "5px" }}>
             {logedInEmpoyee?.firstName} {logedInEmpoyee?.middleName}{" "}
-            {logedInEmpoyee?.lastName}
+            {logedInEmpoyee?.lastName}{" "}
           </h2>
+          <span
+            style={{ fontSize: "14px" }}
+            className="svg-icon svg-icon-md text-sm svg-icon-primary px-3 py-2 rounded-lg bg-secondary cursor-pointer"
+            onClick={() => setShowEmpDetail(!showEmpDetail)}
+          >
+            View Detail
+            <SVG
+              className={"ml-2"}
+              src={toAbsoluteUrl(
+                showEmpDetail
+                  ? "/media/svg/icons/Communication/CancelButton.svg"
+                  : "/media/svg/icons/Communication/AddButton.svg"
+              )}
+            />
+          </span>
         </div>
 
         <Formik
@@ -75,7 +89,6 @@ export const EmployeeSelection = ({
             <>
               <Form className="form form-label-right">
                 <fieldset>
-
                   <div className="from-group row">
                     {/* Reporting Level */}
                     <div className="col-12 col-md-12 row">
@@ -129,7 +142,7 @@ export const EmployeeSelection = ({
           )}
         </Formik>
       </div>
-      <div className="col-12 col-md-7 d-flex align-items-end">
+      <div className="col-12 col-md-5 d-flex align-items-end">
         <PendingRequestSelf
           leaveApprovalCount={leaveApprovalCount}
           attendanceApprovalCount={attendanceApprovalCount}

@@ -51,7 +51,7 @@ export function HolidayTable({ entities, activeFiscalYear }) {
   ];
 
   return (
-    <Accordion defaultActiveKey="0">
+    <Accordion defaultActiveKey="">
       <Card>
         <Card.Header>
           <div className="accordion-header-btn">

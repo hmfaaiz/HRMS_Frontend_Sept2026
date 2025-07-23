@@ -7,14 +7,14 @@ import BarChart from "./BarChart";
 export const AttendanceSummary = ({ payrollData, attendanceSummary , attRecord }) => {
   return (
     <Accordion defaultActiveKey="0">
-      <span className="col-6 text-underline cursor-pointer">
+      {/* <span className="col-6 text-underline cursor-pointer">
         <Link
           target="_blank"
           to={"/attendance_request/read-all-attendance-request"}
         >
           Create Attendance Request
         </Link>
-      </span>
+      </span> */}
       <Card>
         <Card.Header>
           <div className="accordion-header-btn ">

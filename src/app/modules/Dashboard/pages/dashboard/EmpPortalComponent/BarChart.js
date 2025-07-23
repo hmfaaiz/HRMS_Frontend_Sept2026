@@ -94,7 +94,6 @@ const convertTimeToPoint = (val) => {
 
 
 const BarChart = ({ data }) => {
-  console.log("data", data);
   const filterData =
     data?.length > 0
       ? data.map((e) => ({

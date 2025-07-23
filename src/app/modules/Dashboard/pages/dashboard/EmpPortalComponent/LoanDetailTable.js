@@ -105,11 +105,11 @@ export function EmployeeLoanDetail({ entities }) {
   return (
     <>
       <Accordion defaultActiveKey="">
-        <span className="col-6 text-underline cursor-pointer">
+        {/* <span className="col-6 text-underline cursor-pointer">
           <Link target="_blank" to={"/loan_request/read-all-loan-request"}>
             Create Loan Request
           </Link>
-        </span>
+        </span> */}
         <Card>
           <Card.Header className="d-flex justify-content-center">
             <div className="accordion-header-btn w-100  d-flex justify-content-center">

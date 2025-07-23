@@ -28,6 +28,7 @@ export function LeaveApplicationTable() {
       queryParamsLeaveApp: formUIContext.queryParamsLeaveApp,
       setQueryParamsLeaveApp: formUIContext.setQueryParamsLeaveApp,
       setLeaveId: formUIContext.setLeaveId,
+      setId: formUIContext.setId,
     };
   }, [formUIContext]);
 
@@ -44,7 +45,12 @@ export function LeaveApplicationTable() {
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateLeaveDetail"
   );
-console.log("isAccessForEdit"  , isAccessForEdit);
+
+  const isAccessForRead = userAccess?.find(
+    (item) => item.componentName === "ReadLeaveApplication"
+  );
+
+
   // Table columns
   const columns = [
     {
@@ -122,7 +128,9 @@ console.log("isAccessForEdit"  , isAccessForEdit);
       formatExtraData: {
         payrollData: payrollData,
         setLeaveId: FormUIProps.setLeaveId,
+        setId: FormUIProps.setId,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
