@@ -9,8 +9,8 @@ export const PendingRequestSelf = ({
     <div
       style={{
         backgroundColor: "rgb(235 243 255)",
-        margin: "15px",
-        padding: "20px",
+        margin: "10px",
+        padding: "10px",
         borderRadius: "5px",
         border: "2px solid #adceff",
         width: "100%",
@@ -18,7 +18,6 @@ export const PendingRequestSelf = ({
     >
       <h3>Pending Request Self</h3>
       <hr />
-      <br />
       <div className="row">
         <span className="col-6">Leave Approval Request</span>
         <span className="col-6 text-underline cursor-pointer">

@@ -6,18 +6,19 @@ import { format } from "date-fns";
 
 const EmployeeProfile = ({ data }) => {
   return (
-    <Accordion defaultActiveKey="0">
+    <>
+    {/* <Accordion defaultActiveKey=""> */}
       <Card>
-        <Card.Header>
+        {/* <Card.Header>
           <div className="accordion-header-btn ">
             <Accordion.Toggle eventKey="0" className="flex-between-center">
               Employee Detail
               <KeyboardArrowDown />
             </Accordion.Toggle>
           </div>
-        </Card.Header>
+        </Card.Header> */}
         {data ? (
-          <Accordion.Collapse eventKey="0">
+          // <Accordion.Collapse eventKey="0">
             <Card.Body style={{ backgroundColor: "#E6F8FF" }}>
               {/* "rgb(235 243 255)" */}
               <div
@@ -189,12 +190,13 @@ const EmployeeProfile = ({ data }) => {
                 </div>
               </div>
             </Card.Body>
-          </Accordion.Collapse>
+          // </Accordion.Collapse>
         ) : (
           <p>Employee Data Not Exists</p> // Improved message for clarity
         )}
       </Card>
-    </Accordion>
+    {/* </Accordion> */}
+    </>
   );
 };
 

@@ -278,6 +278,7 @@ export function MasterEditForm({
                         component={TextArea}
                         placeholder=""
                         onChange={handleChange}
+                        disabled={isEdit}
                         onBlur={handleBlur}
                         label={
                           <span>
@@ -305,6 +306,7 @@ export function MasterEditForm({
                       <input
                         name="file"
                         type="file"
+                        disabled={isEdit}
                         accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
                         ref={inputFile}
                         onChange={(event) => {
@@ -351,7 +353,7 @@ export function MasterEditForm({
               {/* Cancel button End */}
 
               {/* Save button Start */}
-              {employeeId && accessUser ? <button
+              {employeeId && accessUser && !isEdit ? <button
                 type="submit"
                 disabled={loading}
                 onClick={() => handleSubmit()}

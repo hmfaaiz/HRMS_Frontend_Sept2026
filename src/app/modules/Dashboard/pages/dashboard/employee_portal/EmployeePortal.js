@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useFormUIContext } from "../EmpUIContext";
 import { EmployeeSelection } from "../EmpPortalComponent/EmplyeeSelection";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
@@ -31,6 +31,8 @@ import { fetchLoanApprovalApplication } from "../../../../LoanApproval/redux/for
 export const EmployeePortal = () => {
   const formUIContext = useFormUIContext();
   const dispatch = useDispatch();
+
+  const [showEmpDetail, setShowEmpDetail] = useState(false);
   const formUIProps = useMemo(() => {
     return {
       currentLevel: formUIContext?.currentLevel,
@@ -189,6 +191,8 @@ export const EmployeePortal = () => {
     }
   }, [formUIProps?.selectedEmp, payrollData]);
 
+  console.log("profileInfoprofileInfo" , profileInfo);
+
   return (
     <>
       <EmployeeSelection
@@ -196,47 +200,46 @@ export const EmployeePortal = () => {
         setCurrentLevel={formUIProps?.setCurrentLevel}
         selectedEmp={formUIProps?.selectedEmp}
         setSelectedEmp={formUIProps?.setSelectedEmp}
+        setShowEmpDetail={setShowEmpDetail}
+        showEmpDetail={showEmpDetail}
         employeeList={employeeList}
         levelList={levelList}
-        logedInEmpoyee={logedInEmpoyee}
+        logedInEmpoyee={profileInfo}
         leaveApprovalCount={leaveApprovalCount?.length || 0}
         attendanceApprovalCount={attendanceApprovalCount?.length || 0}
         loanApprovalCount={loanApprovalCount?.length || 0}
       />
-      <EmployeeProfile data={profileInfo} />
-      <br />
-      <hr />
-      <ReportingEmpTable
-        empAuthorityList={
-          reportingEmployee?.length > 0 ? reportingEmployee : []
-        }
-      />
-      <br />
+      {showEmpDetail && (
+        <>
+          <EmployeeProfile data={profileInfo} />
+          <hr />
+          <ReportingEmpTable
+            empAuthorityList={
+              reportingEmployee?.length > 0 ? reportingEmployee : []
+            }
+          />{" "}
+        </>
+      )}
       <hr />
       <AttendanceSummary
         payrollData={payrollData}
         attendanceSummary={attendanceSummary}
         attRecord={attRecord}
       />
-      <br />
       <hr />
       <LeaveBalanceTable leaveBalances={leaveBalances} />
-      <br />
       <hr />
       <HolidayTable
         activeFiscalYear={activeFiscalYear}
         entities={holidayList?.length > 0 ? holidayList : []}
       />
-      <br />
       <hr />
       <LeaveApplicationTable
         entities={leaveRequest?.length > 0 ? leaveRequest : []}
         payrollData={payrollData}
       />
-      <br />
       <hr />
       <EmployeeLoanDetail entities={loanList?.length > 0 ? loanList : []} />
-      <br />
       <hr />
       <EmployeeExtendedInfo
         contactInfo={contactInfo}
