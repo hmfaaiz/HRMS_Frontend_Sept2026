@@ -109,6 +109,7 @@ import { AttendanceWorkflowStatusSlice } from "../app/modules/AttendanceWorkflow
 import { TeamLeaveCalendarSlice } from "../app/modules/Leave_Calendar_Team/_redux/redux-Slice";
 import { TeamAttendanceCalendarSlice } from "../app/modules/Attendance_Calendar_Team/_redux/redux-Slice";
 import { PortalHolidayCalendarSlice } from "../app/modules/PortalHolidayCalendar/_redux/redux-Slice";
+import { EmpSalaryRevisionSlice } from "../app/modules/Emp_Salary_Revision/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -216,6 +217,7 @@ export const rootReducer = combineReducers({
   team_leave_calender : TeamLeaveCalendarSlice.reducer,
   attendance_calendar_team : TeamAttendanceCalendarSlice.reducer,
   portal_holiday_calendar : PortalHolidayCalendarSlice.reducer,
+  emp_salary_revision : EmpSalaryRevisionSlice.reducer,
 });
 
 export function* rootSaga() {
