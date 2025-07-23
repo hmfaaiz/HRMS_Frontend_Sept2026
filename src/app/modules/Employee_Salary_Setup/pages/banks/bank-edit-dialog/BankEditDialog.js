@@ -166,7 +166,7 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
                 setActiveKey(activeKey === "0" ? null : "0")
               }
               >
-                Applicant Profile
+                Employee Salary
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>

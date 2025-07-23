@@ -1440,6 +1440,7 @@ useEffect(()=>{
                             <div className="from-group row">
                               <div className="col-12 col-md-4 mt-12">
                                 <input type="checkbox"
+                                disabled={isUserForRead}
                                   name="gratuity_member"
                                   onChange={(e) => {
                                     setFieldValue('gratuity_member', e.target.checked)
@@ -1467,7 +1468,7 @@ useEffect(()=>{
                                   showTimeInput
                                   name="gratuity_startDate"
                                   autoComplete="off"
-                                  disabled={!values.gratuity_member}
+                                  disabled={!values.gratuity_member || isUserForRead}
                                 // value = {values.dateOfJoining}
                                 />
                                 <ErrorMessage className="form-feedBack" name="gratuity_startDate" component="div" />
@@ -1481,6 +1482,7 @@ useEffect(()=>{
                                 <input
                                   name="overtime_allowance"
                                   type="checkbox"
+                                  disabled={isUserForRead}
                                   onChange={(e) => {
                                     setFieldValue('overtime_allowance', e.target.checked)
                                   }}
@@ -1495,7 +1497,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-3">
                                 <Field
                                   name="overtime_working_day"
-                                  disabled={!Boolean(values.overtime_allowance)}
+                                  disabled={!Boolean(values.overtime_allowance) || isUserForRead}
                                   type="number"
                                   component={Input}
                                   maxLength={2}
@@ -1508,7 +1510,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-3">
                                 <Field
                                   name="overtime_off_day"
-                                  disabled={!Boolean(values.overtime_allowance)}
+                                  disabled={!Boolean(values.overtime_allowance) || isUserForRead}
                                   type="number"
                                   component={Input}
                                   maxLength={2}
@@ -1521,7 +1523,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-3">
                                 <Field
                                   name="overtime_holiday"
-                                  disabled={!Boolean(values.overtime_allowance)}
+                                  disabled={!Boolean(values.overtime_allowance) || isUserForRead}
                                   type="number"
                                   component={Input}
                                   maxLength={2}
@@ -1543,6 +1545,7 @@ useEffect(()=>{
                                 <input
                                   name="eobi_member"
                                   type="checkbox"
+                                  disabled={isUserForRead}
                                   onChange={(e) => {
                                     setFieldValue('eobi_member', e.target.checked)
                                   }}
@@ -1570,7 +1573,7 @@ useEffect(()=>{
                                   name="eobi_reg_date"
                                   autoComplete="off"
 
-                                  disabled={!values.eobi_member}
+                                  disabled={!values.eobi_member || isUserForRead}
                                 />
                                 <ErrorMessage className="form-feedBack" name="eobi_reg_date" component="div" />
                               </div>
@@ -1587,7 +1590,7 @@ useEffect(()=>{
                                   placeholder="Enter EOBI Account No"
                                   label={<span> EOBI Account No{Boolean(values.eobi_member) && <span style={{ color: 'red' }}>*</span>} </span>}
                                   autoComplete="off"
-                                  disabled={!values.eobi_member}
+                                  disabled={!values.eobi_member || isUserForRead}
                                 />
                               </div>
                             </div>
@@ -1597,6 +1600,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-12">
                                 <input
                                   type="checkbox"
+                                  disabled={isUserForRead}
                                   name="social_security_member"
                                   onChange={(e) => {
                                     setFieldValue('social_security_member', e.target.checked)
@@ -1622,7 +1626,7 @@ useEffect(()=>{
                                   showTimeInput
                                   name="social_security_reg_date"
                                   autoComplete="off"
-                                  disabled={!values.social_security_member}
+                                  disabled={!values.social_security_member || isUserForRead}
                                 // value = {values.dateOfJoining}
                                 />
                                 <ErrorMessage className="form-feedBack" name="social_security_reg_date" component="div" />
@@ -1640,7 +1644,7 @@ useEffect(()=>{
                                   placeholder="Enter Social Security AccNo"
                                   label={<span> Social Security Account No{Boolean(values.social_security_member) && <span style={{ color: 'red' }}>*</span>}</span>}
                                   autoComplete="off"
-                                  disabled={!values.social_security_member}
+                                  disabled={!values.social_security_member || isUserForRead}
                                 />
                               </div>
                             </div>
