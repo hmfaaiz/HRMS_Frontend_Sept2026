@@ -12,6 +12,7 @@ import { Card, CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import { fetchCurrentEmpSalary, fetchEmpForSalaryRevision } from "../../../_redux/redux-Actions";
 
 export function EmployeeSelect({
   actionsLoading,
@@ -19,9 +20,10 @@ export function EmployeeSelect({
 }) {
   const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
+  // dispatch(fetchEmpForSalaryRevision());
   const { allEmployees } = useSelector(
     (state) => ({
-      allEmployees: state.dashboard.allEmployees
+      allEmployees:state.emp_salary_revision?.empForSalRev || [],
     }),
     shallowEqual
   )
@@ -73,8 +75,9 @@ export function EmployeeSelect({
                         const value = e.value === '--Select--' ? null : Number(e.value);
                         setFieldValue('employeeId', value);
                         setemployeeId(value);
-                        const selectedEmp = allEmployees.find(emp => emp.value === value);
+                        const selectedEmp = allEmployees?.find(emp => emp.value === value);
                         dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
+                        dispatch(fetchCurrentEmpSalary(value));
 
                       }}
                       label={
@@ -83,7 +86,7 @@ export function EmployeeSelect({
                         </span>
                       }
                       value={
-                        allEmployees.find(
+                        allEmployees?.find(
                           (option) =>
                             option.value === values.employeeId
                         ) || null

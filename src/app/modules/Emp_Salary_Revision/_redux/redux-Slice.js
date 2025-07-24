@@ -15,6 +15,7 @@ const initialEmpSalaryRevisionState = {
     userForRead: false,
     loan_config_details_permission:null,
     loan_type:null,
+    empForSalRev:null,
 };
 
 
@@ -42,17 +43,12 @@ export const EmpSalaryRevisionSlice = createSlice({
     
         },
 
-        EmpSalaryRevisionFetched: (state, action) => {
+        empForSalaryRevisionFetched: (state, action) => {
            
-   
-            const entities = action.payload.data?.data.rows;
+   console.log("empForSalRev", action.payload.data)
+            state.empForSalRev = action.payload.data?.data || [];
 
-            const totalResult = action.payload.data?.data.totalResults;
-           
-            state.listLoading = false;
-            state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
+            
         },
 
          //get User By ID

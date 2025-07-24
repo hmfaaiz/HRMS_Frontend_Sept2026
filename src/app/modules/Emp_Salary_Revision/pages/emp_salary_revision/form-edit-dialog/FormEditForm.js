@@ -1,5 +1,5 @@
 // IT IS A COPY FORM OF EMPLOYEE SALARY (developed by previous developer)
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -22,7 +22,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import axios from 'axios';
-import { amountLimit, amountLimitDynamic } from "../../../../../utils/common";
+import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
 import { DEFAULT_CALCULATION_TYPE_DROPDOWN, DROPDOWN, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
@@ -194,9 +194,8 @@ const formValidation = Yup.object().shape(
 
 );
 export function FormEditForm({
-  saveEarningDeductionTran,
+  saveForm,
   user,
-  actionsLoading,
   onHide,
   isUserForRead,
   enableLoading,
@@ -383,7 +382,7 @@ export function FormEditForm({
   const fetchEmployeeSalaryEarningList = async (empId, basicSalary, setFieldValue) => {
     try {
 
-      const response = await axios.post(`${USERS_URL}/settings/read-all-employee-for-salary-revision`, { id: empId, basicSalary: basicSalary || 0 });
+      const response = await axios.post(`${USERS_URL}/employee_salary_earning/read-all-emp-earning_byId`, { id: empId, basicSalary: basicSalary || 0 });
 
       if (!response?.data?.data?.[0]?.transactionType) {
         setDefaultMapEarningDeductionList([]);
@@ -471,6 +470,7 @@ export function FormEditForm({
 
 
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
+
     const basicSalaryInputFactor = el.target.form.elements['basicSalaryFactor'].value;
     let grossSalaryInput = values.grossSalary;
     let basicSalaryInput = values.basicSalary;
@@ -495,7 +495,7 @@ export function FormEditForm({
       if (Number(basicSalaryInputFactor)) {
         setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == '% Of Gross') {
-            x.amount = ((grossSalaryInput * x.factorValue) / 100);
+            x.updatedAmount = ((grossSalaryInput * x.factorValue) / 100);
           }
           return x;
         })]);
@@ -506,9 +506,9 @@ export function FormEditForm({
 
       setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
         if (x.calculation_type == '% Of Basic') {
-          x.amount = ((basicSalaryNumber * x.factorValue) / 100);
+          x.updatedAmount = ((basicSalaryNumber * x.factorValue) / 100);
           if (x.isPartOfGrossSalary) {
-            basicSalaryNumber += x.amount
+            basicSalaryNumber += x.updatedAmount
           }
         }
         return x;
@@ -517,7 +517,7 @@ export function FormEditForm({
       const result = await Promise.all(
         defMapEarningDeductionList.map(async (x) => {
           if (x.calculation_type === 'Fixed Amount' && x.isPartOfGrossSalary && x.transactionType == "Earning") {
-            basicSalaryNumber = Number(basicSalaryNumber) + x.amount;
+            basicSalaryNumber = Number(basicSalaryNumber) + x.updatedAmount;
           }
           return basicSalaryNumber; // Return the updated grossSalaryInput
         })
@@ -533,7 +533,7 @@ export function FormEditForm({
       const result = await Promise.all(
         defMapEarningDeductionList.map(async (x) => {
           if (x.calculation_type === 'Fixed Amount' && x.isPartOfGrossSalary && x.transactionType == "Earning") {
-            gross = Number(gross) + x.amount;
+            gross = Number(gross) + x.updatedAmount;
           }
           return gross; // Return the updated grossSalaryInput
         })
@@ -620,21 +620,59 @@ export function FormEditForm({
     }
   }, [user.subsidiaryId])
 
+
+
+  // Faaiz 24-7-2025
+
+  useEffect(() => {
+    dispatch(fetchAllFormsMenu(158, "allDesignations"));
+    dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
+    dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
+    dispatch(fetchAllFormsMenu(275, "allEmployeeStatus"));
+    dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
+
+  }, []);
+
+
+  const mergedEmpTypeMenus = useMemo(() => {
+    return [
+      ...(dashboard?.allEmpTypeDynamicChildMenus || []),
+      ...(dashboard?.allEmpTypeChildMenus || [])
+    ];
+  }, [dashboard?.allEmpTypeDynamicChildMenus, dashboard?.allEmpTypeChildMenus]);
+
+
+
   return (
     <>
       <Formik
         enableReinitialize={true}
         initialValues={user}
         validationSchema={formValidation}
-        onSubmit={(values) => {
-          const validationErrors = validate();
+        // onSubmit={(values) => {
+        //   console.log("Form values:", values);
+        //   // const validationErrors = validate();
 
-          if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-          } else {
-            enableLoading();
-            saveEarningDeductionTran({ ...values, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross) }, defMapEarningDeductionList);
-          }
+        //   // if (Object.keys(validationErrors).length > 0) {
+        //   //   setErrors(validationErrors);
+        //   // } else {
+        //     enableLoading();
+
+        //     save({ ...values, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross) }, defMapEarningDeductionList);
+        //   // }
+        // }}
+
+        onSubmit={(values) => {
+          saveForm(
+            {
+              ...values,
+              grossPackage:
+                values.grossSalary > 0
+                  ? Number(values.grossSalary) + Number(totalGross)
+                  : Number(defGrossSalary) + Number(totalGross),
+            },
+            defMapEarningDeductionList
+          );
         }}
       >
         {({
@@ -650,13 +688,172 @@ export function FormEditForm({
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
-              {actionsLoading && (
+              {/* {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
-              )}
+              )} */}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
+
+                  <Accordion defaultActiveKey="">
+                    <Card>
+                      <Card.Header>
+                        <div className='accordion-header-btn'>
+                          <Accordion.Toggle as={Button} eventKey="0">
+                            Employee Information
+                            <KeyboardArrowDown />
+                          </Accordion.Toggle>
+                        </div>
+                      </Card.Header>
+                      <Accordion.Collapse eventKey="0">
+                        <Card.Body style={{ padding: "0" }}>
+
+                          <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                            {/* <h6>Earning Entitlements</h6> */}
+
+                            <div className="row col-12 col-md-12">
+
+                              <div className="col-12 col-md-4 mt-3">
+                                <label>Revised Date</label>
+                                <DatePicker
+                                  className="form-control"
+                                  placeholder="From Date"
+                                  selected={
+                                    values?.desireFromDateOfApp
+                                      ? new Date(values.desireFromDateOfApp)
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                                    setFieldValue("desireFromDateOfApp", selectedDate);
+                                    setFieldValue("desireToDateOfApp", selectedDate);
+                                    handleSubmit();
+                                  }}
+                                  dateFormat="dd-MMM-yyyy"
+                                  name="desireFromDateOfApp"
+                                  autoComplete="off"
+                                />
+                              </div>
+
+
+                              <div className="col-12 col-md-4 mt-3">
+                                <SearchSelect
+                                  name="gradeId"
+                                  label={
+                                    <span>
+                                      Grade <span style={{ color: 'red' }}>*</span>
+                                    </span>
+                                  }
+
+                                  onChange={(e) => {
+                                    setFieldValue("gradeId", e.value || null);
+                                    handleSubmit();
+                                  }}
+                                  value={
+                                    dashboard?.allEmployeegradeList?.find(
+                                      (option) => option.value === values?.Employee?.gradeId
+                                    ) || null
+                                  }
+                                  // options={dashboard?.allEmployeegradeList}
+                                  options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
+                                />
+                              </div>
+
+
+
+                              {/* Designation */}
+                              <div className="col-12 col-md-4 mt-3">
+                                <SearchSelect
+                                  name="designationId"
+                                  label={
+                                    <span>
+                                      Designation <span style={{ color: 'red' }}>*</span>
+                                    </span>
+                                  }
+
+                                  onChange={(e) => {
+                                    setFieldValue("designationId", e.value || null);
+                                    handleSubmit();
+                                  }}
+                                  value={
+                                    dashboard?.allDesignations?.find(
+                                      (option) => option.value === values?.Employee?.designationId
+                                    ) || null
+                                  }
+                                  // options={dashboard?.allDesignations}
+                                  options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
+                                />
+                              </div>
+
+
+                              {/* Grade */}
+
+
+
+
+
+
+                              {/* Employee Type */}
+                              <div className="col-12 col-md-4 mt-3">
+                                <SearchSelect
+                                  name="employeeTypeId"
+                                  label={
+                                    <span>
+                                      Employee Type<span style={{ color: 'red' }}>*</span>
+                                    </span>
+                                  }
+
+                                  onChange={(e) => {
+                                    setFieldValue("employeeTypeId", e.value || null);
+                                    handleSubmit();
+                                  }}
+                                  value={
+                                    mergedEmpTypeMenus.find(
+                                      (option) => option.value === values?.Employee?.employeeTypeId
+                                    ) || null
+                                  }
+
+                                  options={mergedEmpTypeMenus}
+
+
+                                />
+                              </div>
+
+
+                              <div className="col-12 col-md-4 mt-3">
+                                <SearchSelect
+                                  name="employeeStatusId"
+                                  label={<span> Employee Status<span style={{ color: 'red' }}>*</span></span>}
+                                  isDisabled={isUserForRead}
+
+                                  onChange={(e) => {
+
+                                    setFieldValue("employeeStatusId", e.value || null);
+                                  }}
+                                  value={
+                                    dashboard?.allEmployeeStatus?.find(
+                                      (option) => option.value === values?.Employee?.employeeStatusId
+                                    ) || null
+                                  }
+
+                                  error={errors.employeeStatusId}
+                                  touched={touched.employeeStatusId}
+                                  options={dashboard?.allEmployeeStatus}
+                                />
+                              </div>
+
+
+
+                            </div>
+
+
+                          </div>
+
+                        </Card.Body>
+                      </Accordion.Collapse>
+                    </Card>
+                  </Accordion>
                   <div className="from-group row">
                     {/* <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
@@ -706,7 +903,7 @@ export function FormEditForm({
                         }
                         placeholder="Enter Gross Salary"
                         autoComplete="off"
-                        disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
+                        // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
                         value={defGrossSalaryDB || ''}
                         onChange={(e) => {
                           setGrossSalaryDB(e);
@@ -778,7 +975,8 @@ export function FormEditForm({
                         <td>Earning</td>
                         <td>Calculation Type</td>
                         <td>Factor</td>
-                        <td>Amount</td>
+                        <td>Current</td>
+                        <td>Updated Amount</td>
                       </tr>
                       {defMapEarningDeductionList?.map((obj, rightindex) => (
                         obj.transactionType == 'Earning' && obj.isPartOfGrossSalary == true &&
@@ -864,6 +1062,35 @@ export function FormEditForm({
 
                           </td>
 
+                          <td>
+                            <AmountInput
+                              field={{
+                                name: `amount-${rightindex}`,
+                                value: obj.updatedAmount,
+                                onBlur: () => { },
+                                onChange: () => { },
+                              }}
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => {
+                                  setDefaultMapEarningDeductionList(list =>
+                                    list.map((item, idx) =>
+                                      idx === rightindex ? { ...item, updatedAmount: value } : item
+                                    )
+                                  );
+                                  setErrors(prev => ({ ...prev, [`amount-${rightindex}`]: '' }));
+                                },
+                                setFieldTouched: () => { },
+                              }}
+                              label={null}
+                              disabled={true}
+                              value={obj.updatedAmount}
+                            />
+                            {deferrors[`updatedAmount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
+
+                          </td>
+
                         </tr>
 
                         </>
@@ -896,6 +1123,7 @@ export function FormEditForm({
                         <td>Calculation Type</td>
                         <td>Factor</td>
                         <td>Amount</td>
+                        <td>Updated Amount</td>
                       </tr>
                       {defMapEarningDeductionList?.map((obj, rightindex) => (
                         obj.transactionType == 'Earning' && obj.isPartOfGrossSalary == false &&
@@ -981,6 +1209,37 @@ export function FormEditForm({
                               value={obj.amount}
                             />
                             {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
+                          </td>
+
+
+                          <td>
+
+                            <AmountInput
+                              field={{
+                                name: `updatedAmount-${rightindex}`,
+                                value: obj.amount,
+                                onBlur: () => { },
+                                onChange: (e) => { },
+                              }}
+                              id={'updatedAmount-' + rightindex}
+                              onChange={(e) => {
+                                setDefaultMapEarningDeductionList(list =>
+                                  list.map((item, idx) =>
+                                    idx === rightindex ? { ...item, updatedAmount: Number(e) } : item
+                                  )
+                                );
+                              }}
+                              form={{
+                                touched: {},
+                                errors: {},
+                                setFieldValue: (field, value) => { },
+                                setFieldTouched: () => { },
+                              }}
+                              label={null}
+                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
+                              value={obj.updatedAmount}
+                            />
+                            {deferrors[`updatedAmount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
                           </td>
 
                         </tr>
@@ -1648,9 +1907,9 @@ export function FormEditForm({
                   className="btn btn-primary btn-elevate"
                 >
                   Save
-                  {loading && (
+                  {/* {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
+                  )} */}
                 </button>
               )}
             </Modal.Footer>

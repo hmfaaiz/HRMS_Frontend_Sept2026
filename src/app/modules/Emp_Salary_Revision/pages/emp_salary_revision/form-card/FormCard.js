@@ -48,7 +48,7 @@ export function FormCard() {
     }),
     shallowEqual
   )
- 
+ console.log("userAccess11", userAccess)
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateEmployeeSalaryRevision"
   )

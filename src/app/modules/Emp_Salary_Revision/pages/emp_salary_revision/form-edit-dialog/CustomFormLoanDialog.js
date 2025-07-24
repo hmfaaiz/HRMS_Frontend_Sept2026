@@ -21,16 +21,16 @@ const handleSubmit=async()=>{
     isLoanContinuing:false
   };
 
-  await dispatch(
-    actions.updateEmpSalaryRevision(
-      formUpdatedFields,
-      disbaleLoading,
-      // clearForm
-      handleClose(),
-      handleReset(),
-      setIds("")
-    )
-  );
+  // await dispatch(
+  //   actions.updateEmpSalaryRevision(
+  //     formUpdatedFields,
+  //     disbaleLoading,
+  //     // clearForm
+  //     handleClose(),
+  //     handleReset(),
+  //     setIds("")
+  //   )
+  // );
 
 }
 
