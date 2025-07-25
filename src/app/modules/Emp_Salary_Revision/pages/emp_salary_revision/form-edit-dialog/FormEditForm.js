@@ -663,6 +663,12 @@ export function FormEditForm({
         // }}
 
         onSubmit={(values) => {
+
+          const earningDeductionList = defMapEarningDeductionList.map(item => ({
+            ...item,
+            updatedAmount: item.updatedAmount ?? item.amount ?? 0 // fallback if missing
+          }));
+
           saveForm(
             {
               ...values,
@@ -671,7 +677,7 @@ export function FormEditForm({
                   ? Number(values.grossSalary) + Number(totalGross)
                   : Number(defGrossSalary) + Number(totalGross),
             },
-            defMapEarningDeductionList
+            earningDeductionList
           );
         }}
       >
@@ -693,8 +699,12 @@ export function FormEditForm({
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
               )} */}
+
+
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
+
+                    
 
                   <Accordion defaultActiveKey="">
                     <Card>
@@ -714,27 +724,7 @@ export function FormEditForm({
 
                             <div className="row col-12 col-md-12">
 
-                              <div className="col-12 col-md-4 mt-3">
-                                <label>Revised Date</label>
-                                <DatePicker
-                                  className="form-control"
-                                  placeholder="From Date"
-                                  selected={
-                                    values?.desireFromDateOfApp
-                                      ? new Date(values.desireFromDateOfApp)
-                                      : null
-                                  }
-                                  onChange={(date) => {
-                                    let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                                    setFieldValue("desireFromDateOfApp", selectedDate);
-                                    setFieldValue("desireToDateOfApp", selectedDate);
-                                    handleSubmit();
-                                  }}
-                                  dateFormat="dd-MMM-yyyy"
-                                  name="desireFromDateOfApp"
-                                  autoComplete="off"
-                                />
-                              </div>
+
 
 
                               <div className="col-12 col-md-4 mt-3">
@@ -747,8 +737,8 @@ export function FormEditForm({
                                   }
 
                                   onChange={(e) => {
-                                    setFieldValue("gradeId", e.value || null);
-                                    handleSubmit();
+                                    setFieldValue("Employee.gradeId", e.value || null);
+                                   
                                   }}
                                   value={
                                     dashboard?.allEmployeegradeList?.find(
@@ -773,8 +763,8 @@ export function FormEditForm({
                                   }
 
                                   onChange={(e) => {
-                                    setFieldValue("designationId", e.value || null);
-                                    handleSubmit();
+                                   setFieldValue("Employee.designationId", e.value || null);
+                                    
                                   }}
                                   value={
                                     dashboard?.allDesignations?.find(
@@ -805,8 +795,8 @@ export function FormEditForm({
                                   }
 
                                   onChange={(e) => {
-                                    setFieldValue("employeeTypeId", e.value || null);
-                                    handleSubmit();
+                                    setFieldValue("Employee.employeeTypeId", e.value || null);
+                               
                                   }}
                                   value={
                                     mergedEmpTypeMenus.find(
@@ -829,7 +819,7 @@ export function FormEditForm({
 
                                   onChange={(e) => {
 
-                                    setFieldValue("employeeStatusId", e.value || null);
+                                    setFieldValue("Employee.employeeStatusId", e.value || null);
                                   }}
                                   value={
                                     dashboard?.allEmployeeStatus?.find(
@@ -854,37 +844,32 @@ export function FormEditForm({
                       </Accordion.Collapse>
                     </Card>
                   </Accordion>
-                  <div className="from-group row">
-                    {/* <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="employeeId"
-                        label={<span> Employee<span style={{ color: 'red' }}>*</span></span>}
-                        isDisabled={user.employeeId && true}
-                        onBlur={() => {
-                          // handleBlur({ target: { name: "countryId" } });
-                        }}
-                        onChange={(e) => {
-                          setFieldValue("employeeId", e.value || null);
-                          setEmployeeDefault(e);
-                          handleChanged(e, setFieldValue)
-                          dispatch(fetchAllEarningList(1, '', e.value, true));
-                          dispatch(fetchAllDeductionList(2, '', e.value));
-                          //  dispatch(fetchAllActiveEmployees(e.value));
-                        }}
-                        value={(user.employeeId && (dashboard.allEmployeesSalaryDDL &&
-                          dashboard.allEmployeesSalaryDDL.filter((item) => {
-                            return item.value === user.employeeId;
-                          })) || defEmployee || null)}
-                        error={errors.employeeId}
-                        touched={touched.employeeId}
-                        options={dashboard.allEmployeesSalaryDDL}
-                      />
-                    </div> */}
-
-                  </div>
+                 
                   {<div className="from-group row">
 
-                    <div className="col-12 col-md-4 mt-3">
+                        <div className="col-12 col-md-3 mt-3">
+                                <label>Revised Date</label>
+                                <DatePicker
+                                  className="form-control"
+                                  placeholder="revisedDate"
+                                  selected={
+                                    values?.revisedDate
+                                      ? new Date(values.revisedDate)
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                                    setFieldValue("revisedDate", selectedDate);
+                              
+                         
+                                  }}
+                                  dateFormat="dd-MMM-yyyy"
+                                  name="revisedDate"
+                                  autoComplete="off"
+                                />
+                              </div>
+
+                    <div className="col-12 col-md-3 mt-3">
                       <AmountInput
                         field={{
                           name: "grossSalary",
@@ -916,7 +901,7 @@ export function FormEditForm({
 
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3 mt-3">
                       <AmountInput
                         field={{
                           name: "basicSalary",
@@ -945,7 +930,7 @@ export function FormEditForm({
                         }}
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-12 col-md-3 mt-3">
                       <Field
                         name="basicSalaryFactor"
                         type="number"

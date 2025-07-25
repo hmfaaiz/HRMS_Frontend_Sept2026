@@ -60,8 +60,12 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
   }, []);
 
-  const saveForm = async (data, disbaleLoading, onHide) => {
+  const saveForm = async (data,defMapEarningDeductionList) => {
 console.log("daat111",data)
+const updatedData = {
+    ...data,
+    EmpSalEarDeducChild: defMapEarningDeductionList,
+  };
     // const updatedData = {
     //   ...data, // Spread the original data
     //   subsidiaryId: subsidiaryid, // Override the subsidiaryId
@@ -95,7 +99,7 @@ console.log("daat111",data)
     //     resetForm
     //   )
     // );
-    await dispatch(actions.createEmpSalaryRev(data));
+    await dispatch(actions.createEmpSalaryRev(updatedData));
 
 
   }
