@@ -16,7 +16,7 @@ export function AttendanceViewPage() {
   const {
     dashboard,
     listLoading,
-    processLoading,consolidatedLoading,empWiseLoading, pdf2Loading,pdfLoading
+    processLoading,consolidatedLoading,empWiseLoading, pdf2Loading,pdfLoading,excelLoading,csvLoading,
   } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.attendance.listLoading,
@@ -24,6 +24,8 @@ export function AttendanceViewPage() {
     consolidatedLoading:state.attendance.consolidatedLoading,
     empWiseLoading:state.attendance.empWiseLoading,
      pdf2Loading:state.attendance. pdf2Loading,
+     csvLoading:state.attendance. csvLoading,
+     excelLoading:state.attendance. excelLoading,
      pdfLoading:state.attendance. pdfLoading,
   }
   ));
@@ -52,7 +54,7 @@ export function AttendanceViewPage() {
         </CardHeader>
 
         {/* Filter Form Starts */}
-      <FormFilter dispatch={dispatch} pdfLoading={pdfLoading} pdf2Loading ={pdf2Loading} loading={listLoading} processLoading={processLoading} consolidatedLoading={consolidatedLoading} empWiseLoading={empWiseLoading}/>
+      <FormFilter dispatch={dispatch} pdfLoading={pdfLoading} csvLoading={csvLoading} excelLoading={excelLoading} pdf2Loading ={pdf2Loading} loading={listLoading} processLoading={processLoading} consolidatedLoading={consolidatedLoading} empWiseLoading={empWiseLoading}/>
         {/* Filter Form Ends */}
 
         {/* Table Starts */}

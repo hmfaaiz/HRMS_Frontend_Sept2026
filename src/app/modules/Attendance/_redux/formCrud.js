@@ -22,7 +22,7 @@ export function createAttendanceSetup(body) {
 export async function getAllAttendanceSetup(body) {
   // return axios.post(`${USERS_URL}/attendance/read-all-attendance`, body);
     const config = {
-    responseType: (body.pdf || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
+    responseType: (body.pdf2 || body.excel  || body.csv) ? 'arraybuffer' : 'json', 
   };
 
   return axios.post(`${USERS_URL}/attendance/read-all-attendance`, body, config);
