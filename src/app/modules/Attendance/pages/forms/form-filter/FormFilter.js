@@ -143,7 +143,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
             <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-            <h6 className="mb-5">  Attendance Sheet</h6>
+            {/* <h6 className="mb-5">  Attendance Sheet</h6> */}
               <Form className="form form-label-right">
                 <fieldset>
                   <div className="from-group row">
@@ -204,7 +204,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
 
 
 
-                                                              <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
+                                                              <div className="col-12 col-md-4  d-flex flex-column align-items-start">
 
                                           { values?.subsidiaryId ? (() => {
  const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
