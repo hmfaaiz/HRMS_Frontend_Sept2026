@@ -66,6 +66,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     overtime_working_day: "",
     overtime_off_day: "",
     overtime_holiday: "",
+    revisedDate:"",
+    Employee:"",
   };
 
   const value = {
