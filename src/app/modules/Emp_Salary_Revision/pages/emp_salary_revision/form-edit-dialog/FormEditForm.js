@@ -26,6 +26,8 @@ import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../uti
 import { DEFAULT_CALCULATION_TYPE_DROPDOWN, DROPDOWN, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { toast } from "react-toastify";
+import { FormTable } from "../form-table/FormTable";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape(
@@ -215,7 +217,7 @@ export function FormEditForm({
   loading,
   id,
   approveSalary,
-  approveLoading
+  approveLoading, revisedDate
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -248,6 +250,7 @@ export function FormEditForm({
   const [dropdownData, setdropdownData] = useState(DEFAULT_CALCULATION_TYPE_DROPDOWN);
   const [currentSalaryMethod, setcurrentSalaryMethod] = useState('')
   const [salaryApproverPermission, setSalaryApproverPermission] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
 
 
   useEffect(() => {
@@ -484,6 +487,7 @@ export function FormEditForm({
 
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
 
+
     const basicSalaryInputFactor = el.target.form.elements['basicSalaryFactor'].value;
     let grossSalaryInput = values.grossSalary;
     let basicSalaryInput = values.basicSalary;
@@ -660,22 +664,16 @@ export function FormEditForm({
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={user}
+        initialValues={{
+          ...user,
+          revisedDate: revisedDate || null // fallback
+        }}
+
         validationSchema={formValidation}
-        // onSubmit={(values) => {
-        //   console.log("Form values:", values);
-        //   // const validationErrors = validate();
 
-        //   // if (Object.keys(validationErrors).length > 0) {
-        //   //   setErrors(validationErrors);
-        //   // } else {
-        //     enableLoading();
-
-        //     save({ ...values, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross) }, defMapEarningDeductionList);
-        //   // }
-        // }}
 
         onSubmit={(values) => {
+
 
           const earningDeductionList = defMapEarningDeductionList.map(item => ({
             ...item,
@@ -706,7 +704,11 @@ export function FormEditForm({
           formik,
         }) => (
           <>
+
+
             <Modal.Body className="overlay overlay-block cursor-default">
+
+
               {/* {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
                   <div className="spinner spinner-lg spinner-success" />
@@ -716,14 +718,99 @@ export function FormEditForm({
 
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
+                  {/* <div className="col-12 col-md-3 mt-3">
+                    <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
+
+                    <DatePicker
+                      className="form-control"
+                      placeholder="revisedDate"
+                      selected={
+                        values?.revisedDate
+                          ? new Date(values.revisedDate)
+                          : null
+                      }
+                      onChange={(date) => {
+                        let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                        setFieldValue("revisedDate", selectedDate);
+
+
+                      }}
+                      dateFormat="dd-MMM-yyyy"
+                      name="revisedDate"
+                      autoComplete="off"
+                    />
+                    {touched.revisedDate && errors.revisedDate && (
+                      <div className="invalid-feedback d-block">{errors.revisedDate}</div>
+                    )}
+                  </div> */}
+
+                  {/* {confirmationModal && (  */}
+
+
+                  <Modal
+                    show={confirmationModal}
+                    onHide={confirmationModal}
+                    aria-labelledby="example-modal-sizes-title-lg"
+                  >
+                    {/*begin::Loading*/}
+                    {/* {isLoading && <ModalProgressBar />} */}
+                    {/*end::Loading*/}
+                    <Modal.Header closeButton>
+                      <Modal.Title id="example-modal-sizes-title-lg">
+                        Confirmation
+                      </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <span>Are you sure want to update salary?</span>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <div>
+                        <button
+                          type="button"
+                          onClick={() => setConfirmationModal(false)}
+                          className="btn btn-light btn-elevate"
+                        >
+                          Cancel
+                        </button>
+                        <> </>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            fetchEmployeeSalaryEarningList(user?.employeeId, 0, setFieldValue, values?.Employee?.gradeId, values?.Employee?.employeeTypeId);
+                            setConfirmationModal(false)
+                          }}
+                          className="btn btn-primary btn-elevate"
+                        >
+                          Update Salary
+                          {loading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      </div>
+                    </Modal.Footer>
+                  </Modal>
+                  {/* )} */}
+
+                  <div className="mb-5">
+                    <FormTable />
+                  </div>
+
 
 
 
                   <Accordion defaultActiveKey="">
                     <Card>
-                      <Card.Header>
-                        <div className='accordion-header-btn'>
-                          <Accordion.Toggle as={Button} eventKey="0">
+                      <Card.Header className="d-flex justify-content-center">
+                        <div className="accordion-header-btn w-100  d-flex justify-content-center">
+                          <Accordion.Toggle as={Button} eventKey="0" className="flex-between-center text-bold">
+                            {/* <Button
+                              onClick={() => {
+                                if (!user?.employeeId) 
+                                  toast.warning("Please select an employee first.");
+                                }
+                              }
+                            ></Button> */}
                             Employee Information
                             <KeyboardArrowDown />
                           </Accordion.Toggle>
@@ -731,16 +818,15 @@ export function FormEditForm({
                       </Card.Header>
                       <Accordion.Collapse eventKey="0">
                         <Card.Body style={{ padding: "0" }}>
+                          {(user?.employeeId) && (<div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
-                          <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                            {/* <h6>Earning Entitlements</h6> */}
 
                             <div className="row col-12 col-md-12">
 
 
 
 
-                              <div className="col-12 col-md-4 mt-3">
+                              <div className="col-12 col-md-3 mt-3">
                                 <SearchSelect
                                   name="Employee.gradeId"
                                   label={
@@ -751,7 +837,8 @@ export function FormEditForm({
 
                                   onChange={(e) => {
                                     setFieldValue("Employee.gradeId", e.value || null);
-                                    fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, e.value, values.Employee.employeeTypeId);
+                                    // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, e.value, values.Employee.employeeTypeId);
+                                    setConfirmationModal(true)
 
                                   }}
                                   value={
@@ -770,7 +857,7 @@ export function FormEditForm({
 
 
                               {/* Designation */}
-                              <div className="col-12 col-md-4 mt-3">
+                              <div className="col-12 col-md-3 mt-3">
                                 <SearchSelect
                                   name="designationId"
                                   label={
@@ -804,7 +891,7 @@ export function FormEditForm({
 
 
                               {/* Employee Type */}
-                              <div className="col-12 col-md-4 mt-3">
+                              <div className="col-12 col-md-3 mt-3">
                                 <SearchSelect
                                   name="employeeTypeId"
                                   label={
@@ -815,7 +902,8 @@ export function FormEditForm({
 
                                   onChange={(e) => {
                                     setFieldValue("Employee.employeeTypeId", e.value || null);
-                                    fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, values.Employee.gradeId, e.value);
+                                    setConfirmationModal(true)
+                                    // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, values.Employee.gradeId, e.value);
 
                                   }}
                                   value={
@@ -832,7 +920,7 @@ export function FormEditForm({
                               </div>
 
 
-                              <div className="col-12 col-md-4 mt-3">
+                              <div className="col-12 col-md-3 mt-3">
                                 <SearchSelect
                                   name="employeeStatusId"
                                   label={<span> Employee Status<span style={{ color: 'red' }}>*</span></span>}
@@ -859,7 +947,9 @@ export function FormEditForm({
                             </div>
 
 
-                          </div>
+                          </div>)}
+
+
 
                         </Card.Body>
                       </Accordion.Collapse>
@@ -868,31 +958,7 @@ export function FormEditForm({
 
                   {<div className="from-group row">
 
-                    <div className="col-12 col-md-3 mt-3">
-                      <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
 
-                      <DatePicker
-                        className="form-control"
-                        placeholder="revisedDate"
-                        selected={
-                          values?.revisedDate
-                            ? new Date(values.revisedDate)
-                            : null
-                        }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                          setFieldValue("revisedDate", selectedDate);
-
-
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="revisedDate"
-                        autoComplete="off"
-                      />
-                      {touched.revisedDate && errors.revisedDate && (
-                        <div className="invalid-feedback d-block">{errors.revisedDate}</div>
-                      )}
-                    </div>
 
                     <div className="col-12 col-md-3 mt-3">
                       <AmountInput
@@ -968,7 +1034,7 @@ export function FormEditForm({
                       />
                     </div>
                     <div className="col-12 col-md-4 mt-12">
-                      <input type="button" class="btn btn-success" onClick={(e) => calculateEmployeeSalaryPolicy(e, setFieldValue, values)} id="btnSalaryPolicyCalc" value="Calculate"></input>
+                      <input type="button" class="btn btn-success" disabled={!values.revisedDate} onClick={(e) => calculateEmployeeSalaryPolicy(e, setFieldValue, values)} id="btnSalaryPolicyCalc" value="Calculate"></input>
                     </div>
                   </div>}
                   { /* For Earning WIth Payroll Include ByDefault Yes  */}
@@ -1222,58 +1288,7 @@ export function FormEditForm({
                         obj.transactionType == 'Earning' && obj.isPartOfGrossSalary == false &&
                         <><tr>
                           <td id={rightindex} onClick={deleteRow}> Delete</td>
-                          {/* <td>
-                            <select
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({ ...prev, [`earning_deduction_id-${rightindex}`]: '' })); // Clear error on change
-                              }}
-                              // onChange={handleFieldChanged}
 
-                              id={'earning_deduction_id-' + rightindex} value={obj.earning_deduction_id}>
-                              <option value="-1"> --Select--</option>
-                              {
-                                dashboard.allEarnings?.map((x) => {
-                                  return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
-                                })}
-                            </select>
-                            {deferrors[`earning_deduction_id-${rightindex}`] && <div className="form-feedBack">{deferrors[`earning_deduction_id-${rightindex}`]}</div>}
-                          </td> */}
-                          {/* <td>
-                            <SearchSelect
-                              id={`earning_deduction_id-${rightindex}`}
-                              name={`earning_deduction_id-${rightindex}`}
-                              isDisabled={false}
-                              value={
-                                dashboard.allEarnings?.find(
-                                  (x) => x.value === obj.earning_deduction_id
-                                ) || null
-                              }
-                              options={
-                                dashboard.allEarnings?.map((x) => ({
-                                  ...x,
-                                  isDisabled: defMapEarningDeductionList.some(el => el.earning_deduction_id === x.value)
-                                }))
-                              }
-                              onChange={(e) => {
-                                handleFieldChanged({
-                                  target: {
-                                    id: `earning_deduction_id-${rightindex}`,
-                                    value: e?.value || ''
-                                  }
-                                });
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`earning_deduction_id-${rightindex}`]: ''
-                                }));
-                              }}
-                            />
-                            {deferrors[`earning_deduction_id-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`earning_deduction_id-${rightindex}`]}
-                              </div>
-                            )}
-                          </td> */}
 
                           <td>
                             <Field
@@ -1316,64 +1331,6 @@ export function FormEditForm({
                             )}
                           </td>
 
-                          {/* <td>
-                            <select value={obj.calculation_type}
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({ ...prev, [`calculation_type-${rightindex}`]: '' })); // Clear error on change
-
-                                if (e.target.value == "Fixed Amount") { obj.factorValue = 0 }
-                                else {
-                                  obj.amount = 0
-                                }
-                              }}
-
-                              id={'calculation_type-' + rightindex} >
-                              {
-                                createDropdown(dropdownData || [])
-                              }
-                             
-                            </select>
-                            {deferrors[`calculation_type-${rightindex}`] && <div className="form-feedBack">{deferrors[`calculation_type-${rightindex}`]}</div>}
-
-                          </td> */}
-
-                          {/* <td>
-                            <SearchSelect
-                              id={`calculation_type-${rightindex}`}
-                              name={`calculation_type-${rightindex}`}
-                              value={
-                                (dropdownData || []).find(opt => opt.value === obj.calculation_type) || null
-                              }
-                              options={(dropdownData || [])}
-                              onChange={(e) => {
-                                const selectedValue = e?.value || '';
-
-                                handleFieldChanged({
-                                  target: {
-                                    id: `calculation_type-${rightindex}`,
-                                    value: selectedValue
-                                  }
-                                });
-
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`calculation_type-${rightindex}`]: ''
-                                }));
-
-                                if (selectedValue === "Fixed Amount") {
-                                  obj.factorValue = 0;
-                                } else {
-                                  obj.amount = 0;
-                                }
-                              }}
-                            />
-                            {deferrors[`calculation_type-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`calculation_type-${rightindex}`]}
-                              </div>
-                            )}
-                          </td> */}
 
                           <td>
                             <Field
@@ -1404,7 +1361,7 @@ export function FormEditForm({
                                 }
                               }}
                             >
-                              <option value="">--Select--</option>
+                              {/* <option value="">--Select--</option> */}
                               {(dropdownData || []).map((opt) => (
                                 <option key={opt.value} value={opt.value}>
                                   {opt.label}
@@ -1420,17 +1377,6 @@ export function FormEditForm({
                           </td>
 
 
-                          {/* <td>{obj.transactionType}</td> */}
-                          {/* <td>
-                            <input disabled={obj.calculation_type == 'Fixed Amount'} style={{ width: "100px" }} type="number"
-
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({ ...prev, [`factorValue-${rightindex}`]: '' })); // Clear error on change
-                              }}
-                              value={obj.factorValue} id={'factorValue-' + rightindex}></input>
-                            {deferrors[`factorValue-${rightindex}`] && <div className="form-feedBack">{deferrors[`factorValue-${rightindex}`]}</div>}
-                          </td> */}
                           <td>
                             <AmountInput
                               field={{
@@ -2247,16 +2193,67 @@ export function FormEditForm({
 
 
                         </div>
+
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
                 </Accordion>
+
+                <div className="form-group row justify-content-end p-5">
+
+                  {!isUserForRead ? (
+                    <button
+                      type="button"
+                      onClick={onHide}
+                      className="btn btn-light btn-elevate m-1"
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={onHide}
+                      className="btn btn-primary btn-elevate"
+                    >
+                      Ok
+                    </button>
+                  )}
+
+
+                  {!isUserForRead && (
+                    <button
+                      type="submit"
+                      disabled={!values.grossSalary || values.grossSalary == 0}
+                      // || defMapEarningDeductionList.some(obj => !obj.updatedAmount || obj.updatedAmount == 0)
+                      onClick={(e) => {
+                        calculateEmployeeSalaryPolicy(e, setFieldValue, values)
+                        handleSubmit()
+
+                        if (values.revisedDate === null || values.revisedDate === undefined) {
+                          toast.error("Please select a revised date");
+                          return;
+                        }
+
+
+
+                      }}
+                      className="btn btn-primary btn-elevate m-1"
+                    >
+                      Save
+                      {/* {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )} */}
+                    </button>
+                  )}
+
+                </div>
+
               </Form>
             </Modal.Body>
             <Modal.Footer>
 
 
-              {salaryApproverPermission && (
+              {/* {salaryApproverPermission && (
                 !isUserForRead && Boolean(id) && !Boolean(user.approved) ? (
                   <button
                     type="button"
@@ -2269,39 +2266,11 @@ export function FormEditForm({
                     )}
                   </button>
                 ) : null
-              )}
+              )} */}
 
-              {!isUserForRead ? (
-                <button
-                  type="button"
-                  onClick={onHide}
-                  className="btn btn-light btn-elevate"
-                >
-                  Cancel
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={onHide}
-                  className="btn btn-primary btn-elevate"
-                >
-                  Ok
-                </button>
-              )}
 
               <> </>
-              {!isUserForRead && (
-                <button
-                  type="submit"
-                  onClick={() => handleSubmit()}
-                  className="btn btn-primary btn-elevate"
-                >
-                  Save
-                  {/* {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )} */}
-                </button>
-              )}
+
             </Modal.Footer>
           </>
         )}

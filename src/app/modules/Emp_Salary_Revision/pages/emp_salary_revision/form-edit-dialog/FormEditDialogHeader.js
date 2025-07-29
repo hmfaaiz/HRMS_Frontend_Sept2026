@@ -10,21 +10,21 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   const { userForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      userForEdit: state.employee_loan_request.userForEdit,
+      userForEdit: state.emp_salary_revision.userForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
   );
 
-  useEffect(() => {
-    let _title = id ? "" : "Add Employee Loan Request";
-    if (id) {
-      _title = `Edit Employee Loan Request`;
-    } //else if (isUserForRead) {
-    //   _title = `Read user '}'`
-    // }
-    setTitle(_title);
-  }, [userForEdit, actionsLoading]);
+  // useEffect(() => {
+  //   let _title = id ? "" : "Add Employee Loan Request";
+  //   if (id) {
+  //     _title = `Edit Employee Loan Request`;
+  //   } //else if (isUserForRead) {
+  //   //   _title = `Read user '}'`
+  //   // }
+  //   setTitle(_title);
+  // }, [userForEdit, actionsLoading]);
 
   return (
     <>

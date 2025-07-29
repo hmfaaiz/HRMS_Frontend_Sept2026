@@ -42,8 +42,8 @@ export function FormTable() {
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
-      currentState: state.employee_loan_request,
-      userAccess: state?.auth?.userAccess["employee_loan_request"],
+      currentState: state.emp_salary_revision,
+      userAccess: state?.auth?.userAccess["emp_salary_revision"],
     };
   }, shallowEqual);
 
@@ -69,8 +69,8 @@ export function FormTable() {
   // Table columns
   const columns = [
     {
-      dataField: "LoanType.name",
-      text: "Loan Type",
+      dataField: "revisedDate",
+      text: "Revised Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -80,8 +80,8 @@ export function FormTable() {
     },
 
     {
-      dataField: "total_loan_amount",
-      text: "total loan amount",
+      dataField: "grossSalary",
+      text: "Gross Salary",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -96,8 +96,8 @@ export function FormTable() {
     },
 
     {
-      dataField: "monthly_installment",
-      text: "monthly installment",
+      dataField: "basicSalary",
+      text: "Basic Salary",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -111,8 +111,8 @@ export function FormTable() {
       formatter: (cell) => formatNumberWithCommas(cell),
     },
     {
-      dataField: "total_installment",
-      text: "total installments",
+      dataField: "",
+      text: "Gross to Basic Factor",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -126,49 +126,9 @@ export function FormTable() {
       formatter: (cell) => formatNumberWithCommas(cell),
     },
 
-    {
-      dataField: "applied_date",
-      text: "applied date",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-      formatter: (cell) => {
-        // Format the date without timestamp
-        return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
-      },
-    },
+   
 
-    {
-      dataField: "approved_status",
-      text: "Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell, row) => {
-        let text = "";
-        let style = {};
-        if (cell === 0 && !row?.isLoanContinuing) {
-          text = "Pending (Portal)";
-          style = { color: "green", fontWeight: "bold" };
-        } else if (cell === 0) {
-          text = "Pending (HRMS)";
-          style = { color: "green", fontWeight: "bold" };
-        } else if (cell === 1) {
-          text = !row?.isLoanContinuing ? "Completed" : "Active";
-          style = { color: "black", fontWeight: "bold" };
-        } else if (cell === 2) {
-          text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
-        }
-        return <span style={style}>{text}</span>;
-      },
-    },
+  
 
     {
       dataField: "action",
@@ -203,7 +163,7 @@ export function FormTable() {
     sizePerPage: formUIProps.queryParams.pageSize,
     page: formUIProps.queryParams.pageNumber,
   };
-
+console.log("previousSalaryRevisionFetched", entities);
   return (
     <>
       <Accordion defaultActiveKey="">
@@ -215,7 +175,7 @@ export function FormTable() {
                 eventKey="0"
                 className="flex-between-center text-bold"
               >
-                Employee Loan Request
+                  Employee Revision Salaries
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>

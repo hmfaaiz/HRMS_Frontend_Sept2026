@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Modal } from "react-bootstrap";
+
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { FormEditForm } from "./FormEditForm";
 import { FormEditDialogHeader } from "./FormEditDialogHeader";
@@ -8,13 +8,12 @@ import * as actions from "../../../_redux/redux-Actions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
-import { Accordion, Button, Card } from "react-bootstrap";
-import { KeyboardArrowDown } from "@material-ui/icons";
 
-export function FormEditDialog({ id, show, onHide, userForRead }) {
-  const [action, setaction] = useState(false);
+
+export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
+
   const [loading, setLoading] = useState(false);
-  const title = "FormEditDialog";
+
   const FormUIContext = useFormUIContext();
 
   const usersUIProps = useMemo(() => {
@@ -60,12 +59,32 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
   }, []);
 
-  const saveForm = async (data,defMapEarningDeductionList) => {
-console.log("daat111",data)
-const updatedData = {
-    ...data,
-    EmpSalEarDeducChild: defMapEarningDeductionList,
-  };
+
+  useEffect(() => {
+    // dispatch(actions.fetchmoduledata(id));
+    if (userForEdit?.employeeId) {
+      dispatch(actions.fetchAllPrevSalaryRevByEmpId({
+        ...usersUIProps.queryParams,
+        employeeId: userForEdit?.employeeId
+      }));
+
+    }
+
+
+    // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
+  }, [userForEdit?.employeeId,formUIProps.queryParams, dispatch,]);
+
+  const saveForm = async (data, defMapEarningDeductionList) => {
+
+    if (data.revisedDate === null || data.revisedDate === undefined) {
+      toast.error("Please select a revised date");
+      return;
+    }
+
+    const updatedData = {
+      ...data,
+      EmpSalEarDeducChild: defMapEarningDeductionList,
+    };
     // const updatedData = {
     //   ...data, // Spread the original data
     //   subsidiaryId: subsidiaryid, // Override the subsidiaryId
@@ -105,36 +124,37 @@ const updatedData = {
   }
 
 
-return (
-  <>
-    <FormEditDialogHeader id={id} isUserForRead={userForRead} />
-    <FormEditForm
-      saveForm={saveForm}
-      user={userForEdit || formUIProps.initUser}
-      onHide={onHide}
+  return (
+    <>
+      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      <FormEditForm
+        saveForm={saveForm}
+        user={userForEdit || formUIProps.initUser}
+        onHide={onHide}
 
 
-      isUserForRead={userForRead}
-      enableLoading={enableLoading}
-      loading={loading}
-      setIds={formUIProps.setIds}
-      isEdit={id ? true : false}
-      isFileReq={formUIProps.isFileReq}
-      setIsFileReq={formUIProps.setIsFileReq}
-      disbaleLoading={disbaleLoading}
-      formUIProps={formUIProps}
-    />
-    <ToastContainer
-      position="top-right"
-      autoClose={2000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-    />
-  </>
-);
+        isUserForRead={userForRead}
+        enableLoading={enableLoading}
+        loading={loading}
+        setIds={formUIProps.setIds}
+        isEdit={id ? true : false}
+        isFileReq={formUIProps.isFileReq}
+        setIsFileReq={formUIProps.setIsFileReq}
+        disbaleLoading={disbaleLoading}
+        formUIProps={formUIProps}
+        revisedDate={revisedDate}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
+  );
 };

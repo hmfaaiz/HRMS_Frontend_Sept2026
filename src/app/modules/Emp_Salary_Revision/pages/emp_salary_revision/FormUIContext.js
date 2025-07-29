@@ -13,6 +13,7 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [employeeId, setemployeeId] = useState("");
+  const [revisedDate, setRevisedDate] = useState("");
   const [ids, setIds] = useState("");
   const [isFileReq, setIsFileReq] = useState(false);
   const [panelMode, setPanelMode] = useState(false);
@@ -83,6 +84,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     employeeId,
     panelMode,
     setPanelMode,
+    revisedDate,
+    setRevisedDate,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,

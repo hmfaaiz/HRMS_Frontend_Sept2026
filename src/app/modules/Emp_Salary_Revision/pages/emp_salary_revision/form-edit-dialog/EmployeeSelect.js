@@ -8,15 +8,17 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux"
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
-import { Card, CardHeader } from "@material-ui/core";
+import { Card, CardHeader, setRef } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { fetchCurrentEmpSalary, fetchEmpForSalaryRevision } from "../../../_redux/redux-Actions";
+import DatePicker from "react-datepicker";
+import { formatDates } from "../../../../../utils/common";
 
 export function EmployeeSelect({
   actionsLoading,
-  setemployeeId, setPanelMode, panelMode
+  setemployeeId, setPanelMode, panelMode,revisedDate, setRevisedDate  ,
 }) {
   const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
@@ -45,7 +47,7 @@ export function EmployeeSelect({
       >
         {({
           errors,
-          values,
+          values,touched,
           handleBlur,
           setFieldValue,
         }) => (
@@ -111,7 +113,7 @@ export function EmployeeSelect({
 
                   </div>
 
-                  <div className="col-6 col-md-4 d-flex  align-items-center pt-10">
+                  <div className="col-6 col-md-1 d-flex  align-items-center pt-7">
                     <span
                       className="svg-icon svg-icon-md svg-icon-primary"
                       onClick={() => setPanelMode(!panelMode)}
@@ -127,6 +129,33 @@ export function EmployeeSelect({
 
 
                   </div>
+
+                    <div className="col-12 col-md-3">
+                      <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
+
+                      <DatePicker
+                        className="form-control"
+                        placeholder="revisedDate"
+                        selected={
+                          revisedDate
+                            ? new Date(revisedDate)
+                            : null
+                        }
+                        onChange={(date) => {
+                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                          setRevisedDate(selectedDate);
+                          // setFieldValue("revisedDate", selectedDate);
+
+
+                        }}
+                        dateFormat="dd-MMM-yyyy"
+                        name="revisedDate"
+                        autoComplete="off"
+                      />
+                      {touched.revisedDate && errors.revisedDate && (
+                        <div className="invalid-feedback d-block">{errors.revisedDate}</div>
+                      )}
+                    </div>
                   {/* Employee Id Dropdown Ends */}
 
                      <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">

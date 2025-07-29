@@ -14,7 +14,7 @@ export const fetchEmpForSalaryRevision = () => async (dispatch) => {
 
     .then((response) => {
 
-     
+
       dispatch(actions.empForSalaryRevisionFetched(response));
     })
     .catch((error) => {
@@ -24,7 +24,7 @@ export const fetchEmpForSalaryRevision = () => async (dispatch) => {
     });
 };
 
-export const fetchCurrentEmpSalary= (employeeId) => (dispatch) => {
+export const fetchCurrentEmpSalary = (employeeId) => (dispatch) => {
 
 
   if (!employeeId) {
@@ -40,7 +40,7 @@ export const fetchCurrentEmpSalary= (employeeId) => (dispatch) => {
       dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
-      error.clientMessage = "Can't find user";
+      error.clientMessage = "Can't find record";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };
@@ -53,17 +53,17 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
-  
+
   return requestFromServer
     .createEmpSalaryRev(data)
     .then((res) => {
-   
+
       const user = res.data?.data;
-     
-  
+
+
       dispatch(actions.EmpSalaryRevisionCreated(user));
       disbaleLoading();
-      toast.success(SERVER_MESSAGES.insertedSuccess,{
+      toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -75,7 +75,7 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
       onHide();
     })
     .catch((error) => {
-      error.clientMessage = "Can't create user";
+      error.clientMessage = "Can't create record";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
       toast.error(error?.response?.data?.message, {
@@ -91,3 +91,29 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
 };
 
 
+
+export const fetchAllPrevSalaryRevByEmpId = (body) => async (dispatch) => {
+console.log("fetchAllPrevSalaryRevByEmpId", body);
+  // delete params?.openDeleteFormDialog
+
+  return requestFromServer.getAllPrevSalaryRevByEmpId(body)
+
+    .then((response) => {
+
+
+      dispatch(actions.previousSalaryRevisionFetched(response));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't fetch previous salary revisions";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

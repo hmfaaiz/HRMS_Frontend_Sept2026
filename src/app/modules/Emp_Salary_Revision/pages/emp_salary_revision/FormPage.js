@@ -14,7 +14,7 @@ import {} from "../../_redux/redux-Actions";
 
 export function FormPage({ history }) {
 
-console.log("FormPage")
+
   const dispatch = useDispatch();
   const FormUIEvents = {
 
@@ -27,7 +27,7 @@ console.log("FormPage")
 
     
     <FormUIProvider FormUIEvents={FormUIEvents}>
-     
+{/*      
       <Route path="/emp_salary_revision/read-all-employee-salary-revision/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
@@ -39,7 +39,7 @@ console.log("FormPage")
             }}
           />
         )}
-      </Route>
+      </Route> */}
 
     
       <FormCard />
