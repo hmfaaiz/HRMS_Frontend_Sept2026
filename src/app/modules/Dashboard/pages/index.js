@@ -12,9 +12,9 @@ import {
 export function Dashboard() {
   return (
     <>
-      <Card>
+      {/* <Card>
         <CardHeader title={"Dashboard"}></CardHeader>
-        <CardBody>
+        <CardBody> */}
           {localStorage.getItem("isEmployeePortal") === "true" ? (
             <FormUIProvider>
               <EmployeePortal />
@@ -22,8 +22,8 @@ export function Dashboard() {
           ) : (
             <AdminPortal />
           )}
-        </CardBody>
-      </Card>
+        {/* </CardBody>
+      </Card> */}
     </>
   );
 }

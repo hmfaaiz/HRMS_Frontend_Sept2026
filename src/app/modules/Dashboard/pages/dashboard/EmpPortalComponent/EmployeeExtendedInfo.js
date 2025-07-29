@@ -1,215 +1,64 @@
 import React from "react";
-import { KeyboardArrowDown } from "@material-ui/icons";
-import { Accordion, Card } from "react-bootstrap";
-import { format } from "date-fns";
+import { StarIcon } from "lucide-react";
 
 export const EmployeeExtendedInfo = ({
   contactInfo,
-  experienceInfo,
   skillsInfo,
-  academicInfo,
 }) => {
   return (
     <>
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header>
-            <div className="accordion-header-btn ">
-              <Accordion.Toggle eventKey="0" className="flex-between-center">
-                Employee Extended Information
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
+      <div className="w-full col-span-1 text-sm px-3 py-2 bg-white rounded-lg">
+        <h6 className="font-weight-bolder mb-0 text-primary my-2">
+          Emergency Contact
+        </h6>
+        {contactInfo && contactInfo?.length > 0 ? (
+          contactInfo.map((item, index) => (
+            <div key={index} className="grid grid-cols-12 gap-2 text-black">
+              <p className="text-sm mb-0 col-span-3">
+                Name : <span className="font-weight-light" >{item.relation_name}</span>
+              </p>
+              <p className="text-sm mb-0 col-span-3">
+                Relation : <span className="font-weight-light" >{item.relation_text}</span>
+              </p>
+              <p className="text-sm mb-0 col-span-6" >
+                Contact No : <span className="font-weight-light" >{item.contactNo}</span>
+              </p>
             </div>
-          </Card.Header>
-
-          <Accordion.Collapse eventKey="0">
-            <Card.Body style={{ backgroundColor: "#E6F8FF" }}>
-              <div
-                style={{
-                  backgroundColor: "rgb(235 243 255)",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "2px solid #adceff",
-                }}
-              >
-                {/* contact  */}
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                  }}
-                >
-                  <h3>Emergency Contact Information</h3>
-                  <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                    <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
-                      <td>Name</td>
-                      <td>Relation</td>
-                      <td>Contact No</td>
-                    </tr>
-
-                    {contactInfo && contactInfo.length > 0 ? (
-                      contactInfo?.map((obj) => (
-                        <>
-                          <tr>
-                            <td>{obj?.relation_name || ""}</td>
-                            <td>{obj?.relation_text || ""}</td>
-                            <td>{obj?.contactNo || ""}</td>
-                          </tr>
-                        </>
-                      ))
-                    ) : (
-                      <p>Record not found</p>
-                    )}
-                  </table>
-                </div>
-                <br></br>
-                {/* experience  */}
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                  }}
-                >
-                  <h3>Work Experience</h3>
-                  <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                    <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
-                      <td>Company</td>
-                      <td>Position Held</td>
-                      <td>Country</td>
-                      <td>City</td>
-                      <td>Start Date</td>
-                      <td>End Date</td>
-                    </tr>
-
-                    {experienceInfo && experienceInfo?.length > 0 ? (
-                      experienceInfo?.map((obj) => (
-                        <>
-                          <tr>
-                            <td>{obj?.companyName || ""}</td>
-                            <td>{obj?.positionHeld || ""}</td>
-                            <td>{obj?.country?.name}</td>
-                            <td>{obj?.city?.name}</td>
-                            <td>
-                              {format(
-                                new Date(obj?.startDate),
-                                "dd-MMM-yyyy"
-                              ) || ""}
-                            </td>
-                            <td>
-                              {format(new Date(obj?.endDate), "dd-MMM-yyyy") ||
-                                ""}
-                            </td>
-                          </tr>
-                        </>
-                      ))
-                    ) : (
-                      <p>Record not found</p>
-                    )}
-                  </table>
-                </div>
-                <br></br>
-                {/* academic  */}
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                  }}
-                >
-                  <h3>Academic Info</h3>
-                  <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                    <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
-                      <td>Institution</td>
-                      <td>Degree</td>
-                      <td>Country</td>
-                      <td>City</td>
-                      <td>CGPA</td>
-                      <td>Start Date</td>
-                      <td>End Date</td>
-                    </tr>
-
-                    {academicInfo && academicInfo?.length > 0 ? (
-                      academicInfo?.map((obj) => (
-                        <>
-                          <tr>
-                            <td>{obj?.institution?.formName || ""}</td>
-                            <td>{obj?.degree?.formName || ""}</td>
-                            <td>{obj?.country?.name || ""}</td>
-                            <td>{obj?.city?.name || ""}</td>
-                            <td>{obj?.gpa || ""}</td>
-                            <td>
-                              {format(
-                                new Date(obj?.startDate),
-                                "dd-MMM-yyyy"
-                              ) || ""}
-                            </td>
-                            <td>
-                              {format(new Date(obj?.endDate), "dd-MMM-yyyy") ||
-                                ""}
-                            </td>
-                          </tr>
-                        </>
-                      ))
-                    ) : (
-                      <p>Record not found</p>
-                    )}
-                  </table>
-                </div>
-                <br></br>
-                {/* skills  */}
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                  }}
-                >
-                  <h3>Employee Skills</h3>
-                  <table class="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                    <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
-                      <td>Skill</td>
-                      <td>Description</td>
-
-                      <td>Rating</td>
-                      <td>Start Date</td>
-                      <td>End Date</td>
-                    </tr>
-                    {skillsInfo && skillsInfo.length > 0 ? (
-                      skillsInfo?.map((obj) => (
-                        <>
-                          <tr>
-                            <td>{obj?.skill || ""}</td>
-                            <td>{obj?.description || ""}</td>
-                            <td>{obj?.ratingScale || ""}</td>
-                            <td>
-                              {format(
-                                new Date(obj?.startDate),
-                                "dd-MMM-yyyy"
-                              ) || ""}
-                            </td>
-                            <td>
-                              {format(new Date(obj?.endDate), "dd-MMM-yyyy") ||
-                                ""}
-                            </td>
-                          </tr>
-                        </>
-                      ))
-                    ) : (
-                      <p>Record not found</p>
-                    )}
-                  </table>
-                </div>
-              </div>
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+          ))
+        ) : (
+          <p className="text-sm mb-0">No Contact Info Found</p>
+        )}
+      </div>
+      <div className="w-full col-span-1 text-sm px-3 py-2 bg-white rounded-lg">
+        <h6 className="font-weight-bolder mb-0 text-primary my-2">Skills</h6>
+        {skillsInfo && skillsInfo?.length > 0 ? (
+          skillsInfo.map((item, index) => (
+            <div key={index} className="grid grid-cols-12 gap-1 text-black">
+              <p className="text-sm mb-0 col-span-3">{item.skill}</p>
+              <p className="col-span-3">
+              {[1, 2, 3, 4, 5].map((i) => {
+                const rating = item?.ratingScale / 2;
+                return (
+                  <StarIcon
+                    key={i}
+                    size={13}
+                    className={
+                      rating >= i
+                        ? "text-yellow-500 fill-yellow-500"
+                        : rating >= i - 0.5
+                        ? "text-yellow-400 fill-yellow-400" // Optional for half star look
+                        : "text-gray-300"
+                    }
+                  />
+                );
+              })}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-sm mb-0">No Skills Found</p>
+        )}
+      </div>
     </>
   );
 };

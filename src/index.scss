@@ -26,6 +26,10 @@
 @import "../public/css/custome_theme_1/attendance_status.scss";
 @import "../public/css/custome_theme_1/dashboard_alert.scss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 // Header themes
 // Light
 //@import "./_metronic/_assets/sass/themes/layout/header/base/light.scss";
@@ -46,6 +50,8 @@
 .brand-light {
   @import "./_metronic/_assets/sass/themes/layout/brand/light.scss";
 }
+
+
 
 // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 100 to 900
@@ -93,20 +99,22 @@
   height: 40px;
 }
 
-.react-bootstrap-table {
-  overflow-x: auto;
+.table-head-custom{
+  margin-bottom: 0px !important;
 }
 
 .react-bootstrap-table {
-  border-left: 1px solid #ffffffd3 !important;
-  border-right: 1px solid #ffffff !important;
-  border-bottom: 1px solid #ffffff !important;
-  // border-radius: 12px;
+  overflow-x: auto;
+  // padding: 12px !important;
+  background: #ffffff;
+  border: none !important;
+  border-radius: 10px;
   font-family: "Noto Sans", sans-serif;
-  color: #333333;
+  color: #000000;
   th {
     outline: none;
-    background-color: #0093dd;
+    background-color: #ffffff;
+    border-radius: 0;
 
     &.sortable {
       .svg-icon-sort {
@@ -123,26 +131,44 @@
     }
   }
 
-  .table.table-head-custom thead tr {
-    .sortable-active {
-      color: $primary !important;
-    }
-    // background-color: #f7f7f7;
-    color: #333333 !important;
-    border-radius: 140px;
-  }
-  .table.table-head-custom tr:hover {
-    background-color: #e6f8ff;
-  }
+  .table.table-head-custom {
+    thead {
+      tr {
+        color: #000000 !important;
 
-  .table.table-head-custom thead th {
-    color: #ffffff !important; /* Same text color for header cells */
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: capitalize;
-    letter-spacing: 0px;
+        .sortable-active {
+          color: #ffffff !important; // If $white is a variable, use it; otherwise, white
+        }
+      }
+
+      th {
+        color: #000000 !important;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+        letter-spacing: 0;
+        background-color: transparent;
+        border-bottom: 0.2px solid #000000;
+        padding: 3px !important;
+      }
+    }
+
+    tr td {
+      padding: 3px !important;
+      font-size: 10px;
+      font-weight: 400;
+      border-bottom: 0.2px solid #000000 !important;
+      // white-space: nowrap;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+    }
+
+    /* Always show a border at the bottom of the table */
+    border-bottom: 0.2px solid #000000 !important;
   }
 }
+
+
 
 .cursor-default {
   cursor: default !important;
@@ -154,10 +180,10 @@
 
 .react-bootstrap-table table {
   table-layout: auto;
-  border-left: 1px solid #dbdbdb;
-  border-right: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-  border-radius: 12px;
+  border-left: 0px solid #dbdbdb;
+  border-right: 0px solid #e5e5e5;
+  border-bottom: 0.5px solid #000000;
+  border-radius: 0px;
 }
 
 .modal-75vw {
@@ -213,6 +239,48 @@
   max-width: 20%;
 }
 
-input[type=checkbox] {
+
+input[type="checkbox"] {
   accent-color: #0093dd;
- }
+}
+
+.w-full {
+  width: 100%;
+}
+
+.rbc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.collapse.show {
+  display: block !important;
+  height: auto !important;
+  overflow: visible !important;
+  visibility: visible !important;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+// .form-control {
+//   display: block;
+//   width: 100%;
+//   height: calc(1.2em + 1rem + 2px);
+//   padding: 0.35rem 0.75rem;
+//   font-size: 0.775rem;
+//   font-weight: 400;
+//   line-height: 1.5;
+//   color: #3F4254;
+//   background-color: #ffffff;
+//   background-clip: padding-box;
+//   border: 0.5px solid #E4E6EF;
+//   border-radius: 0.25rem;
+//   box-shadow: none;
+//   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+// }

@@ -4,7 +4,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux"
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls"
 import * as actions from "../../../_redux/roles/rolesAction"
 import { useRolesUIContext } from "../RolesUIContext"
-import Button from "@material-ui/core/Button"
+import {Button} from "@material-ui/core"
 
 export function RoleDeleteDialog({ id, show, onHide }) {
 

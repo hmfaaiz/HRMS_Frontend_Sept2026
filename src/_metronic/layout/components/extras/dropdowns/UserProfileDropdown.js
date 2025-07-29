@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
+import { Dropdown } from "react-bootstrap";
 import { shallowEqual, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import objectPath from "object-path";
@@ -11,6 +11,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import SVG from "react-inlinesvg";
+import { ChevronDown } from "lucide-react";
 
 export function UserProfileDropdown() {
   const history = useHistory();
@@ -135,72 +136,63 @@ export function UserProfileDropdown() {
   //   </Dropdown>
   // );
 
-
-
-return (
-  <Dropdown style={{ position: "relative" }} align="end">
-    <Dropdown.Toggle
-      as="div"
-      id="dropdown-toggle-user-profile"
-      style={{ cursor: "pointer" }}
-    >
-      <div className="w-auto d-flex align-items-center btn-lg px-2">
-        <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
+  return (
+    <Dropdown style={{ position: "relative" }} align="end">
+      <div className="w-auto flex items-center text-white px-2 py-2">
+        <span className="text-muted font-bold text-base hidden md:inline mr-1">
           Hi,
         </span>
-        <span className="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">
-          {user?.EmployeeMapping?.fullName || user?.email}{" "}
-          ({user?.role?.name})
+        <span className=" text-white font-bold text-base hidden md:inline mr-3">
+          {user?.EmployeeMapping?.fullName || user?.email} ({user?.role?.name})
         </span>
-        <span className="symbol symbol-45 symbol-light-success rounded-circle overflow-hidden">
-          <img
-            width={36}
-            height={36}
-            src={
-              user?.EmployeeMapping?.profile_image
-                ? user?.EmployeeMapping?.profile_image
-                : "/media/users/user.svg"
-            }
-            alt="User"
-          />
-        </span>
+        <Dropdown.Toggle
+          as="div"
+          id="dropdown-toggle-user-profile"
+          className="cursor-pointer"
+        >
+          <div className="flex items-center cursor-pointer">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              <img
+                width={50}
+                height={50}
+                className="w-full h-full object-cover"
+                src={
+                  user?.EmployeeMapping?.profile_image
+                    ? user?.EmployeeMapping?.profile_image
+                    : "/media/users/user.svg"
+                }
+                alt="User"
+              />
+            </div>
+            <ChevronDown className="w-4 h-4 ml-1 text-white" />
+          </div>
+        </Dropdown.Toggle>
       </div>
-    </Dropdown.Toggle>
 
-<Dropdown.Menu
-  className="ml-40 mt-5 p-0 m-0 dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround"
-  style={{
-    minWidth: "200px",
-    // marginTop: "10px",
-    // position: "absolute",
-    // inset: "100% 0 auto auto", // Top, Right, Bottom, Left
-    // zIndex: 9999,
-  }}
->
-      {portalRoutesLength > 0 &&
-        HRMSRoutesLength > 0 &&
-        user?.employeeIdMapping && (
-          <Dropdown.Item as="button" onClick={handleSwitch}>
-            <img
-              width={20}
-              height={20}
-              className="mr-2"
-              src={toAbsoluteUrl("/media/users/Profile-Switch-Icon.png")}
-              alt="Switch"
-            />
-            Switch Application
-          </Dropdown.Item>
-        )}
-      <Dropdown.Item as={Link} to="/password/reset-password">
-        <LockOpenIcon fontSize="small" className="mr-2" />
-        Reset Password
-      </Dropdown.Item>
-      <Dropdown.Item as={Link} to="/logout">
-        <ExitToAppIcon fontSize="small" className="mr-2" />
-        Sign Out
-      </Dropdown.Item>
-    </Dropdown.Menu>
-  </Dropdown>
-);
-
+      <Dropdown.Menu className="p-0 mt-1 m-0 dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround">
+        {portalRoutesLength > 0 &&
+          HRMSRoutesLength > 0 &&
+          user?.employeeIdMapping && (
+            <Dropdown.Item as="button" onClick={handleSwitch}>
+              <img
+                width={20}
+                height={20}
+                className="mr-2"
+                src={toAbsoluteUrl("/media/users/Profile-Switch-Icon.png")}
+                alt="Switch"
+              />
+              Switch Application
+            </Dropdown.Item>
+          )}
+        <Dropdown.Item as={Link} to="/password/reset-password">
+          <LockOpenIcon fontSize="small" className="mr-2" />
+          Reset Password
+        </Dropdown.Item>
+        <Dropdown.Item as={Link} to="/logout">
+          <ExitToAppIcon fontSize="small" className="mr-2" />
+          Sign Out
+        </Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+  );
 }

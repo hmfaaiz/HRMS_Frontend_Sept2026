@@ -26,14 +26,14 @@ export function PayrollMonthSetupPage({ history }) {
       dispatch(fetchAllCountry());
       dispatch(fetchRoles());
  
-      dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
+      // dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
       history.push("/payroll_month/read-all-payroll-month/new");
     },
     openEditFormDialog: (id) => {
       dispatch(fetchAllCountry());
       dispatch(fetchRoles());
 
-      dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
+      // dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
       history.push(`/payroll_month/read-all-payroll-month/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
