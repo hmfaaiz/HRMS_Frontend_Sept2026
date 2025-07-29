@@ -10,7 +10,7 @@ import { DatePickerField, Select } from "../../../../../../_metronic/_partials/c
 import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
-import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess } from "../../../_redux/formActions";
+import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess, stopAllCalls } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
@@ -29,7 +29,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading}) {
+export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading,csvLoading, excelLoading}) {
 
   const FormUIContext = useFormUIContext()
 
@@ -80,7 +80,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
       // update list by queryParams
       formUIProps.setQueryParams(newQueryParams)
     }
-    console.log("from report222")
+
     dispatch(fetchAttendance(newQueryParams));
 
 
@@ -119,7 +119,6 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
   }
 
 
-
   return (
     <>
       <Formik
@@ -144,7 +143,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
             <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-            <h6 className="mb-5">  Attendance Sheet</h6>
+            {/* <h6 className="mb-5">  Attendance Sheet</h6> */}
               <Form className="form form-label-right">
                 <fieldset>
                   <div className="from-group row">
@@ -205,7 +204,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
 
 
 
-                                                              <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
+                                                              <div className="col-12 col-md-4  d-flex flex-column align-items-start">
 
                                           { values?.subsidiaryId ? (() => {
  const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
@@ -453,7 +452,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
           onClick={() => {
             // setFieldValue("group_by_emp",true)
             generateReport(values,true)}}
-          disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+          disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading }
         >
            Attendance Sheet (Employee Wise)
           <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
@@ -478,7 +477,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
     onClick={() => {
       // setFieldValue("group_by_emp",false)
       generateReport(values,false)}}
-    disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+    disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading}
   >
      Attendance Sheet (Date Wise)
      <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
@@ -504,6 +503,8 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                 onClick={() => {
                   applyFilter(initialFilter.filter)
                   handleReset()
+         
+                  
                 }}
                 className="btn btn-danger btn-elevate"
               >
@@ -513,7 +514,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading ||  pdf2Loading ||  processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+                disabled={loading ||  pdf2Loading || csvLoading || excelLoading ||  processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
                 className="btn btn-success btn-elevate"
               >
                 Filter Records
@@ -525,7 +526,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
        
 
               <button
-                disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to}
+                disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading}
                 className="btn btn-secondary"
                 onClick={() => runAllProcess(values)}
               >
@@ -535,11 +536,11 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                 )}
               </button>
 
-
+                    <ReportButton values={values} />
           
             </Modal.Footer>
 
-               <ReportButton values={values} />
+            
 
         
 
