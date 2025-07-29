@@ -13,7 +13,27 @@ import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashbo
 //Validation for Form
 const formValidation = Yup.object().shape({
   paymentMode: Yup.string().required(VALIDATION_MESSAGES.required),
-  amount: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
+  // amount: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
+ amount: Yup.string()
+  .required(VALIDATION_MESSAGES.required)
+  .matches(/^\d+(\.\d{1,2})?$/, VALIDATION_MESSAGES.validNumber) // Allows decimals up to 2 digits
+  .test(
+    'is-valid-range',
+    'Amount must be between 0.1 and 999999',
+    (value) => {
+      const num = parseFloat(value);
+      return !isNaN(num) && num >= 0.1 && num <= 999999;
+    }
+  )
+  .test(
+    'max-digits',
+    'Amount must not exceed 6 digits in total (before + after decimal)',
+    (value) => {
+      const clean = value?.replace('.', '') || '';
+      return clean.length <= 6;
+    }
+  )
+,
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required)
 });
 
@@ -137,7 +157,8 @@ export function MasterEditForm({
                         label={
                           <span>
                             {" "}
-                            Rounding Up to<span style={{ color: "red" }}>*</span>
+                            {/* Rounding Up to<span style={{ color: "red" }}>*</span> */}
+                           Round To Nearest <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         value={values.amount}
