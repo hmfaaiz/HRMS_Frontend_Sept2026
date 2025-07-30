@@ -72,7 +72,7 @@ export function EmployeeLoanDetail({ entities }) {
   return (
     <div className="px-3 py-2 w-full bg-white rounded-lg">
       <div className="w-full text-xs flex flex-col h-full justify-between">
-        <h6 className="font-weight-bolder mb-0 text-primary">Laon & Payslip</h6>
+        <h6 className="font-bold mb-0 text-primary my-2">Loan & Payslip</h6>
         <div className="w-full">
           <DonutChart
             data={
@@ -85,29 +85,31 @@ export function EmployeeLoanDetail({ entities }) {
             }
           />
         </div>
-        <BootstrapTable
-          noDataIndication={NoRecordsFoundMessage({
-            entities: entities || [],
-          })}
-          wrapperClasses="table-responsive"
-          bordered={false}
-          classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-          bootstrap4
-          remote
-          keyField="Id"
-          data={entities || []}
-          columns={columns}
-        >
-          <PleaseWaitMessage entities={entities || []} />
-          <NoRecordsFoundMessage entities={entities || []} />
-        </BootstrapTable>
-        <div className="font-size-xs flex gap-x-4 items-end text-black mt-2 flex-wrap">
-          <p className="m-0 text-underline">
+        <div className="mt-5">
+          <BootstrapTable
+            noDataIndication={NoRecordsFoundMessage({
+              entities: entities || [],
+            })}
+            wrapperClasses="table-responsive"
+            bordered={false}
+            classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+            bootstrap4
+            remote
+            keyField="Id"
+            data={entities || []}
+            columns={columns}
+          >
+            <PleaseWaitMessage entities={entities || []} />
+            <NoRecordsFoundMessage entities={entities || []} />
+          </BootstrapTable>
+        </div>
+        <div className="font-size-xs font-semibold flex gap-x-4 items-end text-black mt-2 flex-wrap">
+          <p className="m-0 underline hover:text-primary">
             <Link to={"/leave-request/read-all-leave-request"}>
               Loan Request{" "}
             </Link>
           </p>
-          <p className="m-0 text-underline">
+          <p className="m-0 underline">
             <Link to={"/payslip_team/read-payslip"}>Payslip Preview</Link>
           </p>
         </div>

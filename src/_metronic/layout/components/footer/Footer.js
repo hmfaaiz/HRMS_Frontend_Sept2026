@@ -14,22 +14,22 @@ export function Footer() {
 
   return (
     <div
-      className={`footer bg-white py-4 d-flex flex-lg-column  ${layoutProps.footerClasses}`}
+      className={`footer bg-[#f5f5f5] py-2 d-flex flex-lg-column`}
       id="kt_footer"
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0}}
     >
       <div
         className={`${layoutProps.footerContainerClasses} d-flex flex-columnf flex-md-row align-items-center justify-content-between`}
       >
-        <div className="text-dark order-2 order-md-1">
-          <span className="text-muted font-weight-bold mr-2">{today.toString()}</span> &copy;{" "}
+        <div className="text-gray-500 text-sm order-2 order-md-1">
+          <span className="font-weight-bold">{today.toString()}</span> &copy;{" "}
           <a
             href="https://dynasoftcloud.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-dark-75 text-hover-primary"
+            className="text-gray-500 text-hover-primary"
           >
-            Dynasoft Cloud PVT Ltd.
+            HRMS By Dynasoft Cloud
           </a>
         </div>
         {/* <div className="nav nav-dark order-1 order-md-2">

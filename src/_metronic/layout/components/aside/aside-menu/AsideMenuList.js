@@ -82,7 +82,6 @@ export function AsideMenuList({ layoutProps }) {
     ? "1"
     : "2";
 
-    console.log("user", user);
   return (
     <div
       style={{ zIndex: "9999" }}

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
 import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Pen } from "lucide-react";
@@ -22,181 +21,144 @@ const EmployeeProfile = () => {
   }, [user?.employeeIdMapping]);
   return (
     <>
-      <div className="d-flex align-items-center p-3 rounded-lg bg-white w-full">
-        <div>
-          <img
-            name="profile_image"
-            src={
-              data?.profile_image
-                ? `${data?.profile_image}`
-                : toAbsoluteUrl("/media/users/profileImage.png")
-            }
-            alt="Profile"
-            width={130}
-            height={130}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = toAbsoluteUrl("/media/users/profileImage.png");
-            }}
-          />
-          <p className="font-size-xs mt-3 text-center">
-            Change Picture <Pen style={{ width: "11px" }} />
-          </p>
+      <div className="p-3 rounded-lg bg-white w-full">
+        <div className="d-flex align-items-center ">
+          <div>
+            <img
+              name="profile_image"
+              src={
+                data?.profile_image
+                  ? `${data?.profile_image}`
+                  : toAbsoluteUrl("/media/users/profileImage.png")
+              }
+              alt="Profile"
+              width={120}
+              height={120}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = toAbsoluteUrl("/media/users/profileImage.png");
+              }}
+            />
+          </div>
+          <div className="text-black mx-5">
+            <h5 className="font-weight-boldest text-black">
+              {data?.firstName || ""} {data?.middleName || ""}{" "}
+              {data?.lastName || ""}
+            </h5>
+            <p className="text-sm m-0">{data?.department?.deptName || ""}</p>
+            <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
+          </div>
         </div>
-        <div className="text-black mx-5">
-          <h5 className="font-weight-boldest text-black">
-            {data?.firstName || ""} {data?.middleName || ""}{" "}
-            {data?.lastName || ""}
-          </h5>
-          <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
-          <p className="text-sm m-0">
-            {" "}
-            {data?.city?.name ? data?.city?.name + "," : ""}
-            {data?.country?.name || ""}
-          </p>
-        </div>
+        {/* <p className="font-size-xs mt-3">
+          Change Picture <Pen style={{ width: "11px" }} />
+        </p> */}
       </div>
       <div className="px-5 py-2 rounded-lg bg-white w-full">
         {data ? (
           <div>
-            <h6 className="font-weight-bolder">Employee Details</h6>
-            <div className="mt-3">
-              <h6 className="font-weight-bolder text-primary">
+            <h5 className="font-weight-bolder m-0 py-1">Employee Details</h5>
+            {/* Office Information */}
+            <div className="mt-4">
+              <h6 className="font-bold mb-0 text-primary my-2">
                 Office Information
               </h6>
-              <Row className="text-sm text-black font-weight-light">
-                {/* comapny  */}
-                <Col className="font-weight-normal" md={4}>
-                  Company
-                </Col>
-                <Col md={8}>{data?.company?.name || "N/A"}</Col>
-                {/* subsidiary  */}
-                <Col className="font-weight-normal" md={4}>
-                  Subsidiary
-                </Col>
-                <Col md={8}>{data?.subsidiary.name || "N/A"}</Col>
-                {/* Department  */}
-                <Col className="font-weight-normal" md={4}>
-                  Department
-                </Col>
-                <Col md={8}>{data?.department?.deptName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Reporting To
-                </Col>
-                <Col md={8}>
+              <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                <div className="font-medium">Company</div>
+                <div>{data?.company?.name || "N/A"}</div>
+
+                <div className="font-medium">Subsidiary</div>
+                <div>{data?.subsidiary?.name || "N/A"}</div>
+
+                <div className="font-medium">Reporting To</div>
+                <div>
                   {data?.ReportTo?.firstName
-                    ? data?.ReportTo?.firstName +
-                      " " +
-                      data?.ReportTo?.middleName +
-                      " " +
-                      data?.ReportTo?.lastName
+                    ? `${data?.ReportTo?.firstName} ${data?.ReportTo?.middleName} ${data?.ReportTo?.lastName}`
                     : "N/A"}
-                </Col>
-                <Col className="font-weight-normal" md={4}>
-                  Grade
-                </Col>
-                <Col md={8}>{data?.grade?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Designation
-                </Col>
-                <Col md={8}>{data?.designation?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Employee Type
-                </Col>
-                <Col md={8}>{data?.employeeType?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Payroll Group
-                </Col>
-                <Col md={8}>{data?.payrollGroup?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Team
-                </Col>
-                <Col md={8}>{data?.team?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Employee Status
-                </Col>
-                <Col md={8}>{data?.employeeStatus?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Default Shift:
-                </Col>
-                <Col md={8}>{data?.defaultShift?.name || "N/A"}</Col>
-              </Row>
+                </div>
+
+                <div className="font-medium">Grade</div>
+                <div>{data?.grade?.formName || "N/A"}</div>
+
+                <div className="font-medium">Employee Type</div>
+                <div>{data?.employeeType?.formName || "N/A"}</div>
+
+                <div className="font-medium">Payroll Group</div>
+                <div>{data?.payrollGroup?.formName || "N/A"}</div>
+
+                <div className="font-medium">Team</div>
+                <div>{data?.team?.formName || "N/A"}</div>
+
+                <div className="font-medium">Employee Status</div>
+                <div>{data?.employeeStatus?.formName || "N/A"}</div>
+
+                <div className="font-medium">Default Shift</div>
+                <div>{data?.defaultShift?.name || "N/A"}</div>
+              </div>
             </div>
-            <div className="mt-3">
-              <h6 className="font-weight-bolder text-primary">
+
+            {/* Personal Information */}
+            <div className="mt-6">
+              <h6 className="font-bold mb-0 text-primary my-2">
                 Personal Information
               </h6>
-              <Row className="text-sm text-black font-weight-light">
-                <Col className="font-weight-normal" md={4}>
-                  Country
-                </Col>
-                <Col md={8}>{data?.country?.name || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  City
-                </Col>
-                <Col md={8}>{data?.city?.name || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Location
-                </Col>
-                <Col md={8}>{data?.location?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Region
-                </Col>
-                <Col md={8}>{data?.region?.formName || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Gender
-                </Col>
-                <Col md={8}>{data?.gender || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Date of joining
-                </Col>
-                <Col md={8}>
+              <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                <div className="font-medium">Country</div>
+                <div>{data?.country?.name || "N/A"}</div>
+
+                <div className="font-medium">City</div>
+                <div>{data?.city?.name || "N/A"}</div>
+
+                <div className="font-medium">Location</div>
+                <div>{data?.location?.formName || "N/A"}</div>
+
+                <div className="font-medium">Region</div>
+                <div>{data?.region?.formName || "N/A"}</div>
+
+                <div className="font-medium">Gender</div>
+                <div>{data?.gender || "N/A"}</div>
+
+                <div className="font-medium">Date of Joining</div>
+                <div>
                   {data?.dateOfJoining
                     ? format(new Date(data?.dateOfJoining), "yy-MMM-yyyy")
                     : "N/A"}
-                </Col>
-                <Col className="font-weight-normal" md={4}>
-                  Date of Confirmation
-                </Col>
-                <Col md={8}>
+                </div>
+
+                <div className="font-medium">Date of Confirmation</div>
+                <div>
                   {data?.dateOfConfirmation
                     ? format(new Date(data?.dateOfConfirmation), "yy-MMM-yyyy")
                     : "N/A"}
-                </Col>
-                <Col className="font-weight-normal" md={4}>
-                  Date of Birth
-                </Col>
-                <Col md={8}>
+                </div>
+
+                <div className="font-medium">Date of Birth</div>
+                <div>
                   {data?.dateOfBirth
-                    ? format(new Date(data?.dateOfBirth), "yy-MMM-yyyy")
+                    ? format(new Date(data?.dateOfBirth), "dd-MMM-yyyy")
                     : "N/A"}
-                </Col>
-                <Col className="font-weight-normal" md={4}>
-                  Id Card No
-                </Col>
-                <Col md={8}>{data?.nic_no || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Offical Email
-                </Col>
-                <Col md={8}>{data?.email_official || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Cell No
-                </Col>
-                <Col md={8}>{data?.phone_cell || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Phone (Home)
-                </Col>
-                <Col md={8}>{data?.phone_home || "N/A"}</Col>
-                <Col className="font-weight-normal" md={4}>
-                  Passport No
-                </Col>
-                <Col md={8}>{data?.passportNo || "N/A"}</Col>
-              </Row>
+                </div>
+
+                <div className="font-medium">ID Card No</div>
+                <div>{data?.nic_no || "N/A"}</div>
+
+                <div className="font-medium">Official Email</div>
+                <div>{data?.email_official || "N/A"}</div>
+
+                <div className="font-medium">Cell No</div>
+                <div>{data?.phone_cell || "N/A"}</div>
+
+                <div className="font-medium">Phone (Home)</div>
+                <div>{data?.phone_home || "N/A"}</div>
+
+                <div className="font-medium">Passport No</div>
+                <div>{data?.passportNo || "N/A"}</div>
+              </div>
             </div>
           </div>
         ) : (
-          <p>Employee Data Not Exists</p> // Improved message for clarity
+          <p className="text-sm text-red-500">Employee Data Not Exists</p>
         )}
+
         {/* </Accordion> */}
       </div>
     </>

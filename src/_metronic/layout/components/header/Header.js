@@ -49,7 +49,7 @@ export function Header({ toggleMenuVisibility, company, isEmployeePortal }) {
           <div className="flex items-center">
             <img
               alt="logo"
-              className="w-12 h-12 "
+              className="w-12 h-12"
               src={layoutProps.headerStickyLogo}
             />
           </div>

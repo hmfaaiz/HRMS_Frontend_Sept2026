@@ -109,8 +109,10 @@ export function ReportingEmpTable({ empAuthorityList }) {
   ];
 
   return (
-    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg">
-      <h6 className="font-weight-bolder my-2 text-primary">Team Members</h6>    
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-56 overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">
+        Team Members ({empAuthorityList?.length || 0})
+      </h6>
       <BootstrapTable
         noDataIndication={NoRecordsFoundMessage({
           entities: empAuthorityList || [],

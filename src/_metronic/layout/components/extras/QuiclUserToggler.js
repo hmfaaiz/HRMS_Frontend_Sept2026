@@ -30,7 +30,7 @@ export function QuickUserToggler() {
               id="kt_quick_user_toggle"
             >
               <>
-                <span className="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">
+                <span className="text-muted text-white font-normal d-none d-md-inline mr-1">
                   Hi,
                 </span>
                 <span className="text-dark-50 font-weight-bolder font-size-xs d-none d-md-inline mr-3">

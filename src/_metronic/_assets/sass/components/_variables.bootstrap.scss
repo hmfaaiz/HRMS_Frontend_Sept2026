@@ -451,7 +451,7 @@ $transition-input:                                  color 0.15s ease, background
 // Style anchor elements.
 $link-color:                                        $black !default;
 $link-decoration:                                   none !default;
-$link-hover-color:                                  darken($black, 15%) !default;
+$link-hover-color:                                  $primary !default;
 $link-hover-decoration:                             underline !default;
 // Darken percentage for links with `.text-*` class (e.g. `.text-success`)
 $emphasized-link-hover-darken-percentage:           15% !default;

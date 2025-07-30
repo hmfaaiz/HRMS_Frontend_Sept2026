@@ -21,7 +21,7 @@ export const AttendanceSummary = ({ attendanceSummary }) => {
             }
           />
         </div>
-        <div className="grid grid-cols-2 text-sm gap-8 mt-4">
+        <div className="grid grid-cols-2 text-sm gap-8 mt-5">
           <div className="flex justify-between items-center">
             <p className="text-black m-0">Present Days</p>
             <p className="text-primary font-extrabold m-0">
@@ -90,7 +90,7 @@ export const AttendanceSummary = ({ attendanceSummary }) => {
           </div>
         </div>
 
-        <div className="text-xs flex gap-4 items-end text-black mt-2 flex-wrap">
+        <div className="font-size-xs font-semibold flex gap-4 items-end text-black mt-2 flex-wrap">
           <p className="m-0 underline">
             <Link to="/attendance_request/read-all-attendance-request">
               Attendance Request

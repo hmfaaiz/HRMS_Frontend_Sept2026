@@ -75,12 +75,12 @@ const attendanceStatusMap = {
 };
 
 const attendanceStatusColors = {
-  att_absent: "#06c00f",
+  att_absent: "#34b9a3",
   att_absent_att: "#e23f35",
-  att_present: "#06c00f",
-  att_presents: "#b5ba17",
+  att_present: "#34b9a3",
+  att_presents: "#8fbf2a",
   att_HD: "#dd8941",
-  att_dayoff: "#662d91",
+  att_dayoff: "#933ab3",
 };
 
 const convertTimeToPoint = (val) => {

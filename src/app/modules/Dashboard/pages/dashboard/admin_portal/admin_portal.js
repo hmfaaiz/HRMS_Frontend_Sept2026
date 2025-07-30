@@ -553,8 +553,7 @@ export const AdminPortal = () => {
                   {allDashboardAlerts.map((e, alertIdx) => {
                     if (
                       e?.dashlet_type === "chart" &&
-                      panel?.key !== "Recruitment" &&
-                      e?.master_Id != "1893"
+                      e?.master_Id === panels[activeKey]?.resourceId
                     ) {
                       return <ChartData key={`chart-${alertIdx}`} data={e} />;
                     }

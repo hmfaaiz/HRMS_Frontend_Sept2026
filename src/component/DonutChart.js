@@ -30,7 +30,7 @@ const DonutChart = ({ data = [], colors }) => {
   };
 
   const options = {
-    cutout: "70%",
+    cutout: "60%",
     plugins: {
       legend: {
         display: false,

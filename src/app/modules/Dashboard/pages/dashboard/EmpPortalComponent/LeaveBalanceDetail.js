@@ -1,4 +1,4 @@
-  import React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import DonutChart from "../../../../../../component/DonutChart";
 
@@ -35,7 +35,7 @@ export function LeaveBalanceDetail({ leaveBalances }) {
               );
             })}
         </div>
-        <div className="text-xs flex gap-4 items-end text-black mt-2 flex-wrap">
+        <div className="font-size-xs font-semibold flex gap-4 items-end text-black mt-2 flex-wrap">
           <p className="m-0 underline">
             <Link to={"/leave-request/read-all-leave-request"}>
               Leave Request
