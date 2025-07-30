@@ -28,6 +28,7 @@ import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { toast } from "react-toastify";
 import { FormTable } from "../form-table/FormTable";
+import { useFormUIContext } from "../FormUIContext";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape(
@@ -252,7 +253,14 @@ export function FormEditForm({
   const [salaryApproverPermission, setSalaryApproverPermission] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState(false);
 
+  const formUIContext = useFormUIContext();
 
+  const formUIProps = useMemo(() => {
+    return {
+      ids: formUIContext.ids,
+
+    };
+  }, [formUIContext]);
   useEffect(() => {
     if (!user.Id) {
       dispatch(fetchAllActiveEmployees());
@@ -352,8 +360,8 @@ export function FormEditForm({
       })
     );
 
-    fetchEmployeeSalaryEarningList(employeeId, 0, null);
-  }, [user?.employeeId, dashboard.employeeId]);
+    fetchEmployeeSalaryEarningList(employeeId, 0, null,null,null,formUIProps.ids);
+  }, [user?.employeeId, dashboard.employeeId,formUIProps,formUIProps.ids]);
 
 
 
@@ -395,10 +403,10 @@ export function FormEditForm({
   }
 
 
-  const fetchEmployeeSalaryEarningList = async (employeeId, basicSalary, setFieldValue, gradeId, employeeTypeId) => {
+  const fetchEmployeeSalaryEarningList = async (employeeId, basicSalary, setFieldValue, gradeId, employeeTypeId,Id) => {
     try {
 
-      const response = await axios.post(`${USERS_URL}/emp_salary_revision/read-salary-policy-byfilters`, { employeeId, basicSalary: basicSalary || 0, gradeId, employeeTypeId });
+      const response = await axios.post(`${USERS_URL}/emp_salary_revision/read-salary-policy-byfilters`, { employeeId, basicSalary: basicSalary || 0, gradeId, employeeTypeId,Id });
 
       if (!response?.data?.data?.[0]?.transactionType) {
         setDefaultMapEarningDeductionList([]);
@@ -407,7 +415,7 @@ export function FormEditForm({
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
       setBasicSalaryFactor(response?.data?.data[0]?.basicFactor || '');
-      setGrossSalaryDB(response?.data?.data[0]?.grossSalary || '');
+      setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || '');
       setBasicSalary(response?.data?.data[0]?.basicSalary || '');
 
@@ -433,6 +441,7 @@ export function FormEditForm({
       const currencyId = response?.data?.data[0]?.currencyId;
 
       if (setFieldValue) {
+     
         setFieldValue("grossSalary", response?.data?.data[0]?.grossSalary);
         setFieldValue("basicSalary", response?.data?.data[0]?.basicSalary);
         setFieldValue("overtime_working_day", response?.data?.data[0]?.overtime_working_day || 1);
@@ -452,28 +461,62 @@ export function FormEditForm({
   }
 
 
+  // const handleFieldChanged = (el) => {
+  //   const index = el.target.id.split('-')[1]
+  //   const key = el.target.id.split('-')[0]
+  //   setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((val, ind) => {
+  //     if (ind == index) {
+  //       if (!(key == "factorValue" && Number(el.target.value) > 100)) {
+  //         val[key] = key == 'calculation_type' ? (el.target.value) : Number(el.target.value)
+  //       }
+  //     }
+  //     return val
+  //   })])
+  // }
+
   const handleFieldChanged = (el) => {
-    const index = el.target.id.split('-')[1]
-    const key = el.target.id.split('-')[0]
-    setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((val, ind) => {
+  const [key, index] = el.target.id.split('-');
+
+  setDefaultMapEarningDeductionList((prev) =>
+    prev.map((val, ind) => {
       if (ind == index) {
-        if (!(key == "factorValue" && Number(el.target.value) > 100)) {
-          val[key] = key == 'calculation_type' ? (el.target.value) : Number(el.target.value)
+        const newVal = el.target.value;
+        if (!(key === "factorValue" && Number(newVal) > 100)) {
+          val[key] = key === 'calculation_type' || key === 'earning_deduction_id'
+            ? newVal
+            : Number(newVal);
         }
       }
-      return val
-    })])
-  }
+      return val;
+    })
+  );
+};
+
+
+  // const addRow = (element) => {
+  //   if (element.target.id == "Other") {
+  //     setDefaultMapEarningDeductionList([...defMapEarningDeductionList, { transactionType: "Earning", isPartOfGrossSalary: 0 }])
+  //   }
+  //   else {
+  //     setDefaultMapEarningDeductionList([...defMapEarningDeductionList, { transactionType: element.target.id, isPartOfGrossSalary: 1 }])
+  //   }
+
+  // }
+
 
   const addRow = (element) => {
-    if (element.target.id == "Other") {
-      setDefaultMapEarningDeductionList([...defMapEarningDeductionList, { transactionType: "Earning", isPartOfGrossSalary: 0 }])
-    }
-    else {
-      setDefaultMapEarningDeductionList([...defMapEarningDeductionList, { transactionType: element.target.id, isPartOfGrossSalary: 1 }])
-    }
+  const baseObj = {
+    earning_deduction_id: '',
+    calculation_type: '',
+    factorValue: 0,
+    amount: 0,
+    updatedAmount: 0,
+    transactionType: element?.target?.id === "Other" ? "Earning" : element.target.id,
+    isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
+  };
 
-  }
+  setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
+};
 
   const deleteRow = (element) => {
 
@@ -513,6 +556,7 @@ export function FormEditForm({
         setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == '% Of Gross') {
             x.updatedAmount = ((grossSalaryInput * x.factorValue) / 100);
+            console.log("updated111",x.factorValue, x.updatedAmount)
           }
           return x;
         })]);
@@ -524,6 +568,7 @@ export function FormEditForm({
       setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
         if (x.calculation_type == '% Of Basic') {
           x.updatedAmount = ((basicSalaryNumber * x.factorValue) / 100);
+          console.log("updated222", x.updatedAmount)
           if (x.isPartOfGrossSalary) {
             basicSalaryNumber += x.updatedAmount
           }
@@ -979,8 +1024,9 @@ export function FormEditForm({
                         }
                         placeholder="Enter Gross Salary"
                         autoComplete="off"
+                        disabled={!values.revisedDate}
                         // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
-                        value={defGrossSalaryDB || ''}
+                        value={ values.grossSalary || defGrossSalaryDB || ''}
                         onChange={(e) => {
                           setGrossSalaryDB(e);
                           setFieldValue("grossSalary", e);
@@ -1026,7 +1072,7 @@ export function FormEditForm({
                         name="basicSalaryFactor"
                         type="number"
                         disabled
-                        value={defBasicSalaryFactor}
+                        value={values.basicfactor ||defBasicSalaryFactor}
                         component={Input}
                         placeholder="Enter Basic Salary"
                         label={<span> Gross to Basic Factor{Boolean(currentSalaryMethod == 'Gross to Basic') && <><span style={{ color: 'red' }}>*</span></>}</span>}
@@ -2222,7 +2268,7 @@ export function FormEditForm({
 
                   {!isUserForRead && (
                     <button
-                      type="submit"
+                      type="button"
                       disabled={!values.grossSalary || values.grossSalary == 0}
                       // || defMapEarningDeductionList.some(obj => !obj.updatedAmount || obj.updatedAmount == 0)
                       onClick={(e) => {
@@ -2240,9 +2286,9 @@ export function FormEditForm({
                       className="btn btn-primary btn-elevate m-1"
                     >
                       Save
-                      {/* {loading && (
+                      {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )} */}
+                  )}
                     </button>
                   )}
 

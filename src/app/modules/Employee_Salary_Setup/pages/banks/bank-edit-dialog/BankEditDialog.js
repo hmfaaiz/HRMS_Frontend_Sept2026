@@ -132,6 +132,7 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
         overtime_working_day: user.overtime_working_day,
         overtime_off_day: user.overtime_off_day,
         overtime_holiday: user.overtime_holiday,
+        basicFactor: user.basicFactor,
 
       };
 

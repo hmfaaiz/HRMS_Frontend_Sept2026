@@ -57,7 +57,14 @@ export function FormTable() {
     formUIProps.setIds("");
 
     dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
-  }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]);
+  }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]); 
+  
+  
+  useEffect(() => {
+
+
+    dispatch(actions.fetchPreviousEmpSalaryById(formUIProps.ids));
+  }, [formUIProps.ids]);
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateEmpSalaryRevision"
@@ -111,7 +118,7 @@ export function FormTable() {
       formatter: (cell) => formatNumberWithCommas(cell),
     },
     {
-      dataField: "",
+      dataField: "basicFactor",
       text: "Gross to Basic Factor",
       sort: false,
       sortCaret: sortCaret,
@@ -163,7 +170,7 @@ export function FormTable() {
     sizePerPage: formUIProps.queryParams.pageSize,
     page: formUIProps.queryParams.pageNumber,
   };
-console.log("previousSalaryRevisionFetched", entities);
+
   return (
     <>
       <Accordion defaultActiveKey="">

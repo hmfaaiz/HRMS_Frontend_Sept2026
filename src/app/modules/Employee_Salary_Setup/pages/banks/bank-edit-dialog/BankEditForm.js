@@ -413,7 +413,8 @@ export function BankEditForm({
       else {
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
-      setBasicSalaryFactor(response?.data?.data[0]?.basicFactor || '');
+      console.log("aaa333",response?.data?.data[0])
+      setBasicSalaryFactor(response?.data?.data[0]?.basicSalaryFactor || response?.data?.data[0]?.basicFactor || '');
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || '');
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || '');
       setBasicSalary(response?.data?.data[0]?.basicSalary || '');
@@ -666,7 +667,7 @@ useEffect(()=>{
             setErrors(validationErrors);
           } else {
             enableLoading();
-            saveEarningDeductionTran({...values, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)}, defMapEarningDeductionList);
+            saveEarningDeductionTran({...values,basicFactor:defBasicSalaryFactor, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)}, defMapEarningDeductionList);
           }
         }}
       >

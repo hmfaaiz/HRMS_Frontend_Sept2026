@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const { actions } = EmpSalaryRevisionSlice;
 
-
+// dropdown
 export const fetchEmpForSalaryRevision = () => async (dispatch) => {
 
   // delete params?.openDeleteFormDialog
@@ -107,6 +107,36 @@ console.log("fetchAllPrevSalaryRevByEmpId", body);
       error.clientMessage = "Can't fetch previous salary revisions";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const fetchPreviousEmpSalaryById = (Id) => (dispatch) => {
+
+
+  if (!Id) {
+    return dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: undefined }));
+  }
+
+  return requestFromServer
+    .getAllEmpSalaryRevInfoById(Id)
+    .then((response) => {
+      const entities = response.data?.data;
+
+
+      dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: entities }));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find record";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+       toast.error(error?.response?.data?.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

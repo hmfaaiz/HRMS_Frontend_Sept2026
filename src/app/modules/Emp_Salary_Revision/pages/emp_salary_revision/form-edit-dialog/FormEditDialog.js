@@ -27,6 +27,7 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
       setIds: FormUIContext.setIds,
+      ids: FormUIContext.ids,
       employeeId: FormUIContext.employeeId,
       queryParams: FormUIContext.queryParams,
       isFileReq: FormUIContext.isFileReq,
@@ -75,14 +76,14 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
   }, [userForEdit?.employeeId,formUIProps.queryParams, dispatch,]);
 
   const saveForm = async (data, defMapEarningDeductionList) => {
-
+console.log("idsss",formUIProps.ids)
     if (data.revisedDate === null || data.revisedDate === undefined) {
       toast.error("Please select a revised date");
       return;
     }
 
     const updatedData = {
-      ...data,
+      ...data, forEdit: formUIProps?.ids || "",
       EmpSalEarDeducChild: defMapEarningDeductionList,
     };
     // const updatedData = {
