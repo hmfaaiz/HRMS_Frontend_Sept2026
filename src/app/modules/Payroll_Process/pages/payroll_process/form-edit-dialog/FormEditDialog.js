@@ -105,7 +105,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
   return (
     <>
-      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      {/* <FormEditDialogHeader id={id} isUserForRead={userForRead} /> */}
       <FormEditForm
         saveForm={saveForm}
         user={userForEdit || formUIProps.initUser}
