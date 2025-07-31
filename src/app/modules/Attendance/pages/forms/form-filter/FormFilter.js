@@ -500,8 +500,10 @@ const handleCheck = (e,setFieldValue) => {
             </Modal.Body>
             <Modal.Footer>
 
-              <div className="col-12">
-    <div className="d-flex flex-column align-items-end ">
+              <div className="d-flex flex-row col-12  align-items-end justify-content-end">
+
+                <div className="d-flex flex-column">
+                    <div className="">
                     {values.attendanceType==1 && (
                 <div className="">
       <input
@@ -518,7 +520,7 @@ const handleCheck = (e,setFieldValue) => {
               )}
               </div>
 
-              <div  className="d-flex flex-row col-12 align-items-end justify-content-end">
+               <div  className="d-flex flex-row ">
 
                 
               <button
@@ -554,7 +556,7 @@ const handleCheck = (e,setFieldValue) => {
 
               <button
                 disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading}
-                className="btn btn-secondary ml-2"
+                className="btn btn-secondary ml-2 mr-9"
                 onClick={() => runAllProcess(values)}
               >
                 Run Process
@@ -563,12 +565,15 @@ const handleCheck = (e,setFieldValue) => {
                 )}
               </button>
 
-              
+                    <ReportButton values={values} />
 
               </div>
-              <div className="d-flex flex-column align-items-end  mt-4">
-                      <ReportButton values={values} />
-              </div>
+
+                </div>
+  
+
+             
+           
               </div>
 
           
