@@ -117,7 +117,9 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
     const labels = getLabels(values);
     dispatch(fetchAttendanceSheetConsolidated(newQueryParams,document,labels,group_by_emp));
   }
-
+const handleCheck = (e,setFieldValue) => {
+    setFieldValue('markAttendancewithshift', e.target.checked);
+  };
 
   return (
     <>
@@ -125,7 +127,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
         enableReinitialize={true}
         // initialValues={initialFilter.filter}
                 initialValues={{
-                  ...initialFilter.filter,
+                  ...initialFilter.filter,attendanceType:1,
                   subsidiaryId: initialFilter.filter?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList.length > 0 ? allSubsidiaryList[0].value : '') // Set default subsidiaryId if it's not provided
                 }}
         validationSchema={formValidation}
@@ -328,6 +330,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                         onChange={(e) => {
                           const value = e.target.value == -1 ? '' : Number(e.target.value)
                           setFieldValue('attendanceType', value)
+                          setFieldValue('markAttendancewithshift', "")
                         }}
                         label={
                           <span>
@@ -497,7 +500,27 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
             </Modal.Body>
             <Modal.Footer>
 
-   
+              <div className="col-12">
+    <div className="d-flex flex-column align-items-end ">
+                    {values.attendanceType==1 && (
+                <div className="">
+      <input
+        type="checkbox"
+        id="markAttendancewithshift"
+        checked={values.markAttendancewithshift}
+        onChange={(e) => handleCheck(e, setFieldValue)}
+      />
+      <label className="ml-2 mb-3" htmlFor="markAttendancewithshift">
+        Mark attendance with shift timings if not exists.
+      </label>
+    </div>
+
+              )}
+              </div>
+
+              <div  className="d-flex flex-row col-12 align-items-end justify-content-end">
+
+                
               <button
                 type="button"
                 onClick={() => {
@@ -506,7 +529,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
          
                   
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-danger btn-elevate "
               >
                 Cancel
               </button>
@@ -515,19 +538,23 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                 type="submit"
                 onClick={() => handleSubmit()}
                 disabled={loading ||  pdf2Loading || csvLoading || excelLoading ||  processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
-                className="btn btn-success btn-elevate"
+                className="btn btn-success btn-elevate ml-2 "
               >
                 Filter Records
                 {loading  && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
+          
 
+
+
+                
        
 
               <button
                 disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading}
-                className="btn btn-secondary"
+                className="btn btn-secondary ml-2"
                 onClick={() => runAllProcess(values)}
               >
                 Run Process
@@ -536,7 +563,17 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                 )}
               </button>
 
-                    <ReportButton values={values} />
+              
+
+              </div>
+              <div className="d-flex flex-column align-items-end  mt-4">
+                      <ReportButton values={values} />
+              </div>
+              </div>
+
+          
+
+   
           
             </Modal.Footer>
 
