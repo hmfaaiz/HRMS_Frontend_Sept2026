@@ -53,11 +53,11 @@ const formValidation = Yup.object().shape(
 
     grossSalary: Yup.string()
       .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
 
     basicSalary: Yup.string()
       .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
 
     eobi_accNo: Yup.string()
       .matches(/^\d+$/, "Must contain only digits")// Only digits validation
@@ -218,7 +218,7 @@ export function FormEditForm({
   loading,
   id,
   approveSalary,
-  approveLoading, revisedDate
+  approveLoading, revisedDate,isAccessForCreate
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -703,7 +703,7 @@ export function FormEditForm({
     ];
   }, [dashboard?.allEmpTypeDynamicChildMenus, dashboard?.allEmpTypeChildMenus]);
 
-
+console.log("aaaa111",isAccessForCreate)
 
   return (
     <>
@@ -727,7 +727,7 @@ export function FormEditForm({
 
           saveForm(
             {
-              ...values,
+              ...values,basicFactor:defBasicSalaryFactor || values.basicFactor,
               grossPackage:
                 values.grossSalary > 0
                   ? Number(values.grossSalary) + Number(totalGross)
@@ -1072,7 +1072,7 @@ export function FormEditForm({
                         name="basicSalaryFactor"
                         type="number"
                         disabled
-                        value={values.basicfactor ||defBasicSalaryFactor}
+                        value={values.basicfactor || defBasicSalaryFactor}
                         component={Input}
                         placeholder="Enter Basic Salary"
                         label={<span> Gross to Basic Factor{Boolean(currentSalaryMethod == 'Gross to Basic') && <><span style={{ color: 'red' }}>*</span></>}</span>}
@@ -2266,7 +2266,7 @@ export function FormEditForm({
                   )}
 
 
-                  {!isUserForRead && (
+                  {!isUserForRead && isAccessForCreate &&(
                     <button
                       type="button"
                       disabled={!values.grossSalary || values.grossSalary == 0}

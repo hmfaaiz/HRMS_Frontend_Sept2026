@@ -24,7 +24,7 @@ export function ActionsColumnFormatter(
   const isUserRead = false;
   return (
     <>
-      {/* {isAccessForEdit && row.isActive && row?.isLoanContinuing && ( */}
+      {isAccessForEdit && row.isActive  && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -43,11 +43,11 @@ export function ActionsColumnFormatter(
             </span>
           </a>
         </OverlayTrigger>
-      {/* )} */}
+       )} 
 
       <> </>
 
-      {/* {isAccessForDelete && ( */}
+      {isAccessForDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
@@ -78,7 +78,7 @@ export function ActionsColumnFormatter(
             </a>
           )}
         </OverlayTrigger>
-      {/* )} */}
+   )} 
     </>
   );
 }

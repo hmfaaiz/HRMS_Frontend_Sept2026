@@ -46,12 +46,17 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
   const dispatch = useDispatch();
   const {
     userForEdit,
-    isuserForRead,
+    isuserForRead, userAccess,
   } = useSelector((state) => ({
 
     userForEdit: state.emp_salary_revision.userForEdit,
     isuserForRead: state.emp_salary_revision.userForRead,
+    userAccess: state?.auth?.userAccess["emp_salary_revision"],
   }));
+
+  const isAccessForCreate = userAccess?.find(
+    (item) => item.componentName === "CreateEmployeeSalaryRevision"
+  );
 
   useEffect(() => {
     // dispatch(actions.fetchmoduledata(id));
@@ -73,10 +78,10 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
 
 
     // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
-  }, [userForEdit?.employeeId,formUIProps.queryParams, dispatch,]);
+  }, [userForEdit?.employeeId, formUIProps.queryParams, dispatch,]);
 
   const saveForm = async (data, defMapEarningDeductionList) => {
-console.log("idsss",formUIProps.ids)
+    console.log("idsss", formUIProps.ids)
     if (data.revisedDate === null || data.revisedDate === undefined) {
       toast.error("Please select a revised date");
       return;
@@ -144,6 +149,7 @@ console.log("idsss",formUIProps.ids)
         disbaleLoading={disbaleLoading}
         formUIProps={formUIProps}
         revisedDate={revisedDate}
+        isAccessForCreate={isAccessForCreate}
       />
       <ToastContainer
         position="top-right"

@@ -67,7 +67,7 @@ export function FormTable() {
   }, [formUIProps.ids]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateEmpSalaryRevision"
+    (item) => item.componentName === "CreateEmployeeSalaryRevision"
   );
 
   const isAccessForDelete = userAccess?.find(

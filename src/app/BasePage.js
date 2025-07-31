@@ -79,9 +79,9 @@ const CompensationExpModule = lazy(() =>
 const EmployeeTransferModule = lazy(() =>
   import("./modules/Employee_Transfer/pages/index")
 );
-const EmployeeSalaryRevisionModule = lazy(() =>
-  import("./modules/Employee_Salary_Revision/pages/index")
-);
+// const EmployeeSalaryRevisionModule = lazy(() =>
+//   import("./modules/Employee_Salary_Revision/pages/index")
+// );
 const TaxSetupModule = lazy(() => import("./modules/Tax_Setup/pages/index"));
 const FiscalSetupModule = lazy(() =>
   import("./modules/Fiscal_Setup/pages/index")
@@ -268,7 +268,7 @@ const ROUTES = {
   salary_expatriate: EmployeeSalaryExpModule,
   compensation_expatriate: CompensationExpModule,
   employee_transfer: EmployeeTransferModule,
-  salary_revision: EmployeeSalaryRevisionModule,
+  // salary_revision: EmployeeSalaryRevisionModule,
   tax_setup: TaxSetupModule,
   fiscal_setup: FiscalSetupModule,
   payroll_month: PayrollMonthSetupModule,

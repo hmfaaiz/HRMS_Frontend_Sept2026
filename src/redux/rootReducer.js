@@ -43,7 +43,7 @@ import { employeeSalarySlice } from "../app/modules/Employee_Salary_Setup/_redux
 import { employeeSalaryExpSlice } from "../app/modules/Employee_Salary_Expatriate/_redux/employeeSalaryExpSlice";
 import { compensationExpSlice } from "../app/modules/Compensation_Expatriate/_redux/compensationExpSlice";
 import { employee_transfer_slice } from "../app/modules/Employee_Transfer/_redux/employee_transfer_slice";
-import { SalaryRevisionSlice } from "../app/modules/Employee_Salary_Revision/_redux/SalaryRevisionSlice";
+// import { SalaryRevisionSlice } from "../app/modules/Employee_Salary_Revision/_redux/SalaryRevisionSlice";
 
 import { fiscalSetupSlice } from "../app/modules/Fiscal_Setup/_redux/fiscalSetupSlice";
 import { PayrollMonthSlice } from "../app/modules/Payroll_Month_Setup/_redux/PayrollMonthSlice";
@@ -151,7 +151,7 @@ export const rootReducer = combineReducers({
   salary_expatriate: employeeSalaryExpSlice.reducer,
   compensation_expatriate: compensationExpSlice.reducer,
   employee_transfer: employee_transfer_slice.reducer,
-  salary_revision: SalaryRevisionSlice.reducer,
+  // salary_revision: SalaryRevisionSlice.reducer,
   tax_setup: taxSetupSlice.reducer,
   fiscal_setup: fiscalSetupSlice.reducer,
   payroll_month: PayrollMonthSlice.reducer,

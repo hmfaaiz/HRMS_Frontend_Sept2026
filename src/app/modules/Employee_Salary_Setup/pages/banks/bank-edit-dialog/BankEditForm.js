@@ -36,11 +36,11 @@ const formValidation = Yup.object().shape(
       .required(VALIDATION_MESSAGES.required),
     grossSalary: Yup.string()
       .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
 
     basicSalary: Yup.string()
       .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
 
     eobi_accNo: Yup.string()
       .matches(/^\d+$/, "Must contain only digits")// Only digits validation
