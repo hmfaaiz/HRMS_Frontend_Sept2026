@@ -53,7 +53,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     oT: "",
     approvedOT: "",
     workedHours: "",
-    attendanceStatus: ""
+    attendanceStatus: "",
+    markAttendancewithshift:""
   };
 
 

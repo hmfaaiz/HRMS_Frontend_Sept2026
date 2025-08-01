@@ -223,7 +223,7 @@ export function FormTable(user) {
 
 
   const handleFieldChanged = (el) => {
-    setotherErrors(validate());
+    // setotherErrors(validate());
     const index = el.target.id.split('-')[1];
     const key = el.target.id.split('-')[0];
 
@@ -1740,12 +1740,12 @@ Payroll Approver
 
                       <><tr>
                         <td id={rightindex} >
-                          <button id={rightindex} className="btn btn-danger btn-sm" onClick={deleteRowBankInfo}>Delete</button></td>
+                          <button id={rightindex} className="btn btn-danger btn-sm"  disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>Delete</button></td>
                         <td>
 
                           <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
   handleFieldChanged(e);
-  setotherErrors(validate());
+  // setotherErrors(validate());
 }}
  id={"journalBankAccountId-" + rightindex}>
                             <option value="-1">--SELECT--</option>
@@ -1768,7 +1768,7 @@ Payroll Approver
              
                           <input className="form-control" onChange={(e) => {
   handleFieldChanged(e);
-  setotherErrors(validate());
+  // setotherErrors(validate());
 }}
  placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
 
@@ -1778,7 +1778,7 @@ Payroll Approver
                         <td>
                           <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
   handleFieldChanged(e);
-  setotherErrors(validate());
+  // setotherErrors(validate());
 }}
  id={"bankAccountNo-" + rightindex}></input>
 
@@ -1790,7 +1790,7 @@ Payroll Approver
                           id={"isDefault-" + rightindex}
                           onChange={(e) => {
   handleFieldChanged(e);
-  setotherErrors(validate());
+  // setotherErrors(validate());
   
 }}
 
@@ -1827,7 +1827,7 @@ Payroll Approver
    
     }
   
-    setotherErrors(validate());
+    // setotherErrors(validate());
   
   }} 
   
@@ -1850,7 +1850,7 @@ Payroll Approver
     className="form-control"
     onChange={(e) => {
   handleFieldChanged(e);
-  setotherErrors(validate());
+  // setotherErrors(validate());
 }}
 
     id={"branchId-" + rightindex}

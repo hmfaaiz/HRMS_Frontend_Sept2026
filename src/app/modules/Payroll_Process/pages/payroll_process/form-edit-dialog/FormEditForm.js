@@ -463,24 +463,27 @@ export function FormEditForm({
 
 
                 <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end ">
+                  <div className="d-flex flex-column align-items-start ">
+                    {values?.subsidiaryId ? (() => {
+                      const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                        (option) => option.value === values.subsidiaryId
+                      );
+                      return (
+                        <>
+                          <div>
+                            <b>Active Fiscal Year -</b>{" "}
+                            {selectedSubsidiary?.fiscalYearLabel}
+                          </div>
+                          <div>
+                            <b>Active Payroll Month -</b>{" "}
+                            {selectedSubsidiary?.payrollMonthLabel}
+                          </div>
+                        </>
+                      );
+                    })() : null}
+                  </div>
 
-                  {values?.subsidiaryId ? (() => {
-                    const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-                      (option) => option.value === values.subsidiaryId
-                    );
-                    return (
-                      <>
-                        <div>
-                          <b>Active Fiscal Year -</b>{" "}
-                          {selectedSubsidiary?.fiscalYearLabel}
-                        </div>
-                        <div>
-                          <b>Active Payroll Month -</b>{" "}
-                          {selectedSubsidiary?.payrollMonthLabel}
-                        </div>
-                      </>
-                    );
-                  })() : null}
+
                 </div>
 
 
@@ -621,6 +624,15 @@ export function FormEditForm({
                         payrollGroupDetails(values.subsidiaryId, values.payroll_groupId, e.value)
                         checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, e.value)
                         setIsAfterResult(false)
+                        if (!values.payroll_accountId) {
+
+                          const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
+                            (option) => option.isDefault === true
+                          );
+
+                          setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
+
+                        }
                       }}
                       value={
                         dashboard?.allPayrollMonthYearList?.find(
@@ -865,16 +877,16 @@ export function FormEditForm({
             {<button
               type="submit"
               onClick={() => {
-                
-                if (!values.payroll_accountId) {
-                  
-                  const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
-                    (option) => option.isDefault === true
-                  );
-                 
-                  setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
 
-                }
+                // if (!values.payroll_accountId) {
+
+                //   const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
+                //     (option) => option.isDefault === true
+                //   );
+
+                //   setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
+
+                // }
                 handleSubmit();
 
                 // dispatch(actions.clearReduxData())
