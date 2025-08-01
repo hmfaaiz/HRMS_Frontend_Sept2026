@@ -1,8 +1,9 @@
 import React from "react";
 import SVG from "react-inlinesvg";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux"
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { updateUserAccess } from "../../../../_redux/redux-Actions";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -18,13 +19,41 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     openReadFormDialog,
     setIds,
-    setIsFileReq,
+    setIsFileReq, isForDelete,dispatch
   }
 ) {
   const isUserRead = false;
+
+
+// const dispatch = useDispatch();
+
+  // console.log("aaa111a1111",activeFiscalYear)
   return (
     <>
-      {isAccessForEdit && row.isActive  && (
+      {row.isForRead && (
+
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
+          <a
+            title=""
+            className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
+            onClick={() => {
+              setIds(row.Id);
+              dispatch(updateUserAccess("read"))
+            }}
+          >
+            <span className="svg-icon svg-icon-md svg-icon-primary">
+              <SVG
+                src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
+              />
+            </span>
+          </a>
+        </OverlayTrigger>
+
+      )}
+
+
+      {row.isAccessForEdit && row.isActive && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -32,8 +61,8 @@ export function ActionsColumnFormatter(
             title=""
             className="btn btn-icon edit-button"
             onClick={() => {
-              console.log("row11",row.Id)
               setIds(row.Id);
+              //  dispatch(updateUserAccess("edit"))
             }}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
@@ -43,11 +72,11 @@ export function ActionsColumnFormatter(
             </span>
           </a>
         </OverlayTrigger>
-       )} 
+      )}
 
-      <> </>
 
-      {isAccessForDelete && (
+
+      {row.isForDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
@@ -78,7 +107,7 @@ export function ActionsColumnFormatter(
             </a>
           )}
         </OverlayTrigger>
-   )} 
+      )}
     </>
   );
 }

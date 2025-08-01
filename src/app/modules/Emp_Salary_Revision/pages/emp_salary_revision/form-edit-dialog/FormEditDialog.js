@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
+export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setRevisedDate }) {
 
   const [loading, setLoading] = useState(false);
 
@@ -30,8 +30,8 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
       ids: FormUIContext.ids,
       employeeId: FormUIContext.employeeId,
       queryParams: FormUIContext.queryParams,
-      isFileReq: FormUIContext.isFileReq,
-      setIsFileReq: FormUIContext.setIsFileReq,
+   
+  
       openDeleteFormDialog: FormUIContext.openDeleteFormDialog,
     };
   }, [FormUIContext]);
@@ -129,6 +129,9 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
 
   }
 
+  useEffect(()=>{
+    setRevisedDate(userForEdit?.revisedDate)
+  })
 
   return (
     <>
@@ -144,12 +147,13 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate }) {
         loading={loading}
         setIds={formUIProps.setIds}
         isEdit={id ? true : false}
-        isFileReq={formUIProps.isFileReq}
-        setIsFileReq={formUIProps.setIsFileReq}
+
+  
         disbaleLoading={disbaleLoading}
         formUIProps={formUIProps}
         revisedDate={revisedDate}
         isAccessForCreate={isAccessForCreate}
+        setRevisedDate={setRevisedDate}
       />
       <ToastContainer
         position="top-right"

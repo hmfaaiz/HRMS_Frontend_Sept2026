@@ -214,11 +214,10 @@ export function FormEditForm({
   user,
   onHide,
   isUserForRead,
-  enableLoading,
   loading,
-  id,
-  approveSalary,
-  approveLoading, revisedDate,isAccessForCreate
+
+
+ revisedDate,isAccessForCreate,setRevisedDate
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details

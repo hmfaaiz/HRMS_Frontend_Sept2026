@@ -23,7 +23,7 @@ export const fetchEmpForSalaryRevision = () => async (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
 };
-
+// salary from main table 
 export const fetchCurrentEmpSalary = (employeeId) => (dispatch) => {
 
 
@@ -48,7 +48,7 @@ export const fetchCurrentEmpSalary = (employeeId) => (dispatch) => {
 
 
 
-
+// insert
 export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
   dispatch
 ) => {
@@ -91,9 +91,9 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
 };
 
 
-
+// grid data
 export const fetchAllPrevSalaryRevByEmpId = (body) => async (dispatch) => {
-console.log("fetchAllPrevSalaryRevByEmpId", body);
+
   // delete params?.openDeleteFormDialog
 
   return requestFromServer.getAllPrevSalaryRevByEmpId(body)
@@ -146,4 +146,36 @@ export const fetchPreviousEmpSalaryById = (Id) => (dispatch) => {
         progress: undefined,
       });
     });
+};
+
+
+
+export const deleteEmpSalaryRevById = (Id) => (dispatch) => {
+
+  return requestFromServer
+    .deleteEmpSalaryRevInfoById(Id)
+    .then((response) => {
+    
+      // dispatch(actions.deleteEmpSalaryRevInfoById({ Id: id }));
+      toast.success(SERVER_MESSAGES.deletedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error.response.data.message);
+    });
+};
+
+
+
+export const updateUserAccess = (mode) => (dispatch) => {
+      dispatch(actions.updateUserAccess(mode));
+
 };

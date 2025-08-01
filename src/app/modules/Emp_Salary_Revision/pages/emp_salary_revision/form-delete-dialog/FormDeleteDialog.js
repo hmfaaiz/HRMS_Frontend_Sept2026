@@ -65,14 +65,14 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   const deleteEmpSalaryRevision = () => {
     // server request for deleting customer by id
     enableLoading();
-    // dispatch(actions.deleteEmpSalaryRevision(id)).then(() => {
-    //   onHide();
-    //   // refresh list after deletion
+    dispatch(actions.deleteEmpSalaryRevById(id)).then(() => {
+      onHide();
+      // refresh list after deletion
   
-    //   dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
+      dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
    
-    //   disableLoading();
-    // });
+      disableLoading();
+    });
   };
  
   return (
@@ -105,7 +105,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            // onClick={deleteEmpSalaryRevision}
+            onClick={deleteEmpSalaryRevision}
             className="btn btn-primary btn-elevate"
           >
             Delete Record

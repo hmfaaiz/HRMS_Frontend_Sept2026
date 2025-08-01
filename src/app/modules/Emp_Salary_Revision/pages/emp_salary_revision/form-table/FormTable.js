@@ -40,26 +40,29 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
+
   const { currentState, userAccess } = useSelector((state) => {
     return {
       currentState: state.emp_salary_revision,
       userAccess: state?.auth?.userAccess["emp_salary_revision"],
+
     };
   }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
-
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
+  console.log("activeFiscalYear2222", activeFiscalYear?.payrollMonth)
   const dispatch = useDispatch();
 
   useEffect(() => {
     formUIProps.setIds("");
 
     dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
-  }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]); 
-  
-  
+  }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]);
+
+
   useEffect(() => {
 
 
@@ -71,8 +74,23 @@ export function FormTable() {
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteEmpSalaryRevision"
+    (item) => item.componentName === "DeleteSalaryRevisionByid"
   );
+
+  const isAccessForRead = userAccess?.find(
+    (item) => item.componentName === "ReadSalaryRevisionByid"
+  );
+
+  const updatedEntities = (entities || []).map((row) => ({
+    ...row,
+    isForDelete:
+      isAccessForDelete?.isAccess &&
+      row.payroll_monthId === activeFiscalYear?.payrollMonth?.Id,
+    isForRead: isAccessForRead?.isAccess,
+    isAccessForEdit:
+      isAccessForEdit?.isAccess &&
+      row.payroll_monthId === activeFiscalYear?.payrollMonth?.Id,
+  }));
   // Table columns
   const columns = [
     {
@@ -133,9 +151,9 @@ export function FormTable() {
       formatter: (cell) => formatNumberWithCommas(cell),
     },
 
-   
 
-  
+
+
 
     {
       dataField: "action",
@@ -147,12 +165,10 @@ export function FormTable() {
         setIsFileReq: formUIProps.setIsFileReq,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        // openActiveFormDialog: formUIProps.openActiveFormDialog,
-        // openReadFormDialog: formUIProps.openReadFormDialog,
-        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
+        dispatch,
+
+
+
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -182,7 +198,7 @@ export function FormTable() {
                 eventKey="0"
                 className="flex-between-center text-bold"
               >
-                  Employee Revision Salaries
+                Employee Revision Salaries
                 <KeyboardArrowDown />
               </Accordion.Toggle>
             </div>
@@ -205,7 +221,7 @@ export function FormTable() {
                         bootstrap4
                         remote
                         keyField="Id"
-                        data={entities === null ? [] : entities}
+                        data={updatedEntities === null ? [] : updatedEntities}
                         columns={columns}
                         defaultSorted={uiHelpers.defaultSorted}
                         onTableChange={getHandlerTableChange(
@@ -217,8 +233,8 @@ export function FormTable() {
                         // })}
                         {...paginationTableProps}
                       >
-                        <PleaseWaitMessage entities={entities} />
-                        <NoRecordsFoundMessage entities={entities} />
+                        <PleaseWaitMessage entities={updatedEntities} />
+                        <NoRecordsFoundMessage entities={updatedEntities} />
                       </BootstrapTable>
                     </Pagination>
                   );

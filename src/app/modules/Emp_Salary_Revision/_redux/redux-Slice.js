@@ -12,11 +12,13 @@ const initialEmpSalaryRevisionState = {
     userStatusTypes: null,
     userForEdit: undefined,
     lastError: null,
-    userForRead: false,
+    dataForRead: false,
     loan_config_details_permission: null,
     loan_type: null,
     empForSalRev: null,
     previousSalaryRev: null,
+    dataForEdit:false
+    
 };
 
 
@@ -66,7 +68,7 @@ export const EmpSalaryRevisionSlice = createSlice({
             const entities = action.payload.data?.data.rows;
 
             const totalResult = action.payload.data?.data.totalResults;
-    
+
 
             state.listLoading = false;
             state.error = null;
@@ -91,27 +93,13 @@ export const EmpSalaryRevisionSlice = createSlice({
             state.error = null;
             state.entities.unshift(action.payload);
         },
-        // EmpSalaryRevisionUpdated: (state, action) => {
-        //     state.error = null;
-        //     state.actionsLoading = false;
-        //     // state.entities.push(action.payload)
 
-        //     state.entities = state.entities.map((entity) => {
-
-        //         //const payload = { ...action.payload };
-        //         let payload = JSON.stringify(action.payload)
-        //         let payloadObj = JSON.parse(payload);
-        //         let finalObj = JSON.parse(payloadObj.updatedEmpSalaryRevision);
-        //         if (entity.Id === finalObj.Id) {
-        //             return finalObj;
-        //         }
-
-        //         return entity;
-        //     });
-
-        // },
-
-
+        updateUserAccess: (state, action) => {
+            const mode = action.payload;
+            state.dataForRead = mode === "read";
+            state.dataForEdit = mode === "edit";
+        
+        }
 
 
 

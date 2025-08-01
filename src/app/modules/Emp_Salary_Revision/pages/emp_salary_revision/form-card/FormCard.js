@@ -104,7 +104,7 @@ export function FormCard() {
           {/* <br /> */}
           {/* <hr /> */}
           {/* FormEditDialog Starts */}
-          <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} revisedDate={FormUIProps.revisedDate}  />
+          <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} revisedDate={FormUIProps.revisedDate} setRevisedDate={FormUIProps.setRevisedDate}  />
           {/* FormEditDialog Ends */}
 
           {/* <br />

@@ -18,28 +18,30 @@ import { formatDates } from "../../../../../utils/common";
 
 export function EmployeeSelect({
   actionsLoading,
-  setemployeeId, setPanelMode, panelMode,revisedDate, setRevisedDate  ,
+  setemployeeId, setPanelMode, panelMode, revisedDate, setRevisedDate,
 }) {
   const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
   // dispatch(fetchEmpForSalaryRevision());
-  const { allEmployees } = useSelector(
+  const { allEmployees ,currentState} = useSelector(
     (state) => ({
-      allEmployees:state.emp_salary_revision?.empForSalRev || [],
+      allEmployees: state.emp_salary_revision?.empForSalRev || [],
+       currentState: state.emp_salary_revision,
+
     }),
     shallowEqual
   )
 
 
- const { activeFiscalYear } = useSelector((state) => state.dashboard);
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
+
+
+  const { userForRead, userForEdit} = currentState;
 
 
   return (
     <>
-      {/* Formik Starts */}
-
-      {/* <CardHeader title={CurrentModuleName()} >
-      </CardHeader> */}
+   
 
       <Formik
         enableReinitialize={true}
@@ -47,7 +49,7 @@ export function EmployeeSelect({
       >
         {({
           errors,
-          values,touched,
+          values, touched,
           handleBlur,
           setFieldValue,
         }) => (
@@ -130,50 +132,62 @@ export function EmployeeSelect({
 
                   </div>
 
-                    <div className="col-12 col-md-3">
-                      <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
+                  <div className="col-12 col-md-3">
+                    <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
 
-                      <DatePicker
-                        className="form-control"
-                        placeholder="revisedDate"
-                        selected={
-                          revisedDate
-                            ? new Date(revisedDate)
-                            : null
-                        }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, 'yyyy-MM-dd')
-                          setRevisedDate(selectedDate);
-                          // setFieldValue("revisedDate", selectedDate);
+                    <DatePicker
+                      className="form-control"
+                      placeholder="revisedDate"
+                      // disabled={userForRead || userForEdit}
+                      selected={
+                        revisedDate
+                          ? new Date(revisedDate)
+                          : null
+                      }
+                      onChange={(date) => {
+                        let selectedDate = formatDates(date, 'yyyy-MM-dd')
+                        setRevisedDate(selectedDate);
+                        // setFieldValue("revisedDate", selectedDate);
 
 
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="revisedDate"
-                        autoComplete="off"
-                      />
-                      {touched.revisedDate && errors.revisedDate && (
-                        <div className="invalid-feedback d-block">{errors.revisedDate}</div>
-                      )}
-                    </div>
+
+                      }}
+                      // minDate={
+                      //   activeFiscalYear?.payrollMonth?.startDate
+                      //     ? new Date(activeFiscalYear?.payrollMonth?.startDate)
+                      //     : null
+                      // }
+                      maxDate={
+                        activeFiscalYear?.payrollMonth?.endDate
+                          ? new Date(activeFiscalYear?.payrollMonth?.endDate)
+                          : null
+                      }
+                      dateFormat="dd-MMM-yyyy"
+                      name="revisedDate"
+                      autoComplete="off"
+                    />
+                    {touched.revisedDate && errors.revisedDate && (
+                      <div className="invalid-feedback d-block">{errors.revisedDate}</div>
+                    )}
+                  </div>
                   {/* Employee Id Dropdown Ends */}
 
-                     <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
+                  <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
                     {activeFiscalYear
                       ? (() => {
-                          return (
-                            <>
-                              <div>
-                                <b>Active Fiscal Year -</b>{" "}
-                                {activeFiscalYear?.label}
-                              </div>
-                              <div>
-                                <b>Active Payroll Month -</b>{" "}
-                                {activeFiscalYear?.payrollMonthLabel}
-                              </div>
-                            </>
-                          );
-                        })()
+                        return (
+                          <>
+                            <div>
+                              <b>Active Fiscal Year -</b>{" "}
+                              {activeFiscalYear?.label}
+                            </div>
+                            <div>
+                              <b>Active Payroll Month -</b>{" "}
+                              {activeFiscalYear?.payrollMonthLabel}
+                            </div>
+                          </>
+                        );
+                      })()
                       : null}
                   </div>
 

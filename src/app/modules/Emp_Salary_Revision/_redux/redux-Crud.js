@@ -44,3 +44,8 @@ export function getAllEmpSalaryRevInfoById(Id) {
 return axios.get(`${USERS_URL}/emp_salary_revision/read-salary-revision-byId/${Id}`,);
 }
 
+export function deleteEmpSalaryRevInfoById(Id) {
+
+return axios.get(`${USERS_URL}/emp_salary_revision/delete-salary-revision-byId/${Id}`,);
+}
+

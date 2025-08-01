@@ -27,7 +27,7 @@ export function FormPage({ history }) {
 
     
     <FormUIProvider FormUIEvents={FormUIEvents}>
-{/*      
+     
       <Route path="/emp_salary_revision/read-all-employee-salary-revision/:id/:status/delete">
         {({ history, match }) => (
           <FormDeleteDialog
@@ -39,7 +39,7 @@ export function FormPage({ history }) {
             }}
           />
         )}
-      </Route> */}
+      </Route>
 
     
       <FormCard />
