@@ -63,51 +63,60 @@ export function LeaveApplicationTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "70px",
+        maxWidth: "70px",
       },
     },
     {
       dataField: "from",
-      text: "Date From",
+      text: "From",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
+        maxWidth: "70px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "to",
-      text: "Date To",
+      text: "To",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
+        maxWidth: "70px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "days",
-      text: "Leave Days",
+      text: "Days",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "30px",
+        maxWidth: "30px",
       },
     },
-    // {
-    //   dataField: "remarks",
-    //   text: "Remarks",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
+    {
+      dataField: "remarks",
+      text: "Comments",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+        maxWidth: "200px",
+      },
+    },
     // {
     //   dataField: "leave_modification_status",
     //   text: "Modification Remarks",
@@ -125,25 +134,25 @@ export function LeaveApplicationTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "50px",
+        maxWidth: "50px",
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          className = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          className = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          className = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     // {
@@ -174,19 +183,23 @@ export function LeaveApplicationTable() {
     //     }
     //   },
     // },
-    // {
-    //   dataField: "request_remarks",
-    //   text: "Final Authority Remarks",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "220px",
-    //   },
-    // },
+    {
+      dataField: "request_remarks",
+      text: "Remarks",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+        maxWidth: "200px",
+      },
+      formatter: (cell) => {
+        return cell ? cell : "-";
+      },
+    },
     {
       dataField: "action",
-      text: "Actions",
+      text: "Action",
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
@@ -199,10 +212,12 @@ export function LeaveApplicationTable() {
             user?.employeeIdMapping === FormUIProps?.employeeId?.value
           : false,
       },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
+      classes: "text-left pr-0",
+      headerClasses: "text-left pr-3",
       style: {
-        minWidth: "170px",
+        minWidth: "100px",
+        maxWidth: "100px",
+        textAlign: "left",
       },
     },
   ];
@@ -217,56 +232,41 @@ export function LeaveApplicationTable() {
   };
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn">
-            <Accordion.Toggle as={Button} eventKey="0">
-              Leave Applications
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <PaginationProvider
-              pagination={paginationFactory(paginationOptions)}
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">Leave Applications</h6>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
             >
-              {({ paginationProps, paginationTableProps }) => {
-                return (
-                  <Pagination
-                    isLoading={listLoading}
-                    paginationProps={paginationProps}
-                  >
-                    <div style={{ width: "100%", overflowX: "auto" }}>
-                      <BootstrapTable
-                        style={{ width: "100%", overflow: "auto" }}
-                        noDataIndication={NoRecordsFoundMessage({ entities })}
-                        wrapperClasses="table-responsive"
-                        bordered={false}
-                        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                        bootstrap4
-                        remote
-                        keyField="Id"
-                        data={entities === null ? [] : entities}
-                        columns={columns}
-                        defaultSorted={uiHelpers.defaultSorted}
-                        onTableChange={getHandlerTableChange(
-                          FormUIProps.setQueryParamsLeaveApp
-                        )}
-                        {...paginationTableProps}
-                      >
-                        <PleaseWaitMessage entities={entities} />
-                        <NoRecordsFoundMessage entities={entities} />
-                      </BootstrapTable>
-                    </div>
-                  </Pagination>
-                );
-              }}
-            </PaginationProvider>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                <BootstrapTable
+                  style={{ width: "100%", overflow: "auto" }}
+                  noDataIndication={NoRecordsFoundMessage({ entities })}
+                  wrapperClasses="table-responsive"
+                  bordered={false}
+                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                  bootstrap4
+                  remote
+                  keyField="Id"
+                  data={entities === null ? [] : entities}
+                  columns={columns}
+                  defaultSorted={uiHelpers.defaultSorted}
+                  onTableChange={getHandlerTableChange(
+                    FormUIProps.setQueryParamsLeaveApp
+                  )}
+                  {...paginationTableProps}
+                >
+                  <PleaseWaitMessage entities={entities} />
+                  <NoRecordsFoundMessage entities={entities} />
+                </BootstrapTable>
+              </div>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
   );
 }

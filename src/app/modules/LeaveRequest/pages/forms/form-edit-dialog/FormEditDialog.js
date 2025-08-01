@@ -94,22 +94,24 @@ export function FormEditDialog({
   return (
     <>
       {/* <FormEditDialogHeader /> */}
-      <MasterEditForm
-        submitForm={submitForm}
-        user={userForEdit || initUser}
-        empAuthorityList={empAuthorityList}
-        enableLoading={enableLoading}
-        loading={loading}
-        employeeId={formUIProps?.employeeId}
-        currentLevel={currentLevel}
-        isEdit={id ? true : false}
-        isReaply={
-          !id ? false : userForEdit?.request_status !== "R" ? true : false
-        }
-        setId={formUIProps.setId}
-        payrollData={payrollData}
-      />
-      <ToastContainer
+      <div className="px-3 py-2 w-full bg-white rounded-lg ">
+        <MasterEditForm
+          submitForm={submitForm}
+          user={userForEdit || initUser}
+          empAuthorityList={empAuthorityList}
+          enableLoading={enableLoading}
+          loading={loading}
+          employeeId={formUIProps?.employeeId}
+          currentLevel={currentLevel}
+          isEdit={id ? true : false}
+          isReaply={
+            !id ? false : userForEdit?.request_status !== "R" ? true : false
+          }
+          setId={formUIProps.setId}
+          payrollData={payrollData}
+        />
+      </div>
+      {/* <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -119,7 +121,7 @@ export function FormEditDialog({
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </>
   );
 }

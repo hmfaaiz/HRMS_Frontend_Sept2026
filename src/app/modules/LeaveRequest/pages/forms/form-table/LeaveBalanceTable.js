@@ -32,131 +32,30 @@ export function LeaveBalanceTable() {
     };
   }, shallowEqual);
 
-  const {  leaveBalances } = currentState;
-
-  // Table columns
-  const columns = [
-    {
-      dataField: "leaveTypeName",
-      text: "Leave Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    {
-      dataField: "yearName",
-      text: "Year",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-    // {
-    //   dataField: "allocatedCount",
-    //   text: "Allocated Leave Count",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "availedCount",
-    //   text: "Availed",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    
-    // {
-    //   dataField: "carryForwardCount",
-    //   text: "Carry Forward Leave Count",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "lateCount",
-    //   text: "Late Count",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "encashmentCount",
-    //   text: "Encashment Leaves Count",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    {
-      dataField: "remainingCount",
-      text: "Available Balance",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
-  ];
-
+  const { leaveBalances } = currentState;
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn">
-            <Accordion.Toggle as={Button} eventKey="0">
-              Leave Balance
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
+    <div className="px-3 py-2 w-full bg-white rounded-lg ">
+      <div className="w-full text-xs flex flex-col justify-between h-full">
+        <h6 className="font-bold mb-0 text-primary my-2">Leave Balances</h6>
 
-            <BootstrapTable
-              noDataIndication={NoRecordsFoundMessage({
-                entities: leaveBalances || [],
-              })}
-              wrapperClasses="table-responsive"
-              bordered={false}
-              classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
-              bootstrap4
-              remote
-              keyField="Id"
-              data={leaveBalances || []}
-              columns={columns}
-              defaultSorted={uiHelpers.defaultSorted}
-              onTableChange={getHandlerTableChange(
-                FormUIProps.setQueryParamsLeaveApp
-              )}
-            >
-              <PleaseWaitMessage entities={leaveBalances || []} />
-              <NoRecordsFoundMessage entities={leaveBalances || []} />
-            </BootstrapTable>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8  w-full md:w-7/12">
+          {leaveBalances?.length > 0 &&
+            leaveBalances?.map((el, i) => {
+              return (
+                <div
+                  className="grid grid-cols-2 gap-4 items-center text-sm"
+                  key={el?.leaveTypeName || i}
+                >
+                  <p className="text-black m-0 p-0">{el?.leaveTypeName}</p>
+                  <p className="text-primary font-extrabold m-0">
+                    {el?.remainingCount || 0}
+                  </p>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </div>
   );
 }

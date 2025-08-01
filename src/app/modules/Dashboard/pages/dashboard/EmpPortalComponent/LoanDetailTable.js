@@ -71,9 +71,9 @@ export function EmployeeLoanDetail({ entities }) {
 
   return (
     <div className="px-3 py-2 w-full bg-white rounded-lg">
-      <div className="w-full text-xs flex flex-col h-full justify-between">
-        <h6 className="font-bold mb-0 text-primary my-2">Loan & Payslip</h6>
+      <div className="w-full text-xs px-3 py-2  flex flex-col h-full justify-between">
         <div className="w-full">
+          <h6 className="font-bold mb-0 text-primary my-2">Loan & Payslip</h6>
           <DonutChart
             data={
               Array.isArray(entities)
@@ -85,7 +85,7 @@ export function EmployeeLoanDetail({ entities }) {
             }
           />
         </div>
-        <div className="mt-5">
+        <div>
           <BootstrapTable
             noDataIndication={NoRecordsFoundMessage({
               entities: entities || [],
@@ -105,12 +105,12 @@ export function EmployeeLoanDetail({ entities }) {
         </div>
         <div className="font-size-xs font-semibold flex gap-x-4 items-end text-black mt-2 flex-wrap">
           <p className="m-0 underline hover:text-primary">
-            <Link to={"/leave-request/read-all-leave-request"}>
+            <Link to={"/loan_request/read-all-loan-request"}>
               Loan Request{" "}
             </Link>
           </p>
           <p className="m-0 underline">
-            <Link to={"/payslip_team/read-payslip"}>Payslip Preview</Link>
+            <Link to={"/payslip/read-payslip"}>Payslip</Link>
           </p>
         </div>
       </div>

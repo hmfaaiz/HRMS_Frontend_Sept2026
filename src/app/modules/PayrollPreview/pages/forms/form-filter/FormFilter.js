@@ -105,147 +105,63 @@ export function FormFilter({ dispatch, pdfLoading }) {
       >
         {({ values, handleBlur, setFieldValue, errors, touched }) => (
           <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <Form className="form form-label-right">
-                <fieldset>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
-                    <h6>Employee Filters</h6>
-                    <div className="from-group row">
-                      {/* Subsidiary Field Start */}
-                      {/* <div className="col-12">
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            name="currentLevel"
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const value =
-                                e.value === "--Select--" ? "" : Number(e.value);
-                              formUIProps.setCurrentLevel(value);
-                              setFieldValue("currentLevel", value); // <- Important!
-                            }}
-                            label={<span>Reporting Level</span>}
-                            value={
-                              levelList?.find(
-                                (opt) => opt.value === values.currentLevel
-                              ) || "0"
-                            }
-                            autoComplete="off"
-                            options={levelList}
-                          />
-                        </div>
-                      </div> */}
-                      {/* Subsidiary Field End */}
-
-                      {/* Employee Field Start */}
-                      {/* <div className="col-12">
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            name="employeeId"
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const value =
-                                e.value == "--Select--" ? "" : Number(e.value);
-                              setFieldValue("employeeId", value);
-                              formUIProps.setSelectedEmp(e);
-                            }}
-                            label={<span> Employee</span>}
-                            error={errors.employeeId}
-                            touched={touched.employeeId}
-                            value={
-                              allEmployeesMap?.get(values?.employeeId || "") ||
-                              ""
-                            }
-                            autoComplete="off"
-                            options={employeeList}
-                          />
-                        </div>
-                      </div> */}
-                      {/* Employee Field End */}
-
-                      {/* Payroll Month Field Start */}
-                      <div className="col-12">
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            name="monthId"
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const value =
-                                e.value == "--Select--" ? "" : Number(e.value);
-                              setFieldValue("monthId", value);
-                            }}
-                            label={<span> Payroll Month</span>}
-                            value={
-                              allPayrollMonthMap?.get(values?.monthId || "") ||
-                              ""
-                            }
-                            autoComplete="off"
-                            options={allPayrollMonthYearList}
-                          />
-                        </div>
-                      </div>
-                      {/* Payroll Month Field End */}
-                    </div>
+            <Form className="form form-label-right">
+              <fieldset>
+                <h5 className="font-weight-bolder m-0 py-1">Filter Record</h5>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="col-span-1">
+                    <Field
+                      name="monthId"
+                      component={SearchSelect}
+                      onBlur={handleBlur}
+                      onChange={(e) => {
+                        const value =
+                          e.value == "--Select--" ? "" : Number(e.value);
+                        setFieldValue("monthId", value);
+                      }}
+                      label={<span> Payroll Month</span>}
+                      value={
+                        allPayrollMonthMap?.get(values?.monthId || "") || ""
+                      }
+                      autoComplete="off"
+                      options={allPayrollMonthYearList}
+                    />
                   </div>
-                  <br></br>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => {
+                      previewPayslipPdf(values);
+
+                      window.open("/payslip/preview-payslip-pdf");
                     }}
+                    disabled={
+                      !values.employeeId || !values?.monthId || pdfLoading
+                    }
+                    type="button"
+                    className="btn btn-primary m-2"
                   >
-                    <h6>Payslip</h6>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-11">
-                        <button
-                          onClick={() => {
-                            previewPayslipPdf(values);
+                    Preview Payslip
+                  </button>
 
-                            window.open("/payslip/preview-payslip-pdf");
-                          }}
-                          disabled={
-                            !values.employeeId || !values?.monthId || pdfLoading
-                          }
-                          type="button"
-                          className="btn btn-primary btn-elevate"
-                        >
-                          Preview
-                        </button>
-
-                        <span> </span>
-
-                        <button
-                          onClick={() => {
-                            getPayslip(values);
-                          }}
-                          disabled={
-                            !values.employeeId || !values?.monthId || pdfLoading
-                          }
-                          type="button"
-                          className="btn btn-primary btn-elevate"
-                        >
-                          Generate Payslip
-                          {pdfLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </fieldset>
-              </Form>
-            </Modal.Body>
+                  <button
+                    onClick={() => {
+                      getPayslip(values);
+                    }}
+                    disabled={
+                      !values.employeeId || !values?.monthId || pdfLoading
+                    }
+                    type="button"
+                    className="btn btn-primary m-2"
+                  >
+                    Generate Payslip
+                    {pdfLoading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+                </div>
+              </fieldset>
+            </Form>
           </>
         )}
       </Formik>

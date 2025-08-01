@@ -182,14 +182,13 @@
   border-radius: 0px;
 }
 
-// for modal width 
+// for modal width
 .modal-75vw {
   max-width: 75vw;
 }
 .modal-70vw {
   max-width: 70vw;
 }
-
 
 .text-underline-hover:hover {
   text-decoration: underline;
@@ -243,7 +242,10 @@
 
 // for checkbox
 input[type="checkbox"] {
-  accent-color: #0093dd;
+  accent-color: #0093dd !important;
+  background-color: #e6f8ff !important ;
+  border: 1px solid #000 !important;
+  border-radius: 6px !important;
 }
 
 // for w-full
@@ -276,8 +278,8 @@ input[type="checkbox"] {
 
 // for form-control
 .form-control {
-  height: calc(1.1em + 1.2rem + 2px);
-  padding: 0.35rem 0.7rem;
+  height: calc(1.1em + 0.85rem + 2px);
+  padding: 0.35rem 0.5rem;
   font-size: 0.8rem;
   font-weight: 400;
   border: 0.5px solid #000000 !important;
@@ -300,14 +302,15 @@ input[type="checkbox"] {
 // for label of input
 label {
   font-size: 0.85rem;
+  color: #000000;
 }
 
 /* Control (main input box) */
 .select_option__control {
   min-height: unset !important;
-  height: calc(1.1em + 1.2rem + 2px) !important;
+  height: calc(1.1em + 0.85rem + 2px) !important;
   font-size: 0.8rem;
-  padding: 0.15rem 0.7rem;
+  padding: 0.35rem 0.5rem;
   font-weight: 400;
   border: 0.5px solid #000000 !important;
   border-radius: 0.32rem !important;
@@ -318,6 +321,7 @@ label {
 
 .select_option__value-container {
   padding: 0px !important;
+  position: static !important;
 }
 /* Option list dropdown menu */
 .select_option__menu {
@@ -329,12 +333,54 @@ label {
 }
 
 .select_option__indicator {
-  padding: 0px 3px !important;
-  width: 20px !important;
+  padding: 0px 1px !important;
+  width: 15px !important;
+  color: #000000 !important;
+  -webkit-align-items: flex-start !important;
+  align-items: flex-start !important;
+  position: absolute !important;
+  top: 2px !important;
+  right: 2px !important;
+}
+.css-1okebmr-indicatorSeparator {
+  display: none !important;
 }
 
-// for underline 
+.css-b8ldur-Input {
+  margin: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+}
+
+// for underline
 .underline:hover {
   text-decoration: underline #0093dd !important;
 }
 
+// modal center overwrite css
+.modal-dialog {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+  // margin: 7rem auto auto auto !important;
+}
+
+/// button stype overwrite css
+.btn {
+  padding: 7px !important;
+  font-size: 0.8rem !important;
+}
+
+/// request pending , approved and reject text css
+.text-pending {
+  color: #dd8941 !important;
+}
+
+.text-approved {
+  color: #34b9a3 !important;
+}
+
+.text-rejected {
+  color: #e23f35 !important;
+}

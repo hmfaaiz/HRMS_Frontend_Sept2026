@@ -324,7 +324,6 @@ const ROUTES = {
   payslip: PayrollPreview,
   applicant_profile: ApplicantProfileModule,
   interview_schedule: InterviewSchedule,
-  payslip : PayrollPreview,
   applicant_profile:ApplicantProfileModule,
   resume_search_engine:ResumeSearchEngineModule,
   job_offer:JobOfferModule,

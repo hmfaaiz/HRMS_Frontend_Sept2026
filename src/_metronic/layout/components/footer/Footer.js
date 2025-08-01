@@ -14,7 +14,7 @@ export function Footer() {
 
   return (
     <div
-      className={`footer bg-[#f5f5f5] py-2 d-flex flex-lg-column`}
+      className={`footer bg-[#f5f5f5] py-2 d-flex z-10 flex-lg-column`}
       id="kt_footer"
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0}}
     >

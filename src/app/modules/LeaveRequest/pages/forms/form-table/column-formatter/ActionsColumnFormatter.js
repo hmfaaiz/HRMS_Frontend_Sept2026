@@ -2,6 +2,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Minus, RotateCcw } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -44,20 +45,16 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
-      {isAccessForReApply && row.request_status === "R" && (
+      {isAccessForReApply && row.request_status === "R" ? (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Re Apply</Tooltip>}
+          overlay={<Tooltip id="products-edit-tooltip">Re-apply</Tooltip>}
         >
-          <a
-            title=""
-            className="btn btn-icon view-button"
-            onClick={() => editRecord(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Media/Repeat.svg")} />
-            </span>
+          <a title="" className="" onClick={() => editRecord(row.Id)}>
+            <RotateCcw className="w-4 h-4 " />
           </a>
         </OverlayTrigger>
+      ) : (
+        <span className="font-bold"><Minus className="w-4 h-4" /></span>
       )}
 
       {isAccessForDelete && checkPayrolMonth(row, payrollData) && (

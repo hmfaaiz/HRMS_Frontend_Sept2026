@@ -99,20 +99,18 @@ export function WorkflowTable({ onHide, show }) {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
-
+        let classname = "";
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
-
-        return <span style={style}>{text}</span>;
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -155,109 +153,147 @@ export function WorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          Loan Workflow
+          <h5 className="font-bold mb-0 text-black">Leave Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className="overlay overlay-block cursor-default">
+      <Modal.Body className="">
         {formUIProps?.currentData && (
-          <div className="row mb-4">
-            <div className="col-3">
-              Employee Code :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.requestBelongToEmp?.employeeCode}
-              </span>
+          <div className="w-full grid grid-cols-12 text-sm text-black gap-x-2">
+            <div className="col-span-3 bg-tsecondary p-2 rounded-lg">
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Employee Detail
+              </h6>
+              <div className="grid grid-cols-2 text-sm text-black">
+                <div className="font-medium">Employee Code</div>
+                <div>
+                  {formUIProps?.currentData?.requestBelongToEmp?.employeeCode ||
+                    "N/A"}
+                </div>
+
+                <div className="font-medium">Name</div>
+                <div>
+                  {" "}
+                  {formUIProps?.currentData?.requestBelongToEmp?.firstName ||
+                    ""}{" "}
+                  {formUIProps?.currentData?.requestBelongToEmp?.middleName ||
+                    ""}{" "}
+                  {formUIProps?.currentData?.requestBelongToEmp?.lastName || ""}
+                </div>
+
+                <div className="font-medium">Department</div>
+                <div>
+                  {formUIProps?.currentData?.requestBelongToEmp?.department
+                    ?.deptName || "N/A"}
+                </div>
+
+                <div className="font-medium">Designation</div>
+                <div>
+                  {formUIProps?.currentData?.requestBelongToEmp?.designation
+                    ?.formName || "N/A"}
+                </div>
+
+                <div className="font-medium">Employee Type</div>
+                <div>
+                  {formUIProps?.currentData?.requestBelongToEmp?.employeeType
+                    ?.formName || "N/A"}
+                </div>
+              </div>
             </div>
-            <div className="col-3">
-              Name :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.requestBelongToEmp?.firstName}{" "}
-                {formUIProps?.currentData?.requestBelongToEmp?.middleName}{" "}
-                {formUIProps?.currentData?.requestBelongToEmp?.lastName}
-              </span>
-            </div>
-            <div className="col-3">
-              Department :{" "}
-              <span className="font-weight-bold">
-                {
-                  formUIProps?.currentData?.requestBelongToEmp?.department
-                    ?.deptName
-                }
-              </span>
-            </div>
-            <div className="col-3">
-              Designation :{" "}
-              <span className="font-weight-bold">
-                {
-                  formUIProps?.currentData?.requestBelongToEmp?.designation
-                    ?.formName
-                }
-              </span>
-            </div>
-            <div className="col-3">
-              Applied Date :{" "}
-              <span className="font-weight-bold">
-                {/* {new Date(
-                  formUIProps?.currentData?.parentData?.applied_date
-                ).toDateString() || ""} */}
-                {formUIProps?.currentData?.parentData?.applied_date ? format(new Date(
-                  formUIProps?.currentData?.parentData?.applied_date
-                ) , "dd-MMM-yyyy") : ""}
-              </span>
-            </div>
-            <div className="col-3">
-              Loan Type :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.LoanType?.name}
-              </span>
-            </div>
-            <div className="col-3">
-              Total Loan Amount :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.total_loan_amount}
-              </span>
-            </div>
-            <div className="col-3">
-              Monthly Installment :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.monthly_installment}
-              </span>
-            </div>
-            <div className="col-3">
-              Total Installment :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.total_installment}
-              </span>
-            </div>
-            <div className="col-3">
-              Reason :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.currentData?.parentData?.reason}
-              </span>
+            <div className="col-span-9 bg-tsecondary p-2 rounded-lg">
+              <div className="grid grid-cols-12">
+                <div className="col-span-12">
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Loan Request
+                  </h6>
+                  <div className="text-sm text-black">
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Applied Date</div>
+                      <div className="col-span-1">
+                        {formUIProps?.currentData?.parentData?.applied_date
+                          ? format(
+                              new Date(
+                                formUIProps?.currentData?.parentData?.applied_date
+                              ),
+                              "dd-MMM-yyyy"
+                            )
+                          : ""}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Loan Type</div>
+                      <div className="col-span-1">
+                        {formUIProps?.currentData?.parentData?.LoanType?.name}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Total Loan Amount
+                      </div>
+                      <div className="col-span-1">
+                        {
+                          formUIProps?.currentData?.parentData
+                            ?.total_loan_amount
+                        }
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Monthly Installment
+                      </div>
+                      <div className="col-span-1">
+                        {
+                          formUIProps?.currentData?.parentData
+                            ?.monthly_installment
+                        }
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">
+                        Total Installment
+                      </div>
+                      <div className="col-span-1">
+                        {
+                          formUIProps?.currentData?.parentData
+                            ?.total_installment
+                        }
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Reason</div>
+                      <div className="col-span-1">
+                        {formUIProps?.currentData?.parentData?.reason}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
-        <BootstrapTable
-          noDataIndication={NoRecordsFoundMessage({
-            entities: workflowStatusList || [],
-          })}
-          wrapperClasses="table-responsive"
-          bordered={false}
-          classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
-          bootstrap4
-          remote
-          keyField="Id"
-          data={workflowStatusList || []}
-          columns={columns}
-        >
-          <PleaseWaitMessage entities={workflowStatusList || []} />
-          <NoRecordsFoundMessage entities={workflowStatusList || []} />
-        </BootstrapTable>
+        <div className="mt-2">
+          <BootstrapTable
+            noDataIndication={NoRecordsFoundMessage({
+              entities: workflowStatusList || [],
+            })}
+            wrapperClasses="table-responsive"
+            bordered={false}
+            classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
+            bootstrap4
+            remote
+            keyField="Id"
+            data={workflowStatusList || []}
+            columns={columns}
+          >
+            <PleaseWaitMessage entities={workflowStatusList || []} />
+            <NoRecordsFoundMessage entities={workflowStatusList || []} />
+          </BootstrapTable>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <button
           type="submit"
           onClick={() => onHide()}
-          className="btn btn-danger btn-elevate"
+          className="btn btn-light"
         >
           Close
         </button>

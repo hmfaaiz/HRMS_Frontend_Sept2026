@@ -11,7 +11,6 @@ import { fetchAttendanceApprovalApplication } from "../../../../AttendanceApprov
 import { EmployeeLoanDetail } from "../EmpPortalComponent/LoanDetailTable";
 import { LeaveBalanceDetail } from "../EmpPortalComponent/LeaveBalanceDetail";
 import EmployeeProfile from "../EmpPortalComponent/EmployeeProfile";
-import { EmployeeExtendedInfo } from "../EmpPortalComponent/EmployeeExtendedInfo";
 import { ReportingEmpTable } from "../EmpPortalComponent/ReportingEmpTable";
 import {
   fetchAttendance,
@@ -22,6 +21,7 @@ import { HolidayTable } from "../EmpPortalComponent/HolidayCalendar";
 import { fetchLoanApprovalApplication } from "../../../../LoanApproval/redux/formAction";
 import { PendingRequestSelf } from "../EmpPortalComponent/PendingRequest";
 import AttendanceBarChart from "../EmpPortalComponent/AttendanceBarChart";
+import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,8 +34,8 @@ export const EmployeePortal = () => {
     leaveApprovalCount,
     attendanceApprovalCount,
     loanList,
-    contactInfo,
-    skillsInfo,
+    // contactInfo,
+    // skillsInfo,
     payrollData,
     reportingEmployee,
     attendanceSummary,
@@ -54,8 +54,8 @@ export const EmployeePortal = () => {
       loanList: state.dashboard?.loanList,
       holidayList: state.dashboard?.holidayList,
       leaveRequest: state?.leave_request?.entities,
-      contactInfo: state?.dashboard?.contactInfo,
-      skillsInfo: state?.dashboard?.skillsInfo,
+      // contactInfo: state?.dashboard?.contactInfo,
+      // skillsInfo: state?.dashboard?.skillsInfo,
       payrollData: state?.dashboard?.payrollData,
       reportingEmployee: state?.dashboard?.reportingEmployee,
       attendanceSummary: state?.attendance_request?.attendanceSummary,
@@ -85,8 +85,8 @@ export const EmployeePortal = () => {
   // First useEffect: Fetch basic data when selectedEmp changes
   useEffect(() => {
     dispatch(action.fetchLeaveBalances(user?.employeeIdMapping));
-    dispatch(action.fetchContactInfo(user?.employeeIdMapping));
-    dispatch(action.fetchSkillsInfo(user?.employeeIdMapping));
+    // dispatch(action.fetchContactInfo(user?.employeeIdMapping));
+    // dispatch(action.fetchSkillsInfo(user?.employeeIdMapping));
     dispatch(action.getPayrollMonth(user?.employeeIdMapping));
     dispatch(action.fetchReportingEmployee(user?.employeeIdMapping));
     dispatch(action.fetchLoanDetail(user?.employeeIdMapping));
@@ -122,41 +122,36 @@ export const EmployeePortal = () => {
   return (
     <>
       {!isLoading && (
-        <div className="grid grid-cols-1 xl:grid-cols-4 2xl:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           {/* Sidebar: EmployeeSelection and EmployeeProfile */}
-          <div className="px-1 md:mb-0 md:col-span-1 2xl:col-span-3 flex flex-col gap-4">
+          <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+            <div className="lg:hidden block">
+              <EmployeePortalMenu name="Dashboard" />
+            </div>
             <EmployeeProfile />
-            <EmployeeExtendedInfo
-              contactInfo={contactInfo}
-              skillsInfo={skillsInfo}
-            />
           </div>
           {/* Main Content: Dashboard, PendingRequestSelf, ReportingEmpTable, My Details, AttendanceSummary, LeaveApplicationTable, EmployeeLoanDetail */}
-          <div className="md:col-span-3 2xl:col-span-9 flex flex-col gap-4">
-            <div className="px-3 py-2 rounded-lg bg-white">
-              <h5 className="font-weight-bolder m-0 py-1">Dashboard</h5>
+          <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+            <div className="hidden lg:block">
+              <EmployeePortalMenu name="Dashboard" />
             </div>
-            {reportingEmployee && reportingEmployee?.length > 0 && (
-              <>
-                <div className="flex flex-col md:flex-row gap-4">
-                  <PendingRequestSelf
-                    leaveApprovalCount={leaveApprovalCount?.length || 0}
-                    attendanceApprovalCount={
-                      attendanceApprovalCount?.length || 0
-                    }
-                    loanApprovalCount={loanApprovalCount?.length || 0}
-                  />
-                  <ReportingEmpTable
-                    empAuthorityList={
-                      reportingEmployee?.length > 0 ? reportingEmployee : []
-                    }
-                  />
-                </div>
-                <div className="px-3 py-2 rounded-lg bg-white">
-                  <h6 className="font-weight-bolder m-0 py-1">My Details</h6>
-                </div>
-              </>
-            )}
+            {/* {reportingEmployee && reportingEmployee?.length > 0 && ( */}
+            <>
+              <div className="flex flex-col md:flex-row gap-4">
+                <PendingRequestSelf
+                  leaveApprovalCount={leaveApprovalCount?.length || 0}
+                  attendanceApprovalCount={attendanceApprovalCount?.length || 0}
+                  loanApprovalCount={loanApprovalCount?.length || 0}
+                />
+                <ReportingEmpTable
+                  empAuthorityList={
+                    reportingEmployee?.length > 0 ? reportingEmployee : []
+                  }
+                />
+              </div>
+              <EmployeePortalMenu name="My Details" />
+            </>
+            {/* )} */}
             <div className="flex flex-col md:flex-row gap-4">
               <AttendanceSummary attendanceSummary={attendanceSummary} />
               <LeaveBalanceDetail leaveBalances={leaveBalances} />

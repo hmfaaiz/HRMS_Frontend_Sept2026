@@ -1,27 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Field, Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import {  Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Form, Modal } from "react-bootstrap";
-import {
-  CardBody,
-  DatePickerField,
-  CardHeader,
-} from "../../../../../../_metronic/_partials/controls";
+import {  Form, Modal } from "react-bootstrap";
 import * as actions from "../../../_redux/redux-Actions";
 import { FormTable } from "../form-table/FormTable";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import {
-  fetchAllActiveEmployees,
-  fetchAllActiveEmployeesBySubsidiary,
-  fetchAllDept,
-  fetchAllSubsidiaryData,
-} from "../../../../../../_metronic/redux/dashboardActions";
-import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
+import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 
 const formValidation = Yup.object().shape({
   from_date: Yup.date()
@@ -82,120 +71,149 @@ export function FormCard() {
   }, [isDataLoaded, bodyValues]);
 
   return (
-    <>
-      <Card>
-        <CardHeader title={CurrentModuleName()}></CardHeader>
-
-        <Formik
-          enableReinitialize={true}
-          initialValues={{
-            from_date: bodyValues?.from_date || null,
-            to_date: bodyValues?.to_date || null,
-          }}
-          validationSchema={formValidation}
-        >
-          {({ setFieldValue, handleReset, values }) => {
-            return (
-              <>
-                <Modal.Body className="overlay overlay-block cursor-default">
+    <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+        <div className="lg:hidden block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            menuOptions={[
+              {
+                name: "Request",
+                link: "/leave-request/read-all-leave-request",
+              },
+              {
+                name: "Approval",
+                link: "/leave-approval/read-all-leave-approval",
+              },
+              {
+                name: "Workflow Status",
+                link: "/leave-workflow-status/read-all-leave-workflow-status",
+              },
+            ]}
+            isDashboardIcon={true}
+          />
+        </div>
+        <EmployeeProfile />
+      </div>
+      <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+        <div className="hidden lg:block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            menuOptions={[
+              {
+                name: "Request",
+                link: "/leave-request/read-all-leave-request",
+              },
+              {
+                name: "Approval",
+                link: "/leave-approval/read-all-leave-approval",
+              },
+              {
+                name: "Workflow Status",
+                link: "/leave-workflow-status/read-all-leave-workflow-status",
+              },
+            ]}
+            isDashboardIcon={true}
+          />
+        </div>
+        <div className="px-3 py-2 rounded-lg bg-white">
+          <Formik
+            enableReinitialize={true}
+            initialValues={{
+              from_date: bodyValues?.from_date || null,
+              to_date: bodyValues?.to_date || null,
+            }}
+            validationSchema={formValidation}
+          >
+            {({ setFieldValue, handleReset, values }) => {
+              return (
+                <>
                   <Form className="form form-label-right">
                     <fieldset>
-                      <div
-                        style={{
-                          backgroundColor: "rgb(235 243 255)",
-                          marginTop: "15px",
-                          padding: "20px",
-                          borderRadius: "5px",
-                          border: "2px solid #adceff",
-                        }}
-                      >
-                        <h6>Leave Calendar</h6>
-                        {/* Employee Selector */}
-                        <div className="form-group row">
-                          <div className="col-12 col-md-4 mt-3">
-                            <label>
-                              From Date<span style={{ color: "red" }}>*</span>
-                            </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="From Date "
-                              selected={
-                                values?.from_date
-                                  ? new Date(values.from_date)
-                                  : null
-                              }
-                              onChange={(date) => {
-                                setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="from_date"
-                              autoComplete="off"
-                            />
-                          </div>
-                          {/* Date To Selector */}
-                          <div className="col-12 col-md-4 mt-3">
-                            <label>
-                              Date To<span style={{ color: "red" }}>*</span>
-                            </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="To Date "
-                              selected={
-                                values?.to_date
-                                  ? new Date(values.to_date)
-                                  : null
-                              }
-                              onChange={(date) => {
-                                setFieldValue("to_date", date);
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="to_date"
-                              autoComplete="off"
-                            />
-                          </div>
+                      <h6>Filter Record</h6>
+                      {/* Employee Selector */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+                        <div className="col-span-1">
+                          <label>
+                            From Date
+                            <span style={{ color: "red" }}>*</span>
+                          </label>
+                          <DatePicker
+                            className="form-control"
+                            placeholder="From Date "
+                            selected={
+                              values?.from_date
+                                ? new Date(values.from_date)
+                                : null
+                            }
+                            onChange={(date) => {
+                              setFieldValue("from_date", date);
+                              setFieldValue("to_date", date); // Sync from_date and to_date
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd-MMM-yyyy"
+                            // showTimeInput
+                            name="from_date"
+                            autoComplete="off"
+                          />
+                        </div>
+                        {/* Date To Selector */}
+                        <div className="col-span-1">
+                          <label>
+                            Date To<span style={{ color: "red" }}>*</span>
+                          </label>
+                          <DatePicker
+                            className="form-control"
+                            placeholder="To Date "
+                            selected={
+                              values?.to_date ? new Date(values.to_date) : null
+                            }
+                            onChange={(date) => {
+                              setFieldValue("to_date", date);
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd-MMM-yyyy"
+                            // showTimeInput
+                            name="to_date"
+                            autoComplete="off"
+                          />
                         </div>
                       </div>
                     </fieldset>
                   </Form>
-                </Modal.Body>
 
-                <Modal.Footer>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleReset();
-                      dispatch(actions.clearEvents()); // Reset form and clear events
-                    }}
-                    className="btn btn-danger btn-elevate"
-                  >
-                    Cancel
-                  </button>
+                  <Modal.Footer>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleReset();
+                        dispatch(actions.clearEvents()); // Reset form and clear events
+                      }}
+                      className="btn btn-light"
+                    >
+                      Cancel
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
-                      customSubmit(values);
-                    }}
-                    disabled={!values.from_date || !values.to_date}
-                    className="btn btn-success btn-elevate"
-                  >
-                    Filter Record
-                  </button>
-                </Modal.Footer>
-              </>
-            );
-          }}
-        </Formik>
-
-        <CardBody>
+                    <button
+                      onClick={() => {
+                        // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
+                        customSubmit(values);
+                      }}
+                      disabled={!values.from_date || !values.to_date}
+                      className="btn btn-success"
+                    >
+                      Filter Record
+                    </button>
+                  </Modal.Footer>
+                </>
+              );
+            }}
+          </Formik>
           {leaveCalendar && leaveCalendar.length > 0 && <FormTable />}
-        </CardBody>
-      </Card>
-    </>
+        </div>
+      </div>
+    </div>
   );
 }
