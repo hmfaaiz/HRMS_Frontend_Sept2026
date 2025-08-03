@@ -17,207 +17,217 @@ import {
   fetchAllBanks,
   fetchAllCompanyBanks,
   fetchAllBankBranch,
-  fetchPayrollConfigApproverPermission
-
+  fetchPayrollConfigApproverPermission,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
-import axios from 'axios';
-import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
-import { DEFAULT_CALCULATION_TYPE_DROPDOWN, DROPDOWN, VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import axios from "axios";
+import {
+  amountLimit,
+  amountLimitDynamic,
+  formatDates,
+} from "../../../../../utils/common";
+import {
+  DEFAULT_CALCULATION_TYPE_DROPDOWN,
+  DROPDOWN,
+  VALIDATION_MESSAGES,
+} from "../../../../../utils/constants";
 import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { toast } from "react-toastify";
 import { FormTable } from "../form-table/FormTable";
 import { useFormUIContext } from "../FormUIContext";
+import { clearPreviousSalaryRevisionFetched, fetchCurrentEmpSalary } from "../../../_redux/redux-Actions";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
-const formValidation = Yup.object().shape(
-  {
+const formValidation = Yup.object().shape({
+  employeeId: Yup.string().required(VALIDATION_MESSAGES.required),
+  // currencyId: Yup.string()
+  //   .required(VALIDATION_MESSAGES.required),
+  revisedDate: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
-    employeeId: Yup.string()
-      .required(VALIDATION_MESSAGES.required),
-    // currencyId: Yup.string()
-    //   .required(VALIDATION_MESSAGES.required),
-    revisedDate: Yup.string()
+  Employee: Yup.object().shape({
+    gradeId: Yup.string()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
+    designationId: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+    employeeTypeId: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+    employeeStatusId: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+  }),
 
+  grossSalary: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(
+      /^\d+(\.\d{1,2})?$/,
+      "Must be a valid number (up to 2 decimal places)"
+    ), // Only digits validation
 
+  basicSalary: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(
+      /^\d+(\.\d{1,2})?$/,
+      "Must be a valid number (up to 2 decimal places)"
+    ), // Only digits validation
 
-    Employee: Yup.object().shape({
-      gradeId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
-      designationId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
-      employeeTypeId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
-      employeeStatusId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
+  eobi_accNo: Yup.string()
+    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    .when("eobi_member", {
+      is: true, // Condition to check if eobi_member is true
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.string().nullable(), // Optional if eobi_member is false
     }),
 
-    grossSalary: Yup.string()
-      .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
+  pf_accNo: Yup.string()
+    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    .when("pf_member", {
+      is: true, // Condition to check if pf_member is true
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.string().nullable(), // Optional if pf_member is false
+    }),
 
-    basicSalary: Yup.string()
-      .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
+  social_security_accNo: Yup.string()
+    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    .when("social_security_member", {
+      is: true, // Condition to check if social_security_member is true
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.string().nullable(), // Optional if social_security_member is false
+    }),
 
-    eobi_accNo: Yup.string()
-      .matches(/^\d+$/, "Must contain only digits")// Only digits validation
-      .when("eobi_member", {
-        is: true, // Condition to check if eobi_member is true
-        then: Yup.string().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.string().nullable(), // Optional if eobi_member is false
-      }),
+  pension_accNo: Yup.string()
+    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    .when("pension_member", {
+      is: true, // Condition to check if pension_member is true
+      then: Yup.string().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.string().nullable(), // Optional if pension_member is false
+    }),
 
-    pf_accNo: Yup.string()
-      .matches(/^\d+$/, "Must contain only digits") // Only digits validation
-      .when("pf_member", {
-        is: true, // Condition to check if pf_member is true
-        then: Yup.string().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.string().nullable(), // Optional if pf_member is false
-      }),
+  // company_from_accNo: Yup.string()
+  //   .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
-    social_security_accNo: Yup.string()
-      .matches(/^\d+$/, "Must contain only digits") // Only digits validation
-      .when("social_security_member", {
-        is: true, // Condition to check if social_security_member is true
-        then: Yup.string().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.string().nullable(), // Optional if social_security_member is false
-      }),
+  emp_bank_accNo: Yup.string().matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
-    pension_accNo: Yup.string()
-      .matches(/^\d+$/, "Must contain only digits") // Only digits validation
-      .when("pension_member", {
-        is: true, // Condition to check if pension_member is true
-        then: Yup.string().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.string().nullable(), // Optional if pension_member is false
-      }),
+  gratuity_startDate: Yup.date()
+    .nullable()
+    .max(new Date(), "Date cannot be in the future")
+    .when("gratuity_member", {
+      is: true, // Condition to check if gratuity_member is true
+      then: Yup.date().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.date().nullable(), // Optional if gratuity_member is false
+    }),
 
-    // company_from_accNo: Yup.string()
-    //   .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+  eobi_reg_date: Yup.date()
+    .nullable()
+    .max(new Date(), "Date cannot be in the future")
+    .when("eobi_member", {
+      is: true, // Condition to check if eobi_member is true
+      then: Yup.date().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.date().nullable(), // Optional if eobi_member is false
+    }),
 
-    emp_bank_accNo: Yup.string()
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+  pf_reg_date: Yup.date()
+    .nullable()
+    .max(new Date(), "Date cannot be in the future")
+    .when("pf_member", {
+      is: true, // Condition to check if pf_member is true
+      then: Yup.date().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.date().nullable(), // Optional if pf_member is false
+    }),
 
-    gratuity_startDate: Yup.date()
-      .nullable()
-      .max(new Date(), "Date cannot be in the future")
-      .when("gratuity_member", {
-        is: true, // Condition to check if gratuity_member is true
-        then: Yup.date().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.date().nullable(), // Optional if gratuity_member is false
-      }),
+  social_security_reg_date: Yup.date()
+    .nullable()
+    .max(new Date(), "Date cannot be in the future")
+    .when("social_security_member", {
+      is: true, // Condition to check if social_security_member is true
+      then: Yup.date().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.date().nullable(), // Optional if social_security_member is false
+    }),
 
-    eobi_reg_date: Yup.date()
-      .nullable()
-      .max(new Date(), "Date cannot be in the future")
-      .when("eobi_member", {
-        is: true, // Condition to check if eobi_member is true
-        then: Yup.date().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.date().nullable(), // Optional if eobi_member is false
-      }),
+  pension_reg_date: Yup.date()
+    .nullable()
+    .max(new Date(), "Date cannot be in the future")
+    .when("pension_member", {
+      is: true, // Condition to check if pension_member is true
+      then: Yup.date().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.date().nullable(), // Optional if pension_member is false
+    }),
+  overtime_working_day: Yup.number()
+    .max(100, "Value cannot be greater than 100")
+    .min(0, "Value cannot be less than 0")
+    .when("overtime_allowance", {
+      is: (value) => value === true || value === 1, // if select value is 2
+      then: Yup.number().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().notRequired(),
+    }),
+  overtime_off_day: Yup.number()
+    .max(100, "Value cannot be greater than 100")
+    .min(0, "Value cannot be less than 0")
+    .when("overtime_allowance", {
+      is: (value) => value === true || value === 1, // if select value is 2
+      then: Yup.number().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().notRequired(),
+    }),
+  overtime_holiday: Yup.number()
+    .max(100, "Value cannot be greater than 100")
+    .min(0, "Value cannot be less than 0")
+    .when("overtime_allowance", {
+      is: (value) => value === true || value === 1, // if select value is 2
+      then: Yup.number().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().notRequired(),
+    }),
 
-    pf_reg_date: Yup.date()
-      .nullable()
-      .max(new Date(), "Date cannot be in the future")
-      .when("pf_member", {
-        is: true, // Condition to check if pf_member is true
-        then: Yup.date().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.date().nullable(), // Optional if pf_member is false
-      }),
+  payment_mode_Id: Yup.number()
+    .required(VALIDATION_MESSAGES.required)
+    .min(1, VALIDATION_MESSAGES.required),
 
-    social_security_reg_date: Yup.date()
-      .nullable()
-      .max(new Date(), "Date cannot be in the future")
-      .when("social_security_member", {
-        is: true, // Condition to check if social_security_member is true
-        then: Yup.date().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.date().nullable(), // Optional if social_security_member is false
-      }),
+  emp_bankId: Yup.number().when("payment_mode_Id", {
+    is: 153, // if select value is 153
+    then: Yup.number().required(VALIDATION_MESSAGES.required),
+    otherwise: Yup.number().notRequired(),
+  }),
 
-    pension_reg_date: Yup.date()
-      .nullable()
-      .max(new Date(), "Date cannot be in the future")
-      .when("pension_member", {
-        is: true, // Condition to check if pension_member is true
-        then: Yup.date().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.date().nullable(), // Optional if pension_member is false
-      }),
-    overtime_working_day: Yup.number()
-      .max(100, 'Value cannot be greater than 100')
-      .min(0, 'Value cannot be less than 0')
-      .when('overtime_allowance', {
-        is: (value) => value === true || value === 1, // if select value is 2
-        then: Yup.number().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.number().notRequired(),
-      }),
-    overtime_off_day: Yup.number()
-      .max(100, 'Value cannot be greater than 100')
-      .min(0, 'Value cannot be less than 0')
-      .when('overtime_allowance', {
-        is: (value) => value === true || value === 1, // if select value is 2
-        then: Yup.number().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.number().notRequired(),
-      }),
-    overtime_holiday: Yup.number()
-      .max(100, 'Value cannot be greater than 100')
-      .min(0, 'Value cannot be less than 0')
-      .when('overtime_allowance', {
-        is: (value) => value === true || value === 1, // if select value is 2
-        then: Yup.number().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.number().notRequired(),
-      }),
+  emp_bank_branchId: Yup.number().when("payment_mode_Id", {
+    is: 153, // if select value is 153
+    then: Yup.number().required(VALIDATION_MESSAGES.required),
+    otherwise: Yup.number().notRequired(),
+  }),
 
-    payment_mode_Id: Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
+  emp_bank_accountTitle: Yup.string().when("payment_mode_Id", {
+    is: (value) => value === 152, // if select value is 151
+    then: Yup.string().required(VALIDATION_MESSAGES.required),
+    otherwise: Yup.string().notRequired(),
+  }),
 
-    emp_bankId: Yup.number()
-      .when('payment_mode_Id', {
-        is: 153, // if select value is 153
-        then: Yup.number().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.number().notRequired(),
-      }),
+  // company_from_accNo: Yup.number()
+  //   .when('payment_mode_Id', {
+  //     is: 153, // if select value is 153
+  //     then: Yup.number().notRequired(),
+  //     otherwise: Yup.number().notRequired(),
+  //   }),
 
-
-
-    emp_bank_branchId: Yup.number()
-      .when('payment_mode_Id', {
-        is: 153, // if select value is 153
-        then: Yup.number().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.number().notRequired(),
-      }),
-
-
-
-    emp_bank_accountTitle: Yup.string()
-      .when('payment_mode_Id', {
-        is: (value) => value === 152, // if select value is 151
-        then: Yup.string().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.string().notRequired(),
-      }),
-
-    // company_from_accNo: Yup.number()
-    //   .when('payment_mode_Id', {
-    //     is: 153, // if select value is 153
-    //     then: Yup.number().notRequired(),
-    //     otherwise: Yup.number().notRequired(),
-    //   }),
-
-    emp_bank_accNo: Yup.number()
-      .when('payment_mode_Id', {
-        is: 153, // if select value is 153
-        then: Yup.number().required(VALIDATION_MESSAGES.required),
-        otherwise: Yup.number().notRequired(),
-      }),
-  },
-
-);
+  emp_bank_accNo: Yup.number().when("payment_mode_Id", {
+    is: 153, // if select value is 153
+    then: Yup.number().required(VALIDATION_MESSAGES.required),
+    otherwise: Yup.number().notRequired(),
+  }),
+});
 export function FormEditForm({
   saveForm,
-  user,
+  data,
   onHide,
-  isUserForRead,
+  dataForRead,
   loading,
-
-
- revisedDate,isAccessForCreate,setRevisedDate
+  setIds,
+  setemployeeId,
+  revisedDate,
+  isAccessForCreate,
+  setRevisedDate,
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -231,15 +241,20 @@ export function FormEditForm({
   const [defPension, setPensionDate] = useState(null);
   const [defProvidenFund, setProvidentFundDate] = useState(null);
 
-  const [defPaymentModeList = null, setDefualtPaymentModeCodeList] = useState(null);
+  const [defPaymentModeList = null, setDefualtPaymentModeCodeList] = useState(
+    null
+  );
   const [defEmployee = null, setEmployeeDefault] = useState(null);
   const [defBank, setDefaultBanks] = useState({});
   const [defCompanyBank, setDefaultCompanyBanks] = useState({});
   const [defEmpBankBranch, setDefaultEmpBankBranch] = useState({});
   const [defCompanyBankBranch, setDefaultCompanyBankBranch] = useState({});
-  const [defMapEarningDeductionList = null, setDefaultMapEarningDeductionList] = useState([]);
+  const [
+    defMapEarningDeductionList = null,
+    setDefaultMapEarningDeductionList,
+  ] = useState([]);
 
-  const [clearBankAccTitleField, setBankAccTitleClearField] = useState('');
+  const [clearBankAccTitleField, setBankAccTitleClearField] = useState("");
 
   const [defBasicSalaryFactor, setBasicSalaryFactor] = useState(0);
   const [defGrossSalary, setGrossSalary] = useState(0);
@@ -247,9 +262,25 @@ export function FormEditForm({
   const [defGrossSalaryDB, setGrossSalaryDB] = useState(0);
   const [defBasicSalaryDB, setBasicSalaryDB] = useState(0);
   const [deferrors, setErrors] = useState({});
-  const [dropdownData, setdropdownData] = useState(DEFAULT_CALCULATION_TYPE_DROPDOWN);
-  const [currentSalaryMethod, setcurrentSalaryMethod] = useState('')
-  const [salaryApproverPermission, setSalaryApproverPermission] = useState(false);
+  const [user, setUser] = useState({});
+  // const [revisedDate, setRevisedDate] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      setUser(data)
+      // setRevisedDate()
+
+
+    }
+  }, [data])
+
+  const [dropdownData, setdropdownData] = useState(
+    DEFAULT_CALCULATION_TYPE_DROPDOWN
+  );
+  const [currentSalaryMethod, setcurrentSalaryMethod] = useState("");
+  const [salaryApproverPermission, setSalaryApproverPermission] = useState(
+    false
+  );
   const [confirmationModal, setConfirmationModal] = useState(false);
 
   const formUIContext = useFormUIContext();
@@ -257,7 +288,6 @@ export function FormEditForm({
   const formUIProps = useMemo(() => {
     return {
       ids: formUIContext.ids,
-
     };
   }, [formUIContext]);
   useEffect(() => {
@@ -270,15 +300,16 @@ export function FormEditForm({
       dispatch(fetchAllEmpCompensationBenefitsForDDL(2));
       dispatch(fetchAllFormsMenu(150, "allPaymentModeList")); // For All Payment Codes
 
-      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
-
+      dispatch(
+        fetchPayrollConfigApproverPermission(
+          "allPayrollConfigApproverPermissionList"
+        )
+      );
     }
-
   }, [dispatch]);
 
   //===== Date Of End Date
   useEffect(() => {
-
     if (user.gratuity_startDate) {
       setGrauityDate(new Date(user.gratuity_startDate));
     }
@@ -294,7 +325,9 @@ export function FormEditForm({
   }, [user?.emp_bankId, dashboard.emp_bankId]);
 
   useEffect(() => {
-    const emp_bank_branchId = defEmpBankBranch?.value ? defEmpBankBranch.value : user.emp_bank_branchId;
+    const emp_bank_branchId = defEmpBankBranch?.value
+      ? defEmpBankBranch.value
+      : user.emp_bank_branchId;
     setDefaultEmpBankBranch(
       dashboard.allBankBranch &&
       dashboard.allBankBranch.filter((item) => {
@@ -304,7 +337,9 @@ export function FormEditForm({
   }, [user?.emp_bank_branchId, dashboard.emp_bank_branchId]);
 
   useEffect(() => {
-    const company_bankId = defCompanyBank?.value ? defCompanyBank.value : user.company_bankId;
+    const company_bankId = defCompanyBank?.value
+      ? defCompanyBank.value
+      : user.company_bankId;
     setDefaultCompanyBanks(
       dashboard.allCompanyBanks &&
       dashboard.allCompanyBanks.filter((item) => {
@@ -314,7 +349,9 @@ export function FormEditForm({
   }, [user?.company_bankId, dashboard.allCompanyBanks]);
 
   useEffect(() => {
-    const company_branchId = defCompanyBankBranch?.value ? defCompanyBankBranch.value : user.company_branchId;
+    const company_branchId = defCompanyBankBranch?.value
+      ? defCompanyBankBranch.value
+      : user.company_branchId;
     setDefaultCompanyBankBranch(
       dashboard.allBankBranch &&
       dashboard.allBankBranch.filter((item) => {
@@ -349,8 +386,8 @@ export function FormEditForm({
 
   useEffect(() => {
     const employeeId = user.employeeId; // defEmployee?.value ? defEmployee.value : user.employeeId;
-    dispatch(fetchAllEarningList(1, '', employeeId, true));
-    dispatch(fetchAllDeductionList(2, '', employeeId));
+    dispatch(fetchAllEarningList(1, "", employeeId, true));
+    dispatch(fetchAllDeductionList(2, "", employeeId));
     dispatch(fetchAllActiveEmployeesSalaryForDDL(employeeId));
     setEmployeeDefault(
       dashboard.allEmployeesSalaryDDL &&
@@ -359,34 +396,40 @@ export function FormEditForm({
       })
     );
 
-    fetchEmployeeSalaryEarningList(employeeId, 0, null,null,null,formUIProps.ids);
-  }, [user?.employeeId, dashboard.employeeId,formUIProps,formUIProps.ids]);
-
-
+    fetchEmployeeSalaryEarningList(
+      employeeId,
+      0,
+      null,
+      null,
+      null,
+      formUIProps.ids
+    );
+  }, [user?.employeeId, dashboard.employeeId, formUIProps, formUIProps.ids]);
 
   useEffect(() => {
-
-    const payment_mode_Id = defPaymentModeList?.value ? defPaymentModeList.value : user.payment_mode_Id;
+    const payment_mode_Id = defPaymentModeList?.value
+      ? defPaymentModeList.value
+      : user.payment_mode_Id;
     setDefualtPaymentModeCodeList(
       dashboard.allPaymentModeList &&
       dashboard.allPaymentModeList.filter((item) => {
         return item.value === payment_mode_Id;
       })
     );
-
   }, [user?.payment_mode_Id, dashboard.payment_mode_Id]);
 
   //======================= compensation
 
   useEffect(() => {
-    const earning_deduction_id = defEarningList?.value ? defEarningList.value : user.earning_deduction_id;
+    const earning_deduction_id = defEarningList?.value
+      ? defEarningList.value
+      : user.earning_deduction_id;
     setDefaultEarningList(
       dashboard.allEarnings &&
       dashboard.allEarnings.filter((item) => {
         return item.value === earning_deduction_id;
       })
     );
-
   }, [user?.earning_deduction_id, dashboard.earning_deduction_id]);
 
   const handleChanged = (e, setFieldValue) => {
@@ -395,70 +438,109 @@ export function FormEditForm({
   };
 
   const checkReadOnlyStatus = (values, readOnlyValues = []) => {
-    if (!values.payment_mode_Id || readOnlyValues.includes(Number(values.payment_mode_Id))) {
+    if (
+      !values.payment_mode_Id ||
+      readOnlyValues.includes(Number(values.payment_mode_Id))
+    ) {
       return true;
     }
     return false;
-  }
+  };
 
-
-  const fetchEmployeeSalaryEarningList = async (employeeId, basicSalary, setFieldValue, gradeId, employeeTypeId,Id) => {
+  const fetchEmployeeSalaryEarningList = async (
+    employeeId,
+    basicSalary,
+    setFieldValue,
+    gradeId,
+    employeeTypeId,
+    Id
+  ) => {
     try {
-
-      const response = await axios.post(`${USERS_URL}/emp_salary_revision/read-salary-policy-byfilters`, { employeeId, basicSalary: basicSalary || 0, gradeId, employeeTypeId,Id });
+      const response = await axios.post(
+        `${USERS_URL}/emp_salary_revision/read-salary-policy-byfilters`,
+        {
+          employeeId,
+          basicSalary: basicSalary || 0,
+          gradeId,
+          employeeTypeId,
+          Id,
+        }
+      );
 
       if (!response?.data?.data?.[0]?.transactionType) {
         setDefaultMapEarningDeductionList([]);
-      }
-      else {
+      } else {
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
-      setBasicSalaryFactor(response?.data?.data[0]?.basicFactor || '');
+      setBasicSalaryFactor(response?.data?.data[0]?.basicFactor || "");
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
-      setBasicSalaryDB(response?.data?.data[0]?.basicSalary || '');
-      setBasicSalary(response?.data?.data[0]?.basicSalary || '');
+      setBasicSalaryDB(response?.data?.data[0]?.basicSalary || "");
+      setBasicSalary(response?.data?.data[0]?.basicSalary || "");
 
       if (response.data?.data?.[0]?.salaryMethod) {
-        setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || '');
-        setdropdownData(DROPDOWN[response.data?.data?.[0]?.salaryMethod] || DEFAULT_CALCULATION_TYPE_DROPDOWN);
-      }
-      else {
-        const value = response?.data?.data?.find((el) => el.calculation_type == '% Of Basic' || el.calculation_type == '% Of Gross')?.calculation_type
-        if (value == '% Of Basic') {
+        setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || "");
+        setdropdownData(
+          DROPDOWN[response.data?.data?.[0]?.salaryMethod] ||
+          DEFAULT_CALCULATION_TYPE_DROPDOWN
+        );
+      } else {
+        const value = response?.data?.data?.find(
+          (el) =>
+            el.calculation_type == "% Of Basic" ||
+            el.calculation_type == "% Of Gross"
+        )?.calculation_type;
+        if (value == "% Of Basic") {
           setcurrentSalaryMethod("Basic to Gross");
-          setdropdownData(DROPDOWN["Basic to Gross"] || DEFAULT_CALCULATION_TYPE_DROPDOWN);
-        }
-        else if (value == '% Of Gross') {
+          setdropdownData(
+            DROPDOWN["Basic to Gross"] || DEFAULT_CALCULATION_TYPE_DROPDOWN
+          );
+        } else if (value == "% Of Gross") {
           setcurrentSalaryMethod("Gross to Basic");
           setdropdownData(DROPDOWN["Gross to Basic"]);
-        }
-        else {
-          setcurrentSalaryMethod('');
+        } else {
+          setcurrentSalaryMethod("");
           setdropdownData(DEFAULT_CALCULATION_TYPE_DROPDOWN);
         }
       }
       const currencyId = response?.data?.data[0]?.currencyId;
 
       if (setFieldValue) {
-     
         setFieldValue("grossSalary", response?.data?.data[0]?.grossSalary);
         setFieldValue("basicSalary", response?.data?.data[0]?.basicSalary);
-        setFieldValue("overtime_working_day", response?.data?.data[0]?.overtime_working_day || 1);
-        setFieldValue("overtime_off_day", response?.data?.data[0]?.overtime_off_day || 1);
-        setFieldValue("overtime_holiday", response?.data?.data[0]?.overtime_holiday || 1);
-        setFieldValue("overtime_allowance", Boolean(response?.data?.data[0]?.overtime_allowance));
-        setFieldValue("gratuity_member", Boolean(response?.data?.data[0]?.gratuity_member));
-        setFieldValue("eobi_member", Boolean(response?.data?.data[0]?.eobi_member));
-        setFieldValue("social_security_member", Boolean(response?.data?.data[0]?.social_security_member));
-        setFieldValue("currencyId", currencyId || '');
-
+        setFieldValue(
+          "overtime_working_day",
+          response?.data?.data[0]?.overtime_working_day || 1
+        );
+        setFieldValue(
+          "overtime_off_day",
+          response?.data?.data[0]?.overtime_off_day || 1
+        );
+        setFieldValue(
+          "overtime_holiday",
+          response?.data?.data[0]?.overtime_holiday || 1
+        );
+        setFieldValue(
+          "overtime_allowance",
+          Boolean(response?.data?.data[0]?.overtime_allowance)
+        );
+        setFieldValue(
+          "gratuity_member",
+          Boolean(response?.data?.data[0]?.gratuity_member)
+        );
+        setFieldValue(
+          "eobi_member",
+          Boolean(response?.data?.data[0]?.eobi_member)
+        );
+        setFieldValue(
+          "social_security_member",
+          Boolean(response?.data?.data[0]?.social_security_member)
+        );
+        setFieldValue("currencyId", currencyId || "");
       }
-
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     }
-  }
-
+  };
 
   // const handleFieldChanged = (el) => {
   //   const index = el.target.id.split('-')[1]
@@ -474,23 +556,23 @@ export function FormEditForm({
   // }
 
   const handleFieldChanged = (el) => {
-  const [key, index] = el.target.id.split('-');
+    const [key, index] = el.target.id.split("-");
 
-  setDefaultMapEarningDeductionList((prev) =>
-    prev.map((val, ind) => {
-      if (ind == index) {
-        const newVal = el.target.value;
-        if (!(key === "factorValue" && Number(newVal) > 100)) {
-          val[key] = key === 'calculation_type' || key === 'earning_deduction_id'
-            ? newVal
-            : Number(newVal);
+    setDefaultMapEarningDeductionList((prev) =>
+      prev.map((val, ind) => {
+        if (ind == index) {
+          const newVal = el.target.value;
+          if (!(key === "factorValue" && Number(newVal) > 100)) {
+            val[key] =
+              key === "calculation_type" || key === "earning_deduction_id"
+                ? newVal
+                : Number(newVal);
+          }
         }
-      }
-      return val;
-    })
-  );
-};
-
+        return val;
+      })
+    );
+  };
 
   // const addRow = (element) => {
   //   if (element.target.id == "Other") {
@@ -502,98 +584,109 @@ export function FormEditForm({
 
   // }
 
-
   const addRow = (element) => {
-  const baseObj = {
-    earning_deduction_id: '',
-    calculation_type: '',
-    factorValue: 0,
-    amount: 0,
-    updatedAmount: 0,
-    transactionType: element?.target?.id === "Other" ? "Earning" : element.target.id,
-    isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
+    const baseObj = {
+      earning_deduction_id: "",
+      calculation_type: "",
+      factorValue: 0,
+      amount: 0,
+      updatedAmount: 0,
+      transactionType:
+        element?.target?.id === "Other" ? "Earning" : element.target.id,
+      isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
+    };
+
+    setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
   };
 
-  setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
-};
-
   const deleteRow = (element) => {
-
     const data = defMapEarningDeductionList;
     data.splice(element.target.id, 1);
 
-    setDefaultMapEarningDeductionList([...data])
-  }
-
-
+    setDefaultMapEarningDeductionList([...data]);
+  };
 
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
-
-
-    const basicSalaryInputFactor = el.target.form.elements['basicSalaryFactor'].value;
+    const basicSalaryInputFactor =
+      el.target.form.elements["basicSalaryFactor"].value;
     let grossSalaryInput = values.grossSalary;
     let basicSalaryInput = values.basicSalary;
 
-    if (currentSalaryMethod == 'Gross to Basic') {
+    if (currentSalaryMethod == "Gross to Basic") {
       setGrossSalary(grossSalaryInput);
 
       const result = await Promise.all(
         defMapEarningDeductionList.map(async (x) => {
-          if (x.calculation_type === 'Fixed Amount' && x.isPartOfGrossSalary && x.transactionType == "Earning") {
+          if (
+            x.calculation_type === "Fixed Amount" &&
+            x.isPartOfGrossSalary &&
+            x.transactionType == "Earning"
+          ) {
             grossSalaryInput = grossSalaryInput - x.amount;
           }
           return grossSalaryInput; // Return the updated grossSalaryInput
         })
       );
-      const totalBasicWithFactorVal = ((Number(grossSalaryInput) * Number(basicSalaryInputFactor)) / 100)
+      const totalBasicWithFactorVal =
+        (Number(grossSalaryInput) * Number(basicSalaryInputFactor)) / 100;
 
-      setFieldValue("basicSalary", totalBasicWithFactorVal)
+      setFieldValue("basicSalary", totalBasicWithFactorVal);
       setBasicSalary(totalBasicWithFactorVal);
 
       // fetchEmployeeSalaryEarningList(employeeId,basicSalary)
       if (Number(basicSalaryInputFactor)) {
-        setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
-          if (x.calculation_type == '% Of Gross') {
-            x.updatedAmount = ((grossSalaryInput * x.factorValue) / 100);
-            console.log("updated111",x.factorValue, x.updatedAmount)
-          }
-          return x;
-        })]);
+        setDefaultMapEarningDeductionList([
+          ...defMapEarningDeductionList.map((x) => {
+            if (x.calculation_type == "% Of Gross") {
+              x.updatedAmount = (grossSalaryInput * x.factorValue) / 100;
+              console.log("updated111", x.factorValue, x.updatedAmount);
+            }
+            return x;
+          }),
+        ]);
       }
-    }
-    else if (currentSalaryMethod == 'Basic to Gross') {
+    } else if (currentSalaryMethod == "Basic to Gross") {
       let basicSalaryNumber = Number(basicSalaryInput);
 
-      setDefaultMapEarningDeductionList([...defMapEarningDeductionList.map((x) => {
-        if (x.calculation_type == '% Of Basic') {
-          x.updatedAmount = ((basicSalaryNumber * x.factorValue) / 100);
-          console.log("updated222", x.updatedAmount)
-          if (x.isPartOfGrossSalary) {
-            basicSalaryNumber += x.updatedAmount
+      setDefaultMapEarningDeductionList([
+        ...defMapEarningDeductionList.map((x) => {
+          if (x.calculation_type == "% Of Basic") {
+            x.updatedAmount = (basicSalaryNumber * x.factorValue) / 100;
+            console.log("updated222", x.updatedAmount);
+            if (x.isPartOfGrossSalary) {
+              basicSalaryNumber += x.updatedAmount;
+            }
           }
-        }
-        return x;
-      })]);
+          return x;
+        }),
+      ]);
 
       const result = await Promise.all(
         defMapEarningDeductionList.map(async (x) => {
-          if (x.calculation_type === 'Fixed Amount' && x.isPartOfGrossSalary && x.transactionType == "Earning") {
+          if (
+            x.calculation_type === "Fixed Amount" &&
+            x.isPartOfGrossSalary &&
+            x.transactionType == "Earning"
+          ) {
             basicSalaryNumber = Number(basicSalaryNumber) + x.updatedAmount;
           }
           return basicSalaryNumber; // Return the updated grossSalaryInput
         })
       );
 
-      setFieldValue("grossSalary", basicSalaryNumber)
+      setFieldValue("grossSalary", basicSalaryNumber);
       setGrossSalary(basicSalaryNumber);
-      setGrossSalaryDB(basicSalaryNumber)
-    }
-    else {
+      setGrossSalaryDB(basicSalaryNumber);
+    } else {
       let basicSalaryNumber = Number(basicSalaryInput);
       let gross = 0;
       const result = await Promise.all(
         defMapEarningDeductionList.map(async (x) => {
-          if (x.calculation_type === 'Fixed Amount' && x.isPartOfGrossSalary && x.transactionType == "Earning") {
+          if (
+            x.calculation_type === "Fixed Amount" &&
+            x.isPartOfGrossSalary &&
+            x.transactionType == "Earning"
+          ) {
             gross = Number(gross) + x.updatedAmount;
           }
           return gross; // Return the updated grossSalaryInput
@@ -604,42 +697,54 @@ export function FormEditForm({
       setGrossSalary(gross + basicSalaryNumber);
       setGrossSalaryDB(gross + basicSalaryNumber);
     }
-  }
-
-
+  };
 
   const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
-    return item.transactionType === 'Earning' ? sum + Number(item.amount) : sum;
+    return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
   }, 0);
 
+  const totalGross =
+    defMapEarningDeductionList?.reduce((prev, curr) => {
+      return curr.transactionType == "Earning" &&
+        curr.isPartOfGrossSalary == false
+        ? prev + Number(curr.amount)
+        : prev;
+    }, 0) || 0;
 
-
-  const totalGross = defMapEarningDeductionList?.reduce((prev, curr) => {
-    return curr.transactionType == 'Earning' && curr.isPartOfGrossSalary == false ? prev + Number(curr.amount) : prev
-  }, 0) || 0;
-
-
-  const totalDeduction = defMapEarningDeductionList?.reduce((prev, curr) => {
-    return curr.transactionType == 'Deduction' ? prev + Number(curr.amount) : prev
-  }, 0) || 0;
-
+  const totalDeduction =
+    defMapEarningDeductionList?.reduce((prev, curr) => {
+      return curr.transactionType == "Deduction"
+        ? prev + Number(curr.amount)
+        : prev;
+    }, 0) || 0;
 
   const validate = () => {
     const newErrors = {};
     defMapEarningDeductionList.forEach((objValidate, index) => {
       if (!objValidate.earning_deduction_id) {
-        newErrors[`earning_deduction_id-${index}`] = VALIDATION_MESSAGES.required;
+        newErrors[`earning_deduction_id-${index}`] =
+          VALIDATION_MESSAGES.required;
       }
-      if (!objValidate.calculation_type || objValidate.calculation_type == '-1') {
+      if (
+        !objValidate.calculation_type ||
+        objValidate.calculation_type == "-1"
+      ) {
         newErrors[`calculation_type-${index}`] = VALIDATION_MESSAGES.required;
       }
       // Check if factorValue is required
-      if (!objValidate.factorValue && (objValidate.calculation_type == "% Of Gross" || objValidate.calculation_type == "% Of Basic")) {
+      if (
+        !objValidate.factorValue &&
+        (objValidate.calculation_type == "% Of Gross" ||
+          objValidate.calculation_type == "% Of Basic")
+      ) {
         newErrors[`factorValue-${index}`] = VALIDATION_MESSAGES.required;
       }
 
       // Check if amount is required
-      if (!objValidate.amount && objValidate.calculation_type == "Fixed Amount") {
+      if (
+        !objValidate.amount &&
+        objValidate.calculation_type == "Fixed Amount"
+      ) {
         newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
       }
     });
@@ -649,39 +754,34 @@ export function FormEditForm({
 
   const createDropdown = (data) => {
     return (data || []).map((el) => {
-      return (<>
-        <option value={el.value}>{el.label}</option>
-      </>)
-    })
-  }
-
+      return (
+        <>
+          <option value={el.value}>{el.label}</option>
+        </>
+      );
+    });
+  };
 
   const fetchBranch = (bankId) => {
     dispatch(fetchAllBankBranch(bankId));
-  }
-
+  };
 
   useEffect(() => {
-
-
-
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
-      entity => entity.subsidiaryId === Number(user.subsidiaryId)
+      (entity) => entity.subsidiaryId === Number(user.subsidiaryId)
     );
-
 
     if (filteredPermission?.length > 0) {
       const permission = filteredPermission[0];
       const roleId = String(auth?.user?.roleId).trim();
-      const salaryApproverIds = permission?.salaryApproverId?.map(id => String(id).trim());
+      const salaryApproverIds = permission?.salaryApproverId?.map((id) =>
+        String(id).trim()
+      );
 
       const isRoleSalaryApprover = salaryApproverIds?.includes(roleId);
       setSalaryApproverPermission(isRoleSalaryApprover);
-
     }
-  }, [user.subsidiaryId])
-
-
+  }, [user.subsidiaryId]);
 
   // Faaiz 24-7-2025
 
@@ -691,18 +791,16 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
     dispatch(fetchAllFormsMenu(275, "allEmployeeStatus"));
     dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
-
   }, []);
-
 
   const mergedEmpTypeMenus = useMemo(() => {
     return [
       ...(dashboard?.allEmpTypeDynamicChildMenus || []),
-      ...(dashboard?.allEmpTypeChildMenus || [])
+      ...(dashboard?.allEmpTypeChildMenus || []),
     ];
   }, [dashboard?.allEmpTypeDynamicChildMenus, dashboard?.allEmpTypeChildMenus]);
 
-console.log("aaaa111",isAccessForCreate)
+  console.log("aaaa111", isAccessForCreate);
 
   return (
     <>
@@ -710,23 +808,21 @@ console.log("aaaa111",isAccessForCreate)
         enableReinitialize={true}
         initialValues={{
           ...user,
-          revisedDate: revisedDate || null // fallback
+          revisedDate: revisedDate || null, // fallback
         }}
-
         validationSchema={formValidation}
-
-
         onSubmit={(values) => {
-
-
-          const earningDeductionList = defMapEarningDeductionList.map(item => ({
-            ...item,
-            updatedAmount: item.updatedAmount ?? item.amount ?? 0 // fallback if missing
-          }));
+          const earningDeductionList = defMapEarningDeductionList.map(
+            (item) => ({
+              ...item,
+              updatedAmount: item.updatedAmount ?? item.amount ?? 0, // fallback if missing
+            })
+          );
 
           saveForm(
             {
-              ...values,basicFactor:defBasicSalaryFactor || values.basicFactor,
+              ...values,
+              basicFactor: defBasicSalaryFactor || values.basicFactor,
               grossPackage:
                 values.grossSalary > 0
                   ? Number(values.grossSalary) + Number(totalGross)
@@ -746,22 +842,18 @@ console.log("aaaa111",isAccessForCreate)
           handleChange,
           setFieldValue,
           formik,
+          handleReset,
         }) => (
           <>
-
-
             <Modal.Body className="overlay overlay-block cursor-default">
-
-
               {/* {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
               )} */}
 
-
               <Form className="form form-label-right">
-                <fieldset disabled={isUserForRead}>
+                <fieldset disabled={dataForRead}>
                   {/* <div className="col-12 col-md-3 mt-3">
                     <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
 
@@ -790,7 +882,6 @@ console.log("aaaa111",isAccessForCreate)
 
                   {/* {confirmationModal && (  */}
 
-
                   <Modal
                     show={confirmationModal}
                     onHide={confirmationModal}
@@ -806,7 +897,6 @@ console.log("aaaa111",isAccessForCreate)
                     </Modal.Header>
                     <Modal.Body>
                       <span>Are you sure want to update salary?</span>
-
                     </Modal.Body>
                     <Modal.Footer>
                       <div>
@@ -821,8 +911,14 @@ console.log("aaaa111",isAccessForCreate)
                         <button
                           type="button"
                           onClick={() => {
-                            fetchEmployeeSalaryEarningList(user?.employeeId, 0, setFieldValue, values?.Employee?.gradeId, values?.Employee?.employeeTypeId);
-                            setConfirmationModal(false)
+                            fetchEmployeeSalaryEarningList(
+                              user?.employeeId,
+                              0,
+                              setFieldValue,
+                              values?.Employee?.gradeId,
+                              values?.Employee?.employeeTypeId
+                            );
+                            setConfirmationModal(false);
                           }}
                           className="btn btn-primary btn-elevate"
                         >
@@ -840,14 +936,15 @@ console.log("aaaa111",isAccessForCreate)
                     <FormTable />
                   </div>
 
-
-
-
                   <Accordion defaultActiveKey="">
                     <Card>
                       <Card.Header className="d-flex justify-content-center">
                         <div className="accordion-header-btn w-100  d-flex justify-content-center">
-                          <Accordion.Toggle as={Button} eventKey="0" className="flex-between-center text-bold">
+                          <Accordion.Toggle
+                            as={Button}
+                            eventKey="0"
+                            className="flex-between-center text-bold"
+                          >
                             {/* <Button
                               onClick={() => {
                                 if (!user?.employeeId) 
@@ -862,235 +959,288 @@ console.log("aaaa111",isAccessForCreate)
                       </Card.Header>
                       <Accordion.Collapse eventKey="0">
                         <Card.Body style={{ padding: "0" }}>
-                          {(user?.employeeId) && (<div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                          {user?.employeeId && (
+                            <div
+                              style={{
+                                backgroundColor: "rgb(235 243 255)",
+                                padding: "20px",
+                                borderRadius: "5px",
+                                border: "2px solid #adceff",
+                              }}
+                            >
+                              <div className="row col-12 col-md-12">
+                                <div className="col-12 col-md-3 mt-3">
+                                  <SearchSelect
+                                    name="Employee.gradeId"
+                                    label={
+                                      <span>
+                                        Grade{" "}
+                                        <span style={{ color: "red" }}>*</span>
+                                      </span>
+                                    }
+                                    onChange={(e) => {
+                                      setFieldValue(
+                                        "Employee.gradeId",
+                                        e.value || null
+                                      );
+                                      // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, e.value, values.Employee.employeeTypeId);
+                                      setConfirmationModal(true);
+                                    }}
+                                    value={
+                                      dashboard?.allEmployeegradeList?.find(
+                                        (option) =>
+                                          option.value ===
+                                          values?.Employee?.gradeId
+                                      ) || null
+                                    }
+                                    // options={dashboard?.allEmployeegradeList}
+                                    options={[
+                                      { label: "--Select--", value: "" },
+                                      ...(Array.isArray(
+                                        dashboard?.allEmployeegradeList
+                                      )
+                                        ? dashboard?.allEmployeegradeList
+                                        : []),
+                                    ]}
+                                    error={errors?.Employee?.gradeId}
+                                    touched={touched?.Employee?.gradeId}
+                                  />
+                                </div>
 
+                                {/* Designation */}
+                                <div className="col-12 col-md-3 mt-3">
+                                  <SearchSelect
+                                    name="designationId"
+                                    label={
+                                      <span>
+                                        Designation{" "}
+                                        <span style={{ color: "red" }}>*</span>
+                                      </span>
+                                    }
+                                    onChange={(e) => {
+                                      setFieldValue(
+                                        "Employee.designationId",
+                                        e.value || null
+                                      );
+                                    }}
+                                    value={
+                                      dashboard?.allDesignations?.find(
+                                        (option) =>
+                                          option.value ===
+                                          values?.Employee?.designationId
+                                      ) || null
+                                    }
+                                    // options={dashboard?.allDesignations}
+                                    options={[
+                                      { label: "--Select--", value: "" },
+                                      ...(Array.isArray(
+                                        dashboard?.allDesignations
+                                      )
+                                        ? dashboard?.allDesignations
+                                        : []),
+                                    ]}
+                                    error={errors?.Employee?.designationId}
+                                    touched={touched?.Employee?.designationId}
+                                  />
+                                </div>
 
-                            <div className="row col-12 col-md-12">
+                                {/* Grade */}
 
+                                {/* Employee Type */}
+                                <div className="col-12 col-md-3 mt-3">
+                                  <SearchSelect
+                                    name="employeeTypeId"
+                                    label={
+                                      <span>
+                                        Employee Type
+                                        <span style={{ color: "red" }}>*</span>
+                                      </span>
+                                    }
+                                    onChange={(e) => {
+                                      setFieldValue(
+                                        "Employee.employeeTypeId",
+                                        e.value || null
+                                      );
+                                      setConfirmationModal(true);
+                                      // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, values.Employee.gradeId, e.value);
+                                    }}
+                                    value={
+                                      mergedEmpTypeMenus.find(
+                                        (option) =>
+                                          option.value ===
+                                          values?.Employee?.employeeTypeId
+                                      ) || null
+                                    }
+                                    options={mergedEmpTypeMenus}
+                                    error={errors?.Employee?.employeeTypeId}
+                                    touched={touched?.Employee?.employeeTypeId}
+                                  />
+                                </div>
 
-
-
-                              <div className="col-12 col-md-3 mt-3">
-                                <SearchSelect
-                                  name="Employee.gradeId"
-                                  label={
-                                    <span>
-                                      Grade <span style={{ color: 'red' }}>*</span>
-                                    </span>
-                                  }
-
-                                  onChange={(e) => {
-                                    setFieldValue("Employee.gradeId", e.value || null);
-                                    // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, e.value, values.Employee.employeeTypeId);
-                                    setConfirmationModal(true)
-
-                                  }}
-                                  value={
-                                    dashboard?.allEmployeegradeList?.find(
-                                      (option) => option.value === values?.Employee?.gradeId
-                                    ) || null
-                                  }
-                                  // options={dashboard?.allEmployeegradeList}
-                                  options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
-                                  error={errors?.Employee?.gradeId}
-                                  touched={touched?.Employee?.gradeId}
-                                />
-
+                                <div className="col-12 col-md-3 mt-3">
+                                  <SearchSelect
+                                    name="employeeStatusId"
+                                    label={
+                                      <span>
+                                        {" "}
+                                        Employee Status
+                                        <span style={{ color: "red" }}>*</span>
+                                      </span>
+                                    }
+                                    isDisabled={dataForRead}
+                                    onChange={(e) => {
+                                      setFieldValue(
+                                        "Employee.employeeStatusId",
+                                        e.value || null
+                                      );
+                                    }}
+                                    value={
+                                      dashboard?.allEmployeeStatus?.find(
+                                        (option) =>
+                                          option.value ===
+                                          values?.Employee?.employeeStatusId
+                                      ) || null
+                                    }
+                                    error={errors?.Employee?.employeeStatusId}
+                                    touched={
+                                      touched?.Employee?.employeeStatusId
+                                    }
+                                    options={dashboard?.allEmployeeStatus}
+                                  />
+                                </div>
                               </div>
-
-
-
-                              {/* Designation */}
-                              <div className="col-12 col-md-3 mt-3">
-                                <SearchSelect
-                                  name="designationId"
-                                  label={
-                                    <span>
-                                      Designation <span style={{ color: 'red' }}>*</span>
-                                    </span>
-                                  }
-
-                                  onChange={(e) => {
-                                    setFieldValue("Employee.designationId", e.value || null);
-
-                                  }}
-                                  value={
-                                    dashboard?.allDesignations?.find(
-                                      (option) => option.value === values?.Employee?.designationId
-                                    ) || null
-                                  }
-                                  // options={dashboard?.allDesignations}
-                                  options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
-                                  error={errors?.Employee?.designationId}
-                                  touched={touched?.Employee?.designationId}
-                                />
-                              </div>
-
-
-                              {/* Grade */}
-
-
-
-
-
-
-                              {/* Employee Type */}
-                              <div className="col-12 col-md-3 mt-3">
-                                <SearchSelect
-                                  name="employeeTypeId"
-                                  label={
-                                    <span>
-                                      Employee Type<span style={{ color: 'red' }}>*</span>
-                                    </span>
-                                  }
-
-                                  onChange={(e) => {
-                                    setFieldValue("Employee.employeeTypeId", e.value || null);
-                                    setConfirmationModal(true)
-                                    // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, values.Employee.gradeId, e.value);
-
-                                  }}
-                                  value={
-                                    mergedEmpTypeMenus.find(
-                                      (option) => option.value === values?.Employee?.employeeTypeId
-                                    ) || null
-                                  }
-
-                                  options={mergedEmpTypeMenus}
-                                  error={errors?.Employee?.employeeTypeId}
-                                  touched={touched?.Employee?.employeeTypeId}
-
-                                />
-                              </div>
-
-
-                              <div className="col-12 col-md-3 mt-3">
-                                <SearchSelect
-                                  name="employeeStatusId"
-                                  label={<span> Employee Status<span style={{ color: 'red' }}>*</span></span>}
-                                  isDisabled={isUserForRead}
-
-                                  onChange={(e) => {
-
-                                    setFieldValue("Employee.employeeStatusId", e.value || null);
-                                  }}
-                                  value={
-                                    dashboard?.allEmployeeStatus?.find(
-                                      (option) => option.value === values?.Employee?.employeeStatusId
-                                    ) || null
-                                  }
-
-                                  error={errors?.Employee?.employeeStatusId}
-                                  touched={touched?.Employee?.employeeStatusId}
-                                  options={dashboard?.allEmployeeStatus}
-                                />
-                              </div>
-
-
-
                             </div>
-
-
-                          </div>)}
-
-
-
+                          )}
                         </Card.Body>
                       </Accordion.Collapse>
                     </Card>
                   </Accordion>
 
-                  {<div className="from-group row">
+                  {
+                    <div className="from-group row">
+                      <div className="col-12 col-md-3 mt-3">
+                        <AmountInput
+                          field={{
+                            name: "grossSalary",
+                            value: values.grossSalary,
+                            onBlur: () => setFieldTouched("grossSalary", true),
+                            onChange: () => { },
+                          }}
+                          form={{
+                            touched,
+                            errors,
+                            setFieldValue,
+                            setFieldTouched,
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Gross Salary{" "}
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          placeholder="Enter Gross Salary"
+                          autoComplete="off"
+                          disabled={!values.revisedDate}
+                          // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
+                          value={values.grossSalary || defGrossSalaryDB || ""}
+                          onChange={(e) => {
+                            setGrossSalaryDB(e);
+                            setFieldValue("grossSalary", e);
+                          }}
+                        />
+                      </div>
 
-
-
-                    <div className="col-12 col-md-3 mt-3">
-                      <AmountInput
-                        field={{
-                          name: "grossSalary",
-                          value: values.grossSalary,
-                          onBlur: () => setFieldTouched("grossSalary", true),
-                          onChange: () => { },
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        label={
-                          <span> Gross Salary <span style={{ color: 'red' }}>*</span></span>
-                        }
-                        placeholder="Enter Gross Salary"
-                        autoComplete="off"
-                        disabled={!values.revisedDate}
-                        // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
-                        value={ values.grossSalary || defGrossSalaryDB || ''}
-                        onChange={(e) => {
-                          setGrossSalaryDB(e);
-                          setFieldValue("grossSalary", e);
-                        }}
-                      />
-
-
-
-
+                      <div className="col-12 col-md-3 mt-3">
+                        <AmountInput
+                          field={{
+                            name: "basicSalary",
+                            value: values.basicSalary,
+                            onBlur: () => setFieldTouched("basicSalary", true),
+                            onChange: () => { },
+                          }}
+                          form={{
+                            touched,
+                            errors,
+                            setFieldValue,
+                            setFieldTouched,
+                          }}
+                          label={
+                            <span>
+                              Basic Salary{" "}
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          placeholder="Enter Basic Salary"
+                          autoComplete="off"
+                          disabled={currentSalaryMethod === "Gross to Basic"}
+                          value={values.basicSalary}
+                          onChange={(value) => {
+                            setBasicSalary(value); // Local state update
+                            setFieldValue("basicSalary", value); // Formik update
+                          }}
+                        />
+                      </div>
+                      <div className="col-12 col-md-3 mt-3">
+                        <Field
+                          name="basicSalaryFactor"
+                          type="number"
+                          disabled
+                          value={values.basicfactor || defBasicSalaryFactor}
+                          component={Input}
+                          placeholder="Enter Basic Salary"
+                          label={
+                            <span>
+                              {" "}
+                              Gross to Basic Factor
+                              {Boolean(
+                                currentSalaryMethod == "Gross to Basic"
+                              ) && (
+                                  <>
+                                    <span style={{ color: "red" }}>*</span>
+                                  </>
+                                )}
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="col-12 col-md-4 mt-12">
+                        <input
+                          type="button"
+                          class="btn btn-success"
+                          disabled={!values.revisedDate}
+                          onClick={(e) =>
+                            calculateEmployeeSalaryPolicy(
+                              e,
+                              setFieldValue,
+                              values
+                            )
+                          }
+                          id="btnSalaryPolicyCalc"
+                          value="Calculate"
+                        ></input>
+                      </div>
                     </div>
+                  }
+                  {/* For Earning WIth Payroll Include ByDefault Yes  */}
+                  <br></br>
 
-                    <div className="col-12 col-md-3 mt-3">
-                      <AmountInput
-                        field={{
-                          name: "basicSalary",
-                          value: values.basicSalary,
-                          onBlur: () => setFieldTouched("basicSalary", true),
-                          onChange: () => { },
-                        }}
-                        form={{
-                          touched,
-                          errors,
-                          setFieldValue,
-                          setFieldTouched,
-                        }}
-                        label={
-                          <span>
-                            Basic Salary <span style={{ color: 'red' }}>*</span>
-                          </span>
-                        }
-                        placeholder="Enter Basic Salary"
-                        autoComplete="off"
-                        disabled={currentSalaryMethod === 'Gross to Basic'}
-                        value={values.basicSalary}
-                        onChange={(value) => {
-                          setBasicSalary(value);           // Local state update
-                          setFieldValue("basicSalary", value); // Formik update
-                        }}
-                      />
-                    </div>
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="basicSalaryFactor"
-                        type="number"
-                        disabled
-                        value={values.basicfactor || defBasicSalaryFactor}
-                        component={Input}
-                        placeholder="Enter Basic Salary"
-                        label={<span> Gross to Basic Factor{Boolean(currentSalaryMethod == 'Gross to Basic') && <><span style={{ color: 'red' }}>*</span></>}</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="col-12 col-md-4 mt-12">
-                      <input type="button" class="btn btn-success" disabled={!values.revisedDate} onClick={(e) => calculateEmployeeSalaryPolicy(e, setFieldValue, values)} id="btnSalaryPolicyCalc" value="Calculate"></input>
-                    </div>
-                  </div>}
-                  { /* For Earning WIth Payroll Include ByDefault Yes  */}
-                  <br>
-                  </br>
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                  <div
+                    style={{
+                      backgroundColor: "rgb(235 243 255)",
+                      padding: "20px",
+                      borderRadius: "5px",
+                      border: "2px solid #adceff",
+                    }}
+                  >
                     <h6>Earnings </h6>
                     {/* {<a onClick={ModalUIProps.newButtonEarningTran} href='javascript:void(0)'>+ Add New </a>} */}
-                    <table id='testtable' class="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
+                    <table
+                      id="testtable"
+                      class="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                    >
+                      <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
                         {/* <td>Employee</td> */}
                         {/* <td>Action</td> */}
                         <td className="col-3">Earning</td>
@@ -1099,12 +1249,15 @@ console.log("aaaa111",isAccessForCreate)
                         <td>Current</td>
                         <td>Updated Amount</td>
                       </tr>
-                      {defMapEarningDeductionList?.map((obj, rightindex) => (
-                        obj.transactionType == 'Earning' && obj.isPartOfGrossSalary == true &&
-                        <><tr>
-                          {/* <td id={rightindex} onClick={!Boolean(currentSalaryMethod) && deleteRow}>{!Boolean(currentSalaryMethod) && 'Delete'} </td> */}
-                          <td>
-                            {/* <select
+                      {defMapEarningDeductionList?.map(
+                        (obj, rightindex) =>
+                          obj.transactionType == "Earning" &&
+                          obj.isPartOfGrossSalary == true && (
+                            <>
+                              <tr>
+                                {/* <td id={rightindex} onClick={!Boolean(currentSalaryMethod) && deleteRow}>{!Boolean(currentSalaryMethod) && 'Delete'} </td> */}
+                                <td>
+                                  {/* <select
                               disabled={Boolean(currentSalaryMethod)}
                               onChange={(e) => {
                                 handleFieldChanged(e);
@@ -1121,37 +1274,43 @@ console.log("aaaa111",isAccessForCreate)
                             </select>
                             {deferrors[`earning_deduction_id-${rightindex}`] && <div className="form-feedBack">{deferrors[`earning_deduction_id-${rightindex}`]}</div>} */}
 
-                            <SearchSelect
-                              name={`earning_deduction_id-${rightindex}`}
-                              // label={<span>Earning/Deduction <span style={{ color: 'red' }}>*</span></span>}
-                              isDisabled={Boolean(currentSalaryMethod)}
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`earning_deduction_id-${rightindex}`]: '',
-                                }));
-                              }}
-                              value={
-                                dashboard?.allEarnings?.find(
-                                  (option) => option.value === obj.earning_deduction_id
-                                ) || null
-                              }
-                              error={deferrors[`earning_deduction_id-${rightindex}`]}
-                              touched={true} // If you're using Formik, you can manage touched field logic more precisely
-                              options={
-                                dashboard?.allEarnings?.map((x) => ({
-                                  ...x,
-                                  isDisabled: !!defMapEarningDeductionList.find(
-                                    (el) => el.earning_deduction_id === x.value
-                                  ),
-                                }))
-                              }
-                            />
-
-                          </td>
-                          <td>
-                            {/* <select value={obj.calculation_type}
+                                  <SearchSelect
+                                    name={`earning_deduction_id-${rightindex}`}
+                                    // label={<span>Earning/Deduction <span style={{ color: 'red' }}>*</span></span>}
+                                    isDisabled={Boolean(currentSalaryMethod)}
+                                    onChange={(e) => {
+                                      handleFieldChanged(e);
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`earning_deduction_id-${rightindex}`]: "",
+                                      }));
+                                    }}
+                                    value={
+                                      dashboard?.allEarnings?.find(
+                                        (option) =>
+                                          option.value ===
+                                          obj.earning_deduction_id
+                                      ) || null
+                                    }
+                                    error={
+                                      deferrors[
+                                      `earning_deduction_id-${rightindex}`
+                                      ]
+                                    }
+                                    touched={true} // If you're using Formik, you can manage touched field logic more precisely
+                                    options={dashboard?.allEarnings?.map(
+                                      (x) => ({
+                                        ...x,
+                                        isDisabled: !!defMapEarningDeductionList.find(
+                                          (el) =>
+                                            el.earning_deduction_id === x.value
+                                        ),
+                                      })
+                                    )}
+                                  />
+                                </td>
+                                <td>
+                                  {/* <select value={obj.calculation_type}
                               disabled={Boolean(currentSalaryMethod)}
                               onChange={(e) => {
                                 handleFieldChanged(e);
@@ -1169,32 +1328,40 @@ console.log("aaaa111",isAccessForCreate)
                                 createDropdown(dropdownData || [])
                               }
                             </select> */}
-                            {/* {deferrors[`calculation_type-${rightindex}`] && <div className="form-feedBack">{deferrors[`calculation_type-${rightindex}`]}</div>} */}
-                            <SearchSelect
-                              name={`calculation_type-${rightindex}`}
+                                  {/* {deferrors[`calculation_type-${rightindex}`] && <div className="form-feedBack">{deferrors[`calculation_type-${rightindex}`]}</div>} */}
+                                  <SearchSelect
+                                    name={`calculation_type-${rightindex}`}
+                                    isDisabled={Boolean(currentSalaryMethod)}
+                                    onChange={(e) => {
+                                      handleFieldChanged(e);
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`calculation_type-${rightindex}`]: "",
+                                      })); // Clear error
 
-                              isDisabled={Boolean(currentSalaryMethod)}
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({ ...prev, [`calculation_type-${rightindex}`]: '' })); // Clear error
-
-                                if (e.value === "Fixed Amount") {
-                                  obj.factorValue = 0;
-                                } else {
-                                  obj.amount = 0;
-                                }
-                              }}
-                              value={
-                                (dropdownData || []).find(opt => opt.value === obj.calculation_type) || null
-                              }
-                              error={deferrors[`calculation_type-${rightindex}`]}
-                              touched={true}
-                              options={dropdownData || []}
-                            />
-
-                          </td>
-                          {/* <td>{obj.transactionType}</td> */}
-                          {/* <td>
+                                      if (e.value === "Fixed Amount") {
+                                        obj.factorValue = 0;
+                                      } else {
+                                        obj.amount = 0;
+                                      }
+                                    }}
+                                    value={
+                                      (dropdownData || []).find(
+                                        (opt) =>
+                                          opt.value === obj.calculation_type
+                                      ) || null
+                                    }
+                                    error={
+                                      deferrors[
+                                      `calculation_type-${rightindex}`
+                                      ]
+                                    }
+                                    touched={true}
+                                    options={dropdownData || []}
+                                  />
+                                </td>
+                                {/* <td>{obj.transactionType}</td> */}
+                                {/* <td>
 
                             <input disabled style={{ width: "100px" }} type="number"
 
@@ -1205,101 +1372,129 @@ console.log("aaaa111",isAccessForCreate)
                               value={obj.factorValue} id={'factorValue-' + rightindex}></input>
                             {deferrors[`factorValue-${rightindex}`] && <div className="form-feedBack">{deferrors[`factorValue-${rightindex}`]}</div>}
                           </td> */}
-                          <td>
-                            <AmountInput
-                              field={{
-                                name: `factorValue-${rightindex}`,
-                                value: obj.factorValue,
-                                onBlur: () => { },
-                                onChange: () => { },
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => {
-                                  setDefaultMapEarningDeductionList(list =>
-                                    list.map((item, idx) =>
-                                      idx === rightindex ? { ...item, factorValue: value } : item
-                                    )
-                                  );
-                                  setErrors(prev => ({ ...prev, [`factorValue-${rightindex}`]: '' }));
-                                },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={true}
-                              value={obj.factorValue}
-                            />
-                            {deferrors[`factorValue-${rightindex}`] && (
-                              <div className="form-feedBack">{deferrors[`factorValue-${rightindex}`]}</div>
-                            )}
-                          </td>
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `factorValue-${rightindex}`,
+                                      value: obj.factorValue,
+                                      onBlur: () => { },
+                                      onChange: () => { },
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => {
+                                        setDefaultMapEarningDeductionList(
+                                          (list) =>
+                                            list.map((item, idx) =>
+                                              idx === rightindex
+                                                ? {
+                                                  ...item,
+                                                  factorValue: value,
+                                                }
+                                                : item
+                                            )
+                                        );
+                                        setErrors((prev) => ({
+                                          ...prev,
+                                          [`factorValue-${rightindex}`]: "",
+                                        }));
+                                      },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={true}
+                                    value={obj.factorValue}
+                                  />
+                                  {deferrors[`factorValue-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`factorValue-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
 
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `amount-${rightindex}`,
+                                      value: obj.amount,
+                                      onBlur: () => { },
+                                      onChange: () => { },
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => {
+                                        setDefaultMapEarningDeductionList(
+                                          (list) =>
+                                            list.map((item, idx) =>
+                                              idx === rightindex
+                                                ? { ...item, amount: value }
+                                                : item
+                                            )
+                                        );
+                                        setErrors((prev) => ({
+                                          ...prev,
+                                          [`amount-${rightindex}`]: "",
+                                        }));
+                                      },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={true}
+                                    value={obj.amount}
+                                  />
+                                  {deferrors[`amount-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`amount-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
 
-
-                          <td>
-                            <AmountInput
-                              field={{
-                                name: `amount-${rightindex}`,
-                                value: obj.amount,
-                                onBlur: () => { },
-                                onChange: () => { },
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => {
-                                  setDefaultMapEarningDeductionList(list =>
-                                    list.map((item, idx) =>
-                                      idx === rightindex ? { ...item, amount: value } : item
-                                    )
-                                  );
-                                  setErrors(prev => ({ ...prev, [`amount-${rightindex}`]: '' }));
-                                },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={true}
-                              value={obj.amount}
-                            />
-                            {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
-
-                          </td>
-
-                          <td>
-                            <AmountInput
-                              field={{
-                                name: `amount-${rightindex}`,
-                                value: obj.updatedAmount,
-                                onBlur: () => { },
-                                onChange: () => { },
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => {
-                                  setDefaultMapEarningDeductionList(list =>
-                                    list.map((item, idx) =>
-                                      idx === rightindex ? { ...item, updatedAmount: value } : item
-                                    )
-                                  );
-                                  setErrors(prev => ({ ...prev, [`amount-${rightindex}`]: '' }));
-                                },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={true}
-                              value={obj.updatedAmount}
-                            />
-                            {deferrors[`updatedAmount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
-
-                          </td>
-
-                        </tr>
-
-                        </>
-                      ))}
-
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `amount-${rightindex}`,
+                                      value: obj.updatedAmount,
+                                      onBlur: () => { },
+                                      onChange: () => { },
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => {
+                                        setDefaultMapEarningDeductionList(
+                                          (list) =>
+                                            list.map((item, idx) =>
+                                              idx === rightindex
+                                                ? {
+                                                  ...item,
+                                                  updatedAmount: value,
+                                                }
+                                                : item
+                                            )
+                                        );
+                                        setErrors((prev) => ({
+                                          ...prev,
+                                          [`amount-${rightindex}`]: "",
+                                        }));
+                                      },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={true}
+                                    value={obj.updatedAmount}
+                                  />
+                                  {deferrors[`updatedAmount-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`amount-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            </>
+                          )
+                      )}
                     </table>
 
                     {/* {!Boolean(currentSalaryMethod) && <> <div className="from-group row">
@@ -1309,18 +1504,26 @@ console.log("aaaa111",isAccessForCreate)
 
                     </div>
                     </>} */}
-
                   </div>
 
-                  { /* For Earning WIth Payroll Include ByDefault No  */}
+                  {/* For Earning WIth Payroll Include ByDefault No  */}
 
-                  <br>
-                  </br>
-                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                  <br></br>
+                  <div
+                    style={{
+                      backgroundColor: "rgb(235 243 255)",
+                      padding: "20px",
+                      borderRadius: "5px",
+                      border: "2px solid #adceff",
+                    }}
+                  >
                     <h6> Other Earnings </h6>
                     {/* {<a onClick={ModalUIProps.newButtonEarningTran} href='javascript:void(0)'>+ Add New </a>} */}
-                    <table id='testtable' class="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
+                    <table
+                      id="testtable"
+                      class="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                    >
+                      <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
                         {/* <td>Employee</td> */}
                         <td>Action</td>
                         <td className="col-3">Earning</td>
@@ -1329,224 +1532,270 @@ console.log("aaaa111",isAccessForCreate)
                         <td>Amount</td>
                         <td>Updated Amount</td>
                       </tr>
-                      {defMapEarningDeductionList?.map((obj, rightindex) => (
-                        obj.transactionType == 'Earning' && obj.isPartOfGrossSalary == false &&
-                        <><tr>
-                          <td id={rightindex} onClick={deleteRow}> Delete</td>
+                      {defMapEarningDeductionList?.map(
+                        (obj, rightindex) =>
+                          obj.transactionType == "Earning" &&
+                          obj.isPartOfGrossSalary == false && (
+                            <>
+                              <tr>
+                                <td id={rightindex} onClick={deleteRow}>
+                                  {" "}
+                                  Delete
+                                </td>
 
+                                <td>
+                                  <Field
+                                    as="select"
+                                    name={`earning_deduction_id-${rightindex}`}
+                                    id={`earning_deduction_id-${rightindex}`}
+                                    className="form-control"
+                                    value={obj.earning_deduction_id || ""}
+                                    onChange={(e) => {
+                                      handleFieldChanged({
+                                        target: {
+                                          id: `earning_deduction_id-${rightindex}`,
+                                          value: e.target.value,
+                                        },
+                                      });
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`earning_deduction_id-${rightindex}`]: "",
+                                      }));
+                                    }}
+                                  >
+                                    <option value="">--Select--</option>
+                                    {(dashboard.allEarnings || []).map((x) => (
+                                      <option
+                                        key={x.value}
+                                        value={x.value}
+                                        disabled={defMapEarningDeductionList.some(
+                                          (el) =>
+                                            el.earning_deduction_id === x.value
+                                        )}
+                                      >
+                                        {x.label}
+                                      </option>
+                                    ))}
+                                  </Field>
 
-                          <td>
-                            <Field
-                              as="select"
-                              name={`earning_deduction_id-${rightindex}`}
-                              id={`earning_deduction_id-${rightindex}`}
-                              className="form-control"
-                              value={obj.earning_deduction_id || ''}
-                              onChange={(e) => {
-                                handleFieldChanged({
-                                  target: {
-                                    id: `earning_deduction_id-${rightindex}`,
-                                    value: e.target.value,
-                                  },
-                                });
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`earning_deduction_id-${rightindex}`]: '',
-                                }));
-                              }}
-                            >
-                              <option value="">--Select--</option>
-                              {(dashboard.allEarnings || []).map((x) => (
-                                <option
-                                  key={x.value}
-                                  value={x.value}
-                                  disabled={defMapEarningDeductionList.some(
-                                    (el) => el.earning_deduction_id === x.value
+                                  {deferrors[
+                                    `earning_deduction_id-${rightindex}`
+                                  ] && (
+                                      <div className="form-feedBack">
+                                        {
+                                          deferrors[
+                                          `earning_deduction_id-${rightindex}`
+                                          ]
+                                        }
+                                      </div>
+                                    )}
+                                </td>
+
+                                <td>
+                                  <Field
+                                    as="select"
+                                    name={`calculation_type-${rightindex}`}
+                                    id={`calculation_type-${rightindex}`}
+                                    className="form-control"
+                                    value={obj.calculation_type || ""}
+                                    onChange={(e) => {
+                                      const selectedValue = e.target.value;
+
+                                      handleFieldChanged({
+                                        target: {
+                                          id: `calculation_type-${rightindex}`,
+                                          value: selectedValue,
+                                        },
+                                      });
+
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`calculation_type-${rightindex}`]: "",
+                                      }));
+
+                                      if (selectedValue === "Fixed Amount") {
+                                        obj.factorValue = 0;
+                                      } else {
+                                        obj.amount = 0;
+                                      }
+                                    }}
+                                  >
+                                    {/* <option value="">--Select--</option> */}
+                                    {(dropdownData || []).map((opt) => (
+                                      <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                      </option>
+                                    ))}
+                                  </Field>
+
+                                  {deferrors[
+                                    `calculation_type-${rightindex}`
+                                  ] && (
+                                      <div className="form-feedBack">
+                                        {
+                                          deferrors[
+                                          `calculation_type-${rightindex}`
+                                          ]
+                                        }
+                                      </div>
+                                    )}
+                                </td>
+
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `factorValue-${rightindex}`,
+                                      value: obj.factorValue,
+                                      onBlur: () => { },
+                                      onChange: (field, value) => {
+                                        setDefaultMapEarningDeductionList(
+                                          (list) =>
+                                            list.map((item, idx) =>
+                                              idx === rightindex
+                                                ? {
+                                                  ...item,
+                                                  factorValue: value,
+                                                }
+                                                : item
+                                            )
+                                        );
+                                        setErrors((prev) => ({
+                                          ...prev,
+                                          [`factorValue-${rightindex}`]: "",
+                                        }));
+                                      },
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: () => { },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={
+                                      obj.calculation_type === "Fixed Amount"
+                                    }
+                                    value={obj.factorValue}
+                                  />
+                                  {deferrors[`factorValue-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`factorValue-${rightindex}`]}
+                                    </div>
                                   )}
-                                >
-                                  {x.label}
-                                </option>
-                              ))}
-                            </Field>
+                                </td>
 
-                            {deferrors[`earning_deduction_id-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`earning_deduction_id-${rightindex}`]}
-                              </div>
-                            )}
-                          </td>
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `amount-${rightindex}`,
+                                      value: obj.amount,
+                                      onBlur: () => { },
+                                      onChange: (e) => { },
+                                    }}
+                                    id={"amount-" + rightindex}
+                                    onChange={(e) => {
+                                      setDefaultMapEarningDeductionList(
+                                        (list) =>
+                                          list.map((item, idx) =>
+                                            idx === rightindex
+                                              ? { ...item, amount: Number(e) }
+                                              : item
+                                          )
+                                      );
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => { },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={
+                                      obj.calculation_type == "% Of Gross" ||
+                                      obj.calculation_type == "% Of Basic"
+                                    }
+                                    value={obj.amount}
+                                  />
+                                  {deferrors[`amount-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`amount-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
 
-
-                          <td>
-                            <Field
-                              as="select"
-                              name={`calculation_type-${rightindex}`}
-                              id={`calculation_type-${rightindex}`}
-                              className="form-control"
-                              value={obj.calculation_type || ''}
-                              onChange={(e) => {
-                                const selectedValue = e.target.value;
-
-                                handleFieldChanged({
-                                  target: {
-                                    id: `calculation_type-${rightindex}`,
-                                    value: selectedValue,
-                                  },
-                                });
-
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`calculation_type-${rightindex}`]: '',
-                                }));
-
-                                if (selectedValue === 'Fixed Amount') {
-                                  obj.factorValue = 0;
-                                } else {
-                                  obj.amount = 0;
-                                }
-                              }}
-                            >
-                              {/* <option value="">--Select--</option> */}
-                              {(dropdownData || []).map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </option>
-                              ))}
-                            </Field>
-
-                            {deferrors[`calculation_type-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`calculation_type-${rightindex}`]}
-                              </div>
-                            )}
-                          </td>
-
-
-                          <td>
-                            <AmountInput
-                              field={{
-                                name: `factorValue-${rightindex}`,
-                                value: obj.factorValue,
-                                onBlur: () => { },
-                                onChange: (field, value) => {
-                                  setDefaultMapEarningDeductionList((list) =>
-                                    list.map((item, idx) =>
-                                      idx === rightindex ? { ...item, factorValue: value } : item
-                                    )
-                                  );
-                                  setErrors((prev) => ({
-                                    ...prev,
-                                    [`factorValue-${rightindex}`]: ''
-                                  }));
-                                }
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: () => { },
-                                setFieldTouched: () => { }
-                              }}
-                              label={null}
-                              disabled={obj.calculation_type === 'Fixed Amount'}
-                              value={obj.factorValue}
-                            />
-                            {deferrors[`factorValue-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`factorValue-${rightindex}`]}
-                              </div>
-                            )}
-                          </td>
-
-                          <td>
-
-                            <AmountInput
-                              field={{
-                                name: `amount-${rightindex}`,
-                                value: obj.amount,
-                                onBlur: () => { },
-                                onChange: (e) => { },
-                              }}
-                              id={'amount-' + rightindex}
-                              onChange={(e) => {
-                                setDefaultMapEarningDeductionList(list =>
-                                  list.map((item, idx) =>
-                                    idx === rightindex ? { ...item, amount: Number(e) } : item
-                                  )
-                                );
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => { },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
-                              value={obj.amount}
-                            />
-                            {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
-                          </td>
-
-
-                          <td>
-
-                            <AmountInput
-                              field={{
-                                name: `updatedAmount-${rightindex}`,
-                                value: obj.amount,
-                                onBlur: () => { },
-                                onChange: (e) => { },
-                              }}
-                              id={'updatedAmount-' + rightindex}
-                              onChange={(e) => {
-                                setDefaultMapEarningDeductionList(list =>
-                                  list.map((item, idx) =>
-                                    idx === rightindex ? { ...item, updatedAmount: Number(e) } : item
-                                  )
-                                );
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => { },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
-                              value={obj.updatedAmount}
-                            />
-                            {deferrors[`updatedAmount-${rightindex}`] && <div className="form-feedBack">{deferrors[`updatedAmount-${rightindex}`]}</div>}
-                          </td>
-
-                        </tr>
-
-                        </>
-                      ))}
-
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `updatedAmount-${rightindex}`,
+                                      value: obj.amount,
+                                      onBlur: () => { },
+                                      onChange: (e) => { },
+                                    }}
+                                    id={"updatedAmount-" + rightindex}
+                                    onChange={(e) => {
+                                      setDefaultMapEarningDeductionList(
+                                        (list) =>
+                                          list.map((item, idx) =>
+                                            idx === rightindex
+                                              ? {
+                                                ...item,
+                                                updatedAmount: Number(e),
+                                              }
+                                              : item
+                                          )
+                                      );
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => { },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={
+                                      obj.calculation_type == "% Of Gross" ||
+                                      obj.calculation_type == "% Of Basic"
+                                    }
+                                    value={obj.updatedAmount}
+                                  />
+                                  {deferrors[`updatedAmount-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`updatedAmount-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            </>
+                          )
+                      )}
                     </table>
 
-                    {<>
-
-                      <div className="from-group row">
+                    {
+                      <>
+                        {/* <div className="from-group row">
                         <div className="col-12 col-md-4 mt-3">
                           <input type='button' id="Other" class="btn btn-primary" onClick={addRow} value='+Add'></input>
                         </div>
 
 
-                      </div>
-                    </>
-
+                      </div> */}
+                      </>
                     }
-
                   </div>
 
-                  <br>
-                  </br>
-                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                  <br></br>
+                  <div
+                    style={{
+                      backgroundColor: "rgb(235 243 255)",
+                      padding: "20px",
+                      borderRadius: "5px",
+                      border: "2px solid #adceff",
+                    }}
+                  >
                     <h6>Deductions</h6>
                     {/* {<a onClick={ModalUIProps.newButtonEarningTran} href='javascript:void(0)'>+ Add New </a>} */}
                     <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
+                      <tr style={{ backgroundColor: "#4d5f7a", color: "#fff" }}>
                         {/* <td>Employee</td> */}
                         <td>Action</td>
                         <td className="col-2">Deduction</td>
@@ -1555,11 +1804,16 @@ console.log("aaaa111",isAccessForCreate)
                         <td>Amount</td>
                         <td>Updated Amount</td>
                       </tr>
-                      {defMapEarningDeductionList?.map((obj, rightindex) => (
-                        obj.transactionType == 'Deduction' &&
-                        <><tr>
-                          <td id={rightindex} onClick={deleteRow}> Delete</td>
-                          {/* <td>
+                      {defMapEarningDeductionList?.map(
+                        (obj, rightindex) =>
+                          obj.transactionType == "Deduction" && (
+                            <>
+                              <tr>
+                                <td id={rightindex} onClick={deleteRow}>
+                                  {" "}
+                                  Delete
+                                </td>
+                                {/* <td>
                             <select
                               onChange={(e) => {
                                 handleFieldChanged(e);
@@ -1576,172 +1830,208 @@ console.log("aaaa111",isAccessForCreate)
                             {deferrors[`earning_deduction_id-${rightindex}`] && <div className="form-feedBack">{deferrors[`earning_deduction_id-${rightindex}`]}</div>}
                           </td> */}
 
-                          <td style={{ minWidth: '200px' }}>
-                            <Field
-                              as="select"
-                              name={`earning_deduction_id-${rightindex}`}
-                              className="form-control"
-                              onChange={(e) => {
-                                handleFieldChanged({
-                                  target: {
-                                    id: `earning_deduction_id-${rightindex}`,
-                                    value: e.target.value,
-                                  },
-                                });
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`earning_deduction_id-${rightindex}`]: '',
-                                }));
-                              }}
-                              value={obj.earning_deduction_id || '-1'}
-                            >
-                              <option value="-1">--Select--</option>
-                              {(dashboard?.allDeductions || []).map((x) => (
-                                <option
-                                  key={x.value}
-                                  value={x.value}
-                                  disabled={defMapEarningDeductionList.some(
-                                    (el) => el.earning_deduction_id === x.value
+                                <td style={{ minWidth: "200px" }}>
+                                  <Field
+                                    as="select"
+                                    name={`earning_deduction_id-${rightindex}`}
+                                    className="form-control"
+                                    onChange={(e) => {
+                                      handleFieldChanged({
+                                        target: {
+                                          id: `earning_deduction_id-${rightindex}`,
+                                          value: e.target.value,
+                                        },
+                                      });
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`earning_deduction_id-${rightindex}`]: "",
+                                      }));
+                                    }}
+                                    value={obj.earning_deduction_id || "-1"}
+                                  >
+                                    <option value="-1">--Select--</option>
+                                    {(dashboard?.allDeductions || []).map(
+                                      (x) => (
+                                        <option
+                                          key={x.value}
+                                          value={x.value}
+                                          disabled={defMapEarningDeductionList.some(
+                                            (el) =>
+                                              el.earning_deduction_id ===
+                                              x.value
+                                          )}
+                                        >
+                                          {x.label}
+                                        </option>
+                                      )
+                                    )}
+                                  </Field>
+
+                                  {deferrors[
+                                    `earning_deduction_id-${rightindex}`
+                                  ] && (
+                                      <div className="form-feedBack">
+                                        {
+                                          deferrors[
+                                          `earning_deduction_id-${rightindex}`
+                                          ]
+                                        }
+                                      </div>
+                                    )}
+                                </td>
+                                <td style={{ minWidth: "180px" }}>
+                                  <Field
+                                    as="select"
+                                    name={`calculation_type-${rightindex}`}
+                                    className="form-control"
+                                    value={obj.calculation_type || ""}
+                                    onChange={(e) => {
+                                      handleFieldChanged({
+                                        target: {
+                                          id: `calculation_type-${rightindex}`,
+                                          value: e.target.value,
+                                        },
+                                      });
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`calculation_type-${rightindex}`]: "",
+                                      }));
+                                    }}
+                                  >
+                                    {(dropdownData || []).map((item) => (
+                                      <option
+                                        key={item.value}
+                                        value={item.value}
+                                      >
+                                        {item.label}
+                                      </option>
+                                    ))}
+                                  </Field>
+
+                                  {deferrors[
+                                    `calculation_type-${rightindex}`
+                                  ] && (
+                                      <div className="form-feedBack">
+                                        {
+                                          deferrors[
+                                          `calculation_type-${rightindex}`
+                                          ]
+                                        }
+                                      </div>
+                                    )}
+                                </td>
+
+                                <td>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    style={{ width: "100px" }}
+                                    disabled={
+                                      obj.calculation_type === "Fixed Amount"
+                                    }
+                                    id={`factorValue-${rightindex}`}
+                                    value={obj.factorValue}
+                                    onChange={(e) => {
+                                      handleFieldChanged(e);
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`factorValue-${rightindex}`]: "",
+                                      }));
+                                    }}
+                                  />
+                                  {deferrors[`factorValue-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`factorValue-${rightindex}`]}
+                                    </div>
                                   )}
-                                >
-                                  {x.label}
-                                </option>
-                              ))}
-                            </Field>
+                                </td>
 
-                            {deferrors[`earning_deduction_id-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`earning_deduction_id-${rightindex}`]}
-                              </div>
-                            )}
-                          </td>
-                          <td style={{ minWidth: '180px' }}>
-                            <Field
-                              as="select"
-                              name={`calculation_type-${rightindex}`}
-                              className="form-control"
-                              value={obj.calculation_type || ''}
-                              onChange={(e) => {
-                                handleFieldChanged({
-                                  target: {
-                                    id: `calculation_type-${rightindex}`,
-                                    value: e.target.value,
-                                  },
-                                });
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`calculation_type-${rightindex}`]: '',
-                                }));
-                              }}
-                            >
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `amount-${rightindex}`,
+                                      value: obj.amount,
+                                      onBlur: () => { },
+                                      onChange: (e) => { },
+                                    }}
+                                    id={"amount-" + rightindex}
+                                    onChange={(e) => {
+                                      setDefaultMapEarningDeductionList(
+                                        (list) =>
+                                          list.map((item, idx) =>
+                                            idx === rightindex
+                                              ? { ...item, amount: Number(e) }
+                                              : item
+                                          )
+                                      );
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => { },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={
+                                      obj.calculation_type == "% Of Gross" ||
+                                      obj.calculation_type == "% Of Basic"
+                                    }
+                                    value={obj.amount}
+                                  />
 
-                              {(dropdownData || []).map((item) => (
-                                <option key={item.value} value={item.value}>
-                                  {item.label}
-                                </option>
-                              ))}
-                            </Field>
+                                  {deferrors[`amount-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`amount-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
 
-                            {deferrors[`calculation_type-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`calculation_type-${rightindex}`]}
-                              </div>
-                            )}
-                          </td>
+                                <td>
+                                  <AmountInput
+                                    field={{
+                                      name: `updatedAmount-${rightindex}`,
+                                      value: obj.updatedAmount,
+                                      onBlur: () => { },
+                                      onChange: (e) => { },
+                                    }}
+                                    id={"updatedAmount-" + rightindex}
+                                    onChange={(e) => {
+                                      setDefaultMapEarningDeductionList(
+                                        (list) =>
+                                          list.map((item, idx) =>
+                                            idx === rightindex
+                                              ? { ...item, amount: Number(e) }
+                                              : item
+                                          )
+                                      );
+                                    }}
+                                    form={{
+                                      touched: {},
+                                      errors: {},
+                                      setFieldValue: (field, value) => { },
+                                      setFieldTouched: () => { },
+                                    }}
+                                    label={null}
+                                    disabled={
+                                      obj.calculation_type == "% Of Gross" ||
+                                      obj.calculation_type == "% Of Basic"
+                                    }
+                                    value={obj.updatedAmount}
+                                  />
 
-
-
-
-                          <td>
-                            <input
-                              type="number"
-                              className="form-control"
-                              style={{ width: "100px" }}
-                              disabled={obj.calculation_type === 'Fixed Amount'}
-                              id={`factorValue-${rightindex}`}
-                              value={obj.factorValue}
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({
-                                  ...prev,
-                                  [`factorValue-${rightindex}`]: ''
-                                }));
-                              }}
-                            />
-                            {deferrors[`factorValue-${rightindex}`] && (
-                              <div className="form-feedBack">
-                                {deferrors[`factorValue-${rightindex}`]}
-                              </div>
-                            )}
-                          </td>
-
-                          <td>
-                            <AmountInput
-                              field={{
-                                name: `amount-${rightindex}`,
-                                value: obj.amount,
-                                onBlur: () => { },
-                                onChange: (e) => { },
-                              }}
-                              id={'amount-' + rightindex}
-                              onChange={(e) => {
-                                setDefaultMapEarningDeductionList(list =>
-                                  list.map((item, idx) =>
-                                    idx === rightindex ? { ...item, amount: Number(e) } : item
-                                  )
-                                );
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => { },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
-                              value={obj.amount}
-                            />
-
-                            {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
-                          </td>
-
-
-                          <td>
-                            <AmountInput
-                              field={{
-                                name: `updatedAmount-${rightindex}`,
-                                value: obj.updatedAmount,
-                                onBlur: () => { },
-                                onChange: (e) => { },
-                              }}
-                              id={'updatedAmount-' + rightindex}
-                              onChange={(e) => {
-                                setDefaultMapEarningDeductionList(list =>
-                                  list.map((item, idx) =>
-                                    idx === rightindex ? { ...item, amount: Number(e) } : item
-                                  )
-                                );
-                              }}
-                              form={{
-                                touched: {},
-                                errors: {},
-                                setFieldValue: (field, value) => { },
-                                setFieldTouched: () => { },
-                              }}
-                              label={null}
-                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
-                              value={obj.updatedAmount}
-                            />
-
-                            {deferrors[`updatedAmount-${rightindex}`] && <div className="form-feedBack">{deferrors[`updatedAmount-${rightindex}`]}</div>}
-                          </td>
-                        </tr>
-                        </>
-                      ))}
-
+                                  {deferrors[`updatedAmount-${rightindex}`] && (
+                                    <div className="form-feedBack">
+                                      {deferrors[`updatedAmount-${rightindex}`]}
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            </>
+                          )
+                      )}
                     </table>
 
-                    <div className="from-group row">
+                    {/* <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <input type='button' id="Deduction" class="btn btn-primary"
                           onClick={addRow} value='+Add'></input>
@@ -1749,139 +2039,155 @@ console.log("aaaa111",isAccessForCreate)
                       <div className="col-12 col-md-4 mt-3">
                       </div>
 
-                    </div>
-
+                    </div> */}
                   </div>
-                  {<>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
+                  {
+                    <>
+                      <div className="from-group row">
+                        <div className="col-12 col-md-4 mt-3"></div>
+                        <div className="col-12 col-md-4 mt-3"></div>
                       </div>
-                      <div className="col-12 col-md-4 mt-3">
+                      <div className="from-group row">
+                        <div className="col-12 col-md-4 mt-3"></div>
+                        <div className="col-12 col-md-4 mt-3">
+                          <AmountInput
+                            field={{
+                              name: `totalAllowance`,
+                              value: totalAllowance,
+                              onBlur: () => { },
+                              onChange: (e) => { },
+                            }}
+                            form={{
+                              touched: {},
+                              errors: {},
+                              setFieldValue: (field, value) => { },
+                              setFieldTouched: () => { },
+                            }}
+                            label={"Total Allowance"}
+                            disabled={true}
+                            value={totalAllowance}
+                          />
+                          {/* Total Allowance <input type="number" disabled="true" value={totalAllowance} id="txtTotalAllowance"></input> */}
+                        </div>
+                        <div className="col-12 col-md-4 mt-3">
+                          <AmountInput
+                            field={{
+                              name: `grossSalary`,
+                              value:
+                                values.grossSalary > 0
+                                  ? Number(values.grossSalary) +
+                                  Number(totalGross)
+                                  : Number(defGrossSalary) + Number(totalGross),
+                              onBlur: () => { },
+                              onChange: (e) => { },
+                            }}
+                            form={{
+                              touched: {},
+                              errors: {},
+                              setFieldValue: (field, value) => { },
+                              setFieldTouched: () => { },
+                            }}
+                            label={"Gross Package"}
+                            disabled={true}
+                            value={
+                              values.grossSalary > 0
+                                ? Number(values.grossSalary) +
+                                Number(totalGross)
+                                : Number(defGrossSalary) + Number(totalGross)
+                            }
+                          />
+                        </div>
                       </div>
+                      <div className="from-group row">
+                        <div className="col-12 col-md-4 mt-3"></div>
 
-                    </div>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
+                        <div className="col-12 col-md-4 mt-3">
+                          <AmountInput
+                            field={{
+                              name: `totalDeduction`,
+                              value: { totalDeduction },
+                              onBlur: () => { },
+                              onChange: (e) => { },
+                            }}
+                            form={{
+                              touched: {},
+                              errors: {},
+                              setFieldValue: (field, value) => { },
+                              setFieldTouched: () => { },
+                            }}
+                            label={"Total Deductions"}
+                            disabled={true}
+                            value={totalDeduction}
+                          />
+                          {/* Total Deductions <input disabled="true" type="number" value={totalDeduction} id="txtTotalDeductions"></input> */}
+                        </div>
+                        <div className="col-12 col-md-4 mt-3">
+                          <AmountInput
+                            field={{
+                              name: `netSalary`,
+                              value:
+                                values.grossSalary > 0
+                                  ? Number(values.grossSalary) +
+                                  Number(totalGross) -
+                                  Number(totalDeduction)
+                                  : Number(defGrossSalary) + Number(totalGross),
+                              onBlur: () => { },
+                              onChange: (e) => { },
+                            }}
+                            form={{
+                              touched: {},
+                              errors: {},
+                              setFieldValue: (field, value) => { },
+                              setFieldTouched: () => { },
+                            }}
+                            label={"Net Salary"}
+                            disabled={true}
+                            value={
+                              values.grossSalary > 0
+                                ? Number(values.grossSalary) +
+                                Number(totalGross) -
+                                Number(totalDeduction)
+                                : Number(defGrossSalary) + Number(totalGross)
+                            }
+                          />
+                          {/* Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input> */}
+                        </div>
                       </div>
-                      <div className="col-12 col-md-4 mt-3">
-                        <AmountInput
-                          field={{
-                            name: `totalAllowance`,
-                            value: totalAllowance,
-                            onBlur: () => { },
-                            onChange: (e) => { },
-                          }}
-
-                          form={{
-                            touched: {},
-                            errors: {},
-                            setFieldValue: (field, value) => { },
-                            setFieldTouched: () => { },
-                          }}
-                          label={"Total Allowance"}
-                          disabled={true}
-                          value={totalAllowance}
-                        />
-                        {/* Total Allowance <input type="number" disabled="true" value={totalAllowance} id="txtTotalAllowance"></input> */}
+                      <div className="from-group row">
+                        <div className="col-12 col-md-4 mt-3"></div>
+                        <div className="col-12 col-md-4 mt-3"></div>
                       </div>
-                      <div className="col-12 col-md-4 mt-3">
-                        <AmountInput
-                          field={{
-                            name: `grossSalary`,
-                            value: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross),
-                            onBlur: () => { },
-                            onChange: (e) => { },
-                          }}
-
-                          form={{
-                            touched: {},
-                            errors: {},
-                            setFieldValue: (field, value) => { },
-                            setFieldTouched: () => { },
-                          }}
-                          label={"Gross Package"}
-                          disabled={true}
-                          value={values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)}
-                        /></div>
-                    </div>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
-
-                      </div>
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <AmountInput
-                          field={{
-                            name: `totalDeduction`,
-                            value: { totalDeduction },
-                            onBlur: () => { },
-                            onChange: (e) => { },
-                          }}
-
-                          form={{
-                            touched: {},
-                            errors: {},
-                            setFieldValue: (field, value) => { },
-                            setFieldTouched: () => { },
-                          }}
-                          label={"Total Deductions"}
-                          disabled={true}
-                          value={totalDeduction}
-                        />
-                        {/* Total Deductions <input disabled="true" type="number" value={totalDeduction} id="txtTotalDeductions"></input> */}
-                      </div>
-                      <div className="col-12 col-md-4 mt-3">
-                        <AmountInput
-                          field={{
-                            name: `netSalary`,
-                            value: values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross),
-                            onBlur: () => { },
-                            onChange: (e) => { },
-                          }}
-
-                          form={{
-                            touched: {},
-                            errors: {},
-                            setFieldValue: (field, value) => { },
-                            setFieldTouched: () => { },
-                          }}
-                          label={"Net Salary"}
-                          disabled={true}
-                          value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)}
-                        />
-                        {/* Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input> */}
-                      </div>
-                    </div>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
-
-                      </div>
-                      <div className="col-12 col-md-4 mt-3">
-                      </div>
-
-                    </div>
-
-
-                  </>
+                    </>
                   }
-                  <br>
-                  </br>
-                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                  <br></br>
+                  <div
+                    style={{
+                      backgroundColor: "rgb(235 243 255)",
+                      padding: "20px",
+                      borderRadius: "5px",
+                      border: "2px solid #adceff",
+                    }}
+                  >
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
                           name="payment_mode_Id"
-                          label={<span> Payment Mode<span style={{ color: 'red' }}>*</span></span>}
-                          isDisabled={isUserForRead && true}
+                          label={
+                            <span>
+                              {" "}
+                              Payment Mode
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={dataForRead && true}
                           onBlur={() => {
                             // handleBlur({ target: { name: "countryId" } });
                           }}
                           onChange={(e) => {
                             setFieldValue("payment_mode_Id", e.value || null);
                             setDefualtPaymentModeCodeList(e);
-
                           }}
-                          value={(defPaymentModeList || null)}
+                          value={defPaymentModeList || null}
                           error={errors.payment_mode_Id}
                           touched={touched.payment_mode_Id}
                           options={dashboard.allPaymentModeList}
@@ -1889,97 +2195,105 @@ console.log("aaaa111",isAccessForCreate)
                       </div>
                     </div>
                     <div className="from-group row">
-                      {<div className="col-12 col-md-4 mt-3">
-                        <SearchSelect
-                          name="emp_bankId"
-                          label={<span> Employee Bank</span>}
-                          isDisabled={checkReadOnlyStatus(values, [151, 152])}
-                          onBlur={() => {
-                            // handleBlur({ target: { name: "countryId" } });
-                          }}
-
-                          onChange={(e) => {
-                            setFieldValue("emp_bankId", e.value);
-                            setDefaultBanks(e);
-                            dispatch(fetchAllBanks(e.value));
-                            fetchBranch(e.value)
-                          }}
-                          value={!checkReadOnlyStatus(values, [151, 152]) ? defBank : ''}
-                          error={errors.emp_bankId}
-                          touched={touched.emp_bankId}
-                          options={dashboard.allBanks}
-                        />
-                      </div>
+                      {
+                        <div className="col-12 col-md-4 mt-3">
+                          <SearchSelect
+                            name="emp_bankId"
+                            label={<span> Employee Bank</span>}
+                            isDisabled={checkReadOnlyStatus(values, [151, 152])}
+                            onBlur={() => {
+                              // handleBlur({ target: { name: "countryId" } });
+                            }}
+                            onChange={(e) => {
+                              setFieldValue("emp_bankId", e.value);
+                              setDefaultBanks(e);
+                              dispatch(fetchAllBanks(e.value));
+                              fetchBranch(e.value);
+                            }}
+                            value={
+                              !checkReadOnlyStatus(values, [151, 152])
+                                ? defBank
+                                : ""
+                            }
+                            error={errors.emp_bankId}
+                            touched={touched.emp_bankId}
+                            options={dashboard.allBanks}
+                          />
+                        </div>
                       }
 
-                      {<div className="col-12 col-md-4 mt-3">
-                        <SearchSelect
-                          name="emp_bank_branchId"
-                          label={<span>Employee Bank Branch</span>}
-                          isDisabled={checkReadOnlyStatus(values, [151, 152])}
-                          onBlur={() => {
-                            // handleBlur({ target: { name: "countryId" } });
-                          }}
-                          onChange={(e) => {
-                            setFieldValue("emp_bank_branchId", e.value);
-                            setDefaultEmpBankBranch(e);
-                            dispatch(fetchAllBankBranch(e.value));
-                          }}
-                          value={!checkReadOnlyStatus(values, [151, 152]) ? defEmpBankBranch : ''}
-                          error={errors.emp_bank_branchId}
-                          touched={touched.emp_bank_branchId}
-                          options={dashboard.allBankBranch}
-                        />
-                      </div>
+                      {
+                        <div className="col-12 col-md-4 mt-3">
+                          <SearchSelect
+                            name="emp_bank_branchId"
+                            label={<span>Employee Bank Branch</span>}
+                            isDisabled={checkReadOnlyStatus(values, [151, 152])}
+                            onBlur={() => {
+                              // handleBlur({ target: { name: "countryId" } });
+                            }}
+                            onChange={(e) => {
+                              setFieldValue("emp_bank_branchId", e.value);
+                              setDefaultEmpBankBranch(e);
+                              dispatch(fetchAllBankBranch(e.value));
+                            }}
+                            value={
+                              !checkReadOnlyStatus(values, [151, 152])
+                                ? defEmpBankBranch
+                                : ""
+                            }
+                            error={errors.emp_bank_branchId}
+                            touched={touched.emp_bank_branchId}
+                            options={dashboard.allBankBranch}
+                          />
+                        </div>
                       }
 
                       <div className="col-12 col-md-4 mt-3">
-
                         <Field
                           maxLength={20}
-
                           disabled={checkReadOnlyStatus(values, [151, 152])}
                           name="emp_bank_accNo"
                           component={Input}
-                          type='number'
+                          type="number"
                           onInput={(e) => {
-                            e.target.value = amountLimitDynamic(e.target.value, 15); // Limit to 3 digits
+                            e.target.value = amountLimitDynamic(
+                              e.target.value,
+                              15
+                            ); // Limit to 3 digits
                           }}
                           // value={clearEmpBankAccField}
                           //onChange={(e) => setEmpBankAccClearField(e.target.value)}
                           placeholder="Enter Bank Account No"
                           label={<span>Bank Account No</span>}
                           autoComplete="off"
-
                         />
+
+
+
+
                         {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                       </div>
-                      {
-                        <div className="col-12 col-md-4 mt-3">
-                        </div>
-                      }
-
-
-
+                      {<div className="col-12 col-md-4 mt-3"></div>}
                     </div>
                     <div className="from-group row">
-
-                      {
-                        <div className="col-12 col-md-4 mt-3">
-                        </div>
-                      }
-
+                      {<div className="col-12 col-md-4 mt-3"></div>}
                     </div>
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
-
                         <Field
                           name="emp_bank_accountTitle"
                           disabled={checkReadOnlyStatus(values, [151])}
-                          value={!checkReadOnlyStatus(values, [151]) ? values.emp_bank_accountTitle : ''}
+                          value={
+                            !checkReadOnlyStatus(values, [151])
+                              ? values.emp_bank_accountTitle
+                              : ""
+                          }
                           onChange={(e) => {
-                            setFieldValue('emp_bank_accountTitle', e.target.value)
-                            setBankAccTitleClearField(e.target.value)
+                            setFieldValue(
+                              "emp_bank_accountTitle",
+                              e.target.value
+                            );
+                            setBankAccTitleClearField(e.target.value);
                           }}
                           component={Input}
                           placeholder="Enter Bank Account Title"
@@ -1987,31 +2301,17 @@ console.log("aaaa111",isAccessForCreate)
                           autoComplete="off"
                         />
                       </div>
-                      {
-                        <div className="col-12 col-md-4 mt-3">
-                        </div>
-                      }
-
+                      {<div className="col-12 col-md-4 mt-3"></div>}
                     </div>
-                    <div className="from-group row">
-
-                    </div>
+                    <div className="from-group row"></div>
                   </div>
 
-
-                  <br>
-                  </br>
-
-
-
-
-
-
+                  <br></br>
                 </fieldset>
                 <Accordion defaultActiveKey="">
                   <Card>
                     <Card.Header>
-                      <div className='accordion-header-btn'>
+                      <div className="accordion-header-btn">
                         <Accordion.Toggle as={Button} eventKey="0">
                           Entitlements
                           <KeyboardArrowDown />
@@ -2020,32 +2320,51 @@ console.log("aaaa111",isAccessForCreate)
                     </Card.Header>
                     <Accordion.Collapse eventKey="0">
                       <Card.Body>
-
-                        <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                        <div
+                          style={{
+                            backgroundColor: "rgb(235 243 255)",
+                            padding: "20px",
+                            borderRadius: "5px",
+                            border: "2px solid #adceff",
+                          }}
+                        >
                           <h6>Earning Entitlements</h6>
 
                           <div className="from-group row">
                             <div className="col-12 col-md-4 mt-12">
-                              <input type="checkbox"
-                                disabled={isUserForRead}
+                              <input
+                                type="checkbox"
+                                disabled={dataForRead}
                                 name="gratuity_member"
                                 onChange={(e) => {
-                                  setFieldValue('gratuity_member', e.target.checked)
+                                  setFieldValue(
+                                    "gratuity_member",
+                                    e.target.checked
+                                  );
                                 }}
                                 onBlur={handleBlur}
                                 value={values.gratuity_member}
                                 checked={values.gratuity_member}
-
-                              /> Gratuity Member
+                              />{" "}
+                              Gratuity Member
                             </div>
 
                             <div className="col-12 col-md-4 mt-3">
-
-                              {<span> Date Of Registration{Boolean(values.gratuity_member) && <span style={{ color: 'red' }}>*</span>} </span>}
+                              {
+                                <span>
+                                  {" "}
+                                  Date Of Registration
+                                  {Boolean(values.gratuity_member) && (
+                                    <span style={{ color: "red" }}>*</span>
+                                  )}{" "}
+                                </span>
+                              }
                               <DatePicker
                                 className="form-control"
                                 placeholder="Enter Gratuity Reg Date"
-                                selected={values.gratuity_member && defGrauityDate}
+                                selected={
+                                  values.gratuity_member && defGrauityDate
+                                }
                                 onChange={(date) => {
                                   setFieldValue("gratuity_startDate", date);
                                   setGrauityDate(date);
@@ -2055,28 +2374,36 @@ console.log("aaaa111",isAccessForCreate)
                                 showTimeInput
                                 name="gratuity_startDate"
                                 autoComplete="off"
-                                disabled={!values.gratuity_member || isUserForRead}
+                                disabled={
+                                  !values.gratuity_member || dataForRead
+                                }
                               // value = {values.dateOfJoining}
                               />
-                              <ErrorMessage className="form-feedBack" name="gratuity_startDate" component="div" />
+                              <ErrorMessage
+                                className="form-feedBack"
+                                name="gratuity_startDate"
+                                component="div"
+                              />
                             </div>
-
                           </div>
                           <br></br>
                           <div className="from-group row">
-
                             <div className="col-12 col-md-3 mt-3">
                               <input
                                 name="overtime_allowance"
                                 type="checkbox"
-                                disabled={isUserForRead}
+                                disabled={dataForRead}
                                 onChange={(e) => {
-                                  setFieldValue('overtime_allowance', e.target.checked)
+                                  setFieldValue(
+                                    "overtime_allowance",
+                                    e.target.checked
+                                  );
                                 }}
                                 onBlur={handleBlur}
                                 value={values.overtime_allowance}
                                 checked={values.overtime_allowance}
-                              /> Over Time
+                              />{" "}
+                              Over Time
                             </div>
                           </div>
 
@@ -2084,47 +2411,97 @@ console.log("aaaa111",isAccessForCreate)
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="overtime_working_day"
-                                disabled={!Boolean(values.overtime_allowance) || isUserForRead}
+                                disabled={
+                                  !Boolean(values.overtime_allowance) ||
+                                  dataForRead
+                                }
                                 type="number"
                                 component={Input}
                                 maxLength={2}
-                                label={<span> Overtime Factor Working Day{Boolean(values.overtime_allowance) && <span style={{ color: 'red' }}>*</span>}</span>}
+                                label={
+                                  <span>
+                                    {" "}
+                                    Overtime Factor Working Day
+                                    {Boolean(values.overtime_allowance) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
+                                  </span>
+                                }
                                 autoComplete="off"
-                                value={!Boolean(values.overtime_allowance) ? '' : values.overtime_working_day}
+                                value={
+                                  !Boolean(values.overtime_allowance)
+                                    ? ""
+                                    : values.overtime_working_day
+                                }
                               />
                             </div>
 
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="overtime_off_day"
-                                disabled={!Boolean(values.overtime_allowance) || isUserForRead}
+                                disabled={
+                                  !Boolean(values.overtime_allowance) ||
+                                  dataForRead
+                                }
                                 type="number"
                                 component={Input}
                                 maxLength={2}
-                                label={<span> Overtime Factor Off day{Boolean(values.overtime_allowance) && <span style={{ color: 'red' }}>*</span>}</span>}
+                                label={
+                                  <span>
+                                    {" "}
+                                    Overtime Factor Off day
+                                    {Boolean(values.overtime_allowance) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
+                                  </span>
+                                }
                                 autoComplete="off"
-                                value={!Boolean(values.overtime_allowance) ? '' : values.overtime_off_day}
+                                value={
+                                  !Boolean(values.overtime_allowance)
+                                    ? ""
+                                    : values.overtime_off_day
+                                }
                               />
                             </div>
 
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="overtime_holiday"
-                                disabled={!Boolean(values.overtime_allowance) || isUserForRead}
+                                disabled={
+                                  !Boolean(values.overtime_allowance) ||
+                                  dataForRead
+                                }
                                 type="number"
                                 component={Input}
                                 maxLength={2}
-                                label={<span> Overtime Factor Holiday{Boolean(values.overtime_allowance) && <span style={{ color: 'red' }}>*</span>}</span>}
+                                label={
+                                  <span>
+                                    {" "}
+                                    Overtime Factor Holiday
+                                    {Boolean(values.overtime_allowance) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
+                                  </span>
+                                }
                                 autoComplete="off"
-                                value={!Boolean(values.overtime_allowance) ? '' : values.overtime_holiday}
+                                value={
+                                  !Boolean(values.overtime_allowance)
+                                    ? ""
+                                    : values.overtime_holiday
+                                }
                               />
                             </div>
-
-
                           </div>
                         </div>
                         <br></br>
-                        <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                        <div
+                          style={{
+                            backgroundColor: "rgb(235 243 255)",
+                            padding: "20px",
+                            borderRadius: "5px",
+                            border: "2px solid #adceff",
+                          }}
+                        >
                           <h6>Deduction Entitlements</h6>
 
                           <div className="from-group row">
@@ -2132,24 +2509,35 @@ console.log("aaaa111",isAccessForCreate)
                               <input
                                 name="eobi_member"
                                 type="checkbox"
-                                disabled={isUserForRead}
+                                disabled={dataForRead}
                                 onChange={(e) => {
-                                  setFieldValue('eobi_member', e.target.checked)
+                                  setFieldValue(
+                                    "eobi_member",
+                                    e.target.checked
+                                  );
                                 }}
                                 onBlur={handleBlur}
                                 value={values.eobi_member}
                                 checked={values.eobi_member}
-                              /> EOBI Member
+                              />{" "}
+                              EOBI Member
                             </div>
                             <div className="col-12 col-md-4 mt-5">
-                              {<span> Date Of Registration{Boolean(values.eobi_member) && <span style={{ color: 'red' }}>*</span>} </span>}
+                              {
+                                <span>
+                                  {" "}
+                                  Date Of Registration
+                                  {Boolean(values.eobi_member) && (
+                                    <span style={{ color: "red" }}>*</span>
+                                  )}{" "}
+                                </span>
+                              }
 
                               <DatePicker
                                 className="form-control"
                                 placeholder="Enter EOBI Reg Date"
-
                                 selected={values.eobi_member && defEOBIDate}
-                                label='EOBI Reg Date'
+                                label="EOBI Reg Date"
                                 onChange={(date) => {
                                   setFieldValue("eobi_reg_date", date);
                                   setEOBIDate(date);
@@ -2159,53 +2547,83 @@ console.log("aaaa111",isAccessForCreate)
                                 showTimeInput
                                 name="eobi_reg_date"
                                 autoComplete="off"
-
-                                disabled={!values.eobi_member || isUserForRead}
+                                disabled={!values.eobi_member || dataForRead}
                               />
-                              <ErrorMessage className="form-feedBack" name="eobi_reg_date" component="div" />
+                              <ErrorMessage
+                                className="form-feedBack"
+                                name="eobi_reg_date"
+                                component="div"
+                              />
                             </div>
 
                             <div className="col-12 col-md-4 mt-3">
                               <Field
                                 name="eobi_accNo"
-                                type='number'
+                                type="number"
                                 component={Input}
                                 onInput={(e) => {
-                                  e.target.value = amountLimitDynamic(e.target.value, 15); // Limit to 3 digits
+                                  e.target.value = amountLimitDynamic(
+                                    e.target.value,
+                                    15
+                                  ); // Limit to 3 digits
                                 }}
-
                                 placeholder="Enter EOBI Account No"
-                                label={<span> EOBI Account No{Boolean(values.eobi_member) && <span style={{ color: 'red' }}>*</span>} </span>}
+                                label={
+                                  <span>
+                                    {" "}
+                                    EOBI Account No
+                                    {Boolean(values.eobi_member) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}{" "}
+                                  </span>
+                                }
                                 autoComplete="off"
-                                disabled={!values.eobi_member || isUserForRead}
+                                disabled={!values.eobi_member || dataForRead}
                               />
                             </div>
                           </div>
 
                           <div className="from-group row">
-
                             <div className="col-12 col-md-4 mt-12">
                               <input
                                 type="checkbox"
-                                disabled={isUserForRead}
+                                disabled={dataForRead}
                                 name="social_security_member"
                                 onChange={(e) => {
-                                  setFieldValue('social_security_member', e.target.checked)
+                                  setFieldValue(
+                                    "social_security_member",
+                                    e.target.checked
+                                  );
                                 }}
                                 onBlur={handleBlur}
                                 value={values.social_security_member}
                                 checked={values.social_security_member}
-                              /> Social Security Member{values.social_security_member}
-
+                              />{" "}
+                              Social Security Member
+                              {values.social_security_member}
                             </div>
                             <div className="col-12 col-md-4 mt-5">
-                              {<span> Date Of Registration{Boolean(values.social_security_member) && <span style={{ color: 'red' }}>*</span>}</span>}
+                              {
+                                <span>
+                                  {" "}
+                                  Date Of Registration
+                                  {Boolean(values.social_security_member) && (
+                                    <span style={{ color: "red" }}>*</span>
+                                  )}
+                                </span>
+                              }
                               <DatePicker
                                 className="form-control"
                                 placeholder="Enter Social Security Reg Date"
-                                selected={values.social_security_member && defSocialSecurity}
+                                selected={
+                                  values.social_security_member &&
+                                  defSocialSecurity
+                                }
                                 onChange={(date) => {
-                                  setFieldValue("social_security_reg_date", date);
+                                  setFieldValue(
+                                    "social_security_reg_date",
+                                    date
+                                  );
                                   setSocialSecurityDate(date);
                                 }}
                                 timeInputLabel="Time:"
@@ -2213,43 +2631,67 @@ console.log("aaaa111",isAccessForCreate)
                                 showTimeInput
                                 name="social_security_reg_date"
                                 autoComplete="off"
-                                disabled={!values.social_security_member || isUserForRead}
+                                disabled={
+                                  !values.social_security_member || dataForRead
+                                }
                               // value = {values.dateOfJoining}
                               />
-                              <ErrorMessage className="form-feedBack" name="social_security_reg_date" component="div" />
+                              <ErrorMessage
+                                className="form-feedBack"
+                                name="social_security_reg_date"
+                                component="div"
+                              />
                             </div>
 
                             <div className="col-12 col-md-4 mt-3">
-
                               <Field
                                 onInput={(e) => {
-                                  e.target.value = amountLimitDynamic(e.target.value, 15); // Limit to 3 digits
+                                  e.target.value = amountLimitDynamic(
+                                    e.target.value,
+                                    15
+                                  ); // Limit to 3 digits
                                 }}
                                 name="social_security_accNo"
                                 component={Input}
-                                type='number'
+                                type="number"
                                 placeholder="Enter Social Security AccNo"
-                                label={<span> Social Security Account No{Boolean(values.social_security_member) && <span style={{ color: 'red' }}>*</span>}</span>}
+                                label={
+                                  <span>
+                                    {" "}
+                                    Social Security Account No {values.social_security_accNo}
+                                    {Boolean(values.social_security_member) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
+                                  </span>
+                                }
                                 autoComplete="off"
-                                disabled={!values.social_security_member || isUserForRead}
+                                disabled={
+                                  !values.social_security_member || dataForRead
+                                }
                               />
                             </div>
                           </div>
-
-
                         </div>
-
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
                 </Accordion>
 
                 <div className="form-group row justify-content-end p-5">
-
-                  {!isUserForRead ? (
+                  {!dataForRead ? (
                     <button
                       type="button"
-                      onClick={onHide}
+                      onClick={() => {
+                        setemployeeId(null)
+                        dispatch(clearPreviousSalaryRevisionFetched())
+                        dispatch(fetchCurrentEmpSalary(null));
+                        setIds("");
+                        setUser({}); // clear the external source
+                        setRevisedDate(null);
+                        setBasicSalary("");
+                        handleReset();
+
+                      }}
                       className="btn btn-light btn-elevate m-1"
                     >
                       Cancel
@@ -2264,42 +2706,37 @@ console.log("aaaa111",isAccessForCreate)
                     </button>
                   )}
 
-
-                  {!isUserForRead && isAccessForCreate &&(
+                  {!dataForRead && isAccessForCreate && (
                     <button
                       type="button"
                       disabled={!values.grossSalary || values.grossSalary == 0}
                       // || defMapEarningDeductionList.some(obj => !obj.updatedAmount || obj.updatedAmount == 0)
                       onClick={(e) => {
-                        calculateEmployeeSalaryPolicy(e, setFieldValue, values)
-                        handleSubmit()
+                        calculateEmployeeSalaryPolicy(e, setFieldValue, values);
+                        handleSubmit();
 
-                        if (values.revisedDate === null || values.revisedDate === undefined) {
+                        if (
+                          values.revisedDate === null ||
+                          values.revisedDate === undefined
+                        ) {
                           toast.error("Please select a revised date");
                           return;
                         }
-
-
-
                       }}
                       className="btn btn-primary btn-elevate m-1"
                     >
                       Save
                       {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
                     </button>
                   )}
-
                 </div>
-
               </Form>
             </Modal.Body>
             <Modal.Footer>
-
-
               {/* {salaryApproverPermission && (
-                !isUserForRead && Boolean(id) && !Boolean(user.approved) ? (
+                !dataForRead && Boolean(id) && !Boolean(user.approved) ? (
                   <button
                     type="button"
                     onClick={() => approveSalary(id)}
@@ -2313,9 +2750,7 @@ console.log("aaaa111",isAccessForCreate)
                 ) : null
               )} */}
 
-
               <> </>
-
             </Modal.Footer>
           </>
         )}

@@ -179,3 +179,8 @@ export const updateUserAccess = (mode) => (dispatch) => {
       dispatch(actions.updateUserAccess(mode));
 
 };
+
+export const clearPreviousSalaryRevisionFetched = () => (dispatch) => {
+      dispatch(actions.clearPreviousSalaryRevisionFetched());
+
+};

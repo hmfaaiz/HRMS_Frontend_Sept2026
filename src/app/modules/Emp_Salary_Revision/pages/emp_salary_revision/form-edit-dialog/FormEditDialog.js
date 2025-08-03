@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setRevisedDate }) {
+export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setRevisedDate ,setemployeeId}) {
 
   const [loading, setLoading] = useState(false);
 
@@ -46,11 +46,12 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
   const dispatch = useDispatch();
   const {
     userForEdit,
-    isuserForRead, userAccess,
+    dataForRead, userAccess,dataForEdit,
   } = useSelector((state) => ({
 
     userForEdit: state.emp_salary_revision.userForEdit,
-    isuserForRead: state.emp_salary_revision.userForRead,
+    dataForEdit: state.emp_salary_revision.dataForEdit,
+    dataForRead: state.emp_salary_revision.dataForRead,
     userAccess: state?.auth?.userAccess["emp_salary_revision"],
   }));
 
@@ -124,7 +125,7 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
     //     resetForm
     //   )
     // );
-    await dispatch(actions.createEmpSalaryRev(updatedData));
+    await dispatch(actions.createEmpSalaryRev(updatedData,disbaleLoading,onHide));
 
 
   }
@@ -135,14 +136,14 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
 
   return (
     <>
-      <FormEditDialogHeader id={id} isUserForRead={userForRead} />
+      <FormEditDialogHeader id={id} dataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
-        user={userForEdit || formUIProps.initUser}
+        data={userForEdit || formUIProps.initUser}
         onHide={onHide}
 
 
-        isUserForRead={userForRead}
+        dataForRead={dataForRead}
         enableLoading={enableLoading}
         loading={loading}
         setIds={formUIProps.setIds}
@@ -154,6 +155,7 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
         revisedDate={revisedDate}
         isAccessForCreate={isAccessForCreate}
         setRevisedDate={setRevisedDate}
+        setemployeeId={setemployeeId}
       />
       <ToastContainer
         position="top-right"

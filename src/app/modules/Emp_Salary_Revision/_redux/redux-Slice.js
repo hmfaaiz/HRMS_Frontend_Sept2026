@@ -1,3 +1,5 @@
+
+// This is a copy of the salary form, created as per the instructions of the Project Manager.
 import { createSlice } from "@reduxjs/toolkit";
 
 
@@ -17,8 +19,8 @@ const initialEmpSalaryRevisionState = {
     loan_type: null,
     empForSalRev: null,
     previousSalaryRev: null,
-    dataForEdit:false
-    
+    dataForEdit: false
+
 };
 
 
@@ -98,9 +100,21 @@ export const EmpSalaryRevisionSlice = createSlice({
             const mode = action.payload;
             state.dataForRead = mode === "read";
             state.dataForEdit = mode === "edit";
-        
-        }
 
+        },
+
+
+        clearPreviousSalaryRevisionFetched: (state) => {
+            const entities = [];
+
+            const totalResult =0;
+
+
+            state.listLoading = false;
+            state.error = null;
+            state.entities = entities;
+            state.totalCount = totalResult;
+        },
 
 
 

@@ -23,10 +23,10 @@ export function EmployeeSelect({
   const dispatch = useDispatch();
   //Get all Employee list from dashboard global state
   // dispatch(fetchEmpForSalaryRevision());
-  const { allEmployees ,currentState} = useSelector(
+  const { allEmployees, currentState } = useSelector(
     (state) => ({
       allEmployees: state.emp_salary_revision?.empForSalRev || [],
-       currentState: state.emp_salary_revision,
+      currentState: state.emp_salary_revision,
 
     }),
     shallowEqual
@@ -36,12 +36,12 @@ export function EmployeeSelect({
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
 
-  const { userForRead, userForEdit} = currentState;
+  const { dataForRead, dataForEdit } = currentState;
 
 
   return (
     <>
-   
+
 
       <Formik
         enableReinitialize={true}
@@ -133,21 +133,24 @@ export function EmployeeSelect({
                   </div>
 
                   <div className="col-12 col-md-3">
-                    <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
+                    <label>Revised Date {dataForRead}<span style={{ color: 'red' }}>*</span></label>
 
                     <DatePicker
                       className="form-control"
                       placeholder="revisedDate"
-                      // disabled={userForRead || userForEdit}
+                      disabled={dataForRead}
                       selected={
-                        revisedDate
-                          ? new Date(revisedDate)
-                          : null
+                        values.revisedDate
+                          ? new Date(values.revisedDate)
+                          : revisedDate
+                            ? new Date(revisedDate)
+                            : null
                       }
+
                       onChange={(date) => {
                         let selectedDate = formatDates(date, 'yyyy-MM-dd')
                         setRevisedDate(selectedDate);
-                        // setFieldValue("revisedDate", selectedDate);
+                        setFieldValue("revisedDate", date);
 
 
 
@@ -170,6 +173,7 @@ export function EmployeeSelect({
                       <div className="invalid-feedback d-block">{errors.revisedDate}</div>
                     )}
                   </div>
+
                   {/* Employee Id Dropdown Ends */}
 
                   <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
