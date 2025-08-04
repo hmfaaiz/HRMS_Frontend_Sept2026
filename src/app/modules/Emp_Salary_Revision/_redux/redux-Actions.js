@@ -63,7 +63,8 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
 
       dispatch(actions.EmpSalaryRevisionCreated(user));
       disbaleLoading();
-      toast.success(SERVER_MESSAGES.insertedSuccess, {
+      fetchCurrentEmpSalary(data?.employeeId)
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

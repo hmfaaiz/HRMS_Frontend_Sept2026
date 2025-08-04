@@ -132,7 +132,7 @@ export function EmployeeSelect({
 
                   </div>
 
-                  <div className="col-12 col-md-3">
+                  {/* <div className="col-12 col-md-3">
                     <label>Revised Date {dataForRead}<span style={{ color: 'red' }}>*</span></label>
 
                     <DatePicker
@@ -172,7 +172,7 @@ export function EmployeeSelect({
                     {touched.revisedDate && errors.revisedDate && (
                       <div className="invalid-feedback d-block">{errors.revisedDate}</div>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Employee Id Dropdown Ends */}
 

@@ -93,7 +93,7 @@ export const EmpSalaryRevisionSlice = createSlice({
 
             state.actionsLoading = false;
             state.error = null;
-            state.entities.unshift(action.payload);
+            // state.entities.unshift(action.payload);
         },
 
         updateUserAccess: (state, action) => {
@@ -107,9 +107,10 @@ export const EmpSalaryRevisionSlice = createSlice({
         clearPreviousSalaryRevisionFetched: (state) => {
             const entities = [];
 
-            const totalResult =0;
-
-
+            const totalResult = 0;
+            state.dataForEdit = false
+            state.dataForRead = false
+            state.userForEdit = null
             state.listLoading = false;
             state.error = null;
             state.entities = entities;

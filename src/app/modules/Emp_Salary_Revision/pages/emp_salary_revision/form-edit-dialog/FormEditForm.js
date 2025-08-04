@@ -792,7 +792,7 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(275, "allEmployeeStatus"));
     dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
   }, []);
-
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
   const mergedEmpTypeMenus = useMemo(() => {
     return [
       ...(dashboard?.allEmpTypeDynamicChildMenus || []),
@@ -808,7 +808,7 @@ export function FormEditForm({
         enableReinitialize={true}
         initialValues={{
           ...user,
-          revisedDate: revisedDate || null, // fallback
+          // revisedDate: revisedDate || null, // fallback
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -854,7 +854,7 @@ export function FormEditForm({
 
               <Form className="form form-label-right">
                 <fieldset disabled={dataForRead}>
-                  {/* <div className="col-12 col-md-3 mt-3">
+                  <div className="col-12 col-md-3 mb-3 p-0">
                     <label>Revised Date <span style={{ color: 'red' }}>*</span></label>
 
                     <DatePicker
@@ -871,6 +871,12 @@ export function FormEditForm({
 
 
                       }}
+                        maxDate={
+                        activeFiscalYear?.payrollMonth?.endDate
+                          ? new Date(activeFiscalYear?.payrollMonth?.endDate)
+                          : null
+                      }
+                      dateF
                       dateFormat="dd-MMM-yyyy"
                       name="revisedDate"
                       autoComplete="off"
@@ -878,7 +884,7 @@ export function FormEditForm({
                     {touched.revisedDate && errors.revisedDate && (
                       <div className="invalid-feedback d-block">{errors.revisedDate}</div>
                     )}
-                  </div> */}
+                  </div>
 
                   {/* {confirmationModal && (  */}
 
@@ -2699,7 +2705,18 @@ export function FormEditForm({
                   ) : (
                     <button
                       type="button"
-                      onClick={onHide}
+                      // onClick={onHide}
+                        onClick={() => {
+                        setemployeeId(null)
+                        dispatch(clearPreviousSalaryRevisionFetched())
+                        dispatch(fetchCurrentEmpSalary(null));
+                        setIds("");
+                        setUser({}); // clear the external source
+                        setRevisedDate(null);
+                        setBasicSalary("");
+                        handleReset();
+
+                      }}
                       className="btn btn-primary btn-elevate"
                     >
                       Ok
