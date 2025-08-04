@@ -233,6 +233,7 @@ const TeamLeaveCalender = lazy(()=> import("./modules/Leave_Calendar_Team/pages/
 const TeamAttendanceCalender = lazy(()=> import("./modules/Attendance_Calendar_Team/pages/index"))
 const PortalHolidayCalendar = lazy(()=> import("./modules/PortalHolidayCalendar/pages/index"))
 const EmpSalaryRevisionModule = lazy(() => import("./modules/Emp_Salary_Revision/pages/index"));
+const NewsEventTickerModule = lazy(() => import("./modules/NewsEventTicker/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -337,6 +338,7 @@ const ROUTES = {
   attendance_calendar_team : TeamAttendanceCalender,
   holiday_calendar : PortalHolidayCalendar,
   emp_salary_revision : EmpSalaryRevisionModule,
+  news_event_ticker : NewsEventTickerModule,
 };
 
 export default function BasePage() {
