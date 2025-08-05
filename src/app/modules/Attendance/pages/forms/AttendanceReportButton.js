@@ -41,12 +41,12 @@ const ReportButton = (values) => {
       }, // ✅ Push filter values into context
       csv: false,
       excel: false,
-      pdf: false,
+      pdf2: false,
       [value]: true,
     };
 
     FormUIProps.setQueryParams(updatedQueryParams);
-   console.log("print called", updatedQueryParams);
+
     await dispatch(actions.fetchAttendanceReport(updatedQueryParams));
 
     updatedQueryParams = {
@@ -57,7 +57,7 @@ const ReportButton = (values) => {
       },
       csv: false,
       excel: false,
-      pdf: false,
+      pdf2: false,
       [value]: false,
     };
 
@@ -68,40 +68,82 @@ const ReportButton = (values) => {
     <>
       <div className=" d-flex  justify-content-end mr-10">
 
+        <div className="">
+          <button
+            type="button"
+            className="att-file-button position-relative "
+            // disabled={pdfLoading}
+            disabled={pdfLoading || pdf2Loading || csvLoading || excelLoading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
+            onClick={() => print("pdf2")}
+          >
+            <span className="att-file-button">
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")} />
+            </span>
+            {pdf2Loading && (
+              <span
+                className="spinner spinner-black"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "45%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 2,
+                }}
+              ></span>
+            )}
+          </button>
+        </div>
+        <div className="">
+          <button
+            type="button"
+            className="att-file-button position-relative"
+            disabled={csvLoading || excelLoading || pdfLoading || pdf2Loading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
+            onClick={() => print("csv")}
+          >
+            <span className="att-file-button">
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")} />
+            </span>
+            {csvLoading && (
+              <span
+                className="spinner spinner-black"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "45%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 2,
+                }}
+              ></span>
+            )}
+          </button>
+        </div>
 
-        <button
-          type="button"
-          className="att-file-button"
-          // disabled={pdfLoading}
-          disabled={pdfLoading || pdf2Loading || csvLoading || excelLoading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
-          onClick={() => print("pdf")}
-        >
-          <span className="att-file-button">
-            <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")} />
-          </span>
-        </button>
+        <div className="">
+          <button
+            type="button"
+            className="att-file-button position-relative"
+            disabled={excelLoading || listLoading || pdfLoading || pdf2Loading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
+            onClick={() => print("excel")}
+          >
+            <span className="att-file-button">
+              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")} />
+            </span>
 
-        <button
-          type="button"
-          className="att-file-button"
-          disabled={csvLoading || excelLoading || pdfLoading || pdf2Loading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
-          onClick={() => print("csv")}
-        >
-          <span className="att-file-button">
-            <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")} />
-          </span>
-        </button>
+            {excelLoading && (
+              <span
+                className="spinner spinner-black"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "45%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 2,
+                }}
+              ></span>
+            )}
+          </button>
 
-        <button
-          type="button"
-          className="att-file-button"
-          disabled={excelLoading || listLoading || pdfLoading || pdf2Loading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
-          onClick={() => print("excel")}
-        >
-          <span className="att-file-button">
-            <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")} />
-          </span>
-        </button>
+        </div>
       </div>
     </>
   );

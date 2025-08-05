@@ -97,11 +97,11 @@ export function LeaveApplicationTable({ entities, payrollData }) {
 
   return (
     <Accordion defaultActiveKey="">
-      <span className="col-6 text-underline cursor-pointer">
+      {/* <span className="col-6 text-underline cursor-pointer">
         <Link target="_blank" to={"/leave-request/read-all-leave-request"}>
           Create Leave Request
         </Link>
-      </span>
+      </span> */}
       <Card>
         <Card.Header>
           <div className="accordion-header-btn">

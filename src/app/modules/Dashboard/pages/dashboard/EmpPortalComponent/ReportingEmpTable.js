@@ -112,9 +112,9 @@ export function ReportingEmpTable({ empAuthorityList }) {
   ];
 
   return (
-    <Accordion defaultActiveKey="0">
-      <Card>
-        <Card.Header>
+    // <Accordion defaultActiveKey="">
+    <Card>
+      {/* <Card.Header>
           <div className="accordion-header-btn">
             <Accordion.Toggle
               className="flex-between-center"
@@ -125,28 +125,28 @@ export function ReportingEmpTable({ empAuthorityList }) {
               <KeyboardArrowDown />
             </Accordion.Toggle>
           </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <BootstrapTable
-              noDataIndication={NoRecordsFoundMessage({
-                entities: empAuthorityList || [],
-              })}
-              wrapperClasses="table-responsive"
-              bordered={false}
-              classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-              bootstrap4
-              remote
-              keyField="Id"
-              data={empAuthorityList || []}
-              columns={columns}
-            >
-              <PleaseWaitMessage entities={empAuthorityList || []} />
-              <NoRecordsFoundMessage entities={empAuthorityList || []} />
-            </BootstrapTable>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+        </Card.Header> */}
+      {/* <Accordion.Collapse eventKey="0"> */}
+      <Card.Body>
+        <BootstrapTable
+          noDataIndication={NoRecordsFoundMessage({
+            entities: empAuthorityList || [],
+          })}
+          wrapperClasses="table-responsive"
+          bordered={false}
+          classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+          bootstrap4
+          remote
+          keyField="Id"
+          data={empAuthorityList || []}
+          columns={columns}
+        >
+          <PleaseWaitMessage entities={empAuthorityList || []} />
+          <NoRecordsFoundMessage entities={empAuthorityList || []} />
+        </BootstrapTable>
+      </Card.Body>
+      {/* </Accordion.Collapse> */}
+      {/* </Accordion> */}
+    </Card>
   );
 }

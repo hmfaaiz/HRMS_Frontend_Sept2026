@@ -10,7 +10,7 @@ import { DatePickerField, Select } from "../../../../../../_metronic/_partials/c
 import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
-import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess } from "../../../_redux/formActions";
+import { fetchAttendance, fetchAttendanceSheetConsolidated, runProcess, stopAllCalls } from "../../../_redux/formActions";
 import { fetchAllActiveEmployeesBySubsidiary, fetchAllDept } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
@@ -29,7 +29,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams
 }
 
-export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading}) {
+export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processLoading ,consolidatedLoading,empWiseLoading,csvLoading, excelLoading}) {
 
   const FormUIContext = useFormUIContext()
 
@@ -80,7 +80,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
       // update list by queryParams
       formUIProps.setQueryParams(newQueryParams)
     }
-    console.log("from report222")
+
     dispatch(fetchAttendance(newQueryParams));
 
 
@@ -117,8 +117,9 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
     const labels = getLabels(values);
     dispatch(fetchAttendanceSheetConsolidated(newQueryParams,document,labels,group_by_emp));
   }
-
-
+const handleCheck = (e,setFieldValue) => {
+    setFieldValue('markAttendancewithshift', e.target.checked);
+  };
 
   return (
     <>
@@ -126,7 +127,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
         enableReinitialize={true}
         // initialValues={initialFilter.filter}
                 initialValues={{
-                  ...initialFilter.filter,
+                  ...initialFilter.filter,attendanceType:1,
                   subsidiaryId: initialFilter.filter?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList.length > 0 ? allSubsidiaryList[0].value : '') // Set default subsidiaryId if it's not provided
                 }}
         validationSchema={formValidation}
@@ -144,7 +145,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
             <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-            <h6 className="mb-5">  Attendance Sheet</h6>
+            {/* <h6 className="mb-5">  Attendance Sheet</h6> */}
               <Form className="form form-label-right">
                 <fieldset>
                   <div className="from-group row">
@@ -205,7 +206,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
 
 
 
-                                                              <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-end">
+                                                              <div className="col-12 col-md-4  d-flex flex-column align-items-start">
 
                                           { values?.subsidiaryId ? (() => {
  const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
@@ -329,6 +330,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                         onChange={(e) => {
                           const value = e.target.value == -1 ? '' : Number(e.target.value)
                           setFieldValue('attendanceType', value)
+                          setFieldValue('markAttendancewithshift', "")
                         }}
                         label={
                           <span>
@@ -453,7 +455,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
           onClick={() => {
             // setFieldValue("group_by_emp",true)
             generateReport(values,true)}}
-          disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+          disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading }
         >
            Attendance Sheet (Employee Wise)
           <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
@@ -478,7 +480,7 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
     onClick={() => {
       // setFieldValue("group_by_emp",false)
       generateReport(values,false)}}
-    disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+    disabled={loading || processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading}
   >
      Attendance Sheet (Date Wise)
      <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
@@ -498,14 +500,38 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
             </Modal.Body>
             <Modal.Footer>
 
-   
+              <div className="d-flex flex-row col-12  align-items-end justify-content-end">
+
+                <div className="d-flex flex-column">
+                    <div className="">
+                    {values.attendanceType==1 && (
+                <div className="">
+      <input
+        type="checkbox"
+        id="markAttendancewithshift"
+        checked={values.markAttendancewithshift}
+        onChange={(e) => handleCheck(e, setFieldValue)}
+      />
+      <label className="ml-2 mb-3" htmlFor="markAttendancewithshift">
+        Mark attendance with shift timings if not exists.
+      </label>
+    </div>
+
+              )}
+              </div>
+
+               <div  className="d-flex flex-row ">
+
+                
               <button
                 type="button"
                 onClick={() => {
                   applyFilter(initialFilter.filter)
                   handleReset()
+         
+                  
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-danger btn-elevate "
               >
                 Cancel
               </button>
@@ -513,20 +539,24 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
               <button
                 type="submit"
                 onClick={() => handleSubmit()}
-                disabled={loading ||  pdf2Loading ||  processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
-                className="btn btn-success btn-elevate"
+                disabled={loading ||  pdf2Loading || csvLoading || excelLoading ||  processLoading || consolidatedLoading || empWiseLoading || !values.from || !values.to}
+                className="btn btn-success btn-elevate ml-2 "
               >
                 Filter Records
                 {loading  && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
+          
 
+
+
+                
        
 
               <button
-                disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to}
-                className="btn btn-secondary"
+                disabled={loading || processLoading || consolidatedLoading  || empWiseLoading || !values.from || !values.to || pdf2Loading || csvLoading || excelLoading}
+                className="btn btn-secondary ml-2 mr-9"
                 onClick={() => runAllProcess(values)}
               >
                 Run Process
@@ -535,11 +565,24 @@ export function FormFilter({pdfLoading, pdf2Loading, loading, dispatch, processL
                 )}
               </button>
 
+                    <ReportButton values={values} />
 
+              </div>
+
+                </div>
+  
+
+             
+           
+              </div>
+
+          
+
+   
           
             </Modal.Footer>
 
-               <ReportButton values={values} />
+            
 
         
 

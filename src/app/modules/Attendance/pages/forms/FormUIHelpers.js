@@ -24,7 +24,11 @@ export const initialFilter = {
   },
   sortOrder: "asc",
   pageSize: 50,
-  pageNumber: 1
+  pageNumber: 1,
+  pdf2:false,
+  csv:false,
+  excel:false,
+
 }
 
 export const savingFields = ['employeeId', 'comments', 'attDateIn', 'attDateOut', 'timeIn', 'timeOut', 'Id',]

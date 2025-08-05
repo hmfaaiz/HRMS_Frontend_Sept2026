@@ -20,19 +20,19 @@ const initialState = {
     pdfLoading: false,
     csvLoading: false,
     excelLoading: false,
-    pdfLoading2:false,
+    pdf2Loading: false,
 };
 
 export const callTypes = {
     list: "list",
     action: "action",
     process: "process",
-    pdf:"pdf",
-    pdf2:"pdf2",
-    csv:"pdf2",
-    xlsx:"pdf2",
-    consolidated:"consolidated",
-    empWise:"empWise"
+    pdf: "pdf",
+    pdf2: "pdf2",
+    csv: "csv",
+    xlsx: "xlsx",
+    consolidated: "consolidated",
+    empWise: "empWise"
 };
 
 
@@ -46,85 +46,86 @@ export const AttendanceSlice = createSlice({
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } 
-            else if(action.payload.callType === callTypes.process){
+            }
+            else if (action.payload.callType === callTypes.process) {
                 state.processLoading = false;
             }
-            else if(action.payload.callType === callTypes.consolidated){
+            else if (action.payload.callType === callTypes.consolidated) {
                 state.consolidatedLoading = false;
             }
-            
-            else if(action.payload.callType === callTypes.empWise){
+
+            else if (action.payload.callType === callTypes.empWise) {
                 state.empWiseLoading = false;
             }
-             if (action.payload.callType === callTypes.list) {
-                            state.listLoading = false;
-            
-                        }
-                        else if (action.payload.callType === callTypes.pdf) {
-                            state.pdfLoading = false;
-                        }
-                        else if (action.payload.callType === callTypes.pdf2) {
-                            state.pdfLoading2 = false;
-                        }
-            
-                        else if (action.payload.callType === callTypes.csv) {
-                            state.csvLoading = false;
-                        }
-                        else if (action.payload.callType === callTypes.xlsx) {
-                            state.excelLoading = false;
-                        }
-            
-                       
+            if (action.payload.callType === callTypes.list) {
+                state.listLoading = false;
+
+            }
+            else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = false;
+            }
+            else if (action.payload.callType === callTypes.pdf2) {
+                state.pdf2Loading = false;
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = false;
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = false;
+            }
+
+
             else {
                 state.actionsLoading = false;
             }
         },
-            startLoader: (state, action) => {
+        startLoader: (state, action) => {
             state.error = null;
             if (action.payload.callType === callTypes.list) {
-                console.log("startLoader called for list");
+
                 state.listLoading = true;
-            } 
+            }
         },
         startCall: (state, action) => {
             state.error = null;
-          if(action.payload.callType === callTypes.process){
+            if (action.payload.callType === callTypes.process) {
                 state.processLoading = true;
             }
 
-            else if(action.payload.callType === callTypes.consolidated){
+            else if (action.payload.callType === callTypes.consolidated) {
                 state.consolidatedLoading = true;
             }
 
-            
-            else if(action.payload.callType === callTypes.empWise){
+
+            else if (action.payload.callType === callTypes.empWise) {
                 state.empWiseLoading = true;
             }
-               else if (action.payload.callType === callTypes.pdf) {
-                          
-                            state.pdfLoading = true;
+            else if (action.payload.callType === callTypes.pdf) {
+
+                state.pdfLoading = true;
+
+
+            }
+
+            else if (action.payload.callType === callTypes.pdf2) {
             
-            
-                        }
-                        
-                        else if (action.payload.callType === callTypes.pdf2) {
-                          
-                            state.pdfLoading2 = true;
-            
-            
-                        }
-            
-                        else if (action.payload.callType === callTypes.csv) {
-                            state.csvLoading = true;
-            
-            
-                        }
-                        else if (action.payload.callType === callTypes.xlsx) {
-                            state.excelLoading = true;
-            
-            
-                        }
+
+                state.pdf2Loading = true;
+
+
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = true;
+
+
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = true;
+
+
+            }
 
             else {
                 state.actionsLoading = true;
@@ -134,21 +135,51 @@ export const AttendanceSlice = createSlice({
             state.error = null;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } 
-            else if(action.payload.callType === callTypes.process){
+            }
+            else if (action.payload.callType === callTypes.process) {
                 state.processLoading = false;
             }
-            
-            else if(action.payload.callType === callTypes.consolidated){
+
+            else if (action.payload.callType === callTypes.consolidated) {
                 state.consolidatedLoading = false;
             }
-            
-            else if(action.payload.callType === callTypes.empWise){
+
+            else if (action.payload.callType === callTypes.empWise) {
                 state.empWiseLoading = false;
             }
             else {
                 state.actionsLoading = false;
             }
+        },
+        stopAllCall: (state, action) => {
+            state.error = null;
+
+            state.listLoading = false;
+
+
+            state.processLoading = false;
+
+
+
+            state.consolidatedLoading = false;
+
+
+
+            state.empWiseLoading = false;
+
+
+            state.actionsLoading = false;
+
+            state.pdf2Loading = false;
+
+
+
+            state.csvLoading = false;
+
+
+            state.excelLoading = false;
+
+
         },
         AttendanceFetched: (state, action) => {
             const entities = action.payload.data?.data.rows;
@@ -162,18 +193,18 @@ export const AttendanceSlice = createSlice({
             const entities = action?.payload?.userForEdit;
             state.actionsLoading = false;
             if (entities) {
-         // Commented out due to date shifting to the next day because of timezone conversion issue
+                // Commented out due to date shifting to the next day because of timezone conversion issue
                 entities.attDateIn = new Date(entities.attDateIn);
                 entities.attDateOut = new Date(entities.attDateOut)
-            //    console.log("fetching upcoming date ",entities.attDateIn)
-            //     entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
-            //     console.log("fetching entities.attDateIn date ",entities.attDateIn)
-            //     entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
-              
-               
-                
+                //    console.log("fetching upcoming date ",entities.attDateIn)
+                //     entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
+                //     console.log("fetching entities.attDateIn date ",entities.attDateIn)
+                //     entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
 
-           
+
+
+
+
             }
             state.userForEdit = entities;
             state.error = null;
@@ -188,7 +219,7 @@ export const AttendanceSlice = createSlice({
 
                 // entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
                 // entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
-                
+
             }
             state.userForEdit = entities;
         },
@@ -201,8 +232,8 @@ export const AttendanceSlice = createSlice({
                 entities.attDateOut = new Date(entities.attDateOut)
                 // entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
                 // entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
-                
-               
+
+
             }
             state.userForEdit = entities;
         },
@@ -215,10 +246,10 @@ export const AttendanceSlice = createSlice({
             state.pdfLoading = false;
         },
         pdf2Fetched: (state, action) => {
-            state.pdfLoading2 = false;
+            state.pdf2Loading = false;
         },
 
-    
+
 
         csvFetched: (state, action) => {
             state.csvLoading = false;

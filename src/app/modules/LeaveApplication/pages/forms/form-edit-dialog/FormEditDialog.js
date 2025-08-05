@@ -16,6 +16,7 @@ export function FormEditDialog({ id, employeeId }) {
     return {
       initUser: FormUIContext.initUser,
       setId: FormUIContext.setId,
+      id: FormUIContext.id,
     };
   }, [FormUIContext]);
 
@@ -73,6 +74,7 @@ export function FormEditDialog({ id, employeeId }) {
         isEdit={id ? true : false}
         setId={formUIProps.setId}
         payrollData={payrollData}
+        
       />
       <ToastContainer
         position="top-right"

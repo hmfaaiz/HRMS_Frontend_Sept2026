@@ -14,127 +14,127 @@ const { actions } = AttendanceSlice;
  */
 export const fetchAttendance = (queryparm) => async (dispatch) => {
 
-   if (queryparm.pdf) {
-     dispatch(actions.startCall({ callType: callTypes.pdf2 }));
-     return requestFromServer.getAllAttendanceSetup(queryparm)
+//    if (queryparm.pdf) {
+//      dispatch(actions.startCall({ callType: callTypes.pdf2 }));
+//      return requestFromServer.getAllAttendanceSetup(queryparm)
  
  
  
-       .then((res) => {
+//        .then((res) => {
         
-         const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-         const pdfUrl = URL.createObjectURL(pdfBlob);
+//          const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+//          const pdfUrl = URL.createObjectURL(pdfBlob);
  
-         // Trigger file download
-         const link = document.createElement('a');
-         link.href = pdfUrl;
-         link.setAttribute('download', 't_attendance.pdf');
-         document.body.appendChild(link);
-         link.click();
-         dispatch(actions.pdf2Fetched({}));
-         document.body.removeChild(link);
+//          // Trigger file download
+//          const link = document.createElement('a');
+//          link.href = pdfUrl;
+//          link.setAttribute('download', 't_attendance.pdf');
+//          document.body.appendChild(link);
+//          link.click();
+//          dispatch(actions.pdf2Fetched({}));
+//          document.body.removeChild(link);
        
-       })
+//        })
  
  
-       .catch((error) => {
+//        .catch((error) => {
        
-         error.clientMessage = "Can't Generate PDF";
-         dispatch(actions.catchError({ error, callType: callTypes.pdf2 }));
-         toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-         });
-       });
+//          error.clientMessage = "Can't Generate PDF";
+//          dispatch(actions.catchError({ error, callType: callTypes.pdf2 }));
+//          toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+//            position: "top-right",
+//            autoClose: 5000,
+//            hideProgressBar: false,
+//            closeOnClick: true,
+//            pauseOnHover: true,
+//            draggable: true,
+//            progress: undefined,
+//          });
+//        });
  
-   }
+//    }
  
-  else if (queryparm.csv) {
+//   else if (queryparm.csv) {
  
-     dispatch(actions.startCall({ callType: callTypes.csv }));
-     return requestFromServer.getAllAttendanceSetup(queryparm)
+//      dispatch(actions.startCall({ callType: callTypes.csv }));
+//      return requestFromServer.getAllAttendanceSetup(queryparm)
  
  
  
-    .then((res) => {
-         const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-         const pdfUrl = URL.createObjectURL(pdfBlob);
+//     .then((res) => {
+//          const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//          const pdfUrl = URL.createObjectURL(pdfBlob);
    
-         // Trigger file download
-         const link = document.createElement('a');
-         link.href = pdfUrl;
-         link.setAttribute('download', 't_attendance.csv');
-         document.body.appendChild(link);
-         link.click();
-         dispatch(actions.csvFetched({}));
-         dispatch(actions.pdfFetched({}));
-         document.body.removeChild(link);
-       })
-       .catch((error) => {
-         error.clientMessage = "Can't Generate CSV";
-         const decodedData = new TextDecoder().decode(error?.response?.data);
-         const jsonData = JSON.parse(decodedData);
-         // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
-         toast.error( error?.clientMessage, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-         });
-       });
+//          // Trigger file download
+//          const link = document.createElement('a');
+//          link.href = pdfUrl;
+//          link.setAttribute('download', 't_attendance.csv');
+//          document.body.appendChild(link);
+//          link.click();
+//          dispatch(actions.csvFetched({}));
+//          dispatch(actions.pdfFetched({}));
+//          document.body.removeChild(link);
+//        })
+//        .catch((error) => {
+//          error.clientMessage = "Can't Generate CSV";
+//          const decodedData = new TextDecoder().decode(error?.response?.data);
+//          const jsonData = JSON.parse(decodedData);
+//          // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+//          toast.error( error?.clientMessage, {
+//            position: "top-right",
+//            autoClose: 5000,
+//            hideProgressBar: false,
+//            closeOnClick: true,
+//            pauseOnHover: true,
+//            draggable: true,
+//            progress: undefined,
+//          });
+//        });
  
-   }
+//    }
  
  
-   else if (queryparm.excel) {
+//    else if (queryparm.excel) {
   
-     dispatch(actions.startCall({ callType: callTypes.xlsx }));
-     return requestFromServer.getAllAttendanceSetup(queryparm)
+//      dispatch(actions.startCall({ callType: callTypes.xlsx }));
+//      return requestFromServer.getAllAttendanceSetup(queryparm)
  
  
  
-    .then((res) => {
-         const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-         const pdfUrl = URL.createObjectURL(pdfBlob);
+//     .then((res) => {
+//          const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//          const pdfUrl = URL.createObjectURL(pdfBlob);
    
-         // Trigger file download
-         const link = document.createElement('a');
-         link.href = pdfUrl;
-         link.setAttribute('download', 't_attendance.xlsx');
-         document.body.appendChild(link);
-         link.click();
-         dispatch(actions.excelFetched({}));
-         dispatch(actions.pdfFetched({}));
-         document.body.removeChild(link);
-       })
-       .catch((error) => {
-         error.clientMessage = "Can't Generate Excel";
-         const decodedData = new TextDecoder().decode(error?.response?.data);
-         const jsonData = JSON.parse(decodedData);
-         // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
-         toast.error( error?.clientMessage, {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: false,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-           progress: undefined,
-         });
-       });
+//          // Trigger file download
+//          const link = document.createElement('a');
+//          link.href = pdfUrl;
+//          link.setAttribute('download', 't_attendance.xlsx');
+//          document.body.appendChild(link);
+//          link.click();
+//          dispatch(actions.excelFetched({}));
+//          dispatch(actions.pdfFetched({}));
+//          document.body.removeChild(link);
+//        })
+//        .catch((error) => {
+//          error.clientMessage = "Can't Generate Excel";
+//          const decodedData = new TextDecoder().decode(error?.response?.data);
+//          const jsonData = JSON.parse(decodedData);
+//          // dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
+//          toast.error( error?.clientMessage, {
+//            position: "top-right",
+//            autoClose: 5000,
+//            hideProgressBar: false,
+//            closeOnClick: true,
+//            pauseOnHover: true,
+//            draggable: true,
+//            progress: undefined,
+//          });
+//        });
  
-   }
+//    }
  
-   else {
- console.log("hit111",queryparm.pdf)
+//    else {
+//  console.log("hit111",queryparm.pdf)
   dispatch(actions.startCall({ callType: callTypes.list }));
   dispatch(actions.startLoader({ callType: callTypes.list }));
   
@@ -146,12 +146,13 @@ export const fetchAttendance = (queryparm) => async (dispatch) => {
       error.clientMessage = "Can't find Attendances";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
-  }
+  // }
 };
 
 export const fetchAttendanceReport = (queryparm) => async (dispatch) => {
-console.log("hit222",queryparm)
-   if (queryparm.pdf) {
+
+   if (queryparm.pdf2) {
+
      dispatch(actions.startCall({ callType: callTypes.pdf2 }));
      return requestFromServer.getAllAttendanceSetup(queryparm)
  
@@ -234,7 +235,7 @@ console.log("hit222",queryparm)
    else if (queryparm.excel) {
   
      dispatch(actions.startCall({ callType: callTypes.xlsx }));
-     console.log("trigger111")
+   
      return requestFromServer.getAllAttendanceSetup(queryparm)
  
  
@@ -517,5 +518,10 @@ if(group_by_emp){
 
  
 
+
+};
+
+export const stopAllCalls=() => (dispatch) =>{
+  dispatch(actions.stopCall({ callType: callTypes.list }));
 
 };
