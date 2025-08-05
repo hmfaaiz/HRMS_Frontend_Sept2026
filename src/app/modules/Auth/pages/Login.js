@@ -114,9 +114,9 @@ function Login(props) {
   });
 
   return (
-    <div className="d-flex flex-column rounded-lg bg-white p-5">
+    <div className="d-flex flex-column  h-100 ">
       <div
-        className="bg-white"
+        className="bg-white p-10 h-100 rounded-top"
         id="kt_login_signin_form"
       // style={{
       //   height: "72vh", // Full height of the viewport
@@ -135,9 +135,12 @@ function Login(props) {
           <img
             src="/media/bg/login-logo.png"
             alt="Partner 1"
-            style={{ height: 30, marginRight: 30 }}
+            style={{ height: 50, marginRight: 30 }}
           />
         </div>
+
+            <br />
+          <br />
 
         <div>
           <h1
@@ -153,7 +156,7 @@ function Login(props) {
         {/*begin::Form*/}
         <form
           onSubmit={formik.handleSubmit}
-          className="form fv-plugins-bootstrap fv-plugins-framework"
+          className="form fv-plugins-bootstrap fv-plugins-framework "
         // className="login-form"
         >
           {formik.status ? (
@@ -244,14 +247,13 @@ function Login(props) {
             </span>
           </div>
         </form>
-        {/* <div>footer</div> */}
-        {/*end::Form*/}
+     
         <br />
         <br />
 
 
       </div>
-      <footer className="d-flex gap-4  login-footer m-0 ">
+      <footer className="d-flex gap-4  login-footer rounded-bottom ">
         <div></div>
         <div>
           <p className="ml-5 mt-4">Privacy Policy</p>

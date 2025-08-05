@@ -178,7 +178,7 @@ export const rootReducer = combineReducers({
   attendance_configuration: AttendanceConfigurationSlice.reducer,
   employee_shift: employeeShiftSlice.reducer,
   holidays: HolidaysSlice.reducer,
-  reimbursement_claim: reimbursement_claimSlice.reducer,
+  // reimbursement_claim: reimbursement_claimSlice.reducer,
   leave_encashment: LeaveEncashmentSlice.reducer,
   payroll_process: payroll_processSlice.reducer,
 
