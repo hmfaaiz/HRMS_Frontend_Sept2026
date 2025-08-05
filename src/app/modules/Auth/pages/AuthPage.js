@@ -7,23 +7,28 @@ import Login from "./Login";
 import Registration from "./Registration";
 import ForgotPassword from "./ForgotPassword";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
-
+import { shallowEqual, useSelector } from "react-redux";
+import Marquee from "react-fast-marquee";
 export function AuthPage() {
+
+  const auth = useSelector(({ auth }) => auth, shallowEqual);
+  const UserAccess = auth?.userAccess;
+  const user = auth?.user;
   return (
     <>
       <div
-        className="d-flex flex-column flex-root"
-        style={{
-          backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-4.png")})`,
-        }}
+        className="d-flex flex-column m-0 p-0"
+        // style={{
+        //   backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-4.png")})`,
+        // }}
       >
         {/*begin::Login*/}
         <div
-          className="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white"
+          className=" d-flex flex-column"
           id="kt_login"
           style={{
-            height: "100vh", // Full height of the viewport
-            width: "100%", // Full width of the viewport
+            height: "100%", // Full height of the viewport
+            // width: "100%", // Full width of the viewport
             // backgroundImage: 'linear-gradient(to bottom, rgb(36, 144, 207), rgb(13, 114, 185)',  // Linear gradient background
             backgroundImage: `url(${toAbsoluteUrl("/media/bg/login-bg.png")})`,
             backgroundSize: "cover", // Ensures the gradient covers the entire area
@@ -32,27 +37,31 @@ export function AuthPage() {
         >
           {/* login div */}
 
-          <div className="d-flex flex-column flex-row-fluid position-relative p-7 overflow-hidden">
-            <div className="d-flex flex-column-fluid flex-center mt-30 mt-lg-0 p-0">
-              <Switch>
-                <ContentRoute path="/auth/login" component={Login} />
-                <ContentRoute
-                  path="/auth/registration"
-                  component={Registration}
-                />
-                <ContentRoute
-                  path="/auth/forgot-password"
-                  component={ForgotPassword}
-                />
-                <Redirect from="/auth" exact={true} to="/auth/login" />
-                <Redirect to="/auth/login" />
-              </Switch>
+          <div className="container-fluid h-100">
+            <div className="row h-100">
+              <div className="col-12 col-md-4 m-0 p-5 d-flex flex-column" style={{ borderRadius: '8px' }}>
+
+                <Switch>
+                  <ContentRoute path="/auth/login" component={Login} />
+                  <ContentRoute
+                    path="/auth/registration"
+                    component={Registration}
+                  />
+                  <ContentRoute
+                    path="/auth/forgot-password"
+                    component={ForgotPassword}
+                  />
+                  <Redirect from="/auth" exact={true} to="/auth/login" />
+                  <Redirect to="/auth/login" />
+                </Switch>
+
+              </div>
             </div>
           </div>
 
           {/* left side */}
 
-          <div className="login-left-container d-none d-lg-block">
+          {/* <div className="login-left-container d-flex flex-column  col-8">
             <div
               className="login-left-container-inner"
               style={{
@@ -69,60 +78,65 @@ export function AuthPage() {
                   backgroundPosition: "center", // Ensures the background is centered
                 }}
               ></div>
-              <div className="login-left-container-inner-bottom-img">
-                <div className="login-left-container-inner-bottom-img1 mt-5">
-                  <img
-                    src="/media/bg/partner-logo.png"
-                    alt="Partner Logo"
-                    style={{
-                      width: "100%", // Ensure the image takes full width of the container
-                      height: "100%", // Ensure the image takes full height of the container
-                      objectFit: "cover", // Ensures the image covers the container while maintaining aspect ratio
-                      objectPosition: "center", // Ensures the image stays centered if it gets cropped
-                    }}
-                  />
-
-
+              <div className="d-flex flex-column mt-10">
+                <div className="mb-3">
+                  <h1>Technology Partners</h1>
                 </div>
 
 
 
-                <div className="login-left-container-inner-bottom-img2">
-                  <div className="login-left-container-inner-bottom-img2-heading">
-                    <h1  style={{ fontSize: '1.5vw' }}>Our Technology Partners</h1>
-                  </div>
 
-
-                  <div className="login-left-container-inner-bottom-img2-container ">
+                <div style={{ padding: "20px 0", background: "#fff" }}>
+                  <Marquee
+                    speed={40}
+                    gradient={false}
+                    pauseOnHover={true}
+                  >
                     <img
                       src="/media/bg/tech-partner1.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
+                      alt="Partner 1"
+                      style={{ height: 50, marginRight: 30 }}
                     />
-
                     <img
                       src="/media/bg/tech-partner2.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
+                      alt="Partner 2"
+                      style={{ height: 50, marginRight: 30 }}
+                    />   <img
+                      src="/media/bg/tech-partner2.png"
+                      alt="Partner 2"
+                      style={{ height: 50, marginRight: 30 }}
+                    />   <img
+                      src="/media/bg/tech-partner2.png"
+                      alt="Partner 2"
+                      style={{ height: 50, marginRight: 30 }}
+                    />   <img
+                      src="/media/bg/tech-partner2.png"
+                      alt="Partner 2"
+                      style={{ height: 50, marginRight: 30 }}
+                    />   <img
+                      src="/media/bg/tech-partner2.png"
+                      alt="Partner 2"
+                      style={{ height: 50, marginRight: 30 }}
                     />
                     <img
                       src="/media/bg/tech-partner3.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
+                      alt="Partner 3"
+                      style={{ height: 50, marginRight: 30 }}
                     />
                     <img
                       src="/media/bg/tech-partner4.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
+                      alt="Partner 4"
+                      style={{ height: 50, marginRight: 30 }}
                     />
-                  </div>
+                    <img
+                      src="/media/bg/tech-partner1.png"
+                      alt="Partner 5"
+                      style={{ height: 50, marginRight: 30 }}
+                    />
+                  </Marquee>
                 </div>
-
               </div>
+
 
 
 
@@ -134,33 +148,33 @@ export function AuthPage() {
 
             <footer className="d-flex gap-4  login-left-footer justify-content-between p-4 pl-0">
               <div>
-               <div className="mt-4">
-               <img
-                      src="/media/bg/facebook-logo.png"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0" 
+                <div className="mt-4">
+                  <img
+                    src="/media/bg/facebook-logo.png"
+                    alt="Partner Logo"
+                    // className="partner-image"
+                    className="ml-0"
 
-                    />
-                    <img
-                      src="/media/bg/insta-logo.png"
-                      alt="Partner Logo"
-                      className="ml-4" 
+                  />
+                  <img
+                    src="/media/bg/insta-logo.png"
+                    alt="Partner Logo"
+                    className="ml-4"
 
-                    />
-                    <img
-                      src="/media/bg/youtube-logo.png"
-                      alt="Partner Logo"
-                      className="ml-4" 
+                  />
+                  <img
+                    src="/media/bg/youtube-logo.png"
+                    alt="Partner Logo"
+                    className="ml-4"
 
-                    />
-                    <img
-                      src="/media/bg/linkedin-logo.png"
-                      alt="Partner Logo"
-                      className="ml-4" 
+                  />
+                  <img
+                    src="/media/bg/linkedin-logo.png"
+                    alt="Partner Logo"
+                    className="ml-4"
 
-                    />
-               </div>
+                  />
+                </div>
               </div>
               <div>
                 <p className="mt-5 pr-2">&copy;Copyright © 2024, Powered by Dynasoft Cloud</p>
@@ -168,7 +182,7 @@ export function AuthPage() {
 
 
             </footer>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
