@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import { DatePickerField, Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
@@ -174,7 +174,7 @@ export function FormEditForm({
 
 
 
-                  <div className="col-12 col-md-12 mt-3">
+                  {/* <div className="col-12 col-md-12 mt-3">
                     <label>
                       <span>
                         Ticker Description<span style={{ color: "red" }}>*</span>
@@ -188,8 +188,29 @@ export function FormEditForm({
                       type="text"
 
                     />
+                  </div> */}
+                  <div className="col-12 col-md-12 mt-3 mb-9" style={{ height: '150px' }}>
+                    <Field
+                      name="ticker_description"
+                      component={TextArea}
+                      placeholder="Enter ticker Description"
+                      className="form-control h-100"  // Force full height
+                      label={
+                        <span>
+                          {" "}
+                          Ticker Description<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                    <div className="ml-1 mt-1">
+                      <ErrorMessage
+                        name="ticker_description"
+                        component="div"
+                        className="form-feedBack text-danger"
+                      />
+                    </div>
                   </div>
-
 
 
                   <div className="col-12 col-md-6 mt-3">

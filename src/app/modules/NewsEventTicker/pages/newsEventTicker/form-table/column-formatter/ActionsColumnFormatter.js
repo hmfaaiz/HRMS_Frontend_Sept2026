@@ -67,7 +67,7 @@ export function ActionsColumnFormatter(
             </Tooltip>
           }
         >
-          {row.isActive ? (
+          {
             <a
               title=""
               className="btn btn-icon btn-hover-danger btn-sm mx-3 delete-button"
@@ -80,15 +80,7 @@ export function ActionsColumnFormatter(
                 />
               </span>
             </a>
-          ) : (
-            <a
-              title=""
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-3"
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-success">A</span>
-            </a>
-          )}
+         }
         </OverlayTrigger>
       )}
     </>

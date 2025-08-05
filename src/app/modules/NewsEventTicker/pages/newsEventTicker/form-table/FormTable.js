@@ -91,14 +91,19 @@ export function FormTable() {
     },
     {
       dataField: "ticker_description",
-      text: "ticker description",
+      text: "Ticker Description",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "160px",
       },
+       formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+      }
     },
+    
     {
       dataField: "ticker_date",
       text: "ticker date",

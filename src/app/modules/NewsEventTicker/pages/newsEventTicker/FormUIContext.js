@@ -31,7 +31,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     subsidiaryId: "",
     ticker_description: "",
     ticker_date: "",
-  
+  isActive:1
   
   };
 
