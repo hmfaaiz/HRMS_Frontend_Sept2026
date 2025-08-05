@@ -1,21 +1,19 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Field, Formik } from "formik";
 import * as Yup from "yup";
-import { isEqual } from "lodash";
+import { isEqual, debounce } from "lodash";
 import { useFormUIContext } from "../FormUIContext";
-import { Form, Modal } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch } from "react-redux";
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 
-//Validation for date fields
+// Validation for date fields
 const formValidation = Yup.object().shape({
   from: Yup.date().required(VALIDATION_MESSAGES.required),
   to: Yup.date()
@@ -23,58 +21,98 @@ const formValidation = Yup.object().shape({
     .min(Yup.ref("from"), "Date To cannot be before Date From"),
 });
 
-//Prepare new Filter
-const prepareFilter = (queryParams, values) => {
-  const newQueryParams = { ...queryParams };
-  newQueryParams.filter = { ...values };
-  return newQueryParams;
+// Prepare new Filter
+const prepareFilter = (queryParams, values) => ({
+  ...queryParams,
+  filter: { ...values },
+});
+
+// Debounce delay in milliseconds
+const DEBOUNCE_DELAY = 300;
+
+const AttendanceLegend = () => (
+  <div className="text-xs">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+      {[
+        { color: "bg_custom_color_25", label: "Present" },
+        { color: "bg_custom_color_15", label: "Absent" },
+        { color: "bg_custom_color_16", label: "Half day" },
+        { color: "bg_custom_color_1", label: "Leave" },
+        { color: "bg_custom_color_22", label: "Day Off / Holiday" },
+        { color: "bg_custom_color_26", label: "Late In / Early Out" },
+      ].map((item, index) => (
+        <div key={index} className="flex items-center">
+          <span className={`dot ${item.color} me-2`}></span>
+          {item.label}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const AttendanceSummary = ({ attendanceSummary }) => {
+  const summaryItems = [
+    { label: "Present", value: "PresentDays" },
+    { label: "Absent", value: "AbsentDays" },
+    { label: "Off", value: "OffDay" },
+    { label: "Holidays", value: "Holidays" },
+    { label: "Leave", value: "LeaveDays" },
+    { label: "On Time", value: "OnTime" },
+    { label: "Late In", value: "LateComing" },
+    { label: "Early Out", value: "EarlyGoing" },
+    { label: "Half Day", value: "HalfDay" },
+  ];
+
+  return (
+    <div className="text-sm mt-1">
+      <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-10 gap-y-1 lg:gap-y-4">
+        {summaryItems.map((item, index) => (
+          <React.Fragment key={index}>
+            <div className="col-span-1 font-weight-bold text-black">
+              {item.label}
+            </div>
+            <div className="col-span-1 text-primary font-extrabold">
+              {attendanceSummary?.[item.value] || 0}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export function FormFilter() {
-  const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
+  const FormUIContext = useFormUIContext();
+  const [debouncedApplyFilter] = useState(() =>
+    debounce((values, applyFilter) => applyFilter(values), DEBOUNCE_DELAY)
+  );
 
-  //Get All dropdown data from state
-  const {
-    employeeList,
-    levelList,
-    payrollData,
-    activeFiscalYear,
-    user,
-  } = useSelector((state) => {
-    return {
+  const { employeeList, payrollData, attendanceSummary, user } = useSelector(
+    (state) => ({
       employeeList: state.dashboard?.employeeList,
-      levelList: state.dashboard?.levelList,
+      attendanceSummary: state?.attendance_request?.attendanceSummary,
       payrollData: state?.attendance_request?.payrollData,
-      activeFiscalYear: state?.dashboard?.activeFiscalYear,
       user: state?.auth?.user,
-    };
-  });
+    })
+  );
 
-  //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
-  const allEmployeesMap = useMemo(() => {
-    return new Map(employeeList?.map((item) => [item.value, item]));
-  }, [employeeList]);
-  //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
-
-  //Fetch Params from Context
-  const formUIProps = useMemo(() => {
-    return {
+  const formUIProps = useMemo(
+    () => ({
       queryParams: FormUIContext.queryParams,
       setQueryParams: FormUIContext.setQueryParams,
       currentLevel: FormUIContext?.currentLevel,
       setCurrentLevel: FormUIContext.setCurrentLevel,
       employeeId: FormUIContext?.employeeId,
       setemployeeId: FormUIContext?.setemployeeId,
-    };
-  }, [FormUIContext]);
+    }),
+    [FormUIContext]
+  );
 
-  //Function to update filter in queryparams when any filter is selected or updated
   const applyFilter = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1;
-      // update list by queryParams
       formUIProps.setQueryParams(newQueryParams);
     }
     dispatch(actions.fetchAttendance(newQueryParams));
@@ -90,7 +128,7 @@ export function FormFilter() {
       formUIProps.setemployeeId(employeeList[0]);
     }
     if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
-      let findEmp = employeeList.find(
+      const findEmp = employeeList.find(
         (e) => e?.value === user?.employeeIdMapping
       );
       formUIProps.setemployeeId(findEmp);
@@ -98,16 +136,15 @@ export function FormFilter() {
   }, [formUIProps.employeeId, employeeList]);
 
   useEffect(() => {
-    // Only proceed if we have an employeeId
     if (!formUIProps?.employeeId?.value) return;
 
     dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId?.value));
-    // Fetch payroll month if we don't have the data yet
+
     if (!payrollData) {
       dispatch(actions.getPayrollMonth(formUIProps?.employeeId?.value));
       return;
     }
-    // Only apply filter when we have all required data
+
     if (payrollData?.startDate && payrollData?.endDate) {
       const values = {
         ...initialFilter.filter,
@@ -121,10 +158,10 @@ export function FormFilter() {
         getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
       );
     }
-  }, [formUIProps.employeeId?.value, payrollData]); // Dependencies remain the same
+  }, [formUIProps.employeeId?.value, payrollData]);
 
   return (
-    <>
+    <div className="px-3 py-2 rounded-lg bg-white">
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -137,160 +174,59 @@ export function FormFilter() {
         validationSchema={formValidation}
       >
         {({ values, handleBlur, setFieldValue }) => (
-          <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <div
-                style={{
-                  backgroundColor: "rgb(235 243 255)",
-                  marginTop: "15px",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "2px solid #adceff",
-                }}
-              >
-                <h6 className="mb-5">Attendance Sheet</h6>
-                <Form className="form form-label-right">
-                  <fieldset>
-                    <div className="from-group row">
-                      {/* <div className="col-12 col-md-12 row p-0 m-0">
-                        <div className="col-12 col-md-3 mt-3">
-                          <Field
-                            name="currentLevel"
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            onChange={(e) => {
-                              const value =
-                                e.value === "--Select--" ? "" : Number(e.value);
-                              formUIProps.setCurrentLevel(value);
-                              setFieldValue("currentLevel", value); // <- Important!
-                            }}
-                            label={<span>Reporting Level</span>}
-                            value={
-                              levelList?.find(
-                                (opt) => opt.value === values.currentLevel
-                              ) || "0"
-                            }
-                            autoComplete="off"
-                            options={levelList}
-                          />
-                        </div>
-                        <div className="col-12 col-md-9 mt-3">
-                          {activeFiscalYear && activeFiscalYear?.label && (
-                            <div className="col-12 col-md-12">
-                              <div className="row justify-content-end">
-                                <b>
-                                  Active Fiscal{" "}
-                                  <span>{activeFiscalYear?.label}</span>
-                                </b>
-                              </div>
-                            </div>
-                          )}
-                          {payrollData &&
-                            payrollData?.startDate &&
-                            payrollData?.endDate && (
-                              <div className="col-12 col-md-12">
-                                <div className="row  justify-content-end">
-                                  <span className="mr-2">
-                                    <b>Active Payroll Month:</b>{" "}
-                                  </span>
-                                  <span>
-                                    <b>
-                                      <ActivePayrollMonthLabel
-                                        className="date"
-                                        month={payrollData.month}
-                                        year={payrollData.year}
-                                        startDate={payrollData.startDate}
-                                        endDate={payrollData.endDate}
-                                      />
-                                    </b>
-                                  </span>
-                                </div>
-                              </div>
-                            )}
-                        </div>
-                      </div> */}
-                      {/* Employee Field Start */}
-                      {/* <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="employeeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value =
-                              e.value == "--Select--" ? "" : Number(e.value);
-                            setFieldValue("employeeId", value);
-                            formUIProps.setemployeeId(e);
-                            if (value) {
-                              applyFilter({
-                                ...values,
-                                employeeId: value,
-                              });
-                            }
-                          }}
-                          label={<span> Employee</span>}
-                          value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
-                          }
-                          autoComplete="off"
-                          options={employeeList}
-                        />
-                      </div> */}
-                      {/* Employee Field End */}
-                    </div>
-
-                    <div className="from-group row">
-                      {/* Date from Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="from"
-                          component={DatePickerField}
-                          dateFormat="dd-MMM-yyyy"
-                          className="form-control"
-                          label={<span> Date From</span>}
-                          onChange={(date) => {
-                            setFieldValue("from", date ? date : "");
-                            if (date) {
-                              applyFilter({
-                                ...values,
-                                from: date,
-                              });
-                            }
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-                      {/* Date from Field End */}
-
-                      {/* Date to Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="to"
-                          component={DatePickerField}
-                          onBlur={handleBlur}
-                          className="form-control"
-                          dateFormat="dd-MMM-yyyy"
-                          label={<span> Date To</span>}
-                          onChange={(date) => {
-                            setFieldValue("to", date ? date : "");
-                            if (date) {
-                              applyFilter({
-                                ...values,
-                                to: date,
-                              });
-                            }
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-                      {/* Date to Field End */}
-                    </div>
-                  </fieldset>
-                </Form>
+          <Form>
+            <div className="grid grid-cols-1 md:grid-cols-6">
+              {/* Left Column - Date Filters */}
+              <div className="col-span-1 flex flex-col justify-between md:col-span-2">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-1">
+                    <Field
+                      name="from"
+                      component={DatePickerField}
+                      dateFormat="dd-MMM-yyyy"
+                      className="form-control"
+                      label={<span>From</span>}
+                      onChange={(date) => {
+                        setFieldValue("from", date || "");
+                        debouncedApplyFilter(
+                          { ...values, from: date },
+                          applyFilter
+                        );
+                      }}
+                      autoComplete="off"
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <Field
+                      name="to"
+                      component={DatePickerField}
+                      onBlur={handleBlur}
+                      className="form-control"
+                      dateFormat="dd-MMM-yyyy"
+                      label={<span>To</span>}
+                      onChange={(date) => {
+                        setFieldValue("to", date || "");
+                        debouncedApplyFilter(
+                          { ...values, to: date },
+                          applyFilter
+                        );
+                      }}
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
               </div>
-            </Modal.Body>
-          </>
+              {/* Right Column - Attendance Summary */}
+              <div className="col-span-1 md:col-span-4 sm:ml-6 md:ml-20">
+                <AttendanceSummary attendanceSummary={attendanceSummary} />
+                {/* <div className="mt-1">
+                  <AttendanceLegend />
+                </div> */}
+              </div>
+            </div>
+          </Form>
         )}
       </Formik>
-    </>
+    </div>
   );
 }

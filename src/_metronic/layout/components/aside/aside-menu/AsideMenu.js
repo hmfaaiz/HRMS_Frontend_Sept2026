@@ -16,15 +16,15 @@ export function AsideMenu({disableScroll}) {
   return (
     <>
       {/* begin::Menu Container */}
-      <div style={{height:"150px !important", zIndex:"100" }}
+      {/* <div style={{height:"100% !important", zIndex:"100" }}
         id="kt_aside_menu"
         data-menu-vertical="1"
-        className={`aside-menu my-4 ${layoutProps.asideClassesFromConfig}`}
+        className={`aside-menu ${layoutProps.asideClassesFromConfig}`}
         {...layoutProps.asideMenuAttr}
-      >
+      > */}
         <AsideMenuList layoutProps={layoutProps} />
         
-      </div>
+      {/* </div> */}
       {/* end::Menu Container */}
     </>
   );

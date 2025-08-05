@@ -1,201 +1,214 @@
-import React from "react";
-import { Accordion, Card, Row, Col } from "react-bootstrap";
-import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import { ArrowDown, ChevronUp, StarIcon } from "lucide-react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import * as action from "../../../_redux/dashboardActions";
+import useWindowSize from "../../../../../utils/useWindowSize";
 
-const EmployeeProfile = ({ data }) => {
+const formatDate = (date, fmt) => (date ? format(new Date(date), fmt) : "N/A");
+
+const renderInfoGrid = (data, fields) => (
+  <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+    {fields.map(([label, value], idx) => (
+      <React.Fragment key={idx}>
+        <div className="font-medium">{label}</div>
+        <div>{value || "N/A"}</div>
+      </React.Fragment>
+    ))}
+  </div>
+);
+
+const renderStars = (ratingScale) => {
+  const rating = ratingScale / 2;
+  return [1, 2, 3, 4, 5].map((i) => (
+    <StarIcon
+      key={i}
+      size={13}
+      className={
+        rating >= i
+          ? "text-yellow-500 fill-yellow-500"
+          : rating >= i - 0.5
+          ? "text-yellow-400 fill-yellow-400"
+          : "text-gray-300"
+      }
+    />
+  ));
+};
+
+const EmployeeProfile = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { width } = useWindowSize();
+  const dispatch = useDispatch();
+  const { user, data, contactInfo, skillsInfo } = useSelector(
+    (state) => ({
+      user: state?.auth?.user,
+      data: state?.dashboard?.profileInfo,
+      contactInfo: state?.dashboard?.contactInfo,
+      skillsInfo: state?.dashboard?.skillsInfo,
+    }),
+    shallowEqual
+  );
+
+  useEffect(() => {
+    if (user?.employeeIdMapping) {
+      dispatch(action.fetchProfileInfo(user.employeeIdMapping));
+      dispatch(action.fetchContactInfo(user.employeeIdMapping));
+      dispatch(action.fetchSkillsInfo(user.employeeIdMapping));
+    }
+  }, [user?.employeeIdMapping, dispatch]);
+
+  useEffect(() => {
+    if (width >= 1280) {
+      // Large screen → always open
+      setIsOpen(true);
+    } else {
+      // Small screen → always closed
+      setIsOpen(false);
+    }
+  }, [width]);
+
   return (
     <>
-    {/* <Accordion defaultActiveKey=""> */}
-      <Card>
-        {/* <Card.Header>
-          <div className="accordion-header-btn ">
-            <Accordion.Toggle eventKey="0" className="flex-between-center">
-              Employee Detail
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
+      {/* Profile Header */}
+      <div className="p-3 rounded-lg bg-white w-full">
+        <div className="d-flex align-items-center">
+          <img
+            src={
+              data?.profile_image ||
+              toAbsoluteUrl("/media/users/profileImage.png")
+            }
+            alt="Profile"
+            width={120}
+            className="rounded-md"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = toAbsoluteUrl("/media/users/profileImage.png");
+            }}
+          />
+          <div className="text-black mx-5">
+            <h5 className="font-weight-boldest text-black">
+              {[data?.firstName, data?.middleName, data?.lastName]
+                .filter(Boolean)
+                .join(" ")}
+            </h5>
+            <p className="text-sm m-0">{data?.department?.deptName || ""}</p>
+            <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
           </div>
-        </Card.Header> */}
+        </div>
+      </div>
+
+      {/* Employee Details */}
+      <div className="px-5 py-2 rounded-lg bg-white w-full">
         {data ? (
-          // <Accordion.Collapse eventKey="0">
-            <Card.Body style={{ backgroundColor: "#E6F8FF" }}>
-              {/* "rgb(235 243 255)" */}
-              <div
-                style={{
-                  backgroundColor: "#E6F8FF",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "none",
-                }}
-              >
-                {/* <div className="d-flex justify-content-between flex-column flex-md-row align-items-center"> */}
-                  {/* Employee Information Sections */}
-                  {/* <h2 className="text-bold">Employee Information</h2> */}
+          <>
+            <div className="flex flex-row justify-between items-center">
+              <h5 className="font-weight-bolder m-0 py-1">Employee Details</h5>
+              {width < 1280 && (
+                <ChevronUp
+                  onClick={() => setIsOpen((prev) => !prev)}
+                  className={`w-5 h-5 font-bold cursor-pointer ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              )}
+            </div>
 
-                  {/* {Object.keys(data).length ? (
-                    <div className="form-group row">
-                      <div className="col-12 col-md-4 mt-3">
-                        <img
-                          name="profile_image"
-                          src={
-                            data.profile_image
-                              ? `${data.profile_image}`
-                              : toAbsoluteUrl("/media/users/profileImage.png")
-                          } // Fallback if no image
-                          alt="Profile"
-                          width={120}
-                          height={120}
-                          style={{
-                            borderRadius: "50%", // Make the image circular
-                            objectFit: "cover", // Ensure the image covers the entire area without distortion
-                          }}
-                          onError={(e) => {
-                            e.target.onerror = null; // Error loop rokne ke liye
-                            e.target.src = toAbsoluteUrl(
-                              "/media/users/profileImage.png"
-                            ); // Agar image load na ho toh fallback image set karo
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <p></p>
-                  )}
-                </div> */}
-                {/* <hr /> */}
+            {/* Office Information */}
+            {isOpen && (
+              <>
+                <h6 className="font-bold mb-0 text-primary my-2 mt-4">
+                  Office Information
+                </h6>
+                {renderInfoGrid(data, [
+                  ["Company", data?.company?.name],
+                  ["Subsidiary", data?.subsidiary?.name],
+                  [
+                    "Reporting To",
+                    data?.ReportTo
+                      ? `${data?.ReportTo?.firstName || ""} ${data?.ReportTo
+                          ?.middleName || ""} ${data?.ReportTo?.lastName ||
+                          ""}`.trim()
+                      : null,
+                  ],
+                  ["Grade", data?.grade?.formName],
+                  ["Employee Type", data?.employeeType?.formName],
+                  ["Payroll Group", data?.payrollGroup?.formName],
+                  ["Team", data?.team?.formName],
+                  ["Employee Status", data?.employeeStatus?.formName],
+                  ["Default Shift", data?.defaultShift?.name],
+                ])}
 
-                <div style={{ marginBottom: "2%" }}>
-                  <h5 className="text-bold mb-5 custom_color_1">
-                    Office Information
-                  </h5>
-                  <Row>
-                    <Col md={3}>
-                      <strong>Company: </strong>
-                      {data?.company?.name || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Subsidiary: </strong>
-                      {data?.subsidiary.name || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Department: </strong>
-                      {data?.department?.deptName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Reporting To: </strong>
-                      {data?.ReportTo?.firstName
-                        ? data?.ReportTo?.firstName +
-                          " " +
-                          data?.ReportTo?.middleName +
-                          " " +
-                          data?.ReportTo?.lastName
-                        : "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Grade: </strong>
-                      {data?.grade?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Designation: </strong>
-                      {data?.designation?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Employee Type: </strong>
-                      {data?.employeeType?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Payroll Group: </strong>
-                      {data?.payrollGroup?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Team: </strong>
-                      {data?.team?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Employee Status: </strong>
-                      {data?.employeeStatus?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Default Shift: </strong>
-                      {data?.defaultShift?.name || "N/A"}
-                    </Col>
-                  </Row>
-                  <hr />
-                </div>
-
-                <div style={{ marginBottom: "2%" }}>
-                  <h5 className="text-bold mb-5 custom_color_1">
-                    Personal Information
-                  </h5>
-                  <Row>
-                    <Col md={3}>
-                      <strong>Country: </strong>
-                      {data?.country?.name || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>City: </strong>
-                      {data?.city?.name || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>location: </strong>
-                      {data?.location?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Region: </strong>
-                      {data?.region?.formName || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Gender: </strong>
-                      {data?.gender || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Date of joining: </strong>
-                      {data?.dateOfJoining ? format(new Date(data?.dateOfJoining) , "yy-MMM-yyyy") : "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Date of Confirmation: </strong>
-                      {data?.dateOfConfirmation ? format(new Date(data?.dateOfConfirmation) , "yy-MMM-yyyy") : "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Date of Birth: </strong>
-                      {data?.dateOfBirth ? format(new Date(data?.dateOfBirth) , "yy-MMM-yyyy") : "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Id Card No: </strong>
-                      {data?.nic_no || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Offical Email: </strong>
-                      {data?.email_official || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Cell No: </strong>
-                      {data?.phone_cell || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Phone (Home): </strong>
-                      {data?.phone_home || "N/A"}
-                    </Col>
-                    <Col md={3}>
-                      <strong>Passport No: </strong>
-                      {data?.passportNo || "N/A"}
-                    </Col>
-                    <Col md={6}>
-                      <strong>Address: </strong>
-                      {data?.additional_summary || "N/A"}
-                    </Col>
-                  </Row>
-                  <hr />
-                </div>
-              </div>
-            </Card.Body>
-          // </Accordion.Collapse>
+                {/* Personal Information */}
+                <h6 className="font-bold mb-0 text-primary my-2 mt-6">
+                  Personal Information
+                </h6>
+                {renderInfoGrid(data, [
+                  ["Country", data?.country?.name],
+                  ["City", data?.city?.name],
+                  ["Location", data?.location?.formName],
+                  ["Region", data?.region?.formName],
+                  ["Gender", data?.gender],
+                  [
+                    "Date of Joining",
+                    formatDate(data?.dateOfJoining, "yy-MMM-yyyy"),
+                  ],
+                  [
+                    "Date of Confirmation",
+                    formatDate(data?.dateOfConfirmation, "yy-MMM-yyyy"),
+                  ],
+                  [
+                    "Date of Birth",
+                    formatDate(data?.dateOfBirth, "dd-MMM-yyyy"),
+                  ],
+                  ["ID Card No", data?.nic_no],
+                  ["Official Email", data?.email_official],
+                  ["Cell No", data?.phone_cell],
+                  ["Phone (Home)", data?.phone_home],
+                  ["Passport No", data?.passportNo],
+                ])}
+              </>
+            )}
+          </>
         ) : (
-          <p>Employee Data Not Exists</p> // Improved message for clarity
+          <p className="text-sm text-red-500">Employee Data Not Exists</p>
         )}
-      </Card>
-    {/* </Accordion> */}
+      </div>
+
+      {/* Emergency Contact */}
+      {isOpen && (
+        <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
+          <h6 className="font-bold mb-0 text-primary my-2">
+            Emergency Contact
+          </h6>
+          {contactInfo?.length > 0 ? (
+            renderInfoGrid(contactInfo[0], [
+              ["Name", contactInfo[0]?.relation_name],
+              ["Relation", contactInfo[0]?.relation_text],
+              ["Contact No", contactInfo[0]?.contactNo],
+            ])
+          ) : (
+            <p className="text-sm mb-0">No Contact Info Found</p>
+          )}
+        </div>
+      )}
+
+      {/* Skills */}
+      {isOpen && (
+        <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
+          <h6 className="font-bold mb-0 text-primary my-2">Skills</h6>
+          {skillsInfo?.length > 0 ? (
+            skillsInfo.map((item, index) => (
+              <div key={index} className="grid grid-cols-12 gap-1 text-black">
+                <p className="text-sm mb-0 col-span-3">{item.skill}</p>
+                <p className="col-span-3">{renderStars(item?.ratingScale)}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-sm mb-0">No Skills Found</p>
+          )}
+        </div>
+      )}
     </>
   );
 };

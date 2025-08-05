@@ -13,7 +13,6 @@ import {
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../../FormUIHelper";
-// import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../../FormUIContext";
 import { Card } from "react-bootstrap";
@@ -69,20 +68,20 @@ export function LeaveApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let classname = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -97,35 +96,20 @@ export function LeaveApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let classname = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
-      },
-    },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        setLeaveBalanceId: FormUIProps.setLeaveBalanceId,
-        setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
-        setLeaveData: FormUIProps?.setLeaveData,
-      },
-
-      style: {
-        minWidth: "100px",
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -221,6 +205,21 @@ export function LeaveApprovalFormTable() {
         maxWidth: "100px",
       },
     },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        setLeaveBalanceId: FormUIProps.setLeaveBalanceId,
+        setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
+        setLeaveData: FormUIProps?.setLeaveData,
+      },
+
+      style: {
+        minWidth: "100px",
+      },
+    },
     // {
     //   dataField: "parentData.remarks",
     //   text: "Reason",
@@ -258,22 +257,10 @@ export function LeaveApprovalFormTable() {
   // };
 
   return (
-    <Card.Body
-      style={{ backgroundColor: "#ffffff" }}
-      className="overlay overlay-block cursor-default"
-    >
-      {/* <h1>Leave Approval</h1> */}
-      {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            > */}
-      <div style={{ width: "100%", overflowX: "auto" }}>
+    
+      <div className="overflow-x-auto w-full">
         <BootstrapTable
           noDataIndication={NoRecordsFoundMessage({ entities })}
-          style={{ width: "100%", overflow: "auto" }}
           wrapperClasses="table-responsive"
           bordered={false}
           classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
@@ -326,10 +313,5 @@ export function LeaveApprovalFormTable() {
           <NoRecordsFoundMessage entities={entities} />
         </BootstrapTable>
       </div>
-      {/* </Pagination> */}
-      {/* );
-        }}
-      </PaginationProvider> */}
-    </Card.Body>
   );
 }

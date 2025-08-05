@@ -3,16 +3,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormCard } from "./form-card/FormCard";
 
-
-
-
-export function FormPage({  }) {
-
+export function FormPage({}) {
   return (
-
-<>
-
-
+    <>
       <FormCard />
       <ToastContainer
         position="top-right"

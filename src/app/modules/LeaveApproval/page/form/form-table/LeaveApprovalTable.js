@@ -36,10 +36,11 @@ export function LeaveApprovalFormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, user } = useSelector((state) => {
+  const { currentState, user , leaveBalances } = useSelector((state) => {
     return {
       currentState: state.leave_approval,
       user: state?.auth?.user,
+      leaveBalances: state?.leave_approval?.leaveBalances,
     };
   }, shallowEqual);
 
@@ -60,7 +61,7 @@ export function LeaveApprovalFormTable() {
   const columns = [
     {
       dataField: "authorityStatus",
-      text: "Self status",
+      text: "status",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -70,65 +71,50 @@ export function LeaveApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          className = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          className = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          className = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
-    {
-      dataField: "parentData.request_status",
-      text: "Request status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "90px",
-        maxWidth: "90px",
-      },
-      formatter: (cell) => {
-        let text = "";
-        let style = {};
+    // {
+    //   dataField: "parentData.request_status",
+    //   text: "Request status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "90px",
+    //     maxWidth: "90px",
+    //   },
+    //   formatter: (cell) => {
+    //     let text = "";
+    //     let style = {};
 
-        if (cell === "P") {
-          text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
-        } else if (cell === "A") {
-          text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
-        } else if (cell === "R") {
-          text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
-        }
+    //     if (cell === "P") {
+    //       text = "Pending";
+    //       style = { color: "green", fontWeight: "bold" };
+    //     } else if (cell === "A") {
+    //       text = "Approved";
+    //       style = { color: "black", fontWeight: "bold" };
+    //     } else if (cell === "R") {
+    //       text = "Rejected";
+    //       style = { color: "red", fontWeight: "bold" };
+    //     }
 
-        return <span style={style}>{text}</span>;
-      },
-    },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        setLeaveBalanceId: FormUIProps.setLeaveBalanceId,
-        setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
-        setLeaveData: FormUIProps?.setLeaveData,
-      },
-
-      style: {
-        minWidth: "100px",
-      },
-    },
+    //     return <span style={style}>{text}</span>;
+    //   },
+    // },
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
@@ -189,7 +175,7 @@ export function LeaveApprovalFormTable() {
     },
     {
       dataField: "parentData.from",
-      text: "Date From",
+      text: "From",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -197,11 +183,13 @@ export function LeaveApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "parentData.to",
-      text: "Date To",
+      text: "To",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -209,17 +197,34 @@ export function LeaveApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "parentData.days",
-      text: "Leave Days",
+      text: "Days",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         minWidth: "100px",
         maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "action",
+      text: "Action",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        setLeaveBalanceId: FormUIProps.setLeaveBalanceId,
+        setLeaveWorkflowId: FormUIProps.setLeaveWorkflowId,
+        setLeaveData: FormUIProps?.setLeaveData,
+      },
+
+      style: {
+        minWidth: "100px",
       },
     },
     // {
@@ -259,78 +264,59 @@ export function LeaveApprovalFormTable() {
   // };
 
   return (
-    <Card.Body
-      style={{ backgroundColor: "#ffffff" }}
-      className="overlay overlay-block cursor-default"
-    >
-      {/* <h1>Leave Approval</h1> */}
-      {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            > */}
-      <div style={{ width: "100%", overflowX: "auto" }}>
-        <BootstrapTable
-          noDataIndication={NoRecordsFoundMessage({ entities })}
-          style={{ width: "100%", overflow: "auto" }}
-          wrapperClasses="table-responsive"
-          bordered={false}
-          classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-          bootstrap4
-          selectRow={{
-            mode: "checkbox",
-            clickToSelect: false,
-            style: { backgroundColor: "#ecbd8b" },
-            selected: FormUIProps.Ids, // make sure it's an array of Ids
-            selectable: (row) => row?.authorityStatus === "P",
-            selectionRenderer: ({ mode, checked, disabled }) => (
-              <input type="checkbox" checked={checked} disabled={disabled} />
-            ),
-            onSelect: (row, isSelect) => {
-              if (row.authorityStatus !== "P") return false;
+    <div className="w-full overflow-x-auto mt-4">
+      <BootstrapTable
+        noDataIndication={NoRecordsFoundMessage({ entities })}
+        style={{ width: "100%", overflow: "auto" }}
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        selectRow={{
+          mode: "checkbox",
+          clickToSelect: false,
+          style: { backgroundColor: "#e6f8ff" },
+          selected: FormUIProps.Ids, // make sure it's an array of Ids
+          selectable: (row) => row?.authorityStatus === "P",
+          selectionRenderer: ({ mode, checked, disabled }) => (
+            <input type="checkbox" checked={checked} disabled={disabled} />
+          ),
+          onSelect: (row, isSelect) => {
+            if (row.authorityStatus !== "P") return false;
 
-              if (isSelect) {
-                FormUIProps.setIds((prev) => [...prev, row.Id]);
-              } else {
-                FormUIProps.setIds((prev) =>
-                  prev.filter((id) => id !== row.Id)
-                );
-              }
-            },
-            onSelectAll: (isSelect, rows) => {
-              const selectableRows = rows.filter(
-                (r) => r.authorityStatus === "P"
-              );
+            if (isSelect) {
+              FormUIProps.setIds((prev) => [...prev, row.Id]);
+            } else {
+              FormUIProps.setIds((prev) => prev.filter((id) => id !== row.Id));
+            }
+          },
+          onSelectAll: (isSelect, rows) => {
+            const selectableRows = rows.filter(
+              (r) => r.authorityStatus === "P"
+            );
 
-              if (isSelect) {
-                FormUIProps.setIds(selectableRows.map((r) => r.Id));
-              } else {
-                FormUIProps.setIds([]);
-              }
-            },
-          }}
-          remote
-          keyField="Id"
-          data={entities === null ? [] : entities}
-          columns={columns}
-          defaultSorted={uiHelpers.defaultSorted}
-          onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
-          // selectRow={getSelectRow({
-          //   entities,
-
-          // })}
-          // {...paginationTableProps}
-        >
-          <PleaseWaitMessage entities={entities} />
-          <NoRecordsFoundMessage entities={entities} />
-        </BootstrapTable>
-      </div>
-      {/* </Pagination> */}
-      {/* );
+            if (isSelect) {
+              FormUIProps.setIds(selectableRows.map((r) => r.Id));
+            } else {
+              FormUIProps.setIds([]);
+            }
+          },
         }}
-      </PaginationProvider> */}
-    </Card.Body>
+        remote
+        keyField="Id"
+        data={entities === null ? [] : entities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+        // selectRow={getSelectRow({
+        //   entities,
+
+        // })}
+        // {...paginationTableProps}
+      >
+        <PleaseWaitMessage entities={entities} />
+        <NoRecordsFoundMessage entities={entities} />
+      </BootstrapTable>
+    </div>
   );
 }

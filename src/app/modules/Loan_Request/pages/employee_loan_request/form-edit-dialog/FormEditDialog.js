@@ -165,23 +165,25 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   return (
     <>
       {/* <FormEditDialogHeader id={id} isUserForRead={userForRead} /> */}
-      <FormEditForm
-        saveForm={saveForm}
-        user={userForEdit || formUIProps.initUser}
-        onHide={onHide}
-        roles={roles}
-        userStatusTypes={userStatusTypes}
-        isUserForRead={userForRead}
-        enableLoading={enableLoading}
-        loading={loading}
-        setIds={formUIProps.setIds}
-        isEdit={id ? true : false}
-        isFileReq={formUIProps.isFileReq}
-        setIsFileReq={formUIProps.setIsFileReq}
-        disbaleLoading={disbaleLoading}
-        formUIProps={formUIProps}
-      />
-      <ToastContainer
+      <div className="px-3 py-2 w-full bg-white rounded-lg ">
+        <FormEditForm
+          saveForm={saveForm}
+          user={userForEdit || formUIProps.initUser}
+          onHide={onHide}
+          roles={roles}
+          userStatusTypes={userStatusTypes}
+          isUserForRead={userForRead}
+          enableLoading={enableLoading}
+          loading={loading}
+          setIds={formUIProps.setIds}
+          isEdit={id ? true : false}
+          isFileReq={formUIProps.isFileReq}
+          setIsFileReq={formUIProps.setIsFileReq}
+          disbaleLoading={disbaleLoading}
+          formUIProps={formUIProps}
+        />
+      </div>
+      {/* <ToastContainer
         position="top-right"
         autoClose={2000}
         hideProgressBar={false}
@@ -191,7 +193,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+      /> */}
     </>
   );
 }

@@ -14,6 +14,7 @@ $black:    											#000000 !default;
 $white:    											#ffffff !default;
 
 // Gray colors
+$gray-50: 											#f5f5f5 !default;
 $gray-100: 											#0093DD !default;
 $gray-200: 											#EBEDF3 !default;
 $gray-300: 											#E4E6EF !default;
@@ -30,6 +31,7 @@ $dark-75:          									$gray-800 !default; // Custom variable
 $dark-65:          									$gray-700 !default; // Custom variable
 $dark-50:          									$gray-600 !default; // Custom variable
 $dark-25:          									$gray-400 !default; // Custom variable
+$dark-5:          									$gray-50 !default; // Custom variable
 
 // Text muted
 $text-muted:                  						$gray-500 !default; // Custom variable
@@ -56,7 +58,7 @@ $dark-inverse:         								$white !default; // Custom variable
 
 // Primary colors
 $primary:       									#3699FF !default; // Bootstrap variable
-$primary-hover:    									#187DE4 !default; // Custom variable
+$primary-hover:    									#000000 !default; // Custom variable
 $primary-light:    									#E1F0FF !default; // Custom variable
 $primary-inverse:  									$white !default;  // Custom variable
 
@@ -67,8 +69,8 @@ $secondary-light:  									$gray-200 !default; // Custom variable
 $secondary-inverse:									$dark-75 !default; // Custom variable
 
 // Success colors
-$success:       									#1BC5BD !default; // Bootstrap variable
-$success-hover:    									#0BB7AF !default; // Custom variable
+$success:       									#34b9a3 !default; // Bootstrap variable
+$success-hover:    									#000000 !default; // Custom variable
 $success-light:    									#C9F7F5 !default; // Custom variable
 $success-inverse:  									$white !default; // Custom variable
 
@@ -85,8 +87,8 @@ $warning-light:    									#FFF4DE !default; // Custom variable
 $warning-inverse:  									$white !default; // Custom variable
 
 // Danger colors
-$danger:        									#F64E60 !default; // Bootstrap variable
-$danger-hover:     									#EE2D41 !default; // Custom variable
+$danger:        									#e23f35 !default; // Bootstrap variable
+$danger-hover:     									#000000 !default; // Custom variable
 $danger-light:     									#FFE2E5 !default; // Custom variable
 $danger-inverse:   									$white !default; // Custom variable
 
@@ -319,7 +321,7 @@ $border-radius-lg:            						.85rem !default;
 $border-radius-xl:                                  1.25rem !default; // Custom variable
 
 // Border settings
-$border-color:                                      $gray-200 !default;
+$border-color:                                      $dark-5 !default;
 $border-width:                                      1px !default;
 
 // Hover background color
@@ -390,7 +392,7 @@ $h2-font-size:                                      $font-size-base * 1.75 !defa
 $h3-font-size:                                      $font-size-base * 1.5 !default;    // 19.5px
 $h4-font-size:                                      $font-size-base * 1.35 !default;   // 17.55px
 $h5-font-size:                                      $font-size-base * 1.25 !default;   // 16.25px
-$h6-font-size:                                      $font-size-base * 1.175 !default;  // 15.275px
+$h6-font-size:                                      $font-size-base * 1 !default;  // 15.275px
 
 $headings-margin-bottom:                            $spacer / 2 !default;
 $headings-font-family:                              null !default;
@@ -449,9 +451,9 @@ $transition-input:                                  color 0.15s ease, background
 // Links
 //
 // Style anchor elements.
-$link-color:                                        $primary !default;
+$link-color:                                        $black !default;
 $link-decoration:                                   none !default;
-$link-hover-color:                                  darken($primary, 15%) !default;
+$link-hover-color:                                  $primary !default;
 $link-hover-decoration:                             underline !default;
 // Darken percentage for links with `.text-*` class (e.g. `.text-success`)
 $emphasized-link-hover-darken-percentage:           15% !default;
@@ -590,13 +592,13 @@ $list-group-hover-bg:               				$gray-200 !default;
 // Modals
 
 // Padding applied to the modal body
-$modal-inner-padding:              					1.75rem !default;
+$modal-inner-padding:              					0.5rem !default;
 
 // Margin between elements in footer, must be lower than or equal to 2 * $modal-inner-padding
 $modal-footer-margin-between:       				.5rem !default;
 
 $modal-dialog-margin:               				.5rem !default;
-$modal-dialog-margin-y-sm-up:       				1.75rem !default;
+$modal-dialog-margin-y-sm-up:       				 0rem !default;
 
 $modal-content-color:               				null !default;
 $modal-content-bg:                  				$white !default;
@@ -616,8 +618,8 @@ $modal-header-border-color:         				$border-color !default;
 $modal-footer-border-color:         			 	$border-color !default;
 $modal-header-border-width:         				1px !default;
 $modal-footer-border-width:         				1px !default;
-$modal-header-padding-y:            				1.5rem !default;
-$modal-header-padding-x:            				1.75rem !default;
+$modal-header-padding-y:            				0.8rem !default;
+$modal-header-padding-x:            				1.15rem !default;
 $modal-header-padding:              				$modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
 
 $modal-xl:                         		 			1140px !default;
@@ -717,7 +719,7 @@ $code-padding:                                      0.15rem 0.5rem !default; // 
 
 // Modals
 // Padding applied to the modal body
-$modal-inner-padding:                               1rem !default;
+$modal-inner-padding:                               0.75rem 1.15rem !default;
 $modal-dialog-margin:                               .5rem !default;
 $modal-dialog-margin-y-sm-up:                       1.75rem !default;
 $modal-title-color:                                 $dark !default; // Custom variable

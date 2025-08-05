@@ -70,20 +70,20 @@ export function ApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let classname = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -98,36 +98,23 @@ export function ApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let classname = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={classname}>{text}</span>;
       },
     },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        setWorkflowId: FormUIProps.setWorkflowId,
-        setCurrentData: FormUIProps?.setCurrentData,
-      },
 
-      style: {
-        minWidth: "100px",
-      },
-    },
     {
       dataField: "requestBelongToEmp.employeeCode", // Reference the parent object (department)
       text: "Code", // Column heading
@@ -185,7 +172,9 @@ export function ApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "parentData.timeIn",
@@ -197,7 +186,7 @@ export function ApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell),
     },
     {
       dataField: "parentData.timeOut",
@@ -209,7 +198,21 @@ export function ApprovalFormTable() {
         minWidth: "130px",
         maxWidth: "130px",
       },
-      formatter : (cell) => formatTime(cell)
+      formatter: (cell) => formatTime(cell),
+    },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        setWorkflowId: FormUIProps.setWorkflowId,
+        setCurrentData: FormUIProps?.setCurrentData,
+      },
+
+      style: {
+        minWidth: "100px",
+      },
     },
     // {
     //   dataField: "parentData.isLateComing",
@@ -253,14 +256,10 @@ export function ApprovalFormTable() {
   ];
 
   return (
-    <Card.Body
-      style={{ backgroundColor: "#ffffff" }}
-      className="overlay overlay-block cursor-default"
-    >
-      <div style={{ width: "100%", overflowX: "auto" }}>
+   
+      <div className="overflow-x-auto w-full">
         <BootstrapTable
           noDataIndication={NoRecordsFoundMessage({ entities })}
-          style={{ width: "100%", overflow: "auto" }}
           wrapperClasses="table-responsive"
           bordered={false}
           classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
@@ -308,6 +307,5 @@ export function ApprovalFormTable() {
           <NoRecordsFoundMessage entities={entities} />
         </BootstrapTable>
       </div>
-    </Card.Body>
   );
 }

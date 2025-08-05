@@ -89,56 +89,52 @@ export const FormApproval = () => {
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
           <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <button
-                type="button"
-                onClick={() => {
-                  setFieldValue("request_status", "A");
-                  handleSubmit();
-                }}
-                disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                className="btn btn-success btn-elevate"
-              >
-                Approve Request
-              </button>
-              <button
-                type="button"
-                disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                onClick={() =>
-                  handleRejectClick(setFieldValue, handleSubmit, values)
-                }
-                className="btn btn-danger btn-elevate mx-2"
-              >
-                Reject Request
-              </button>
-              <Form className="form form-label-right">
-                <fieldset
-                  disabled={formUIProps?.Ids?.length > 0 ? false : true}
-                >
-                  <div className="from-group row">
-                    <div className="col-12 col-md-8 mt-3">
-                      <Field
-                        name="authorityRemarks"
-                        component={TextArea}
-                        placeholder=""
-                        onChange={(e) => {
-                          setFieldValue("authorityRemarks", e.target.value);
-                        }}
-                        onBlur={handleBlur}
-                        label={
-                          <span>
-                            {" "}
-                            Remarks<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.authorityRemarks}
-                        autoComplete="off"
-                      />
-                    </div>
+            <button
+              type="button"
+              onClick={() => {
+                setFieldValue("request_status", "A");
+                handleSubmit();
+              }}
+              disabled={!(formUIProps?.Ids?.length > 0) || loading}
+              className="btn btn-success btn-elevate"
+            >
+              Approve
+            </button>
+            <button
+              type="button"
+              disabled={!(formUIProps?.Ids?.length > 0) || loading}
+              onClick={() =>
+                handleRejectClick(setFieldValue, handleSubmit, values)
+              }
+              className="btn btn-danger btn-elevate mx-2"
+            >
+              Reject
+            </button>
+            <Form className="form form-label-right">
+              <fieldset disabled={formUIProps?.Ids?.length > 0 ? false : true}>
+                <div className="from-group row">
+                  <div className="col-12 col-md-12 mt-2">
+                    <Field
+                      name="authorityRemarks"
+                      component={TextArea}
+                      placeholder=""
+                      onChange={(e) => {
+                        setFieldValue("authorityRemarks", e.target.value);
+                      }}
+                      onBlur={handleBlur}
+                      label={
+                        <span>
+                          {" "}
+                          Remarks<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      value={values.authorityRemarks}
+                      autoComplete="off"
+                    />
                   </div>
-                </fieldset>
-              </Form>
-            </Modal.Body>
+                </div>
+              </fieldset>
+            </Form>
           </>
         )}
       </Formik>

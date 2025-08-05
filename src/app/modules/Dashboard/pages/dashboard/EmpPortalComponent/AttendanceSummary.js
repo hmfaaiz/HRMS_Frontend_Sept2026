@@ -1,129 +1,65 @@
 import React from "react";
-import { KeyboardArrowDown } from "@material-ui/icons";
-import { Accordion, Card } from "react-bootstrap";
-import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
 import { Link } from "react-router-dom";
-import BarChart from "./BarChart";
-export const AttendanceSummary = ({ payrollData, attendanceSummary , attRecord }) => {
+import DonutChart from "../../../../../../component/DonutChart";
+
+export const AttendanceSummary = ({ attendanceSummary }) => {
+  const attendanceFields = [
+    { label: "Present Days", key: "PresentDays" },
+    { label: "On Time", key: "OnTime" },
+    { label: "Absent Days", key: "AbsentDays" },
+    { label: "Late In", key: "LateComing" },
+    { label: "Holidays", key: "Holidays" },
+    { label: "Early Out", key: "EarlyGoing" },
+    { label: "Off Days", key: "OffDay" },
+    { label: "Half Days", key: "HalfDay" },
+    { label: "Leave Days", key: "LeaveDays" },
+  ];
   return (
-    <Accordion defaultActiveKey="0">
-      {/* <span className="col-6 text-underline cursor-pointer">
-        <Link
-          target="_blank"
-          to={"/attendance_request/read-all-attendance-request"}
-        >
-          Create Attendance Request
-        </Link>
-      </span> */}
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn ">
-            <Accordion.Toggle eventKey="0" className="flex-between-center">
-              Attendance Summary
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-
-        <Accordion.Collapse eventKey="0">
-          <Card.Body style={{ backgroundColor: "#E6F8FF" }}>
-            {payrollData && payrollData?.startDate && payrollData?.endDate && (
-              <strong>
-                {" "}
-                <ActivePayrollMonthLabel
-                  month={payrollData?.month}
-                  startDate={payrollData?.startDate}
-                  endDate={payrollData?.endDate}
-                  year={payrollData?.year}
-                  className={"ee"}
-                />
-              </strong>
-            )}
-            <div className="d-flex justify-content-left ">
-              <div className="d-flex align-items-center m-3">
-                <span className="dot bg_custom_color_25 me-2"></span> Present
-              </div>
-              <div className="d-flex align-items-center m-3">
-                <span className="dot bg_custom_color_15 me-2"></span> Absent
-              </div>
-              <div className="d-flex align-items-center m-3">
-                <span className="dot bg_custom_color_16 me-2"></span> Half day
-              </div>
-              <div className="d-flex align-items-center m-3">
-                <span className="dot bg_custom_color_1 me-2"></span> Leave
-              </div>
-
-              <div className="d-flex align-items-center m-3">
-                <span className="dot bg_custom_color_22 me-2"></span> Day Off /
-                Holiday
-              </div>
-              <div className="d-flex align-items-center m-3">
-                <span className="dot bg_custom_color_26 me-2"></span> Late In /
-                Early Out
-              </div>
+    <div className="w-full bg-white rounded-lg">
+      <div className="w-full text-xs px-3 py-2  flex flex-col h-full justify-between">
+        <div className="w-full">
+          <h6 className="font-bold mb-0 text-primary my-2">Attendance</h6>
+          <DonutChart
+            data={
+              attendanceSummary && Object.keys(attendanceSummary).length > 0
+                ? Object.entries(attendanceSummary)
+                    .filter(([key]) => key !== "Id" && key !== "FirstName")
+                    .map(([key, value]) => ({
+                      label: key,
+                      value: value,
+                    }))
+                : []
+            }
+          />
+        </div>
+        <div className="grid grid-cols-2 text-sm gap-x-8 mt-5">
+          {attendanceFields.map(({ label, key }) => (
+            <div key={key} className="flex justify-between items-center">
+              <p className="text-black m-0">{label}</p>
+              <p className="text-primary font-extrabold m-0">
+                {attendanceSummary?.[key] || 0}
+              </p>
             </div>
-            <BarChart data={attRecord} />
-
-            <div
-              style={{
-                backgroundColor: "rgb(235 243 255)",
-                padding: "20px",
-                borderRadius: "5px",
-                border: "2px solid #adceff",
-              }}
-            >
-              <div className="row">
-                <div className="col-1">
-                  <span className="font-weight-bold">Present</span>
-                </div>
-                <div className="col-1">
-                  {attendanceSummary?.PresentDays || 0}{" "}
-                </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Absent</span>
-                </div>
-                <div className="col-1">
-                  {attendanceSummary?.AbsentDays || 0}{" "}
-                </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Holidays</span>
-                </div>
-                <div className="col-1">{attendanceSummary?.Holidays || 0} </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Off Days</span>
-                </div>
-                <div className="col-1">{attendanceSummary?.OffDay || 0} </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Leave Days</span>
-                </div>
-                <div className="col-1">
-                  {attendanceSummary?.LeaveDays || 0}{" "}
-                </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">On Time</span>
-                </div>
-                <div className="col-1">{attendanceSummary?.OnTime || 0} </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Late In</span>
-                </div>
-                <div className="col-1">
-                  {attendanceSummary?.LateComing || 0}{" "}
-                </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Early Out</span>
-                </div>
-                <div className="col-1">
-                  {attendanceSummary?.EarlyGoing || 0}{" "}
-                </div>
-                <div className="col-1">
-                  <span className="font-weight-bold">Half Days</span>
-                </div>
-                <div className="col-1">{attendanceSummary?.HalfDay || 0} </div>
-              </div>
-            </div>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+          ))}
+        </div>
+        <div className="font-size-xs font-semibold flex gap-4 items-end text-black mt-2 flex-wrap">
+          <p className="m-0 underline">
+            <Link to="/attendance_request/read-all-attendance-request">
+              Attendance Request
+            </Link>
+          </p>
+          <p className="m-0 underline">
+            <Link to="/attendance_calendar_team/read-attendance-calendar">
+              Attendance Calendar
+            </Link>
+          </p>
+          <p className="m-0 underline">
+            <Link to="/holiday_calendar/my-holiday-calendar">
+              Holiday Calendar
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };

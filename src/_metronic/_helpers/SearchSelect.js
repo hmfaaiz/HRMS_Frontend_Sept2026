@@ -44,6 +44,7 @@ export function SearchSelect({
         defaultOptions={options}
         loadOptions={promiseOptions}
         isClearable={isClearable}
+         classNamePrefix="select_option"
       />
 
       {error && touched ? <div className="form-feedBack">{error}</div> : null}

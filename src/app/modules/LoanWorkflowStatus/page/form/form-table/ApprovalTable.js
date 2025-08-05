@@ -13,12 +13,9 @@ import {
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../../FormUIHelper";
-// import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
-import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../../FormUIContext";
 import { Card } from "react-bootstrap";
 import { ActionsColumnFormatter } from "./column-formatter/ActionCloumnFormatter";
-import { format } from "date-fns";
 
 export function ApprovalFormTable() {
   //Users UI Context
@@ -69,20 +66,20 @@ export function ApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let classname = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -97,34 +94,20 @@ export function ApprovalFormTable() {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
+        let classname = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
-      },
-    },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        setWorkflowId: FormUIProps.setWorkflowId,
-        setCurrentData: FormUIProps?.setCurrentData,
-      },
-
-      style: {
-        minWidth: "100px",
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -218,6 +201,20 @@ export function ApprovalFormTable() {
         maxWidth: "90px",
       },
     },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        setWorkflowId: FormUIProps.setWorkflowId,
+        setCurrentData: FormUIProps?.setCurrentData,
+      },
+
+      style: {
+        minWidth: "100px",
+      },
+    },
     // {
     //   dataField: "parentData.applied_date",
     //   text: "Applied Date",
@@ -243,61 +240,56 @@ export function ApprovalFormTable() {
   ];
 
   return (
-    <Card.Body
-      style={{ backgroundColor: "#ffffff" }}
-      className="overlay overlay-block cursor-default"
-    >
-      <div style={{ width: "100%", overflowX: "auto" }}>
-        <BootstrapTable
-          noDataIndication={NoRecordsFoundMessage({ entities })}
-          style={{ width: "100%", overflow: "auto" }}
-          wrapperClasses="table-responsive"
-          bordered={false}
-          classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-          bootstrap4
-          // selectRow={{
-          //   mode: "checkbox",
-          //   clickToSelect: false,
-          //   style: { backgroundColor: "#ecbd8b" },
-          //   selected: FormUIProps.Ids, // make sure it's an array of Ids
-          //   selectable: (row) => row?.authorityStatus === "P",
-          //   selectionRenderer: ({ mode, checked, disabled }) => (
-          //     <input type="checkbox" checked={checked} disabled={disabled} />
-          //   ),
-          //   onSelect: (row, isSelect) => {
-          //     if (row.authorityStatus !== "P") return false;
+    <div className="w-full overflow-x-auto">
+      <BootstrapTable
+        noDataIndication={NoRecordsFoundMessage({ entities })}
+        className="w-full overflow-x-auto"
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        // selectRow={{
+        //   mode: "checkbox",
+        //   clickToSelect: false,
+        //   style: { backgroundColor: "#ecbd8b" },
+        //   selected: FormUIProps.Ids, // make sure it's an array of Ids
+        //   selectable: (row) => row?.authorityStatus === "P",
+        //   selectionRenderer: ({ mode, checked, disabled }) => (
+        //     <input type="checkbox" checked={checked} disabled={disabled} />
+        //   ),
+        //   onSelect: (row, isSelect) => {
+        //     if (row.authorityStatus !== "P") return false;
 
-          //     if (isSelect) {
-          //       FormUIProps.setIds((prev) => [...prev, row.Id]);
-          //     } else {
-          //       FormUIProps.setIds((prev) =>
-          //         prev.filter((id) => id !== row.Id)
-          //       );
-          //     }
-          //   },
-          //   onSelectAll: (isSelect, rows) => {
-          //     const selectableRows = rows.filter(
-          //       (r) => r.authorityStatus === "P"
-          //     );
+        //     if (isSelect) {
+        //       FormUIProps.setIds((prev) => [...prev, row.Id]);
+        //     } else {
+        //       FormUIProps.setIds((prev) =>
+        //         prev.filter((id) => id !== row.Id)
+        //       );
+        //     }
+        //   },
+        //   onSelectAll: (isSelect, rows) => {
+        //     const selectableRows = rows.filter(
+        //       (r) => r.authorityStatus === "P"
+        //     );
 
-          //     if (isSelect) {
-          //       FormUIProps.setIds(selectableRows.map((r) => r.Id));
-          //     } else {
-          //       FormUIProps.setIds([]);
-          //     }
-          //   },
-          // }}
-          remote
-          keyField="Id"
-          data={entities === null ? [] : entities}
-          columns={columns}
-          defaultSorted={uiHelpers.defaultSorted}
-          onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
-        >
-          <PleaseWaitMessage entities={entities} />
-          <NoRecordsFoundMessage entities={entities} />
-        </BootstrapTable>
-      </div>
-    </Card.Body>
+        //     if (isSelect) {
+        //       FormUIProps.setIds(selectableRows.map((r) => r.Id));
+        //     } else {
+        //       FormUIProps.setIds([]);
+        //     }
+        //   },
+        // }}
+        remote
+        keyField="Id"
+        data={entities === null ? [] : entities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(FormUIProps.setQueryParams)}
+      >
+        <PleaseWaitMessage entities={entities} />
+        <NoRecordsFoundMessage entities={entities} />
+      </BootstrapTable>
+    </div>
   );
 }

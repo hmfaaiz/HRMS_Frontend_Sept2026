@@ -119,8 +119,7 @@ export function EmployeeSelect({
 
   return (
     <>
-      {/* Formik Starts */}
-      <Formik
+      {/* <Formik
         enableReinitialize={true}
         initialValues={{
           ...initialFilter.filter,
@@ -137,155 +136,13 @@ export function EmployeeSelect({
                 <div className="spinner spinner-lg spinner-success" />
               </div>
             )}
-            {/* Form Starts */}
             <Form className="form form-label-right">
               <fieldset>
-                {/* <div className="from-group row">
-                  <div className="col-12 col-md-12 row p-0 m-0">
-                    <div className="col-12 col-md-3 mt-3">
-                      <Field
-                        name="currentLevel"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value === "--Select--" ? "" : Number(e.value);
-                          formUIProps.setCurrentLevel(value);
-                          setFieldValue("currentLevel", value); // <- Important!
-                        }}
-                        label={<span>Reporting Level</span>}
-                        value={
-                          levelList?.find(
-                            (opt) => opt.value === values.currentLevel
-                          ) || "0"
-                        }
-                        autoComplete="off"
-                        options={levelList}
-                      />
-                    </div>
-                    <div className="col-12 col-md-9 mt-3">
-                      {activeFiscalYear && activeFiscalYear?.label && (
-                        <div className="col-12 col-md-12">
-                          <div className="row justify-content-end">
-                            <b>
-                              Active Fiscal{" "}
-                              <span>{activeFiscalYear?.label}</span>
-                            </b>
-                          </div>
-                        </div>
-                      )}
-                      {payrollData &&
-                        payrollData?.startDate &&
-                        payrollData?.endDate && (
-                          <div className="col-12 col-md-12">
-                            <div className="row  justify-content-end">
-                              <span className="mr-2">
-                                <b>Active Payroll Month: </b>
-                              </span>
-                              <span>
-                                <b>
-                                  <ActivePayrollMonthLabel
-                                    className="date"
-                                    month={payrollData.month}
-                                    year={payrollData.year}
-                                    startDate={payrollData.startDate}
-                                    endDate={payrollData.endDate}
-                                  />
-                                </b>
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      name="employeeId"
-                      component={SearchSelect}
-                      onBlur={handleBlur}
-                      onChange={(e) => {
-                        const value =
-                          e.value == "--Select--" ? "" : Number(e.value);
-                        setFieldValue("employeeId", value);
-                        formUIProps.setemployeeId(e);
-                        if (value) {
-                          applyFilter({
-                            ...values,
-                            employeeId: value,
-                          });
-                        }
-                        setId(""); //Clear Edit values on Employee Change
-                      }}
-                      label={
-                        <span>
-                          {" "}
-                          Employee<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      value={
-                        allEmployeesMap?.get(values?.employeeId || "") || ""
-                      }
-                      autoComplete="off"
-                      options={employeeList}
-                    />
-                    {!values.employeeId && (
-                      <CustomErrorLabel
-                        touched={true}
-                        error={VALIDATION_MESSAGES.required}
-                      />
-                    )}
-                  </div>
-                </div> */}
-                {/* <div className="from-group row">
-                  <div className="col-12 col-md-4  mt-3">
-                    <Field
-                      name="from"
-                      component={DatePickerField}
-                      dateFormat="dd/MM/yyyy"
-                      className="form-control"
-                      label={<span> Date From</span>}
-                      onChange={(date) => {
-                        setFieldValue("from", date ? date : "");
-                        if (date) {
-                          applyFilter({
-                            ...values,
-                            from: date,
-                          });
-                        }
-                      }}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      name="to"
-                      component={DatePickerField}
-                      onBlur={handleBlur}
-                      className="form-control"
-                      dateFormat="dd/MM/yyyy"
-                      label={<span> Date To</span>}
-                      onChange={(date) => {
-                        setFieldValue("to", date ? date : "");
-                        if (date) {
-                          applyFilter({
-                            ...values,
-                            to: date,
-                          });
-                        }
-                      }}
-                      autoComplete="off"
-                    />
-                  </div>
-                </div> */}
-                {/* Date to Field End */}
-                {/* Employee Id Dropdown Ends */}
               </fieldset>
             </Form>
-            {/* Form Ends */}
           </>
         )}
-      </Formik>
-      {/* Formik Ends */}
+      </Formik> */}
     </>
   );
 }

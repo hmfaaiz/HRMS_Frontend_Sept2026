@@ -75,12 +75,12 @@ const attendanceStatusMap = {
 };
 
 const attendanceStatusColors = {
-  att_absent: "#06c00f",
+  att_absent: "#34b9a3",
   att_absent_att: "#e23f35",
-  att_present: "#06c00f",
-  att_presents: "#b5ba17",
+  att_present: "#34b9a3",
+  att_presents: "#8fbf2a",
   att_HD: "#dd8941",
-  att_dayoff: "#662d91",
+  att_dayoff: "#933ab3",
 };
 
 const convertTimeToPoint = (val) => {
@@ -91,9 +91,7 @@ const convertTimeToPoint = (val) => {
   return +(hours + minutes / 60).toFixed(2);
 };
 
-
-
-const BarChart = ({ data }) => {
+const AttendanceBarChart = ({ data }) => {
   const filterData =
     data?.length > 0
       ? data.map((e) => ({
@@ -133,33 +131,52 @@ const BarChart = ({ data }) => {
       },
       drawVerticalLabels: {
         labels: filterData.map((item) => item.hoverLabel),
-        colors: filterData.map((item) => (item.total > 0 ? "white" : "black")), // color of text above bar
+        colors: filterData.map((item) => (item.total > 0 ? "white" : "black")),
         font: filterData.map((item) =>
-          item.total > 0 ? "10px Noto Sans" : "bold 10px Noto Sans"
-        ), // color of text above bar
+          item.total > 0 ? "8px Noto Sans" : "bold 8px Noto Sans"
+        ),
+      },
+      datalabels: {
+        display: false,
       },
     },
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 1,
+          stepSize: 2,
+          maxTicksLimit: 9,
+          font: {
+            size: 8,
+          },
+        },
+      },
+      x: {
+        ticks: {
+          font: {
+            size: 8,
+          },
         },
       },
     },
   };
 
   return (
-    <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-      {data?.length > 0 && barChartData && (
-        <Bar
-          data={barChartData}
-          options={options}
-          plugins={[drawVerticalLabelsPlugin]}
-        />
-      )}
+    <div className="w-full col-span-2 font-size-xs px-3 py-2 bg-white rounded-lg">
+      <h6 className="font-weight-bolder mb-0 text-primary my-2">
+        Attendance Detail
+      </h6>
+      <div>
+        {data?.length > 0 && barChartData && (
+          <Bar
+            data={barChartData}
+            options={options}
+            plugins={[drawVerticalLabelsPlugin]}
+          />
+        )}
+      </div>
     </div>
   );
 };
 
-export default BarChart;
+export default AttendanceBarChart;

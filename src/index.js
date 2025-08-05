@@ -11,7 +11,6 @@ import * as _redux from "./redux"
 import store, { persistor } from "./redux/store"
 import App from "./app/App"
 import "./index.scss" // Standard version
-import "./custum.css"
 // import "./sass/style.react.rtl.css"; // RTL version
 import "./_metronic/_assets/plugins/keenthemes-icons/font/ki.css"
 import "socicon/css/socicon.css"
@@ -26,6 +25,7 @@ import {
   MetronicSubheaderProvider,
 } from "./_metronic/layout"
 import { MetronicI18nProvider } from "./_metronic/i18n"
+import "./custum.css"
 
 const { PUBLIC_URL, REACT_APP_ENV } = process.env
 //console.log("Env", process.env)
