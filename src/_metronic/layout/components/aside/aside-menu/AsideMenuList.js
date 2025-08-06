@@ -140,7 +140,7 @@ export function AsideMenuList({ layoutProps }) {
                           </button>
                           {/* Dropdown menu */}
                           <div
-                            className={`absolute left-0 mt-2 min-w-56 bg-white border rounded shadow-lg transition z-50 ${
+                            className={`absolute left-0 mt-3 min-w-56 bg-white border rounded shadow-lg transition z-50 ${
                               dropdownOpen === idx ? "block" : "hidden"
                             }`}
                           >

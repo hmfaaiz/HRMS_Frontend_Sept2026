@@ -26,7 +26,6 @@ const WorkflowFormFilter = () => {
     >
       {({ values, handleSubmit, handleChange, handleBlur,setFieldValue }) => (
         <form onSubmit={handleSubmit} className="form form-label-right">
-          <div className="row">
             {/* <div className="col-12">
               <input
                 type="text"
@@ -48,7 +47,6 @@ const WorkflowFormFilter = () => {
                             handleBlur={handleBlur}
                             handleSubmit={handleSubmit}
                           />
-          </div>
         </form>
       )}
     </Formik>

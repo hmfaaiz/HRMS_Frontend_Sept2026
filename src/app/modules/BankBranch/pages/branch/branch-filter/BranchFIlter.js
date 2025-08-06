@@ -99,7 +99,6 @@ export function BranchFilter({ listLoading, user, setCity,
 
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
 
               {/* <div className="col-12 col-md-12">
                 <input
@@ -126,7 +125,6 @@ export function BranchFilter({ listLoading, user, setCity,
                 handleBlur={handleBlur}
                 handleSubmit={handleSubmit}
               />
-            </div>
           </form>
         )}
       </Formik>
