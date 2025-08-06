@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector, shallowEqual } from "react-redux";
 import { Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -51,54 +51,157 @@ export function EmployeeSalarySetupPage({ history }) {
       history.push(`/employee_salary/read-all-employee-salary/${id}/read`);
     },
   };
+   const { userAccess } = useSelector(
+      (state) => ({
+        userAccess: state.auth.userAccess.Employee_Salary
+      }),
+      shallowEqual
+    )
+  
+      const isAccessForEdit = userAccess?.find(
+      (item) => item.componentName === "UpdateEmployeeSalary"
+    );
+  
+    const isAccessForDelete = userAccess?.find(
+      (item) => item.componentName === "DeleteEmployeeSalary"
+    );
+  
+     const accessUser = userAccess.find(
+      (item) => item.componentName === "CreateEmployeeSalary"
+    )
+      const isAccessForRead= userAccess?.find(
+      (item) => item.componentName === "ReadEmployeeSalary"
+    );
   return (
     
-    <BanksUIProvider BanksUIEvents={BanksUIEvents}>
-      <Route exact path="/employee_salary/read-all-employee-salary/new">
-        {({ history, match }) => (
-          <BankEditDialog
-            show={match != null}
-            onHide={() => {
-              history.push("/employee_salary/read-all-employee-salary");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/employee_salary/read-all-employee-salary/:id/edit">
-        {({ history, match }) => (
-          <BankEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() => {
-              history.push("/employee_salary/read-all-employee-salary");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/employee_salary/read-all-employee-salary/:id/read">
-        {({ history, match }) => (
-          <BankEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            userForRead={true}
-            onHide={() => {
-              history.push("/employee_salary/read-all-employee-salary");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/employee_salary/read-all-employee-salary/:id/:status/delete">
-        {({ history, match }) => (
-          <BankDeleteDialog
-            show={match != null}
-            id={match && match.params.id}
-            status={match && match.params.status}
-            onHide={() => {
-              history.push("/employee_salary/read-all-employee-salary");
-            }}
-          />
-        )}
-      </Route>
+    // <BanksUIProvider BanksUIEvents={BanksUIEvents}>
+    //   <Route exact path="/employee_salary/read-all-employee-salary/new">
+    //     {({ history, match }) => (
+    //       <BankEditDialog
+    //         show={match != null}
+    //         onHide={() => {
+    //           history.push("/employee_salary/read-all-employee-salary");
+    //         }}
+    //       />
+    //     )}
+    //   </Route>
+    //   <Route path="/employee_salary/read-all-employee-salary/:id/edit">
+    //     {({ history, match }) => (
+    //       <BankEditDialog
+    //         show={match != null}
+    //         id={match && match.params.id}
+    //         onHide={() => {
+    //           history.push("/employee_salary/read-all-employee-salary");
+    //         }}
+    //       />
+    //     )}
+    //   </Route>
+    //   <Route path="/employee_salary/read-all-employee-salary/:id/read">
+    //     {({ history, match }) => (
+    //       <BankEditDialog
+    //         show={match != null}
+    //         id={match && match.params.id}
+    //         userForRead={true}
+    //         onHide={() => {
+    //           history.push("/employee_salary/read-all-employee-salary");
+    //         }}
+    //       />
+    //     )}
+    //   </Route>
+    //   <Route path="/employee_salary/read-all-employee-salary/:id/:status/delete">
+    //     {({ history, match }) => (
+    //       <BankDeleteDialog
+    //         show={match != null}
+    //         id={match && match.params.id}
+    //         status={match && match.params.status}
+    //         onHide={() => {
+    //           history.push("/employee_salary/read-all-employee-salary");
+    //         }}
+    //       />
+    //     )}
+    //   </Route>
+    //   <Route path="/employee_salary/read-all-employee-salary/:id/active">
+    //     {({ history, match }) => (
+    //       <BankActiveDialog
+    //         show={match != null}
+    //         id={match && match.params.id}
+    //         //status={match && match.params.status}
+    //         onHide={() => {
+    //           history.push("/employee_salary/read-all-employee-salary");
+    //         }}
+    //       />
+    //     )}
+    //   </Route>
+    //   <BanksCard />
+    //   <ToastContainer
+    //     position="top-right"
+    //     autoClose={5000}
+    //     hideProgressBar={false}
+    //     newestOnTop={false}
+    //     closeOnClick
+    //     rtl={false}
+    //     pauseOnFocusLoss
+    //     draggable
+    //     pauseOnHover
+    //   />
+    // </BanksUIProvider>
+
+
+
+
+        <BanksUIProvider BanksUIEvents={BanksUIEvents}>
+            <BanksCard />
+
+                {accessUser && (
+                     <Route path="/employee_salary/read-all-employee-salary/new" render={({ match, history }) => (
+                          <BankEditDialog
+                        status="new"
+                         onHide={() => history.push("/employee_salary/read-all-employee-salary")}
+                        />
+                         )} />
+            
+                        )}
+
+                          {isAccessForEdit && (
+                                         <Route path="/employee_salary/read-all-employee-salary/:id/edit" render={({ match, history }) => (
+                                      <BankEditDialog
+                                     id={match.params.id}
+                                     status="edit"
+                                     onHide={() => history.push("/employee_salary/read-all-employee-salary")}
+                                    />
+                                     )} />
+                                    )}
+
+                                     {isAccessForRead && (
+                                              <Route path="/employee_salary/read-all-employee-salary/:id/read" render={({ match, history }) => (
+                                               <BankEditDialog
+                                            id={match.params.id}
+                                            status="read"
+                                                userForRead={true}
+                                                 onHide={() => history.push("/employee_salary/read-all-employee-salary")}
+                                                  />
+                                    )}         />
+                                    )}
+
+                                    {isAccessForDelete && (
+                                          <Route path="/employee_salary/read-all-employee-salary/:id/:status/delete">
+                                            {({ history, match }) => (
+                                              <BankDeleteDialog
+                                                show={match != null}
+                                                id={match && match.params.id}
+                                                status={match && match.params.status}
+                                                onHide={() => {
+                                                  history.push("/employee_salary/read-all-employee-salary");
+                                                }}
+                                              />
+                                            )}
+                                          </Route>
+                                          )}
+         
+   
+  
+    
+      {/* may be not in used */}
       <Route path="/employee_salary/read-all-employee-salary/:id/active">
         {({ history, match }) => (
           <BankActiveDialog
@@ -111,7 +214,7 @@ export function EmployeeSalarySetupPage({ history }) {
           />
         )}
       </Route>
-      <BanksCard />
+    
       <ToastContainer
         position="top-right"
         autoClose={5000}

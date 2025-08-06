@@ -1,0 +1,88 @@
+import React from "react";
+import SVG from "react-inlinesvg";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+
+export function ActionsColumnFormatter(
+  cellContent,
+  row,
+  rowIndex,
+
+  {
+    openEditFormDialog,
+    openDeleteFormDialog,
+    openActiveFormDialog,
+    openReadUserDialog,
+    isAccessForEdit,
+    isAccessForDelete,
+    openReadFormDialog,isAccessForRead
+  }
+) {
+  const isUserRead = false;
+  return (
+    <>
+          {isAccessForRead &&  (
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
+        <a
+          title=""
+          className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
+          onClick={() => openReadFormDialog(row.Id, isUserRead)}
+        >
+          <span className="svg-icon svg-icon-md svg-icon-primary">
+            <SVG
+              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
+            />
+          </span>
+        </a>
+      </OverlayTrigger>
+
+          )}
+      {isAccessForEdit &&  (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+        >
+          <a
+            title=""
+            className="btn btn-icon btn-hover-primary btn-sm mx-3 edit-button"
+            onClick={() => openEditFormDialog(row.Id)}
+          >
+            <span className="svg-icon svg-icon-md svg-icon-primary">
+              <SVG
+                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
+              />
+            </span>
+          </a>
+        </OverlayTrigger>
+      )}
+
+      <> </>
+
+      {isAccessForDelete && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">
+              {row.isActive ? "Delete" : "Mark Active"}
+            </Tooltip>
+          }
+        >
+          {
+            <a
+              title=""
+              className="btn btn-icon btn-hover-danger btn-sm mx-3 delete-button"
+              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+            >
+              <span className="svg-icon svg-icon-md svg-icon-danger">
+                <SVG
+                  src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
+                  title=""
+                />
+              </span>
+            </a>
+         }
+        </OverlayTrigger>
+      )}
+    </>
+  );
+}

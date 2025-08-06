@@ -50,7 +50,7 @@ export const AdminPortal = () => {
   const user = useSelector((state) => state.auth?.user || {});
   const dashboard = useSelector((state) => state.dashboard || []);
 
-  console.log("useruser", user);
+ 
 
   const [activeKey, setActiveKey] = useState("0"); // Default to Employee
   const [empSummaryFilter, setEmpSummaryFilter] = useState({

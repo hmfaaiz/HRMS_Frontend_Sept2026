@@ -114,41 +114,38 @@ function Login(props) {
   });
 
   return (
-    <div className="d-flex flex-column mt-5">
+    <div className="d-flex flex-column  h-100 ">
       <div
-        className=" login-signin"
+        className="bg-white p-10 h-100 rounded-top"
         id="kt_login_signin_form"
-        style={{
-          height: "72vh", // Full height of the viewport
-          width: "30vw", // Make the form take full width
-          justifyContent: "center", // Center horizontally
-          alignItems: "center", // Center vertically
-          backgroundColor: "white",
-          backgroundSize: "cover", // Ensures the gradient covers the entire area
-          backgroundPosition: "center", // Ensures the background is centered
-          padding: "60px", // Padding inside the form
-        }}
+      // style={{
+      //   height: "72vh", // Full height of the viewport
+      //   width: "30vw", // Make the form take full width
+      //   justifyContent: "center", // Center horizontally
+      //   alignItems: "center", // Center vertically
+      //   backgroundColor: "white",
+      //   backgroundSize: "cover", // Ensures the gradient covers the entire area
+      //   backgroundPosition: "center", // Ensures the background is centered
+      //   padding: "60px", // Padding inside the form
+      // }}
       >
-        <div
-          className="text-center mb-10 mb-lg-20"
-          style={{
-            // width: "70%",  // Make the form take full width
-            width: "20vw",
-            height: "8vh", // 10% of the viewport height (can be adjusted)
-            backgroundImage: `url(${toAbsoluteUrl(
-              "/media/bg/login-logo.png"
-            )})`, // Add image as background
-            backgroundSize: "cover", // Ensure the image covers the entire container
-            backgroundPosition: "center", // Center the image inside the container
-            backgroundRepeat: "no-repeat", // Prevent the image from repeating
-            borderRadius: "8px", // Optional: rounded corners
-          }}
-        ></div>
+
+
+        <div>
+          <img
+            src="/media/bg/login-logo.png"
+            alt="Partner 1"
+            style={{ height: 50, marginRight: 30 }}
+          />
+        </div>
+
+            <br />
+          <br />
 
         <div>
           <h1
-            className="fw-bold"
-            style={{ color: "#2490CF", fontSize: "2rem" }}
+            className="fw-bold mt-10"
+          // style={{ color: "#2490CF", fontSize: "2rem" }}
           >
             Log In
           </h1>
@@ -159,8 +156,8 @@ function Login(props) {
         {/*begin::Form*/}
         <form
           onSubmit={formik.handleSubmit}
-          className="form fv-plugins-bootstrap fv-plugins-framework"
-          // className="login-form"
+          className="form fv-plugins-bootstrap fv-plugins-framework "
+        // className="login-form"
         >
           {formik.status ? (
             <div className="mb-10 alert alert-custom alert-light-danger alert-dismissible">
@@ -250,23 +247,13 @@ function Login(props) {
             </span>
           </div>
         </form>
-        {/* <div>footer</div> */}
-        {/*end::Form*/}
+     
         <br />
         <br />
 
-        {/* <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-left">
-                <p>Privacy Policy</p>
-                <p>Legal</p>
-                <p>Contact Us</p>
-            </div>
-           
-        </div>
-    </footer> */}
+
       </div>
-      <footer className="d-flex gap-4  login-footer  p-4 ">
+      <footer className="d-flex gap-4  login-footer rounded-bottom ">
         <div></div>
         <div>
           <p className="ml-5 mt-4">Privacy Policy</p>

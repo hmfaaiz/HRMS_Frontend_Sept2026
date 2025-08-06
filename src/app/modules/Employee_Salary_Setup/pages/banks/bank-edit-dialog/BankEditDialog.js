@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { BankEditForm } from "./BankEditForm";
 import { BankEditDialogHeader } from './BankEditDialogHeader'
@@ -9,14 +8,24 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useBanksUIContext } from "../BanksUIContext";
 import axios from 'axios';
+import { Accordion, Button, Card } from "react-bootstrap";
+import { KeyboardArrowDown } from "@material-ui/icons";
+
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
-export function BankEditDialog({ id, show, onHide, userForRead }) {
+export function BankEditDialog({ id, show, onHide, userForRead,status }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const [approveLoading, setapproveLoading] = useState(false);
   const title = "EarningEditDialog";
   const banksUIContext = useBanksUIContext();
+  const [activeKey, setActiveKey] = useState("0");
+
+  useEffect(() => {
+  
+      setActiveKey("0"); // jab new user aaye to accordion open kar do
+   
+  }, [id,status]);
 
 
   const usersUIProps = useMemo(() => {
@@ -123,6 +132,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         overtime_working_day: user.overtime_working_day,
         overtime_off_day: user.overtime_off_day,
         overtime_holiday: user.overtime_holiday,
+        basicFactor: user.basicFactor,
 
       };
 
@@ -137,13 +147,34 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
   }
 
   return (
-    <Modal
-      size="lg"
-      show={show}
-      onHide={onHide}
-      aria-labelledby="example-modal-sizes-title-lg"
-      backdrop="static"
-    >
+    // <Modal
+    //   size="lg"
+    //   show={show}
+    //   onHide={onHide}
+    //   aria-labelledby="example-modal-sizes-title-lg"
+    //   backdrop="static"
+    // >
+
+        <Accordion activeKey={activeKey}>
+        <Card>
+          <Card.Header className="d-flex justify-content-center">
+            <div className="accordion-header-btn w-100  d-flex justify-content-center">
+              <Accordion.Toggle
+                as={Button}
+                eventKey="0"
+                className="flex-between-center text-bold"
+                 onClick={() =>
+                setActiveKey(activeKey === "0" ? null : "0")
+              }
+              >
+                Employee Salary
+                <KeyboardArrowDown />
+              </Accordion.Toggle>
+            </div>
+          </Card.Header>
+          <Accordion.Collapse eventKey="0">
+            <Card.Body>
+    <>
       <BankEditDialogHeader id={id} isUserForRead={userForRead} />
       <BankEditForm
         saveEarningDeductionTran={saveEarningDeductionTran}
@@ -159,6 +190,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         approveSalary={approveSalary}
         approveLoading={approveLoading}
       />
+      
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -170,6 +202,11 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         draggable
         pauseOnHover
       />
-    </Modal>
+      </>
+       </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+    //  </Modal> 
   );
 }

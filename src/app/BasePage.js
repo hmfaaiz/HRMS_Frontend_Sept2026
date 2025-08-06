@@ -79,9 +79,9 @@ const CompensationExpModule = lazy(() =>
 const EmployeeTransferModule = lazy(() =>
   import("./modules/Employee_Transfer/pages/index")
 );
-const EmployeeSalaryRevisionModule = lazy(() =>
-  import("./modules/Employee_Salary_Revision/pages/index")
-);
+// const EmployeeSalaryRevisionModule = lazy(() =>
+//   import("./modules/Employee_Salary_Revision/pages/index")
+// );
 const TaxSetupModule = lazy(() => import("./modules/Tax_Setup/pages/index"));
 const FiscalSetupModule = lazy(() =>
   import("./modules/Fiscal_Setup/pages/index")
@@ -232,6 +232,8 @@ const AttendanceWorkflowStatus = lazy(()=> import("./modules/AttendanceWorkflowS
 const TeamLeaveCalender = lazy(()=> import("./modules/Leave_Calendar_Team/pages/index"))
 const TeamAttendanceCalender = lazy(()=> import("./modules/Attendance_Calendar_Team/pages/index"))
 const PortalHolidayCalendar = lazy(()=> import("./modules/PortalHolidayCalendar/pages/index"))
+const EmpSalaryRevisionModule = lazy(() => import("./modules/Emp_Salary_Revision/pages/index"));
+const NewsEventTickerModule = lazy(() => import("./modules/NewsEventTicker/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -267,7 +269,7 @@ const ROUTES = {
   salary_expatriate: EmployeeSalaryExpModule,
   compensation_expatriate: CompensationExpModule,
   employee_transfer: EmployeeTransferModule,
-  salary_revision: EmployeeSalaryRevisionModule,
+  // salary_revision: EmployeeSalaryRevisionModule,
   tax_setup: TaxSetupModule,
   fiscal_setup: FiscalSetupModule,
   payroll_month: PayrollMonthSetupModule,
@@ -333,7 +335,9 @@ const ROUTES = {
   attendanceworkflowstatus: AttendanceWorkflowStatus,
   leave_calendar_team : TeamLeaveCalender,
   attendance_calendar_team : TeamAttendanceCalender,
-  holiday_calendar : PortalHolidayCalendar
+  holiday_calendar : PortalHolidayCalendar,
+  emp_salary_revision : EmpSalaryRevisionModule,
+  news_event_ticker : NewsEventTickerModule,
 };
 
 export default function BasePage() {
