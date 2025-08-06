@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
 import { toAbsoluteUrl } from "../../../../_metronic/_helpers";
-
+import { CircleArrowRight } from 'lucide-react';
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
@@ -116,7 +116,7 @@ function Login(props) {
   return (
     <div className="d-flex flex-column  h-100 ">
       <div
-        className="bg-white p-10 h-100 rounded-top"
+        className="bg-white p-10 h-100 rounded-top opacity-97"
         id="kt_login_signin_form"
       // style={{
       //   height: "72vh", // Full height of the viewport
@@ -133,22 +133,26 @@ function Login(props) {
 
         <div>
           <img
-            src="/media/bg/login-logo.png"
-            alt="Partner 1"
-            style={{ height: 50, marginRight: 30 }}
+          className="fluid"
+            src="/media/bg/Login/DSC-Logo.svg"
+            alt="DSC"
+            style={{ height: 50, marginRight: 30 , backgroundSize: 'cover',}}
+            
           />
         </div>
 
-            <br />
-          <br />
+        {/* <br /> */}
+        <br />
 
         <div>
           <h1
-            className="fw-bold mt-10"
+            className="fw-bold mt-10" style={{ color: '#000000', fontWeight: 400 }}
           // style={{ color: "#2490CF", fontSize: "2rem" }}
           >
             Log In
           </h1>
+
+
         </div>
         <br />
         {/* end::Head */}
@@ -159,7 +163,7 @@ function Login(props) {
           className="form fv-plugins-bootstrap fv-plugins-framework "
         // className="login-form"
         >
-          {formik.status ? (
+          {/* {formik.status ? (
             <div className="mb-10 alert alert-custom alert-light-danger alert-dismissible">
               <div className="alert-text font-weight-bold">{formik.status}</div>
             </div>
@@ -173,12 +177,16 @@ function Login(props) {
             //   </div>
             // )
             ""
-          )}
+          )} */}
 
           <div className="form-group fv-plugins-icon-container ">
+            <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
+              Email address
+            </label>
             <input
               placeholder="Email"
               type="text"
+
               className={`form-control form-control-solid h-auto py-5 px-6  ${getInputClasses(
                 "email"
               )} inputcolor`}
@@ -193,6 +201,9 @@ function Login(props) {
           </div>
 
           <div className="form-group fv-plugins-icon-container">
+            <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
+              Password
+            </label>
             <input
               placeholder="Password"
               type="password"
@@ -202,14 +213,30 @@ function Login(props) {
               name="password"
               {...formik.getFieldProps("password")}
             />
-            {formik.touched.password && formik.errors.password ? (
+            {(formik.touched.password && formik.errors.password) || formik.status ? (
               <div className="fv-plugins-message-container">
-                <div className="fv-help-block">{formik.errors.password}</div>
+                {formik.errors.password && (
+                  <div className="fv-help-block">{formik.errors.password}</div>
+                )}
+                {/* {formik.status && (
+                  <div className="fv-help-block">{formik.status}</div>
+                )} */}
               </div>
             ) : null}
+  {/* <br />
+  <br /> */}
+            {formik.status ? (
+              <div className="alert alert-custom alert-light-danger alert-dismissible text-center h-2 mt-10">
+                <div className="alert-text font-weight-bold">{formik.status}</div>
+              </div>
+            ) : (
+
+              ""
+            )}
+
           </div>
 
-          <div className="d-flex align-items-center  ">
+          {/* <div className="d-flex align-items-center  ">
             <input
               type="checkbox"
               style={{
@@ -221,33 +248,37 @@ function Login(props) {
             <span className="ml-3" style={{ fontSize: "15px" }}>
               Remember me
             </span>
-          </div>
+          </div> */}
           <br />
-          <br />
+          {/* <br /> */}
 
           <div className="">
             <button
               id=""
               type="submit"
               disabled={formik.isSubmitting}
-              className="custom-button"
+              className="custom-button rounded"
             >
-              <span>Log In</span>
+
+              <span>Log in    <CircleArrowRight strokeWidth={3} className="w-5 h-5 cursor-pointer"/></span>
               {loading && <span className="ml-3 spinner spinner-white"></span>}
             </button>
           </div>
+          <div>
+
+          </div>
 
           <br />
-          <div className="d-flex align-items-center  ">
+          {/* <div className="d-flex align-items-center  ">
             <span
               className="ml-1"
               style={{ fontSize: "15px", color: "#007bff" }}
             >
               Forgot Password?
             </span>
-          </div>
+          </div> */}
         </form>
-     
+
         <br />
         <br />
 
@@ -256,13 +287,13 @@ function Login(props) {
       <footer className="d-flex gap-4  login-footer rounded-bottom ">
         <div></div>
         <div>
-          <p className="ml-5 mt-4">Privacy Policy</p>
+          <p className="mt-4 text-black">Privacy Policy</p>
         </div>
         <div>
-          <p className="ml-5 mt-4">Legal</p>
+          <p className="ml-4 mt-4 text-black">Legal</p>
         </div>
         <div>
-          <p className="ml-5 mt-4">Contact Us</p>
+          <p className="ml-4 mt-4 text-black">Contact Us</p>
         </div>
       </footer>
     </div>

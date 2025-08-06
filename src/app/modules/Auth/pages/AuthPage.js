@@ -60,7 +60,7 @@ export function AuthPage() {
             {/* Right  */}
 
 
-            <div className="col-12 col-md-8 pt-5 d-flex flex-column d-none">
+            <div className="col-12 col-md-8 pt-5 d-flex flex-column  opacity-97">
               <div className="bg-white p-5 m-0 rounded-top">
                 {/* <div
                   className=" d-flex flex-column"
@@ -75,17 +75,19 @@ export function AuthPage() {
                 >
 
 
-
+// https://dynasoftcloud.com/contact-us.php
 
                 </div> */}
-                <Carousel interval={3000}>
-                  {[1, 2, 3].map((item, index) => (
+                {/* <Carousel interval={3000}>
+                  {[1, 2, 3,4].map((item, index) => (
                     <Carousel.Item key={index}>
                       <div
-                        className="d-flex flex-column"
+                      // https://dynasoftcloud.com/contact-us.php
+                        className="d-flex flex-column rounded"
                         style={{
                           height: '63vh',
-                          backgroundImage: `url(${toAbsoluteUrl("/media/bg/login-pic.png")})`,
+                          // backgroundImage: `url(${toAbsoluteUrl("/media/bg/Testing1.png")})`,
+                           backgroundImage: `url(${toAbsoluteUrl(`/media/bg/Slider/Slider${index + 1}.webp`)})`,
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
                           backgroundRepeat: 'no-repeat',
@@ -93,7 +95,32 @@ export function AuthPage() {
                       ></div>
                     </Carousel.Item>
                   ))}
+                </Carousel> */}
+
+                <Carousel interval={3000}>
+                  {[1, 2, 3, 4].map((item, index) => (
+                    <Carousel.Item key={index}>
+                      <a
+                        href="https://dynasoftcloud.com/contact-us.php"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: 'none' }}
+                      >
+                        <div
+                          className="d-flex flex-column rounded"
+                          style={{
+                            height: '63vh',
+                            backgroundImage: `url(${toAbsoluteUrl(`/media/bg/Slider/Slider${index + 1}.webp`)})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                          }}
+                        ></div>
+                      </a>
+                    </Carousel.Item>
+                  ))}
                 </Carousel>
+
                 {/* <div
                   id="carouselExampleIndicators"
                   className="carousel slide"
@@ -148,58 +175,60 @@ export function AuthPage() {
 
 
                 <div className="d-flex flex-column">
-                  <div className="mt-10">
+                  {/* <div className="mt-10">
                     <h1>Technology Partners</h1>
-                  </div>
+                  </div> */}
+
+                  <h5 className="mt-8 text-black font-bold text-base sm:text-lg py-1">
+                    Technology Partners
+                  </h5>
 
 
-
-
-                  <div className="d-flex mt-9">
+                  <div className="d-flex mt-6 mb-8">
                     <Marquee
                       speed={40}
                       gradient={false}
                       pauseOnHover={true}
                     >
                       <img
-                        src="/media/bg/tech-partner1.png"
-                        alt="Partner 1"
+                        src="/media/bg/Marquee/Marquee1.png"
+            
                         style={{ height: 50, marginRight: 30 }}
                       />
                       <img
-                        src="/media/bg/tech-partner2.png"
-                        alt="Partner 2"
+                        src="/media/bg/Marquee/Marquee2.png"
+                   
                         style={{ height: 50, marginRight: 30 }}
                       />   <img
-                        src="/media/bg/tech-partner2.png"
-                        alt="Partner 2"
+                        src="/media/bg/Marquee/Marquee3.png"
+                   
                         style={{ height: 50, marginRight: 30 }}
                       />   <img
-                        src="/media/bg/tech-partner2.png"
-                        alt="Partner 2"
+                        src="/media/bg/Marquee/Marquee4.png"
+                    
                         style={{ height: 50, marginRight: 30 }}
                       />   <img
-                        src="/media/bg/tech-partner2.png"
-                        alt="Partner 2"
+                        src="/media/bg/Marquee/Marquee5.png"
+                   
                         style={{ height: 50, marginRight: 30 }}
                       />   <img
-                        src="/media/bg/tech-partner2.png"
-                        alt="Partner 2"
+                        src="/media/bg/Marquee/Marquee6.png"
+                     
                         style={{ height: 50, marginRight: 30 }}
                       />
                       <img
-                        src="/media/bg/tech-partner3.png"
-                        alt="Partner 3"
+                        src="/media/bg/Marquee/Marquee7.png"
+                      
                         style={{ height: 50, marginRight: 30 }}
                       />
                       <img
-                        src="/media/bg/tech-partner4.png"
-                        alt="Partner 4"
+                        src="/media/bg/Marquee/Marquee1.png"
+                   
                         style={{ height: 50, marginRight: 30 }}
                       />
                       <img
-                        src="/media/bg/tech-partner1.png"
-                        alt="Partner 5"
+                        src="/media/bg/Marquee/Marquee2.png"
+                    
                         style={{ height: 50, marginRight: 30 }}
                       />
                     </Marquee>
@@ -217,45 +246,49 @@ export function AuthPage() {
                 <div>
                   <div className="mt-4">
                     {/* <Linkedin className="w-6 h-6 pl-2 text-black cursor-pointer"/> */}
-                    <img
-                      src="/media/bg/facebook.svg"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0"
+                    <a href="https://pk.linkedin.com/company/dynasoftcloud" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-Linkedin.svg"
 
-                    />  <img
-                      src="/media/bg/youtube.svg"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0"
+                        // className="partner-image"
+                        className="ml-2 w-5 h-5"
 
-                    />  <img
-                      src="/media/bg/linkedin.svg"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0"
+                      />
+                    </a>
+                    <a href="https://www.facebook.com/dynasoftcloud" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-Facebook.svg"
+                        className="ml-2 w-5 h-5"
+                        alt="Facebook"
+                      />
+                    </a>
 
-                    />  <img
-                      src="/media/bg/instagram.svg"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0"
+                    <a href="https://www.instagram.com/dynasoftcloud/" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-Instagram.svg"
 
-                    />  <img
-                      src="/media/bg/mail.svg"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0"
+                        // className="partner-image"
+                        className="ml-2 w-5 h-5"
 
-                    />
+                      />
 
-                    {/* <Facebook  className="w-6 h-6 pl-2 text-black cursor-pointer"/> */}
-                    {/* <Instagram className="w-4 h-4 pl-2text-black cursor-pointer"/> */}
-                    {/* <Youtube className="w-6 h-6 pl-2text-black cursor-pointer"/> */}
+                    </a>
+
+
+                    <a href="https://www.youtube.com/@DynasoftCloud" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-YouTube.svg"
+
+                        // className="partner-image"
+                        className="ml-2 w-5 h-5"
+
+                      />
+                    </a>
+
                   </div>
                 </div>
                 <div>
-                  <p className="mt-5 pr-2">2025 © HRMS By Dynasoft Cloud</p>
+                  <p className="mt-5 pr-2 text-black mr-2">2025 &copy; HRMS By Dynasoft Cloud</p>
                 </div>
 
 
@@ -271,12 +304,12 @@ export function AuthPage() {
 
 
 
-        </div>
+        </div >
 
         {/* left side */}
 
 
-      </div>
+      </div >
 
     </>
   );
