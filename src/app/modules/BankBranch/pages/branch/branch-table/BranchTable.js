@@ -35,17 +35,13 @@ export function BranchTable() {
     };
   }, [branchUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {   return {
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
       currentState: state.branch,
       userAccess: state?.auth?.userAccess["Branch"],
-    }},
-    shallowEqual
-  );
+    };
+  }, shallowEqual);
 
-  
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -107,7 +103,7 @@ export function BranchTable() {
         minWidth: "160px",
       },
     },
-    
+
     {
       dataField: "fullAddress",
       text: "Address",
@@ -118,7 +114,7 @@ export function BranchTable() {
         minWidth: "160px",
       },
     },
-  
+
     {
       dataField: "fullContactInfo",
       text: "Contact Information",
@@ -129,9 +125,8 @@ export function BranchTable() {
         minWidth: "160px",
       },
     },
-    
-   
-       {
+
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -163,8 +158,8 @@ export function BranchTable() {
     page: branchUIProps.queryParams.pageNumber,
   };
 
-    return (
-    <>
+  return (
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -198,6 +193,6 @@ export function BranchTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

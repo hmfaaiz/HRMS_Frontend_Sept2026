@@ -1,6 +1,7 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import React from "react";
 import { getPages, getPagesCount } from "../../../_helpers";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 export function PaginationLinks({ paginationProps }) {
   const { totalSize, sizePerPage, page, paginationSize } = paginationProps;
@@ -30,60 +31,70 @@ export function PaginationLinks({ paginationProps }) {
 
   const disabledClass = pagesCount > 1 ? "" : "disabled";
   return (
-    <>
+    <div>
       {pagesCount < 2 && <></>}
       {pagesCount > 1 && (
         <>
-          <div className={`d-flex flex-wrap py-2 mr-3 ${disabledClass}`}>
-            <a
+          <div className={`flex flex-wrap justify-center ${disabledClass}`}>
+            {/* First Page */}
+            <button
               onClick={() => handleFirstPage(paginationProps)}
-              className="btn btn-icon btn-sm btn-light btn-hover-primary mr-2 my-1"
+              className="w-6 h-6 flex justify-center items-center rounded-md border-none bg-tlight text-black mr-2 my-1"
             >
-              <i className="ki ki-bold-double-arrow-back icon-xs" />
-            </a>
-            <a
-              onClick={() => handlePrevPage(paginationProps)}
-              className="btn btn-icon btn-sm btn-light btn-hover-primary mr-2 my-1"
-            >
-              <i className="ki ki-bold-arrow-back icon-xs" />
-            </a>
+              <ChevronsLeft size={10} />
+            </button>
 
+            {/* Prev Page */}
+            <button
+              onClick={() => handlePrevPage(paginationProps)}
+              className="w-6 h-6 flex justify-center items-center rounded-md border-none bg-tlight text-black mr-2 my-1"
+            >
+              <ChevronLeft size={10} />
+            </button>
+
+            {/* Ellipsis Before */}
             {page > 1 && (
-              <a className="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">
-                ...
-              </a>
+              <span className="w-6 h-6 flex justify-center items-center text-xs text-black mr-2 my-1">...</span>
             )}
+
+            {/* Page Numbers */}
             {pages.map((p) => (
-              <a
+              <button
                 key={p}
                 onClick={() => handleSelectedPage(paginationProps, p)}
-                className={`btn btn-icon btn-sm border-0 btn-light ${
-                  page === p ? " btn-hover-primary active" : ""
-                } mr-2 my-1`}
+                className={`w-6 h-6 flex justify-center items-center text-xs rounded-md border-0 mr-2 my-1 ${
+                  page === p
+                    ? "bg-primary text-white"
+                    : "bg-tlight hover:bg-tprimary text-black"
+                }`}
               >
                 {p}
-              </a>
+              </button>
             ))}
+
+            {/* Ellipsis After */}
             {page < pagesCount && (
-              <a className="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">
-                ...
-              </a>
+              <span className="w-6 h-6 flex justify-center items-center text-xs text-black mr-2 my-1">...</span>
             )}
-            <a
+
+            {/* Next Page */}
+            <button
               onClick={() => handleNextPage(paginationProps)}
-              className="btn btn-icon btn-sm btn-light btn-hover-primary mr-2 my-1"
+              className="w-6 h-6 flex justify-center items-center rounded-md border-none bg-tlight text-black mr-2 my-1"
             >
-              <i className="ki ki-bold-arrow-next icon-xs"></i>
-            </a>
-            <a
+              <ChevronRight size={10} />
+            </button>
+
+            {/* Last Page */}
+            <button
               onClick={() => handleLastPage(paginationProps)}
-              className="btn btn-icon btn-sm btn-light btn-hover-primary mr-2 my-1"
+              className="w-6 h-6 flex justify-center items-center rounded-md border-none bg-tlight text-black mr-2 my-1"
             >
-              <i className="ki ki-bold-double-arrow-next icon-xs"></i>
-            </a>
+              <ChevronsRight size={10} />
+            </button>
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, HamburgerIcon, Menu } from "lucide-react";
+import { ChevronDown, LayoutDashboard } from "lucide-react";
 import { useLocation } from "react-router";
 import { checkIsActive } from "../../../../_helpers";
 import { shallowEqual, useSelector } from "react-redux";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./navigation_menu.css";
 import { Header } from "../../header/Header";
+import { Link } from "@material-ui/core";
 
 export function AsideMenuList({ layoutProps }) {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
@@ -87,47 +88,34 @@ export function AsideMenuList({ layoutProps }) {
       style={{ zIndex: "9999" }}
       className="sticky top-0 w-full bg-[#0093dd]"
     >
-      <Header isEmployeePortal={isEmployeePortal} company={user?.Company} toggleMenuVisibility={toggleMenuVisibility} />
+      <Header
+        isEmployeePortal={isEmployeePortal}
+        company={user?.Company}
+        toggleMenuVisibility={toggleMenuVisibility}
+      />
       {isEmployeePortal === "1" && (
         <div
-          className="w-full flex px-6"
+          className="w-full flex container-fluid"
           style={{ display: "flex", width: "100%" }}
           ref={dropdownContainerRef}
         >
-          <nav className="w-full flex items-center justify-between px-4 py-1">
+          <nav className="w-full flex items-center justify-between py-1">
             <div className="flex-1">
               <div
                 className={`xl:flex ${isVisible ? "block" : "hidden"} w-full`}
               >
-                <ul className="flex flex-col xl:flex-row xl:space-x-6 list-none my-2">
+                <ul className="flex flex-col items-end xl:flex-row xl:space-x-6 list-none mb-1">
                   <li className="relative group">
-                    <button
-                      className="p-0 bg-transparent border-none font-bold text-white focus:outline-none flex items-center"
-                      onClick={() => handleDropdown("dashboard")}
+                    <Link
+                      className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl"
+                      to="/dashboard"
                     >
-                      Dashboard
-                      <ChevronDown
-                        className={`ml-1 w-5 h-5 stroke-2 transition-transform duration-200 ${
-                          dropdownOpen === "dashboard"
-                            ? "rotate-180"
-                            : "rotate-0"
-                        }`}
-                      />
-                    </button>
-                    {/* Dropdown menu */}
-                    <div
-                      className={`absolute left-0 mt-2 min-w-56 bg-white border rounded shadow-lg transition z-50 ${
-                        dropdownOpen === "dashboard" ? "block" : "hidden"
-                      }`}
-                    >
-                      <a
-                        href="/dashboard"
-                        className="block px-4 py-2 hover:bg-gray-100"
-                      >
-                        Dashboard
-                      </a>
-                    </div>
+                      <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
+                      <span className="ml-2">Dashboard</span>
+                    </Link>
                   </li>
+                </ul>
+                <ul className="flex flex-col justify-start items-end xl:justify-end w-full text-sm xl:flex-row xl:space-x-6 list-none mb-1">
                   {UserAccess &&
                     Object.keys(UserAccess)?.map((res, idx) => {
                       const hasVisible = UserAccess[res]
@@ -145,7 +133,7 @@ export function AsideMenuList({ layoutProps }) {
                           >
                             {res.replace(/_/g, " ")}
                             <ChevronDown
-                              className={`ml-1 w-5 h-5 stroke-2 transition-transform duration-200 ${
+                              className={`ml-1 w-4 h-4 stroke-2 transition-transform duration-200 ${
                                 dropdownOpen === idx ? "rotate-180" : "rotate-0"
                               }`}
                             />

@@ -13,7 +13,7 @@ import DesignationWorkFlowFormEditDailog from "./form-edit-dialog/DesignationWor
 import { DuplicateDialog } from "./duplicate_dialog/DuplicateDialog";
 
 export function WorkflowPolicyPage({ history }) {
-  const [value1, setValue1] = useState(0);
+  const [value, setValue] = useState(0);
   const componentEvents = {
     newButtonClick: () => {
       history.push("/workflow_policy/read-all-workflow-policy/new");
@@ -65,14 +65,10 @@ export function WorkflowPolicyPage({ history }) {
   const accessDesigPage = userAccess.find(
     (item) => item.componentName === "CreateDesignationWorkflowPolicy"
   );
-  function handleChange1(event, newValue) {
-    setValue1(newValue);
-  }
 
   return (
     <FormUIProvider FormUIEvents={componentEvents}>
       <Switch>
-        
         <Route
           exact={true}
           path="/workflow_policy/read-all-workflow-policy/new"
@@ -193,7 +189,7 @@ export function WorkflowPolicyPage({ history }) {
           )}
         </Route>
       </Switch>
-      <Tabs value={value1} onChange={handleChange1}>
+      {/* <Tabs value={value} onChange={handleChange1}>
         <Tab
           style={{
             backgroundColor: "#0093dd",
@@ -212,10 +208,20 @@ export function WorkflowPolicyPage({ history }) {
           }}
           label="Designation Workflow Policy"
         />
-      </Tabs>
-      {value1 === 0 && <WorkflowFormCard accessPage={accessPage} />}
-      {value1 === 1 && (
-        <DesignationWorkflowFormCard accessPage={accessDesigPage} />
+      </Tabs> */}
+      {value === 0 && (
+        <WorkflowFormCard
+          value={value}
+          setValue={setValue}
+          accessPage={accessPage}
+        />
+      )}
+      {value === 1 && (
+        <DesignationWorkflowFormCard
+          value={value}
+          setValue={setValue}
+          accessPage={accessDesigPage}
+        />
       )}
       <ToastContainer
         position="top-right"

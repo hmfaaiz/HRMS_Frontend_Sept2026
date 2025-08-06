@@ -67,7 +67,7 @@ export function UserProfileDropdown() {
   return (
     <div className="relative text-white" ref={dropdownRef}>
       <div
-        className="flex items-center gap-2 px-3 py-2 cursor-pointer"
+        className="flex items-center gap-2 py-2 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="hidden md:inline text-sm">Hi,</span>

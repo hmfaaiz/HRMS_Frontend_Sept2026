@@ -34,7 +34,7 @@ const DesignationWorkflowFormFilter = () => {
     >
       {({ values, handleSubmit, handleBlur, setFieldValue }) => (
         <form onSubmit={handleSubmit} className="form form-label-right">
-          {/* <div className="row"> */}
+          <div className="row">
             {/* <div className="col-12 col-md-12">
               <input
                 type="text"
@@ -52,13 +52,13 @@ const DesignationWorkflowFormFilter = () => {
                 }}
               />
             </div> */}
-                  <InputSearch
-                                        values={values}
-                                        fieldName="searchQuery"
-                                        setFieldValue={setFieldValue}
-                                        handleBlur={handleBlur}
-                                        handleSubmit={handleSubmit}
-                                      />
+            <InputSearch
+              values={values}
+              fieldName="searchQuery"
+              setFieldValue={setFieldValue}
+              handleBlur={handleBlur}
+              handleSubmit={handleSubmit}
+            />
             {/* <div className="col-12 col-md-6">
               <Field
                 name="workflowType"
@@ -86,7 +86,7 @@ const DesignationWorkflowFormFilter = () => {
                 })}
               />
             </div> */}
-          {/* </div> */}
+          </div>
         </form>
       )}
     </Formik>

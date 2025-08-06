@@ -321,7 +321,7 @@ $border-radius-lg:            						.85rem !default;
 $border-radius-xl:                                  1.25rem !default; // Custom variable
 
 // Border settings
-$border-color:                                      $dark-5 !default;
+$border-color:                                      #f5f5f5 !default;
 $border-width:                                      1px !default;
 
 // Hover background color
@@ -619,7 +619,7 @@ $modal-footer-border-color:         			 	$border-color !default;
 $modal-header-border-width:         				1px !default;
 $modal-footer-border-width:         				1px !default;
 $modal-header-padding-y:            				0.8rem !default;
-$modal-header-padding-x:            				1.15rem !default;
+$modal-header-padding-x:            				0.5rem !default;
 $modal-header-padding:              				$modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
 
 $modal-xl:                         		 			1140px !default;
@@ -722,9 +722,9 @@ $code-padding:                                      0.15rem 0.5rem !default; // 
 $modal-inner-padding:                               0.75rem 1.15rem !default;
 $modal-dialog-margin:                               .5rem !default;
 $modal-dialog-margin-y-sm-up:                       1.75rem !default;
-$modal-title-color:                                 $dark !default; // Custom variable
-$modal-title-font-weight:                           500 !default; // Custom variable
-$modal-title-font-size:                             1.3rem !default; // Custom variable
+$modal-title-color:                                 $black !default; // Custom variable
+$modal-title-font-weight:                           700 !default; // Custom variable
+$modal-title-font-size:                             1.25rem !important; // Custom variable
 $modal-title-small-color:                           $text-muted !default; // Custom variable
 $modal-title-small-font-weight:                     400 !default; // Custom variable
 $modal-title-small-font-size:                       0.9rem !default; // Custom variable

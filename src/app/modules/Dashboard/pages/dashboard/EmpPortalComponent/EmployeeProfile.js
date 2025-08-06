@@ -121,8 +121,8 @@ const EmployeeProfile = () => {
                   Office Information
                 </h6>
                 {renderInfoGrid(data, [
-                  ["Company", data?.company?.name],
-                  ["Subsidiary", data?.subsidiary?.name],
+                  // ["Company", data?.company?.name],
+                  // ["Subsidiary", data?.subsidiary?.name],
                   [
                     "Reporting To",
                     data?.ReportTo
@@ -132,9 +132,9 @@ const EmployeeProfile = () => {
                       : null,
                   ],
                   ["Grade", data?.grade?.formName],
+                  // ["Payroll Group", data?.payrollGroup?.formName],
+                  // ["Team", data?.team?.formName],
                   ["Employee Type", data?.employeeType?.formName],
-                  ["Payroll Group", data?.payrollGroup?.formName],
-                  ["Team", data?.team?.formName],
                   ["Employee Status", data?.employeeStatus?.formName],
                   ["Default Shift", data?.defaultShift?.name],
                 ])}
@@ -144,11 +144,11 @@ const EmployeeProfile = () => {
                   Personal Information
                 </h6>
                 {renderInfoGrid(data, [
-                  ["Country", data?.country?.name],
-                  ["City", data?.city?.name],
+                  // ["Country", data?.country?.name],
+                  // ["City", data?.city?.name],
                   ["Location", data?.location?.formName],
-                  ["Region", data?.region?.formName],
-                  ["Gender", data?.gender],
+                  // ["Region", data?.region?.formName],
+                  // ["Gender", data?.gender],
                   [
                     "Date of Joining",
                     formatDate(data?.dateOfJoining, "yy-MMM-yyyy"),
@@ -157,15 +157,15 @@ const EmployeeProfile = () => {
                     "Date of Confirmation",
                     formatDate(data?.dateOfConfirmation, "yy-MMM-yyyy"),
                   ],
-                  [
-                    "Date of Birth",
-                    formatDate(data?.dateOfBirth, "dd-MMM-yyyy"),
-                  ],
+                  // [
+                  //   "Date of Birth",
+                  //   formatDate(data?.dateOfBirth, "dd-MMM-yyyy"),
+                  // ],
                   ["ID Card No", data?.nic_no],
-                  ["Official Email", data?.email_official],
-                  ["Cell No", data?.phone_cell],
-                  ["Phone (Home)", data?.phone_home],
-                  ["Passport No", data?.passportNo],
+                  // ["Official Email", data?.email_official],
+                  // ["Cell No", data?.phone_cell],
+                  // ["Phone (Home)", data?.phone_home],
+                  // ["Passport No", data?.passportNo],
                 ])}
               </>
             )}

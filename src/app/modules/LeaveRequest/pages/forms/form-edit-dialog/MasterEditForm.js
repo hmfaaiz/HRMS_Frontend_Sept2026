@@ -305,40 +305,48 @@ export function MasterEditForm({
                   </div>
                   {/* Remarks Field End */}
                   <div className="col-span-1">
-                    <label >
-                      {" "}
-                      Attachment:{" "}
+                    <label
+                      htmlFor="file_input"
+                      // className="block mb-2 text-xs font-normal text-gray-900"
+                    >
+                      Attachment
                     </label>
+
+                    {/* Hidden input */}
                     <input
+                      id="file_input"
                       name="file"
-                      className="w-full"
                       type="file"
                       accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
                       ref={inputFile}
+                      className="hidden"
                       onChange={(event) => {
-                        // Update Formik's value
                         const file = event.currentTarget.files[0];
                         setFieldValue("file", file);
                       }}
                     />
-                    <div>
-                      <br />
-                      {values.fileName && values.file == values.fileName && (
-                        <>
-                          <label>
-                            <strong>Existing File:</strong>
-                          </label>
-                          {
-                            <a
-                              href={getUploadUrl(values.fileName)}
-                              target="_blank"
-                            >
-                              <span>{getFileName(values.fileName)}</span>
-                            </a>
-                          }
-                        </>
-                      )}
-                    </div>
+
+                    {/* Styled label as upload box */}
+                    <label
+                      htmlFor="file_input"
+                      className="form-control block w-full cursor-pointer"
+                    >
+                      {values.file ? values.file.name : "Upload"}
+                    </label>
+
+                    {/* Show existing file if any */}
+                    {values.fileName && values.file === values.fileName && (
+                      <div className="mt-2">
+                        <strong>Existing File: </strong>
+                        <a
+                          href={getUploadUrl(values.fileName)}
+                          target="_blank"
+                          className="text-blue-600 underline"
+                        >
+                          {getFileName(values.fileName)}
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </fieldset>

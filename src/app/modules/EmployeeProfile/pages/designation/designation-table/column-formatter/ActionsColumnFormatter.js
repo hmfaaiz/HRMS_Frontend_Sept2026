@@ -3,6 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -17,27 +18,24 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadDesignationDialog,
-    isAccessForRead
+    isAccessForRead,
   }
 ) {
   const isUserRead = false;
   return (
-    <>
-    {isAccessForRead && (
-      <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
-        <a
-          title=""
-            className="btn btn-icon view-button"
-          onClick={() => openReadDesignationDialog(row.Id, isUserRead)}
+    <div className="space-x-2">
+      {isAccessForRead && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
         >
-          <span className="svg-icon svg-icon-md svg-icon-primary">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-            />
-          </span>
-        </a>
-      </OverlayTrigger>
+          <a
+            title=""
+            className=""
+            onClick={() => openReadDesignationDialog(row.Id, isUserRead)}
+          >
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
       )}
       {isAccessForEdit && row.isActive && (
         <OverlayTrigger
@@ -45,19 +43,13 @@ export function ActionsColumnFormatter(
         >
           <a
             title=""
-           className="btn btn-icon edit-button"
+            className=""
             onClick={() => openEditDesignationDialog(row.Id)}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
-
-      <> </>
 
       {isAccessForDelete && (
         <OverlayTrigger
@@ -70,15 +62,9 @@ export function ActionsColumnFormatter(
           {row.isActive ? (
             <a
               title=""
-              className="btn btn-icon delete-button"
               onClick={() => openDeleteDesignationDialog(row.Id, row.isActive)}
             >
-              <span className="svg-icon svg-icon-md svg-icon-danger">
-                <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
-                  title=""
-                />
-              </span>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
           ) : (
             <div></div>
@@ -92,6 +78,6 @@ export function ActionsColumnFormatter(
           )}
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

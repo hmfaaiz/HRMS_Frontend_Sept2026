@@ -135,23 +135,25 @@ export const EmployeePortal = () => {
             <div className="hidden lg:block">
               <EmployeePortalMenu name="Dashboard" />
             </div>
-            {/* {reportingEmployee && reportingEmployee?.length > 0 && ( */}
-            <>
-              <div className="flex flex-col md:flex-row gap-4">
-                <PendingRequestSelf
-                  leaveApprovalCount={leaveApprovalCount?.length || 0}
-                  attendanceApprovalCount={attendanceApprovalCount?.length || 0}
-                  loanApprovalCount={loanApprovalCount?.length || 0}
-                />
-                <ReportingEmpTable
-                  empAuthorityList={
-                    reportingEmployee?.length > 0 ? reportingEmployee : []
-                  }
-                />
-              </div>
-              <EmployeePortalMenu name="My Details" />
-            </>
-            {/* )} */}
+            {reportingEmployee && reportingEmployee?.length > 0 && (
+              <>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <PendingRequestSelf
+                    leaveApprovalCount={leaveApprovalCount?.length || 0}
+                    attendanceApprovalCount={
+                      attendanceApprovalCount?.length || 0
+                    }
+                    loanApprovalCount={loanApprovalCount?.length || 0}
+                  />
+                  <ReportingEmpTable
+                    empAuthorityList={
+                      reportingEmployee?.length > 0 ? reportingEmployee : []
+                    }
+                  />
+                </div>
+                <EmployeePortalMenu name="My Details" />
+              </>
+            )}
             <div className="flex flex-col md:flex-row gap-4">
               <AttendanceSummary attendanceSummary={attendanceSummary} />
               <LeaveBalanceDetail leaveBalances={leaveBalances} />

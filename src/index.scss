@@ -102,11 +102,11 @@
 }
 
 .react-bootstrap-table {
+  margin: 10px 0px !important;
   overflow-x: auto;
   // padding: 12px !important;
   background: #ffffff;
-  border: none !important;
-  border-radius: 10px;
+  // border: none !important;
   font-family: "Noto Sans", sans-serif;
   color: #000000;
   th {
@@ -294,6 +294,11 @@ input[type="checkbox"] {
   background-color: #f5f5f5 !important;
 }
 
+.select_option__control--is-disabled {
+  border: 0.5px solid #f5f5f5 !important;
+  border-radius: 0.32rem;
+  background-color: #f5f5f5 !important;
+}
 // for invalid-feedback
 .invalid-feedback {
   font-size: 0.7rem;
@@ -303,6 +308,7 @@ input[type="checkbox"] {
 label {
   font-size: 0.85rem;
   color: #000000;
+  margin-bottom: 0px !important;
 }
 
 /* Control (main input box) */
@@ -368,7 +374,7 @@ label {
 
 /// button stype overwrite css
 .btn {
-  padding: 7px !important;
+  padding: 5px 7px !important;
   font-size: 0.8rem !important;
 }
 
@@ -383,4 +389,15 @@ label {
 
 .text-rejected {
   color: #e23f35 !important;
+}
+
+// pagination css
+.btn.btn-light i {
+  color: #000000 !important;
+  font-size: 9px !important;
+}
+.btn.btn-icon.btn-sm,
+.btn-group-sm > .btn.btn-icon {
+  height: calc(1.05em + 0.75rem + 1px) !important;
+  width: calc(1.05em + 0.75rem + 1px) !important;
 }

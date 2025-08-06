@@ -3,6 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -16,40 +17,29 @@ export function ActionsColumnFormatter(
     openReadUserDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadBranchDialog
+    openReadBranchDialog,
   }
 ) {
   const isUserRead = false;
   return (
     <>
       <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
+        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+      >
         <a
           title=""
-          className="btn btn-icon view-button"
+          className=""
           onClick={() => openReadBranchDialog(row.Id, isUserRead)}
         >
-          <span className="svg-icon svg-icon-md svg-icon-primary">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-            />
-          </span>
+          <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
       {isAccessForEdit && row.isActive && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a
-            title=""
-           className="btn btn-icon edit-button"
-            onClick={() => openEditBranchDialog(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
+          <a title="" className="" onClick={() => openEditBranchDialog(row.Id)}>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
@@ -67,23 +57,18 @@ export function ActionsColumnFormatter(
           {row.isActive ? (
             <a
               title=""
-             className="btn btn-icon delete-button"
+              className=""
               onClick={() => openDeleteBranchDialog(row.Id, row.isActive)}
             >
-              <span className="svg-icon svg-icon-md svg-icon-danger">
-                <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
-                  title=""
-                />
-              </span>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
           ) : (
             <a
               title=""
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-3"
+              className=""
               onClick={() => openActiveBranchDialog(row.Id, row.isActive)}
             >
-              <span className="svg-icon svg-icon-md svg-icon-success">A</span>
+              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
             </a>
           )}
         </OverlayTrigger>

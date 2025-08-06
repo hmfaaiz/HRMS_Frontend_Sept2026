@@ -17,8 +17,8 @@ export function PaginationToolbar(props) {
     ]
   } = paginationProps;
   const style = {
-    width: "75px",
-    color: "#f2f2f0",
+    width: "55px",
+    color: "#000000",
 
   };
 
@@ -28,7 +28,7 @@ export function PaginationToolbar(props) {
   };
 
   return (
-    <div className="d-flex align-items-center py-3">
+    <div className="flex justify-center items-center">
       {isLoading && (
         <div className="d-flex align-items-center">
           <div className="mr-2 text-muted">Loading...</div>
@@ -37,7 +37,7 @@ export function PaginationToolbar(props) {
       )}
       <select
         disabled={totalSize === 0}
-        className={`form-control form-control-sm font-weight-bold mr-4 border-0 bg-light ${totalSize ===
+        className={`text-xs bg-tsecondary rounded-sm border ${totalSize ===
           0 && "disabled"}`}
         onChange={onSizeChange}
         value={sizePerPage}
@@ -49,7 +49,7 @@ export function PaginationToolbar(props) {
             <option
               key={option.text}
               value={option.page}
-              className={`btn ${isSelect ? "active" : ""}`}
+              className={`${isSelect ? "bg-tprimary" : "bg-tsecondary "}`}
             >
               {option.text}
             </option>

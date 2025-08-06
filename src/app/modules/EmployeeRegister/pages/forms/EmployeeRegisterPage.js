@@ -4,28 +4,31 @@ import "react-toastify/dist/ReactToastify.css";
 import { Card } from "react-bootstrap";
 import { FormTable } from "./form-table/FormTable";
 import { FormFilter } from "./form-filter/FormFilter";
-import { fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllDept,
+  fetchAllFormsMenu,
+  fetchAllSubsidiaryData,
+} from "../../../../../_metronic/redux/dashboardActions";
 import { useSelector, useDispatch } from "react-redux";
 import { FormUIProvider } from "./FormUIContext";
 import { CardHeader } from "../../../../../_metronic/_partials/controls";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
+import TCard from "../../../../utils/common-modules/TCard";
 
 export function EmployeeRegisterPage() {
   const dispatch = useDispatch();
-  const {
-    dashboard,
-    listLoading,
-    pdfLoading
-  } = useSelector((state) => ({
+  const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.employee_register.listLoading,
-    pdfLoading: state.employee_register.pdfLoading
-  }
-  ));
+    pdfLoading: state.employee_register.pdfLoading,
+  }));
 
   //Get all Dropdown data from server on page load and set it in state
   useEffect(() => {
-    if (!dashboard?.allEmployeeGradeList || !dashboard?.allEmployeeGradeList?.length)
+    if (
+      !dashboard?.allEmployeeGradeList ||
+      !dashboard?.allEmployeeGradeList?.length
+    )
       dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList"));
 
     if (!dashboard?.allSubsidiaryList?.length)
@@ -34,29 +37,25 @@ export function EmployeeRegisterPage() {
     if (!dashboard?.allDesignations || !dashboard?.allDesignations?.length)
       dispatch(fetchAllFormsMenu(158, "allDesignations"));
 
-    if (!dashboard?.allLocationChildMenus || !dashboard?.allLocationChildMenus?.length)
+    if (
+      !dashboard?.allLocationChildMenus ||
+      !dashboard?.allLocationChildMenus?.length
+    )
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, [dispatch]);
 
   return (
-
     <FormUIProvider FormUIEvents={{}}>
-      < Card>
-        {/* Card Starts */}
-
-        <CardHeader title={CurrentModuleName()}>
-        </CardHeader>
-
-        {/* Filter Form Starts */}
-        <FormFilter loading={listLoading} pdfLoading={pdfLoading} dispatch={dispatch} />
-        {/* Filter Form Ends */}
-
-        {/* Table Starts */}
+      <TCard name={CurrentModuleName()}>
+        <div>
+          <FormFilter
+            loading={listLoading}
+            pdfLoading={pdfLoading}
+            dispatch={dispatch}
+          />
+        </div>
         <FormTable />
-        {/* Table Ends */}
-
-        {/* Card Ends */}
-      </Card >
+      </TCard>
       <ToastContainer
         position="top-right"
         autoClose={5000}

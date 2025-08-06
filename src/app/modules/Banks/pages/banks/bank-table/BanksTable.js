@@ -36,16 +36,15 @@ export function BanksTable() {
   }, [bankUIContext]);
 
   //console.log("queryparms", usersUIProps.queryparms)
-  const { currentState, userAccess } = useSelector(
-    (state) => {  console.log("state ",state); return {
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    console.log("state ", state);
+    return {
       currentState: state.bank,
       userAccess: state?.auth?.userAccess["Bank"],
-    }},
-    shallowEqual
-  );
+    };
+  }, shallowEqual);
   console.log("currentState", currentState);
-  
+
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -54,7 +53,7 @@ export function BanksTable() {
 
   useEffect(() => {
     bankUIProps.setIds([]);
-    console.log("test 2",bankUIProps.queryParams)
+    console.log("test 2", bankUIProps.queryParams);
     dispatch(actions.fetchUsers(bankUIProps.queryParams));
   }, [bankUIProps.queryParams, dispatch, totalCount]);
 
@@ -77,16 +76,16 @@ export function BanksTable() {
     //     minWidth: "160px",
     //   },
     // },
-   
+
     {
       dataField: "subs.subsName",
       text: "Subsidiary",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
+      // style: {
+      //   maxWidth: "160px",
+      // },
     },
     {
       dataField: "Name",
@@ -94,11 +93,11 @@ export function BanksTable() {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
+      // style: {
+      //   maxWidth: "160px",
+      // },
     },
-       {
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -130,8 +129,8 @@ export function BanksTable() {
     page: bankUIProps.queryParams.pageNumber,
   };
 
-    return (
-    <>
+  return (
+    <div className="overflow-x-auto w-full">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -165,6 +164,6 @@ export function BanksTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

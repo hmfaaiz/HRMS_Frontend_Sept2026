@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       colors: {
         tsecondary: "#E6F8FF",
+        tlight: "#F5F5F5",
+        tprimary: "#0093DD",
+        tprimarydark: "#006294",
       },
     },
   },
