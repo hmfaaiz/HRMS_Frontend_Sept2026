@@ -65,7 +65,6 @@ export function FormFilter() {
           setFieldValue,
         }) => (
           <form className="form form-label-right" style={{margin: '0.8rem 0'}}>
-            <div className="row">
               {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
@@ -93,7 +92,6 @@ export function FormFilter() {
   handleSubmit={handleSubmit}
 />
 
-            </div>
           </form>
         )}
       </Formik>

@@ -1,75 +1,72 @@
-import React, { useEffect, useMemo, useState } from "react"
-import { Field, Formik } from "formik"
+import React, { useEffect, useMemo, useState } from "react";
+import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Form, Modal } from "react-bootstrap";
-import { CardBody, DatePickerField,CardHeader } from "../../../../../../_metronic/_partials/controls";
+import {
+  CardBody,
+  DatePickerField,
+  CardHeader,
+} from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
-import { FormTable } from "../form-table/FormTable"
-import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
+import { FormTable } from "../form-table/FormTable";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
-
+import TCard from "../../../../../utils/common-modules/TCard";
 
 const formValidation = Yup.object().shape({
-  subsidiaryId: Yup.number()
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  from_date: Yup.date()
+    .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required),
-    from_date: Yup.date()
-    .typeError('Please select the date')
-    .required(VALIDATION_MESSAGES.required),
-    to_date: Yup.date()
-    .typeError('Please select the date')
+  to_date: Yup.date()
+    .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required)
-    .min(Yup.ref('from_date'), 'Date to date cannot be before Date from date'),
+    .min(Yup.ref("from_date"), "Date to date cannot be before Date from date"),
 });
-
-
-
 
 export function FormCard() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false)
-  const [bodyValues, setBodyValues] = useState()
+  const [loading, setLoading] = useState(false);
+  const [bodyValues, setBodyValues] = useState();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-
   const customSubmit = (values) => {
-      let formattedFromDate= formatDates(values?.from_date, 'yyyy-MM-dd')
-        let formattedToDate=  formatDates(values?.to_date, 'yyyy-MM-dd')
-           dispatch(actions.fetchHolidays( {...values, from_date: formattedFromDate, to_date: formattedToDate }, setLoading));
+    let formattedFromDate = formatDates(values?.from_date, "yyyy-MM-dd");
+    let formattedToDate = formatDates(values?.to_date, "yyyy-MM-dd");
+    dispatch(
+      actions.fetchHolidays(
+        { ...values, from_date: formattedFromDate, to_date: formattedToDate },
+        setLoading
+      )
+    );
     // dispatch(actions.fetchHolidays(values, setLoading));
-  }
+  };
 
-
-  const { currentState, dashboard } = useSelector(
-    (state) => {
-      return {
-        currentState: state?.calendar,
-        dashboard: state?.dashboard,
-      };
-    }
-  );
+  const { currentState, dashboard } = useSelector((state) => {
+    return {
+      currentState: state?.calendar,
+      dashboard: state?.dashboard,
+    };
+  });
 
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-
-
   }, [dispatch]);
 
-
-  ;
   const { holidayCalendar } = currentState;
 
   useEffect(() => {
     if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
       const firstSubsidiary = dashboard.allSubsidiaryList[0];
       setBodyValues({
-        from_date: firstSubsidiary.fiscalYear?.startDate || '',
-        to_date: firstSubsidiary.fiscalYear?.endDate || '',
-        subsidiaryId: firstSubsidiary.value || ''
+        from_date: firstSubsidiary.fiscalYear?.startDate || "",
+        to_date: firstSubsidiary.fiscalYear?.endDate || "",
+        subsidiaryId: firstSubsidiary.value || "",
       });
       setIsDataLoaded(true); // Mark data as loaded
     }
@@ -80,82 +77,265 @@ export function FormCard() {
     if (isDataLoaded && bodyValues?.subsidiaryId) {
       customSubmit(bodyValues);
     }
-  }, [isDataLoaded, bodyValues])
-
+  }, [isDataLoaded, bodyValues]);
 
   return (
-    <>
-      <Card>
+    // <>
+    //   <Card>
+    //     <CardHeader title={CurrentModuleName()}></CardHeader>
 
-        <CardHeader title={CurrentModuleName()} >
+    //     <Formik
+    //       enableReinitialize={true}
+    //       initialValues={{
+    //         from_date: bodyValues?.from_date,
+    //         to_date: bodyValues?.to_date,
+    //         subsidiaryId: bodyValues?.subsidiaryId,
+    //       }}
+    //       validationSchema={formValidation}
+    //       onSubmit={(values) => {
+    //         customSubmit(values);
+    //       }}
+    //     >
+    //       {({
+    //         handleSubmit,
+    //         handleBlur,
+    //         setFieldValue,
+    //         handleReset,
+    //         values,
+    //         touched,
+    //         errors,
+    //       }) => (
+    //         <>
+    //           <Modal.Body className="overlay overlay-block cursor-default">
+    //             <Form className="form form-label-right">
+    //               <fieldset>
+    //                 <div
+    //                   style={{
+    //                     backgroundColor: "rgb(235 243 255)",
+    //                     marginTop: "15px",
+    //                     padding: "20px",
+    //                     borderRadius: "5px",
+    //                     border: "2px solid #adceff",
+    //                   }}
+    //                 >
+    //                   <h6>Holiday Calendar</h6>
+
+    //                   <div className="from-group row">
+    //                     <div className="col-12 col-md-4 mt-3">
+    //                       <SearchSelect
+    //                         name="subsidiaryId"
+    //                         label={
+    //                           <span>
+    //                             Subsidiary
+    //                             <span style={{ color: "red" }}>*</span>
+    //                           </span>
+    //                         }
+    //                         onChange={(e) => {
+    //                           setFieldValue("subsidiaryId", e.value || null);
+    //                         }}
+    //                         value={
+    //                           dashboard?.allSubsidiaryList?.find(
+    //                             (option) =>
+    //                               option?.value === values?.subsidiaryId
+    //                           ) || null
+    //                         }
+    //                         options={dashboard?.allSubsidiaryList}
+    //                         error={errors.subsidiaryId}
+    //                         touched={touched.subsidiaryId}
+    //                       />
+    //                     </div>
+
+    //                     {/* 
+    //                     <div className="col-12 col-md-4 mt-3">
+    //                       <Field
+    //                         name="from_date"
+    //                         component={DatePickerField}
+    //                         dateFormat="dd/MM/yyyy"
+    //                         className="form-control"
+
+    //                         label={
+    //                           <span>
+    //                             {" "}
+    //                             Date From<span style={{ color: "red" }}>*</span>
+    //                           </span>
+    //                         }
+    //                         onChange={(date) => {
+    //                           setFieldValue('from_date', date)
+    //                           setFieldValue('to_date', date)
+    //                         }}
+    //                         autoComplete="off"
+    //                       />
+    //                     </div>
 
 
 
-        </CardHeader>
+    //                     <div className="col-12 col-md-4 mt-3">
+    //                       <Field
+    //                         name="to_date"
+    //                         component={DatePickerField}
+    //                         onBlur={handleBlur}
+    //                         className="form-control"
+    //                         dateFormat="dd/MM/yyyy"
+    //                         label={
+    //                           <span>
+    //                             {" "}
+    //                             Date To<span style={{ color: "red" }}>*</span>
+    //                           </span>
+    //                         }
+    //                         onChange={(date) => {
+    //                           setFieldValue('to_date', date)
+    //                         }}
+    //                         autoComplete="off"
+    //                       />
+    //                     </div> */}
 
-        <Formik
-          enableReinitialize={true}
-          initialValues={{
-            from_date: bodyValues?.from_date,
-            to_date: bodyValues?.to_date,
-            subsidiaryId: bodyValues?.subsidiaryId,
+    //                     <div className="col-12 col-md-4 mt-3">
+    //                       <label>
+    //                         From Date<span style={{ color: "red" }}>*</span>
+    //                       </label>
+    //                       <DatePicker
+    //                         className="form-control"
+    //                         placeholder="From Date "
+    //                         selected={
+    //                           values?.from_date
+    //                             ? new Date(values.from_date)
+    //                             : null
+    //                         }
+    //                         onChange={(date) => {
+    //                           setFieldValue("from_date", date);
+    //                           setFieldValue("to_date", date); // Sync from_date and to_date
+    //                         }}
+    //                         timeInputLabel="Time:"
+    //                         dateFormat="dd-MMM-yyyy"
+    //                         // showTimeInput
+    //                         name="from_date"
+    //                         autoComplete="off"
+    //                       />
+    //                     </div>
 
-          }}
-          validationSchema={formValidation}
-          onSubmit={(values) => {
+    //                     {/* Date To Selector */}
+    //                     <div className="col-12 col-md-4 mt-3">
+    //                       <label>
+    //                         Date To<span style={{ color: "red" }}>*</span>
+    //                       </label>
+    //                       <DatePicker
+    //                         className="form-control"
+    //                         placeholder="To Date "
+    //                         selected={
+    //                           values?.to_date ? new Date(values.to_date) : null
+    //                         }
+    //                         onChange={(date) => {
+    //                           setFieldValue("to_date", date);
+    //                         }}
+    //                         timeInputLabel="Time:"
+    //                         dateFormat="dd-MMM-yyyy"
+    //                         // showTimeInput
+    //                         name="to_date"
+    //                         autoComplete="off"
+    //                       />
+    //                     </div>
+    //                   </div>
+    //                 </div>
+    //               </fieldset>
+    //             </Form>
+    //           </Modal.Body>
+    //           <Modal.Footer>
+    //             <button
+    //               type="button"
+    //               onClick={() => {
+    //                 handleReset();
+    //                 dispatch(actions.clearEvents());
+    //               }}
+    //               className="btn btn-danger btn-elevate"
+    //             >
+    //               Cancel
+    //             </button>
 
-            customSubmit(values)
-          }}
-        >
-          {({
-            handleSubmit,
-            handleBlur,
-            setFieldValue,
-            handleReset, values, touched, errors,
+    //             <button
+    //               onClick={() => {
+    //                 customSubmit(values);
+    //               }}
+    //               disabled={!values.from_date || !values.to_date}
+    //               className="btn btn-success btn-elevate"
+    //             >
+    //               Filter Record
+    //               {loading && (
+    //                 <span className="ml-3 mr-3 spinner spinner-white"></span>
+    //               )}
+    //             </button>
+    //           </Modal.Footer>
+    //         </>
+    //       )}
+    //     </Formik>
 
-          }) => (
-            <>
-              <Modal.Body className="overlay overlay-block cursor-default">
-                <Form className="form form-label-right">
-                  <fieldset>
+    //     <CardBody>
+    //       {holidayCalendar && holidayCalendar.length > 0 && <FormTable />}
+    //     </CardBody>
+    //   </Card>
+      <TCard name={CurrentModuleName()}>
+        <div className="">
+          <Formik
+            enableReinitialize={true}
+            initialValues={{
+              from_date: bodyValues?.from_date,
+              to_date: bodyValues?.to_date,
+              subsidiaryId: bodyValues?.subsidiaryId,
+            }}
+            validationSchema={formValidation}
+            onSubmit={(values) => {
+              customSubmit(values);
+            }}
+          >
+            {({
+              handleSubmit,
+              handleBlur,
+              setFieldValue,
+              handleReset,
+              values,
+              touched,
+              errors,
+            }) => (
+              <>
+                <Modal.Body className="overlay overlay-block cursor-default">
+                  <Form className="form form-label-right">
+                    <fieldset>
+                      <div
+                        style={{
+                          backgroundColor: "rgb(235 243 255)",
+                          marginTop: "15px",
+                          padding: "20px",
+                          borderRadius: "5px",
+                          border: "2px solid #adceff",
+                        }}
+                      >
+                        <h6>Holiday Calendar</h6>
 
+                        <div className="from-group row">
+                          <div className="col-12 col-md-4 mt-3">
+                            <SearchSelect
+                              name="subsidiaryId"
+                              label={
+                                <span>
+                                  Subsidiary
+                                  <span style={{ color: "red" }}>*</span>
+                                </span>
+                              }
+                              onChange={(e) => {
+                                setFieldValue("subsidiaryId", e.value || null);
+                              }}
+                              value={
+                                dashboard?.allSubsidiaryList?.find(
+                                  (option) =>
+                                    option?.value === values?.subsidiaryId
+                                ) || null
+                              }
+                              options={dashboard?.allSubsidiaryList}
+                              error={errors.subsidiaryId}
+                              touched={touched.subsidiaryId}
+                            />
+                          </div>
 
-
-
-                    <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                      <h6>Holiday Calendar</h6>
-
-                      <div className="from-group row">
-
-                        <div className="col-12 col-md-4 mt-3">
-
-
-                          <SearchSelect
-                            name="subsidiaryId"
-                            label={
-                              <span>
-                                Subsidiary<span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-
-                            onChange={(e) => {
-                              setFieldValue("subsidiaryId", e.value || null);
-
-                            }}
-                            value={
-                              dashboard?.allSubsidiaryList?.find(
-                                (option) => option?.value === values?.subsidiaryId
-                              ) || null
-                            }
-                            options={dashboard?.allSubsidiaryList}
-
-
-                            error={errors.subsidiaryId}
-                            touched={touched.subsidiaryId}
-                          />
-                        </div>
-
-{/* 
+                          {/* 
                         <div className="col-12 col-md-4 mt-3">
                           <Field
                             name="from_date"
@@ -200,112 +380,88 @@ export function FormCard() {
                         </div> */}
 
                           <div className="col-12 col-md-4 mt-3">
-
-
-                            <label>From Date<span style={{ color: "red" }}>*</span></label>
+                            <label>
+                              From Date<span style={{ color: "red" }}>*</span>
+                            </label>
                             <DatePicker
                               className="form-control"
                               placeholder="From Date "
-                              selected={values?.from_date ? new Date(values.from_date) : null}
-
+                              selected={
+                                values?.from_date
+                                  ? new Date(values.from_date)
+                                  : null
+                              }
                               onChange={(date) => {
                                 setFieldValue("from_date", date);
                                 setFieldValue("to_date", date); // Sync from_date and to_date
-
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="from_date"
-
                               autoComplete="off"
-
-
-
                             />
-
                           </div>
 
                           {/* Date To Selector */}
                           <div className="col-12 col-md-4 mt-3">
-
-
-                            <label>Date To<span style={{ color: "red" }}>*</span></label>
+                            <label>
+                              Date To<span style={{ color: "red" }}>*</span>
+                            </label>
                             <DatePicker
                               className="form-control"
                               placeholder="To Date "
-                              selected={values?.to_date ? new Date(values.to_date) : null}
-
+                              selected={
+                                values?.to_date
+                                  ? new Date(values.to_date)
+                                  : null
+                              }
                               onChange={(date) => {
                                 setFieldValue("to_date", date);
-
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="to_date"
-
                               autoComplete="off"
-
-
-
                             />
-
                           </div>
-
+                        </div>
                       </div>
+                    </fieldset>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleReset();
+                      dispatch(actions.clearEvents());
+                    }}
+                    className="btn btn-danger btn-elevate"
+                  >
+                    Cancel
+                  </button>
 
-                    </div>
-
-
-
-                  </fieldset>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleReset();
-                    dispatch(actions.clearEvents());
-                  }}
-                  className="btn btn-danger btn-elevate"
-                >
-                  Cancel
-                </button>
-
-                <button
-
-                  onClick={() => { customSubmit(values) }}
-                  disabled={!values.from_date || !values.to_date}
-                  className="btn btn-success btn-elevate"
-                >
-                  Filter Record
-                  {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
-
-
-              </Modal.Footer>
-
-
-
-            </>
-          )}
-        </Formik>
-
-
-        <CardBody>
-          {holidayCalendar && holidayCalendar.length > 0 && <FormTable />}
-        </CardBody>
-
-      </Card>
-
-
-
-
-    </>
-  )
+                  <button
+                    onClick={() => {
+                      customSubmit(values);
+                    }}
+                    disabled={!values.from_date || !values.to_date}
+                    className="btn btn-success btn-elevate"
+                  >
+                    Filter Record
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+                </Modal.Footer>
+              </>
+            )}
+          </Formik>
+        </div>
+        {holidayCalendar && holidayCalendar.length > 0 && <FormTable />}
+      </TCard>
+    // </>
+  );
 }

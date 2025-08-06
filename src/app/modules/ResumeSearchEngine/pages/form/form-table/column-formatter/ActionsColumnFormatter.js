@@ -3,46 +3,26 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Eye } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
 
-  {
- 
-    isAccessForView,
-    openReadFormDialog,
-
-
-  }
+  { isAccessForView, openReadFormDialog }
 ) {
   const isUserRead = false;
   return (
-  
-
-    <div className="d-flex flex-nowrap align-items-center">
-
-
-
-
-  {/* View */}
-  {isAccessForView && (
-    <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
-      <a
-        className="btn btn-icon view-button"
-        onClick={() => openReadFormDialog(row.Id)}
-      >
-        <span className="svg-icon svg-icon-md svg-icon-primary">
-          <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
-        </span>
-      </a>
-    </OverlayTrigger>
-  )}
-
-
-
-</div>
-
+    <div className="space-x-2">
+      {/* View */}
+      {isAccessForView && (
+        <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
+          <a className="" onClick={() => openReadFormDialog(row.Id)}>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+    </div>
   );
 }

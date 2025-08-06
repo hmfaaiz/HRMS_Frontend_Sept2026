@@ -38,19 +38,12 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-      return {
-
-
-        currentState: state.job_vacancy,
-        userAccess: state?.auth?.userAccess["job_vacancy"],
-      }
-    },
-    shallowEqual
-  );
-
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.job_vacancy,
+      userAccess: state?.auth?.userAccess["job_vacancy"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -61,10 +54,8 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setIds([]);
 
-
     dispatch(actions.fetchJobVacancy(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
-
 
   const isAccessForView = userAccess?.find(
     (item) => item.componentName === "ReadJobVacancy"
@@ -76,8 +67,6 @@ export function FormTable() {
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteJobVacancy"
   );
-
-
 
   // Posting
 
@@ -107,7 +96,7 @@ export function FormTable() {
     }
   };
 
-    const vacancyStatusOptions = [
+  const vacancyStatusOptions = [
     { value: null, label: "All" },
     { value: 0, label: "Vacancy not posted" },
     { value: 1, label: "Currently Posted" },
@@ -116,7 +105,6 @@ export function FormTable() {
   ];
 
   const columns = [
-
     {
       dataField: "CONCATJobTitle",
       text: "Job Code / Job Title",
@@ -136,7 +124,9 @@ export function FormTable() {
       style: {
         minWidth: "100px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
 
     {
@@ -178,7 +168,9 @@ export function FormTable() {
       style: {
         minWidth: "10px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
 
     {
@@ -198,23 +190,15 @@ export function FormTable() {
       isDummyField: true,
       formatter: ActionsColumnFormatter,
       formatExtraData: {
-
         openPostingFormDialog: formUIProps.openPostingFormDialog,
         openHoldFormDialog: formUIProps.openHoldFormDialog,
         openCloseFormDialog: formUIProps.openCloseFormDialog,
 
+        isAccessForPosting: isAccessForPost ? isAccessForPost.isAccess : false,
 
-        isAccessForPosting: isAccessForPost
-          ? isAccessForPost.isAccess
-          : false,
+        isAccessForHold: isAccessForHold ? isAccessForHold.isAccess : false,
 
-        isAccessForHold: isAccessForHold
-          ? isAccessForHold.isAccess
-          : false,
-
-        isAccessForClose: isAccessForClose
-          ? isAccessForClose.isAccess
-          : false,
+        isAccessForClose: isAccessForClose ? isAccessForClose.isAccess : false,
       },
 
       classes: "text-center pr-4",
@@ -239,14 +223,12 @@ export function FormTable() {
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
-
-
       },
 
-      classes: "text-center pr-0",
-      headerClasses: "text-center pr-3",
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
       style: {
-        minWidth: "100px",
+        minWidth: "170px",
       },
     },
   ];
@@ -261,7 +243,7 @@ export function FormTable() {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -295,6 +277,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

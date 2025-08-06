@@ -1,30 +1,28 @@
-import React, { useMemo } from "react"
-import { Formik } from "formik"
-import { isEqual } from "lodash"
-import { useFormUIContext } from "../FormUIContext"
+import React, { useMemo } from "react";
+import { Formik } from "formik";
+import { isEqual } from "lodash";
+import { useFormUIContext } from "../FormUIContext";
 import { useDispatch } from "react-redux";
-
 
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
-
-
-
-
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values
-  const newQueryParams = { ...queryParams }
-  const filter = {}
+  const { searchText } = values;
+  const newQueryParams = { ...queryParams };
+  const filter = {};
 
   if (searchText) {
-    filter.searchQuery = searchText
+    filter.searchQuery = searchText;
     // filter.email = searchText
   }
-  newQueryParams.filter = filter
-  return newQueryParams
-}
+  newQueryParams.filter = filter;
+  return newQueryParams;
+};
 
-export function FormFilter({ listLoading, user, setCity,
+export function FormFilter({
+  listLoading,
+  user,
+  setCity,
   seletCity,
   setCenter,
   center,
@@ -33,53 +31,37 @@ export function FormFilter({ listLoading, user, setCity,
   subCenter,
   alarmTime,
   setAlarmTime,
-  setVehicle, }) {
-
-
+  setVehicle,
+}) {
   const dispatch = useDispatch();
-  const FormUIContext = useFormUIContext()
-
-
-
-
+  const FormUIContext = useFormUIContext();
 
   const formUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
       setQueryParams: FormUIContext.setQueryParams,
-    }
-  }, [FormUIContext])
-
- 
-
-
-
-
+    };
+  }, [FormUIContext]);
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
-
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1
+      newQueryParams.pageNumber = 1;
       // update list by queryParams
-  
- 
-      formUIProps.setQueryParams(newQueryParams)
+
+      formUIProps.setQueryParams(newQueryParams);
     }
-  }
+  };
 
   return (
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={{
-        
-        }}
+        initialValues={{}}
         onSubmit={(values) => {
- 
           // createPdf(values);
-          applyFilter(values)
+          applyFilter(values);
         }}
       >
         {({
@@ -90,12 +72,9 @@ export function FormFilter({ listLoading, user, setCity,
           setFieldValue,
           errors,
           touched,
-
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
-
-              {/* <div className="col-12 col-md-12">
+            {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -113,21 +92,16 @@ export function FormFilter({ listLoading, user, setCity,
                 </small>
               </div> */}
 
-                            <InputSearch
-  values={values}
-  fieldName="searchText"
-  setFieldValue={setFieldValue}
-  handleBlur={handleBlur}
-  handleSubmit={handleSubmit}
-/>
-            </div>
+            <InputSearch
+              values={values}
+              fieldName="searchText"
+              setFieldValue={setFieldValue}
+              handleBlur={handleBlur}
+              handleSubmit={handleSubmit}
+            />
           </form>
         )}
       </Formik>
-
-   
     </>
-  )
-
-
+  );
 }

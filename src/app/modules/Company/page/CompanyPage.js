@@ -14,6 +14,8 @@ import { ToastContainer } from "react-toastify";
 import { CompanyDeleteDialog } from "./form/company-delete-dailog/CompanyDeleteDailog";
 import { CompanyTable } from "./form/form-table/FormTable";
 import FormFilter from "../page/form/form-filter/FormFilter";
+import TCard from "../../../utils/common-modules/TCard";
+import { CirclePlus } from "lucide-react";
 export function CompanyPage({ history }) {
   const componentEvents = {
     newButtonClick: () => {
@@ -82,7 +84,7 @@ export function CompanyPage({ history }) {
           />
         )}
       </Route>
-      <Card>
+      {/* <Card>
         <CardHeader title={CurrentModuleName()}>
           <CardHeaderToolbar>
             <div className="pr-5">
@@ -102,7 +104,29 @@ export function CompanyPage({ history }) {
         <CardBody>
           <CompanyTable />
         </CardBody>
-      </Card>
+      </Card> */}
+      <TCard name={CurrentModuleName()}>
+        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+          <FormFilter />
+          <div className="flex items-center gap-2">
+            {/* <CardHeaderToolbar> */}
+            {accessPage && (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                onClick={componentEvents.newButtonClick}
+                >
+                  <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+                  Add 
+                </button>
+              </>
+            )}
+            {/* </CardHeaderToolbar> */}
+          </div>
+        </div>
+          <CompanyTable />
+      </TCard>
       <ToastContainer
         position="top-right"
         autoClose={5000}

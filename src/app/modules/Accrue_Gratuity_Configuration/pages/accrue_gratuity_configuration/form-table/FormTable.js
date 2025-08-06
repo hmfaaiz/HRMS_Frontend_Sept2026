@@ -151,7 +151,7 @@ export function FormTable() {
   };
 
     return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -185,6 +185,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

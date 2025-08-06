@@ -1,87 +1,86 @@
-import React, { useEffect, useMemo, useState } from "react"
-import { Field, Formik } from "formik"
+import React, { useEffect, useMemo, useState } from "react";
+import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Form, Modal } from "react-bootstrap";
-import { CardBody, DatePickerField, CardHeader } from "../../../../../../_metronic/_partials/controls";
+import {
+  CardBody,
+  DatePickerField,
+  CardHeader,
+} from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
-import { FormTable } from "../form-table/FormTable"
-import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
+import { FormTable } from "../form-table/FormTable";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { fetchAllActiveEmployees, fetchAllActiveEmployeesBySubsidiary, fetchAllDept, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllActiveEmployees,
+  fetchAllActiveEmployeesBySubsidiary,
+  fetchAllDept,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
-
+import TCard from "../../../../../utils/common-modules/TCard";
 
 const formValidation = Yup.object().shape({
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
   from_date: Yup.date()
-    .typeError('Please select the date')
+    .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required),
   to_date: Yup.date()
-    .typeError('Please select the date')
+    .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required)
-    .min(Yup.ref('from_date'), 'Date to date cannot be before Date from date'),
-
+    .min(Yup.ref("from_date"), "Date to date cannot be before Date from date"),
 });
-
-
-
 
 export function FormCard() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false)
-  const [bodyValues, setBodyValues] = useState()
+  const [loading, setLoading] = useState(false);
+  const [bodyValues, setBodyValues] = useState();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-
   const customSubmit = (values) => {
-    let formattedFromDate = formatDates(values?.from_date, 'yyyy-MM-dd')
-    let formattedToDate = formatDates(values?.to_date, 'yyyy-MM-dd')
+    let formattedFromDate = formatDates(values?.from_date, "yyyy-MM-dd");
+    let formattedToDate = formatDates(values?.to_date, "yyyy-MM-dd");
 
-    dispatch(actions.fetchLeaves({ ...values, from_date: formattedFromDate, to_date: formattedToDate }, setLoading));
-  }
+    dispatch(
+      actions.fetchLeaves(
+        { ...values, from_date: formattedFromDate, to_date: formattedToDate },
+        setLoading
+      )
+    );
+  };
 
-
-  const { currentState, dashboard } = useSelector(
-    (state) => {
-      return {
-        currentState: state?.leave_calendar,
-        dashboard: state?.dashboard,
-      };
-    }
-  );
+  const { currentState, dashboard } = useSelector((state) => {
+    return {
+      currentState: state?.leave_calendar,
+      dashboard: state?.dashboard,
+    };
+  });
 
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-
-
   }, [dispatch]);
-
-
-
 
   const { leaveCalendar } = currentState;
 
   const setInitialValues = (firstSubsidiary) => {
     setBodyValues({
-      from_date: firstSubsidiary?.payrollMonth?.startDate || '',
-      to_date: firstSubsidiary?.payrollMonth?.endDate || '',
-      subsidiaryId: firstSubsidiary?.value || ''
+      from_date: firstSubsidiary?.payrollMonth?.startDate || "",
+      to_date: firstSubsidiary?.payrollMonth?.endDate || "",
+      subsidiaryId: firstSubsidiary?.value || "",
     });
     setIsDataLoaded(true); // Mark data as loaded
     dispatch(fetchAllActiveEmployeesBySubsidiary(firstSubsidiary?.value));
-
-  }
+  };
 
   useEffect(() => {
     if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
       const firstSubsidiary = dashboard.allSubsidiaryList[0];
       dispatch(fetchAllDept(dashboard.allSubsidiaryList[0].value));
-      setInitialValues(firstSubsidiary)
+      setInitialValues(firstSubsidiary);
     }
   }, [dashboard.allSubsidiaryList]);
 
@@ -90,173 +89,176 @@ export function FormCard() {
     if (isDataLoaded && bodyValues?.subsidiaryId) {
       customSubmit(bodyValues);
     }
-  }, [isDataLoaded, bodyValues])
-
+  }, [isDataLoaded, bodyValues]);
 
   return (
     <>
-      <Card>
+      <TCard name={CurrentModuleName()}>
+        <div className="">
+          <Formik
+            enableReinitialize={true}
+            initialValues={{
+              from_date: bodyValues?.from_date || null,
+              to_date: bodyValues?.to_date || null,
+              subsidiaryId: bodyValues?.subsidiaryId || null,
+              employeeId: null, // Default null for employeeId
+            }}
+            validationSchema={formValidation}
+            // onSubmit={(values) => {
 
-        <CardHeader title={CurrentModuleName()} >
+            //   customSubmit(values);
+            // }}
+          >
+            {({
+              handleSubmit,
+              handleBlur,
+              setFieldValue,
+              handleReset,
+              values,
+              touched,
+              errors,
+            }) => {
+              // Handle subsidiaryId change to reset all fields
+              const handleSubsidiaryChange = (e) => {
+                const selectedValue = e.value || null;
 
+                Object.keys(values).forEach((key) => {
+                  setFieldValue(key, null); // Reset each field to null
+                });
 
+                // Set the newly selected subsidiaryId
+                setFieldValue("subsidiaryId", selectedValue);
+                dispatch(fetchAllDept(selectedValue));
+                setInitialValues(
+                  dashboard?.allSubsidiaryList?.find(
+                    (option) => option?.value === selectedValue
+                  ) || null
+                );
+              };
 
-        </CardHeader>
+              return (
+                <>
+                  <Modal.Body className="overlay overlay-block cursor-default">
+                    <Form className="form form-label-right">
+                      <fieldset>
+                        <div
+                          style={{
+                            backgroundColor: "rgb(235 243 255)",
+                            marginTop: "15px",
+                            padding: "20px",
+                            borderRadius: "5px",
+                            border: "2px solid #adceff",
+                          }}
+                        >
+                          <h6>Leave Calendar</h6>
 
-        <Formik
-          enableReinitialize={true}
-          initialValues={{
-            from_date: bodyValues?.from_date || null,
-            to_date: bodyValues?.to_date || null,
-            subsidiaryId: bodyValues?.subsidiaryId || null,
-            employeeId: null, // Default null for employeeId
-          }}
-          validationSchema={formValidation}
-        // onSubmit={(values) => {
+                          <div className="form-group row">
+                            {/* Subsidiary Selector */}
+                            <div className="col-12 col-md-4 mt-3">
+                              <SearchSelect
+                                name="subsidiaryId"
+                                label={
+                                  <span>
+                                    Subsidiary
+                                    <span style={{ color: "red" }}>*</span>
+                                  </span>
+                                }
+                                onChange={handleSubsidiaryChange} // Call the dynamic reset handler
+                                value={
+                                  dashboard?.allSubsidiaryList?.find(
+                                    (option) =>
+                                      option?.value === values?.subsidiaryId
+                                  ) || null
+                                }
+                                options={dashboard?.allSubsidiaryList}
+                                error={errors.subsidiaryId}
+                                touched={touched.subsidiaryId}
+                              />
+                            </div>
 
-        //   customSubmit(values);
-        // }}
-        >
-          {({
-            handleSubmit,
-            handleBlur,
-            setFieldValue,
-            handleReset,
-            values,
-            touched,
-            errors,
-          }) => {
-            // Handle subsidiaryId change to reset all fields
-            const handleSubsidiaryChange = (e) => {
-              const selectedValue = e.value || null;
-
-              Object.keys(values).forEach((key) => {
-                setFieldValue(key, null); // Reset each field to null
-              });
-
-
-              // Set the newly selected subsidiaryId
-              setFieldValue("subsidiaryId", selectedValue);
-              dispatch(fetchAllDept(selectedValue));
-              setInitialValues(dashboard?.allSubsidiaryList?.find(
-                (option) => option?.value === selectedValue
-              ) || null)
-            };
-
-            return (
-              <>
-                <Modal.Body className="overlay overlay-block cursor-default">
-                  <Form className="form form-label-right">
-                    <fieldset>
-                      <div
-                        style={{
-                          backgroundColor: "rgb(235 243 255)",
-                          marginTop: "15px",
-                          padding: "20px",
-                          borderRadius: "5px",
-                          border: "2px solid #adceff",
-                        }}
-                      >
-                        <h6>Leave Calendar</h6>
-
-                        <div className="form-group row">
-                          {/* Subsidiary Selector */}
-                          <div className="col-12 col-md-4 mt-3">
-                            <SearchSelect
-                              name="subsidiaryId"
-                              label={
-                                <span>
-                                  Subsidiary<span style={{ color: "red" }}>*</span>
-                                </span>
-                              }
-                              onChange={handleSubsidiaryChange} // Call the dynamic reset handler
-                              value={
-                                dashboard?.allSubsidiaryList?.find(
-                                  (option) => option?.value === values?.subsidiaryId
-                                ) || null
-                              }
-                              options={dashboard?.allSubsidiaryList}
-                              error={errors.subsidiaryId}
-                              touched={touched.subsidiaryId}
-                            />
+                            <div className="col-12 col-md-4 mt-3">
+                              <Field
+                                name="departmentId"
+                                component={SearchSelect}
+                                onBlur={handleBlur}
+                                onChange={(e) => {
+                                  const value =
+                                    e.value == "--Select--"
+                                      ? ""
+                                      : Number(e.value);
+                                  setFieldValue("departmentId", value);
+                                  setFieldValue("employeeId", null);
+                                }}
+                                label={<span> Department</span>}
+                                value={
+                                  dashboard?.allDept?.find(
+                                    (option) =>
+                                      option?.value === values?.departmentId
+                                  ) || null
+                                }
+                                // options={dashboard?.allDept}
+                                options={[
+                                  { label: "--Select--", value: "" },
+                                  ...(Array.isArray(dashboard?.allDept)
+                                    ? dashboard?.allDept
+                                    : []),
+                                ]}
+                                error={errors.departmentId}
+                                touched={touched.departmentId}
+                              />
+                            </div>
                           </div>
 
-                          <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="departmentId"
-                              component={SearchSelect}
-                              onBlur={handleBlur}
-                              onChange={(e) => {
-                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                setFieldValue('departmentId', value)
-                                setFieldValue("employeeId", null);
-                              }}
-                              label={
-                                <span>
-                                  {" "}
-                                  Department
-                                </span>
-                              }
-                              value={
-                                dashboard?.allDept?.find(
-                                  (option) => option?.value === values?.departmentId
-                                ) || null
-                              }
-                              // options={dashboard?.allDept}
-                              options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
-                              error={errors.departmentId}
-                              touched={touched.departmentId}
-                            />
-                          </div>
-                        </div>
+                          {/* Employee Selector */}
+                          <div className="form-group row">
+                            <div className="col-12 col-md-4 mt-3">
+                              <SearchSelect
+                                name="employeeId"
+                                label={<span>Employee</span>}
+                                onChange={(e) => {
+                                  setFieldValue("employeeId", e.value || null);
+                                }}
+                                value={
+                                  dashboard?.allEmployees?.find(
+                                    (option) =>
+                                      option?.value === values?.employeeId
+                                  ) || null
+                                }
+                                // options={dashboard?.allEmployees}
+                                // options={
+                                //   values?.departmentId
+                                //     ? dashboard?.allEmployees?.filter(
+                                //         (emp) => emp?.departmentId === values.departmentId
+                                //       )
+                                //     : dashboard?.allEmployees
+                                // }
 
-                        {/* Employee Selector */}
-                        <div className="form-group row">
-                          <div className="col-12 col-md-4 mt-3">
-                            <SearchSelect
-                              name="employeeId"
-                              label={<span>Employee</span>}
-                              onChange={(e) => {
-                                setFieldValue("employeeId", e.value || null);
-                              }}
-                              value={
-                                dashboard?.allEmployees?.find(
-                                  (option) => option?.value === values?.employeeId
-                                ) || null
-                              }
-                              // options={dashboard?.allEmployees}
-                              // options={
-                              //   values?.departmentId
-                              //     ? dashboard?.allEmployees?.filter(
-                              //         (emp) => emp?.departmentId === values.departmentId
-                              //       )
-                              //     : dashboard?.allEmployees
-                              // }
+                                options={[
+                                  { label: "--Select--", value: "" },
+                                  ...(Array.isArray(
+                                    values?.departmentId
+                                      ? dashboard?.allEmployees?.filter(
+                                          (emp) =>
+                                            emp?.departmentId ===
+                                            values.departmentId
+                                        )
+                                      : dashboard?.allEmployees
+                                  )
+                                    ? values?.departmentId
+                                      ? dashboard?.allEmployees?.filter(
+                                          (emp) =>
+                                            emp?.departmentId ===
+                                            values.departmentId
+                                        )
+                                      : dashboard?.allEmployees
+                                    : []),
+                                ]}
+                                error={errors.employeeId}
+                                touched={touched.employeeId}
+                              />
+                            </div>
 
-                              options={[
-                                { label: '--Select--', value: '' },
-                                ...(Array.isArray(
-                                  values?.departmentId
-                                    ? dashboard?.allEmployees?.filter(
-                                      (emp) => emp?.departmentId === values.departmentId
-                                    )
-                                    : dashboard?.allEmployees
-                                )
-                                  ? values?.departmentId
-                                    ? dashboard?.allEmployees?.filter(
-                                      (emp) => emp?.departmentId === values.departmentId
-                                    )
-                                    : dashboard?.allEmployees
-                                  : []
-                                ),
-                              ]}
-
-                              error={errors.employeeId}
-                              touched={touched.employeeId}
-                            />
-                          </div>
-
-                          {/*                      
+                            {/*                      
                           <div className="col-12 col-md-4 mt-3">
                             <Field
                               name="from_date"
@@ -288,107 +290,89 @@ export function FormCard() {
                             />
                           </div> */}
 
-                          <div className="col-12 col-md-4 mt-3">
+                            <div className="col-12 col-md-4 mt-3">
+                              <label>
+                                From Date<span style={{ color: "red" }}>*</span>
+                              </label>
+                              <DatePicker
+                                className="form-control"
+                                placeholder="From Date "
+                                selected={
+                                  values?.from_date
+                                    ? new Date(values.from_date)
+                                    : null
+                                }
+                                onChange={(date) => {
+                                  setFieldValue("from_date", date);
+                                  setFieldValue("to_date", date); // Sync from_date and to_date
+                                }}
+                                timeInputLabel="Time:"
+                                dateFormat="dd-MMM-yyyy"
+                                // showTimeInput
+                                name="from_date"
+                                autoComplete="off"
+                              />
+                            </div>
 
-
-                            <label>From Date<span style={{ color: "red" }}>*</span></label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="From Date "
-                              selected={values?.from_date ? new Date(values.from_date) : null}
-
-                              onChange={(date) => {
-                                setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
-
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="from_date"
-
-                              autoComplete="off"
-
-
-
-                            />
-
-                          </div>
-
-                          {/* Date To Selector */}
-                          <div className="col-12 col-md-4 mt-3">
-
-
-                            <label>Date To<span style={{ color: "red" }}>*</span></label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="To Date "
-                              selected={values?.to_date ? new Date(values.to_date) : null}
-
-                              onChange={(date) => {
-                                setFieldValue("to_date", date);
-
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="to_date"
-
-                              autoComplete="off"
-
-
-
-                            />
-
+                            {/* Date To Selector */}
+                            <div className="col-12 col-md-4 mt-3">
+                              <label>
+                                Date To<span style={{ color: "red" }}>*</span>
+                              </label>
+                              <DatePicker
+                                className="form-control"
+                                placeholder="To Date "
+                                selected={
+                                  values?.to_date
+                                    ? new Date(values.to_date)
+                                    : null
+                                }
+                                onChange={(date) => {
+                                  setFieldValue("to_date", date);
+                                }}
+                                timeInputLabel="Time:"
+                                dateFormat="dd-MMM-yyyy"
+                                // showTimeInput
+                                name="to_date"
+                                autoComplete="off"
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </fieldset>
-                  </Form>
-                </Modal.Body>
+                      </fieldset>
+                    </Form>
+                  </Modal.Body>
 
-                <Modal.Footer>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleReset();
-                      dispatch(actions.clearEvents()); // Reset form and clear events
-                    }}
-                    className="btn btn-danger btn-elevate"
-                  >
-                    Cancel
-                  </button>
+                  <Modal.Footer>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleReset();
+                        dispatch(actions.clearEvents()); // Reset form and clear events
+                      }}
+                      className="btn btn-danger btn-elevate"
+                    >
+                      Cancel
+                    </button>
 
-                  <button
-                    onClick={() => {
-
-
-
-                      // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
-                      customSubmit(values);
-                    }}
-                    disabled={!values.from_date || !values.to_date}
-                    className="btn btn-success btn-elevate"
-                  >
-                    Filter Record
-                  </button>
-                </Modal.Footer>
-              </>
-            );
-          }}
-        </Formik>
-
-
-
-        <CardBody>
-          {leaveCalendar && leaveCalendar.length > 0 && <FormTable />}
-        </CardBody>
-
-      </Card>
-
-
-
-
+                    <button
+                      onClick={() => {
+                        // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
+                        customSubmit(values);
+                      }}
+                      disabled={!values.from_date || !values.to_date}
+                      className="btn btn-success btn-elevate"
+                    >
+                      Filter Record
+                    </button>
+                  </Modal.Footer>
+                </>
+              );
+            }}
+          </Formik>
+        </div>
+        {leaveCalendar && leaveCalendar.length > 0 && <FormTable />}
+      </TCard>
     </>
-  )
+  );
 }

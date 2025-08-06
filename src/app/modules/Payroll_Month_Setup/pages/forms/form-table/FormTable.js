@@ -35,17 +35,13 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {  return {
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
       currentState: state.payroll_month,
       userAccess: state?.auth?.userAccess["Payroll_Month"],
-    }},
-    shallowEqual
-  );
-  
-  
+    };
+  }, shallowEqual);
+
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -88,7 +84,7 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-    
+
     {
       dataField: "endDate",
       text: "end Date",
@@ -139,7 +135,7 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-       {
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -171,8 +167,8 @@ export function FormTable() {
     page: FormUIProps.queryParams.pageNumber,
   };
 
-    return (
-    <>
+  return (
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -206,6 +202,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

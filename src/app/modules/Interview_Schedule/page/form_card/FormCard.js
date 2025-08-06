@@ -12,6 +12,8 @@ import { FormTable } from "../form_table/FormTable";
 import { useSelector, shallowEqual } from "react-redux";
 import { useFormUIContext } from "../FormUIContext";
 import HRRecomendation from "../hr_recomendation/HRRecomendation";
+import TCard from "../../../../utils/common-modules/TCard";
+import { CirclePlus } from "lucide-react";
 export default function FormCard() {
   const FormUIContext = useFormUIContext();
   const { userAccess } = useSelector((state) => {
@@ -36,43 +38,56 @@ export default function FormCard() {
   });
 
   return (
-    <>
-      <Card>
-           <CardHeader title={CurrentModuleName()}></CardHeader>
-        <CardBody>
-       
-          <br />
-          {/* <hr /> */}
-          <JobSection />
-          <br />
-          {/* <hr /> */}
-          <ApplicationSection />
-          <br />
-          {/* <hr /> */}
-          {/* <CardHeader title={"Interview Schedule List"}></CardHeader> */}
-          <div className=" p-2 d-flex justify-content-end">
-            <CardHeaderToolbar>
-              {accessToCreate?.isAccess && (
-                <button
-                  type="button"
-                  disabled={
-                    !formUIProps?.selectedApplicant || !formUIProps?.selectedJob
-                  }
-                  className="btn btn-primary"
-                  onClick={formUIProps.newButtonClick}
-                >
-                  + Add Interview
-                </button>
-              )}
-            </CardHeaderToolbar>
-          </div>
+    // <>
+    //   <Card>
+    //     <CardHeader title={CurrentModuleName()}></CardHeader>
+    //     <CardBody>
+    //       <JobSection />
+    //       <ApplicationSection />
+    //       <div className=" p-2 d-flex justify-content-end">
+    //         <CardHeaderToolbar>
+    //           {accessToCreate?.isAccess && (
+    //             <button
+    //               type="button"
+    //               disabled={
+    //                 !formUIProps?.selectedApplicant || !formUIProps?.selectedJob
+    //               }
+    //               className="btn btn-primary"
+    //               onClick={formUIProps.newButtonClick}
+    //             >
+    //               + Add
+    //             </button>
+    //           )}
+    //         </CardHeaderToolbar>
+    //       </div>
 
-          <FormTable />
-          <br />
-          <hr />
-          {accessToHRRecommendation?.isAccess && <HRRecomendation />}
-        </CardBody>
-      </Card>
-    </>
+    //       <FormTable />
+    //       <br />
+    //       <hr />
+    //       {accessToHRRecommendation?.isAccess && <HRRecomendation />}
+    //     </CardBody>
+    //   </Card>
+    <TCard name={CurrentModuleName()}>
+      <JobSection />
+      <ApplicationSection />
+      <div className="d-flex justify-end items-center">
+        {accessToCreate?.isAccess && (
+          <button
+            type="button"
+            disabled={
+              !formUIProps?.selectedApplicant || !formUIProps?.selectedJob
+            }
+            className="btn btn-primary"
+            onClick={formUIProps.newButtonClick}
+          >
+            <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+            Add
+          </button>
+        )}
+      </div>
+      <FormTable />
+      {accessToHRRecommendation?.isAccess && <HRRecomendation />}
+    </TCard>
+    // </>
   );
 }

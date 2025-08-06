@@ -35,17 +35,13 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {   return {
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
       currentState: state.fiscal_setup,
       userAccess: state?.auth?.userAccess["Fiscal_Setup"],
-    }},
-    shallowEqual
-  );
+    };
+  }, shallowEqual);
 
-  
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -54,7 +50,7 @@ export function FormTable() {
 
   useEffect(() => {
     FormUIProps.setIds([]);
-   
+
     dispatch(actions.fetchUsers(FormUIProps.queryParams));
   }, [FormUIProps.queryParams, dispatch, totalCount]);
 
@@ -87,7 +83,7 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-   
+
     {
       dataField: "endDate",
       text: "end Date",
@@ -108,9 +104,9 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-          formatter: (cell) => cell ? "Yes" : "No"
+      formatter: (cell) => (cell ? "Yes" : "No"),
     },
-       {
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -142,8 +138,8 @@ export function FormTable() {
     page: FormUIProps.queryParams.pageNumber,
   };
 
-    return (
-    <>
+  return (
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -177,6 +173,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

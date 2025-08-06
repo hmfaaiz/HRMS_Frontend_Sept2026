@@ -651,6 +651,7 @@ let defaultCount = 0;
   // }, [dispatch]);
   return (
     <>
+    <div className="w-full overflow-x-auto" >
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -684,7 +685,7 @@ let defaultCount = 0;
           );
         }}
       </PaginationProvider>
-
+</div>
       <Formik
         enableReinitialize={true}
         initialValues={currentState.userForEdit || initialValues}
