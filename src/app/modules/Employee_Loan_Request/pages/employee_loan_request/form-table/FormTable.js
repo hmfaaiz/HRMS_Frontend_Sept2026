@@ -221,7 +221,7 @@ export function FormTable() {
             </div>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
-            <Card.Body>
+            <div className="w-full overflow-x-auto">
               <PaginationProvider
                 pagination={paginationFactory(paginationOptions)}
               >
@@ -257,7 +257,7 @@ export function FormTable() {
                   );
                 }}
               </PaginationProvider>
-            </Card.Body>
+            </div>
           </Accordion.Collapse>
         </Card>
       </Accordion>

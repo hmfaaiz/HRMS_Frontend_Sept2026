@@ -185,9 +185,9 @@ export function FormFIlter({ listLoading, user }) {
           handleReset, touched, errors,
         }) => (
           <>
-            <Card>
+            {/* <Card>
               <CardHeader title={CurrentModuleName()} />
-            </Card>
+            </Card> */}
             <Accordion defaultActiveKey="">
               <Card>
                 <Card.Header className="d-flex justify-content-center">
@@ -443,7 +443,6 @@ export function FormFIlter({ listLoading, user }) {
 
 
             </Accordion>
-
           </>
         )}
       </Formik >

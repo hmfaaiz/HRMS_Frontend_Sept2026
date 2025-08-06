@@ -112,7 +112,7 @@ export function RolesTable() {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -142,6 +142,6 @@ export function RolesTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

@@ -15,6 +15,8 @@ import FormFilter from "./form/form-filter/FormFilter";
 import { SubsidiaryEditDialog } from "./form/subsidiary-edit-dialog/SubsidiaryEditDialog";
 import { SubsidiaryDeleteDialog } from "./form/subsidiary-delete-dailog/SubsidiaryDeleteDailog";
 import { SubsidiaryTable } from "./form/form-table/FormTable";
+import TCard from "../../../utils/common-modules/TCard";
+import { CirclePlus } from "lucide-react";
 export function SubsidiaryPage({ history }) {
   const componentEvents = {
     newButtonClick: () => {
@@ -83,7 +85,7 @@ export function SubsidiaryPage({ history }) {
           />
         )}
       </Route>
-      <Card>
+      {/* <Card>
         <CardHeader title={CurrentModuleName()}>
           <CardHeaderToolbar>
             <div className="pr-5">
@@ -103,7 +105,29 @@ export function SubsidiaryPage({ history }) {
         <CardBody>
           <SubsidiaryTable />
         </CardBody>
-      </Card>
+      </Card> */}
+      <TCard name={CurrentModuleName()}>
+        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+          <FormFilter />
+          <div className="flex items-center gap-2">
+            {/* <CardHeaderToolbar> */}
+            {accessPage && (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={componentEvents.newButtonClick}
+                >
+                  <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+                  Add
+                </button>
+              </>
+            )}
+            {/* </CardHeaderToolbar> */}
+          </div>
+        </div>
+        <SubsidiaryTable />
+      </TCard>
       <ToastContainer
         position="top-right"
         autoClose={5000}

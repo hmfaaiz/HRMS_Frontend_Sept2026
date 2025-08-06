@@ -102,9 +102,9 @@ export function AsideMenuList({ layoutProps }) {
           <nav className="w-full flex items-center justify-between py-1">
             <div className="flex-1">
               <div
-                className={`xl:flex ${isVisible ? "block" : "hidden"} w-full`}
+                className={`lg:flex ${isVisible ? "block" : "hidden"} w-full`}
               >
-                <ul className="flex flex-col items-end xl:flex-row xl:space-x-6 list-none mb-1">
+                <ul className="flex flex-col items-start lg:items-end lg:flex-row lg:space-x-6 list-none mb-1">
                   <li className="relative group">
                     <Link
                       className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl"
@@ -115,7 +115,7 @@ export function AsideMenuList({ layoutProps }) {
                     </Link>
                   </li>
                 </ul>
-                <ul className="flex flex-col justify-start items-end xl:justify-end w-full text-sm xl:flex-row xl:space-x-6 list-none mb-1">
+                <ul className="flex flex-col justify-start items-start lg:items-end lg:justify-end w-full text-sm lg:flex-row lg:space-x-6 list-none mb-1">
                   {UserAccess &&
                     Object.keys(UserAccess)?.map((res, idx) => {
                       const hasVisible = UserAccess[res]
@@ -140,7 +140,7 @@ export function AsideMenuList({ layoutProps }) {
                           </button>
                           {/* Dropdown menu */}
                           <div
-                            className={`absolute left-0 mt-3 min-w-56 bg-white border rounded shadow-lg transition z-50 ${
+                            className={`absolute right-0 mt-3 min-w-56 bg-white border rounded shadow-lg transition z-50 ${
                               dropdownOpen === idx ? "block" : "hidden"
                             }`}
                           >

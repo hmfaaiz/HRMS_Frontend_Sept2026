@@ -269,7 +269,7 @@ export function FormTable() {
   };
 
   return (
-    <>
+    <div>
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -303,6 +303,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

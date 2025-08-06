@@ -7,9 +7,9 @@ import { FormUIProvider } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormDynamicDialogModal } from "./form-delete-dialog/FormDynamicDialogModal";
-import { useSelector, shallowEqual } from "react-redux"
+import { useSelector, shallowEqual } from "react-redux";
 import { FormCard } from "./form-card/FormCard";
-import { } from "../../_redux/redux-Actions";
+import {} from "../../_redux/redux-Actions";
 import { FormFIlter } from "./form-filter/FormFIlter";
 import { Switch } from "react-router-dom";
 import { Accordion, Button, Card } from "react-bootstrap";
@@ -18,11 +18,11 @@ import {
   Card as CardHeadeing,
   CardHeader,
   Input,
-} from "../../../../../_metronic/_partials/controls"
+} from "../../../../../_metronic/_partials/controls";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
+import TCard from "../../../../utils/common-modules/TCard";
 
 export function FormPage({ history }) {
-
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {
@@ -51,22 +51,15 @@ export function FormPage({ history }) {
     },
   };
 
-
-  const { userAccess } = useSelector(
-    (state) => {
-
-      return {
-        userAccess: state.auth.userAccess.job_vacancy,
-      };
-    },
-    shallowEqual
-  );
+  const { userAccess } = useSelector((state) => {
+    return {
+      userAccess: state.auth.userAccess.job_vacancy,
+    };
+  }, shallowEqual);
 
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateJobVacancy"
-  )
-
-
+  );
 
   const isAccessForView = userAccess?.find(
     (item) => item.componentName === "ReadJobVacancy"
@@ -79,8 +72,7 @@ export function FormPage({ history }) {
     (item) => item.componentName === "DeleteJobVacancy"
   );
 
-
-    const isAccessForPost = userAccess?.find(
+  const isAccessForPost = userAccess?.find(
     (item) => item.componentName === "PostJobVacancy"
   );
   const isAccessForHold = userAccess?.find(
@@ -91,8 +83,6 @@ export function FormPage({ history }) {
   );
 
   return (
-
-
     // <FormUIProvider FormUIEvents={FormUIEvents}>
     //   <Route exact path="/job_vacancy/read-all-job-vacancy/new">
     //     {({ history, match }) => (
@@ -178,7 +168,6 @@ export function FormPage({ history }) {
     //     )}
     //   </Route>
 
-
     //   {/* close */}
     //   <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/close">
     //     {({ history, match }) => (
@@ -213,57 +202,53 @@ export function FormPage({ history }) {
     //   />
     // </FormUIProvider>
 
-
-
-
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <CardHeadeing>
+      {/* <CardHeadeing>
         <CardHeader title={CurrentModuleName()} />
-      </CardHeadeing>
+      </CardHeadeing> */}
 
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
-              <Accordion.Toggle
-                as={Button}
-                eventKey="0"
-                className="flex-between-center text-bold"
-              >
-                Filter
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
-              <>
-                <FormFIlter />
-
-              </>
-
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-
-      <FormCard />
-
+      {/* <FormCard /> */}
+      <TCard name={CurrentModuleName()}>
+        <div>
+          <Accordion defaultActiveKey="">
+            <Card>
+              <Card.Header className="d-flex justify-content-center">
+                <div className="accordion-header-btn w-100  d-flex justify-content-center">
+                  <Accordion.Toggle
+                    as={Button}
+                    eventKey="0"
+                    className="flex-between-center text-bold"
+                  >
+                    Filter
+                    <KeyboardArrowDown />
+                  </Accordion.Toggle>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                <Card.Body>
+                  <>
+                    <FormFIlter />
+                  </>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
+        <FormCard />
+      </TCard>
       <Switch>
         {/* NEW */}
-        {accessUser && (<Route exact path="/job_vacancy/read-all-job-vacancy/new">
-          {({ history, match }) => (
-            <FormEditDialog
-              show={match != null}
-              status="new"
-
-              onHide={() =>
-                history.push("/job_vacancy/read-all-job-vacancy")
-              }
-            />
-          )}
-        </Route>)
-        }
+        {accessUser && (
+          <Route exact path="/job_vacancy/read-all-job-vacancy/new">
+            {({ history, match }) => (
+              <FormEditDialog
+                show={match != null}
+                status="new"
+                onHide={() => history.push("/job_vacancy/read-all-job-vacancy")}
+              />
+            )}
+          </Route>
+        )}
 
         {/* EDIT */}
         {isAccessForEdit && (
@@ -273,9 +258,7 @@ export function FormPage({ history }) {
                 show={match != null}
                 id={match?.params?.id}
                 status="edit"
-                onHide={() =>
-                  history.push("/job_vacancy/read-all-job-vacancy")
-                }
+                onHide={() => history.push("/job_vacancy/read-all-job-vacancy")}
               />
             )}
           </Route>
@@ -289,15 +272,11 @@ export function FormPage({ history }) {
                 id={match?.params?.id}
                 status="read"
                 dataForRead={true}
-                onHide={() =>
-                  history.push("/job_vacancy/read-all-job-vacancy")
-                }
+                onHide={() => history.push("/job_vacancy/read-all-job-vacancy")}
               />
             )}
           </Route>
         )}
-
-
 
         {/* DELETE */}
         {isAccessForDelete && (
@@ -307,75 +286,72 @@ export function FormPage({ history }) {
                 show={match != null}
                 id={match?.params?.id}
                 status={match?.params?.status}
-                onHide={() =>
-                  history.push("/job_vacancy/read-all-job-vacancy")
-                }
+                onHide={() => history.push("/job_vacancy/read-all-job-vacancy")}
               />
             )}
           </Route>
         )}
         {/* DYNAMIC ACTIONS */}
 
-
-           {/* dynamic rendering */}
+        {/* dynamic rendering */}
 
         {/* posting */}
         {isAccessForPost && (
-        <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/posting">
-          {({ history, match }) => (
-            <FormDynamicDialogModal
-              show={match != null}
-              id={match && match.params.id}
-              status={match && match.params.status}
-              title="Post Record"
-              message="Are you sure you want to post this record?"
-              confirmButtonText="Post Record"
-              onHide={() => {
-                history.push("/job_vacancy/read-all-job-vacancy");
-              }}
-              actionName="postJobVacancy"
-            />
-          )}
-        </Route>
-)}
+          <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/posting">
+            {({ history, match }) => (
+              <FormDynamicDialogModal
+                show={match != null}
+                id={match && match.params.id}
+                status={match && match.params.status}
+                title="Post Record"
+                message="Are you sure you want to post this record?"
+                confirmButtonText="Post Record"
+                onHide={() => {
+                  history.push("/job_vacancy/read-all-job-vacancy");
+                }}
+                actionName="postJobVacancy"
+              />
+            )}
+          </Route>
+        )}
         {/* hold */}
         {isAccessForHold && (
-        <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/hold">
-          {({ history, match }) => (
-            <FormDynamicDialogModal
-              show={match != null}
-              id={match && match.params.id}
-              status={match && match.params.status}
-              title="Hold Record"
-              message="Are you sure you want to hold this record?"
-              confirmButtonText="Hold Record"
-              onHide={() => {
-                history.push("/job_vacancy/read-all-job-vacancy");
-              }}
-              actionName="holdJobVacancy"
-            />
-          )}
-        </Route>
+          <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/hold">
+            {({ history, match }) => (
+              <FormDynamicDialogModal
+                show={match != null}
+                id={match && match.params.id}
+                status={match && match.params.status}
+                title="Hold Record"
+                message="Are you sure you want to hold this record?"
+                confirmButtonText="Hold Record"
+                onHide={() => {
+                  history.push("/job_vacancy/read-all-job-vacancy");
+                }}
+                actionName="holdJobVacancy"
+              />
+            )}
+          </Route>
         )}
 
         {/* close */}
         {isAccessForClose && (
-        <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/close">
-          {({ history, match }) => (
-            <FormDynamicDialogModal
-              show={match != null}
-              id={match && match.params.id}
-              status={match && match.params.status}
-              title="Close Record"
-              message="Are you sure you want to close this record?"
-              confirmButtonText="Close Record"
-              onHide={() => {
-                history.push("/job_vacancy/read-all-job-vacancy");
-              }}
-              actionName="closeJobVacancy"
-            />
-          )}
-        </Route>
+          <Route path="/job_vacancy/read-all-job-vacancy/:id/:status/close">
+            {({ history, match }) => (
+              <FormDynamicDialogModal
+                show={match != null}
+                id={match && match.params.id}
+                status={match && match.params.status}
+                title="Close Record"
+                message="Are you sure you want to close this record?"
+                confirmButtonText="Close Record"
+                onHide={() => {
+                  history.push("/job_vacancy/read-all-job-vacancy");
+                }}
+                actionName="closeJobVacancy"
+              />
+            )}
+          </Route>
         )}
       </Switch>
 
@@ -391,6 +367,5 @@ export function FormPage({ history }) {
         pauseOnHover
       />
     </FormUIProvider>
-
   );
 }

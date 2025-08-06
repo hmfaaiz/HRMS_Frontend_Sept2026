@@ -1,65 +1,52 @@
-import React, { useMemo, useState,} from "react"
-import { Formik } from "formik"
-import { isEqual } from "lodash"
-import { useFormUIContext } from "../FormUIContext"
-import { useDispatch, } from "react-redux";
+import React, { useMemo, useState } from "react";
+import { Formik } from "formik";
+import { isEqual } from "lodash";
+import { useFormUIContext } from "../FormUIContext";
+import { useDispatch } from "react-redux";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
-
-
-
-
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values
-  const newQueryParams = { ...queryParams }
-  const filter = {}
+  const { searchText } = values;
+  const newQueryParams = { ...queryParams };
+  const filter = {};
 
   if (searchText) {
-    filter.searchQuery = searchText
+    filter.searchQuery = searchText;
     // filter.email = searchText
   }
-  newQueryParams.filter = filter
-  return newQueryParams
-}
+  newQueryParams.filter = filter;
+  return newQueryParams;
+};
 
-export function FormFIlter({ listLoading,user }) {
+export function FormFIlter({ listLoading, user }) {
+  const FormUIContext = useFormUIContext();
 
-  const FormUIContext = useFormUIContext()
-
-  const formUIProps  = useMemo(() => {
+  const formUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
       setQueryParams: FormUIContext.setQueryParams,
-    }
-  }, [FormUIContext])
-
+    };
+  }, [FormUIContext]);
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    if (!isEqual(newQueryParams, formUIProps.queryParams)) {
+      newQueryParams.pageNumber = 1;
 
-    const newQueryParams = prepareFilter(formUIProps .queryParams, values)
-    if (!isEqual(newQueryParams, formUIProps .queryParams)) {
-      newQueryParams.pageNumber = 1
-    
-      formUIProps .setQueryParams(newQueryParams)
+      formUIProps.setQueryParams(newQueryParams);
     }
-  }
-
-
+  };
 
   return (
     <>
       <Formik
         enableReinitialize={true}
         initialValues={{
-   
           searchText: "",
-
         }}
         onSubmit={(values) => {
-    
-    
-          applyFilter(values)
+          applyFilter(values);
         }}
       >
         {({
@@ -70,12 +57,9 @@ export function FormFIlter({ listLoading,user }) {
           setFieldValue,
           errors,
           touched,
-
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
-
-              {/* <div className="col-12 col-md-12">
+            {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -93,20 +77,16 @@ export function FormFIlter({ listLoading,user }) {
                 </small>
               </div> */}
 
-                            <InputSearch
-                values={values}
-                fieldName="searchText"
-                setFieldValue={setFieldValue}
-                handleBlur={handleBlur}
-                handleSubmit={handleSubmit}
-              />
-            </div>
+            <InputSearch
+              values={values}
+              fieldName="searchText"
+              setFieldValue={setFieldValue}
+              handleBlur={handleBlur}
+              handleSubmit={handleSubmit}
+            />
           </form>
         )}
       </Formik>
-
-     
     </>
-  )
-
+  );
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Formik } from "formik";
 import { isEqual } from "lodash";
 import { useFormUIContext } from "../../FormUIContext";
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 const FormFilter = () => {
   const { queryParams, setQueryParams } = useFormUIContext();
@@ -21,11 +22,9 @@ const FormFilter = () => {
       initialValues={{ searchText: "" }}
       onSubmit={applyFilter}
     >
-      {({ values, handleSubmit, handleChange, handleBlur }) => (
+      {({ values, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
         <form onSubmit={handleSubmit} className="form form-label-right">
-          <div className="row">
-            <div className="col-12">
-              <input
+          {/* <input
                 type="text"
                 className="form-control"
                 name="searchText"
@@ -36,9 +35,14 @@ const FormFilter = () => {
                   handleChange(e);
                   handleSubmit();
                 }}
-              />
-            </div>
-          </div>
+              /> */}
+          <InputSearch
+            values={values}
+            fieldName="searchText"
+            setFieldValue={setFieldValue}
+            handleBlur={handleBlur}
+            handleSubmit={handleSubmit}
+          />
         </form>
       )}
     </Formik>
