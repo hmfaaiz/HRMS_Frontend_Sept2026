@@ -53,26 +53,7 @@ export function LoanRegisterPage() {
 
   return (
     <FormUIProvider FormUIEvents={{}}>
-      {/* <Card> */}
-      {/* Card Starts */}
 
-      {/* <CardHeader title={CurrentModuleName()}></CardHeader> */}
-
-      {/* Filter Form Starts */}
-      {/* <FormFilter
-          loading={listLoading}
-          loanReqLoading={loanReqLoading}
-          dispatch={dispatch}
-          LoanPositionLoading={LoanPositionLoading}
-        /> */}
-      {/* Filter Form Ends */}
-
-      {/* Table Starts */}
-      {/* <FormTable /> */}
-      {/* Table Ends */}
-
-      {/* Card Ends */}
-      {/* </Card> */}
       <TCard name={CurrentModuleName()}>
         <FormFilter
           loading={listLoading}
