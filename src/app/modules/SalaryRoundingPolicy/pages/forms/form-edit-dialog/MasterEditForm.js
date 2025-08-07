@@ -14,26 +14,26 @@ import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashbo
 const formValidation = Yup.object().shape({
   paymentMode: Yup.string().required(VALIDATION_MESSAGES.required),
   // amount: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
- amount: Yup.string()
-  .required(VALIDATION_MESSAGES.required)
-  .matches(/^\d+(\.\d{1,2})?$/, VALIDATION_MESSAGES.validNumber) // Allows decimals up to 2 digits
-  .test(
-    'is-valid-range',
-    'Amount must be between 0.1 and 999999',
-    (value) => {
-      const num = parseFloat(value);
-      return !isNaN(num) && num >= 0.1 && num <= 999999;
-    }
-  )
-  .test(
-    'max-digits',
-    'Amount must not exceed 6 digits in total (before + after decimal)',
-    (value) => {
-      const clean = value?.replace('.', '') || '';
-      return clean.length <= 6;
-    }
-  )
-,
+  amount: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(/^\d+(\.\d{1,2})?$/, VALIDATION_MESSAGES.validNumber) // Allows decimals up to 2 digits
+    .test(
+      'is-valid-range',
+      'Amount must be between 0.1 and 999999',
+      (value) => {
+        const num = parseFloat(value);
+        return !isNaN(num) && num >= 0.1 && num <= 999999;
+      }
+    )
+    .test(
+      'max-digits',
+      'Amount must not exceed 6 digits in total (before + after decimal)',
+      (value) => {
+        const clean = value?.replace('.', '') || '';
+        return clean.length <= 6;
+      }
+    )
+  ,
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required)
 });
 
@@ -48,15 +48,15 @@ export function MasterEditForm({
   loading,
 }) {
   const { dashboard } = useSelector((state) => state);
-    const dispatch = useDispatch();
-    useEffect(() => {
-      if (!user.Id) {
-        // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
-        dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-        }
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!user.Id) {
+      // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    }
   }, [dispatch, user.Id]);
   const dropdown = (data) => {
-  
+
     return [{ Id: "", formName: "--Select Mode--" }, ...data].map((el) => {
       return (<>
         <option value={el.Id}>{el.formName}</option>
@@ -81,7 +81,7 @@ export function MasterEditForm({
           values,
           handleBlur,
           handleChange,
-          setFieldValue,touched,
+          setFieldValue, touched,
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
@@ -92,36 +92,33 @@ export function MasterEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
+                    <div className="col-span-1">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e?.value || "");
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
+                        options={dashboard?.allSubsidiaryList}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                      
+                    </div>
 
-                        <div className="col-12 col-md-4 mt-3">
-  <SearchSelect
-    name="subsidiaryId"
-    label={
-      <span>
-        Subsidiary<span style={{ color: "red" }}>*</span>
-      </span>
-    }
-    isDisabled={isUserForRead}
-    onChange={(e) => {
-      setFieldValue("subsidiaryId", e?.value || "");
-    }}
-    value={
-      dashboard?.allSubsidiaryList?.find(
-        (option) => option.value === values.subsidiaryId
-      ) || null
-    }
-    options={dashboard?.allSubsidiaryList}
-  />
-  {errors.subsidiaryId && (
-    <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
-      {errors.subsidiaryId}
-    </div>
-  )}
-</div>
 
-                    
-                    <div className="col-12 col-md-4 mt-3">
+                     <div className="col-span-1">
                       <Field
                         name="paymentMode"
                         component={Select}
@@ -147,7 +144,7 @@ export function MasterEditForm({
                     </div>
 
 
-                    <div className="col-12 col-md-4 mt-3">
+                       <div className="col-span-1">
                       <Field
                         name="amount"
                         component={Input}
@@ -158,7 +155,7 @@ export function MasterEditForm({
                           <span>
                             {" "}
                             {/* Rounding Up to<span style={{ color: "red" }}>*</span> */}
-                           Round To Nearest <span style={{ color: "red" }}>*</span>
+                            Round To Nearest <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         value={values.amount}

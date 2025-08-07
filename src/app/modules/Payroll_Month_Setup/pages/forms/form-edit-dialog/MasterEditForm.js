@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import { DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
@@ -18,38 +18,39 @@ import {
 import DatePicker from "react-datepicker";
 import axios from "axios";
 import { USERS_URL } from "../../../_redux/formCrud";
-import { getDateDiffInDays } from "../../../../../utils/common";;
+import { getDateDiffInDays } from "../../../../../utils/common"; import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+;
 // Validation schema
 const formValidation = Yup.object().shape(
   {
     subsidiaryId: Yup.mixed()
       .nullable().
-      required("Required*"),
+      required(VALIDATION_MESSAGES.required),
 
     month: Yup.number()
       .nullable().
-      required("Required*"),
+      required(VALIDATION_MESSAGES.required),
 
     month_days: Yup.number()
       .nullable().
-      required("Required*"),
+      required(VALIDATION_MESSAGES.required),
 
     year: Yup.number()
       .nullable().
-      required("Required*"),
+      required(VALIDATION_MESSAGES.required),
 
     shortFormat: Yup.number()
       .nullable().
-      required("Required*"),
+      required(VALIDATION_MESSAGES.required),
 
     startDate: Yup.date()
       .nullable()
-      .required("Start date is required")
+      .required(VALIDATION_MESSAGES.required)
       .max(Yup.ref('endDate'), 'Start date cannot be later than end date'), // Use Yup.ref to reference endDate
 
     endDate: Yup.date()
       .nullable()
-      .required("End date is required")
+      .required(VALIDATION_MESSAGES.required)
       .min(Yup.ref('startDate'), 'End date cannot be earlier than start date'), // Use Yup.ref to reference startDate
 
   },
@@ -113,14 +114,14 @@ export function MasterEditForm({
 
 
         // setFieldValue("shortFormat", shortformat);
-      
+
 
         const nextStartDate = new Date(response?.data?.data?.endDate);
 
         let date = new Date(nextStartDate.setDate(nextStartDate.getDate() + 1))
         // setDefaultStartDate(date);
         setFieldValue("startDate", date)
-        setEndDate(year,month,date, setFieldValue)
+        setEndDate(year, month, date, setFieldValue)
 
       }
     } catch (error) {
@@ -136,33 +137,33 @@ export function MasterEditForm({
 
   }
 
- const getTotalDaysInMonth=(year, month)=> {
- 
+  const getTotalDaysInMonth = (year, month) => {
+
     const lastDayOfMonth = new Date(year, month, 0);
-   return lastDayOfMonth.getDate();
-}
+    return lastDayOfMonth.getDate();
+  }
 
-const setEndDate = (year,month,date, setFieldValue) => {
+  const setEndDate = (year, month, date, setFieldValue) => {
 
-  const totalDays = getTotalDaysInMonth(year,month); // 1 is February (months are 0-indexed)
-
-
-  setDefaultStartDate(date);
-
-  const endDate = new Date(date);
-  endDate.setDate(endDate.getDate() + totalDays-1); // Add total days to the start date
-
-  setFieldValue("endDate", new Date (endDate));
-  setDefaultEndDate(endDate);
-
-  setFieldValue("month_days", totalDays);
+    const totalDays = getTotalDaysInMonth(year, month); // 1 is February (months are 0-indexed)
 
 
-}
+    setDefaultStartDate(date);
+
+    const endDate = new Date(date);
+    endDate.setDate(endDate.getDate() + totalDays - 1); // Add total days to the start date
+
+    setFieldValue("endDate", new Date(endDate));
+    setDefaultEndDate(endDate);
+
+    setFieldValue("month_days", totalDays);
+
+
+  }
 
 
   // const setEndDate = (date, setFieldValue) => {
-   
+
   //   setDefaultStartDate(date);
 
   //   const endDate = new Date(date);
@@ -182,14 +183,14 @@ const setEndDate = (year,month,date, setFieldValue) => {
 
 
   const setShortDormat = (month, year, setFieldValue) => {
-  
-    if(month && year){
+
+    if (month && year) {
       const formattedMonth = month && month < 10 ? `0${month}` : `${month}`;
       const formattedYear = year && year.toString().slice(-2); // Extract last 2 digits of the year
-  
+
       const shortFormat = `${formattedMonth}${formattedYear}`;
-  
-  
+
+
       setFieldValue("shortFormat", shortFormat);
     }
 
@@ -223,7 +224,7 @@ const setEndDate = (year,month,date, setFieldValue) => {
 
         validationSchema={formValidation}
         onSubmit={(values) => {
-       
+
           // enableLoading();
           SavePayrollMonthSetup(values);
 
@@ -250,8 +251,8 @@ const setEndDate = (year,month,date, setFieldValue) => {
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
+                    <div className="col-span-1">
 
 
                       <SearchSelect
@@ -282,9 +283,8 @@ const setEndDate = (year,month,date, setFieldValue) => {
                   </div>
 
 
-                  <div className="from-group row">
-
-                    <div className="col-12 col-md-4 mt-3">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12 mt-2">
+                    <div className="col-span-6 lg:col-span-1">
                       <SearchSelect
                         name="month"
                         label={
@@ -297,12 +297,12 @@ const setEndDate = (year,month,date, setFieldValue) => {
                         isDisabled={isUserForRead || flag}
                         onChange={(e) => {
                           setFieldValue("month", e.value || null);
-                          setShortDormat(e.value, values.year, setFieldValue) 
-                          if(values.year && values.month && values.startDate){
-                         
-                            setEndDate(values.year, e.value,values.startDate, setFieldValue)
+                          setShortDormat(e.value, values.year, setFieldValue)
+                          if (values.year && values.month && values.startDate) {
+
+                            setEndDate(values.year, e.value, values.startDate, setFieldValue)
                           }
-                          
+
                         }}
                         value={
                           monthOptions?.find(
@@ -315,13 +315,7 @@ const setEndDate = (year,month,date, setFieldValue) => {
                       />
                     </div>
 
-                  </div>
-                  <div className="from-group row">
-
-
-
-
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-span-6 lg:col-span-1">
                       <label>
                         Year{" "}
                         <span style={{ color: "red" }}>*</span>
@@ -330,8 +324,8 @@ const setEndDate = (year,month,date, setFieldValue) => {
                         name="year"
                         component={Input}
                         placeholder="Enter year"
-                      
-                        disabled={isUserForRead || flag || !values.month }
+
+                        disabled={isUserForRead || flag || !values.month}
                         type="number"
                         min="1000"  // Minimum 4-digit year (e.g., 1000)
                         max="9999"  // Maximum 4-digit year (e.g., 9999)
@@ -344,24 +338,24 @@ const setEndDate = (year,month,date, setFieldValue) => {
                         onChange={(e) => {
                           // Use onChange to update the form's state with the input value
                           let value = e.target.value;
-                    
+
                           // Ensure the value is numeric and only 4 digits
                           if (/^\d{0,4}$/.test(value)) {
                             setFieldValue("year", value); // Update the form field
-                            setShortDormat(values.month,value, setFieldValue) 
+                            setShortDormat(values.month, value, setFieldValue)
                           }
                         }}
-                       
+
                         onInput={(e) => e.target.value = e.target.value.slice(0, 4)} // Ensure user can't type more than 4 digits
-                        
+
 
 
                       />
                     </div>
 
-                  </div>
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
+
+
+                    <div className="col-span-6 lg:col-span-1">
 
 
                       <Field
@@ -382,36 +376,35 @@ const setEndDate = (year,month,date, setFieldValue) => {
                       />
 
                     </div>
+
                   </div>
-                  <div className="from-group row">
 
 
 
 
-                    <div className="col-12 col-md-4 mt-3">
 
-                      <span> Start Date<span style={{ color: 'red' }}>*</span></span>
-                      <DatePicker
+
+
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12 mt-2">
+                    <div className="col-span-6 lg:col-span-1 ">
+
+                  
+                      <Field
                         className="form-control"
+                        component={DatePickerField}
                         placeholder="Enter Start Date"
                         selected={defstartDate}
+                          label={
+                          <span>
+                            {" "}
+                           Start Date<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         onChange={(date) => {
                           setFieldValue("startDate", date);
-                          setEndDate(values.year,values.month,date, setFieldValue)
-                          // setDefaultStartDate(date);
+                          setEndDate(values.year, values.month, date, setFieldValue)
+                 
 
-                          // // Add 365 days (considering leap years automatically)
-                          // const endDate = new Date(date);
-                          // endDate.setMonth(endDate.getMonth() + 1); // Add one year (365 or 366 days will be calculated automatically)
-
-                          // // Set the calculated end date
-                          // endDate.setDate(endDate.getDate() - 1);
-                          // setFieldValue("endDate", endDate);
-                          // setDefaultEndDate(endDate);
-                          // // setDefaultDays()
-                      
-                          // setFieldValue("month_days", getDateDiffInDays(values.startDate, values.endDate));
-                        
                         }}
 
                         timeInputLabel="Time:"
@@ -422,15 +415,22 @@ const setEndDate = (year,month,date, setFieldValue) => {
                         autoComplete="off"
                         value={values.startDate}
                       />
-                      <ErrorMessage className="form-feedBack" name="startDate" component="div" />
+                      {/* <ErrorMessage className="form-feedBack" name="startDate" component="div" /> */}
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <span> End Date</span>
-                      <DatePicker
+                    <div className="col-span-6 lg:col-span-1">
+                     
+                      <Field
                         className="form-control"
+                        component={DatePickerField}
                         placeholder="Enter End Date"
                         selected={defendDate}
+                         label={
+                          <span>
+                            {" "}
+                           End Date<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         onChange={(date) => {
                           setFieldValue("endDate", date);
                           setDefaultEndDate(date);
@@ -445,14 +445,11 @@ const setEndDate = (year,month,date, setFieldValue) => {
                         autoComplete="off"
                         value={values.endDate}
                       />
-                      <ErrorMessage className="form-feedBack" name="endDate" component="div" />
+                      {/* <ErrorMessage className="form-feedBack" name="endDate" component="div" /> */}
                     </div>
 
 
-                  </div>
-
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="col-span-6 lg:col-span-1">
                       <Field
                         name="month_days"
                         disabled={true}
@@ -465,6 +462,9 @@ const setEndDate = (year,month,date, setFieldValue) => {
                       />
                     </div>
                   </div>
+
+
+
 
 
                 </fieldset>
