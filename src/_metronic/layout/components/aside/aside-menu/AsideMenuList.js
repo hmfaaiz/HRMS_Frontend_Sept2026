@@ -85,7 +85,7 @@ export function AsideMenuList({ layoutProps }) {
 
   return (
     <div
-      style={{ zIndex: "9999" }}
+      style={{ zIndex: "999" }}
       className="sticky top-0 w-full bg-[#0093dd]"
     >
       <Header

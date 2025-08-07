@@ -84,7 +84,7 @@ export function DeptCard() {
                   onClick={DeptUIProps.newDeptButtonClick}
                 >
                   <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-                  Add Department
+                  Add
                 </button>
               </>
             )}

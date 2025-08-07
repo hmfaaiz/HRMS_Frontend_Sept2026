@@ -2719,7 +2719,7 @@ export function FormEditForm({
                       }}
                       className="btn btn-primary btn-elevate"
                     >
-                      Ok
+                      OK
                     </button>
                   )}
 

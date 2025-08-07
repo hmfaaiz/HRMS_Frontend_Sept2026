@@ -836,7 +836,7 @@ export function FormEditForm({
           </Modal.Body>
 
           <Modal.Footer>
-            {/* Cancel / Ok Button */}
+            {/* Cancel / OK Button */}
             {!isUserForRead ? (
               <button
                 type="button"
@@ -853,7 +853,7 @@ export function FormEditForm({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

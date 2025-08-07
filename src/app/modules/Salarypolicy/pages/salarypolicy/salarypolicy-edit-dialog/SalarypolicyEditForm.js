@@ -303,7 +303,7 @@ let formattedString;
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
             {!isUserForRead  && values.type && (

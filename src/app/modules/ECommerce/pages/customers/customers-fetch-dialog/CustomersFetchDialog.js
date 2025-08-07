@@ -105,7 +105,7 @@ export function CustomersFetchDialog({ show, onHide }) {
             onClick={onHide}
             className="btn btn-primary btn-elevate"
           >
-            Ok
+            OK
           </button>
         </div>
       </Modal.Footer>

@@ -265,7 +265,7 @@ function ConfirmationDialogRaw9(props) {
           Cancel
         </Button>
         <Button onClick={handleOk} color="primary">
-          Ok
+          OK
         </Button>
       </DialogActions>
     </Dialog>
@@ -1717,7 +1717,7 @@ function ConfirmationDialogRaw(props) {
           Cancel
         </Button>
         <Button onClick={handleOk} color="primary">
-          Ok
+          OK
         </Button>
       </DialogActions>
     </Dialog>

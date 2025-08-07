@@ -76,7 +76,7 @@ export function DeptTable() {
 
     {
       dataField: "deptCode",
-      text: "Department Code",
+      text: "Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -86,7 +86,7 @@ export function DeptTable() {
     },
     {
       dataField: "DepartmentTree",
-      text: "Department Name",
+      text: "Name",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -113,7 +113,7 @@ export function DeptTable() {
 
     {
       dataField: "budgetStrength",
-      text: "Department Strength",
+      text: "Strength",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

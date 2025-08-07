@@ -80,11 +80,11 @@ export function BanksCard() {
             <>
               <button
                 type="button"
-                className="btn btn-primary mr-2"
+                className="btn btn-primary"
                 onClick={BanksUIProps.newBankButtonClick}
               >
-                <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" /> Add
-                Bank
+                <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+                Add
               </button>
             </>
           )}

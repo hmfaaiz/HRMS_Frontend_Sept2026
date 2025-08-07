@@ -22,7 +22,7 @@ export function ActionsColumnFormatter(
 ) {
   const isUserRead = false;
   return (
-    <>
+    <div className="space-x-2">
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
       >
@@ -44,7 +44,6 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      <> </>
 
       {isAccessForDelete && (
         <OverlayTrigger
@@ -73,6 +72,6 @@ export function ActionsColumnFormatter(
           )}
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

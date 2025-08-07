@@ -485,7 +485,7 @@ const setEndDate = (year,month,date, setFieldValue) => {
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

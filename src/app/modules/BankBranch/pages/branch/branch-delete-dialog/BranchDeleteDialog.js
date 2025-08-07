@@ -6,7 +6,6 @@ import * as actions from "../../../_redux/branchActions";
 import { useBranchUIContext } from "../BranchUIContext";
 
 export function BranchDeleteDialog({ id, status, show, onHide }) {
-
   const [loading, setLoading] = useState(false);
   // Customers UI Context
   const usersUIContext = useBranchUIContext();
@@ -71,8 +70,8 @@ export function BranchDeleteDialog({ id, status, show, onHide }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure want to delete this record?</span>}
-        {isLoading && <span>user is deactivating...</span>}
+        {!isLoading && <label>Are you sure want to delete this record?</label>}
+        {isLoading && <label>user is deactivating...</label>}
       </Modal.Body>
       <Modal.Footer>
         <div>
@@ -87,9 +86,9 @@ export function BranchDeleteDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={deleteBranch}
-            className="btn btn-primary btn-elevate"
+            className="btn btn-danger btn-elevate"
           >
-            Delete Record
+            Delete
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}

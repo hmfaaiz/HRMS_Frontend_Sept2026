@@ -399,7 +399,7 @@ export const EditForm = ({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 
