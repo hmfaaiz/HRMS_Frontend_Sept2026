@@ -305,6 +305,7 @@ input[type="checkbox"] {
 // for invalid-feedback
 .invalid-feedback {
   font-size: 0.7rem;
+  display: block !important;
 }
 
 // for label of input
@@ -403,4 +404,8 @@ label {
 .btn-group-sm > .btn.btn-icon {
   height: calc(1.05em + 0.75rem + 1px) !important;
   width: calc(1.05em + 0.75rem + 1px) !important;
+}
+
+.stroke-3{
+  stroke-width: 3 !important;
 }

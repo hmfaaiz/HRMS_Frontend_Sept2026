@@ -118,7 +118,8 @@ export function SubsidiaryPage({ history }) {
                   className="btn btn-primary"
                   onClick={componentEvents.newButtonClick}
                 >
-                  <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+                >
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                   Add
                 </button>
               </>

@@ -47,7 +47,7 @@ export function SearchSelect({
          classNamePrefix="select_option"
       />
 
-      {error && touched ? <div className="form-feedBack">{error}</div> : null}
+      {error && touched ? <div className="invalid-feedback">{error}</div> : null}
       {/* {JSON.stringify(selectedOption)} */}
     </>
   );

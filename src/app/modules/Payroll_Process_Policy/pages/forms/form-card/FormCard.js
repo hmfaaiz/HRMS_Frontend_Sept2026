@@ -76,7 +76,8 @@ export function FormCard({ id, setid, readOnly }) {
                   className="btn btn-primary"
                   onClick={formUIProps.newFormButtonClick}
                 >
-                  <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+                >
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                   Add
                 </button>
               </>
