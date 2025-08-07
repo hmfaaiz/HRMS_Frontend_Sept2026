@@ -60,42 +60,10 @@ export function AuthPage() {
             {/* Right  */}
 
 
-            <div className="col-12 col-md-8 pt-5 d-flex flex-column  opacity-97">
+            <div className="col-12 col-md-8 pt-5 d-flex flex-column  opacity-97" >
+              {/*  style={{ display: window.innerWidth < 768 ? 'none' : 'flex' }} */}
               <div className="bg-white p-5 m-0 rounded-top">
-                {/* <div
-                  className=" d-flex flex-column"
-                  id="kt_login"
-                  style={{
-                    height: "63vh", // full viewport height ✅
-                    backgroundImage: `url(${toAbsoluteUrl("/media/bg/login-pic.png")})`,
-                    backgroundSize: "cover", // covers full area ✅
-                    backgroundPosition: "center", // centers the image ✅
-                    backgroundRepeat: "no-repeat", // prevent tiling (optional)
-                  }}
-                >
-
-
-// https://dynasoftcloud.com/contact-us.php
-
-                </div> */}
-                {/* <Carousel interval={3000}>
-                  {[1, 2, 3,4].map((item, index) => (
-                    <Carousel.Item key={index}>
-                      <div
-                      // https://dynasoftcloud.com/contact-us.php
-                        className="d-flex flex-column rounded"
-                        style={{
-                          height: '63vh',
-                          // backgroundImage: `url(${toAbsoluteUrl("/media/bg/Testing1.png")})`,
-                           backgroundImage: `url(${toAbsoluteUrl(`/media/bg/Slider/Slider${index + 1}.webp`)})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                      ></div>
-                    </Carousel.Item>
-                  ))}
-                </Carousel> */}
+   
 
                 <Carousel interval={3000}>
                   {[1, 2, 3, 4].map((item, index) => (
