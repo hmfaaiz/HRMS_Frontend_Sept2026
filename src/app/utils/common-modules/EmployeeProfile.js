@@ -70,17 +70,17 @@
 //           <div className='accordion-header-btn '>
 //             <Accordion.Toggle eventKey="0" className="flex-between-center">
 //               Employee Detail
-       
+
 //             </Accordion.Toggle>
 //           </div>
 //         </Card.Header> */}
 //         <Accordion.Collapse eventKey="0">
 //           <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
-         
+
 //           {/* "rgb(235 243 255)" */}
 //             <div style={{ backgroundColor:  "#E6F8FF", padding: "20px", borderRadius: "5px", border: 'none' }}>
-     
-              
+
+
 
 //             <div className="d-flex justify-content-between flex-column flex-md-row align-items-center">
 
@@ -100,7 +100,7 @@
 //                   style={{
 //                     borderRadius: '50%',  // Make the image circular
 //                     objectFit: 'cover',   // Ensure the image covers the entire area without distortion
-                  
+
 //                   }}
 //                     onError={(e) => {
 //                     e.target.onerror = null; // Error loop rokne ke liye
@@ -119,7 +119,7 @@
 //                 SECTIONS.map((section, sectionIndex) => (
 //                   <div key={sectionIndex} style={{ marginBottom: "2%" }}>
 //                     <h5 className='text-bold mb-5 custom_color_1'>{section.heading}</h5>
-                
+
 //                     <Row>
 //                       {section.fields.map((field, fieldIndex) => (
 //                         <Col key={fieldIndex} md={3}> {/* Four columns layout */}
@@ -212,85 +212,83 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
         <Accordion defaultActiveKey="0" className="mx-6">
           <Card>
             <Accordion.Collapse eventKey="0">
+
               <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
-                <div
-                  style={{
-                    backgroundColor: '#E6F8FF',
-                    padding: '20px',
-                    borderRadius: '5px',
-                    border: 'none',
-                  }}
-                >
+                <div style={{ backgroundColor: '#E6F8FF', borderRadius: '5px', border: 'none' }}>
                   {Object.keys(data).length ? (
-                    SECTIONS.map((section, sectionIndex) => (
-                      <div key={sectionIndex} style={{ marginBottom: '2%' }}>
-                        <h5 className="text-bold mb-5 custom_color_1">{section.heading}</h5>
+                    <Row>
+                      {/* Office Info */}
+                      <Col md={4}>
+                        <h5 className="text-bold mb-4 custom_color_1">Office Information</h5>
+                        {SECTIONS[0].fields.map((field, idx) => (
+                          <div key={idx} className="d-flex justify-content-between">
+                            <strong>{field.name}:</strong>{" "}
+                            <span className='text-start'>
+                              {data[field.value]
+                                ? field.isDate
+                                  ? formatDates(data[field.value])
+                                  : data[field.value]
+                                : 'N/A'}
+                            </span>
 
-                        <Row className="align-items-start">
-                          {/* Fields on the left */}
-                          <Col md={9}>
-                            <Row>
-                              {section.fields.map((field, fieldIndex) => (
-                                <Col key={fieldIndex} md={4} className="mb-3">
-                                  <strong>{field.name}: </strong>
-                                  {data[field.value]
-                                    ? field.isDate
-                                      ? formatDates(data[field.value])
-                                      : data[field.value]
-                                    : 'N/A'}
-                                </Col>
-                              ))}
+                          </div>
+                        ))}
+                        <div className="">
+                          <strong>Reporting To:</strong> {data.reportToName ?? 'N/A'}
+                        </div>
+                        <div className="">
+                          <strong>Payroll Group:</strong> {data.payrollName ?? 'N/A'}
+                        </div>
+                      </Col>
 
-                              {/* Add Reporting To & Payroll Group below others in Office Info */}
-                              {sectionIndex === 0 && (
-                                <>
-                                  <Col md={4} className="mb-3">
-                                    <strong>Reporting To: </strong>
-                                    {data.reportToName ?? 'N/A'}
-                                  </Col>
-                                  <Col md={4} className="mb-3">
-                                    <strong>Payroll Group: </strong>
-                                    {data.payrollName ?? 'N/A'}
-                                  </Col>
-                                </>
-                              )}
-                            </Row>
-                          </Col>
+                      {/* Personal Info */}
+                      <Col md={4}>
+                        <h5 className="text-bold mb-4 custom_color_1">Personal Information</h5>
+                        {SECTIONS[1].fields.map((field, idx) => (
+                          <div key={idx} className="">
+                            <strong>{field.name}:</strong>{" "}
+                            {data[field.value]
+                              ? field.isDate
+                                ? formatDates(data[field.value])
+                                : data[field.value]
+                              : 'N/A'}
+                          </div>
+                        ))}
+                      </Col>
 
-                          {/* Profile image on the right in Office Info only */}
-                          {sectionIndex === 0 && (
-                            <Col md={3} className="text-end">
-                              <img
-                                name="profile_image"
-                                src={
-                                  data.profile_image
-                                    ? `${data.profile_image}`
-                                    : toAbsoluteUrl('/media/users/profileImage.png')
-                                }
-                                alt="Profile"
-                                width={120}
-                                height={120}
-                                style={{
-                                  borderRadius: '50%',
-                                  objectFit: 'cover',
-                                }}
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
-                                }}
-                              />
-                            </Col>
-                          )}
-                        </Row>
-
-                        {/* <hr /> */}
-                      </div>
-                    ))
+                      {/* Profile Image */}
+                      <Col md={4} className="d-flex justify-content-center align-items-start">
+                        <img
+                          name="profile_image"
+                          src={
+                            data.profile_image
+                              ? `${data.profile_image}`
+                              : toAbsoluteUrl('/media/users/profileImage.png')
+                          }
+                          alt="Profile"
+                          width={120}
+                          height={120}
+                          style={{
+                            borderRadius: '10px',
+                            objectFit: 'cover',
+                            border: '1px solid #ddd',
+                            padding: '5px',
+                            backgroundColor: '#fff',
+                          }}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
+                          }}
+                        />
+                      </Col>
+                    </Row>
                   ) : (
-                    <p>Please Choose an Employee</p>
+                    <p>No profile data available</p>
                   )}
                 </div>
               </Card.Body>
+
+
             </Accordion.Collapse>
           </Card>
         </Accordion>

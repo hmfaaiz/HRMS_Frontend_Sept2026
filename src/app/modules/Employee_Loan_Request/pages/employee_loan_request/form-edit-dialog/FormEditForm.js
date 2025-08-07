@@ -449,7 +449,7 @@ export function FormEditForm({
     };
   });
 
-  const isLoanCompleted = () => {};
+  const isLoanCompleted = () => { };
 
   const clearCustomeData = () => {
     setMaxAmountLimit("");
@@ -581,9 +581,8 @@ export function FormEditForm({
                   isUserForRead || !currentState?.loan_config_details_permission
                 }
               >
-                <div className="form-group row">
-                  {/* <div className="col-12 col-md-12  p-0 m-0"> */}
-                  <div className="col-12 col-md-6 ">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                  <div className="">
                     <SearchSelect
                       name="loan_typeId"
                       label={
@@ -613,28 +612,9 @@ export function FormEditForm({
                   </div>
                   {/* </div> */}
 
-                  {/* Active payroll month */}
 
-                  {/* <div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
-                    {activeFiscalYear
-                      ? (() => {
-                          return (
-                            <>
-                              <div>
-                                <b>Active Fiscal Year -</b>{" "}
-                                {activeFiscalYear?.label}
-                              </div>
-                              <div>
-                                <b>Active Payroll Month -</b>{" "}
-                                {activeFiscalYear?.payrollMonthLabel}
-                              </div>
-                            </>
-                          );
-                        })()
-                      : null}
-                  </div> */}
 
-                  <div className="col-12 col-md-6 ">
+                  <div className="">
                     <SearchSelect
                       name="employee_loan_accountId"
                       label={
@@ -671,7 +651,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <label>
                       Applied Date <span style={{ color: "red" }}>*</span>
                     </label>
@@ -696,7 +676,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <label>
                       Installment Start Date{""}
                       <span style={{ color: "red" }}>*</span>
@@ -722,44 +702,11 @@ export function FormEditForm({
                       }
                     />
                   </div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
 
-                  <div className="col-12 col-md-6 mt-3">
-                    {/* <Field
-                      name="total_loan_amount"
-                      component={Input}
-                      placeholder="Enter total loan amount"
-                      label={
-                        <div className="d-flex">
-                          <div className="d-flex">Total Loan Amount </div>
-                          <div className="d-flex ml-3">
-                            <span>
-                              ( Amount Limit :
-                              {maxAmountLimit?.toLocaleString() || 0})
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          </div>
-                        </div>
-                      }
-                      type="number"
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
+                  <div className="">
 
-                        if (
-                          maxAmountLimit !== undefined &&
-                          value > maxAmountLimit
-                        ) {
-                          return; // Prevent setting value above max
-                        }
-
-                        setFieldValue("total_loan_amount", value);
-                        setTotalLoanAmount(value);
-                      }}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                      }}
-                      // disabled={userForEdit?.details[0]?.is_deducted}
-                      disabled={userForEdit}
-                    /> */}
                     <AmountInput
                       field={{
                         name: `total_loan_amount`,
@@ -787,20 +734,18 @@ export function FormEditForm({
                       placeholder="Enter total loan amount"
                       label={
                         <div className="d-flex">
-                          <div className="d-flex">Total Loan Amount </div>
-                          <div className="d-flex ml-3">
-                            <span>
-                              ( Amount Limit :
-                              {maxAmountLimit?.toLocaleString() || 0})
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          </div>
+                          <div className="d-flex">Total Loan Amount   <span>
+                            (Amount Limit :
+                            {maxAmountLimit?.toLocaleString() || 0})
+                            <span style={{ color: "red" }}>*</span>
+                          </span></div>
+
                         </div>
                       }
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <AmountInput
                       field={{
                         name: `monthly_installment`,
@@ -829,10 +774,10 @@ export function FormEditForm({
                       label={
                         <div className="d-flex">
                           <div className="d-flex"> Monthly Installment</div>
-                          <div className="d-flex ml-3">
+                          <div className="d-flex">
                             {maxMonthlyAmountSuggest ? (
                               <span>
-                                (Max Suggested Installment Based on Salary :{" "}
+                                (Suggested Installment Based on Policy :{" "}
                                 {maxMonthlyAmountSuggest?.toLocaleString() || 0}
                                 )
                               </span>
@@ -844,21 +789,19 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <Field
                       name="total_installment"
                       component={Input}
                       placeholder="Total installments"
                       label={
                         <div className="d-flex">
-                          <div className="d-flex"> Total installments</div>
-                          <div className="d-flex ml-3">
-                            <span>
-                              (Max installments :{" "}
-                              {monthlyInstallmentsLimit?.toLocaleString() || 0})
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          </div>
+                          <div className="d-flex"> Total installments  <span>
+                            (Max installments :{" "}
+                            {monthlyInstallmentsLimit?.toLocaleString() || 0})
+                            <span style={{ color: "red" }}>*</span>
+                          </span></div>
+
                         </div>
                       }
                       type="number"
@@ -867,7 +810,11 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+
+                </div>
+                <div className="grid grid-cols-1 mt-2">
+
+                  <div className="">
                     <Field
                       name="reason"
                       component={TextArea}
@@ -884,8 +831,13 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
-                  <AmountInput
+
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3 mt-2">
+
+                  <div className="">
+                    <AmountInput
                       field={{
                         name: `loan_amount_paid`,
                         value: values?.loan_amount_paid,
@@ -899,19 +851,10 @@ export function FormEditForm({
                       label={<span>Loan Amount Paid</span>}
                       disabled={true}
                     />
-                    {/* <Field
-                      name="loan_amount_paid"
-                      component={Input}
-                      placeholder=""
-                      label={<span>Loan Amount Paid</span>}
-                      disabled={true}
-                      type="number"
-                      // value={""}
-                    /> */}
-                  </div>
 
-                  <div className="col-12 col-md-6 mt-3">
-                  <AmountInput
+                  </div>
+                  <div className="">
+                    <AmountInput
                       field={{
                         name: `loan_amount_remaining`,
                         value: values?.loan_amount_remaining,
@@ -937,37 +880,40 @@ export function FormEditForm({
                     /> */}
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
-                    {/* Your Field component (Checkbox) */}
-                    <Field
-                      name="isLoanContinuing"
-                      component="input"
-                      type="checkbox"
-                      id="isLoanContinuing"
-                      checked={!values.isLoanContinuing && userForEdit}
-                      onClick={handleCheckboxClick} // Trigger modal on checkbox click
-                      disabled={!userForEdit || !userForEdit?.isLoanContinuing}
-                    />
-                    <label className="ml-2 mb-2" htmlFor="isLoanContinuing">
-                      Loan Completed
-                    </label>
+                  <div className="pt-6">
+                    <div className="flex items-center">
+                      {/* Your Field component (Checkbox) */}
+                      <Field
+                        name="isLoanContinuing"
+                        component="input"
+                        type="checkbox"
+                        id="isLoanContinuing"
+                        checked={!values.isLoanContinuing && userForEdit}
+                        onClick={handleCheckboxClick} // Trigger modal on checkbox click
+                        disabled={!userForEdit || !userForEdit?.isLoanContinuing}
+                      />
+                      <label className="ml-2 mb-2" htmlFor="isLoanContinuing">
+                        Loan Completed
+                      </label>
 
-                    {/* CustomFormLoanDialog component is rendered here and controlled by the state */}
+                      {/* CustomFormLoanDialog component is rendered here and controlled by the state */}
 
-                    <CustomFormLoanDialog
-                      showModal={showModal}
-                      handleClose={handleCloseModal}
-                      userForEdit={userForEdit}
-                      message={
-                        userForEdit && userForEdit.loan_amount_remaining == 0
-                          ? "Are you sure to close this loan?"
-                          : "Are you sure to close this loan, this loan is not completed?"
-                      }
-                      handleReset={handleReset}
-                      setIds={setIds}
-                    />
+                      <CustomFormLoanDialog
+                        showModal={showModal}
+                        handleClose={handleCloseModal}
+                        userForEdit={userForEdit}
+                        message={
+                          userForEdit && userForEdit.loan_amount_remaining == 0
+                            ? "Are you sure to close this loan?"
+                            : "Are you sure to close this loan, this loan is not completed?"
+                        }
+                        handleReset={handleReset}
+                        setIds={setIds}
+                      />
+                    </div>
                   </div>
                 </div>
+
               </fieldset>
             </Form>
           </Modal.Body>

@@ -11,7 +11,7 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { Card, CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import { Eye, X, XCircle, CircleX } from "lucide-react";
 
 export function EmployeeSelect({
   actionsLoading,
@@ -27,7 +27,7 @@ export function EmployeeSelect({
   )
 
 
- const { activeFiscalYear } = useSelector((state) => state.dashboard);
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
 
   return (
@@ -57,10 +57,10 @@ export function EmployeeSelect({
             {/* Form Starts */}
             <Form className="form form-label-right">
               <fieldset>
-                <div className="from-group row">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 mt-2 col-span-12">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-3  ml-7">
+                  <div className="ml-3">
 
 
 
@@ -108,25 +108,39 @@ export function EmployeeSelect({
 
                   </div>
 
-                  <div className="col-6 col-md-4 d-flex  align-items-center pt-10">
-                    <span
-                      className="svg-icon svg-icon-md svg-icon-primary"
-                      onClick={() => setPanelMode(!panelMode)}
-                    >
-                      <SVG
-                        src={toAbsoluteUrl(
-                          panelMode
-                            ? "/media/svg/icons/Communication/CancelButton.svg"
-                            : "/media/svg/icons/Communication/AddButton.svg"
-                        )}
-                      />
-                    </span>
+                  <div className="mt-6">
+
+
+
+                    {panelMode ? (
+                      <button
+                        type="button"
+                        className="btn  btn-danger d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-white" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        
+
+                         <Eye className="w-4 h-4 text-white" />
+                        View Details
+                      </button>
+                    )}
+
+
 
 
                   </div>
                   {/* Employee Id Dropdown Ends */}
 
-                     <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
+                  {/* <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
                     {activeFiscalYear
                       ? (() => {
                           return (
@@ -143,7 +157,7 @@ export function EmployeeSelect({
                           );
                         })()
                       : null}
-                  </div>
+                  </div> */}
 
                 </div>
               </fieldset>
