@@ -138,7 +138,8 @@ export function UserProfileDropdown() {
 
 
 return (
-  <Dropdown style={{ position: "relative" }} align="end">
+  
+<Dropdown className="user-dropdown" drop="down" align="end"  flip={false}>
     <Dropdown.Toggle
       as="div"
       id="dropdown-toggle-user-profile"
@@ -168,14 +169,14 @@ return (
     </Dropdown.Toggle>
 
 <Dropdown.Menu
-  className="ml-40 mt-5 p-0 m-0 dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround"
-  style={{
-    minWidth: "200px",
-    // marginTop: "10px",
-    // position: "absolute",
-    // inset: "100% 0 auto auto", // Top, Right, Bottom, Left
-    // zIndex: 9999,
-  }}
+  className="  p-0 m-0 "
+  // style={{
+  //   minWidth: "200px",
+  //   // marginTop: "10px",
+  //   position: "absolute",
+  //   right: "0px",
+  //   zIndex: "9",
+  // }}
 >
       {portalRoutesLength > 0 &&
         HRMSRoutesLength > 0 &&

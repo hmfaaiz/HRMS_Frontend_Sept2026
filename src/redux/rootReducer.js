@@ -43,7 +43,7 @@ import { employeeSalarySlice } from "../app/modules/Employee_Salary_Setup/_redux
 import { employeeSalaryExpSlice } from "../app/modules/Employee_Salary_Expatriate/_redux/employeeSalaryExpSlice";
 import { compensationExpSlice } from "../app/modules/Compensation_Expatriate/_redux/compensationExpSlice";
 import { employee_transfer_slice } from "../app/modules/Employee_Transfer/_redux/employee_transfer_slice";
-import { SalaryRevisionSlice } from "../app/modules/Employee_Salary_Revision/_redux/SalaryRevisionSlice";
+// import { SalaryRevisionSlice } from "../app/modules/Employee_Salary_Revision/_redux/SalaryRevisionSlice";
 
 import { fiscalSetupSlice } from "../app/modules/Fiscal_Setup/_redux/fiscalSetupSlice";
 import { PayrollMonthSlice } from "../app/modules/Payroll_Month_Setup/_redux/PayrollMonthSlice";
@@ -109,6 +109,8 @@ import { AttendanceWorkflowStatusSlice } from "../app/modules/AttendanceWorkflow
 import { TeamLeaveCalendarSlice } from "../app/modules/Leave_Calendar_Team/_redux/redux-Slice";
 import { TeamAttendanceCalendarSlice } from "../app/modules/Attendance_Calendar_Team/_redux/redux-Slice";
 import { PortalHolidayCalendarSlice } from "../app/modules/PortalHolidayCalendar/_redux/redux-Slice";
+import { EmpSalaryRevisionSlice } from "../app/modules/Emp_Salary_Revision/_redux/redux-Slice";
+import { NewsEventTickerSlice } from "../app/modules/NewsEventTicker/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -150,7 +152,7 @@ export const rootReducer = combineReducers({
   salary_expatriate: employeeSalaryExpSlice.reducer,
   compensation_expatriate: compensationExpSlice.reducer,
   employee_transfer: employee_transfer_slice.reducer,
-  salary_revision: SalaryRevisionSlice.reducer,
+  // salary_revision: SalaryRevisionSlice.reducer,
   tax_setup: taxSetupSlice.reducer,
   fiscal_setup: fiscalSetupSlice.reducer,
   payroll_month: PayrollMonthSlice.reducer,
@@ -216,6 +218,8 @@ export const rootReducer = combineReducers({
   team_leave_calender : TeamLeaveCalendarSlice.reducer,
   attendance_calendar_team : TeamAttendanceCalendarSlice.reducer,
   portal_holiday_calendar : PortalHolidayCalendarSlice.reducer,
+  emp_salary_revision : EmpSalaryRevisionSlice.reducer,
+  news_event_ticker : NewsEventTickerSlice.reducer,
 });
 
 export function* rootSaga() {

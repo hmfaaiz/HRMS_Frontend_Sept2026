@@ -36,11 +36,11 @@ const formValidation = Yup.object().shape(
       .required(VALIDATION_MESSAGES.required),
     grossSalary: Yup.string()
       .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
 
     basicSalary: Yup.string()
       .required(VALIDATION_MESSAGES.required)
-      .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+      .matches(/^\d+(\.\d{1,2})?$/, "Must be a valid number (up to 2 decimal places)"), // Only digits validation
 
     eobi_accNo: Yup.string()
       .matches(/^\d+$/, "Must contain only digits")// Only digits validation
@@ -158,12 +158,7 @@ const formValidation = Yup.object().shape(
         otherwise: Yup.number().notRequired(),
       }),
 
-    // company_bankId: Yup.number()
-    //   .when('payment_mode_Id', {
-    //     is: 153, // if select value is 153
-    //     then: Yup.number().required(VALIDATION_MESSAGES.required),
-    //     otherwise: Yup.number().notRequired(),
-    //   }),
+
 
     emp_bank_branchId: Yup.number()
       .when('payment_mode_Id', {
@@ -172,12 +167,7 @@ const formValidation = Yup.object().shape(
         otherwise: Yup.number().notRequired(),
       }),
 
-    // company_branchId: Yup.number()
-    //   .when('payment_mode_Id', {
-    //     is: 153, // if select value is 153
-    //     then: Yup.number().required(VALIDATION_MESSAGES.required),
-    //     otherwise: Yup.number().notRequired(),
-    //   }),
+
 
     emp_bank_accountTitle: Yup.string()
       .when('payment_mode_Id', {
@@ -423,7 +413,8 @@ export function BankEditForm({
       else {
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
-      setBasicSalaryFactor(response?.data?.data[0]?.basicFactor || '');
+      console.log("aaa333",response?.data?.data[0])
+      setBasicSalaryFactor(response?.data?.data[0]?.basicSalaryFactor || response?.data?.data[0]?.basicFactor || '');
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || '');
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || '');
       setBasicSalary(response?.data?.data[0]?.basicSalary || '');
@@ -676,7 +667,7 @@ useEffect(()=>{
             setErrors(validationErrors);
           } else {
             enableLoading();
-            saveEarningDeductionTran({...values, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)}, defMapEarningDeductionList);
+            saveEarningDeductionTran({...values,basicFactor:defBasicSalaryFactor, grossPackage: values.grossSalary > 0 ? Number(values.grossSalary) + Number(totalGross) : Number(defGrossSalary) + Number(totalGross)}, defMapEarningDeductionList);
           }
         }}
       >
@@ -779,24 +770,7 @@ useEffect(()=>{
 
 
 
-                      {/* <Field
-                        name="grossSalary"
-                        type="number"
-                        maxLength={8}
-                        disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
-                        onInput={(e) => {
-                          e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                        }}
-                        onChange={(e) => {
-                          setGrossSalaryDB(e.target.value);
-                          setFieldValue("grossSalary", e.target.value);
-                        }}
-                        component={Input}
-                        value={defGrossSalaryDB || ''}
-                        placeholder="Enter Gross Salary"
-                        label={<span> Gross Salary<span style={{ color: 'red' }}>*</span></span>}
-                        autoComplete="off"
-                      /> */}
+                    
                     </div>
 
                     <div className="col-12 col-md-4 mt-3">
@@ -1034,16 +1008,7 @@ useEffect(()=>{
                           </td>
 
                           <td>
-                            {/* <input
-
-                              type="number"
-                              onInput={(e) => {
-                                e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                              }}
-
-                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'} style={{ width: "100px" }}
-                              onChange={handleFieldChanged}
-                              value={obj.amount} id={'amount-' + rightindex}></input> */}
+                            
                                <AmountInput
                               field={{
                                 name: `amount-${rightindex}`,
@@ -1181,18 +1146,7 @@ useEffect(()=>{
                               disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'}
                               value={obj.amount}
                             />
-                            {/* <input
-                              type="number"
-                              onInput={(e) => {
-                                e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                              }}
-                              disabled={obj.calculation_type == '% Of Gross' || obj.calculation_type == '% Of Basic'} style={{ width: "100px" }}
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                setErrors((prev) => ({ ...prev, [`amount-${rightindex}`]: '' })); // Clear error on change
-                              }}
-                              value={obj.amount} id={'amount-' + rightindex} >
-                            </input> */}
+                            
                             {deferrors[`amount-${rightindex}`] && <div className="form-feedBack">{deferrors[`amount-${rightindex}`]}</div>}
                           </td>
                         </tr>
@@ -1419,27 +1373,7 @@ useEffect(()=>{
                         </div>
                       }
 
-                      {/* {<div className="col-12 col-md-4 mt-3">
-                        <SearchSelect
-                          name="company_bankId"
-                          label={<span> Company Bank</span>}
-                          isDisabled={checkReadOnlyStatus(values, [151, 152])}
-                          onBlur={() => {
-                            // handleBlur({ target: { name: "countryId" } });
-                          }}
-                          onChange={(e) => {
-                            setFieldValue("company_bankId", e.value);
-                            setDefaultCompanyBanks(e);
-                            dispatch(fetchAllCompanyBanks(e.value));
-                          }}
-                          value={!checkReadOnlyStatus(values, [151, 152]) ? defCompanyBank : ''}
-                          error={errors.company_bankId}
-                          touched={touched.company_bankId}
-                          options={dashboard.allCompanyBanks}
-                        />
-                      </div>
-
-                      } */}
+                
 
                     </div>
                     <div className="from-group row">
@@ -1448,27 +1382,7 @@ useEffect(()=>{
                         <div className="col-12 col-md-4 mt-3">
                         </div>
                       }
-                      {/* {<div className="col-12 col-md-4 mt-3">
-                        <SearchSelect
-                          name="company_branchId"
-                          label={<span>Company Bank Branch</span>}
-                          isDisabled={checkReadOnlyStatus(values, [151, 152])}
-                          onBlur={() => {
-                            // handleBlur({ target: { name: "countryId" } });
-                          }}
-                          onChange={(e) => {
-                            setFieldValue("company_branchId", e.value);
-                            setDefaultCompanyBankBranch(e);
-                            dispatch(fetchAllBankBranch(e.value));
-                          }}
-                          value={!checkReadOnlyStatus(values, [151, 152]) ? defCompanyBankBranch : ''}
-                          error={errors.company_branchId}
-                          touched={touched.company_branchId}
-                          options={dashboard.allBankBranch}
-                        />
-                      </div>
-
-                      } */}
+                   
                     </div>
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
@@ -1491,26 +1405,7 @@ useEffect(()=>{
                         <div className="col-12 col-md-4 mt-3">
                         </div>
                       }
-                      {/* <div className="col-12 col-md-4 mt-3">
-
-                        <Field
-                          maxLength={20}
-
-                          disabled={checkReadOnlyStatus(values, [151, 152])}
-                          name="company_from_accNo"
-                          component={Input}
-                          type='number'
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(e.target.value, 15); // Limit to 3 digits
-                          }}
-                          // value={clearComBankAccField}
-                          // onChange={(e) => setComBankAccClearField(e.target.value)}
-                          placeholder="Enter Bank Account No"
-                          label={<span>Company Bank Account No</span>}
-                          autoComplete="off"
-
-                        />
-                      </div> */}
+                      
                     </div>
                     <div className="from-group row">
 
@@ -1522,7 +1417,12 @@ useEffect(()=>{
                   </br>
 
 
-                  <Accordion defaultActiveKey="">
+               
+
+
+
+                </fieldset>
+                   <Accordion defaultActiveKey="">
                     <Card>
                       <Card.Header>
                         <div className='accordion-header-btn'>
@@ -1541,6 +1441,7 @@ useEffect(()=>{
                             <div className="from-group row">
                               <div className="col-12 col-md-4 mt-12">
                                 <input type="checkbox"
+                                disabled={isUserForRead}
                                   name="gratuity_member"
                                   onChange={(e) => {
                                     setFieldValue('gratuity_member', e.target.checked)
@@ -1568,7 +1469,7 @@ useEffect(()=>{
                                   showTimeInput
                                   name="gratuity_startDate"
                                   autoComplete="off"
-                                  disabled={!values.gratuity_member}
+                                  disabled={!values.gratuity_member || isUserForRead}
                                 // value = {values.dateOfJoining}
                                 />
                                 <ErrorMessage className="form-feedBack" name="gratuity_startDate" component="div" />
@@ -1582,6 +1483,7 @@ useEffect(()=>{
                                 <input
                                   name="overtime_allowance"
                                   type="checkbox"
+                                  disabled={isUserForRead}
                                   onChange={(e) => {
                                     setFieldValue('overtime_allowance', e.target.checked)
                                   }}
@@ -1596,7 +1498,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-3">
                                 <Field
                                   name="overtime_working_day"
-                                  disabled={!Boolean(values.overtime_allowance)}
+                                  disabled={!Boolean(values.overtime_allowance) || isUserForRead}
                                   type="number"
                                   component={Input}
                                   maxLength={2}
@@ -1609,7 +1511,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-3">
                                 <Field
                                   name="overtime_off_day"
-                                  disabled={!Boolean(values.overtime_allowance)}
+                                  disabled={!Boolean(values.overtime_allowance) || isUserForRead}
                                   type="number"
                                   component={Input}
                                   maxLength={2}
@@ -1622,7 +1524,7 @@ useEffect(()=>{
                               <div className="col-12 col-md-4 mt-3">
                                 <Field
                                   name="overtime_holiday"
-                                  disabled={!Boolean(values.overtime_allowance)}
+                                  disabled={!Boolean(values.overtime_allowance) || isUserForRead}
                                   type="number"
                                   component={Input}
                                   maxLength={2}
@@ -1632,45 +1534,7 @@ useEffect(()=>{
                                 />
                               </div>
 
-                              {/* <div className="col-12 col-md-4 mt-3">
-                        <input
-                          type="checkbox"
-                          name="shift_allowance"
-                          onChange={(e)=> {
-                            setFieldValue('shift_allowance', e.target.checked)
-                          }}
-                          onBlur={handleBlur}
-                          value={values.shift_allowance}
-                          checked={values.shift_allowance}
-                        />  Shift Allowance
-
-                      </div> */}
-                              {/* <div className="col-12 col-md-4 mt-3">
-                        <input
-                          type="checkbox"
-                          name="regularity_allowance"
-                          onChange={(e)=> {
-                            setFieldValue('regularity_allowance', e.target.checked)
-                          }}
-                          onBlur={handleBlur}
-                          value={values.regularity_allowance}
-                          checked={values.regularity_allowance}
-                        /> Regularity Allowance
-
-                      </div> */}
-                              {/* <div className="col-12 col-md-4 mt-3">
-                        <input
-                          type="checkbox"
-                          name="punctuality_allowance"
-                          onChange={(e)=> {
-                            setFieldValue('punctuality_allowance', e.target.checked)
-                          }}
-                          onBlur={handleBlur}
-                          checked={values.punctuality_allowance}
-                          value={values.punctuality_allowance}
-                        /> Punctuality Allowance
-
-                      </div> */}
+                            
                             </div>
                           </div>
                           <br></br>
@@ -1682,6 +1546,7 @@ useEffect(()=>{
                                 <input
                                   name="eobi_member"
                                   type="checkbox"
+                                  disabled={isUserForRead}
                                   onChange={(e) => {
                                     setFieldValue('eobi_member', e.target.checked)
                                   }}
@@ -1709,7 +1574,7 @@ useEffect(()=>{
                                   name="eobi_reg_date"
                                   autoComplete="off"
 
-                                  disabled={!values.eobi_member}
+                                  disabled={!values.eobi_member || isUserForRead}
                                 />
                                 <ErrorMessage className="form-feedBack" name="eobi_reg_date" component="div" />
                               </div>
@@ -1726,84 +1591,17 @@ useEffect(()=>{
                                   placeholder="Enter EOBI Account No"
                                   label={<span> EOBI Account No{Boolean(values.eobi_member) && <span style={{ color: 'red' }}>*</span>} </span>}
                                   autoComplete="off"
-                                  disabled={!values.eobi_member}
+                                  disabled={!values.eobi_member || isUserForRead}
                                 />
                               </div>
                             </div>
-                            {/* <div className="from-group row">
-
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          name="pf_member"
-                          type="checkbox"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.pf_member}
-                          value={values.pf_member}
-                        //onChange={handleCheckboxChange}
-                        /> PF Member
-
-                      </div>
-
-                      <div className="col-12 col-md-4 mt-5">
-                        {<span> Date Of Registration{Boolean(values.pf_member) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        <DatePicker
-                          className="form-control"
-                          placeholder="Enter PF Reg Date"
-
-                          selected={values.pf_member && defProvidenFund}
-                          onChange={(date) => {
-                            setFieldValue("pf_reg_date", date);
-                            setProvidentFundDate(date);
-                          }}
-                          timeInputLabel="Time:"
-                          dateFormat="dd-MMM-yyyy"
-                          showTimeInput
-                          name="pf_reg_date"
-                          autoComplete="off"
-                          disabled={!values.pf_member}
-                        // value = {values.dateOfJoining}
-                        />
-                        <ErrorMessage className="form-feedBack" name="pf_reg_date" component="div" />
-                      </div>
-
-                      <div className="col-12 col-md-4 mt-3">
-
-                        <Field
-                          name="pf_accNo"
-
-                          component={Input}
-                          type='number'
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(e.target.value, 15); // Limit to 3 digits
-                          }}
-                          placeholder="Enter PF Acc No"
-                          label={<span> PF Account No{Boolean(values.pf_member) && <span style={{ color: 'red' }}>*</span>}</span>}
-                          autoComplete="off"
-                          disabled={!values.pf_member}
-                        />
-                      </div>
-                    </div>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          type="checkbox"
-                          disabled={!values.pf_member}
-                          name="profit_member"
-                          onChange={(e)=> {
-                            setFieldValue('profit_member', e.target.checked)
-                          }}
-                          onBlur={handleBlur}
-                          value={values.profit_member}
-                          checked={values.profit_member}
-                        /> Profit Member
-                      </div>
-                    </div> */}
+                           
                             <div className="from-group row">
 
                               <div className="col-12 col-md-4 mt-12">
                                 <input
                                   type="checkbox"
+                                  disabled={isUserForRead}
                                   name="social_security_member"
                                   onChange={(e) => {
                                     setFieldValue('social_security_member', e.target.checked)
@@ -1829,7 +1627,7 @@ useEffect(()=>{
                                   showTimeInput
                                   name="social_security_reg_date"
                                   autoComplete="off"
-                                  disabled={!values.social_security_member}
+                                  disabled={!values.social_security_member || isUserForRead}
                                 // value = {values.dateOfJoining}
                                 />
                                 <ErrorMessage className="form-feedBack" name="social_security_reg_date" component="div" />
@@ -1847,89 +1645,22 @@ useEffect(()=>{
                                   placeholder="Enter Social Security AccNo"
                                   label={<span> Social Security Account No{Boolean(values.social_security_member) && <span style={{ color: 'red' }}>*</span>}</span>}
                                   autoComplete="off"
-                                  disabled={!values.social_security_member}
+                                  disabled={!values.social_security_member || isUserForRead}
                                 />
                               </div>
                             </div>
-                            {/* <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-12">
-                        <input
-                          type="checkbox"
-
-                          name="pension_member"
-                          onChange={(e)=> {
-                            setFieldValue('pension_member', e.target.checked)
-                          }}
-                          onBlur={handleBlur}
-                          value={values.pension_member}
-                          checked={values.pension_member}
-                        /> Pension Member
-                      </div>
-                      <div className="col-12 col-md-4 mt-5">
-                        {<span> Pension Reg Date{Boolean(values.pension_member) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        <DatePicker
-                          className="form-control"
-                          placeholder="Enter Pension Reg Date"
-                          selected={values.pension_member && defPension}
-                          onChange={(date) => {
-                            setFieldValue("pension_reg_date", date);
-                            setPensionDate(date);
-                          }}
-                          timeInputLabel="Time:"
-                          dateFormat="dd-MMM-yyyy"
-                          showTimeInput
-                          name="pension_reg_date"
-                          autoComplete="off"
-                          disabled={!values.pension_member}
-                        />
-                        <ErrorMessage className="form-feedBack" name="pension_reg_date" component="div" />
-                      </div>
-
-                      <div className="col-12 col-md-4 mt-3">
-
-                        <Field
-
-                          type="number"
-                          name="pension_accNo"
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(e.target.value, 15); // Limit to 3 digits
-                          }}
-                          component={Input}
-                          placeholder="Enter Pension AccNo"
-                          label={<span> Pension Account No{Boolean(values.pension_member) && <span style={{ color: 'red' }}>*</span>}</span>}
-                          autoComplete="off"
-                          disabled={!values.pension_member}
-                        />
-                      </div>
-
-                    </div> */}
+                           
 
                           </div>
                         </Card.Body>
                       </Accordion.Collapse>
                     </Card>
                   </Accordion>
-
-
-
-                </fieldset>
               </Form>
             </Modal.Body>
             <Modal.Footer>
 
-              {/* {
-                !isUserForRead && Boolean(id) && !Boolean(user.approved) &&
-                <button
-                  type="button"
-                  onClick={() => approveSalary(id)}
-                  className="btn btn-green btn-elevate"
-                >
-                  Approve
-                  {approveLoading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
-              } */}
+              
 {salaryApproverPermission && (
   !isUserForRead && Boolean(id) && !Boolean(user.approved) ? (
     <button
