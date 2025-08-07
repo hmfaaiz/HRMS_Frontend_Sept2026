@@ -207,7 +207,7 @@ export function FormTable() {
   return (
     <>
       {["1"]?.map((dd, index) => (
-        <div className="grid grid-cols-10 my-4 gap-1 text-sm">
+        <div className="grid grid-cols-3 sm:grid-cols-4  md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 my-4 gap-1 text-sm">
           {newdata
             ?.filter((obj) => obj.isActive == true)
             .map((obj, rightindex) => (
@@ -233,9 +233,8 @@ export function FormTable() {
             ))}
         </div>
       ))}
-      {heading && (
-        <h6 className="font-bold mb-0 text-primary">{heading} </h6>
-      )}
+      <hr />
+      {heading && <h6 className="font-bold mb-0 text-primary">{heading} </h6>}
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -248,37 +247,39 @@ export function FormTable() {
         pauseOnHover
       />
       <div className="w-full overflow-x-auto">
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            // <Pagination
-            //   isLoading={listLoading}
-            //   paginationProps={paginationProps}
-            // >
-            <BootstrapTable
-              wrapperClasses="table-responsive"
-              bordered={false}
-              classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-              bootstrap4
-              remote
-              keyField="Id"
-              data={customList === null ? [] : customList}
-              columns={columns}
-              defaultSorted={uiHelpers.defaultSorted}
-              onTableChange={getHandlerTableChange(formUIProps.setQueryParams)}
-              // selectRow={getSelectRow({
-              //   entities,
+        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+          {({ paginationProps, paginationTableProps }) => {
+            return (
+              // <Pagination
+              //   isLoading={listLoading}
+              //   paginationProps={paginationProps}
+              // >
+              <BootstrapTable
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={customList === null ? [] : customList}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  formUIProps.setQueryParams
+                )}
+                // selectRow={getSelectRow({
+                //   entities,
 
-              // })}
-              {...paginationTableProps}
-            >
-              <PleaseWaitMessage entities={customList} />
-              <NoRecordsFoundMessage entities={customList} />
-            </BootstrapTable>
-            // </Pagination>
-          );
-        }}
-      </PaginationProvider>
+                // })}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={customList} />
+                <NoRecordsFoundMessage entities={customList} />
+              </BootstrapTable>
+              // </Pagination>
+            );
+          }}
+        </PaginationProvider>
       </div>
     </>
   );

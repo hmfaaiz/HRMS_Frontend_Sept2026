@@ -137,7 +137,7 @@ export function FormEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {/* {
                       <div className="col-12 col-md-4 mt-3">
                         <SearchSelect
@@ -163,7 +163,7 @@ export function FormEditForm({
                       </div>
 
                     } */}
-                    {<div className="col-12 col-md-4 mt-3">
+                    {<div className="col-span-1">
                       <Field
                         name="formCode"
                         disabled={formDetails.currentId!==45}
@@ -174,7 +174,7 @@ export function FormEditForm({
                         value={values.formCode || defFormCode}
                       />
                     </div>}
-                    {<div className="col-12 col-md-8 mt-3">
+                    <div className="col-span-1 sm:col-span-2">
                       <Field
                         name="formName"
                         maxLength={50}
@@ -183,10 +183,8 @@ export function FormEditForm({
                         label={<span> Name<span style={{ color: 'red' }}>*</span></span>}
 
                       />
-                    </div>}
-
+                    </div>
                   </div>
-                  <div className="form-group row"></div>
                 </fieldset>
               </Form>
             </Modal.Body>

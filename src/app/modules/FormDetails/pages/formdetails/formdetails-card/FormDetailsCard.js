@@ -127,7 +127,7 @@ export function FormCard() {
                     onClick={FormUIProps.newFormButtonClick}
                   >
                     <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-                    Add General Setup
+                    Add 
                   </button>
 
                   <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">

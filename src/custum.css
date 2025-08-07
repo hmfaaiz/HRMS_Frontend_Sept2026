@@ -7,6 +7,14 @@
     color: #F64E60;
 }
 
+#webpack-dev-server-client-overlay-div {
+  display: none !important;
+}
+
+iframe {
+    display: none !important;
+}
+
 .table-box {
     height: 350px;
     overflow-y: auto;

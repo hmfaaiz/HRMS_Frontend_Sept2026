@@ -68,6 +68,9 @@
 // .example-highlight {
 //   padding: 0rem 1.5rem 1.75rem !important;
 // }
+#webpack-dev-server-client-overlay-div {
+  display: none !important;
+}
 
 .example-highlight > pre {
   background: none transparent !important;
