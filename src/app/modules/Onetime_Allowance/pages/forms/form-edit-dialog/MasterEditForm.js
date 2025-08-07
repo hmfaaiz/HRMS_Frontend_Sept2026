@@ -439,7 +439,7 @@ export function MasterEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

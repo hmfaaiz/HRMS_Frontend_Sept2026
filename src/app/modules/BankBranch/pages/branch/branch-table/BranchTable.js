@@ -80,17 +80,17 @@ export function BranchTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "110px",
       },
     },
     {
       dataField: "branchCode",
-      text: "Branch Code",
+      text: "Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "60px",
       },
     },
     {

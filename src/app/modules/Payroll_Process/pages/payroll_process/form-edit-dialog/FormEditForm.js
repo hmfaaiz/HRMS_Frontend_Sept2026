@@ -785,7 +785,7 @@ export function FormEditForm({
 
 
           <Modal.Footer>
-            {/* Cancel / Ok Button */}
+            {/* Cancel / OK Button */}
             {/* checkPayroll_EmployeesExist */}
 
             {/* {checkPayroll_EmployeesExist?.length > 0 && ( */}
@@ -866,7 +866,7 @@ export function FormEditForm({
                 }}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

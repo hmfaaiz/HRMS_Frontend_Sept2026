@@ -91,7 +91,7 @@ export function SpecificationsFetchDialog() {
             onClick={specsUIProps.onHide}
             className="btn btn-primary btn-elevate"
           >
-            Ok
+            OK
           </button>
         </div>
       </Modal.Footer>

@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
-
   fetchAllSubCenter,
   fetchAllSubsidiaryData,
   getLatestBookingNo,
@@ -22,19 +25,16 @@ const cnicRegExp = /^[0-9]{5}-[0-9]{7}-[0-9]$/;
 // Password Regex
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
-const bankEditSchema = Yup.object().shape(
-  {
-    Name: Yup.string()
-      // .matches(/^[A-Za-z\s]+$/, 'Only alphabetic characters allowed')
-      // .matches(/^[A-Za-z\s.-]+$/, 'Name must only contain letters.')
-      .trim()
-      .required(VALIDATION_MESSAGES.required),
-    subsidiaryId: Yup.string()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required),
-  },
-
-);
+const bankEditSchema = Yup.object().shape({
+  Name: Yup.string()
+    // .matches(/^[A-Za-z\s]+$/, 'Only alphabetic characters allowed')
+    // .matches(/^[A-Za-z\s.-]+$/, 'Name must only contain letters.')
+    .trim()
+    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+});
 export function BankEditForm({
   saveBank,
   user,
@@ -54,25 +54,23 @@ export function BankEditForm({
   const { auth } = useSelector((state) => state);
   const [defSubsidiary = null, setDefualtSubsidiaryList] = useState(null);
 
-
   useEffect(() => {
     if (!user.Id) {
-
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"))
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     }
   }, [dispatch]);
 
   useEffect(() => {
-
-    const subsidiaryId = defSubsidiary?.value ? defSubsidiary.value : user.subsidiaryId;
+    const subsidiaryId = defSubsidiary?.value
+      ? defSubsidiary.value
+      : user.subsidiaryId;
 
     setDefualtSubsidiaryList(
       dashboard.allSubsidiaryList &&
-      dashboard.allSubsidiaryList.filter((item) => {
-        return item.value === subsidiaryId;
-      })
+        dashboard.allSubsidiaryList.filter((item) => {
+          return item.value === subsidiaryId;
+        })
     );
-
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
 
   return (
@@ -106,11 +104,16 @@ export function BankEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="col-span-1">
                       <SearchSelect
                         name="subsidiaryId"
-                        label={<span> Subsidiary<span style={{ color: 'red' }}>*</span></span>}
+                        label={
+                          <span>
+                            {" "}
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         isDisabled={isUserForRead && true}
                         onBlur={() => {
                           // handleBlur({ target: { name: "countryId" } });
@@ -118,32 +121,34 @@ export function BankEditForm({
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
                           setDefualtSubsidiaryList(e);
-
                         }}
-
-                        value={(defSubsidiary || null)}
+                        value={defSubsidiary || null}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}
                       />
                     </div>
-                    <div className="col-12 col-md-8 mt-3">
+                    <div className="col-span-1 sm:col-span-2">
                       <Field
                         name="Name"
                         MaxLength={40}
                         component={Input}
                         placeholder="Bank Name"
-                        label={<span> Bank Name<span style={{ color: 'red' }}>*</span></span>}
+                        label={
+                          <span>
+                            {" "}
+                            Bank Name<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         onInput={(e) => {
-                          e.target.value = amountLimitDynamic(e.target.value,50); // Limit to 50 digits
+                          e.target.value = amountLimitDynamic(
+                            e.target.value,
+                            50
+                          ); // Limit to 50 digits
                         }}
-
                       />
                     </div>
-
-
                   </div>
-                  <div className="form-group row"></div>
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -162,7 +167,7 @@ export function BankEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

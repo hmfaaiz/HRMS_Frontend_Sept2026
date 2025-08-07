@@ -77,11 +77,11 @@ export function BranchCard() {
             <>
               <button
                 type="button"
-                className="btn btn-primary mr-2"
+                className="btn btn-primary"
                 onClick={BranchUIProps.newBranchButtonClick}
               >
-                <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-                Add Branch
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-2" />{" "}
+                Add
               </button>
             </>
           )}

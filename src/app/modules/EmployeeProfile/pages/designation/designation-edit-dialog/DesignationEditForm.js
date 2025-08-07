@@ -4185,7 +4185,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 
