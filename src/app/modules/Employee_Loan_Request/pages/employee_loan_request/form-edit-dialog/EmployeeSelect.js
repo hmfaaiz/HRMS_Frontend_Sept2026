@@ -79,7 +79,7 @@ export function EmployeeSelect({
                       }}
                       label={
                         <span>
-                          Employee <span style={{ color: 'red' }}>*</span>
+                          Employee 
                         </span>
                       }
                       value={
@@ -101,9 +101,9 @@ export function EmployeeSelect({
                       isSearchable={true} // Ensure search functionality is enabled
                     />
 
-                    {
+                    {/* {
                       !values.employeeId && <CustomErrorLabel touched={true} error={'Required'} />
-                    }
+                    } */}
 
 
                   </div>
@@ -115,10 +115,10 @@ export function EmployeeSelect({
                     {panelMode ? (
                       <button
                         type="button"
-                        className="btn  btn-danger d-flex align-items-center gap-2"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
                         onClick={() => setPanelMode(!panelMode)}
                       >
-                        <XCircle className="w-3 h-3 text-white" />
+                        <XCircle className="w-3 h-3 text-black" />
                         Cancel
                       </button>
                     ) : (
