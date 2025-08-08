@@ -873,13 +873,13 @@ let defaultCount = 0;
               <br></br>
 
               <h6>Approval Authorities</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+              
 
                 <div className="from-group row">
               
 <div className="col-12 col-md-4 mt-3">
 Salary Setup Approver
-  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
+ 
 
     <div className="multi-select">
       <div className="dropdown-label"></div>
@@ -901,7 +901,7 @@ Salary Setup Approver
       )} */}
       </div>
     </div>
-  </div>
+
 </div>
 
                
@@ -965,10 +965,10 @@ Payroll Approver
 </div>
 
                 </div>
-              </div>
+            
               <br></br>
               <h6>Email Preferences</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+             
 
 
                 <div className="from-group row">
@@ -1016,11 +1016,11 @@ Payroll Approver
                     </div>
                   </div>
                 </div>
-              </div>
+           
 
               <br></br>
               <h6>Accounting Impact</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+            
 
                 <div className="from-group row">
                   <div className="col-12 col-md-4 mt-3">
@@ -1153,10 +1153,10 @@ Payroll Approver
                     </Select>
                   </div> */}
                 </div>
-              </div>
+       
               <br></br>
               <h6>Tax Integration</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+            
 
                 <div className="from-group row">
                   <div className="col-12 col-md-4 mt-3">
@@ -1231,10 +1231,10 @@ Payroll Approver
 
                   </div> */}
                 </div>
-              </div>
+           
               <br></br>
               <h6>Leave/Attendance Integration </h6>
-              <div style={{ zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "10px", borderRadius: "5px", border: '2px solid #adceff' }}>
+        
                 <div className="col-12 col-md-12 mt-3">
                   <div className="from-group row">
                     <div className="col-12 col-md-4 mt-3">
@@ -1253,7 +1253,7 @@ Payroll Approver
 
                   <br></br>
 
-                  <div style={{ height: "30%", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid rgb(178 184 193)' }}>
+                  <div>
                     <h6>Late Deduction</h6>
                     <div className="from-group row">
 
@@ -1351,7 +1351,7 @@ Payroll Approver
 
                   <br></br>
 
-                  <div style={{ height: "30%", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid rgb(178 184 193)' }}>
+                  <div >
                     <h6>Overtime / Leave Encashment</h6>
                     <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
@@ -1406,7 +1406,7 @@ Payroll Approver
 
                   <br></br>
 
-                  <div style={{ height: "30%", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid rgb(178 184 193)' }}>
+                  <div >
                     <h6>Leave Management</h6>
                     <div className="from-group row">
 
@@ -1448,48 +1448,14 @@ Payroll Approver
                   </div>
 
                 </div>
-              </div>
+          
               <br>
               </br>
 
-              {/* <h6>Loan Integration </h6>
-              <div style={{ height: "200px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-
-                <div className="from-group row">
-
-                  <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "30px" }}
-                      name="isEnableLoan"
-                      type="checkbox"
-                      onChange={(e) => {
-                        setFieldValue('isEnableLoan', e.target.checked)
-                      }}
-                      checked={values.isEnableLoan}
-                    />
-                    Enable Loan Management
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    {<span>Loan Deduction<span style={{ color: 'red' }}>*</span></span>}
-                    <select className="form-control"
-                      onChange={(e) => {
-                        setFieldValue('loanDeductionId', e.target.value)
-                      }}
-                      value={values.loanDeductionId}
-                      name="loanDeductionId">
-
-                      <option value="-1"> --Select--</option>
-                      {
-                        dashboard.allDeductions?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <br></br> */}
+           
 
               <h6>EOBI Configuration </h6>
-              <div style={{ height: "350px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+        
 
                 <div className="from-group row">
                   <div className="col-12 col-md-4 mt-3">
@@ -1600,11 +1566,11 @@ Payroll Approver
                     </div>
                   </div>
                 </div>
-              </div>
+            
               <br></br>
               <h6>Social Security Configuration </h6>
 
-              <div style={{ height: "350px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+              
 
                 <div className="from-group row">
                   <div className="col-12 col-md-4 mt-3">
@@ -1718,10 +1684,10 @@ Payroll Approver
                     </div>
                   </div>
                 </div>
-              </div>
+            
               <br></br>
               <br></br> <h6> Journal Accounts & Bank Information</h6>
-              <div style={{ height: "350px", overflow: "scroll", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+            
 
                 <div className="from-group row">
                   <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
@@ -1886,7 +1852,7 @@ Payroll Approver
 
                   </div>
                 </div>
-              </div>
+           
   {otherErrors["isDefault"] && (
   <tr>
     <td colSpan={6}>
