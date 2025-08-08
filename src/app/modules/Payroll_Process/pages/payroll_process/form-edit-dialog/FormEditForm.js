@@ -470,14 +470,14 @@ export function FormEditForm({
                       );
                       return (
                         <>
-                          <div>
+                          {/* <div>
                             <b>Active Fiscal Year -</b>{" "}
                             {selectedSubsidiary?.fiscalYearLabel}
                           </div>
                           <div>
                             <b>Active Payroll Month -</b>{" "}
                             {selectedSubsidiary?.payrollMonthLabel}
-                          </div>
+                          </div> */}
                         </>
                       );
                     })() : null}
@@ -487,9 +487,9 @@ export function FormEditForm({
                 </div>
 
 
-                <div className="form-group row">
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="subsidiaryId"
                       label={
@@ -526,7 +526,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_accountId"
                       label={
@@ -569,7 +569,7 @@ export function FormEditForm({
 
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_groupId"
                       label={
@@ -609,7 +609,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_monthId"
                       label={
@@ -651,9 +651,10 @@ export function FormEditForm({
                       touched={touched.payroll_monthId}
                     />
                   </div>
+                  </div>
 
 
-
+ <div className="form-group row">
 
                   {currentState?.payroll_group_details && (
                     <>

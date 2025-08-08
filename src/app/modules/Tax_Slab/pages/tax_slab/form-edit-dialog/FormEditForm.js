@@ -135,13 +135,13 @@ export function FormEditForm({
                         setFieldTouched,
                       }}
                       placeholder="Enter To Amount"
-                      label={<>To Amount <span style={{ color: "red" }}>*</span></>}
+                      label={<>To Amount<span style={{ color: "red" }}>*</span></>}
                     />
                   </div>
 
                   <div className="col-span-1">
                     <label>
-                      Percentage <span style={{ color: "red" }}>*</span>
+                      Percentage<span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="percentage"
@@ -171,7 +171,7 @@ export function FormEditForm({
                         setFieldTouched,
                       }}
                       placeholder="Enter Fixed Amount"
-                      label={<>Fixed Amount <span style={{ color: "red" }}>*</span></>}
+                      label={<>Fixed Amount<span style={{ color: "red" }}>*</span></>}
                     />
                   </div>
                 </div>

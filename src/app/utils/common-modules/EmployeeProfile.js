@@ -259,7 +259,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                       </Col>
 
                       {/* Personal Info */}
-                      <Col md={3} className=' lg:ml-36'>
+                      <Col md={3} className=' lg:ml-36 '>
                         <h6 className="font-bold mb-0 text-primary my-2 ">
                           Personal Information
                         </h6>
@@ -289,7 +289,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                       </Col>
 
                       {/* Profile Image */}
-                      <Col md={3} className="flex flex-col lg:ml-36">
+                      <Col md={3} className="flex flex-col lg:ml-36  ">
                         <h6 className="font-bold mb-0 text-primary my-2 ">
                           Employee Picture
                         </h6>

@@ -186,7 +186,7 @@ export function FormEditForm({
 
                   <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
-                      Gratuity Basis <span style={{ color: "red" }}>*</span>
+                      Gratuity Basis<span style={{ color: "red" }}>*</span>
 
 
                     </label>
@@ -211,7 +211,7 @@ export function FormEditForm({
 
                     </Field>
                     {errors.basis_of_gratuityId && touched.basis_of_gratuityId && (
-                      <div className="text-danger">{errors.basis_of_gratuityId}</div>
+                      <div className="text-red-400 text-xs mt-1">{errors.basis_of_gratuityId}</div>
                     )}
                   </div>
                   <div className="col-span-6 lg:col-span-4">

@@ -155,7 +155,7 @@ export function MasterEditForm({
                           <span>
                             {" "}
                             {/* Rounding Up to<span style={{ color: "red" }}>*</span> */}
-                            Round To Nearest <span style={{ color: "red" }}>*</span>
+                            Round To Nearest<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         value={values.amount}

@@ -653,7 +653,7 @@ export function FormEditForm({
 
                   <div className="">
                     <label>
-                      Applied Date <span style={{ color: "red" }}>*</span>
+                      Applied Date<span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="applied_date"

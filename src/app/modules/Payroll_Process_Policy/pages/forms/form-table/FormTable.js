@@ -725,7 +725,7 @@ let defaultCount = 0;
           <>  <Form className="form form-label-right">
             <fieldset disabled={user?.readOnly || false} >
               <h6>Payroll Configuration</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+              {/* <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}> */}
 
                 <div className="from-group row">
                   <div className="col-12 col-md-4 mt-3">
@@ -869,7 +869,7 @@ let defaultCount = 0;
                     />
                   </div>
                 </div>
-              </div>
+              {/* </div> */}
               <br></br>
 
               <h6>Approval Authorities</h6>

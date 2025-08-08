@@ -219,8 +219,8 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
-                  <div className="col-12 col-md-6">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                  <div className="">
                     <SearchSelect
                       name="reimbursement_typeId"
                       label={
@@ -273,7 +273,7 @@ export function FormEditForm({
                       : null}
                   </div> */}
 
-                  <div className="col-12 col-md-6">
+                  <div className="">
                     <label>
                       Date <span style={{ color: "red" }}>*</span>
                     </label>
@@ -295,7 +295,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="pay_in_payroll_forId"
                       label={
@@ -329,7 +329,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     {/* <Field
                       name="amount"
                       component={Input}
@@ -432,7 +432,7 @@ export function FormEditForm({
                         return (
                           <div className="d-flex">
                             <div className="d-flex">Total Amount </div>
-                            <div className="d-flex ml-3">
+                            <div className="d-flex">
                               ( Amount Limit:{" "}
                               {finalAmountLimit?.toLocaleString()} )
                               <span style={{ color: "red" }}>*</span>
@@ -479,8 +479,10 @@ export function FormEditForm({
                       )}
                   </div>
                   ) : null} */}
+                </div>
+                <div className="grid  gap-x-3 mt-2">
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <Field
                       name="details"
                       component={TextArea}
@@ -498,11 +500,9 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
+                  {/* <div className="grid gap-x-3 mt-2">
                     <label
-                      style={{
-                        "margin-right": "0.5rem",
-                      }}
+                  
                     >
                       {" "}
                       Attachment:{" "}
@@ -535,7 +535,57 @@ export function FormEditForm({
                         </>
                       )}
                     </div>
-                  </div>
+                  </div> */}
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                    <div className="col-span-1">
+                      <label
+                        htmlFor="file"
+                      // className="block mb-2 text-xs font-normal text-gray-900"
+                      >
+                        Attachment
+                      </label>
+
+                      {/* Hidden input */}
+
+
+                      {/* Styled label as upload box */}
+                      <label
+                        htmlFor="file_input"
+                        className="form-control block w-full cursor-pointer"
+                        onChange={(event) => {
+                          const file = event.currentTarget.files[0];
+                          setFieldValue("file", file);
+                        }}
+                      >
+                        {user.file ? user.file : "Upload"}
+                        <input
+                          id="file"
+                          name="file"
+                          type="file"
+                          accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                          ref={inputFile}
+                          className="hidden"
+                          onChange={(event) => {
+                            const file = event.currentTarget.files[0];
+                            setFieldValue("file", file);
+                          }}
+                        />
+                      </label>
+
+                      {/* Show existing file if any */}
+                      {user.file && user.file === user.file && (
+                        <div className="mt-2">
+                          <strong>Existing File: </strong>
+                          <a
+                            href={getUploadUrl(user.file)}
+                            target="_blank"
+                            className="text-blue-600 underline"
+                          >
+                            {getFileName(user.file)}
+                          </a>
+                        </div>
+                      )}
+                    </div></div>
                 </div>
               </fieldset>
             </Form>

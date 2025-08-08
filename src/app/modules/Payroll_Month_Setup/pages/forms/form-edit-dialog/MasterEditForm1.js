@@ -487,7 +487,7 @@ export function MasterEditForm({
 
                     <div className="col-12 col-md-4 mt-3">
                       <label>
-                        Year{" "}
+                        Year
                         <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field

@@ -317,7 +317,7 @@ export function MasterEditForm({
 
                     <div className="col-span-6 lg:col-span-1">
                       <label>
-                        Year{" "}
+                        Year
                         <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
@@ -396,7 +396,7 @@ export function MasterEditForm({
                         selected={defstartDate}
                           label={
                           <span>
-                            {" "}
+                           
                            Start Date<span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -427,7 +427,7 @@ export function MasterEditForm({
                         selected={defendDate}
                          label={
                           <span>
-                            {" "}
+                        
                            End Date<span style={{ color: "red" }}>*</span>
                           </span>
                         }

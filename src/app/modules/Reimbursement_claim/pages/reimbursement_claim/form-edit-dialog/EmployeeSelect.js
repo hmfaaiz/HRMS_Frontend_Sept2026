@@ -11,7 +11,8 @@ import { CardHeader } from "@material-ui/core";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import SVG from "react-inlinesvg";
+import { Eye, X, XCircle, CircleX } from "lucide-react";
+
 
 export function EmployeeSelect({
   actionsLoading,
@@ -26,15 +27,12 @@ export function EmployeeSelect({
     shallowEqual
   )
 
- const { activeFiscalYear } = useSelector((state) => state.dashboard);
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
 
 
   return (
     <>
-
-      <CardHeader title={CurrentModuleName()} >
-      </CardHeader>
       {/* Formik Starts */}
       <Formik
         enableReinitialize={true}
@@ -56,10 +54,11 @@ export function EmployeeSelect({
             {/* Form Starts */}
             <Form className="form form-label-right">
               <fieldset>
-                <div className="from-group row">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
 
                   {/* Employee Id Dropdown Starts */}
-                  <div className="col-12 col-md-3  ml-7">
+                  <div className="ml-3">
+
 
 
                     <SearchSelect
@@ -76,7 +75,7 @@ export function EmployeeSelect({
                       }}
                       label={
                         <span>
-                          Employee <span style={{ color: 'red' }}>*</span>
+                          Employee 
                         </span>
                       }
                       value={
@@ -97,12 +96,12 @@ export function EmployeeSelect({
                       })) : []),]}
                       isSearchable={true} // Ensure search functionality is enabled
                     />
-                    {
+                    {/* {
                       !values.employeeId && <CustomErrorLabel touched={true} error={'Required'} />
-                    }
+                    } */}
                   </div>
 
-                  <div className="col-4 col-md-4 d-flex  align-items-center pt-10">
+                  {/* <div className="col-4 col-md-4 d-flex  align-items-center pt-10">
                     <span
                       className="svg-icon svg-icon-md svg-icon-primary"
                       onClick={() => setPanelMode(!panelMode)}
@@ -117,10 +116,41 @@ export function EmployeeSelect({
                     </span>
 
 
+                  </div> */}
+
+                  <div className="mt-6">
+
+
+
+                    {panelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+
+
+                        <Eye className="w-4 h-4 text-white" />
+                        View Details
+                      </button>
+                    )}
+
+
+
+
                   </div>
                   {/* Employee Id Dropdown Ends */}
 
-                          <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
+                  {/* <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
                     {activeFiscalYear
                       ? (() => {
                           return (
@@ -137,7 +167,7 @@ export function EmployeeSelect({
                           );
                         })()
                       : null}
-                  </div>
+                  </div> */}
 
                 </div>
               </fieldset>

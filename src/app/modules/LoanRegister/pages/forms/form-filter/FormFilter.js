@@ -235,14 +235,14 @@ const [endDate,setEndDate]=useState()
    const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
     return (
       <>
-        <div>
+        {/* <div>
           <b>Active Fiscal Year -</b>{" "}
           {selectedSubsidiary?.fiscalYearLabel}
         </div>
         <div>
           <b>Active Payroll Month -</b>{" "}
           {selectedSubsidiary?.payrollMonthLabel}
-        </div>
+        </div> */}
       </>
     );
   })() : null}
