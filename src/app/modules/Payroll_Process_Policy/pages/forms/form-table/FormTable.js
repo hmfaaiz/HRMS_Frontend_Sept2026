@@ -805,104 +805,106 @@ export function FormTable(user) {
 
 
                 <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
-           
+                  <div>
                     <h6 className="font-bold text-primary m-0 h-5">
                       Approval Authorities
                     </h6>
-           
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
-                    <div className="">
-                      <label>
-                        Salary Setup Approver
-                      </label>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
+                      <div className="">
+                        <label>
+                          Salary Setup Approver
+                        </label>
 
 
 
 
 
-                      <div className="dropdown-options">
-                        {roles?.map((option) => (
-                          <div key={option.Id} className="flex justify-start items-center">
-                            <input className="mr-1"
-                              name="salaryApproverId"
-                              type="checkbox"
-                              value={option.value}
-                              checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
-                              onChange={handleChange}
-                            />
-                            <label>{option.label}
-                            </label>
-                          </div>
-                        ))}
+                        <div className="dropdown-options">
+                          {roles?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center">
+                              <input className="mr-1"
+                                name="salaryApproverId"
+                                type="checkbox"
+                                value={option.value}
+                                checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
+                                onChange={handleChange}
+                              />
+                              <label>{option.label}
+                              </label>
+                            </div>
+                          ))}
+
+                        </div>
+
 
                       </div>
 
 
-                    </div>
+
+
+
+
+                      <div className="">
+                        <label>
+                          Loan Approver
+                        </label>
 
 
 
 
 
+                        <div className="dropdown-options">
+                          {roles?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center">
+                              <input className="mr-1"
+                                name="loanApproverId"
+                                type="checkbox"
+                                value={option.value}
+                                checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
+                                onChange={handleChange}
+                              />
+                              <label>{option.label}
+                              </label>
+                            </div>
+                          ))}
 
-                    <div className="">
-                      <label>
-                        Loan Approver
-                      </label>
+                        </div>
 
-
-
-
-
-                      <div className="dropdown-options">
-                        {roles?.map((option) => (
-                          <div key={option.Id} className="flex justify-start items-center">
-                            <input className="mr-1"
-                              name="loanApproverId"
-                              type="checkbox"
-                              value={option.value}
-                              checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
-                              onChange={handleChange}
-                            />
-                            <label>{option.label}
-                            </label>
-                          </div>
-                        ))}
 
                       </div>
 
 
-                    </div>
 
 
-
-
-                    <div className="">
-                      <label>
-                        Payroll Approver
-                      </label>
+                      <div className="">
+                        <label>
+                          Payroll Approver
+                        </label>
 
 
 
 
 
-                      <div className="dropdown-options">
-                        {roles?.map((option) => (
-                          <div key={option.Id} className="flex justify-start items-center">
-                            <input className="mr-1"
-                              name="payrollApproverId"
-                              type="checkbox"
-                              value={option.value}
-                              checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
-                              onChange={handleChange}
-                            />
-                            <label>{option.label}
-                            </label>
-                          </div>
-                        ))}
+                        <div className="dropdown-options">
+                          {roles?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center">
+                              <input className="mr-1"
+                                name="payrollApproverId"
+                                type="checkbox"
+                                value={option.value}
+                                checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
+                                onChange={handleChange}
+                              />
+                              <label>{option.label}
+                              </label>
+                            </div>
+                          ))}
+
+                        </div>
+
 
                       </div>
-
 
                     </div>
 
@@ -1161,7 +1163,7 @@ export function FormTable(user) {
                 <h6 className="font-semibold mb-0 text-primary mt-2 text-sm">
                   Late Deduction
                 </h6>
-                <div className="grid grid-cols-3 gap-x-3">
+                <div className="grid lg:grid-cols-3 gap-x-3">
 
                   <div className="">
                     <Field
@@ -1308,7 +1310,7 @@ export function FormTable(user) {
                 <h6 className="font-semibold mb-0 text-primary  text-sm my-2">
                   Leave Management
                 </h6>
-                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
 
 
                   <div className="flex items-start">
@@ -1360,7 +1362,7 @@ export function FormTable(user) {
                 EOBI Configuration
               </h6>
 
-              <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                 <div className="flex  items-start">
                   <label className="flex items-center space-x-1">
 
@@ -1414,7 +1416,7 @@ export function FormTable(user) {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                 <div className="">
                   <Field
                     disabled={!Boolean(values.isEnableEOBI)}
@@ -1479,7 +1481,7 @@ export function FormTable(user) {
               </h6>
 
 
-              <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                 <div className="flex items-start">
                   <label className="flex items-center space-x-1">
 
@@ -1534,7 +1536,7 @@ export function FormTable(user) {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                 <div className="">
                   <Field
                     name="sessi_employeer_value_in_percent"
