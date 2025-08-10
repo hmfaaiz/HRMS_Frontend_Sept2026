@@ -487,7 +487,7 @@ export function FormEditForm({
                 </div>
 
 
-                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
 
                   <div className="">
                     <SearchSelect
@@ -651,10 +651,10 @@ export function FormEditForm({
                       touched={touched.payroll_monthId}
                     />
                   </div>
-                  </div>
+                </div>
 
 
- <div className="form-group row">
+                <div className="form-group row">
 
                   {currentState?.payroll_group_details && (
                     <>
@@ -683,11 +683,17 @@ export function FormEditForm({
                       </button>
                     </>
                   )}
+                </div>
 
-                  <div className='accordion-header-btn w-100  d-flex justify-content-left bg-primary m-4'>
-                    <h6 className="text-white p-5">Before Process - Result</h6>
-                  </div>
-                  <div className="col-12 col-md-6 mt-3">
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  Before Process - Result
+                </h6>
+
+
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
+
+                  <div className="">
                     <label>
                       Total Employee:
                       <span style={{ fontWeight: 'bold' }}> {currentState?.payroll_group_details?.total_employees || 0}</span>
@@ -695,7 +701,7 @@ export function FormEditForm({
 
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
 
                     <label>
                       Salary setup created & approved: <span style={{ fontWeight: 'bold' }}> {currentState?.payroll_group_details?.slary_setup_not_created || 0}</span>
@@ -703,7 +709,7 @@ export function FormEditForm({
 
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <label>
                       Loan to be processed: <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.loan_to_be_processed || 0}</span>
                     </label>
@@ -711,63 +717,59 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <label>
-                      Stop Salary : <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
+                      Stop Salary: <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
                     </label>
 
                   </div>
 
 
-
-
-
-
-
-
                 </div>
+
+
+
+
+
+
 
 
                 {/* <hr /> */}
 
                 {resultAfterPayrollProcess ?
                   <>
-                    <div className='accordion-header-btn w-100  d-flex justify-content-left  bg-primary'>
-                      <h6 className="text-white p-5">After Process - Result</h6>
-                    </div>
-                    <div className="form-group row">
+
+                    <h6 className="font-bold mb-0 text-primary my-2 mt-3">
+                      After Process - Result
+                    </h6>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
 
 
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
                           Tax calculated: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.TaxCalculated || 0}</span>
                         </label>
 
                       </div>
 
-                      {/* <div className="col-12 col-md-6 mt-3">
-                        <label>
-                          Tax not calculated: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.TaxNotCalculated || 0}</span>
-                        </label>
-
-                      </div> */}
+                
 
 
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
                           Employee with zero salary: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.EmployeewithZeroSalary || 0}</span>
                         </label>
 
                       </div>
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
                           Employee with negative salary: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.EmployeewithNegativeSalary || 0}</span>
                         </label>
 
                       </div>
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
-                          Loan processed:<span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.LoanProcess || 0}</span>
+                          Loan processed: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.LoanProcess || 0}</span>
                         </label>
 
                       </div>

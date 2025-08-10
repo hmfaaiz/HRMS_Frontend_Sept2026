@@ -11,7 +11,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { fetchAllActiveEmployeesBySubsidiary,fetchAllPayrollMonthYearList, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllActiveEmployeesBySubsidiary, fetchAllPayrollMonthYearList, fetchAllDept, getAllLoanType } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { formatDates } from "../../../../../utils/common";
 import { parse } from "date-fns";
@@ -35,7 +35,7 @@ const prepareFilter = (queryParams, values) => {
 }
 
 export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoading, loan_type }) {
-const [endDate,setEndDate]=useState()
+  const [endDate, setEndDate] = useState()
   const FormUIContext = useFormUIContext()
 
   //Get All dropdown data from state
@@ -59,11 +59,11 @@ const [endDate,setEndDate]=useState()
     return new Map(allDept?.map(item => [item.value, item]));
   }, [allDept]);
 
-   const allPayrollMonthMap = useMemo(() => {
-     return new Map(allPayrollMonthYearList?.map(item => [item.value, item]));
-   }, [allPayrollMonthYearList]);
+  const allPayrollMonthMap = useMemo(() => {
+    return new Map(allPayrollMonthYearList?.map(item => [item.value, item]));
+  }, [allPayrollMonthYearList]);
 
-   const allLoanTypeListhMap = useMemo(() => {
+  const allLoanTypeListhMap = useMemo(() => {
     return new Map(allLoanTypeList?.map(item => [item.value, item]));
   }, [allLoanTypeList]);
 
@@ -125,26 +125,26 @@ const [endDate,setEndDate]=useState()
     dispatch(fetchAllDept(subsidiaryId));
     dispatch(fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList"));
     dispatch(getAllLoanType({ subsidiaryId }));
-    
-    
+
+
   }, [allSubsidiaryList]);
 
 
-  
+
   const loan_status = [
     { value: 1, label: "Active" },
     { value: 0, label: "In-Active" },
     { value: '', label: "All" }
   ];
 
-    //Trugger request to download PDF of data according to filters
-    const getPositionReportPdf = (values) => {
+  //Trugger request to download PDF of data according to filters
+  const getPositionReportPdf = (values) => {
 
-      const newQueryParams = prepareFilter(formUIProps.queryParams, values)
-      const labels = getLabels(values);
-      dispatch(actions.fetchLoanPositionReport(newQueryParams, document, labels));
-    }
-  
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    const labels = getLabels(values);
+    dispatch(actions.fetchLoanPositionReport(newQueryParams, document, labels));
+  }
+
 
   useEffect(() => {
     if (allPayrollMonthYearList?.length > 0) {
@@ -184,332 +184,335 @@ const [endDate,setEndDate]=useState()
               <Form className="form form-label-right">
                 <fieldset>
 
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                    {/* <h6>Employee</h6> */}
-                    <div className="from-group row">
 
-                      {/* Subsidiary Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-
-
-                        <SearchSelect
-                          name="subsidiaryId"
-                          label={
-                            <span>
-                              Subsidiary<span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('subsidiaryId', value)
-                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                            dispatch(fetchAllDept(value));
-                            dispatch(fetchAllPayrollMonthYearList({ subsidiaryId:value }, "allPayrollMonthYearList"));
-                            dispatch(getAllLoanType({ subsidiaryId:value }));
-                            setFieldValue('employeeId', '')
-                            setFieldValue('departmentId', '')
-                          }}
-
-                          value={allSubsidiaryMap?.get(values?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
-                          autoComplete="off"
-                          options={allSubsidiaryList}
+                  {/* <h6>Employee</h6> */}
+                  <h6 className="font-bold mb-0 text-primary ">
+                    Employee
+                  </h6>
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+                    {/* Subsidiary Field Start */}
+                    <div className="">
 
 
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
 
-                          error={errors.subsidiaryId}
-                          touched={touched.subsidiaryId}
-                        />
-                      </div>
+                        onChange={(e) => {
+                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                          setFieldValue('subsidiaryId', value)
+                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                          dispatch(fetchAllDept(value));
+                          dispatch(fetchAllPayrollMonthYearList({ subsidiaryId: value }, "allPayrollMonthYearList"));
+                          dispatch(getAllLoanType({ subsidiaryId: value }));
+                          setFieldValue('employeeId', '')
+                          setFieldValue('departmentId', '')
+                        }}
 
-                      
-                      {/* Subsidiary Field End */}
-
-{/* Active payroll month */}
+                        value={allSubsidiaryMap?.get(values?.subsidiaryId || (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
+                        autoComplete="off"
+                        options={allSubsidiaryList}
 
 
 
-<div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
-
-  {values?.subsidiaryId ? (() => {
-   const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
-    return (
-      <>
-        {/* <div>
-          <b>Active Fiscal Year -</b>{" "}
-          {selectedSubsidiary?.fiscalYearLabel}
-        </div>
-        <div>
-          <b>Active Payroll Month -</b>{" "}
-          {selectedSubsidiary?.payrollMonthLabel}
-        </div> */}
-      </>
-    );
-  })() : null}
-</div>
-
-                      {/* Deparment Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="departmentId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('departmentId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Department
-                            </span>
-                          }
-                          value={allDeptMap?.get(values?.departmentId || '') || ''}
-                          autoComplete="off"
-                          // options={allDept}
-                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
-                        />
-                      </div>
-                      {/* Deparment Field End */}
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="employeeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('employeeId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Employee
-                            </span>
-                          }
-                          value={allEmployeesMap?.get(values?.employeeId || '') || ''}
-                          autoComplete="off"
-                          // options={allEmployees}
-                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
-
-
-
-
-                        />
-                      </div>
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="loan_typeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('loan_typeId', value)
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Loan Type
-                            </span>
-                          }
-                          value={
-                            allLoanTypeList?.find(
-                              (option) => option.value === values.loan_typeId
-                            ) || null
-                          }
-                          autoComplete="off"
-                          // options={allLoanTypeList}
-                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLoanTypeList) ? allLoanTypeList : []),]}
-
-
-
-
-                        />
-                      </div>
-
-
-
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
                     </div>
+
+                    <div className="">
+                      <Field
+                        name="departmentId"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                          setFieldValue('departmentId', value)
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Department
+                          </span>
+                        }
+                        value={allDeptMap?.get(values?.departmentId || '') || ''}
+                        autoComplete="off"
+                        // options={allDept}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
+                      />
+                    </div>
+                    {/* Deparment Field End */}
+                    <div className="">
+                      <Field
+                        name="employeeId"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                          setFieldValue('employeeId', value)
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Employee
+                          </span>
+                        }
+                        value={allEmployeesMap?.get(values?.employeeId || '') || ''}
+                        autoComplete="off"
+                        // options={allEmployees}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
+
+
+
+
+                      />
+                    </div>
+
+
+                    <div className="">
+                      <Field
+                        name="loan_typeId"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                          setFieldValue('loan_typeId', value)
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Loan Type
+                          </span>
+                        }
+                        value={
+                          allLoanTypeList?.find(
+                            (option) => option.value === values.loan_typeId
+                          ) || null
+                        }
+                        autoComplete="off"
+                        // options={allLoanTypeList}
+                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLoanTypeList) ? allLoanTypeList : []),]}
+
+
+
+
+                      />
+                    </div>
+
+
                   </div>
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-
-                    <div className="from-group row">
 
 
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="isLoanContinuing"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
-                            setFieldValue('isLoanContinuing',  e.value )
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Loan Status
-                            </span>
-                          }
-                          value={
-                            loan_status?.find(
-                              (option) => option.value === values.isLoanContinuing
-                            ) || null
-                          }
-                          autoComplete="off"
-                          options={loan_status}
+                  {/* <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
+
+                      {values?.subsidiaryId ? (() => {
+                        const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
+                        return (
+                          <>
+                            <div>
+                              <b>Active Fiscal Year -</b>{" "}
+                              {selectedSubsidiary?.fiscalYearLabel}
+                            </div>
+                            <div>
+                              <b>Active Payroll Month -</b>{" "}
+                              {selectedSubsidiary?.payrollMonthLabel}
+                            </div>
+                          </>
+                        );
+                      })() : null}
+                    </div> */}
 
 
 
 
-                        />
-                      </div>
 
 
 
-                      <div className="col-12 col-md-4 mt-3">
-
-
-                        <label>From Date</label>
-                        <DatePicker
-                          className="form-control"
-                          placeholder="From Date "
-                          selected={values?.from ? new Date(values.from) : null}
-                          maxDate={endDate}
-                          onChange={(date) => {
-                            let formattedFromDate= formatDates(date, 'yyyy-MM-dd')
-                            let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
-                            setFieldValue("from", formattedFromDate);
-                            setFieldValue("to", formattedToDate); // Sync from_date and to_date
-
-                          }}
-                          timeInputLabel="Time:"
-                          dateFormat="dd-MMM-yyyy"
-                          // showTimeInput
-                          name="from"
-
-                          autoComplete="off"
 
 
 
-                        />
+                  <hr></hr>
 
-                      </div>
+                  <h6 className="font-bold mb-0 text-primary">
+                    Date
+                  </h6>
 
-                      {/* Date To Selector */}
-                      <div className="col-12 col-md-4 mt-3">
-
-
-                        <label>Date To</label>
-                        <DatePicker
-                          className="form-control"
-                          placeholder="To Date "
-                          selected={values?.to ? new Date(values.to) : null}
-                          minDate={values.from ? new Date(values.from) : ""}
-                          maxDate={endDate}
-                          onChange={(date) => {
-                    
-                            let formattedToDate=  formatDates(date, 'yyyy-MM-dd')
-                            setFieldValue("to", formattedToDate);
-
-                          }}
-                          timeInputLabel="Time:"
-                          dateFormat="dd-MMM-yyyy"
-                          // showTimeInput
-                          name="to"
-
-                          autoComplete="off"
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
 
 
-
-                        />
-
-                      </div>
+                    <div className="">
+                      <Field
+                        name="isLoanContinuing"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                          setFieldValue('isLoanContinuing', e.value)
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Loan Status
+                          </span>
+                        }
+                        value={
+                          loan_status?.find(
+                            (option) => option.value === values.isLoanContinuing
+                          ) || null
+                        }
+                        autoComplete="off"
+                        options={loan_status}
 
 
 
+
+                      />
+                    </div>
+
+
+
+                    <div className="">
+
+
+                      <label>From Date</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="From Date "
+                        selected={values?.from ? new Date(values.from) : null}
+                        maxDate={endDate}
+                        onChange={(date) => {
+                          let formattedFromDate = formatDates(date, 'yyyy-MM-dd')
+                          let formattedToDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("from", formattedFromDate);
+                          setFieldValue("to", formattedToDate); // Sync from_date and to_date
+
+                        }}
+                        timeInputLabel="Time:"
+                        dateFormat="dd-MMM-yyyy"
+                        // showTimeInput
+                        name="from"
+
+                        autoComplete="off"
+
+
+
+                      />
 
                     </div>
 
-                    <div className="d-flex justify-content-end mt-5">
+                    {/* Date To Selector */}
+                    <div className="">
+
+
+                      <label>Date To</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="To Date "
+                        selected={values?.to ? new Date(values.to) : null}
+                        minDate={values.from ? new Date(values.from) : ""}
+                        maxDate={endDate}
+                        onChange={(date) => {
+
+                          let formattedToDate = formatDates(date, 'yyyy-MM-dd')
+                          setFieldValue("to", formattedToDate);
+
+                        }}
+                        timeInputLabel="Time:"
+                        dateFormat="dd-MMM-yyyy"
+                        // showTimeInput
+                        name="to"
+
+                        autoComplete="off"
+
+
+
+                      />
+
+                    </div>
+
+
+
+                    <div className="col-start-4 col-end-5 flex justify-end ">
                       <button
                         type="button"
                         onClick={() => { getPdf(values) }}
-                        disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !isValid }
-                        className="btn btn-primary btn-elevate"
+                        disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !isValid}
+                        className="btn btn-primary btn-elevate h-9 mt-4"
                       >
-                        Loan Request Report 
-                          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                                                        <SVG
-                                                          src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                                        />
-                                                      </span>
+                        Loan Request Report
+                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                          <SVG
+                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                          />
+                        </span>
                         {loanReqLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
                     </div>
 
-
                   </div>
 
 
 
-
-                  <div style={{ backgroundColor: "rgb(235 243 255)", marginTop: "15px", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-
-                    <div className="from-group row">
-
-
-                           <div className="col-12 col-md-4 mt-3">
-                                            <Field
-                                              name="monthId"
-                                              component={SearchSelect}
-                                              onBlur={handleBlur}
-                                              onChange={(e) => {
-                                                const value = e.value == '--Select--' ? '' : Number(e.value)
-                                                setFieldValue('monthId', value)
-                                              }}
-                                              label={
-                                                <span>
-                                                  {" "}
-                                                  Payroll Month<span style={{ color: "red" }}>*</span>
-                                                </span>
-                                              }
-                                              value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
-                                              autoComplete="off"
-                                              options={allPayrollMonthYearList}
-                                            />
-                                          </div>
+                  <hr></hr>
 
 
 
+                  <h6 className="font-bold mb-0 text-primary ">
+                    Payroll Month
+                  </h6>
+
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mb-2">
+
+
+                    <div className="col-start-1 col-end-2">
+                      <Field
+                        name="monthId"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e.value == '--Select--' ? '' : Number(e.value)
+                          setFieldValue('monthId', value)
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Payroll Month<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
+                        autoComplete="off"
+                        options={allPayrollMonthYearList}
+                      />
                     </div>
-                    <div className="d-flex justify-content-end mt-5">
+
+                    <div className="col-start-4 col-end-5 flex justify-end ">
                       <button
-                      type="button"
+                        type="button"
                         onClick={() => { getPositionReportPdf(values) }}
                         disabled={LoanPositionLoading || loanReqLoading || !values?.subsidiaryId || !values.monthId}
-                        className="btn btn-primary btn-elevate"
+                        className="btn btn-primary btn-elevate h-9 mt-4"
                       >
                         Loan Position Report
-                          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                                                        <SVG
-                                                          src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                                        />
-                                                      </span>
+                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                          <SVG
+                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                          />
+                        </span>
                         {LoanPositionLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
                     </div>
 
-
                   </div>
 
 
-                  <br></br>
 
                 </fieldset>
               </Form>
@@ -527,7 +530,7 @@ const [endDate,setEndDate]=useState()
                 Cancel
               </button>
 
-       
+
 
 
 
