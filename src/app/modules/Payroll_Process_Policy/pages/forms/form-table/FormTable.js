@@ -805,11 +805,12 @@ export function FormTable(user) {
 
 
                 <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
-
-                  <h6 className="font-bold mb-0 text-primary ">
-                    Approval Authorities
-                  </h6>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 ">
+           
+                    <h6 className="font-bold text-primary m-0 h-5">
+                      Approval Authorities
+                    </h6>
+           
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
                     <div className="">
                       <label>
                         Salary Setup Approver
@@ -912,7 +913,7 @@ export function FormTable(user) {
                 </h6> */}
                 <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
 
-                  <h6 className="font-bold mb-0 text-primary ">
+                  <h6 className="font-bold mb-0 text-primary mt-0">
                     Email Preferences
                   </h6>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
@@ -935,7 +936,7 @@ export function FormTable(user) {
                         options={dashboard.allEmployees}
                       />
                     </div>
-                    <div className="">
+                    <div className="md:ml-20">
                       <label>Email Recipents</label>
 
 
@@ -971,7 +972,7 @@ export function FormTable(user) {
 
 
 
-              <h6 className="font-bold mb-0 text-primary">
+              <h6 className="font-bold mb-0 text-primary my-1">
                 Accounting Impact
               </h6>
 
@@ -1048,7 +1049,7 @@ export function FormTable(user) {
 
               <hr></hr>
 
-              <h6 className="font-bold mb-0 text-primary">
+              <h6 className="font-bold mb-0 text-primary my-1">
                 Tax Integration
               </h6>
 

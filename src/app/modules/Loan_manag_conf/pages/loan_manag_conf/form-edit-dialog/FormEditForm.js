@@ -196,10 +196,10 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
+                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   {/* Subsidiary Field */}
-                  <div className="col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-6">
+                 
+                    <div className="">
                       <SearchSelect
                         name="subsidiaryId"
                         label={
@@ -226,10 +226,10 @@ export function FormEditForm({
                         touched={touched.subsidiaryId}
                       />
                     </div>
-                  </div>
+                 
 
                   {/* Account Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="accountId"
                       label={
@@ -257,7 +257,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Employee Loan Account Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     {/* <Field
                       name="emp_loan_account"
                       component={Input}
@@ -293,11 +293,14 @@ export function FormEditForm({
                       touched={touched.accountId}
                     />
                   </div>
+                  </div>
 
                   {/* Installment Deduction Percentage Field */}
 
                   {/* Installment Deduction Basis Type Field */}
-                  <div className="col-12 col-md-6 mt-3">
+
+                    <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                  <div className="">
                     <label htmlFor="installment_deduction_basis_type">
                       Installment Deduction Basis Type
                       {/* <span style={{ color: "red" }}>*</span> */}
@@ -364,7 +367,7 @@ export function FormEditForm({
                       )}
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <Field
                       name="installment_deduction_percentage"
                       component={Input}
@@ -404,15 +407,18 @@ export function FormEditForm({
               <FieldArray name="details">
                 {({ push, remove }) => (
                   <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
+                    // style={{
+                    //   backgroundColor: "rgb(235 243 255)",
+                    //   padding: "20px",
+                    //   borderRadius: "5px",
+                    //   border: "2px solid #adceff",
+                    //   marginTop: "20px",
+                    // }}
                   >
-                    <h6>Details</h6>
+               
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                         Details
+                        </h6>
                     <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                       <thead>
                         <tr

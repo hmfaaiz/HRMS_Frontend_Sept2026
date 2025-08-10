@@ -301,37 +301,38 @@ export function FormEditForm({
                       {/* allEmployeesWithNoPermissionList */}
 
 
-                      <div className="from-group row">
+            
 
 
-                        <div className="col-12 col-md-12 mt-3">
-                          Employee
-                          <div style={{ backgroundColor: "#ffffff", height: "50vh", padding: "10px", overflow: "scroll" }}>
 
-                            <div className="multi-select">
-                              <div className="dropdown-label"></div>
-                              <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-                                {currentState?.payroll_group_details?.employees_list?.map((option) => (
-                                  <div key={option.Id} className="dropdown-option">
-                                    <input style={{ width: "25px" }}
-                                      name="employeeId"
-                                      type="checkbox"
-                                      value={option.Id}
-                                      checked={selectedEmployees.includes(option.Id)}
+                        <label> Employee </label>
 
-                                      onChange={() => handleCheckboxChange(option.Id)}
-                                    />
-                                    {option.fullName}
-                                  </div>
-                                ))}
-                                {/* {errors.employeeId && touched.employeeId && (
+                        <div className="overflow-auto max-h-48 border-none">
+
+
+
+
+                          {currentState?.payroll_group_details?.employees_list?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center border-none">
+                              <input className="mr-1"
+                                name="employeeId"
+                                type="checkbox"
+                                value={option.Id}
+                                checked={selectedEmployees.includes(option.Id)}
+
+                                onChange={() => handleCheckboxChange(option.Id)}
+                              />
+                              <label className="">   {option.fullName} </label>
+                            </div>
+                          ))}
+                          {/* {errors.employeeId && touched.employeeId && (
                                 <div className="invalid-text">{errors.employeeId}</div>
                               )} */}
-                              </div>
-                            </div>
-                          </div>
+
+
                         </div>
-                      </div>
+
+                   
 
 
 
@@ -369,66 +370,51 @@ export function FormEditForm({
                       <fieldset disabled={isUserForRead}>
                         {/* allEmployeesWithNoPermissionList */}
 
-                        <div className="from-group row">
-                          <div className="col-12 col-md-12 mt-3">
-                            Employee
-                            <div
-                              style={{
-                                backgroundColor: "#ffffff",
-                                height: "50vh",
-                                padding: "10px",
-                                overflow: "scroll",
-                              }}
-                            >
-                              <div className="multi-select">
-                                <div className="dropdown-label"></div>
-                                <div
-                                  className="dropdown-options"
-                                  style={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                    padding: "5px",
-                                  }}
-                                >
-                                  {currentState?.payroll_group_details?.for_loan_employees_list?.map(
-                                    (option) => (
-                                      <div
-                                        key={option.Id}
-                                        className="dropdown-option"
-                                      >
-                                        <input
-                                          style={{ width: "25px" }}
-                                          name="employeeId"
-                                          type="checkbox"
-                                          value={option.Id}
-                                          // checked={selectedLoans.includes(
-                                          //   option?.Id
-                                          // )}
 
-                                          checked={selectedLoans.some((item) => item.loan_request_detailId === option?.Id)}
-                                          onChange={() =>
-                                            handleLoanCheckboxChange({
-                                              loan_request_detailId: option?.Id,
-                                              employeeId: option?.employeeId,
-                                              loan_typeId: option?.Employee_loan_request?.LoanType?.Id,
-                                            })
-                                          }
-                                        />
 
-                                        {`${option?.Employee_loan_request
-                                          ?.Employee?.fullName || ""} - ${option
-                                            ?.Employee_loan_request?.LoanType
-                                            ?.name ||
-                                          ""} (${option?.amount_received ||
-                                          ""})`}
-                                      </div>
-                                    )
-                                  )}
-                                </div>
+                        <label>Employee</label>
+                        <div className="overflow-auto max-h-48 border-none">
+
+
+
+                          {currentState?.payroll_group_details?.for_loan_employees_list?.map(
+                            (option) => (
+                              <div key={option.Id} className="flex justify-start items-center border-none">
+
+                                <input className="mr-1"
+                                  name="employeeId"
+                                  type="checkbox"
+                                  value={option.Id}
+                                  // checked={selectedLoans.includes(
+                                  //   option?.Id
+                                  // )}
+
+                                  checked={selectedLoans.some((item) => item.loan_request_detailId === option?.Id)}
+                                  onChange={() =>
+                                    handleLoanCheckboxChange({
+                                      loan_request_detailId: option?.Id,
+                                      employeeId: option?.employeeId,
+                                      loan_typeId: option?.Employee_loan_request?.LoanType?.Id,
+                                    })
+                                  }
+                                />
+                                <label className="">
+                                  {`${option?.Employee_loan_request
+                                    ?.Employee?.fullName || ""} - ${option
+                                      ?.Employee_loan_request?.LoanType
+                                      ?.name ||
+                                    ""} (${option?.amount_received ||
+                                    ""})`}
+
+                                </label>
                               </div>
-                            </div>
-                          </div>
+                            )
+                          )}
+
+
                         </div>
+
+
                       </fieldset>
                     </Form>
                   </Modal.Body>
@@ -673,7 +659,7 @@ export function FormEditForm({
                       <button
                         onClick={() => handleLoanModalYes()}
                         type="button"
-                        className="m-3 btn btn-red"
+                        className="m-3 btn btn-danger"
                         disabled={isAfterResult}
                       >
                         Stop Loan
@@ -752,7 +738,7 @@ export function FormEditForm({
 
                       </div>
 
-                
+
 
 
                       <div className="">
