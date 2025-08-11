@@ -3095,7 +3095,7 @@ export function DesignationEditForm({
                                   }}
 
                                   id={'countryId-' + rightindex} >
-                                  <option value="-1"> --Select--</option>
+                                  <option value="-1"> Select</option>
                                   {
                                     dashboard.allCountry?.map((x) => {
                                       return <option value={x.value}> {x.label} </option>
@@ -3114,7 +3114,7 @@ export function DesignationEditForm({
                                   }}
 
                                   id={'cityId-' + rightindex} >
-                                  <option value="-1"> --Select--</option>
+                                  <option value="-1"> Select</option>
                                   {
 
                                     dashboard.allCity?.map((x) => {
@@ -3253,7 +3253,7 @@ export function DesignationEditForm({
                                     }}
 
                                     id={'countryId-' + rightindex} >
-                                    <option value="-1">--Select--</option>
+                                    <option value="-1">Select</option>
                                     {
                                       dashboard.allCountry?.map((x) => {
                                         return <option value={x.value}> {x.label} </option>
@@ -3271,7 +3271,7 @@ export function DesignationEditForm({
                                     }}
 
                                     id={'cityId-' + rightindex} >
-                                    <option value="-1"> --Select--</option>
+                                    <option value="-1"> Select</option>
 
                                     {
 
@@ -3519,7 +3519,7 @@ export function DesignationEditForm({
                                     }}
 
                                     id={'actionTakenBy-' + rightindex} >
-                                    <option value='-1'>--Select--</option>
+                                    <option value='-1'>Select</option>
                                     {
                                       dashboard.allEmployees?.filter(x => x.value != values.Id).map((x) => {
                                         return <option value={x.value}> {x.label} </option>

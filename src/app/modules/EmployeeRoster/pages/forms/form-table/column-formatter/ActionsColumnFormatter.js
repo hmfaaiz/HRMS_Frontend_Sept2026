@@ -2,6 +2,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -12,30 +13,26 @@ export function ActionsColumnFormatter(
     openDeleteFormDialog,
     isAccessForEdit,
     isAccessForDelete,
-    payrollData
+    payrollData,
   }
 ) {
-
   //Function to check if the date doesn't lie before the payroll month date
   const checkPayrolMonth = (row, payroll) => {
-    return payroll && payroll.startDate && new Date(payroll.startDate).getTime() <= new Date(row.from).getTime();
-  }
+    return (
+      payroll &&
+      payroll.startDate &&
+      new Date(payroll.startDate).getTime() <= new Date(row.from).getTime()
+    );
+  };
 
   return (
-    <>
+    <div className="space-x-2">
       {!checkPayrolMonth(row, payrollData) && (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
-          <a
-            title=""
-            className="btn btn-icon view-button"
-            onClick={() => setId(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-              />
-            </span>
+          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+        >
+          <a onClick={() => setId(row.Id)}>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
@@ -44,47 +41,23 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a
-            title=""
-            className="btn btn-icon edit-button"
-            onClick={() => setId(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
+          <a onClick={() => setId(row.Id)}>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
 
       {isAccessForDelete && checkPayrolMonth(row, payrollData) && (
         <OverlayTrigger
-          overlay={
-            <Tooltip id="products-edit-tooltip">
-              Delete
-            </Tooltip>
-          }
+          overlay={<Tooltip id="products-edit-tooltip">Delete</Tooltip>}
         >
           {
-            (
-              <a
-                title=""
-                className="btn btn-icon delete-button"
-                onClick={() => openDeleteFormDialog(row.Id)}
-              >
-                <span className="svg-icon svg-icon-md svg-icon-danger">
-                  <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
-                    title=""
-                  />
-                </span>
-              </a>
-            )
-
+            <a onClick={() => openDeleteFormDialog(row.Id)}>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+            </a>
           }
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

@@ -1,38 +1,38 @@
-import React, { useMemo } from "react"
+import React, { useMemo } from "react";
 
 import {
   Card,
   CardBody,
   CardHeader,
   CardHeaderToolbar,
-} from "../../../../../../_metronic/_partials/controls"
-import { BanksTable } from "../bank-table/BanksTable"
-import { useBanksUIContext } from "../BanksUIContext"
-import { BanksFilter } from "../bank-filter/BanksFIlter"
-import { useSelector, shallowEqual } from "react-redux"
-import CurrentModuleName from "../../../../../utils/common-modules/ModuleName"
-import { CirclePlus, FileText } from "lucide-react"
-import { OverlayTrigger, Tooltip } from "react-bootstrap"
-import TCard from "../../../../../utils/common-modules/TCard"
+} from "../../../../../../_metronic/_partials/controls";
+import { BanksTable } from "../bank-table/BanksTable";
+import { useBanksUIContext } from "../BanksUIContext";
+import { BanksFilter } from "../bank-filter/BanksFIlter";
+import { useSelector, shallowEqual } from "react-redux";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
+import { CirclePlus, FileText } from "lucide-react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import TCard from "../../../../../utils/common-modules/TCard";
 
 export function BanksCard() {
-  const banksUIContext = useBanksUIContext()
+  const banksUIContext = useBanksUIContext();
   const BanksUIProps = useMemo(() => {
     return {
       newBankButtonClick: banksUIContext.newBankButtonClick,
       openEditBankDialog: banksUIContext.openEditBankDialog,
-    }
-  }, [banksUIContext])
+    };
+  }, [banksUIContext]);
 
   const { userAccess } = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.Employee_Salary,
     }),
     shallowEqual
-  )
+  );
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateEmployeeSalary"
-  )
+  );
 
   return (
     // <>
@@ -66,7 +66,7 @@ export function BanksCard() {
     //       <BanksTable />
     //     </CardBody>
     //   </Card >
-          <TCard name={CurrentModuleName()}>
+    <TCard name={CurrentModuleName()}>
       <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
         <BanksFilter />
         <div className="flex items-center gap-2">
@@ -78,9 +78,8 @@ export function BanksCard() {
                 className="btn btn-primary"
                 onClick={BanksUIProps.newBankButtonClick}
               >
-              >
-                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "} Add
-                
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                Add
               </button>
             </>
           )}
@@ -89,5 +88,5 @@ export function BanksCard() {
       <BanksTable />
     </TCard>
     // </>
-  )
+  );
 }

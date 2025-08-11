@@ -201,7 +201,7 @@ const [endDate,setEndDate]=useState()
                           }
 
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('subsidiaryId', value)
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
@@ -255,7 +255,7 @@ const [endDate,setEndDate]=useState()
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('departmentId', value)
                           }}
                           label={
@@ -267,7 +267,7 @@ const [endDate,setEndDate]=useState()
                           value={allDeptMap?.get(values?.departmentId || '') || ''}
                           autoComplete="off"
                           // options={allDept}
-                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
+                          options={[{ label: 'Select', value: '' }, ...(Array.isArray(allDept) ? allDept : []),]}
                         />
                       </div>
                       {/* Deparment Field End */}
@@ -277,7 +277,7 @@ const [endDate,setEndDate]=useState()
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('employeeId', value)
                           }}
                           label={
@@ -289,7 +289,7 @@ const [endDate,setEndDate]=useState()
                           value={allEmployeesMap?.get(values?.employeeId || '') || ''}
                           autoComplete="off"
                           // options={allEmployees}
-                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
+                           options={[{ label: 'Select', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
 
 
 
@@ -304,7 +304,7 @@ const [endDate,setEndDate]=useState()
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('loan_typeId', value)
                           }}
                           label={
@@ -320,7 +320,7 @@ const [endDate,setEndDate]=useState()
                           }
                           autoComplete="off"
                           // options={allLoanTypeList}
-                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allLoanTypeList) ? allLoanTypeList : []),]}
+                          options={[{ label: 'Select', value: '' }, ...(Array.isArray(allLoanTypeList) ? allLoanTypeList : []),]}
 
 
 
@@ -343,7 +343,7 @@ const [endDate,setEndDate]=useState()
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('isLoanContinuing',  e.value )
                           }}
                           label={
@@ -371,10 +371,10 @@ const [endDate,setEndDate]=useState()
                       <div className="col-12 col-md-4 mt-3">
 
 
-                        <label>From Date</label>
+                        <label>From</label>
                         <DatePicker
                           className="form-control"
-                          placeholder="From Date "
+                          placeholder="From "
                           selected={values?.from ? new Date(values.from) : null}
                           maxDate={endDate}
                           onChange={(date) => {
@@ -404,7 +404,7 @@ const [endDate,setEndDate]=useState()
                         <label>Date To</label>
                         <DatePicker
                           className="form-control"
-                          placeholder="To Date "
+                          placeholder="To "
                           selected={values?.to ? new Date(values.to) : null}
                           minDate={values.from ? new Date(values.from) : ""}
                           maxDate={endDate}
@@ -468,7 +468,7 @@ const [endDate,setEndDate]=useState()
                                               component={SearchSelect}
                                               onBlur={handleBlur}
                                               onChange={(e) => {
-                                                const value = e.value == '--Select--' ? '' : Number(e.value)
+                                                const value = e.value == 'Select' ? '' : Number(e.value)
                                                 setFieldValue('monthId', value)
                                               }}
                                               label={

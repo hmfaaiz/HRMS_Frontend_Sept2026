@@ -67,7 +67,7 @@ const DesignationWorkflowFormFilter = () => {
                 onBlur={handleBlur}
                 onChange={(e) => {
                   const value =
-                    e.target.value == "--Select--"
+                    e.target.value == "Select"
                       ? ""
                       : Number(e.target.value);
                   setFieldValue("workflowType", e.target.value);

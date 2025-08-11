@@ -121,7 +121,7 @@ const EmployeeProfile = () => {
                   Office Information
                 </h6>
                 {renderInfoGrid(data, [
-                  // ["Company", data?.company?.name],
+                   // ["Company", data?.company?.name],
                   // ["Subsidiary", data?.subsidiary?.name],
                   [
                     "Reporting To",

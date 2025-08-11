@@ -58,7 +58,7 @@ export function EmployeeSelect({
                       placeholder=""
                       onBlur={handleBlur}
                       onChange={(e) => {
-                        const value = e.target.value == '--Select--' ? null : Number(e.target.value)
+                        const value = e.target.value == 'Select' ? null : Number(e.target.value)
                         setFieldValue('employeeId', value)
                         setemployeeId(value)
                       }}
@@ -70,7 +70,7 @@ export function EmployeeSelect({
                       }
                       value={values.employeeId}
                       autoComplete="off"
-                      children={CustomDropdown({ data: allEmployees, firstElement: { label: '--Select--', value: '' } })}
+                      children={CustomDropdown({ data: allEmployees, firstElement: { label: 'Select', value: '' } })}
                     />
                     {
                       !values.employeeId && <CustomErrorLabel touched={true} error={'Required'} />

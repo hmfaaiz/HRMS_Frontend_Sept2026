@@ -61,8 +61,8 @@ export function WorkflowDeleteDialog({ show, onHide }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure want to delete this record?</span>}
-        {isLoading && <span>Workflow policy is deactivating...</span>}
+        {!isLoading && <label>Are you sure want to delete this record?</label>}
+        {isLoading && <label>Workflow policy is deactivating...</label>}
       </Modal.Body>
       <Modal.Footer>
         <div>
@@ -77,9 +77,9 @@ export function WorkflowDeleteDialog({ show, onHide }) {
           <button
             type="button"
             onClick={deleteEvent}
-            className="btn btn-primary btn-elevate"
+            className="btn btn-danger btn-elevate"
           >
-            Delete Record
+            Delete
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}

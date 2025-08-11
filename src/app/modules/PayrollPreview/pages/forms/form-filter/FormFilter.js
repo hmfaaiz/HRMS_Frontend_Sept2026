@@ -116,7 +116,7 @@ export function FormFilter({ dispatch, pdfLoading }) {
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value =
-                          e.value == "--Select--" ? "" : Number(e.value);
+                          e.value == "Select" ? "" : Number(e.value);
                         setFieldValue("monthId", value);
                       }}
                       label={<span> Payroll Month</span>}

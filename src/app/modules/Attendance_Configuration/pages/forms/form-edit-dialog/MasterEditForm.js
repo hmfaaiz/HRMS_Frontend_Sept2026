@@ -76,7 +76,7 @@ export function MasterEditForm({
   }, [user?.leave_typeId, dashboard.leave_typeId]);
 
   const dropdown = (data) => {
-    return [{ value: "", label: "--Select--" }, ...data].map((el) => {
+    return [{ value: "", label: "Select" }, ...data].map((el) => {
       return (<>
         <option value={el.value}>{el.label}</option>
       </>)

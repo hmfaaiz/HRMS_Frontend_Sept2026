@@ -229,64 +229,57 @@ const WorkflowEditForm = ({
           <Modal.Body className="overlay overlay-block cursor-default">
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                  }}
-                >
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        isDisabled={isUserForRead}
-                        name="subsidiaryId"
-                        label={
-                          <span>
-                            {" "}
-                            Subsidiary
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={({ value }) => {
-                          setFieldValue("subsidiaryId", value);
-                        }}
-                        value={
-                          dashboard?.allSubsidiaryList?.find(
-                            (e) => e.value === values?.subsidiaryId
-                          ) || null
-                        }
-                        error={errors.subsidiaryId}
-                        touched={touched.subsidiaryId}
-                        options={dashboard?.allSubsidiaryList}
-                      />
-                    </div>
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        isDisabled={isUserForRead}
-                        name="workflowTypeId"
-                        label={
-                          <span>
-                            {" "}
-                            Workflow Type
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={({ value }) => {
-                          setFieldValue("workflowTypeId", value);
-                        }}
-                        value={
-                          dashboard?.allEmployeeRequestTypeList?.find(
-                            (e) => e.value === values?.workflowTypeId
-                          ) || null
-                        }
-                        error={errors.workflowTypeId}
-                        touched={touched.workflowTypeId}
-                        options={dashboard?.allEmployeeRequestTypeList}
-                      />
-                    </div>
-                    {/* <div className="col-12 col-md-4 mt-3">
+                <div className="grid grid-cols-12 gap-x-3 gap-y-1">
+                  <div className="col-span-6 lg:col-span-4">
+                    <SearchSelect
+                      isDisabled={isUserForRead}
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          {" "}
+                          Subsidiary
+                          <span>*</span>
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("subsidiaryId", value);
+                      }}
+                      value={
+                        dashboard?.allSubsidiaryList?.find(
+                          (e) => e.value === values?.subsidiaryId
+                        ) || null
+                      }
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      options={dashboard?.allSubsidiaryList}
+                    />
+                  </div>
+                  <div className="col-span-6 lg:col-span-4">
+                    <SearchSelect
+                      isDisabled={isUserForRead}
+                      name="workflowTypeId"
+                      label={
+                        <span>
+                          {" "}
+                          Workflow Type
+                          <span>*</span>
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("workflowTypeId", value);
+                      }}
+                      value={
+                        dashboard?.allEmployeeRequestTypeList?.find(
+                          (e) => e.value === values?.workflowTypeId
+                        ) || null
+                      }
+                      error={errors.workflowTypeId}
+                      touched={touched.workflowTypeId}
+                      options={dashboard?.allEmployeeRequestTypeList}
+                    />
+                  </div>
+                  <div className="col-span-1 hidden lg:block lg:col-span-4"></div>
+                  {/* <div className="col-12 col-md-4 mt-3">
                       <SearchSelect
                         isDisabled={isUserForRead}
                         name="defaultApproverId"
@@ -363,179 +356,155 @@ const WorkflowEditForm = ({
                         />
                       </div>
                     </div> */}
-                    <div className="col-12 col-md-12 mt-3">
-                      <SearchSelect
-                        isDisabled={isUserForRead}
-                        name="emailCreationEmpId"
-                        label={
-                          <span>
-                            {" "}
-                            Send Email to selected Employee, once request is
-                            created.{" "}
-                          </span>
-                        }
-                        onChange={({ value }) => {
-                          setFieldValue("emailCreationEmpId", value);
-                        }}
-                        value={
-                          dashboard?.allEmployees?.find(
-                            (e) => e.value === values?.emailCreationEmpId
-                          ) || null
-                        }
-                        error={errors.emailCreationEmpId}
-                        touched={touched.emailCreationEmpId}
-                        options={dashboard?.allEmployees}
-                      />
-                    </div>
-                    <div className="col-12 col-md-12 mt-3">
-                      <SearchSelect
-                        isDisabled={isUserForRead}
-                        name="emailApprovedEmpId"
-                        label={
-                          <span>
-                            {" "}
-                            Send Email to selected Employee, if request is
-                            approved{" "}
-                          </span>
-                        }
-                        onChange={({ value }) => {
-                          setFieldValue("emailApprovedEmpId", value);
-                        }}
-                        value={
-                          dashboard?.allEmployees?.find(
-                            (e) => e.value === values?.emailApprovedEmpId
-                          ) || null
-                        }
-                        error={errors.emailApprovedEmpId}
-                        touched={touched.emailApprovedEmpId}
-                        options={dashboard?.allEmployees}
-                      />
-                    </div>
-                    <div className="col-12 col-md-12 mt-3">
-                      <SearchSelect
-                        isDisabled={isUserForRead}
-                        name="emailRejectedEmpId"
-                        label={
-                          <span>
-                            {" "}
-                            Send Email to selected Employee, if request is
-                            rejected.{" "}
-                          </span>
-                        }
-                        value={
-                          dashboard?.allEmployees?.find(
-                            (e) => e.value === values?.emailRejectedEmpId
-                          ) || null
-                        }
-                        onChange={({ value }) => {
-                          setFieldValue("emailRejectedEmpId", value);
-                        }}
-                        error={errors.emailRejectedEmpId}
-                        touched={touched.emailRejectedEmpId}
-                        options={dashboard?.allEmployees}
-                      />
-                    </div>
+                  <div className="col-span-6 lg:col-span-4">
+                    <SearchSelect
+                      isDisabled={isUserForRead}
+                      name="emailCreationEmpId"
+                      label={
+                        <span>
+                          {" "}
+                          Send Email to selected Employee, once request is
+                          created.{" "}
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("emailCreationEmpId", value);
+                      }}
+                      value={
+                        dashboard?.allEmployees?.find(
+                          (e) => e.value === values?.emailCreationEmpId
+                        ) || null
+                      }
+                      error={errors.emailCreationEmpId}
+                      touched={touched.emailCreationEmpId}
+                      options={dashboard?.allEmployees}
+                    />
+                  </div>
+                  <div className="col-span-6 lg:col-span-4">
+                    <SearchSelect
+                      isDisabled={isUserForRead}
+                      name="emailApprovedEmpId"
+                      label={
+                        <span>
+                          {" "}
+                          Send Email to selected Employee, if request is
+                          approved{" "}
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("emailApprovedEmpId", value);
+                      }}
+                      value={
+                        dashboard?.allEmployees?.find(
+                          (e) => e.value === values?.emailApprovedEmpId
+                        ) || null
+                      }
+                      error={errors.emailApprovedEmpId}
+                      touched={touched.emailApprovedEmpId}
+                      options={dashboard?.allEmployees}
+                    />
+                  </div>
+                  <div className="col-span-6 lg:col-span-4">
+                    <SearchSelect
+                      isDisabled={isUserForRead}
+                      name="emailRejectedEmpId"
+                      label={
+                        <span>
+                          {" "}
+                          Send Email to selected Employee, if request is
+                          rejected.{" "}
+                        </span>
+                      }
+                      value={
+                        dashboard?.allEmployees?.find(
+                          (e) => e.value === values?.emailRejectedEmpId
+                        ) || null
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("emailRejectedEmpId", value);
+                      }}
+                      error={errors.emailRejectedEmpId}
+                      touched={touched.emailRejectedEmpId}
+                      options={dashboard?.allEmployees}
+                    />
                   </div>
                 </div>
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    marginTop: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                  }}
-                >
-                  <h6>Email Reminders</h6>
-                  <div className="col-12 col-md-6 mt-5 mx-0 p-0">
-                    <input
-                      name="emailPendingToApprovers"
-                      type="checkbox"
-                      onChange={(e) => {
-                        if (e?.target?.value) {
-                          setFieldValue("isMonday", false);
-                          setFieldValue("isTuesday", false);
-                          setFieldValue("isWednesday", false);
-                          setFieldValue("isThursday", false);
-                          setFieldValue("isFriday", false);
-                          setFieldValue("isSaturday", false);
-                          setFieldValue("isSunday", false);
-                          setFieldValue("emailTime", "");
-                        }
-                        setFieldValue(
-                          "emailPendingToApprovers",
-                          !values?.emailPendingToApprovers
-                        );
-                      }}
-                      onBlur={handleBlur}
-                      value={values.emailPendingToApprovers}
-                      checked={values.emailPendingToApprovers}
-                    />
-                    <label className="px-2">
-                      Notify Approvers of Pending Request
-                    </label>
+                <hr />
+                <div className="grid grid-cols-12 gap-x-3 gap-y-1">
+                  <div className="col-span-12 lg:col-span-3">
+                    <h6 className="font-bold mb-0 text-primary">
+                      Email Reminders
+                    </h6>
+                    <div className="flex justify-start items-center gap-2">
+                      <input
+                        name="emailPendingToApprovers"
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e?.target?.value) {
+                            setFieldValue("isMonday", false);
+                            setFieldValue("isTuesday", false);
+                            setFieldValue("isWednesday", false);
+                            setFieldValue("isThursday", false);
+                            setFieldValue("isFriday", false);
+                            setFieldValue("isSaturday", false);
+                            setFieldValue("isSunday", false);
+                            setFieldValue("emailTime", "");
+                          }
+                          setFieldValue(
+                            "emailPendingToApprovers",
+                            !values?.emailPendingToApprovers
+                          );
+                        }}
+                        onBlur={handleBlur}
+                        value={values.emailPendingToApprovers}
+                        checked={values.emailPendingToApprovers}
+                      />
+                      <label className="">
+                        Notify Approvers of Pending Request
+                      </label>
+                    </div>
                     <ErrorMessage
-                      className="form-feedBack"
+                      className="invalid-feedback"
                       name="emailPendingToApprovers"
                       component="div"
                     />
                   </div>
-                  <div className="col-12 col-md-12 mt-5 mx-0 p-0">
-                    Days
-                    <div
-                      style={{
-                        padding: "10px",
-                        overflow: "scroll",
-                      }}
-                    >
-                      <div className="multi-select">
-                        <div className="dropdown-label"></div>
+                  <div className="col-span-12 lg:col-span-6">
+                    <h6 className="font-bold mb-0 text-primary">Days</h6>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-x-2 text-sm text-black">
+                      {Object.values(WEEK_DAY_STRING).map((day) => (
                         <div
-                          className="dropdown-options"
-                          style={{
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            padding: "5px",
-                          }}
+                          key={day}
+                          className="col-span-1 flex items-center gap-2"
                         >
-                          {Object.values(WEEK_DAY_STRING).map((day) => (
-                            <div key={day} className="dropdown-option">
-                              <input
-                                style={{ width: "25px" }}
-                                name={`is${day}`}
-                                disabled={!values?.emailPendingToApprovers}
-                                type="checkbox"
-                                onChange={() => {
-                                  setFieldValue(
-                                    `is${day}`,
-                                    values[`is${day}`] ? false : true
-                                  );
-                                  // setTimeout(() => {
-                                  //   formik.validateForm();
-                                  // }, 100);
-                                }}
-                                checked={values[`is${day}`]}
-                                value={values[`is${day}`]}
-                              />
-                              {day}
-                            </div>
-                          ))}
+                          <input
+                            name={`is${day}`}
+                            disabled={!values?.emailPendingToApprovers}
+                            type="checkbox"
+                            onChange={() => {
+                              setFieldValue(
+                                `is${day}`,
+                                values[`is${day}`] ? false : true
+                              );
+                            }}
+                            checked={values[`is${day}`]}
+                            value={values[`is${day}`]}
+                          />
+                          {day}
                         </div>
-                      </div>
+                      ))}
                     </div>
                     {errors?.isMonday && (
-                      <div className="form-feedBack" style={{ color: "red" }}>
-                        {errors?.isMonday}
-                      </div>
+                      <div className="invalid-feedback">{errors?.isMonday}</div>
                     )}
                     <ErrorMessage
-                      className="form-feedBack"
+                      className="invalid-feedback"
                       name="workingdays"
                       component="div"
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3 mx-0 p-0">
-                    <label>Time</label>
+                  <div className="col-span-12 lg:col-span-3">
+                    <h6 className="font-bold mb-0 text-primary">Time</h6>
                     <Field
                       name="emailTime"
                       component={TimeInput}

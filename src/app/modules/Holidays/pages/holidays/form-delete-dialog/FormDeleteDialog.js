@@ -69,15 +69,15 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure want to delete this record?</span>}
-        {isLoading && <span>user is deactivating...</span>}
+        {!isLoading && <label>Are you sure want to delete this record?</label>}
+        {isLoading && <label>user is deactivating...</label>}
       </Modal.Body>
       <Modal.Footer>
         <div>
           <button
             type="button"
             onClick={onHide}
-            className="btn btn-light btn-elevate"
+            className="btn btn-light"
           >
             Cancel
           </button>
@@ -85,9 +85,9 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={deleteHoliday}
-            className="btn btn-primary btn-elevate"
+            className="btn btn-danger  btn-elevate"
           >
-            Delete Record
+            Delete 
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}

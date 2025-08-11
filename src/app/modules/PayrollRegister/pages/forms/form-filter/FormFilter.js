@@ -227,7 +227,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('subsidiaryId', value)
                             dispatch(fetchAllPayrollMonthYearList({ subsidiaryId: value }, "allPayrollMonthYearList"));
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
@@ -283,7 +283,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                                       component={SearchSelect}
                                       onBlur={handleBlur}
                                       onChange={(e) => {
-                                        const value = e.value == '--Select--' ? '' : Number(e.value)
+                                        const value = e.value == 'Select' ? '' : Number(e.value)
                                         setFieldValue('departmentId', value)
                                       }}
                                       label={
@@ -306,7 +306,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('monthId', value)
                           }}
                           label={
@@ -462,7 +462,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value == '--Select--' ? '' : Number(e.value)
+                            const value = e.value == 'Select' ? '' : Number(e.value)
                             setFieldValue('employeeId', value)
                           }}
                           label={

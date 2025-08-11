@@ -792,7 +792,7 @@ let defaultCount = 0;
                       }}
                       onBlur={handleBlur}
                     >
-                      <option value="-1">--Select--</option>
+                      <option value="-1">Select</option>
                       <option value="1">Payroll Type-Period Name-Subsidiary</option>
                       <option value="2">Payroll Type-Subsidiary-Period-Period Name</option>
                       <option value="3">Subsidiary-Period Name-Payroll Type</option>
@@ -1108,7 +1108,7 @@ Payroll Approver
                       }}
                       onBlur={handleBlur}
                     >
-                      <option value="-1">--Select--</option>
+                      <option value="-1">Select</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
 
@@ -1128,7 +1128,7 @@ Payroll Approver
                       }}
                       onBlur={handleBlur}
                     >
-                      <option value="-1">--Select--</option>
+                      <option value="-1">Select</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
 
@@ -1146,7 +1146,7 @@ Payroll Approver
                       }}
                       onBlur={handleBlur}
                     >
-                      <option value="-1">--Select--</option>
+                      <option value="-1">Select</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
 
@@ -1184,7 +1184,7 @@ Payroll Approver
                       }}
                       value={values.payrollTax_DeductionTypeId}
                       name="payrollTax_DeductionTypeId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
                         dashboard.allDeductions?.map((x) => {
                           return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
@@ -1201,7 +1201,7 @@ Payroll Approver
                       }}
                       value={values.arrearTaxDeductionId}
                       name="arrearTaxDeductionId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
                         dashboard.allDeductions?.map((x) => {
                           return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
@@ -1223,7 +1223,7 @@ Payroll Approver
                       }}
                       onBlur={handleBlur}
                     >
-                      <option value="-1">--Select--</option>
+                      <option value="-1">Select</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
 
@@ -1278,7 +1278,7 @@ Payroll Approver
                         <select className="form-control"
                           disabled={!Boolean(values.isEnableAttandanceIntegration)}
                           onChange={(e) => {
-                            const value = e.target.value == '--Select--' ? '' : Number(e.target.value);
+                            const value = e.target.value == 'Select' ? '' : Number(e.target.value);
                             setFieldValue('leaveDeductionId', value)
                           }}
                           value={values.leaveDeductionId}
@@ -1310,7 +1310,7 @@ Payroll Approver
     {/* Add 'N/A' option */}
     <option value="N/A">N/A</option>
 
-    {/* Filter out '--Select--' and render other options for leave types */}
+    {/* Filter out 'Select' and render other options for leave types */}
     {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
       <option key={x.value} value={x.value}>
         {x.label}
@@ -1337,7 +1337,7 @@ Payroll Approver
                           disabled={!Boolean(values.isEnableAttandanceIntegration)}
                           value={values.lateDeductionId}
                           name="lateDeductionId">
-                          <option value="-1"> --Select--</option>
+                          <option value="-1"> Select</option>
                           {
                             dashboard.allDeductions?.map((x) => {
                               return <option value={x.value}> {x.label} </option>
@@ -1375,7 +1375,7 @@ Payroll Approver
                           value={values.overTimeEarningId}
                           disabled={!Boolean(values.isEnableAttandanceIntegration)}
                           name="overTimeEarningId">
-                          <option value="-1"> --Select--</option>
+                          <option value="-1"> Select</option>
                           {
                             dashboard.allEarnings?.map((x) => {
                               return <option value={x.value}> {x.label} </option>
@@ -1392,7 +1392,7 @@ Payroll Approver
                           disabled={!Boolean(values.isEnableAttandanceIntegration)}
                           value={values.leaveEnchashment_EarningId}
                           name="leaveEnchashment_EarningId">
-                          <option value="-1"> --Select--</option>
+                          <option value="-1"> Select</option>
                           {
                             dashboard.allEarnings?.map((x) => {
                               return <option value={x.value}> {x.label} </option>
@@ -1436,7 +1436,7 @@ Payroll Approver
                           disabled={!Boolean(values.isEnableAttandanceIntegration)}
                           onBlur={handleBlur}
                         >
-                          <option value="-1">--Select--</option>
+                          <option value="-1">Select</option>
                           <option value="true">Yes</option>
                           <option value="false">No</option>
 
@@ -1477,7 +1477,7 @@ Payroll Approver
                       value={values.loanDeductionId}
                       name="loanDeductionId">
 
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
                         dashboard.allDeductions?.map((x) => {
                           return <option value={x.value}> {x.label} </option>
@@ -1524,7 +1524,7 @@ Payroll Approver
                       }}
                       value={values.eobi_deductionId}
                       name="eobi_deductionId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
                         dashboard.allDeductions?.map((x) => {
                           return <option value={x.value}> {x.label} </option>
@@ -1641,7 +1641,7 @@ Payroll Approver
                       value={values.sessi_deductionId}
                       disabled={!Boolean(values.isEnableSESSI)}
                       name="sessi_deductionId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
                         dashboard.allDeductions?.map((x) => {
                           return <option value={x.value}> {x.label} </option>

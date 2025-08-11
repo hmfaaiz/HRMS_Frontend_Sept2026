@@ -76,7 +76,7 @@ export function EmployeeSelect({
                       placeholder=""
                       onBlur={handleBlur}
                       onChange={(e) => {
-                        const value = e.value === '--Select--' ? null : Number(e.value);
+                        const value = e.value === 'Select' ? null : Number(e.value);
                         setFieldValue('employeeId', value);
                         setemployeeId(value);
                         const selectedEmp = allEmployees?.find(emp => emp.value === value);
@@ -101,7 +101,7 @@ export function EmployeeSelect({
                       //   label: emp.label, // Adjust according to your data
                       //   value: emp.value, // Adjust according to your data
                       // }))}
-                      options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees.map((emp) => ({
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees.map((emp) => ({
                         label: emp.label, // Adjust according to your data
                         value: emp.value, // Adjust according to your data
                       })) : []),]}

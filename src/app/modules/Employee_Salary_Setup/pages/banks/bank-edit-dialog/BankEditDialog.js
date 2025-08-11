@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { BankEditForm } from "./BankEditForm";
-import { BankEditDialogHeader } from './BankEditDialogHeader'
+import { BankEditDialogHeader } from "./BankEditDialogHeader";
 
 import * as actions from "../../../_redux/bankActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useBanksUIContext } from "../BanksUIContext";
-import axios from 'axios';
+import axios from "axios";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
-export function BankEditDialog({ id, show, onHide, userForRead,status }) {
+export function BankEditDialog({ id, show, onHide, userForRead, status }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const [approveLoading, setapproveLoading] = useState(false);
@@ -22,11 +22,8 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
   const [activeKey, setActiveKey] = useState("0");
 
   useEffect(() => {
-  
-      setActiveKey("0"); // jab new user aaye to accordion open kar do
-   
-  }, [id,status]);
-
+    setActiveKey("0"); // jab new user aaye to accordion open kar do
+  }, [id, status]);
 
   const usersUIProps = useMemo(() => {
     return {
@@ -58,7 +55,6 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
     userStatusTypes,
     isuserForRead,
   } = useSelector((state) => ({
-
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
     userForEdit: state.employee_salary.userForEdit,
@@ -82,18 +78,21 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
 
   const saveEarningDeductionTran = async (user, emp_ed_Obj) => {
     if (!id) {
+      const finalObject = { user };
+      const response = await axios.post(
+        `${USERS_URL}/employee_salary_earning/update-salary-earning-deduction-bulk`,
+        { data: { emp_ed_Obj, employeeId: user.employeeId } }
+      );
 
-      const finalObject = { user }
-      const response = await axios.post(`${USERS_URL}/employee_salary_earning/update-salary-earning-deduction-bulk`, { data: {emp_ed_Obj,employeeId: user.employeeId} });
-
-      await dispatch(actions.createEmployee_Salary(user, disbaleLoading, onHide));
+      await dispatch(
+        actions.createEmployee_Salary(user, disbaleLoading, onHide)
+      );
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
-
-
     } else {
-
-
-      const response = await axios.post(`${USERS_URL}/employee_salary_earning/update-salary-earning-deduction-bulk`, { data:  {emp_ed_Obj,employeeId: user.employeeId} });
+      const response = await axios.post(
+        `${USERS_URL}/employee_salary_earning/update-salary-earning-deduction-bulk`,
+        { data: { emp_ed_Obj, employeeId: user.employeeId } }
+      );
 
       // This object set for Edit/Save Fields in DB
       const earningUpdatedFields = {
@@ -133,64 +132,45 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
         overtime_off_day: user.overtime_off_day,
         overtime_holiday: user.overtime_holiday,
         basicFactor: user.basicFactor,
-
       };
 
-      await dispatch(actions.updateEmployee_Salary(earningUpdatedFields, disbaleLoading, onHide));
+      await dispatch(
+        actions.updateEmployee_Salary(
+          earningUpdatedFields,
+          disbaleLoading,
+          onHide
+        )
+      );
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };
 
-  const approveSalary = async(id)=> {
+  const approveSalary = async (id) => {
     setapproveLoading(true);
-    await dispatch(actions.approveEmployeeSalary(id, setapproveLoading, onHide));
-  }
+    await dispatch(
+      actions.approveEmployeeSalary(id, setapproveLoading, onHide)
+    );
+  };
 
   return (
-    // <Modal
-    //   size="lg"
-    //   show={show}
-    //   onHide={onHide}
-    //   aria-labelledby="example-modal-sizes-title-lg"
-    //   backdrop="static"
-    // >
-
-        <Accordion activeKey={activeKey}>
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
-              <Accordion.Toggle
-                as={Button}
-                eventKey="0"
-                className="flex-between-center text-bold"
-                 onClick={() =>
-                setActiveKey(activeKey === "0" ? null : "0")
-              }
-              >
-                Employee Salary
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
     <>
-      <BankEditDialogHeader id={id} isUserForRead={userForRead} />
-      <BankEditForm
-        saveEarningDeductionTran={saveEarningDeductionTran}
-        user={userForEdit || banksUIProps.initUser}
-        onHide={onHide}
-        roles={roles}
-        centers={centers}
-        userStatusTypes={userStatusTypes}
-        isUserForRead={userForRead}
-        enableLoading={enableLoading}
-        loading={loading}
-        id={id}
-        approveSalary={approveSalary}
-        approveLoading={approveLoading}
-      />
-      
+      <div className="px-3 py-2 rounded-lg bg-white mt-3">
+        <BankEditDialogHeader id={id} isUserForRead={userForRead} />
+        <BankEditForm
+          saveEarningDeductionTran={saveEarningDeductionTran}
+          user={userForEdit || banksUIProps.initUser}
+          onHide={onHide}
+          roles={roles}
+          centers={centers}
+          userStatusTypes={userStatusTypes}
+          isUserForRead={userForRead}
+          enableLoading={enableLoading}
+          loading={loading}
+          id={id}
+          approveSalary={approveSalary}
+          approveLoading={approveLoading}
+        />
+      </div>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -202,11 +182,6 @@ export function BankEditDialog({ id, show, onHide, userForRead,status }) {
         draggable
         pauseOnHover
       />
-      </>
-       </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-    //  </Modal> 
+    </>
   );
 }

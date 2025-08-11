@@ -296,7 +296,7 @@ export function DeptEditForm({
                             //     : dashboard.allDept
                             // }
                             options={[
-                              { label: '--Select--', value: '' },
+                              { label: 'Select', value: '' },
                               ...(user?.deptId
                                 ? dashboard.allDept.filter((e) => e?.value !== user?.deptId)
                                 : dashboard.allDept || [])

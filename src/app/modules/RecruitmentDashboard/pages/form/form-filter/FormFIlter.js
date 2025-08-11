@@ -278,7 +278,7 @@ export function FormFIlter({ listLoading, user }) {
                                   ) || null
                                 }
                                 // options={dashboard?.allDept}
-                                     options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
+                                     options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                               />
                             </div>
 
@@ -297,7 +297,7 @@ export function FormFIlter({ listLoading, user }) {
                                   ) || null
                                 }
                                 // options={dashboard?.allDesignations}
-                                  options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
+                                  options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                               />
                             </div>
 
@@ -317,7 +317,7 @@ export function FormFIlter({ listLoading, user }) {
                                   ) || null
                                 }
                                 // options={dashboard?.allEmployeegradeList}
-                                options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
+                                options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
                               />
                             </div>
 
@@ -337,7 +337,7 @@ export function FormFIlter({ listLoading, user }) {
                                   ) || null
                                 }
                                 // options={dashboard.allLocationChildMenus}
-                                options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
+                                options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
                                 
                               />
                             </div>
@@ -405,7 +405,7 @@ export function FormFIlter({ listLoading, user }) {
                                 }
 
                                 // options={dashboard?.allAppointmentTypeList}
-                                 options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
+                                 options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
 
                               />
                             </div>

@@ -2,8 +2,14 @@ import React, { useMemo } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Checkbox, DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
-import { useSelector, shallowEqual ,useDispatch} from "react-redux";
+import {
+  Checkbox,
+  DatePickerField,
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -16,20 +22,27 @@ import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboard
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import { TimeInput } from "../../../../../../_metronic/_partials/controls/forms/TimeInput";
+import { Eye, XCircle } from "lucide-react";
 
 //Validations for Form
 const formValidation = Yup.object().shape({
   employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
   attDateIn: Yup.date().required(VALIDATION_MESSAGES.required),
-  attDateOut: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('attDateIn'), 'Date Out cannot be before Date in date'),
-  timeIn: Yup.string().required(VALIDATION_MESSAGES.required).matches(
-    /^(?:[01]\d|2[0-3])[0-5]\d$/,
-    'Time must be in HHMM format and valid 24-hour format'
-  ),
-  timeOut: Yup.string().required(VALIDATION_MESSAGES.required).matches(
-    /^(?:[01]\d|2[0-3])[0-5]\d$/,
-    'Time must be in HHMM format and valid 24-hour format'
-  ),
+  attDateOut: Yup.date()
+    .required(VALIDATION_MESSAGES.required)
+    .min(Yup.ref("attDateIn"), "Date Out cannot be before Date in date"),
+  timeIn: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(
+      /^(?:[01]\d|2[0-3])[0-5]\d$/,
+      "Time must be in HHMM format and valid 24-hour format"
+    ),
+  timeOut: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(
+      /^(?:[01]\d|2[0-3])[0-5]\d$/,
+      "Time must be in HHMM format and valid 24-hour format"
+    ),
   comments: Yup.string().required(VALIDATION_MESSAGES.required),
 });
 
@@ -40,18 +53,18 @@ export function MasterEditForm({
   isUserForRead,
   enableLoading,
   loading,
-  setfilters, setPanelMode, panelMode
+  setfilters,
+  setPanelMode,
+  panelMode,
 }) {
-
   const { allEmployees, allEmployeeShifts, payrollData } = useSelector(
     (state) => ({
       allEmployees: state.dashboard.allEmployees,
       allEmployeeShifts: state.dashboard.allEmployeeShifts,
-      payrollData: state.attendance.payrollData
+      payrollData: state.attendance.payrollData,
     }),
     shallowEqual
-  )
-
+  );
 
   //Validation for Form.
   //If payroll month is available then form should not allow to add date for before payroll month end date.
@@ -60,114 +73,124 @@ export function MasterEditForm({
     if (payrollData && payrollData.endDate) {
       return Yup.object().shape({
         employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
-        attDateIn: Yup.date().required(VALIDATION_MESSAGES.required).min(payrollData.startDate, `Date cannot be before ${formatDates(payrollData.startDate)}`),
-        attDateOut: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('attDateIn'), 'Date Out cannot be before Date in date')
+        attDateIn: Yup.date()
+          .required(VALIDATION_MESSAGES.required)
+          .min(
+            payrollData.startDate,
+            `Date cannot be before ${formatDates(payrollData.startDate)}`
+          ),
+        attDateOut: Yup.date()
+          .required(VALIDATION_MESSAGES.required)
+          .min(Yup.ref("attDateIn"), "Date Out cannot be before Date in date")
           .test(
-            'max-3-days',
-            'Date Out cannot be more than 3 days after Date In',
-            function (value) {
+            "max-3-days",
+            "Date Out cannot be more than 3 days after Date In",
+            function(value) {
               const { attDateIn } = this.parent;
               if (!value || !attDateIn) return true; // If either value is missing, let other validations handle it
-              const dateIn = new Date(formatDates(attDateIn, 'yyyy-MM-dd'));
-              const dateOut = new Date(formatDates(value, 'yyyy-MM-dd'));
+              const dateIn = new Date(formatDates(attDateIn, "yyyy-MM-dd"));
+              const dateOut = new Date(formatDates(value, "yyyy-MM-dd"));
               const diffInDays = (dateOut - dateIn) / (1000 * 60 * 60 * 24);
               return diffInDays <= 2;
             }
           )
-          
+
           .test(
-            'date-out-not-equal-if-different',
-            'Date Out must be after Date In if they are not the same',
-            function (value) {
+            "date-out-not-equal-if-different",
+            "Date Out must be after Date In if they are not the same",
+            function(value) {
               const { attDateIn } = this.parent;
               if (!value || !attDateIn) return true;
-        
-              const dateIn = new Date(formatDates(attDateIn, 'yyyy-MM-dd'));
-              const dateOut = new Date(formatDates(value, 'yyyy-MM-dd'));
-        
+
+              const dateIn = new Date(formatDates(attDateIn, "yyyy-MM-dd"));
+              const dateOut = new Date(formatDates(value, "yyyy-MM-dd"));
+
               if (dateIn.getTime() === dateOut.getTime()) return true;
-        
+
               return dateOut > dateIn;
             }
           ),
-          
-          
-          
-          
-        timeIn: Yup.string().required(VALIDATION_MESSAGES.required).matches(
-          /^(?:[01]\d|2[0-3])[0-5]\d$/,
-          'Time must be in HHMM format and valid 24-hour format'
-        ),
-        timeOut: Yup.string().required(VALIDATION_MESSAGES.required)
-        .matches(
-          /^(?:[01]\d|2[0-3])[0-5]\d$/,
-          'Time must be in HHMM format and valid 24-hour format'
-        )
-        .test(
-          'time-out-after-time-in-if-same-date',
-          ' Date In and Date Out are same, Time Out must be after Time In',
-          function (value) {
-            const { timeIn, attDateIn, attDateOut } = this.parent;
-            if (!value || !timeIn || !attDateIn || !attDateOut) return true;
-      
-            // Convert dates to string for comparison
-            const dateIn = formatDates(attDateIn, 'yyyy-MM-dd');
-            const dateOut = formatDates(attDateOut, 'yyyy-MM-dd');
-      
-            if (dateIn !== dateOut) return true; // Only apply this test if dates are same
-      
-            // Convert HHMM strings to minutes
-            const timeInMinutes = parseInt(timeIn.substring(0, 2)) * 60 + parseInt(timeIn.substring(2, 4));
-            const timeOutMinutes = parseInt(value.substring(0, 2)) * 60 + parseInt(value.substring(2, 4));
-      
-            return timeOutMinutes >= timeInMinutes;
-          }
-        ) ,
+
+        timeIn: Yup.string()
+          .required(VALIDATION_MESSAGES.required)
+          .matches(
+            /^(?:[01]\d|2[0-3])[0-5]\d$/,
+            "Time must be in HHMM format and valid 24-hour format"
+          ),
+        timeOut: Yup.string()
+          .required(VALIDATION_MESSAGES.required)
+          .matches(
+            /^(?:[01]\d|2[0-3])[0-5]\d$/,
+            "Time must be in HHMM format and valid 24-hour format"
+          )
+          .test(
+            "time-out-after-time-in-if-same-date",
+            " Date In and Date Out are same, Time Out must be after Time In",
+            function(value) {
+              const { timeIn, attDateIn, attDateOut } = this.parent;
+              if (!value || !timeIn || !attDateIn || !attDateOut) return true;
+
+              // Convert dates to string for comparison
+              const dateIn = formatDates(attDateIn, "yyyy-MM-dd");
+              const dateOut = formatDates(attDateOut, "yyyy-MM-dd");
+
+              if (dateIn !== dateOut) return true; // Only apply this test if dates are same
+
+              // Convert HHMM strings to minutes
+              const timeInMinutes =
+                parseInt(timeIn.substring(0, 2)) * 60 +
+                parseInt(timeIn.substring(2, 4));
+              const timeOutMinutes =
+                parseInt(value.substring(0, 2)) * 60 +
+                parseInt(value.substring(2, 4));
+
+              return timeOutMinutes >= timeInMinutes;
+            }
+          ),
         comments: Yup.string().required(VALIDATION_MESSAGES.required),
-      })
-   
-   
-   
-   
-   
-    }
-    else {
+      });
+    } else {
       return Yup.object().shape({
         employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
         attDateIn: Yup.date().required(VALIDATION_MESSAGES.required),
-        attDateOut: Yup.date().required(VALIDATION_MESSAGES.required).min(Yup.ref('attDateIn'), 'Date Out cannot be before Date in date')
+        attDateOut: Yup.date()
+          .required(VALIDATION_MESSAGES.required)
+          .min(Yup.ref("attDateIn"), "Date Out cannot be before Date in date")
           .test(
-            'max-3-days',
-            'Date Out cannot be more than 3 days after Date In',
-            function (value) {
+            "max-3-days",
+            "Date Out cannot be more than 3 days after Date In",
+            function(value) {
               const { attDateIn } = this.parent;
               if (!value || !attDateIn) return true; // If either value is missing, let other validations handle it
-              const dateIn = new Date(formatDates(attDateIn, 'yyyy-MM-dd'));
-              const dateOut = new Date(formatDates(value, 'yyyy-MM-dd'));
+              const dateIn = new Date(formatDates(attDateIn, "yyyy-MM-dd"));
+              const dateOut = new Date(formatDates(value, "yyyy-MM-dd"));
               const diffInDays = (dateOut - dateIn) / (1000 * 60 * 60 * 24);
               return diffInDays <= 2;
             }
           ),
-        timeIn: Yup.string().required(VALIDATION_MESSAGES.required).matches(
-          /^(?:[01]\d|2[0-3])[0-5]\d$/,
-          'Time must be in HHMM format and valid 24-hour format'
-        ),
-        timeOut: Yup.string().required(VALIDATION_MESSAGES.required).matches(
-          /^(?:[01]\d|2[0-3])[0-5]\d$/,
-          'Time must be in HHMM format and valid 24-hour format'
-        ),
+        timeIn: Yup.string()
+          .required(VALIDATION_MESSAGES.required)
+          .matches(
+            /^(?:[01]\d|2[0-3])[0-5]\d$/,
+            "Time must be in HHMM format and valid 24-hour format"
+          ),
+        timeOut: Yup.string()
+          .required(VALIDATION_MESSAGES.required)
+          .matches(
+            /^(?:[01]\d|2[0-3])[0-5]\d$/,
+            "Time must be in HHMM format and valid 24-hour format"
+          ),
         comments: Yup.string().required(VALIDATION_MESSAGES.required),
-      })
+      });
     }
-  }, [payrollData])
+  }, [payrollData]);
 
   const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map(item => [item.value, item]));
+    return new Map(allEmployees?.map((item) => [item.value, item]));
   }, [allEmployees]);
   const dispatch = useDispatch();
-    const{    activeFiscalYear
-        } = useSelector((state) => state.dashboard);
-  
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
+
   return (
     <>
       <Formik
@@ -190,17 +213,17 @@ export function MasterEditForm({
           handleReset,
         }) => (
           <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              {actionsLoading && (
-                <div className="overlay-layer bg-transparent">
-                  <div className="spinner spinner-lg spinner-success" />
-                </div>
-              )}
-              <Form className="form form-label-right">
-                <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
-                    {/* Employee Field Start */}
-                    <div className="col-8 col-md-3  ml-9">
+            {actionsLoading && (
+              <div className="overlay-layer bg-transparent">
+                <div className="spinner spinner-lg spinner-success" />
+              </div>
+            )}
+            <Form>
+              <fieldset disabled={isUserForRead}>
+                <div className="grid grid-cols-4 md:grid-cols-6 gap-x-3 gap-y-1">
+                  {/* Employee Field Start */}
+                  <div className="col-span-4 md:col-span-6 grid grid-cols-6 gap-x-3 gap-y-1">
+                    <div>
                       <Field
                         name="employeeId"
                         component={SearchSelect}
@@ -212,15 +235,21 @@ export function MasterEditForm({
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
+                            e.value == "Select" ? "" : Number(e.value);
                           setFieldValue("employeeId", value);
                           setfilters((prevState) => ({
                             ...prevState,
                             employeeId: value,
-                            
                           }));
-                            const selectedEmp = allEmployees.find(emp => emp.value === value);
-                            dispatch(getActiveFiscalYear("activeFiscalYear", selectedEmp?.subsidiaryId));
+                          const selectedEmp = allEmployees.find(
+                            (emp) => emp.value === value
+                          );
+                          dispatch(
+                            getActiveFiscalYear(
+                              "activeFiscalYear",
+                              selectedEmp?.subsidiaryId
+                            )
+                          );
                         }}
                         label={
                           <span>
@@ -233,7 +262,10 @@ export function MasterEditForm({
                         }
                         autoComplete="off"
                         // options={allEmployees}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allEmployees) ? allEmployees : []),]}
+                        options={[
+                          { label: "Select", value: "" },
+                          ...(Array.isArray(allEmployees) ? allEmployees : []),
+                        ]}
                       />
                       {errors.employeeId && touched.employeeId && (
                         <CustomErrorLabel
@@ -243,24 +275,28 @@ export function MasterEditForm({
                       )}
                     </div>
                     {/* Employee Field End */}
-           
-   <div className="col-2 col-md-4 d-flex  align-items-center pt-10">
-                                        <span
-                                          className="svg-icon svg-icon-md svg-icon-primary"
-                                          onClick={() => setPanelMode(!panelMode)}
-                                        >
-                                          <SVG
-                                            src={toAbsoluteUrl(
-                                              panelMode
-                                                ? "/media/svg/icons/Communication/CancelButton.svg"
-                                                : "/media/svg/icons/Communication/AddButton.svg"
-                                            )}
-                                          />
-                                        </span>
-                    
-                    
-                                      </div>
-       
+
+                    <div className="mt-6">
+                      {panelMode ? (
+                        <button
+                          type="button"
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() => setPanelMode(!panelMode)}
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() => setPanelMode(!panelMode)}
+                        >
+                          <Eye className="w-4 h-4 text-white" />
+                          View Details
+                        </button>
+                      )}
+                    </div>
 
                     {/* {payrollData &&
                       payrollData.startDate &&
@@ -283,393 +319,366 @@ export function MasterEditForm({
                         </div>
                       )} */}
 
-                       {/* Active payroll month */}
+                    {/* Active payroll month */}
 
-
-
-            <div className="col-12 col-md-4 mt-3 d-flex flex-column align-items-start">
-
-  {activeFiscalYear ? (() => {
-
-    return (
-      <>
-        <div>
-          <b>Active Fiscal Year -</b>{" "}
-          {activeFiscalYear?.label}
-        </div>
-        <div>
-          <b>Active Payroll Month -</b>{" "}
-          {activeFiscalYear?.payrollMonthLabel}
-        </div>
-      </>
-    );
-  })() : null}
-</div>
-                  </div>
-
-                         
-
-                  <br />
-             
-
-                  {/* EmployeeProfile Starts */}
-                  <EmployeeProfile employeeId={values.employeeId} panelMode={panelMode}/>
-                  {/* EmployeeProfile Ends */}
-
-            
-                  <div className="from-group row ml-5">
-                    {/* Date In Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="attDateIn"
-                        component={DatePickerField}
-                        dateFormat="dd-MMM-yyyy"
-                        onChange={(date) => {
-                          setFieldValue("attDateIn", date);
-                          setfilters((prevState) => ({
-                            ...prevState,
-                            attDateIn: date,
-                          }));
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Date In<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
+                    <div className="mt-4 text-xs d-flex flex-column align-items-start">
+                      {activeFiscalYear
+                        ? (() => {
+                            return (
+                              <>
+                                <div>
+                                  <b>Active Fiscal Year -</b>{" "}
+                                  {activeFiscalYear?.label}
+                                </div>
+                                <div>
+                                  <b>Active Payroll Month -</b>{" "}
+                                  {activeFiscalYear?.payrollMonthLabel}
+                                </div>
+                              </>
+                            );
+                          })()
+                        : null}
                     </div>
-                    {/* Date In Field End */}
-
-                    {/* Time In Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="timeIn"
-                        component={TimeInput}
-                        // maxlength="4"
-                        label={
-                          <span>
-                            {" "}
-                            Time In<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Time In Field End */}
-                  </div>
-
-                  <div className="from-group row ml-5">
-                    {/* Date Out Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="attDateOut"
-                        component={DatePickerField}
-                        dateFormat="dd-MMM-yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date Out<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Date Out Field End */}
-
-                    {/* Time Out Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="timeOut"
-                        component={TimeInput}
-                        // maxlength="4"
-                        label={
-                          <span>
-                            {" "}
-                            Time Out<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Time Out Field End */}
-                  </div>
-
-                  <div className="from-group row ml-5">
-                    {/* Worked Hours Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="workedHours"
-                        component={TimeInput}
-                        className="form-control"
-                        disabled
-                        label={<span> Worked Hours</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Worked Hours Field End */}
-
-                    {/* Attendance Status Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="attendanceStatus"
-                        component={Input}
-                        className="form-control"
-                        disabled
-                        label={<span> Attendance Status</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Attendance Status Field End */}
-                  </div>
-
-                  <div className="from-group row ml-5">
-                    {/* Comments Field Start */}
-                    <div className="col-12 col-md-8 mt-3">
-                      <Field
-                        name="comments"
-                        component={TextArea}
-                        placeholder=""
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        label={
-                          <span>
-                            {" "}
-                            Comments<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.comments}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Comments Field End */}
                   </div>
 
                   <br />
-                  <hr />
-                  <Accordion defaultActiveKey="0">
-                    <Card>
-                      <Card.Header>
-                        <div className="accordion-header-btn">
-                          <Accordion.Toggle as={Button} eventKey="0">
-                            Shift Details
-                            <KeyboardArrowDown />
-                          </Accordion.Toggle>
-                        </div>
-                      </Card.Header>
-                      <Accordion.Collapse eventKey="0">
-                        <Card.Body>
-                          <div className="from-group row">
-                            {/* Shift Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftCode"
-                                component={Input}
-                                className="form-control"
-                                disabled
-                                label={<span> Employee Shift</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Shift Field End */}
+                  <div className="col-span-4 md:col-span-6">
+                    {/* EmployeeProfile Starts */}
+                    <EmployeeProfile
+                      employeeId={values.employeeId}
+                      panelMode={panelMode}
+                    />
+                    {/* EmployeeProfile Ends */}
+                  </div>
 
-                            {/* Shift Start Time Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftStartTime"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> Shift Start Time</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Shift Start Time Field End */}
+                  {/* Date In Field Start */}
+                  <div>
+                    <Field
+                      name="attDateIn"
+                      component={DatePickerField}
+                      dateFormat="dd-MMM-yyyy"
+                      onChange={(date) => {
+                        setFieldValue("attDateIn", date);
+                        setfilters((prevState) => ({
+                          ...prevState,
+                          attDateIn: date,
+                        }));
+                      }}
+                      label={
+                        <span>
+                          {" "}
+                          Date In<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Date In Field End */}
 
-                            {/* Shift End Time Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftEndTime"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> Shift End Time</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Shift End Time Field End */}
+                  {/* Time In Field Start */}
+                  <div>
+                    <Field
+                      name="timeIn"
+                      component={TimeInput}
+                      // maxlength="4"
+                      label={
+                        <span>
+                          {" "}
+                          Time In<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Time In Field End */}
+                  {/* Date Out Field Start */}
+                  <div>
+                    <Field
+                      name="attDateOut"
+                      component={DatePickerField}
+                      dateFormat="dd-MMM-yyyy"
+                      label={
+                        <span>
+                          {" "}
+                          Date Out<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Date Out Field End */}
 
-                            {/* Shift Hours Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftWorkingHours"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> Shift Hours</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Shift Hours Field End */}
+                  {/* Time Out Field Start */}
+                  <div>
+                    <Field
+                      name="timeOut"
+                      component={TimeInput}
+                      // maxlength="4"
+                      label={
+                        <span>
+                          {" "}
+                          Time Out<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Time Out Field End */}
 
-                            {/* Late In Time Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftLateIn"
-                                component={TimeInput}
-                                disabled
-                                className="form-control"
-                                label={<span> Late In Time</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Late In Time Field End */}
+                  {/* Worked Hours Field Start */}
+                  <div>
+                    <Field
+                      name="workedHours"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Worked Hours</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Worked Hours Field End */}
 
-                            {/* Early Out Time Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftEarlyOut"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> Early Out Time</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Early Out Time Field End */}
+                  {/* Attendance Status Field Start */}
+                  <div>
+                    <Field
+                      name="attendanceStatus"
+                      component={Input}
+                      className="form-control"
+                      disabled
+                      label={<span> Attendance Status</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Attendance Status Field End */}
+                </div>
 
-                            {/* Half day Start Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftHalfDayStart"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> Half day Start</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Half day Start Field End */}
+                {/* Comments Field Start */}
+                <div className="col-span-3">
+                  <Field
+                    name="comments"
+                    component={TextArea}
+                    placeholder=""
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    label={
+                      <span>
+                        {" "}
+                        Comments<span style={{ color: "red" }}>*</span>
+                      </span>
+                    }
+                    value={values.comments}
+                    autoComplete="off"
+                  />
+                </div>
+                {/* Comments Field End */}
 
-                            {/* Half Day End Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="shiftHalfDayEnd"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> Half Day End</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Half Day End Field End */}
+                <hr />
+                <h6 className="font-bold mb-0 text-primary">Shift Detail</h6>
+                <div className="grid grid-cols-4 md:grid-cols-6 gap-x-3 gap-y-1">
+                  {/* Shift Field Start */}
+                  <div>
+                    <Field
+                      name="shiftCode"
+                      component={Input}
+                      className="form-control"
+                      disabled
+                      label={<span> Employee Shift</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Shift Field End */}
 
-                            {/* Allow OverTime Field Starts */}
-                            <div className="d-flex col-12 col-md-4 mt-3">
-                              <Field
-                                name={`isOverTime`}
-                                component={Checkbox}
-                                disabled
-                                onChange={(e) => {
-                                  setFieldValue(`isOverTime`, e.target.checked);
-                                }}
-                                isSelected={values.isOverTime}
-                              />
-                              <span className="mt-7 ml-3"> Allow OverTime</span>
-                            </div>
-                            {/* Allow OverTime Field End */}
+                  {/* Shift Start Time Field Start */}
+                  <div>
+                    <Field
+                      name="shiftStartTime"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Shift Start Time</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Shift Start Time Field End */}
 
-                            {/* Include Inter-Shift Gap Field Starts */}
-                            <div className="d-flex col-12 col-md-4 mt-3">
-                              <Field
-                                name={`isIncludeInterShifGap`}
-                                component={Checkbox}
-                                onChange={(e) => {
-                                  setFieldValue(
-                                    `isIncludeInterShifGap`,
-                                    e.target.checked
-                                  );
-                                }}
-                                disabled
-                                isSelected={values.isIncludeInterShifGap}
-                              />
-                              <span className="mt-7 ml-3">Include Inter-Shift Gap</span>
-                            </div>
-                            {/* Include Inter-Shift Gap Field End */}
+                  {/* Shift End Time Field Start */}
+                  <div>
+                    <Field
+                      name="shiftEndTime"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Shift End Time</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Shift End Time Field End */}
 
-                            {/* inter Shift Gap Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="interShifGap"
-                                component={TimeInput}
-                                className="form-control"
-                                disabled
-                                label={<span> inter Shift Gap</span>}
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* inter Shift Gap Field End */}
+                  {/* Shift Hours Field Start */}
+                  <div>
+                    <Field
+                      name="shiftWorkingHours"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Shift Hours</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Shift Hours Field End */}
 
-                            {/* Late By Hours Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="lateInHours"
-                                component={TimeInput}
-                                className="form-control"
-                                label={<span> Late By Hours</span>}
-                                disabled
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Late By Hours Field End */}
+                  {/* Late In Time Field Start */}
+                  <div>
+                    <Field
+                      name="shiftLateIn"
+                      component={TimeInput}
+                      disabled
+                      className="form-control"
+                      label={<span> Late In Time</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Late In Time Field End */}
 
-                            {/* Overtime Start Time Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="overtimeStart"
-                                component={TimeInput}
-                                className="form-control"
-                                label={<span> Overtime Start Time</span>}
-                                disabled
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Overtime Start Time Field End */}
+                  {/* Early Out Time Field Start */}
+                  <div>
+                    <Field
+                      name="shiftEarlyOut"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Early Out Time</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Early Out Time Field End */}
 
-                            {/* Overtime Hours Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="oT"
-                                component={TimeInput}
-                                className="form-control"
-                                label={<span> Overtime Hours</span>}
-                                disabled
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Overtime Hours Field End */}
+                  {/* Half day Start Field Start */}
+                  <div>
+                    <Field
+                      name="shiftHalfDayStart"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Half day Start</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Half day Start Field End */}
 
-                            {/* Actual Overtime Field Start */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="approvedOT"
-                                component={TimeInput}
-                                className="form-control"
-                                label={<span> Actual Overtime</span>}
-                                disabled
-                                autoComplete="off"
-                              />
-                            </div>
-                            {/* Actual Overtime Field End */}
-                          </div>
-                        </Card.Body>
-                      </Accordion.Collapse>
-                    </Card>
-                  </Accordion>
-                </fieldset>
-              </Form>
-            </Modal.Body>
+                  {/* Half Day End Field Start */}
+                  <div>
+                    <Field
+                      name="shiftHalfDayEnd"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> Half Day End</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Half Day End Field End */}
+
+                  {/* Allow OverTime Field Starts */}
+                  <div className="flex items-center gap-1 mt-3">
+                    <Field
+                      name={`isOverTime`}
+                      component={Checkbox}
+                      disabled
+                      onChange={(e) => {
+                        setFieldValue(`isOverTime`, e.target.checked);
+                      }}
+                      isSelected={values.isOverTime}
+                    />
+                    <span className="mt-7 ml-3"> Allow OverTime</span>
+                  </div>
+                  {/* Allow OverTime Field End */}
+
+                  {/* Include Inter-Shift Gap Field Starts */}
+                  <div className="flex items-center gap-1 mt-3">
+                    <Field
+                      name={`isIncludeInterShifGap`}
+                      component={Checkbox}
+                      onChange={(e) => {
+                        setFieldValue(
+                          `isIncludeInterShifGap`,
+                          e.target.checked
+                        );
+                      }}
+                      disabled
+                      isSelected={values.isIncludeInterShifGap}
+                    />
+                    <span className="mt-7 ml-3">Include Inter-Shift Gap</span>
+                  </div>
+                  {/* Include Inter-Shift Gap Field End */}
+
+                  {/* inter Shift Gap Field Start */}
+                  <div>
+                    <Field
+                      name="interShifGap"
+                      component={TimeInput}
+                      className="form-control"
+                      disabled
+                      label={<span> inter Shift Gap</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* inter Shift Gap Field End */}
+
+                  {/* Late By Hours Field Start */}
+                  <div>
+                    <Field
+                      name="lateInHours"
+                      component={TimeInput}
+                      className="form-control"
+                      label={<span> Late By Hours</span>}
+                      disabled
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Late By Hours Field End */}
+
+                  {/* Overtime Start Time Field Start */}
+                  <div>
+                    <Field
+                      name="overtimeStart"
+                      component={TimeInput}
+                      className="form-control"
+                      label={<span> Overtime Start Time</span>}
+                      disabled
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Overtime Start Time Field End */}
+
+                  {/* Overtime Hours Field Start */}
+                  <div>
+                    <Field
+                      name="oT"
+                      component={TimeInput}
+                      className="form-control"
+                      label={<span> Overtime Hours</span>}
+                      disabled
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Overtime Hours Field End */}
+
+                  {/* Actual Overtime Field Start */}
+                  <div>
+                    <Field
+                      name="approvedOT"
+                      component={TimeInput}
+                      className="form-control"
+                      label={<span> Actual Overtime</span>}
+                      disabled
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Actual Overtime Field End */}
+                </div>
+              </fieldset>
+            </Form>
             <Modal.Footer>
               {!isUserForRead && (
                 <button
@@ -678,7 +687,7 @@ export function MasterEditForm({
                     setfilters({ employeeId: "", attDateIn: "" });
                     handleReset();
                   }}
-                  className="btn btn-light btn-elevate"
+                  className="btn btn-light"
                 >
                   Cancel
                 </button>

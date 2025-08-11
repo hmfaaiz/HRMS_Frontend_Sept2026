@@ -169,6 +169,11 @@
   }
 }
 
+.table th,
+.table td {
+  border-top: 0px solid #ebedf3 !important;
+}
+
 .cursor-default {
   cursor: default !important;
 }
@@ -185,12 +190,27 @@
   border-radius: 0px;
 }
 
+.react-bootstrap-table table thead tr td {
+  color: #000000 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: capitalize !important;
+  letter-spacing: 0 !important;
+  background-color: transparent !important;
+  border-bottom: 0.2px solid #000000 !important;
+  padding: 3px !important;
+}
+
 // for modal width
 .modal-75vw {
   max-width: 75vw;
 }
 .modal-70vw {
   max-width: 70vw;
+}
+
+.modal {
+  padding: 40px 0px 40px 0px !important;
 }
 
 .text-underline-hover:hover {
@@ -406,6 +426,18 @@ label {
   width: calc(1.05em + 0.75rem + 1px) !important;
 }
 
-.stroke-3{
+.stroke-3 {
   stroke-width: 3 !important;
+}
+
+
+//checkbox
+
+.checkbox > span {
+    border-radius: 0.12rem !important;
+}
+
+.checkbox > span {
+    height: 13px !important;
+    width: 13px !important;
 }

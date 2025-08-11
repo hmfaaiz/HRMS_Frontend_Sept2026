@@ -184,7 +184,7 @@ export function FormCard() {
     //                           onBlur={handleBlur}
     //                           onChange={(e) => {
     //                             const value =
-    //                               e.value == "--Select--"
+    //                               e.value == "Select"
     //                                 ? ""
     //                                 : Number(e.value);
     //                             setFieldValue("departmentId", value);
@@ -198,7 +198,7 @@ export function FormCard() {
     //                           }
     //                           // options={dashboard?.allDept}
     //                           options={[
-    //                             { label: "--Select--", value: "" },
+    //                             { label: "Select", value: "" },
     //                             ...(Array.isArray(dashboard?.allDept)
     //                               ? dashboard?.allDept
     //                               : []),
@@ -226,7 +226,7 @@ export function FormCard() {
     //                           }
     //                           // options={dashboard?.allEmployees}
     //                           options={[
-    //                             { label: "--Select--", value: "" },
+    //                             { label: "Select", value: "" },
     //                             ...(values?.departmentId
     //                               ? dashboard?.allEmployees?.filter(
     //                                   (emp) =>
@@ -242,11 +242,11 @@ export function FormCard() {
 
     //                       <div className="col-12 col-md-4 mt-3">
     //                         <label>
-    //                           From Date<span style={{ color: "red" }}>*</span>
+    //                           From<span style={{ color: "red" }}>*</span>
     //                         </label>
     //                         <DatePicker
     //                           className="form-control"
-    //                           placeholder="From Date "
+    //                           placeholder="From "
     //                           selected={
     //                             values?.from_date
     //                               ? new Date(values.from_date)
@@ -271,7 +271,7 @@ export function FormCard() {
     //                         </label>
     //                         <DatePicker
     //                           className="form-control"
-    //                           placeholder="To Date "
+    //                           placeholder="To "
     //                           selected={
     //                             values?.to_date
     //                               ? new Date(values.to_date)
@@ -399,23 +399,16 @@ export function FormCard() {
 
             return (
               <>
-                <Modal.Body className="overlay overlay-block cursor-default">
                   <Form className="form form-label-right">
                     <fieldset>
-                      <div
-                        style={{
-                          backgroundColor: "rgb(235 243 255)",
-                          marginTop: "15px",
-                          padding: "20px",
-                          borderRadius: "5px",
-                          border: "2px solid #adceff",
-                        }}
-                      >
-                        <h6>Attendance Calendar</h6>
+                      
+                    <h6 className="font-bold mb-0 text-primary my-2 mt-4">
+                      Filter
+                    </h6>
 
-                        <div className="form-group row">
+                    <div className="grid-cols-3 md:grid-cols-5 grid gap-x-3 gap-y-1">
                           {/* Subsidiary Selector */}
-                          <div className="col-12 col-md-4 mt-3">
+                          <div >
                             <SearchSelect
                               name="subsidiaryId"
                               label={
@@ -437,14 +430,14 @@ export function FormCard() {
                             />
                           </div>
 
-                          <div className="col-12 col-md-4 mt-3">
+                          <div >
                             <Field
                               name="departmentId"
                               component={SearchSelect}
                               onBlur={handleBlur}
                               onChange={(e) => {
                                 const value =
-                                  e.value == "--Select--"
+                                  e.value == "Select"
                                     ? ""
                                     : Number(e.value);
                                 setFieldValue("departmentId", value);
@@ -458,7 +451,7 @@ export function FormCard() {
                               }
                               // options={dashboard?.allDept}
                               options={[
-                                { label: "--Select--", value: "" },
+                                { label: "Select", value: "" },
                                 ...(Array.isArray(dashboard?.allDept)
                                   ? dashboard?.allDept
                                   : []),
@@ -467,11 +460,7 @@ export function FormCard() {
                               touched={touched.departmentId}
                             />
                           </div>
-                        </div>
-
-                        {/* Employee Selector */}
-                        <div className="form-group row">
-                          <div className="col-12 col-md-4 mt-3">
+                          <div >
                             <SearchSelect
                               name="employeeId"
                               label={<span>Employee</span>}
@@ -486,7 +475,7 @@ export function FormCard() {
                               }
                               // options={dashboard?.allEmployees}
                               options={[
-                                { label: "--Select--", value: "" },
+                                { label: "Select", value: "" },
                                 ...(values?.departmentId
                                   ? dashboard?.allEmployees?.filter(
                                       (emp) =>
@@ -500,13 +489,13 @@ export function FormCard() {
                             />
                           </div>
 
-                          <div className="col-12 col-md-4 mt-3">
+                          <div >
                             <label>
-                              From Date<span style={{ color: "red" }}>*</span>
+                              From<span style={{ color: "red" }}>*</span>
                             </label>
                             <DatePicker
                               className="form-control"
-                              placeholder="From Date "
+                              placeholder="From "
                               selected={
                                 values?.from_date
                                   ? new Date(values.from_date)
@@ -525,13 +514,13 @@ export function FormCard() {
                           </div>
 
                           {/* Date To Selector */}
-                          <div className="col-12 col-md-4 mt-3">
+                          <div >
                             <label>
                               Date To<span style={{ color: "red" }}>*</span>
                             </label>
                             <DatePicker
                               className="form-control"
-                              placeholder="To Date "
+                              placeholder="To "
                               selected={
                                 values?.to_date
                                   ? new Date(values.to_date)
@@ -548,10 +537,9 @@ export function FormCard() {
                             />
                           </div>
                         </div>
-                      </div>
+                      
                     </fieldset>
                   </Form>
-                </Modal.Body>
 
                 <Modal.Footer className="justify-content-between">
                   <div className="d-flex justify-content-center ">
@@ -588,7 +576,7 @@ export function FormCard() {
                         handleReset();
                         dispatch(actions.clearEvents()); // Reset form and clear events
                       }}
-                      className="btn btn-danger btn-elevate m-2"
+                      className="btn btn-light"
                     >
                       Cancel
                     </button>
@@ -599,9 +587,9 @@ export function FormCard() {
                         customSubmit(values);
                       }}
                       disabled={!values.from_date || !values.to_date}
-                      className="btn btn-success btn-elevate m-2"
+                      className="btn btn-primary btn-elevate m-2"
                     >
-                      Filter Record
+                      Filter 
                     </button>
                   </div>
                 </Modal.Footer>

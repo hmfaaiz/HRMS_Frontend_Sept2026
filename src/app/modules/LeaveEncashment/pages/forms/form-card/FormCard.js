@@ -153,41 +153,40 @@ export function FormCard() {
 
     //     {/* Card Ends */}
     //   </Card>
-      <TCard name={CurrentModuleName()}>
-        <div className="">
-          <EmployeeSelect
-            setId={formUIProps.setId}
-            setemployeeId={formUIProps.setemployeeId}
-            setyearId={formUIProps.setyearId}
-            setPanelMode={formUIProps.setPanelMode}
+    <TCard name={CurrentModuleName()}>
+      <div className="">
+        <EmployeeSelect
+          setId={formUIProps.setId}
+          setemployeeId={formUIProps.setemployeeId}
+          setyearId={formUIProps.setyearId}
+          setPanelMode={formUIProps.setPanelMode}
+          panelMode={formUIProps.panelMode}
+        />
+        <div className="flex items-center gap-2">
+          {/* EmployeeProfile Starts */}
+          <EmployeeProfile
+            employeeId={formUIProps.employeeId}
             panelMode={formUIProps.panelMode}
           />
-          <div className="flex items-center gap-2">
-            {/* EmployeeProfile Starts */}
-            <EmployeeProfile
-              employeeId={formUIProps.employeeId}
-              panelMode={formUIProps.panelMode}
-            />
-            {/* EmployeeProfile Ends */}
-          </div>
-          {/* FormEditDialog Starts */}
-          <FormEditDialog
-            id={formUIProps.id}
-            employeeId={formUIProps.employeeId}
-            yearId={formUIProps.yearId}
-          />
-          {/* FormEditDialog Ends */}
-          <br />
-          {/* LeaveEncashmentTable Starts */}
-          <LeaveEncashmentTable />
-          {/* LeaveEncashmentTable Ends */}
-          <br />
-          <hr />
-          {/* LeaveBalanceTable Starts */}
-          <LeaveBalanceTable />
-          {/* LeaveBalanceTable Ends */}
+          {/* EmployeeProfile Ends */}
         </div>
-      </TCard>
+        {/* FormEditDialog Starts */}
+        <FormEditDialog
+          id={formUIProps.id}
+          employeeId={formUIProps.employeeId}
+          yearId={formUIProps.yearId}
+        />
+        {/* FormEditDialog Ends */}
+        <hr />
+        {/* LeaveEncashmentTable Starts */}
+        <LeaveEncashmentTable />
+        {/* LeaveEncashmentTable Ends */}
+        <hr />
+        {/* LeaveBalanceTable Starts */}
+        <LeaveBalanceTable />
+        {/* LeaveBalanceTable Ends */}
+      </div>
+    </TCard>
     // </>
   );
 }

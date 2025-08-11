@@ -202,7 +202,7 @@ if(user?.requireDeligation && !user?.deligationId){
     // >
 
 
-     <Accordion activeKey={activeKey}>
+     <Accordion className="mt-2" activeKey={activeKey}>
         <Card>
           <Card.Header className="d-flex justify-content-center">
             <div className="accordion-header-btn w-100  d-flex justify-content-center">

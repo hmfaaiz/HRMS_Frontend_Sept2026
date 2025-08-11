@@ -45,7 +45,7 @@ function LeaveTypeSalaryDeductionTable({ values, setFieldValue, createDropdown, 
                         component={Select}
                         className={errors.leaveTypeSalaryDeductionPolicies?.[index]?.leaveType && touched.leaveTypeSalaryDeductionPolicies?.[index]?.leaveType ? 'form-control is-invalid' : 'form-control'}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : e.target.value
+                          const value = e.target.value == 'Select' ? '' : e.target.value
                           setFieldValue(
                             `leaveTypeSalaryDeductionPolicies[${index}].leaveType`,
                             value

@@ -315,7 +315,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allDept}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                       />
                     </div>
 
@@ -334,7 +334,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allDesignations}
-                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations: []),]}
+                           options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations: []),]}
                       />
                     </div>
 
@@ -354,7 +354,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allEmployeegradeList}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList: []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList: []),]}
                       />
                     </div>
 
@@ -374,7 +374,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard.allLocationChildMenus}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus: []),]}
                       />
                     </div>
 
@@ -397,7 +397,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allCountry}
-                           options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry: []),]}
+                           options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry: []),]}
                       />
                     </div>
 
@@ -417,7 +417,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={filteredCities(values.countryId)}
-                               options={[{ label: '--Select--', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId): []),]}
+                               options={[{ label: 'Select', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId): []),]}
 
                       />
                     </div>
@@ -443,7 +443,7 @@ export function FormFIlter({ listLoading, user }) {
                         }
 
                         // options={dashboard?.allAppointmentTypeList}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList: []),]}
 
                       />
                     </div>
@@ -506,7 +506,7 @@ export function FormFIlter({ listLoading, user }) {
                         }}
 
                         // options={dashboard?.allApplicationStatusList || []}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allApplicationStatusList) ? dashboard?.allApplicationStatusList: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allApplicationStatusList) ? dashboard?.allApplicationStatusList: []),]}
                         getOptionLabel={(x) => x.label} // optional: customize label rendering
                         getOptionValue={(x) => x.value} // optional: customize value extraction
                         placeholder="Select Status"
@@ -532,7 +532,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allPriorityTypeList}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList: []),]}
                       />
                     </div>
                     {/* Job Status */}
@@ -545,7 +545,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Desire Date of Appointment (From)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="From Date"
+                        placeholder="From"
                         selected={
                           values?.desireFromDateOfApp
                             ? new Date(values.desireFromDateOfApp)
@@ -568,7 +568,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Desire Date of Appointment (To)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="To Date"
+                        placeholder="To"
                         selected={
                           values?.desireToDateOfApp
                             ? new Date(values.desireToDateOfApp)
@@ -596,7 +596,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Applied Date (From)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="From Date"
+                        placeholder="From"
                         selected={
                           values?.applicationFromDate
                             ? new Date(values.applicationFromDate)
@@ -620,7 +620,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Applied Date (To)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="To Date"
+                        placeholder="To"
                         selected={
                           values?.applicationToDate
                             ? new Date(values.applicationToDate)
@@ -775,7 +775,7 @@ export function FormFIlter({ listLoading, user }) {
                         }
 
                         // options={dashboard.allCurrencyCodeList}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList: []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList: []),]}
                       />
                     </div>
 
@@ -798,7 +798,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
                         // options={salaryPayTypeIdOptions}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(salaryPayTypeIdOptions) ? salaryPayTypeIdOptions: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(salaryPayTypeIdOptions) ? salaryPayTypeIdOptions: []),]}
                       />
                     </div>
 
@@ -844,7 +844,7 @@ export function FormFIlter({ listLoading, user }) {
                         }
 
                         // options={dashboard?.allQualificationList}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allQualificationList) ? dashboard?.allQualificationList: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allQualificationList) ? dashboard?.allQualificationList: []),]}
 
 
                       />
@@ -960,7 +960,7 @@ export function FormFIlter({ listLoading, user }) {
                         }
 
                         // options={dashboard.allMaritalStatus}
-                         options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus: []),]}
+                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus: []),]}
                       />
                     </div>
                     <div className="col-12 col-md-4 mt-3">
@@ -1004,7 +1004,7 @@ export function FormFIlter({ listLoading, user }) {
                         }
 
                         // options={dashboard.allReligionChildMenus}
-                          options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus: []),]}
+                          options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus: []),]}
                       />
                     </div>
 
@@ -1019,7 +1019,7 @@ export function FormFIlter({ listLoading, user }) {
                           handleSubmit();
                         }}
                         // options={nationalityOptions}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions: []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions: []),]}
                         placeholder="Select Nationality"
                       />
 

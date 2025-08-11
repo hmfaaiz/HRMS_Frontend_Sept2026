@@ -1711,11 +1711,11 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div style={{ backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+                  <div>
                    
 
 
- <div className="form-group row col-12 col-md-12  p-0 m-0 " style={{ height: '250px' }}>
+ <div className="form-group row col-12 col-md-12  p-0 m-0 " >
 
   <div className="form-group row col-12 col-md-10  p-0 m-0 mt-5">
     <div className="form-group row col-12 col-md-12 p-0 m-0 mt-5 mb-5">    <h3>Basic Information</h3></div>
@@ -1994,12 +1994,6 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
 
 
 
-                    <div className="from-group row">
-
-
-
-
-                    </div>
                     <div className="form-group row">
 
 
@@ -3675,7 +3669,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                   }}
 
                                   id={'countryId-' + rightindex} >
-                                  <option value=""> --Select--</option>
+                                  <option value=""> Select</option>
                                   {
                                     dashboard.allCountry?.map((x) => {
                                       return <option value={x.value}> {x.label} </option>
@@ -3694,7 +3688,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                   }}
 
                                   id={'cityId-' + rightindex} >
-                                  <option value=""> --Select--</option>
+                                  <option value=""> Select</option>
                                   {
 
                                     dashboard.allCity?.map((x) => {
@@ -3802,7 +3796,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                     }}
 
                                     id={'institutionId-' + rightindex} >
-                                    <option value="">--Select--</option>
+                                    <option value="">Select</option>
                                     {
                                       dashboard.allInstitution?.map((x) => {
                                         return <option value={x.value}> {x.label} </option>
@@ -3821,7 +3815,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                     }}
 
                                     id={'degreeId-' + rightindex} >
-                                    <option value="">--Select--</option>
+                                    <option value="">Select</option>
                                     {
                                       dashboard.allDegreeTitle?.map((x) => {
                                         return <option value={x.value}> {x.label} </option>
@@ -3839,7 +3833,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                     }}
 
                                     id={'countryId-' + rightindex} >
-                                    <option value="">--Select--</option>
+                                    <option value="">Select</option>
                                     {
                                       dashboard.allCountry?.map((x) => {
                                         return <option value={x.value}> {x.label} </option>
@@ -3857,7 +3851,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                     }}
 
                                     id={'cityId-' + rightindex} >
-                                    <option value=""> --Select--</option>
+                                    <option value=""> Select</option>
 
                                     {
 
@@ -3987,7 +3981,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                     style={{ display: "block" }}
                                     id={'ratingScale-' + rightindex}
                                   >
-                                    <option label="--Select--" />
+                                    <option label="Select" />
                                     <option value="1" label="1" />
                                     <option value="2" label="2" />
                                     <option value="3" label="3" />
@@ -4111,7 +4105,7 @@ console.log("aaaa111",dashboard?.allEmployeesWithNoPermissionList)
                                     }}
 
                                     id={'actionTakenBy-' + rightindex} >
-                                    <option value="">--Select--</option>
+                                    <option value="">Select</option>
                                     {
                                       dashboard.allEmployeesWithNoPermissionList?.filter(x => x.value != values.Id).map((x) => {
                                         return <option value={x.value}> {x.label} </option>

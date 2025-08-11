@@ -276,7 +276,7 @@ export function BankEditForm({
                         disabled={!values.isVisaSponsorShipStatus}
                         selected={-1}
                       >
-                        <option value="-1" label="--Select--" />
+                        <option value="-1" label="Select" />
                         <option value="With Family" label="With Family" />
                         <option value="Without Family" label="Without Family" />
 
