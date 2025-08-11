@@ -8,8 +8,7 @@ import { shallowEqual, useSelector } from "react-redux";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "./navigation_menu.css";
 import { Header } from "../../header/Header";
-import { Link } from "@material-ui/core";
-
+import { Link } from "react-router-dom";
 export function AsideMenuList({ layoutProps }) {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
@@ -84,10 +83,7 @@ export function AsideMenuList({ layoutProps }) {
     : "2";
 
   return (
-    <div
-      style={{ zIndex: "999" }}
-      className="sticky top-0 w-full bg-[#0093dd]"
-    >
+    <div style={{ zIndex: "999" }} className="sticky top-0 w-full bg-[#0093dd]">
       <Header
         isEmployeePortal={isEmployeePortal}
         company={user?.Company}
