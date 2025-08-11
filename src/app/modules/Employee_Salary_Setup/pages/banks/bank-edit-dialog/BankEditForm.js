@@ -1363,7 +1363,7 @@ export function BankEditForm({
                   <div>
                     <div className="flex justify-between items-center">
                       <h6 className="font-bold mb-0 text-primary">
-                        Other Earnings{"  "}
+                        Deductions{"  "}
                       </h6>
                       <button
                         type="button"
@@ -1783,6 +1783,9 @@ export function BankEditForm({
                   </div>
                   <hr />
                   <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-3 gap-y-1">
+                <h6 className="m-0 text-black font-bold text-base col-span-1 xl:col-span-2 sm:text-lg py-1">
+                      Entitlements
+                    </h6>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
                       <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
                         Earning

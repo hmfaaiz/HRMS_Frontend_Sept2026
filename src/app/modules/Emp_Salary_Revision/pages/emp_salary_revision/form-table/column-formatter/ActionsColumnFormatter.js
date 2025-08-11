@@ -1,9 +1,10 @@
 import React from "react";
 import SVG from "react-inlinesvg";
-import { useSelector, shallowEqual, useDispatch } from "react-redux"
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { updateUserAccess } from "../../../../_redux/redux-Actions";
+import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -19,63 +20,47 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     openReadFormDialog,
     setIds,
-    setIsFileReq, isForDelete,dispatch
+    setIsFileReq,
+    isForDelete,
+    dispatch,
   }
 ) {
   const isUserRead = false;
 
-
-// const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   // console.log("aaa111a1111",activeFiscalYear)
   return (
-    <>
+    <div className="space-x-2">
+      {" "}
       {row.isForRead && (
-
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
+          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+        >
           <a
-            title=""
-            className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
             onClick={() => {
               setIds(row.Id);
-              dispatch(updateUserAccess("read"))
+              dispatch(updateUserAccess("read"));
             }}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-              />
-            </span>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
-
       )}
-
-
       {row.isAccessForEdit && row.isActive && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
           <a
-            title=""
-            className="btn btn-icon edit-button"
             onClick={() => {
               setIds(row.Id);
               //  dispatch(updateUserAccess("edit"))
             }}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
-
-
-
       {row.isForDelete && (
         <OverlayTrigger
           overlay={
@@ -85,29 +70,18 @@ export function ActionsColumnFormatter(
           }
         >
           {row.isActive ? (
-            <a
-              title=""
-              className="btn btn-icon  delete-button"
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-danger">
-                <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
-                  title=""
-                />
-              </span>
+            <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
           ) : (
             <a
-              title=""
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-3"
               onClick={() => openActiveFormDialog(row.Id, row.isActive)}
             >
-              <span className="svg-icon svg-icon-md svg-icon-success">A</span>
+              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
             </a>
           )}
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

@@ -40,12 +40,10 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-
   const { currentState, userAccess } = useSelector((state) => {
     return {
       currentState: state.emp_salary_revision,
       userAccess: state?.auth?.userAccess["emp_salary_revision"],
-
     };
   }, shallowEqual);
 
@@ -53,7 +51,7 @@ export function FormTable() {
 
   //totalCount = 10
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
-  console.log("activeFiscalYear2222", activeFiscalYear?.payrollMonth)
+  console.log("activeFiscalYear2222", activeFiscalYear?.payrollMonth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -62,10 +60,7 @@ export function FormTable() {
     dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
   }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]);
 
-
   useEffect(() => {
-
-
     dispatch(actions.fetchPreviousEmpSalaryById(formUIProps.ids));
   }, [formUIProps.ids]);
 
@@ -151,10 +146,6 @@ export function FormTable() {
       formatter: (cell) => formatNumberWithCommas(cell),
     },
 
-
-
-
-
     {
       dataField: "action",
       text: "Actions",
@@ -166,9 +157,6 @@ export function FormTable() {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         dispatch,
-
-
-
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -188,62 +176,43 @@ export function FormTable() {
   };
 
   return (
-    <>
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
-              <Accordion.Toggle
-                as={Button}
-                eventKey="0"
-                className="flex-between-center text-bold"
-              >
-                Employee Revision Salaries
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
-              <PaginationProvider
-                pagination={paginationFactory(paginationOptions)}
-              >
-                {({ paginationProps, paginationTableProps }) => {
-                  return (
-                    <Pagination
-                      isLoading={listLoading}
-                      paginationProps={paginationProps}
-                    >
-                      <BootstrapTable
-                        wrapperClasses="table-responsive"
-                        bordered={false}
-                        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                        bootstrap4
-                        remote
-                        keyField="Id"
-                        data={updatedEntities === null ? [] : updatedEntities}
-                        columns={columns}
-                        defaultSorted={uiHelpers.defaultSorted}
-                        onTableChange={getHandlerTableChange(
-                          formUIProps.setQueryParams
-                        )}
-                        // selectRow={getSelectRow({
-                        //   entities,
+    <div className="w-full overflow-x-auto">
+      <h6 className="font-bold mb-0 text-primary mt-2">
+        Employee Revision Salaries
+      </h6>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
+            >
+              <BootstrapTable
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={updatedEntities === null ? [] : updatedEntities}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  formUIProps.setQueryParams
+                )}
+                // selectRow={getSelectRow({
+                //   entities,
 
-                        // })}
-                        {...paginationTableProps}
-                      >
-                        <PleaseWaitMessage entities={updatedEntities} />
-                        <NoRecordsFoundMessage entities={updatedEntities} />
-                      </BootstrapTable>
-                    </Pagination>
-                  );
-                }}
-              </PaginationProvider>
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-    </>
+                // })}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={updatedEntities} />
+                <NoRecordsFoundMessage entities={updatedEntities} />
+              </BootstrapTable>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
   );
 }
