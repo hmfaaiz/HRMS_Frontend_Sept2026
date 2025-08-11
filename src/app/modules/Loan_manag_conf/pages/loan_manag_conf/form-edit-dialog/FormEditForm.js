@@ -299,7 +299,7 @@ export function FormEditForm({
 
                   {/* Installment Deduction Basis Type Field */}
 
-                    <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="grid grid-cols-3 gap-x-3 mt-2">
                   <div className="">
                     <label htmlFor="installment_deduction_basis_type">
                       Installment Deduction Basis Type

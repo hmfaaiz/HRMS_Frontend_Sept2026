@@ -17,6 +17,7 @@ import { formatDates } from "../../../../../utils/common";
 import { parse } from "date-fns";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+import { Download } from "lucide-react";
 
 
 //Validation for date fields
@@ -378,7 +379,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                     <div className="">
 
 
-                      <label>From Date</label>
+                      <label>Date</label>
                       <DatePicker
                         className="form-control"
                         placeholder="From Date "
@@ -408,7 +409,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                     <div className="">
 
 
-                      <label>Date To</label>
+                      <label>To</label>
                       <DatePicker
                         className="form-control"
                         placeholder="To Date "
@@ -445,9 +446,10 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                       >
                         Loan Request Report
                         <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                          <SVG
+                          {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          />
+                          /> */}
+                           <Download />
                         </span>
                         {loanReqLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -500,9 +502,10 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                       >
                         Loan Position Report
                         <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                          <SVG
+                          {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          />
+                          /> */}
+                           <Download />
                         </span>
                         {LoanPositionLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -525,7 +528,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                   applyFilter(initialFilter.filter)
                   handleReset()
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-light btn-elevate"
               >
                 Cancel
               </button>

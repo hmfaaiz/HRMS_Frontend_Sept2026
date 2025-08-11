@@ -17,6 +17,7 @@ import { formatDates } from "../../../../../utils/common";
 import { parse } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
+import { Download } from "lucide-react";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -331,7 +332,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                     <div className="">
 
 
-                      <label>From Date</label>
+                      <label>Date</label>
                       <DatePicker
                         className="form-control"
                         placeholder="From Date "
@@ -362,7 +363,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                     <div className="">
 
 
-                      <label>Date To</label>
+                      <label>To</label>
                       <DatePicker
                         className="form-control"
                         placeholder="To Date "
@@ -403,7 +404,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                   applyFilter(initialFilter.filter)
                   handleReset()
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-light btn-elevate"
               >
                 Cancel
               </button>
@@ -417,9 +418,11 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                 >
                   Reimbursement Report
                   <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                    <SVG
+                    {/* <SVG
                       src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                    />
+                    /> */}
+
+                      <Download />
                   </span>
                   {reimbursementLoading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -433,7 +436,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
 
             </Modal.Footer>
             <div className="d-flex justify-content-end mr-5 mb-5">
-              <span>Select Payroll Month or Dates</span>
+              <label>Select payroll month or dates to download</label>
             </div>
 
 
