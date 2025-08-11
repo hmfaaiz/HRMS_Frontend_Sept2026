@@ -47,7 +47,7 @@ export function FormCard() {
 
   return (
     <>
-      <div className=" p-2">
+      <div className="text-right my-1">
         {accessUser && (
           <button
             type="button"
@@ -59,7 +59,7 @@ export function FormCard() {
           </button>
         )}
 
-        <CardHeaderToolbar></CardHeaderToolbar>
+
       </div>
 
       <FormTable />

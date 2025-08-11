@@ -157,26 +157,34 @@ export function FormEditDialog({ id, show, onHide, dataForRead,status }) {
     // >
 
 
-    <Accordion activeKey={activeKey}>
-      <Card>
-        <Card.Header className="d-flex justify-content-center">
-          <div className="accordion-header-btn w-100  d-flex justify-content-center">
-            <Accordion.Toggle
-              as={Button}
-              eventKey="0"
-              className="flex-between-center text-bold"
-               onClick={() =>
-                setActiveKey(activeKey === "0" ? null : "0")
-              }
-            >
-              Job Vacancy 
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <>
+    // <Accordion activeKey={activeKey}>
+    //   <Card>
+    //     <Card.Header className="d-flex justify-content-center">
+    //       <div className="accordion-header-btn w-100  d-flex justify-content-center">
+    //         <Accordion.Toggle
+    //           as={Button}
+    //           eventKey="0"
+    //           className="flex-between-center text-bold"
+    //            onClick={() =>
+    //             setActiveKey(activeKey === "0" ? null : "0")
+    //           }
+    //         >
+    //           Job Vacancy 
+    //           <KeyboardArrowDown />
+    //         </Accordion.Toggle>
+    //       </div>
+    //     </Card.Header>
+    //     <Accordion.Collapse eventKey="0">
+    //       <Card.Body>
+        
+
+    //       </Card.Body>
+    //     </Accordion.Collapse>
+    //   </Card>
+    // </Accordion>
+
+        <div className="bg-white">
+          <hr></hr>
               <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
               <FormEditForm
                 saveForm={saveForm}
@@ -201,12 +209,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead,status }) {
                 draggable
                 pauseOnHover
               />
-            </>
-
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+            </div>
 
     // </Modal>
   );

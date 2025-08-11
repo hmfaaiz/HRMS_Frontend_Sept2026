@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -9,7 +9,7 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormDynamicDialogModal } from "./form-delete-dialog/FormDynamicDialogModal";
 import { useSelector, shallowEqual } from "react-redux";
 import { FormCard } from "./form-card/FormCard";
-import {} from "../../_redux/redux-Actions";
+import { } from "../../_redux/redux-Actions";
 import { FormFIlter } from "./form-filter/FormFIlter";
 import { Switch } from "react-router-dom";
 import { Accordion, Button, Card } from "react-bootstrap";
@@ -21,6 +21,8 @@ import {
 } from "../../../../../_metronic/_partials/controls";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
+import { CirclePlus  } from "lucide-react";
+import { CircleMinus  } from "lucide-react";
 
 export function FormPage({ history }) {
   const dispatch = useDispatch();
@@ -81,7 +83,7 @@ export function FormPage({ history }) {
   const isAccessForClose = userAccess?.find(
     (item) => item.componentName === "CloseJobVacancy"
   );
-
+  const [activeKey, setActiveKey] = useState(null);
   return (
     // <FormUIProvider FormUIEvents={FormUIEvents}>
     //   <Route exact path="/job_vacancy/read-all-job-vacancy/new">
@@ -209,18 +211,19 @@ export function FormPage({ history }) {
 
       {/* <FormCard /> */}
       <TCard name={CurrentModuleName()}>
-        <div>
-          <Accordion defaultActiveKey="">
+        <div >
+          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
             <Card>
               <Card.Header className="d-flex justify-content-center">
-                <div className="accordion-header-btn w-100  d-flex justify-content-center">
+                <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
                   <Accordion.Toggle
                     as={Button}
                     eventKey="0"
-                    className="flex-between-center text-bold"
+                    className="flex justify-start text-bold"
                   >
-                    Filter
-                    <KeyboardArrowDown />
+                   
+                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
+
                   </Accordion.Toggle>
                 </div>
               </Card.Header>
