@@ -47,10 +47,10 @@ export function MasterEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
+                  <div className="grid grid-cols-6 gap-x-6 gap-y-1">
 
                     {/* Allocated Leave Count Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div >
                       <Field
                         name="allocatedCount"
                         component={Input}
@@ -71,7 +71,7 @@ export function MasterEditForm({
                     {/* Allocated Leave Count Field End */}
 
                     {/* Remaining Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div >
                       <Field
                         name="remainingCount"
                         component={Input}
@@ -91,7 +91,7 @@ export function MasterEditForm({
                     {/* Remaining Field End */}
 
                     {/* Late Count Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div >
                       <Field
                         name="lateCount"
                         component={Input}
@@ -111,7 +111,7 @@ export function MasterEditForm({
                     {/* Late Count Field End */}
 
                     {/* Availed Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div >
                       <Field
                         name="availedCount"
                         component={Input}
@@ -131,7 +131,7 @@ export function MasterEditForm({
                     {/* Availed Field End */}
 
                      {/* Carry Forward Leave Count Field Start */}
-                     <div className="col-12 col-md-4 mt-3">
+                     <div >
                       <Field
                         name="carryForwardCount"
                         component={Input}
@@ -151,7 +151,7 @@ export function MasterEditForm({
                     {/* Carry Forward Leave Count Field End */}
 
                     {/* Encashment Leaves Count Field Start */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div >
                       <Field
                         name="encashmentCount"
                         component={Input}

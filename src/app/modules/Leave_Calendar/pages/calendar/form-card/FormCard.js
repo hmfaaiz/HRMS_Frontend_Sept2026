@@ -141,124 +141,110 @@ export function FormCard() {
                   <Modal.Body className="overlay overlay-block cursor-default">
                     <Form className="form form-label-right">
                       <fieldset>
-                        <div
-                          style={{
-                            backgroundColor: "rgb(235 243 255)",
-                            marginTop: "15px",
-                            padding: "20px",
-                            borderRadius: "5px",
-                            border: "2px solid #adceff",
-                          }}
-                        >
-                          <h6>Leave Calendar</h6>
-
-                          <div className="form-group row">
-                            {/* Subsidiary Selector */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <SearchSelect
-                                name="subsidiaryId"
-                                label={
-                                  <span>
-                                    Subsidiary
-                                    <span style={{ color: "red" }}>*</span>
-                                  </span>
-                                }
-                                onChange={handleSubsidiaryChange} // Call the dynamic reset handler
-                                value={
-                                  dashboard?.allSubsidiaryList?.find(
-                                    (option) =>
-                                      option?.value === values?.subsidiaryId
-                                  ) || null
-                                }
-                                options={dashboard?.allSubsidiaryList}
-                                error={errors.subsidiaryId}
-                                touched={touched.subsidiaryId}
-                              />
-                            </div>
-
-                            <div className="col-12 col-md-4 mt-3">
-                              <Field
-                                name="departmentId"
-                                component={SearchSelect}
-                                onBlur={handleBlur}
-                                onChange={(e) => {
-                                  const value =
-                                    e.value == "--Select--"
-                                      ? ""
-                                      : Number(e.value);
-                                  setFieldValue("departmentId", value);
-                                  setFieldValue("employeeId", null);
-                                }}
-                                label={<span> Department</span>}
-                                value={
-                                  dashboard?.allDept?.find(
-                                    (option) =>
-                                      option?.value === values?.departmentId
-                                  ) || null
-                                }
-                                // options={dashboard?.allDept}
-                                options={[
-                                  { label: "--Select--", value: "" },
-                                  ...(Array.isArray(dashboard?.allDept)
-                                    ? dashboard?.allDept
-                                    : []),
-                                ]}
-                                error={errors.departmentId}
-                                touched={touched.departmentId}
-                              />
-                            </div>
+                        <div className="grid grid-cols-5 gap-x-3 gap-y-1">
+                          {/* Subsidiary Selector */}
+                          <div>
+                            <SearchSelect
+                              name="subsidiaryId"
+                              label={
+                                <label>
+                                  Subsidiary
+                                  <span style={{ color: "red" }}>*</span>
+                                </label>
+                              }
+                              onChange={handleSubsidiaryChange} // Call the dynamic reset handler
+                              value={
+                                dashboard?.allSubsidiaryList?.find(
+                                  (option) =>
+                                    option?.value === values?.subsidiaryId
+                                ) || null
+                              }
+                              options={dashboard?.allSubsidiaryList}
+                              error={errors.subsidiaryId}
+                              touched={touched.subsidiaryId}
+                            />
                           </div>
 
-                          {/* Employee Selector */}
-                          <div className="form-group row">
-                            <div className="col-12 col-md-4 mt-3">
-                              <SearchSelect
-                                name="employeeId"
-                                label={<span>Employee</span>}
-                                onChange={(e) => {
-                                  setFieldValue("employeeId", e.value || null);
-                                }}
-                                value={
-                                  dashboard?.allEmployees?.find(
-                                    (option) =>
-                                      option?.value === values?.employeeId
-                                  ) || null
-                                }
-                                // options={dashboard?.allEmployees}
-                                // options={
-                                //   values?.departmentId
-                                //     ? dashboard?.allEmployees?.filter(
-                                //         (emp) => emp?.departmentId === values.departmentId
-                                //       )
-                                //     : dashboard?.allEmployees
-                                // }
+                          <div>
+                            <Field
+                              name="departmentId"
+                              component={SearchSelect}
+                              onBlur={handleBlur}
+                              onChange={(e) => {
+                                const value =
+                                  e.value == "Select"
+                                    ? ""
+                                    : Number(e.value);
+                                setFieldValue("departmentId", value);
+                                setFieldValue("employeeId", null);
+                              }}
+                              label={<span> Department</span>}
+                              value={
+                                dashboard?.allDept?.find(
+                                  (option) =>
+                                    option?.value === values?.departmentId
+                                ) || null
+                              }
+                              // options={dashboard?.allDept}
+                              options={[
+                                { label: "Select", value: "" },
+                                ...(Array.isArray(dashboard?.allDept)
+                                  ? dashboard?.allDept
+                                  : []),
+                              ]}
+                              error={errors.departmentId}
+                              touched={touched.departmentId}
+                            />
+                          </div>
 
-                                options={[
-                                  { label: "--Select--", value: "" },
-                                  ...(Array.isArray(
-                                    values?.departmentId
-                                      ? dashboard?.allEmployees?.filter(
-                                          (emp) =>
-                                            emp?.departmentId ===
-                                            values.departmentId
-                                        )
-                                      : dashboard?.allEmployees
-                                  )
-                                    ? values?.departmentId
-                                      ? dashboard?.allEmployees?.filter(
-                                          (emp) =>
-                                            emp?.departmentId ===
-                                            values.departmentId
-                                        )
-                                      : dashboard?.allEmployees
-                                    : []),
-                                ]}
-                                error={errors.employeeId}
-                                touched={touched.employeeId}
-                              />
-                            </div>
+                          <div>
+                            <SearchSelect
+                              name="employeeId"
+                              label={<span>Employee</span>}
+                              onChange={(e) => {
+                                setFieldValue("employeeId", e.value || null);
+                              }}
+                              value={
+                                dashboard?.allEmployees?.find(
+                                  (option) =>
+                                    option?.value === values?.employeeId
+                                ) || null
+                              }
+                              // options={dashboard?.allEmployees}
+                              // options={
+                              //   values?.departmentId
+                              //     ? dashboard?.allEmployees?.filter(
+                              //         (emp) => emp?.departmentId === values.departmentId
+                              //       )
+                              //     : dashboard?.allEmployees
+                              // }
 
-                            {/*                      
+                              options={[
+                                { label: "Select", value: "" },
+                                ...(Array.isArray(
+                                  values?.departmentId
+                                    ? dashboard?.allEmployees?.filter(
+                                        (emp) =>
+                                          emp?.departmentId ===
+                                          values.departmentId
+                                      )
+                                    : dashboard?.allEmployees
+                                )
+                                  ? values?.departmentId
+                                    ? dashboard?.allEmployees?.filter(
+                                        (emp) =>
+                                          emp?.departmentId ===
+                                          values.departmentId
+                                      )
+                                    : dashboard?.allEmployees
+                                  : []),
+                              ]}
+                              error={errors.employeeId}
+                              touched={touched.employeeId}
+                            />
+                          </div>
+
+                          {/*                      
                           <div className="col-12 col-md-4 mt-3">
                             <Field
                               name="from_date"
@@ -290,53 +276,52 @@ export function FormCard() {
                             />
                           </div> */}
 
-                            <div className="col-12 col-md-4 mt-3">
-                              <label>
-                                From Date<span style={{ color: "red" }}>*</span>
-                              </label>
-                              <DatePicker
-                                className="form-control"
-                                placeholder="From Date "
-                                selected={
-                                  values?.from_date
-                                    ? new Date(values.from_date)
-                                    : null
-                                }
-                                onChange={(date) => {
-                                  setFieldValue("from_date", date);
-                                  setFieldValue("to_date", date); // Sync from_date and to_date
-                                }}
-                                timeInputLabel="Time:"
-                                dateFormat="dd-MMM-yyyy"
-                                // showTimeInput
-                                name="from_date"
-                                autoComplete="off"
-                              />
-                            </div>
+                          <div>
+                            <label>
+                              From<span style={{ color: "red" }}>*</span>
+                            </label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="From "
+                              selected={
+                                values?.from_date
+                                  ? new Date(values.from_date)
+                                  : null
+                              }
+                              onChange={(date) => {
+                                setFieldValue("from_date", date);
+                                setFieldValue("to_date", date); // Sync from_date and to_date
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd-MMM-yyyy"
+                              // showTimeInput
+                              name="from_date"
+                              autoComplete="off"
+                            />
+                          </div>
 
-                            {/* Date To Selector */}
-                            <div className="col-12 col-md-4 mt-3">
-                              <label>
-                                Date To<span style={{ color: "red" }}>*</span>
-                              </label>
-                              <DatePicker
-                                className="form-control"
-                                placeholder="To Date "
-                                selected={
-                                  values?.to_date
-                                    ? new Date(values.to_date)
-                                    : null
-                                }
-                                onChange={(date) => {
-                                  setFieldValue("to_date", date);
-                                }}
-                                timeInputLabel="Time:"
-                                dateFormat="dd-MMM-yyyy"
-                                // showTimeInput
-                                name="to_date"
-                                autoComplete="off"
-                              />
-                            </div>
+                          {/* Date To Selector */}
+                          <div>
+                            <label>
+                              Date To<span style={{ color: "red" }}>*</span>
+                            </label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="To "
+                              selected={
+                                values?.to_date
+                                  ? new Date(values.to_date)
+                                  : null
+                              }
+                              onChange={(date) => {
+                                setFieldValue("to_date", date);
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd-MMM-yyyy"
+                              // showTimeInput
+                              name="to_date"
+                              autoComplete="off"
+                            />
                           </div>
                         </div>
                       </fieldset>
@@ -350,7 +335,7 @@ export function FormCard() {
                         handleReset();
                         dispatch(actions.clearEvents()); // Reset form and clear events
                       }}
-                      className="btn btn-danger btn-elevate"
+                      className="btn btn-light"
                     >
                       Cancel
                     </button>
@@ -361,9 +346,9 @@ export function FormCard() {
                         customSubmit(values);
                       }}
                       disabled={!values.from_date || !values.to_date}
-                      className="btn btn-success btn-elevate"
+                      className="btn btn-primary btn-elevate"
                     >
-                      Filter Record
+                      Filter
                     </button>
                   </Modal.Footer>
                 </>

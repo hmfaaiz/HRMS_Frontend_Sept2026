@@ -225,7 +225,7 @@ export function BankEditForm({
                         style={{ display: "block" }}
                         autoComplete="off"
                       >
-                        <option value="-1" label="--Select--" />
+                        <option value="-1" label="Select" />
                         <option value="true" label="Yes" />
                         <option value="false" label="No" />
 

@@ -53,9 +53,8 @@ const DesignationWorkflowFormCard = ({ accessPage, value, setValue }) => {
                 className="btn btn-primary"
                 onClick={formUIProps.newButtonDesigClick}
               >
-              >
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                Add Designation Workflow Policy
+                Add
               </button>
             </>
           )}

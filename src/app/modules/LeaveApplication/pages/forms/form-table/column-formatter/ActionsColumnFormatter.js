@@ -2,6 +2,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Eye, Pencil } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -19,7 +20,7 @@ export function ActionsColumnFormatter(
   };
 
   return (
-    <>
+    <div className="space-x-2">
       {isAccessForEdit && row.isActive && checkPayrolMonth(row, payrollData) && (
         <OverlayTrigger
           overlay={
@@ -27,17 +28,11 @@ export function ActionsColumnFormatter(
           }
         >
           <a
-            title=""
-            className="btn btn-icon edit-button"
             onClick={() => {
               setLeaveId(row.Id);
             }}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
@@ -49,20 +44,14 @@ export function ActionsColumnFormatter(
           }
         >
           <a
-            title=""
-            className="btn btn-icon view-button"
             onClick={() => {
               setId(row.Id);
             }}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-              />
-            </span>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

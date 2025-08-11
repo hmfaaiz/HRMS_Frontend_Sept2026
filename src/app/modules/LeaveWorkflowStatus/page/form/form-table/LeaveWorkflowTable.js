@@ -241,7 +241,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">From Date</div>
+                      <div className="font-medium col-span-1">From</div>
                       <div className="col-span-3">
                         {formUIProps?.leaveData?.parentData?.from
                           ? format(
@@ -254,7 +254,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
                       </div>
                     </div>
                     <div className="grid grid-cols-4">
-                      <div className="font-medium col-span-1">To Date</div>
+                      <div className="font-medium col-span-1">To</div>
                       <div className="col-span-3">
                         {formUIProps?.leaveData?.parentData?.from
                           ? format(

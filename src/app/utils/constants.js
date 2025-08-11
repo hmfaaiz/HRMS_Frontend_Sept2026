@@ -411,19 +411,19 @@ export const WEEK_DAY_STRING = {
 }
 
 export const GROSS_TO_BASIC_CALCULATION_TYPE_DROPDOWN = [
-  { label: '--Select--', value: '-1' },
+  { label: 'Select', value: '-1' },
   { label: '% Of Gross', value: '% Of Gross' },
   { label: 'Fixed Amount', value: 'Fixed Amount' },
 ]
 
 export const BASIC_TO_GROSS_CALCULATION_TYPE_DROPDOWN = [
-  { label: '--Select--', value: '-1' },
+  { label: 'Select', value: '-1' },
   { label: '% Of Basic', value: '% Of Basic' },
   { label: 'Fixed Amount', value: 'Fixed Amount' },
 ]
 
 export const DEFAULT_CALCULATION_TYPE_DROPDOWN = [
-  { label: '--Select--', value: '-1' },
+  { label: 'Select', value: '-1' },
   { label: 'Fixed Amount', value: 'Fixed Amount' },
 ]
 

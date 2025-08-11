@@ -29,20 +29,17 @@ export function LeaveEncashmentTable() {
       queryParamsLeaveEnc: formUIContext.queryParamsLeaveEnc,
       setQueryParamsLeaveEnc: formUIContext.setQueryParamsLeaveEnc,
       editRecord: formUIContext.editRecord,
-      openDeleteFormDialog: formUIContext.openDeleteFormDialog
+      openDeleteFormDialog: formUIContext.openDeleteFormDialog,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess, payrollData } = useSelector(
-    (state) => {
-      return {
-        payrollData: state.leave_encashment.payrollData,
-        currentState: state.leave_encashment,
-        userAccess: state?.auth?.userAccess["Leave_Encashment"],
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess, payrollData } = useSelector((state) => {
+    return {
+      payrollData: state.leave_encashment.payrollData,
+      currentState: state.leave_encashment,
+      userAccess: state?.auth?.userAccess["Leave_Encashment"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -112,53 +109,38 @@ export function LeaveEncashmentTable() {
   };
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-        <div className='accordion-header-btn'>
-          <Accordion.Toggle as={Button} eventKey="0">
-            Leave Encashments
-            <KeyboardArrowDown />
-          </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-              {({ paginationProps, paginationTableProps }) => {
-                return (
-                  <Pagination
-                    isLoading={listLoading}
-                    paginationProps={paginationProps}
-                  >
-                    <BootstrapTable
-                      noDataIndication={NoRecordsFoundMessage({ entities })}
-                      wrapperClasses="table-responsive"
-                      bordered={false}
-                      classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                      bootstrap4
-                      remote
-                      keyField="Id"
-                      data={entities === null ? [] : entities}
-                      columns={columns}
-                      defaultSorted={uiHelpers.defaultSorted}
-                      onTableChange={getHandlerTableChange(
-                        FormUIProps.setQueryParamsLeaveEnc
-                      )}
-                      {...paginationTableProps}
-                    >
-
-                      <PleaseWaitMessage entities={entities} />
-                      <NoRecordsFoundMessage entities={entities} />
-                    </BootstrapTable>
-                  </Pagination>
-                );
-              }}
-            </PaginationProvider>
-
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+    <div className="w-full font-size-xs  bg-white rounded-lg overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">Leave Enchashments</h6>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
+            >
+              <BootstrapTable
+                noDataIndication={NoRecordsFoundMessage({ entities })}
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={entities === null ? [] : entities}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  FormUIProps.setQueryParamsLeaveEnc
+                )}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={entities} />
+                <NoRecordsFoundMessage entities={entities} />
+              </BootstrapTable>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
   );
 }

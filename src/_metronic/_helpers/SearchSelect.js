@@ -44,10 +44,17 @@ export function SearchSelect({
         defaultOptions={options}
         loadOptions={promiseOptions}
         isClearable={isClearable}
-         classNamePrefix="select_option"
+        classNamePrefix="select_option"
+        menuPortalTarget={document.body}
+        menuPosition="fixed"
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        }}
       />
 
-      {error && touched ? <div className="invalid-feedback">{error}</div> : null}
+      {error && touched ? (
+        <div className="invalid-feedback">{error}</div>
+      ) : null}
       {/* {JSON.stringify(selectedOption)} */}
     </>
   );

@@ -70,195 +70,190 @@ export function BanksCard() {
   };
 
   return (
-//     <>
-//       <Card>
-//         <CardHeader title={CurrentModuleName()}>
-//           <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
-//             <div className="col-6">
-//               <BanksFilter />
-//             </div>
+    //     <>
+    //       <Card>
+    //         <CardHeader title={CurrentModuleName()}>
+    //           <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
+    //             <div className="col-6">
+    //               <BanksFilter />
+    //             </div>
 
-//             <div className=" p-2">
-//               <CardHeaderToolbar>
-//                 {accessUser ? (
-//                   <>
-//                     <button
-//                       type="button"
-//                       className="btn btn-primary"
-//                       onClick={BanksUIProps.newBankButtonClick}
-//                     >
-//                       + Add Loan Type
-//                     </button>
+    //             <div className=" p-2">
+    //               <CardHeaderToolbar>
+    //                 {accessUser ? (
+    //                   <>
+    //                     <button
+    //                       type="button"
+    //                       className="btn btn-primary"
+    //                       onClick={BanksUIProps.newBankButtonClick}
+    //                     >
+    //                       + Add Loan Type
+    //                     </button>
 
-//                     <button
-//                       type="button"
-//                       className="file-button"
-//                       disabled={pdfLoading}
-//                       onClick={() => {
-//                         print("pdf");
-//                       }}
-//                     >
-//                       {/* Print PDF */}
-//                       <span className="file-button">
-//                         <SVG
-//                           src={toAbsoluteUrl(
-//                             "/media/svg/icons/Communication/PDF.svg"
-//                           )}
-//                         />
-//                       </span>
-//                       {/* {pdfLoading && (
-//   <span className="ml-3 mr-3 spinner spinner-white"></span>
-// )} */}
-//                     </button>
+    //                     <button
+    //                       type="button"
+    //                       className="file-button"
+    //                       disabled={pdfLoading}
+    //                       onClick={() => {
+    //                         print("pdf");
+    //                       }}
+    //                     >
+    //                       {/* Print PDF */}
+    //                       <span className="file-button">
+    //                         <SVG
+    //                           src={toAbsoluteUrl(
+    //                             "/media/svg/icons/Communication/PDF.svg"
+    //                           )}
+    //                         />
+    //                       </span>
+    //                       {/* {pdfLoading && (
+    //   <span className="ml-3 mr-3 spinner spinner-white"></span>
+    // )} */}
+    //                     </button>
 
-//                     <button
-//                       type="button"
-//                       className=" file-button"
-//                       disabled={csvLoading}
-//                       onClick={() => {
-//                         print("csv");
-//                       }}
-//                     >
-//                       {/* Print CSV
-//                        */}
+    //                     <button
+    //                       type="button"
+    //                       className=" file-button"
+    //                       disabled={csvLoading}
+    //                       onClick={() => {
+    //                         print("csv");
+    //                       }}
+    //                     >
+    //                       {/* Print CSV
+    //                        */}
 
-//                       <span className=" file-button">
-//                         <SVG
-//                           src={toAbsoluteUrl(
-//                             "/media/svg/icons/Communication/CSV.svg"
-//                           )}
-//                         />
-//                       </span>
-//                       {/* {csvLoading && (
-//   <span className="ml-3 mr-3 spinner spinner-white"></span>
-// )} */}
-//                     </button>
+    //                       <span className=" file-button">
+    //                         <SVG
+    //                           src={toAbsoluteUrl(
+    //                             "/media/svg/icons/Communication/CSV.svg"
+    //                           )}
+    //                         />
+    //                       </span>
+    //                       {/* {csvLoading && (
+    //   <span className="ml-3 mr-3 spinner spinner-white"></span>
+    // )} */}
+    //                     </button>
 
-//                     <button
-//                       type="button"
-//                       className=" file-button"
-//                       disabled={excelLoading}
-//                       onClick={() => {
-//                         print("excel");
-//                       }}
-//                     >
-//                       {/* Print Excel
-//                        */}
+    //                     <button
+    //                       type="button"
+    //                       className=" file-button"
+    //                       disabled={excelLoading}
+    //                       onClick={() => {
+    //                         print("excel");
+    //                       }}
+    //                     >
+    //                       {/* Print Excel
+    //                        */}
 
-//                       <span className="file-button">
-//                         <SVG
-//                           src={toAbsoluteUrl(
-//                             "/media/svg/icons/Communication/XLSX.svg"
-//                           )}
-//                         />
-//                       </span>
-//                       {/* {excelLoading && (
-//   <span className="ml-3 mr-3 spinner spinner-white"></span>
-// )} */}
-//                     </button>
-//                   </>
-//                 ) : (
-//                   <></>
-//                 )}
-//               </CardHeaderToolbar>
-//             </div>
-//           </div>
-//         </CardHeader>
+    //                       <span className="file-button">
+    //                         <SVG
+    //                           src={toAbsoluteUrl(
+    //                             "/media/svg/icons/Communication/XLSX.svg"
+    //                           )}
+    //                         />
+    //                       </span>
+    //                       {/* {excelLoading && (
+    //   <span className="ml-3 mr-3 spinner spinner-white"></span>
+    // )} */}
+    //                     </button>
+    //                   </>
+    //                 ) : (
+    //                   <></>
+    //                 )}
+    //               </CardHeaderToolbar>
+    //             </div>
+    //           </div>
+    //         </CardHeader>
 
-//         <CardBody>
-//           <BanksTable />
-//         </CardBody>
-//       </Card>
-      <TCard name={CurrentModuleName()}>
-        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-          <BanksFilter />
-          <div className="flex items-center gap-2">
-            {/* <CardHeaderToolbar> */}
-            {accessUser && (
-              <>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={BanksUIProps.newBankButtonClick}
-                >
-                >
+    //         <CardBody>
+    //           <BanksTable />
+    //         </CardBody>
+    //       </Card>
+    <TCard name={CurrentModuleName()}>
+      <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+        <BanksFilter />
+        <div className="flex items-center gap-2">
+          {/* <CardHeaderToolbar> */}
+          {accessUser && (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={BanksUIProps.newBankButtonClick}
+              >
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                  Add
-                </button>
-              </>
-            )}
-            <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id="products-edit-tooltip">Export PDF</Tooltip>
-                }
+                Add
+              </button>
+            </>
+          )}
+          <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+            <OverlayTrigger
+              overlay={<Tooltip id="products-edit-tooltip">Export PDF</Tooltip>}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={pdfLoading}
+                onClick={() => {
+                  print("pdf");
+                }}
               >
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  disabled={pdfLoading}
-                  onClick={() => {
-                    print("pdf");
-                  }}
-                >
-                  {/* Print PDF */}
-                  <FileText className="w-4 h-4 text-black cursor-pointer" />
-                  {/* {pdfLoading && (
+                {/* Print PDF */}
+                <FileText className="w-4 h-4 text-black cursor-pointer" />
+                {/* {pdfLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )} */}
-                </button>
-              </OverlayTrigger>
+              </button>
+            </OverlayTrigger>
 
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id="products-edit-tooltip">Export CSV</Tooltip>
-                }
+            <OverlayTrigger
+              overlay={<Tooltip id="products-edit-tooltip">Export CSV</Tooltip>}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={csvLoading}
+                onClick={() => {
+                  print("csv");
+                }}
               >
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  disabled={csvLoading}
-                  onClick={() => {
-                    print("csv");
-                  }}
-                >
-                  {/* Print CSV
-                   */}
+                {/* Print CSV
+                 */}
 
-                  <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
-                  {/* {csvLoading && (
+                <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
+                {/* {csvLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )} */}
-                </button>
-              </OverlayTrigger>
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id="products-edit-tooltip">Export Excel</Tooltip>
-                }
+              </button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="products-edit-tooltip">Export Excel</Tooltip>
+              }
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={excelLoading}
+                onClick={() => {
+                  print("excel");
+                }}
               >
-                <button
-                  type="button"
-                  className="border-none bg-transparent"
-                  disabled={excelLoading}
-                  onClick={() => {
-                    print("excel");
-                  }}
-                >
-                  {/* Print Excel
-                   */}
+                {/* Print Excel
+                 */}
 
-                  <Sheet className="w-4 h-4 text-black cursor-pointer" />
-                  {/* {excelLoading && (
+                <Sheet className="w-4 h-4 text-black cursor-pointer" />
+                {/* {excelLoading && (
             <span className="ml-3 mr-3 spinner spinner-white"></span>
           )} */}
-                </button>
-              </OverlayTrigger>
-            </div>
-            {/* </CardHeaderToolbar> */}
+              </button>
+            </OverlayTrigger>
           </div>
+          {/* </CardHeaderToolbar> */}
         </div>
-        <BanksTable />
-      </TCard>
+      </div>
+      <BanksTable />
+    </TCard>
     // </>
   );
 }

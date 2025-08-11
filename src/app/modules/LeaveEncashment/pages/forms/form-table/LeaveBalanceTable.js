@@ -166,49 +166,33 @@ export function LeaveBalanceTable() {
   };
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn">
-            <Accordion.Toggle as={Button} eventKey="0">
-              Leave Balance
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-              {({ paginationProps, paginationTableProps }) => { */}
-            {/* return ( */}
+    <div className="w-full font-size-xs bg-white rounded-lg overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">Leave Balance</h6>
 
-            <BootstrapTable
-              noDataIndication={NoRecordsFoundMessage({
-                entities: leaveBalances || [],
-              })}
-              wrapperClasses="table-responsive"
-              bordered={false}
-              classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
-              bootstrap4
-              remote
-              keyField="Id"
-              data={leaveBalances || []}
-              columns={columns}
-              defaultSorted={uiHelpers.defaultSorted}
-              onTableChange={getHandlerTableChange(
-                FormUIProps.setQueryParamsLeaveEnc
-              )}
-              // {...paginationTableProps}
-            >
-              <PleaseWaitMessage entities={leaveBalances || []} />
-              <NoRecordsFoundMessage entities={leaveBalances || []} />
-            </BootstrapTable>
-            {/* ); */}
-            {/* }}
+      <BootstrapTable
+        noDataIndication={NoRecordsFoundMessage({
+          entities: leaveBalances || [],
+        })}
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={leaveBalances || []}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(
+          FormUIProps.setQueryParamsLeaveEnc
+        )}
+        // {...paginationTableProps}
+      >
+        <PleaseWaitMessage entities={leaveBalances || []} />
+        <NoRecordsFoundMessage entities={leaveBalances || []} />
+      </BootstrapTable>
+      {/* ); */}
+      {/* }}
             </PaginationProvider> */}
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+    </div>
   );
 }

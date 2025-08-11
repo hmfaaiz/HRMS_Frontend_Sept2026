@@ -7,7 +7,6 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
-
   fetchAllEmployeeShifts,
   fetchAllSubsidiaryData,
   getLatestTableId,
@@ -16,33 +15,27 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
 import { amountLimitDynamic } from "../../../../../utils/common";
 
-
 const roster_patternEditSchema = Yup.object().shape({
-
-
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   patternCode: Yup.string()
-  .trim()
+    .trim()
     .required(VALIDATION_MESSAGES.required),
 
   // patternName: Yup.string()
   // // .matches(/^[A-Za-z\s.-]+$/, 'Pattern Name must only contain letters.')
   // .required(VALIDATION_MESSAGES.required),
 
-   patternName: Yup.string()
-  .trim()
-  .required(VALIDATION_MESSAGES.required),
+  patternName: Yup.string()
+    .trim()
+    .required(VALIDATION_MESSAGES.required),
 
-    list: Yup.array().of(
-      Yup.object().shape({
-        shiftId: Yup.number().required(VALIDATION_MESSAGES.required),
-        sno: Yup.number().required(VALIDATION_MESSAGES.required)
-      })
-    )
-
-
+  list: Yup.array().of(
+    Yup.object().shape({
+      shiftId: Yup.number().required(VALIDATION_MESSAGES.required),
+      sno: Yup.number().required(VALIDATION_MESSAGES.required),
+    })
+  ),
 });
 
 export function FormEditForm({
@@ -55,29 +48,22 @@ export function FormEditForm({
   loading,
 }) {
   const dispatch = useDispatch();
-  const { dashboard} = useSelector((state) => state);
-    const { currentUser } = useSelector((state) => {
-      return {
-      
-        currentUser: state.auth.user,
-      };
-    }, shallowEqual);
-const [patternCode, setpatternCode] = useState("");
+  const { dashboard } = useSelector((state) => state);
+  const { currentUser } = useSelector((state) => {
+    return {
+      currentUser: state.auth.user,
+    };
+  }, shallowEqual);
+  const [patternCode, setpatternCode] = useState("");
   useEffect(() => {
-
     if (!data.Id) {
-
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllEmployeeShifts('allEmployeeShifts'));
-
+      dispatch(fetchAllEmployeeShifts("allEmployeeShifts"));
     }
   }, [dispatch, data.Id]);
 
-
   const fetchData = async (setpatternCode) => {
-
     if (!data.Id) {
-
       dispatch(
         getLatestTableId(
           "t_roster_pattern",
@@ -89,19 +75,18 @@ const [patternCode, setpatternCode] = useState("");
     }
   };
   useEffect(() => {
-    fetchData(setpatternCode)
-  }, [])
-  
-
-
+    fetchData(setpatternCode);
+  }, []);
 
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={{...data, patternCode: data.patternCode ? data?.patternCode : patternCode}}
+      initialValues={{
+        ...data,
+        patternCode: data.patternCode ? data?.patternCode : patternCode,
+      }}
       validationSchema={roster_patternEditSchema}
       onSubmit={(values) => {
-
         enableLoading();
         saveForm(values);
       }}
@@ -116,9 +101,8 @@ const [patternCode, setpatternCode] = useState("");
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
-                <div className="form-group row">
-             <div className="form-group row col-12 col-md-12  p-0 m-0">
- <div className="col-12 col-md-6 mt-3">
+                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                  <div>
                     <SearchSelect
                       name="subsidiaryId"
                       label={
@@ -129,8 +113,7 @@ const [patternCode, setpatternCode] = useState("");
                       isDisabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
-                        setFieldValue("list",[])
-
+                        setFieldValue("list", []);
                       }}
                       value={
                         dashboard?.allSubsidiaryList?.find(
@@ -138,17 +121,12 @@ const [patternCode, setpatternCode] = useState("");
                         ) || null
                       }
                       options={dashboard?.allSubsidiaryList}
-
-
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                     />
                   </div>
-                  </div>
-                 
 
-
-                  <div className="col-12 col-md-6 mt-3">
+                  <div>
                     <label>
                       <span>
                         Pattern Code<span style={{ color: "red" }}>*</span>
@@ -160,15 +138,13 @@ const [patternCode, setpatternCode] = useState("");
                       placeholder="Enter Pattern Code"
                       disabled={true}
                       type="text"
-                       onInput={(e) => {
-                                                e.target.value = amountLimitDynamic(e.target.value,30); // Limit to 30 digits
-                                              }}
-
+                      onInput={(e) => {
+                        e.target.value = amountLimitDynamic(e.target.value, 30); // Limit to 30 digits
+                      }}
                     />
                   </div>
 
-
-                  <div className="col-12 col-md-6 mt-3">
+                  <div>
                     <label>
                       <span>
                         Pattern Name<span style={{ color: "red" }}>*</span>
@@ -178,28 +154,15 @@ const [patternCode, setpatternCode] = useState("");
                       name="patternName"
                       component={Input}
                       placeholder="Enter Pattern Name"
-
                       type="text"
                       onInput={(e) => {
-                        e.target.value = amountLimitDynamic(e.target.value,30); // Limit to 30 digits
+                        e.target.value = amountLimitDynamic(e.target.value, 30); // Limit to 30 digits
                       }}
-
                     />
                   </div>
-
-
-
                 </div>
-
-                <div
-                  style={{
-                    backgroundColor: "rgb(235 243 255)",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solid #adceff",
-                    width: '-webkit-fill-available'
-                  }}
-                >
+                <hr />
+                <div>
                   <PatternListForm
                     values={values}
                     setFieldValue={setFieldValue}
@@ -207,13 +170,13 @@ const [patternCode, setpatternCode] = useState("");
                     touched={touched}
                     dropdownData={{
                       // allEmployeeShifts: dashboard?.allEmployeeShifts
-                      allEmployeeShifts:dashboard?.allEmployeeShifts?.filter(shift => shift.subsidiaryId === values.subsidiaryId)
+                      allEmployeeShifts: dashboard?.allEmployeeShifts?.filter(
+                        (shift) => shift.subsidiaryId === values.subsidiaryId
+                      ),
                     }}
                     isdataForRead={isdataForRead}
                   />
                 </div>
-
-
               </fieldset>
             </Form>
           </Modal.Body>

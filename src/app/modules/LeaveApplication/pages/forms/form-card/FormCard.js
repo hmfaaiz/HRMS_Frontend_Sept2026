@@ -82,113 +82,47 @@ export function FormCard() {
   };
 
   return (
-    // <>
-    //   <Card>
-    //     {/* Card Starts */}
-    //     <CardHeader title={CurrentModuleName()}></CardHeader>
-    //     <CardBody>
-    //       <div className="">
-    //         <div className="">
-    //           {/* EmployeeSelect Starts */}
-    //           <EmployeeSelect
-    //             setId={formUIProps.setId}
-    //             setemployeeId={formUIProps.setemployeeId}
-    //             setPanelMode={formUIProps.setPanelMode}
-    //             panelMode={formUIProps.panelMode}
-    //           />
-    //           {/* EmployeeSelect Ends */}
-
-    //           <br />
-    //         </div>
-
-    //         {/* EmployeeProfile Starts */}
-    //         <EmployeeProfile
-    //           employeeId={formUIProps.employeeId}
-    //           panelMode={formUIProps.panelMode}
-    //         />
-    //         {/* EmployeeProfile Ends */}
-
-    //         {/* FormEditDialog Starts */}
-    //         <FormEditDialog
-    //           id={formUIProps.id}
-    //           employeeId={formUIProps.employeeId}
-    //         />
-    //         {/* FormEditDialog Ends */}
-    //       </div>
-    //       <br />
-
-    //       {/* LeaveApplicationTable Starts */}
-    //       <LeaveApplicationTable />
-    //       {/* LeaveApplicationTable Ends */}
-    //       <LeaveApplicationDetailTable
-    //         show={formUIProps?.leaveId !== null}
-    //         onHide={() => formUIProps.setLeaveId(null)}
-    //         leaveId={formUIProps?.leaveId}
-    //         handleSubmit={SubmitLeaveDetail}
-    //       />
-
-    //       <br />
-    //       <hr />
-
-    //       {/* PendingLeaveTable Starts */}
-    //       <PendingLeaveTable />
-    //       {/* PendingLeaveTable Ends */}
-
-    //       <br />
-    //       <hr />
-
-    //       {/* LeaveBalanceTable Starts */}
-    //       <LeaveBalanceTable />
-    //       {/* LeaveBalanceTable Ends */}
-    //     </CardBody>
-
-    //     {/* Card Ends */}
-    //   </Card>
-    <TCard name={CurrentModuleName()}>
-      <div className="">
-        <EmployeeSelect
-          setId={formUIProps.setId}
-          setemployeeId={formUIProps.setemployeeId}
-          setPanelMode={formUIProps.setPanelMode}
-          panelMode={formUIProps.panelMode}
-        />
-        <div className="flex items-center gap-2">
-          <EmployeeProfile
-            employeeId={formUIProps.employeeId}
+    <>
+      <TCard name={CurrentModuleName()}>
+        <div className="">
+          <EmployeeSelect
+            setId={formUIProps.setId}
+            setemployeeId={formUIProps.setemployeeId}
+            setPanelMode={formUIProps.setPanelMode}
             panelMode={formUIProps.panelMode}
           />
+          <div className="flex items-center gap-2">
+            <EmployeeProfile
+              employeeId={formUIProps.employeeId}
+              panelMode={formUIProps.panelMode}
+            />
+          </div>
         </div>
-      </div>
-      {/* EmployeeProfile Ends */}
+        {/* EmployeeProfile Ends */}
 
-      {/* FormEditDialog Starts */}
-      <FormEditDialog id={formUIProps.id} employeeId={formUIProps.employeeId} />
-      {/* FormEditDialog Ends */}
-      <br />
+        {/* FormEditDialog Starts */}
+        <FormEditDialog
+          id={formUIProps.id}
+          employeeId={formUIProps.employeeId}
+        />
+        {/* FormEditDialog Ends */}
 
-      {/* LeaveApplicationTable Starts */}
-      <LeaveApplicationTable />
-      {/* LeaveApplicationTable Ends */}
-      <LeaveApplicationDetailTable
-        show={formUIProps?.leaveId !== null}
-        onHide={() => formUIProps.setLeaveId(null)}
-        leaveId={formUIProps?.leaveId}
-        handleSubmit={SubmitLeaveDetail}
-      />
+        {/* LeaveApplicationTable Starts */}
+        {/* LeaveApplicationTable Ends */}
+        <LeaveApplicationDetailTable
+          show={formUIProps?.leaveId !== null}
+          onHide={() => formUIProps.setLeaveId(null)}
+          leaveId={formUIProps?.leaveId}
+          handleSubmit={SubmitLeaveDetail}
+        />
 
-      <br />
-      <hr />
+        {/* PendingLeaveTable Starts */}
+        {/* <PendingLeaveTable /> */}
+        {/* PendingLeaveTable Ends */}
 
-      {/* PendingLeaveTable Starts */}
-      <PendingLeaveTable />
-      {/* PendingLeaveTable Ends */}
-
-      <br />
-      <hr />
-
-      {/* LeaveBalanceTable Starts */}
+      </TCard>
       <LeaveBalanceTable />
-    </TCard>
-    // </>
+      <LeaveApplicationTable />
+    </>
   );
 }

@@ -241,7 +241,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allDept}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
                       />
                     </div>
 
@@ -260,7 +260,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allDesignations}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
                       />
                     </div>
 
@@ -279,7 +279,7 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allPriorityTypeList}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList : []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList : []),]}
                       />
                     </div>
                   </div>
@@ -308,7 +308,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Desire Date of Appointment (From)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="From Date"
+                        placeholder="From"
                         selected={
                           values?.desireFromDateOfApp
                             ? new Date(values.desireFromDateOfApp)
@@ -331,7 +331,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Desire Date of Appointment (To)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="To Date"
+                        placeholder="To"
                         selected={
                           values?.desireToDateOfApp
                             ? new Date(values.desireToDateOfApp)
@@ -359,7 +359,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Job Finalized (From)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="From Date"
+                        placeholder="From"
                         selected={
                           values?.jobFinalizedFromDate
                             ? new Date(values.jobFinalizedFromDate)
@@ -383,7 +383,7 @@ export function FormFIlter({ listLoading, user }) {
                       <label>Job Finalized (To)</label>
                       <DatePicker
                         className="form-control"
-                        placeholder="To Date"
+                        placeholder="To"
                         selected={
                           values?.jobFinalizedToDate
                             ? new Date(values.jobFinalizedToDate)

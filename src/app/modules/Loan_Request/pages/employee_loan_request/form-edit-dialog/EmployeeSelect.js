@@ -148,7 +148,7 @@ export function EmployeeSelect() {
     //         ) || ""
     //       }
     //       onChange={(e) => {
-    //         const value = e.value === "--Select--" ? "" : Number(e.value);
+    //         const value = e.value === "Select" ? "" : Number(e.value);
     //         formUIProps.setCurrentLevel(value);
     //       }}
     //       options={levelList}
@@ -167,7 +167,7 @@ export function EmployeeSelect() {
     //           allEmployeesMap.get(formUIProps?.employeeId?.value) || ""
     //         }
     //         onChange={(e) => {
-    //           const value = e.value === "--Select--" ? "" : Number(e.value);
+    //           const value = e.value === "Select" ? "" : Number(e.value);
     //           formUIProps.setemployeeId(e);
     //           if (value) {
     //             applyFilter({ employeeId: value });

@@ -1,11 +1,4 @@
 import React, { useMemo } from "react";
-
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardHeaderToolbar,
-} from "../../../../../../_metronic/_partials/controls";
 import { FormTable } from "../form-table/FormTable";
 import { useFormUIContext } from "../FormUIContext";
 import { FormFIlter } from "../form-filter/FormFIlter";
@@ -86,7 +79,6 @@ export function FormCard() {
                 type="button"
                 className="btn btn-primary"
                 onClick={FormUIProps.newFormButtonClick}
-              >
               >
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                 Add

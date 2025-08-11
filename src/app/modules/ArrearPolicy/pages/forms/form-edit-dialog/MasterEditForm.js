@@ -110,7 +110,7 @@ export function MasterEditForm({
                         autoComplete="off"
                         children={
                           <>
-                            <option value={''}>--Select--</option>
+                            <option value={''}>Select</option>
                             <option value={'1'}>Month Days</option>
                             <option value={'2'}>Ratio Of Years</option>
                             <option value={'3'}>Fixed Days</option>

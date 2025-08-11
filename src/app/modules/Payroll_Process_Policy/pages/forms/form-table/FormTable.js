@@ -1340,7 +1340,7 @@ export function FormTable(user) {
                       disabled={!Boolean(values.isEnableAttandanceIntegration)}
                       onBlur={handleBlur}
                     >
-                      <option value="-1">--Select--</option>
+                      <option value="-1">Select</option>
                       <option value="true">Yes</option>
                       <option value="false">No</option>
 

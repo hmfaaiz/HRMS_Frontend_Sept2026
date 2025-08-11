@@ -1001,7 +1001,7 @@ export function FormEditForm({
                                     }
                                     // options={dashboard?.allEmployeegradeList}
                                     options={[
-                                      { label: "--Select--", value: "" },
+                                      { label: "Select", value: "" },
                                       ...(Array.isArray(
                                         dashboard?.allEmployeegradeList
                                       )
@@ -1038,7 +1038,7 @@ export function FormEditForm({
                                     }
                                     // options={dashboard?.allDesignations}
                                     options={[
-                                      { label: "--Select--", value: "" },
+                                      { label: "Select", value: "" },
                                       ...(Array.isArray(
                                         dashboard?.allDesignations
                                       )
@@ -1272,7 +1272,7 @@ export function FormEditForm({
                               }}
 
                               id={'earning_deduction_id-' + rightindex} value={obj.earning_deduction_id}>
-                              <option value="-1"> --Select--</option>
+                              <option value="-1"> Select</option>
                               {
                                 dashboard.allEarnings?.map((x) => {
                                   return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
@@ -1569,7 +1569,7 @@ export function FormEditForm({
                                       }));
                                     }}
                                   >
-                                    <option value="">--Select--</option>
+                                    <option value="">Select</option>
                                     {(dashboard.allEarnings || []).map((x) => (
                                       <option
                                         key={x.value}
@@ -1626,7 +1626,7 @@ export function FormEditForm({
                                       }
                                     }}
                                   >
-                                    {/* <option value="">--Select--</option> */}
+                                    {/* <option value="">Select</option> */}
                                     {(dropdownData || []).map((opt) => (
                                       <option key={opt.value} value={opt.value}>
                                         {opt.label}
@@ -1827,7 +1827,7 @@ export function FormEditForm({
                               }}
 
                               id={'earning_deduction_id-' + rightindex} value={obj.earning_deduction_id}>
-                              <option value="-1"> --Select--</option>
+                              <option value="-1"> Select</option>
                               {
                                 dashboard.allDeductions?.map((x) => {
                                   return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
@@ -1855,7 +1855,7 @@ export function FormEditForm({
                                     }}
                                     value={obj.earning_deduction_id || "-1"}
                                   >
-                                    <option value="-1">--Select--</option>
+                                    <option value="-1">Select</option>
                                     {(dashboard?.allDeductions || []).map(
                                       (x) => (
                                         <option

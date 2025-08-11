@@ -173,8 +173,7 @@ export function ReligionCard() {
                   className="btn btn-primary"
                   onClick={DesignationUIProps.newDesignationButtonClick}
                 >
-                >
-                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                  <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                   Add Employee Profile
                 </button>
               </>

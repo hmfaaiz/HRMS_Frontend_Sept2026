@@ -171,11 +171,11 @@ export function FormCard() {
                     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
                       <div className="col-span-1">
                         <label>
-                          From Date<span style={{ color: "red" }}>*</span>
+                          From<span style={{ color: "red" }}>*</span>
                         </label>
                         <DatePicker
                           className="form-control"
-                          placeholder="From Date "
+                          placeholder="From "
                           selected={
                             values?.from_date
                               ? new Date(values.from_date)
@@ -200,7 +200,7 @@ export function FormCard() {
                         </label>
                         <DatePicker
                           className="form-control"
-                          placeholder="To Date "
+                          placeholder="To "
                           selected={
                             values?.to_date ? new Date(values.to_date) : null
                           }

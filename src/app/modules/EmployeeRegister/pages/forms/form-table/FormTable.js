@@ -30,14 +30,11 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState } = useSelector(
-    (state) => {
-      return {
-        currentState: state.employee_register,
-      }
-    },
-    shallowEqual
-  );
+  const { currentState } = useSelector((state) => {
+    return {
+      currentState: state.employee_register,
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -51,7 +48,7 @@ export function FormTable() {
   const columns = [
     {
       dataField: "employeeCode",
-      text: "Emp. Code",
+      text: "Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -117,7 +114,7 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
-    
+
     {
       dataField: "dateOfJoining",
       text: "date Of Joining",
@@ -128,7 +125,9 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
+      formatter: (cell) => {
+        return format(new Date(cell), "dd-MMM-yyyy");
+      },
     },
 
     {
@@ -141,7 +140,9 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "ReportTo.reportName",
@@ -154,8 +155,6 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
- 
-
   ];
 
   //Table pagination properties
@@ -168,7 +167,7 @@ export function FormTable() {
   };
 
   return (
-    <Modal.Body className="overlay overlay-block cursor-default">
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -180,7 +179,7 @@ export function FormTable() {
                 noDataIndication={NoRecordsFoundMessage({ entities })}
                 wrapperClasses="table-responsive"
                 bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
                 bootstrap4
                 remote
                 keyField="Id"
@@ -196,7 +195,6 @@ export function FormTable() {
                 // })}
                 {...paginationTableProps}
               >
-
                 <PleaseWaitMessage entities={entities} />
                 <NoRecordsFoundMessage entities={entities} />
               </BootstrapTable>
@@ -204,6 +202,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-      </Modal.Body>
+    </div>
   );
 }

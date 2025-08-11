@@ -164,49 +164,71 @@ export function LeaveBalanceTable() {
   };
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn">
-            <Accordion.Toggle as={Button} eventKey="0">
-              Leave Balance
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-              {({ paginationProps, paginationTableProps }) => { */}
-            {/* return ( */}
+    // <Accordion defaultActiveKey="">
+    //   <Card>
+    //     <Card.Header>
+    //       <div className="accordion-header-btn">
+    //         <Accordion.Toggle as={Button} eventKey="0">
+    //           Leave Balance
+    //           <KeyboardArrowDown />
+    //         </Accordion.Toggle>
+    //       </div>
+    //     </Card.Header>
+    //     <Accordion.Collapse eventKey="0">
+    //       <Card.Body>
+    //         {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+    //           {({ paginationProps, paginationTableProps }) => { */}
+    //         {/* return ( */}
 
-            <BootstrapTable
-              noDataIndication={NoRecordsFoundMessage({
-                entities: leaveBalances || [],
-              })}
-              wrapperClasses="table-responsive"
-              bordered={false}
-              classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
-              bootstrap4
-              remote
-              keyField="Id"
-              data={leaveBalances || []}
-              columns={columns}
-              defaultSorted={uiHelpers.defaultSorted}
-              onTableChange={getHandlerTableChange(
-                FormUIProps.setQueryParamsLeaveApp
-              )}
-              // {...paginationTableProps}
-            >
-              <PleaseWaitMessage entities={leaveBalances || []} />
-              <NoRecordsFoundMessage entities={leaveBalances || []} />
-            </BootstrapTable>
-            {/* ); */}
-            {/* }}
-            </PaginationProvider> */}
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+    //         <BootstrapTable
+    //           noDataIndication={NoRecordsFoundMessage({
+    //             entities: leaveBalances || [],
+    //           })}
+    //           wrapperClasses="table-responsive"
+    //           bordered={false}
+    //           classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
+    //           bootstrap4
+    //           remote
+    //           keyField="Id"
+    //           data={leaveBalances || []}
+    //           columns={columns}
+    //           defaultSorted={uiHelpers.defaultSorted}
+    //           onTableChange={getHandlerTableChange(
+    //             FormUIProps.setQueryParamsLeaveApp
+    //           )}
+    //           // {...paginationTableProps}
+    //         >
+    //           <PleaseWaitMessage entities={leaveBalances || []} />
+    //           <NoRecordsFoundMessage entities={leaveBalances || []} />
+    //         </BootstrapTable>
+    //         {/* ); */}
+    //         {/* }}
+    //         </PaginationProvider> */}
+    //       </Card.Body>
+    //     </Accordion.Collapse>
+    //   </Card>
+    // </Accordion>
+    <div className="px-3 py-2 w-full mt-2 bg-white rounded-lg ">
+      <div className="w-full text-xs flex flex-col justify-between h-full">
+        <h6 className="font-bold mb-0 text-primary my-2">Leave Balances</h6>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8  w-full md:w-7/12">
+          {leaveBalances?.length > 0 &&
+            leaveBalances?.map((el, i) => {
+              return (
+                <div
+                  className="grid grid-cols-2 gap-4 items-center text-sm"
+                  key={el?.leaveTypeName || i}
+                >
+                  <p className="text-black m-0 p-0">{el?.leaveTypeName}</p>
+                  <p className="text-primary font-extrabold m-0">
+                    {el?.remainingCount || 0}
+                  </p>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </div>
   );
 }
