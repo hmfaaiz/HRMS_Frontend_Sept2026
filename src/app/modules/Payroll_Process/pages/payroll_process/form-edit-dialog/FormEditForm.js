@@ -301,37 +301,38 @@ export function FormEditForm({
                       {/* allEmployeesWithNoPermissionList */}
 
 
-                      <div className="from-group row">
+            
 
 
-                        <div className="col-12 col-md-12 mt-3">
-                          Employee
-                          <div style={{ backgroundColor: "#ffffff", height: "50vh", padding: "10px", overflow: "scroll" }}>
 
-                            <div className="multi-select">
-                              <div className="dropdown-label"></div>
-                              <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-                                {currentState?.payroll_group_details?.employees_list?.map((option) => (
-                                  <div key={option.Id} className="dropdown-option">
-                                    <input style={{ width: "25px" }}
-                                      name="employeeId"
-                                      type="checkbox"
-                                      value={option.Id}
-                                      checked={selectedEmployees.includes(option.Id)}
+                        <label> Employee </label>
 
-                                      onChange={() => handleCheckboxChange(option.Id)}
-                                    />
-                                    {option.fullName}
-                                  </div>
-                                ))}
-                                {/* {errors.employeeId && touched.employeeId && (
+                        <div className="overflow-auto max-h-48 border-none">
+
+
+
+
+                          {currentState?.payroll_group_details?.employees_list?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center border-none">
+                              <input className="mr-1"
+                                name="employeeId"
+                                type="checkbox"
+                                value={option.Id}
+                                checked={selectedEmployees.includes(option.Id)}
+
+                                onChange={() => handleCheckboxChange(option.Id)}
+                              />
+                              <label className="">   {option.fullName} </label>
+                            </div>
+                          ))}
+                          {/* {errors.employeeId && touched.employeeId && (
                                 <div className="invalid-text">{errors.employeeId}</div>
                               )} */}
-                              </div>
-                            </div>
-                          </div>
+
+
                         </div>
-                      </div>
+
+                   
 
 
 
@@ -369,66 +370,51 @@ export function FormEditForm({
                       <fieldset disabled={isUserForRead}>
                         {/* allEmployeesWithNoPermissionList */}
 
-                        <div className="from-group row">
-                          <div className="col-12 col-md-12 mt-3">
-                            Employee
-                            <div
-                              style={{
-                                backgroundColor: "#ffffff",
-                                height: "50vh",
-                                padding: "10px",
-                                overflow: "scroll",
-                              }}
-                            >
-                              <div className="multi-select">
-                                <div className="dropdown-label"></div>
-                                <div
-                                  className="dropdown-options"
-                                  style={{
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                    padding: "5px",
-                                  }}
-                                >
-                                  {currentState?.payroll_group_details?.for_loan_employees_list?.map(
-                                    (option) => (
-                                      <div
-                                        key={option.Id}
-                                        className="dropdown-option"
-                                      >
-                                        <input
-                                          style={{ width: "25px" }}
-                                          name="employeeId"
-                                          type="checkbox"
-                                          value={option.Id}
-                                          // checked={selectedLoans.includes(
-                                          //   option?.Id
-                                          // )}
 
-                                          checked={selectedLoans.some((item) => item.loan_request_detailId === option?.Id)}
-                                          onChange={() =>
-                                            handleLoanCheckboxChange({
-                                              loan_request_detailId: option?.Id,
-                                              employeeId: option?.employeeId,
-                                              loan_typeId: option?.Employee_loan_request?.LoanType?.Id,
-                                            })
-                                          }
-                                        />
 
-                                        {`${option?.Employee_loan_request
-                                          ?.Employee?.fullName || ""} - ${option
-                                            ?.Employee_loan_request?.LoanType
-                                            ?.name ||
-                                          ""} (${option?.amount_received ||
-                                          ""})`}
-                                      </div>
-                                    )
-                                  )}
-                                </div>
+                        <label>Employee</label>
+                        <div className="overflow-auto max-h-48 border-none">
+
+
+
+                          {currentState?.payroll_group_details?.for_loan_employees_list?.map(
+                            (option) => (
+                              <div key={option.Id} className="flex justify-start items-center border-none">
+
+                                <input className="mr-1"
+                                  name="employeeId"
+                                  type="checkbox"
+                                  value={option.Id}
+                                  // checked={selectedLoans.includes(
+                                  //   option?.Id
+                                  // )}
+
+                                  checked={selectedLoans.some((item) => item.loan_request_detailId === option?.Id)}
+                                  onChange={() =>
+                                    handleLoanCheckboxChange({
+                                      loan_request_detailId: option?.Id,
+                                      employeeId: option?.employeeId,
+                                      loan_typeId: option?.Employee_loan_request?.LoanType?.Id,
+                                    })
+                                  }
+                                />
+                                <label className="">
+                                  {`${option?.Employee_loan_request
+                                    ?.Employee?.fullName || ""} - ${option
+                                      ?.Employee_loan_request?.LoanType
+                                      ?.name ||
+                                    ""} (${option?.amount_received ||
+                                    ""})`}
+
+                                </label>
                               </div>
-                            </div>
-                          </div>
+                            )
+                          )}
+
+
                         </div>
+
+
                       </fieldset>
                     </Form>
                   </Modal.Body>
@@ -470,14 +456,14 @@ export function FormEditForm({
                       );
                       return (
                         <>
-                          <div>
+                          {/* <div>
                             <b>Active Fiscal Year -</b>{" "}
                             {selectedSubsidiary?.fiscalYearLabel}
                           </div>
                           <div>
                             <b>Active Payroll Month -</b>{" "}
                             {selectedSubsidiary?.payrollMonthLabel}
-                          </div>
+                          </div> */}
                         </>
                       );
                     })() : null}
@@ -487,9 +473,9 @@ export function FormEditForm({
                 </div>
 
 
-                <div className="form-group row">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="subsidiaryId"
                       label={
@@ -526,7 +512,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_accountId"
                       label={
@@ -569,7 +555,7 @@ export function FormEditForm({
 
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_groupId"
                       label={
@@ -609,7 +595,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_monthId"
                       label={
@@ -651,9 +637,10 @@ export function FormEditForm({
                       touched={touched.payroll_monthId}
                     />
                   </div>
+                </div>
 
 
-
+                <div className="form-group row">
 
                   {currentState?.payroll_group_details && (
                     <>
@@ -672,7 +659,7 @@ export function FormEditForm({
                       <button
                         onClick={() => handleLoanModalYes()}
                         type="button"
-                        className="m-3 btn btn-red"
+                        className="m-3 btn btn-danger"
                         disabled={isAfterResult}
                       >
                         Stop Loan
@@ -682,11 +669,17 @@ export function FormEditForm({
                       </button>
                     </>
                   )}
+                </div>
 
-                  <div className='accordion-header-btn w-100  d-flex justify-content-left bg-primary m-4'>
-                    <h6 className="text-white p-5">Before Process - Result</h6>
-                  </div>
-                  <div className="col-12 col-md-6 mt-3">
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  Before Process - Result
+                </h6>
+
+
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
+
+                  <div className="">
                     <label>
                       Total Employee:
                       <span style={{ fontWeight: 'bold' }}> {currentState?.payroll_group_details?.total_employees || 0}</span>
@@ -694,7 +687,7 @@ export function FormEditForm({
 
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
 
                     <label>
                       Salary setup created & approved: <span style={{ fontWeight: 'bold' }}> {currentState?.payroll_group_details?.slary_setup_not_created || 0}</span>
@@ -702,7 +695,7 @@ export function FormEditForm({
 
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <label>
                       Loan to be processed: <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.loan_to_be_processed || 0}</span>
                     </label>
@@ -710,63 +703,59 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <label>
-                      Stop Salary : <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
+                      Stop Salary: <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
                     </label>
 
                   </div>
 
 
-
-
-
-
-
-
                 </div>
+
+
+
+
+
+
 
 
                 {/* <hr /> */}
 
                 {resultAfterPayrollProcess ?
                   <>
-                    <div className='accordion-header-btn w-100  d-flex justify-content-left  bg-primary'>
-                      <h6 className="text-white p-5">After Process - Result</h6>
-                    </div>
-                    <div className="form-group row">
+
+                    <h6 className="font-bold mb-0 text-primary my-2 mt-3">
+                      After Process - Result
+                    </h6>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
 
 
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
                           Tax calculated: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.TaxCalculated || 0}</span>
                         </label>
 
                       </div>
 
-                      {/* <div className="col-12 col-md-6 mt-3">
-                        <label>
-                          Tax not calculated: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.TaxNotCalculated || 0}</span>
-                        </label>
-
-                      </div> */}
 
 
-                      <div className="col-12 col-md-6 mt-3">
+
+                      <div className="">
                         <label>
                           Employee with zero salary: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.EmployeewithZeroSalary || 0}</span>
                         </label>
 
                       </div>
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
                           Employee with negative salary: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.EmployeewithNegativeSalary || 0}</span>
                         </label>
 
                       </div>
-                      <div className="col-12 col-md-6 mt-3">
+                      <div className="">
                         <label>
-                          Loan processed:<span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.LoanProcess || 0}</span>
+                          Loan processed: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.LoanProcess || 0}</span>
                         </label>
 
                       </div>

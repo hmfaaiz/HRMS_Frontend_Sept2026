@@ -113,7 +113,7 @@ export function FormTable(user) {
   useEffect(() => {
     if (!user.formid) {
       dispatch(fetchAllBanks());
-       dispatch(fetchAllBankBranch(true));
+      dispatch(fetchAllBankBranch(true));
     }
   }, [user.journalBankAccountId, dispatch]);
 
@@ -301,7 +301,7 @@ export function FormTable(user) {
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
-        default_loan_accountId: Yup.number()
+      default_loan_accountId: Yup.number()
         .when('isEnableAccounting', {
           is: true, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
@@ -328,8 +328,8 @@ export function FormTable(user) {
 
 
       leaveDeductionId: Yup.number()
-  .nullable() , // Allow null (for 'N/A')
- 
+        .nullable(), // Allow null (for 'N/A')
+
 
       lateCountPerDaySalaryDeduction: Yup.number()
         .when('isEnableAttandanceIntegration', {
@@ -417,8 +417,8 @@ export function FormTable(user) {
     payroll_approverId: "",
     payroll_groupId: "",
     basicSalaryId: "",
-    salaryRoundingId:"",
-    
+    salaryRoundingId: "",
+
     //-- Email Sender ------------
     sender_emailId: "",
     employee_email_recipentId: "",
@@ -468,7 +468,7 @@ export function FormTable(user) {
     sessi_basis: "",
     sessi_employeer_value_in_percent: "",
     sessi_employee_value_in_percent: "",
-    
+
     //-- Other
   };
 
@@ -504,7 +504,7 @@ export function FormTable(user) {
         payroll_approverId: user.payroll_approverId,
         payroll_groupId: user.payroll_groupId,
         basicSalaryId: user.basicSalaryId,
-        salaryRoundingId:user?.salaryRoundingId,
+        salaryRoundingId: user?.salaryRoundingId,
         // -- Email Sender ------------
         sender_emailId: user.sender_emailId,
         employee_email_recipentId: user.employee_email_recipentId,
@@ -556,12 +556,12 @@ export function FormTable(user) {
         sessi_employeer_value_in_percent: user.sessi_employeer_value_in_percent,
         sessi_employee_value_in_percent: user.sessi_employee_value_in_percent,
 
-        salaryApproverId:user.salaryApproverId,
-    loanApproverId:user.loanApproverId,
-    payrollApproverId:user.payrollApproverId
+        salaryApproverId: user.salaryApproverId,
+        loanApproverId: user.loanApproverId,
+        payrollApproverId: user.payrollApproverId
 
       };
-     
+
 
       await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList));
       // await dispatch(actions.fetchUsers(usersUIProps.queryParams));
@@ -577,7 +577,7 @@ export function FormTable(user) {
     dispatch(fetchAllDeductionList(2, currentState?.userForEdit?.subsidiaryId || '', ''));
     dispatch(fetchAllEarningList(1, currentState?.userForEdit?.subsidiaryId || '', ''));
   }, [currentState?.userForEdit?.subsidiaryId])
-let defaultCount = 0;
+  let defaultCount = 0;
   const validate = () => {
     const newErrors = {};
 
@@ -601,23 +601,23 @@ let defaultCount = 0;
       // if (!objValidate.bankName) {
       //   newErrors[`bankName-${index}`] = VALIDATION_MESSAGES.required;
       // }  
-       if (!objValidate.bankId || objValidate.journalBankAccountId == "-1") {
+      if (!objValidate.bankId || objValidate.journalBankAccountId == "-1") {
         newErrors[`bankId-${index}`] = VALIDATION_MESSAGES.required;
       }
-         if (!objValidate.branchId ||  objValidate.branchId == "-1")  {
+      if (!objValidate.branchId || objValidate.branchId == "-1") {
         newErrors[`branchId-${index}`] = VALIDATION_MESSAGES.required;
       }
 
-       // Count how many are checked as default
-  if (objValidate.isDefault) {
-    defaultCount++;
-  }
+      // Count how many are checked as default
+      if (objValidate.isDefault) {
+        defaultCount++;
+      }
     });
 
     // ✅ Check if exactly one default is selected
- if (defaultCount > 1) {
-  newErrors["isDefault"] = "Only one row can be marked as default.";
-}
+    if (defaultCount > 1) {
+      newErrors["isDefault"] = "Only one row can be marked as default.";
+    }
 
     return newErrors;
   };
@@ -637,55 +637,55 @@ let defaultCount = 0;
   };
 
 
-    const filteredBranches = (bankId) => {
+  const filteredBranches = (bankId) => {
     return dashboard?.allBankBranch?.filter((branch) => branch.bankId == bankId) || [];
   };
 
   // useEffect(() => {
-    
+
   //     // dispatch(fetchAllBanks(1));
   //     dispatch(fetchAllBanks(null));
   //     dispatch(fetchAllBankBranch(null));
 
-   
+
   // }, [dispatch]);
   return (
     <>
-    <div className="w-full overflow-x-auto" >
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <Pagination
-              isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  FormUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
-
-                // })}
-                {...paginationTableProps}
+      <div className="w-full overflow-x-auto" >
+        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+          {({ paginationProps, paginationTableProps }) => {
+            return (
+              <Pagination
+                isLoading={listLoading}
+                paginationProps={paginationProps}
               >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
-            </Pagination>
-          );
-        }}
-      </PaginationProvider>
-</div>
+                <BootstrapTable
+                  wrapperClasses="table-responsive"
+                  bordered={false}
+                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                  bootstrap4
+                  remote
+                  keyField="Id"
+                  data={entities === null ? [] : entities}
+                  columns={columns}
+                  defaultSorted={uiHelpers.defaultSorted}
+                  onTableChange={getHandlerTableChange(
+                    FormUIProps.setQueryParams
+                  )}
+                  // selectRow={getSelectRow({
+                  //   entities,
+
+                  // })}
+                  {...paginationTableProps}
+                >
+                  <PleaseWaitMessage entities={entities} />
+                  <NoRecordsFoundMessage entities={entities} />
+                </BootstrapTable>
+              </Pagination>
+            );
+          }}
+        </PaginationProvider>
+      </div>
       <Formik
         enableReinitialize={true}
         initialValues={currentState.userForEdit || initialValues}
@@ -697,7 +697,7 @@ let defaultCount = 0;
           if (Object.keys(validationErrors).length > 0) {
             setotherErrors(validationErrors);
           } else {
-            defaultCount=0
+            defaultCount = 0
             setotherErrors(validate());
             SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances);
 
@@ -724,443 +724,358 @@ let defaultCount = 0;
         }) => (
           <>  <Form className="form form-label-right">
             <fieldset disabled={user?.readOnly || false} >
-              <h6>Payroll Configuration</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="subsidiaryId"
-                      isDisabled={Boolean(user?.readOnly)}
-                      label={<span>Subsidiary <span style={{ color: 'red' }}>*</span></span>}
-                      onBlur={() => {
-                        // handleBlur({ target: { name: "countryId" } });
-                      }}
-                      onChange={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        setDefualtSubsidiaryList(e);
-                        dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes", e.value));
-                        dispatch(fetchAllDeductionList(2, e.value, ''));
-                        dispatch(fetchAllEarningList(1, e.value, ''));
-                        //handlePaymenModeChanged(e)
-                      }}
-
-                      value={
-                        dashboard.allSubidiaryList.find(
-                          (option) => option.value === values.subsidiaryId
-                        ) || null
-                      }
-                      error={errors.subsidiaryId}
-                      touched={touched.subsidiaryId}
-                      options={dashboard.allSubidiaryList}
-                    />
-
-                  </div>
-
-                  {/*<div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="payroll_groupId"
-                      label={<span>Payroll Group<span style={{ color: 'red' }}>*</span></span>}
-                      // isDisabled={isUserForRead}
-                      onBlur={() => {
-                        // handleBlur({ target: { name: "countryId" } });
-                      }}
-                      onChange={(e) => {
-                        setFieldValue("payroll_groupId", e.value || null);
-                        setDefaultPayrollGroup(e);
-                        // dispatch(fetchAllFormsMenu(e.value));
-                      }}
-                      value={(dashboard.allChildMenus.find(
-                        (option) => option.value === values.payroll_groupId
-                      ) || null)}
-                      error={errors.payroll_groupId}
-                      touched={touched.payroll_groupId}
-                      options={dashboard.allChildMenus}
-                    />
-                  </div>*/}
-
-                  {/* <div className="col-12 col-md-4 mt-3">
-
-                    <Select
-                      className="form-control"
-                      name="payroll_templateId"
-                      placeholder="Filter by Status"
-                      label={<span>Payroll Template</span>}
-                      onChange={(e) => {
-                        setFieldValue("payroll_templateId", e.target.value);
-
-                      }}
-                      onBlur={handleBlur}
-                    >
-                      <option value="-1">Select</option>
-                      <option value="1">Payroll Type-Period Name-Subsidiary</option>
-                      <option value="2">Payroll Type-Subsidiary-Period-Period Name</option>
-                      <option value="3">Subsidiary-Period Name-Payroll Type</option>
-                      <option value="4">Subsidiary-Payroll Type-Period Name</option>
-                      <option value="5">Period Name-Subsidiary-Payroll Type</option>
-                      <option value="6">Period Name-Payroll Type-Subsidiary</option>
-                    </Select>
-
-                  </div> */}
-
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      name="employer_uniqueId"
-                      component={Input}
-                      type="number"
-                      placeholder="Employer Unique ID"
-                      label={<span>Employer Unique ID</span>}
-                      autoComplete="off"
-                    />
-                  </div> */}
-
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="payroll_approverId"
-                      label={<span>Payroll Approver</span>}
-                      onBlur={() => {
-                        // handleBlur({ target: { name: "countryId" } });
-                      }}
-                      onChange={(e) => {
-                        setFieldValue("payroll_approverId", e.value || null);
-                        setEmployeeDefault(e);
-                        //handlePaymenModeChanged(e)
-                      }}
-                      isDisabled={Boolean(user?.readOnly)}
-                      value={(roles?.find(
-                        (option) => option.value === values.payroll_approverId
-                      ) || null)}
-                      error={errors.payroll_approverId}
-                      touched={touched.payroll_approverId}
-                      options={roles}
-                    />
-
-                  </div> */}
-
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="basicSalaryId"
-                      label={<span>Basic Salary <span style={{ color: 'red' }}>*</span></span>}
-                      onChange={(e) => {
-                        setFieldValue("basicSalaryId", e.value || null);
-                      }}
-                      value={allEarningsMap?.get(values?.basicSalaryId || '') || ''}
-                      error={errors.basicSalaryId}
-                      touched={touched.basicSalaryId}
-                      options={dashboard.allEarnings}
-                      isDisabled={Boolean(user?.readOnly)}
-                    />
-                  </div>
 
 
-
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="salaryRoundingId"
-                      label={<span>Salary Rounding </span>}
-                      onChange={(e) => {
-                        setFieldValue("salaryRoundingId", e.value || null);
-                      }}
-                      value={allEarningsMap?.get(values?.salaryRoundingId || '') || ''}
-                      error={errors.salaryRoundingId}
-                      touched={touched.salaryRoundingId}
-                      options={dashboard.allEarnings}
-                      isDisabled={Boolean(user?.readOnly)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <br></br>
-
-              <h6>Approval Authorities</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-
-                <div className="from-group row">
-              
-<div className="col-12 col-md-4 mt-3">
-Salary Setup Approver
-  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
-
-    <div className="multi-select">
-      <div className="dropdown-label"></div>
-      <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-        {roles?.map((option) => (
-          <div key={option.Id} className="dropdown-option">
-            <input style={{ width: "25px" }}
-                                  name="salaryApproverId"
-                                  type="checkbox"
-                                  value={option.value}
-                                  checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
-                                  onChange={handleChange}
-                                />
-            {option.label}
-          </div>
-        ))}
-        {/* {errors.employeeId && touched.employeeId && (
-        <div className="invalid-text">{errors.employeeId}</div>
-      )} */}
-      </div>
-    </div>
-  </div>
-</div>
-
-               
+              <h6 className="font-bold mb-0 text-primary ">
+                Payroll Configuration
+              </h6>
 
 
-<div className="col-12 col-md-4 mt-3">
-Loan Approver
-  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
+              <div className="grid grid-cols-1 lg:grid-cols-6 gap-x-3 ">
+                <div className="col-span-2">
+                  <SearchSelect
+                    name="subsidiaryId"
+                    isDisabled={Boolean(user?.readOnly)}
+                    label={<span>Subsidiary<span style={{ color: 'red' }}>*</span></span>}
+                    onBlur={() => {
+                      // handleBlur({ target: { name: "countryId" } });
+                    }}
+                    onChange={(e) => {
+                      setFieldValue("subsidiaryId", e.value || null);
+                      setDefualtSubsidiaryList(e);
+                      dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes", e.value));
+                      dispatch(fetchAllDeductionList(2, e.value, ''));
+                      dispatch(fetchAllEarningList(1, e.value, ''));
+                      //handlePaymenModeChanged(e)
+                    }}
 
-    <div className="multi-select">
-      <div className="dropdown-label"></div>
-      <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-        {roles?.map((option) => (
-          <div key={option.Id} className="dropdown-option">
-                   <input style={{ width: "25px" }}
-                                  name="loanApproverId"
-                                  type="checkbox"
-                                  value={option.value}
-                                  checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
-                                  onChange={handleChange}
-                                />
-            {option.label}
-          </div>
-        ))}
-        {/* {errors.employeeId && touched.employeeId && (
-        <div className="invalid-text">{errors.employeeId}</div>
-      )} */}
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<div className="col-12 col-md-4 mt-3">
-Payroll Approver
-  <div style={{ backgroundColor: "#ffffff", height: "20vh", padding: "10px", overflow: "scroll" }}>
-
-    <div className="multi-select">
-      <div className="dropdown-label"></div>
-      <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-        {roles?.map((option) => (
-          <div key={option.Id} className="dropdown-option">
-            <input style={{ width: "25px" }}
-                                  name="payrollApproverId"
-                                  type="checkbox"
-                                  value={option.value}
-                                  checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
-                                  onChange={handleChange}
-                                />
-                    
-            {option.label}
-          </div>
-        ))}
-        {/* {errors.employeeId && touched.employeeId && (
-        <div className="invalid-text">{errors.employeeId}</div>
-      )} */}
-      </div>
-    </div>
-  </div>
-</div>
+                    value={
+                      dashboard.allSubidiaryList.find(
+                        (option) => option.value === values.subsidiaryId
+                      ) || null
+                    }
+                    error={errors.subsidiaryId}
+                    touched={touched.subsidiaryId}
+                    options={dashboard.allSubidiaryList}
+                  />
 
                 </div>
+
+
+
+                <div className="col-span-2">
+                  <SearchSelect
+                    name="basicSalaryId"
+                    label={<span>Basic Salary<span style={{ color: 'red' }}>*</span></span>}
+                    onChange={(e) => {
+                      setFieldValue("basicSalaryId", e.value || null);
+                    }}
+                    value={allEarningsMap?.get(values?.basicSalaryId || '') || ''}
+                    error={errors.basicSalaryId}
+                    touched={touched.basicSalaryId}
+                    options={dashboard.allEarnings}
+                    isDisabled={Boolean(user?.readOnly)}
+                  />
+                </div>
+
+
+
+                <div className="col-span-2">
+                  <SearchSelect
+                    name="salaryRoundingId"
+                    label={<span>Salary Rounding </span>}
+                    onChange={(e) => {
+                      setFieldValue("salaryRoundingId", e.value || null);
+                    }}
+                    value={allEarningsMap?.get(values?.salaryRoundingId || '') || ''}
+                    error={errors.salaryRoundingId}
+                    touched={touched.salaryRoundingId}
+                    options={dashboard.allEarnings}
+                    isDisabled={Boolean(user?.readOnly)}
+                  />
+                </div>
               </div>
-              <br></br>
-              <h6>Email Preferences</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+              {/* </div> */}
+              <hr></hr>
 
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="sender_emailId"
-                      label={<span>Email Sender</span>}
-                      onBlur={() => {
-                        // handleBlur({ target: { name: "countryId" } });
-                      }}
-                      onChange={(e) => {
-                        setFieldValue("sender_emailId", e.value || null);
-                      }}
-                      isDisabled={Boolean(user?.readOnly)}
-                      value={(dashboard.allEmployees.find(
-                        (option) => option.value === values.sender_emailId
-                      ) || null)}
-                      error={errors.sender_emailId}
-                      touched={touched.sender_emailId}
-                      options={dashboard.allEmployees}
-                    />
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    Email Recipents
-                    <div style={{ backgroundColor: "#ffffff", height: "170px", padding: "10px", overflow: "scroll" }}>
 
-                      <div className="multi-select">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-3 ">
 
-                        <div className="dropdown-label"></div>
-                        <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-                          {dashboard.allEmployees.map((option) => (
-                            <div key={option.value} className="dropdown-option">
-                              <input style={{ width: "25px" }}
-                                name="employee_email_recipentId"
+
+
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
+                  <div>
+                    <h6 className="font-bold text-primary m-0 h-5">
+                      Approval Authorities
+                    </h6>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
+                      <div className="">
+                        <label>
+                          Salary Setup Approver
+                        </label>
+
+
+
+
+
+                        <div className="dropdown-options">
+                          {roles?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center">
+                              <input className="mr-1"
+                                name="salaryApproverId"
                                 type="checkbox"
-                                checked={defEmailRecipents?.includes(option.value)}
-                                onChange={() => handleCheckboxChangeFor_EmailReciepents(option.value)}
+                                value={option.value}
+                                checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
+                                onChange={handleChange}
                               />
-                              {option.label}
+                              <label>{option.label}
+                              </label>
                             </div>
                           ))}
+
                         </div>
 
+
                       </div>
+
+
+
+
+
+
+                      <div className="">
+                        <label>
+                          Loan Approver
+                        </label>
+
+
+
+
+
+                        <div className="dropdown-options">
+                          {roles?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center">
+                              <input className="mr-1"
+                                name="loanApproverId"
+                                type="checkbox"
+                                value={option.value}
+                                checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
+                                onChange={handleChange}
+                              />
+                              <label>{option.label}
+                              </label>
+                            </div>
+                          ))}
+
+                        </div>
+
+
+                      </div>
+
+
+
+
+                      <div className="">
+                        <label>
+                          Payroll Approver
+                        </label>
+
+
+
+
+
+                        <div className="dropdown-options">
+                          {roles?.map((option) => (
+                            <div key={option.Id} className="flex justify-start items-center">
+                              <input className="mr-1"
+                                name="payrollApproverId"
+                                type="checkbox"
+                                value={option.value}
+                                checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
+                                onChange={handleChange}
+                              />
+                              <label>{option.label}
+                              </label>
+                            </div>
+                          ))}
+
+                        </div>
+
+
+                      </div>
+
                     </div>
+
                   </div>
                 </div>
+                {/* <h6 className="font-bold mb-0 text-primary ">
+                  Email Preferences
+                </h6> */}
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
+
+                  <h6 className="font-bold mb-0 text-primary mt-0">
+                    Email Preferences
+                  </h6>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
+                    <div className="">
+                      <SearchSelect
+                        name="sender_emailId"
+                        label={<span>Email Sender</span>}
+                        onBlur={() => {
+                          // handleBlur({ target: { name: "countryId" } });
+                        }}
+                        onChange={(e) => {
+                          setFieldValue("sender_emailId", e.value || null);
+                        }}
+                        isDisabled={Boolean(user?.readOnly)}
+                        value={(dashboard.allEmployees.find(
+                          (option) => option.value === values.sender_emailId
+                        ) || null)}
+                        error={errors.sender_emailId}
+                        touched={touched.sender_emailId}
+                        options={dashboard.allEmployees}
+                      />
+                    </div>
+                    <div className="md:ml-20">
+                      <label>Email Recipents</label>
+
+
+
+
+                      <div className="overflow-auto max-h-48 border-none">
+                        {dashboard.allEmployees.map((option) => (
+                          <div key={option.value} className="flex justify-start items-center border-none">
+                            <input className="mr-1"
+                              name="employee_email_recipentId"
+                              type="checkbox"
+                              checked={defEmailRecipents?.includes(option.value)}
+                              onChange={() => handleCheckboxChangeFor_EmailReciepents(option.value)}
+                            />
+                            <label>{option.label}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+
+
+                    </div>
+
+                  </div>
+                </div>
+
               </div>
 
-              <br></br>
-              <h6>Accounting Impact</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+              {/* <br></br> */}
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "20px" }}
+              <hr></hr>
+
+
+
+
+              <h6 className="font-bold mb-0 text-primary my-1">
+                Accounting Impact
+              </h6>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3 ">
+                {/* <div className="flex justify-start items-center">
+                  <input className="mr-1"
+                    name="isEnableAccounting"
+                    type="checkbox"
+                    onChange={(e) => {
+                      setFieldValue('isEnableAccounting', e.target.checked)
+                    }}
+                    checked={values.isEnableAccounting}
+
+                  />
+                  <label> Enable Accounting Impact</label>
+
+                </div> */}
+
+                <div className="col-span-1">
+                  <label className="flex items-center mt-1">
+                    <input
+                      className="mr-1"
                       name="isEnableAccounting"
                       type="checkbox"
                       onChange={(e) => {
-                        setFieldValue('isEnableAccounting', e.target.checked)
+                        setFieldValue('isEnableAccounting', e.target.checked);
                       }}
                       checked={values.isEnableAccounting}
-
                     />
-                    Enable Accounting Impact
-                    <br></br>
-                  </div>
+                    <span>Enable Accounting Impact</span>
+                  </label>
                 </div>
 
-                <div className="from-group row">
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="basic_pay_accountId"
-                      label={<span>Basic Pay Journal Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
-                      onChange={(e) => {
-                        setFieldValue("basic_pay_accountId", e.value || null);
-                        setDefaultBasicPayAccount(e);
-                      }}
-                      value={
-                        dashboard.allPayrollAccounts.find(
-                          (option) => option.value === values.basic_pay_accountId
-                        ) || null
-                      }
-                      error={errors.basic_pay_accountId}
-                      touched={touched.basic_pay_accountId}
-                      options={dashboard.allPayrollAccounts}
-                    />
-                  </div> */}
-                  <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="payroll_payable_accountId"
-                      label={<span>Payroll Payable Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
-                      onChange={(e) => {
-                        setFieldValue("payroll_payable_accountId", e.value || null);
-                        setDefaultPaybleAccount(e);
-                      }}
-                      value={
-                        dashboard.allPayrollPayableAccounts.find(
-                          (option) => option.value === values.payroll_payable_accountId
-                        ) || null
-                      }
-                      error={errors.payroll_payable_accountId}
-                      touched={touched.payroll_payable_accountId}
-                      options={dashboard.allPayrollPayableAccounts}
-                    />
-                  </div>
-                                    <div className="col-12 col-md-4 mt-3">
-                    <SearchSelect
-                      name="default_loan_accountId"
-                      label={<span>Default Loan Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
-                      onChange={(e) => {
-                        setFieldValue("default_loan_accountId", e.value || null);
-                        setDefaultPaybleAccount(e);
-                      }}
-                      value={
-                        dashboard.allPayrollPayableAccounts.find(
-                          (option) => option.value === values.default_loan_accountId
-                        ) || null
-                      }
-                      error={errors.default_loan_accountId}
-                      touched={touched.default_loan_accountId}
-                      options={dashboard.allPayrollPayableAccounts}
-                    />
-                  </div>
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <Select
-                      className="form-control"
-                      name="isGroupEarningOnAccount"
-                      disabled={!Boolean(values.isEnableAccounting)}
-                      label={<span>Group Earning Account</span>}
-                      onChange={(e) => {
-                        setFieldValue("isGroupEarningOnAccount", e.target.value);
-
-                      }}
-                      onBlur={handleBlur}
-                    >
-                      <option value="-1">Select</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-
-                    </Select>
-                  </div> */}
-
-                  {/* <div className="col-12 col-md-4 mt-3">
-
-                    <Select
-                      className="form-control"
-                      name="isGroupDeduductionOnAccount"
-                      disabled={!Boolean(values.isEnableAccounting)}
-                      label={<span>Group Deduction Account</span>}
-                      onChange={(e) => {
-                        setFieldValue("isGroupDeduductionOnAccount", e.target.value);
-
-                      }}
-                      onBlur={handleBlur}
-                    >
-                      <option value="-1">Select</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-
-                    </Select>
-                  </div> */}
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <Select
-                      className="form-control"
-                      name="isAccrueGratuityOnPayroll"
-                      disabled={!Boolean(values.isEnableAccounting)}
-                      label={<span>Accrue Gratuity On Payroll</span>}
-                      onChange={(e) => {
-                        setFieldValue("isAccrueGratuityOnPayroll", e.target.value);
-
-                      }}
-                      onBlur={handleBlur}
-                    >
-                      <option value="-1">Select</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-
-                    </Select>
-                  </div> */}
+                <div className="">
+                  <SearchSelect
+                    name="payroll_payable_accountId"
+                    label={<span>Payroll Payable Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
+                    isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
+                    onChange={(e) => {
+                      setFieldValue("payroll_payable_accountId", e.value || null);
+                      setDefaultPaybleAccount(e);
+                    }}
+                    value={
+                      dashboard.allPayrollPayableAccounts.find(
+                        (option) => option.value === values.payroll_payable_accountId
+                      ) || null
+                    }
+                    error={errors.payroll_payable_accountId}
+                    touched={touched.payroll_payable_accountId}
+                    options={dashboard.allPayrollPayableAccounts}
+                  />
+                </div>
+                <div className="">
+                  <SearchSelect
+                    name="default_loan_accountId"
+                    label={<span>Default Loan Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
+                    isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
+                    onChange={(e) => {
+                      setFieldValue("default_loan_accountId", e.value || null);
+                      setDefaultPaybleAccount(e);
+                    }}
+                    value={
+                      dashboard.allPayrollPayableAccounts.find(
+                        (option) => option.value === values.default_loan_accountId
+                      ) || null
+                    }
+                    error={errors.default_loan_accountId}
+                    touched={touched.default_loan_accountId}
+                    options={dashboard.allPayrollPayableAccounts}
+                  />
                 </div>
               </div>
-              <br></br>
-              <h6>Tax Integration</h6>
-              <div style={{ height: "250px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "20px" }}
+
+              <hr></hr>
+
+              <h6 className="font-bold mb-0 text-primary my-1">
+                Tax Integration
+              </h6>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3  ">
+                {/* <div className="flex justify-start items-center">
+                  <input className="mr-1"
+                    name="isEnableTax"
+                    type="checkbox"
+                    onChange={(e) => {
+                      setFieldValue('isEnableTax', e.target.checked)
+                    }}
+                    checked={values.isEnableTax}
+
+                  />
+                  <label>
+                    Enable Tax Integration
+                  </label>
+
+                  <br></br>
+                </div> */}
+
+                <div className="flex items-start">
+                  <label className="flex items-center mt-1">
+                    <input className="mr-1"
                       name="isEnableTax"
                       type="checkbox"
                       onChange={(e) => {
@@ -1169,58 +1084,260 @@ Payroll Approver
                       checked={values.isEnableTax}
 
                     />
-                    Enable Tax Integration
-                    <br></br>
-                  </div>
+                    <span>
+                      Enable Tax Integration
+                    </span>
+                  </label>
+
                 </div>
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    {<span>Payroll Tax Deduction Type{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    <select className="form-control"
-                      disabled={!Boolean(values.isEnableTax)}
-                      onChange={(e) => {
-                        setFieldValue('payrollTax_DeductionTypeId', e.target.value)
-                      }}
-                      value={values.payrollTax_DeductionTypeId}
-                      name="payrollTax_DeductionTypeId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard.allDeductions?.map((x) => {
-                          return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="form-feedBack" name="payrollTax_DeductionTypeId" component="div" />}
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    {<span>Arrears Tax Deduction{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    <select className="form-control"
-                      disabled={!Boolean(values.isEnableTax)}
-                      onChange={(e) => {
-                        setFieldValue('arrearTaxDeductionId', e.target.value)
-                      }}
-                      value={values.arrearTaxDeductionId}
-                      name="arrearTaxDeductionId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard.allDeductions?.map((x) => {
-                          return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.arrearTaxDeductionId && touched.arrearTaxDeductionId && <ErrorMessage className="form-feedBack" name="arrearTaxDeductionId" component="div" />}
-                  </div>
-                  {/* <div className="col-12 col-md-4 mt-2">
 
+
+                <div className="col-apnan2">
+                  {<span><label>Payroll Tax Deduction Type</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
+                  <select className="form-control"
+                    disabled={!Boolean(values.isEnableTax)}
+                    onChange={(e) => {
+                      setFieldValue('payrollTax_DeductionTypeId', e.target.value)
+                    }}
+                    value={values.payrollTax_DeductionTypeId}
+                    name="payrollTax_DeductionTypeId">
+                    <option value="-1"> --Select--</option>
+                    {
+                      dashboard.allDeductions?.map((x) => {
+                        return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
+                      })}
+                  </select>
+                  {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="form-feedBack" name="payrollTax_DeductionTypeId" component="div" />}
+                </div>
+                <div className="col-apnan2">
+                  {<span><label>Arrears Tax Deduction</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
+                  <select className="form-control"
+                    disabled={!Boolean(values.isEnableTax)}
+                    onChange={(e) => {
+                      setFieldValue('arrearTaxDeductionId', e.target.value)
+                    }}
+                    value={values.arrearTaxDeductionId}
+                    name="arrearTaxDeductionId">
+                    <option value="-1"> --Select--</option>
+                    {
+                      dashboard.allDeductions?.map((x) => {
+                        return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
+                      })}
+                  </select>
+                  {errors.arrearTaxDeductionId && touched.arrearTaxDeductionId && <ErrorMessage className="form-feedBack" name="arrearTaxDeductionId" component="div" />}
+                </div>
+
+              </div>
+
+              <hr></hr>
+
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Leave/Attendance Integration
+              </h6>
+
+
+
+              <div className="flex  items-start">
+                <label className="flex items-center mt-1">
+                  <input className="mr-1"
+                    name="isEnableAttandanceIntegration"
+                    type="checkbox"
+                    onChange={(e) => {
+                      setFieldValue('isEnableAttandanceIntegration', e.target.checked)
+                    }}
+                    checked={values.isEnableAttandanceIntegration}
+
+                  />
+                  <span>
+                    Enable Attendance Integration
+                  </span>
+                </label>
+              </div>
+
+
+
+
+              <div>
+
+                <h6 className="font-semibold mb-0 text-primary mt-2 text-sm">
+                  Late Deduction
+                </h6>
+                <div className="grid lg:grid-cols-3 gap-x-3">
+
+                  <div className="">
+                    <Field
+                      name="lateCountPerDaySalaryDeduction"
+                      onChange={(e) => {
+                        //setGrossSalaryDB(e.target.value);
+                        setFieldValue("lateCountPerDaySalaryDeduction", e.target.value);
+                      }}
+                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      value={values.lateCountPerDaySalaryDeduction}
+                      component={Input}
+                      placeholder="Enter value"
+                      label={<span>Late Count Per Day Salary Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      autoComplete="off"
+                    />
+                  </div>
+
+
+
+                  <div className="">
+                    <label>
+                      Leave Deduction
+                      {Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}
+                    </label>
+                    <select
+                      className="form-control"
+                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      onChange={(e) => {
+                        // If 'N/A' is selected, set the value to null, else convert the selected value to a number
+                        const value = e.target.value === 'N/A' ? null : Number(e.target.value);
+                        setFieldValue('leaveDeductionId', value); // Update form value with the selected option
+                      }}
+                      value={values.leaveDeductionId || 'N/A'} // Default to 'N/A' if no value is selected
+                      name="leaveDeductionId"
+                    >
+                      {/* Add 'N/A' option */}
+                      <option value="N/A">N/A</option>
+
+                      {/* Filter out '--Select--' and render other options for leave types */}
+                      {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
+                        <option key={x.value} value={x.value}>
+                          {x.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    {errors.leaveDeductionId && touched.leaveDeductionId && (
+                      <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />
+                    )}
+                  </div>
+
+
+
+
+
+
+                  <div className="">
+                    {<label>Late Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                    <select className="form-control"
+                      onChange={(e) => {
+                        setFieldValue('lateDeductionId', e.target.value)
+                      }}
+                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      value={values.lateDeductionId}
+                      name="lateDeductionId">
+                      <option value="-1"> --Select--</option>
+                      {
+                        dashboard.allDeductions?.map((x) => {
+                          return <option value={x.value}> {x.label} </option>
+                        })}
+                    </select>
+                    {errors.lateDeductionId && touched.lateDeductionId && <ErrorMessage className="form-feedBack" name="lateDeductionId" component="div" />}
+                  </div>
+
+                </div>
+              </div>
+
+
+
+              <div >
+
+
+                <h6 className="font-semibold mb-0 text-primary text-sm my-2">
+                  Overtime / Leave Encashment
+                </h6>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3">
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
+                      <input className="mr-1"
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        type="checkbox"
+                        name="isEnableOverTimeCalc"
+                        onChange={(e) => {
+                          setFieldValue('isEnableOverTimeCalc', e.target.checked)
+                        }}
+                        checked={values.isEnableOverTimeCalc}
+                      />
+                      Enable Overtime Calculation
+                    </label>
+                  </div>
+                  <div className="">
+                    {<label>Overtime Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                    <select className="form-control"
+                      onChange={(e) => {
+                        setFieldValue('overTimeEarningId', e.target.value)
+                      }}
+                      value={values.overTimeEarningId}
+                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      name="overTimeEarningId">
+                      <option value="-1"> --Select--</option>
+                      {
+                        dashboard.allEarnings?.map((x) => {
+                          return <option value={x.value}> {x.label} </option>
+                        })}
+                    </select>
+                    {errors.overTimeEarningId && touched.overTimeEarningId && <ErrorMessage className="form-feedBack" name="overTimeEarningId" component="div" />}
+                  </div>
+                  <div className="">
+                    {<label>Encashment Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                    <select className="form-control"
+                      onChange={(e) => {
+                        setFieldValue('leaveEnchashment_EarningId', e.target.value)
+                      }}
+                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      value={values.leaveEnchashment_EarningId}
+                      name="leaveEnchashment_EarningId">
+                      <option value="-1"> --Select--</option>
+                      {
+                        dashboard.allEarnings?.map((x) => {
+                          return <option value={x.value}> {x.label} </option>
+                        })}
+                    </select>
+                    {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="form-feedBack" name="leaveEnchashment_EarningId" component="div" />}
+                  </div>
+
+                </div>
+              </div>
+
+
+
+              <div >
+
+
+                <h6 className="font-semibold mb-0 text-primary  text-sm my-2">
+                  Leave Management
+                </h6>
+                <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+
+
+                  <div className="flex items-start">
+                    <label className="flex items-center space-x-1">
+                      <input className="mr-1"
+                        type="checkbox"
+                        name="isEnableLeaveManagemenent"
+                        onChange={(e) => {
+                          setFieldValue('isEnableLeaveManagemenent', e.target.checked)
+                        }}
+                        checked={values.isEnableLeaveManagemenent}
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                      />
+                      Enable Leave Management
+                    </label>
+                  </div>
+                  <div className="">
                     <Select
                       className="form-control"
-                      name="isTrackDeductionHistory"
-                      value={values.isTrackDeductionHistory}
-                      disabled={!Boolean(values.isEnableTax)}
-                      label={<span>Track Tax Deduction History</span>}
+                      name="isEnableSandwichLeavePolicy"
+                      value={values.isEnableSandwichLeavePolicy}
+                      label={<span>Enable Sandwich Policy For Leave</span>}
                       onChange={(e) => {
-                        setFieldValue("isTrackDeductionHistory", e.target.value);
+                        setFieldValue("isEnableSandwichLeavePolicy", e.target.value);
 
                       }}
+                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
                       onBlur={handleBlur}
                     >
                       <option value="-1">Select</option>
@@ -1229,271 +1346,28 @@ Payroll Approver
 
                     </Select>
 
-                  </div> */}
-                </div>
-              </div>
-              <br></br>
-              <h6>Leave/Attendance Integration </h6>
-              <div style={{ zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "10px", borderRadius: "5px", border: '2px solid #adceff' }}>
-                <div className="col-12 col-md-12 mt-3">
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
-                      <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "20px" }}
-                        name="isEnableAttandanceIntegration"
-                        type="checkbox"
-                        onChange={(e) => {
-                          setFieldValue('isEnableAttandanceIntegration', e.target.checked)
-                        }}
-                        checked={values.isEnableAttandanceIntegration}
-
-                      />
-                      Enable Attendance Integration
-                    </div>
-                  </div>
-
-                  <br></br>
-
-                  <div style={{ height: "30%", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid rgb(178 184 193)' }}>
-                    <h6>Late Deduction</h6>
-                    <div className="from-group row">
-
-                      <div className="col-12 col-md-4 mt-1">
-                        <Field
-                          name="lateCountPerDaySalaryDeduction"
-                          onChange={(e) => {
-                            //setGrossSalaryDB(e.target.value);
-                            setFieldValue("lateCountPerDaySalaryDeduction", e.target.value);
-                          }}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          value={values.lateCountPerDaySalaryDeduction}
-                          component={Input}
-                          placeholder="Enter value"
-                          label={<span>Late Count Per Day Salary Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
-                          autoComplete="off"
-                        />
-                      </div>
-
-                      {/* <div className="col-12 col-md-4 mt-3">
-                        {<span>Leave Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        <select className="form-control"
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          onChange={(e) => {
-                            const value = e.target.value == 'Select' ? '' : Number(e.target.value);
-                            setFieldValue('leaveDeductionId', value)
-                          }}
-                          value={values.leaveDeductionId}
-                          name="leaveDeductionId">
-                          {
-                            dashboard.allLeaveTypes?.map((x) => {
-                              return <option value={x.value}> {x.label} </option>
-                            })}
-                        </select>
-                        {errors.leaveDeductionId && touched.leaveDeductionId && <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />}
-                      </div> */}
-
-<div className="col-12 col-md-4 mt-3">
-  <span>
-    Leave Deduction
-    {Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}
-  </span>
-  <select
-    className="form-control"
-    disabled={!Boolean(values.isEnableAttandanceIntegration)}
-    onChange={(e) => {
-      // If 'N/A' is selected, set the value to null, else convert the selected value to a number
-      const value = e.target.value === 'N/A' ? null : Number(e.target.value);
-      setFieldValue('leaveDeductionId', value); // Update form value with the selected option
-    }}
-    value={values.leaveDeductionId || 'N/A'} // Default to 'N/A' if no value is selected
-    name="leaveDeductionId"
-  >
-    {/* Add 'N/A' option */}
-    <option value="N/A">N/A</option>
-
-    {/* Filter out 'Select' and render other options for leave types */}
-    {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
-      <option key={x.value} value={x.value}>
-        {x.label}
-      </option>
-    ))}
-  </select>
-
-  {errors.leaveDeductionId && touched.leaveDeductionId && (
-    <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />
-  )}
-</div>
-
-
-
-
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        {<span>Late Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        <select className="form-control"
-                          onChange={(e) => {
-                            setFieldValue('lateDeductionId', e.target.value)
-                          }}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          value={values.lateDeductionId}
-                          name="lateDeductionId">
-                          <option value="-1"> Select</option>
-                          {
-                            dashboard.allDeductions?.map((x) => {
-                              return <option value={x.value}> {x.label} </option>
-                            })}
-                        </select>
-                        {errors.lateDeductionId && touched.lateDeductionId && <ErrorMessage className="form-feedBack" name="lateDeductionId" component="div" />}
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <br></br>
-
-                  <div style={{ height: "30%", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid rgb(178 184 193)' }}>
-                    <h6>Overtime / Leave Encashment</h6>
-                    <div className="from-group row">
-                      <div className="col-12 col-md-4 mt-3">
-                        <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "20px" }}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          type="checkbox"
-                          name="isEnableOverTimeCalc"
-                          onChange={(e) => {
-                            setFieldValue('isEnableOverTimeCalc', e.target.checked)
-                          }}
-                          checked={values.isEnableOverTimeCalc}
-                        />
-                        Enable Overtime Calculation
-                      </div>
-                      <div className="col-12 col-md-4 mt-5">
-                        {<span>Overtime Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        <select className="form-control"
-                          onChange={(e) => {
-                            setFieldValue('overTimeEarningId', e.target.value)
-                          }}
-                          value={values.overTimeEarningId}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          name="overTimeEarningId">
-                          <option value="-1"> Select</option>
-                          {
-                            dashboard.allEarnings?.map((x) => {
-                              return <option value={x.value}> {x.label} </option>
-                            })}
-                        </select>
-                        {errors.overTimeEarningId && touched.overTimeEarningId && <ErrorMessage className="form-feedBack" name="overTimeEarningId" component="div" />}
-                      </div>
-                      <div className="col-12 col-md-4 mt-3">
-                        {<span>Encashment Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        <select className="form-control"
-                          onChange={(e) => {
-                            setFieldValue('leaveEnchashment_EarningId', e.target.value)
-                          }}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          value={values.leaveEnchashment_EarningId}
-                          name="leaveEnchashment_EarningId">
-                          <option value="-1"> Select</option>
-                          {
-                            dashboard.allEarnings?.map((x) => {
-                              return <option value={x.value}> {x.label} </option>
-                            })}
-                        </select>
-                        {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="form-feedBack" name="leaveEnchashment_EarningId" component="div" />}
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <br></br>
-
-                  <div style={{ height: "30%", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid rgb(178 184 193)' }}>
-                    <h6>Leave Management</h6>
-                    <div className="from-group row">
-
-
-                      <div className="col-12 col-md-4 mt-3">
-                        <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "20px" }}
-                          type="checkbox"
-                          name="isEnableLeaveManagemenent"
-                          onChange={(e) => {
-                            setFieldValue('isEnableLeaveManagemenent', e.target.checked)
-                          }}
-                          checked={values.isEnableLeaveManagemenent}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                        />
-                        Enable Leave Management
-                      </div>
-                      <div className="col-12 col-md-4 mt-3">
-                        <Select
-                          className="form-control"
-                          name="isEnableSandwichLeavePolicy"
-                          value={values.isEnableSandwichLeavePolicy}
-                          label={<span>Enable Sandwich Policy For Leave</span>}
-                          onChange={(e) => {
-                            setFieldValue("isEnableSandwichLeavePolicy", e.target.value);
-
-                          }}
-                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                          onBlur={handleBlur}
-                        >
-                          <option value="-1">Select</option>
-                          <option value="true">Yes</option>
-                          <option value="false">No</option>
-
-                        </Select>
-
-                      </div>
-
-                    </div>
                   </div>
 
                 </div>
               </div>
-              <br>
-              </br>
 
-              {/* <h6>Loan Integration </h6>
-              <div style={{ height: "200px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
+              <hr></hr>
 
-                <div className="from-group row">
 
-                  <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "30px" }}
-                      name="isEnableLoan"
-                      type="checkbox"
-                      onChange={(e) => {
-                        setFieldValue('isEnableLoan', e.target.checked)
-                      }}
-                      checked={values.isEnableLoan}
-                    />
-                    Enable Loan Management
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    {<span>Loan Deduction<span style={{ color: 'red' }}>*</span></span>}
-                    <select className="form-control"
-                      onChange={(e) => {
-                        setFieldValue('loanDeductionId', e.target.value)
-                      }}
-                      value={values.loanDeductionId}
-                      name="loanDeductionId">
 
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard.allDeductions?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <br></br> */}
 
-              <h6>EOBI Configuration </h6>
-              <div style={{ height: "350px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "30px" }}
+
+              <h6 className="font-bold mb-0 text-primary my-2">
+                EOBI Configuration
+              </h6>
+
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                <div className="flex  items-start">
+                  <label className="flex items-center space-x-1">
+
+                    <input className="mr-1"
+
                       name="isEnableEOBI"
                       type="checkbox"
                       onChange={(e) => {
@@ -1502,113 +1376,116 @@ Payroll Approver
                       checked={values.isEnableEOBI}
                     />
                     Enable EOBI
-                  </div>
+                  </label>
+                </div>
 
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "30px" }}
-                      name="isIncludeBasic"
-                      type="checkbox"
-                      onChange={(e) => {
-                        setFieldValue('isIncludeBasic', e.target.checked)
-                      }}
-                      checked={values.isIncludeBasic}
-                    />kra
-                    Include Basic
-                  </div> */}
-                  <div className="col-12 col-md-4 mt-3">
-                    {<span>EOBI Deduction{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    <select className="form-control"
-                      disabled={!Boolean(values.isEnableEOBI)}
-                      onChange={(e) => {
-                        setFieldValue('eobi_deductionId', e.target.value)
-                      }}
-                      value={values.eobi_deductionId}
-                      name="eobi_deductionId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard.allDeductions?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.eobi_deductionId && touched.eobi_deductionId && <ErrorMessage className="form-feedBack" name="eobi_deductionId" component="div" />}
-                  </div>
 
-                  <div className="col-12 col-md-4 mt-3">
+                <div className="">
+                  {<label>EOBI Deduction{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                  <select className="form-control"
+                    disabled={!Boolean(values.isEnableEOBI)}
+                    onChange={(e) => {
+                      setFieldValue('eobi_deductionId', e.target.value)
+                    }}
+                    value={values.eobi_deductionId}
+                    name="eobi_deductionId">
+                    <option value="-1"> --Select--</option>
+                    {
+                      dashboard.allDeductions?.map((x) => {
+                        return <option value={x.value}> {x.label} </option>
+                      })}
+                  </select>
+                  {errors.eobi_deductionId && touched.eobi_deductionId && <ErrorMessage className="form-feedBack" name="eobi_deductionId" component="div" />}
+                </div>
+
+                <div className="">
                   <AmountInput
-                      field={{
-                        name: `eobi_basis`,
-                        value: values?.eobi_basis,
-                      }}
-                      form={{
-                        touched,
-                        errors,
-                        setFieldValue,
-                        setFieldTouched,
-                      }}
-                      placeholder="Minimum Wage"
-                      label={<span>Minimum Wage{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      disabled={!Boolean(values.isEnableEOBI)}
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      disabled={!Boolean(values.isEnableEOBI)}
-                      name="eobi_employeer_value_in_percent"
-                      component={Input}
-                      type="number"
-                      placeholder="Employeer value"
-                      value={values.eobi_employeer_value_in_percent}
-                      label={<span>Employer(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      disabled={!Boolean(values.isEnableEOBI)}
-                      name="eobi_employee_value_in_percent"
-                      component={Input}
-                      type="number"
-                      placeholder="Employee value"
-                      label={<span>Employee(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    EOBI Allowances
-                    <div style={{ backgroundColor: "#ffffff", height: "170px", padding: "10px", overflow: "scroll" }}>
-
-                      <div className="multi-select">
-
-                        <div className="dropdown-label"></div>
-                        <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-                          {dashboard.allEarnings.map((option) => (
-                            <div key={option.value} className="dropdown-option">
-                              <input style={{ width: "25px" }}
-                                disabled={!Boolean(values.isEnableEOBI)}
-                                name="eobi_earningId"
-                                type="checkbox"
-                                checked={defEOBIAllowances?.includes(option.value)}
-                                onChange={() => handleCheckboxChangeFor_EOBIAllowances(option.value)}
-                              />
-                              {option.label}
-                            </div>
-                          ))}
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
+                    field={{
+                      name: `eobi_basis`,
+                      value: values?.eobi_basis,
+                    }}
+                    form={{
+                      touched,
+                      errors,
+                      setFieldValue,
+                      setFieldTouched,
+                    }}
+                    placeholder="Minimum Wage"
+                    label={<span>Minimum Wage{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                    disabled={!Boolean(values.isEnableEOBI)}
+                  />
                 </div>
               </div>
-              <br></br>
-              <h6>Social Security Configuration </h6>
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                <div className="">
+                  <Field
+                    disabled={!Boolean(values.isEnableEOBI)}
+                    name="eobi_employeer_value_in_percent"
+                    component={Input}
+                    type="number"
+                    placeholder="Employeer value"
+                    value={values.eobi_employeer_value_in_percent}
+                    label={<span>Employer(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="">
+                  <Field
+                    disabled={!Boolean(values.isEnableEOBI)}
+                    name="eobi_employee_value_in_percent"
+                    component={Input}
+                    type="number"
+                    placeholder="Employee value"
+                    label={<span>Employee(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="">
+                  <label>  EOBI Allowances </label>
 
-              <div style={{ height: "350px", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "30px" }}
+
+
+                  <div className="overflow-auto max-h-48 border-none">
+
+                    {dashboard.allEarnings.map((option) => (
+                      <div key={option.value} className="flex justify-start items-center border-none">
+
+                        <input className="mr-1"
+                          disabled={!Boolean(values.isEnableEOBI)}
+                          name="eobi_earningId"
+                          type="checkbox"
+                          checked={defEOBIAllowances?.includes(option.value)}
+                          onChange={() => handleCheckboxChangeFor_EOBIAllowances(option.value)}
+                        />
+                        <label> {option.label} </label>
+                      </div>
+                    ))}
+                  </div>
+
+
+
+
+
+
+
+
+                </div>
+              </div>
+
+              <hr></hr>
+
+
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Social Security Configuration
+              </h6>
+
+
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                <div className="flex items-start">
+                  <label className="flex items-center space-x-1">
+
+                    <input className="mr-1"
                       name="isEnableSESSI"
                       type="checkbox"
                       onChange={(e) => {
@@ -1617,283 +1494,277 @@ Payroll Approver
                       checked={values.isEnableSESSI}
                     />
                     Enable Social Security
-                  </div>
+                  </label>
+                </div>
 
-                  {/* <div className="col-12 col-md-4 mt-3">
-                    <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "30px" }}
-                      name="isIncludeBasic"
-                      type="checkbox"
-                      onChange={(e) => {
-                        setFieldValue('isIncludeBasic', e.target.checked)
-                      }}
-                      checked={values.isIncludeBasic}
-                    />
-                    Include Basic
-                  </div> */}
 
-                  <div className="col-12 col-md-4 mt-3">
-                    {<span>Social Security Deduction{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    <select className="form-control"
 
-                      onChange={(e) => {
-                        setFieldValue('sessi_deductionId', e.target.value)
-                      }}
-                      value={values.sessi_deductionId}
-                      disabled={!Boolean(values.isEnableSESSI)}
-                      name="sessi_deductionId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard.allDeductions?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.sessi_deductionId && touched.sessi_deductionId && <ErrorMessage className="form-feedBack" name="sessi_deductionId" component="div" />}
-                  </div>
+                <div className="">
+                  {<label>Social Security Deduction{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                  <select className="form-control"
 
-                  <div className="col-12 col-md-4 mt-3">
+                    onChange={(e) => {
+                      setFieldValue('sessi_deductionId', e.target.value)
+                    }}
+                    value={values.sessi_deductionId}
+                    disabled={!Boolean(values.isEnableSESSI)}
+                    name="sessi_deductionId">
+                    <option value="-1"> --Select--</option>
+                    {
+                      dashboard.allDeductions?.map((x) => {
+                        return <option value={x.value}> {x.label} </option>
+                      })}
+                  </select>
+                  {errors.sessi_deductionId && touched.sessi_deductionId && <ErrorMessage className="form-feedBack" name="sessi_deductionId" component="div" />}
+                </div>
+
+                <div className="">
                   <AmountInput
-                      field={{
-                        name: `sessi_basis`,
-                        value: values?.sessi_basis,
-                      }}
-                      form={{
-                        touched,
-                        errors,
-                        setFieldValue,
-                        setFieldTouched,
-                      }}
-                      disabled={!Boolean(values.isEnableSESSI)}
-                      placeholder="Minimum Wage"
-                      label={<span>Minimum Wage{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      name="sessi_employeer_value_in_percent"
-                      component={Input}
-                      type="number"
-                      disabled={!Boolean(values.isEnableSESSI)}
-                      placeholder="Employeer value"
-                      value={values.sessi_employeer_value_in_percent}
-                      label={<span>Employeer(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    <Field
-                      name="sessi_employee_value_in_percent"
-                      component={Input}
-                      type="number"
-                      disabled={!Boolean(values.isEnableSESSI)}
-                      placeholder="Employee value"
-                      value={values.sessi_employee_value_in_percent}
-                      label={<span>Employee(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="col-12 col-md-4 mt-3">
-                    Social Security Allowances
-                    <div style={{ backgroundColor: "#ffffff", height: "170px", padding: "10px", overflow: "scroll" }}>
-
-                      <div className="multi-select">
-
-                        <div className="dropdown-label"></div>
-                        <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
-                          {dashboard.allEarnings.map((option) => (
-                            <div key={option.value} className="dropdown-option">
-                              <input style={{ width: "25px" }}
-                                name="sessi_earningId"
-                                type="checkbox"
-                                disabled={!Boolean(values.isEnableSESSI)}
-                                checked={defSESSIAllowances?.includes(option.value)}
-                                onChange={() => handleCheckboxChangeFor_SESSIAllowances(option.value)}
-                              />
-                              {option.label}
-                            </div>
-                          ))}
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
+                    field={{
+                      name: `sessi_basis`,
+                      value: values?.sessi_basis,
+                    }}
+                    form={{
+                      touched,
+                      errors,
+                      setFieldValue,
+                      setFieldTouched,
+                    }}
+                    disabled={!Boolean(values.isEnableSESSI)}
+                    placeholder="Minimum Wage"
+                    label={<span>Minimum Wage{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                  />
                 </div>
               </div>
-              <br></br>
-              <br></br> <h6> Journal Accounts & Bank Information</h6>
-              <div style={{ height: "350px", overflow: "scroll", zIndex: "1", width: "100%", backgroundColor: "rgb(235 243 255)", padding: "20px", borderRadius: "5px", border: '2px solid #adceff' }}>
-
-                <div className="from-group row">
-                  <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
-                    {/* <h7 ><b>Journal Accounts & Bank Info</b>
-                    </h7> */}
-                    <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
-                      {/* <td>Employee</td> */}
-                      <td>Action</td>
-                      <td className="col-2">Journal Bank Acc#</td>
-                      <td className="col-2">Bank Code Employer</td>
-                      <td className="col-2">Bank Account No</td>
-                      <td className="col-1">Default</td>
-                      <td className="col-2">Bank Name</td>
-                      <td className="col-2">Branch Name</td>
-                    </tr>
-                    {defBankInfoList?.map((obj, rightindex) => (
-
-                      <><tr>
-                        <td id={rightindex} >
-                          <button id={rightindex} className="btn btn-danger btn-sm"  disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>Delete</button></td>
-                        <td>
-
-                          <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
-  handleFieldChanged(e);
-  // setotherErrors(validate());
-}}
- id={"journalBankAccountId-" + rightindex}>
-                            <option value="-1">--SELECT--</option>
-                 
-                            {
-                              dashboard.allPayrollAccounts?.map((x) => {
-                                return <option value={x.value}> {x.label} </option>
-                              })}
-                          </select>
-
-                          {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
-
-                        
+              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                <div className="">
+                  <Field
+                    name="sessi_employeer_value_in_percent"
+                    component={Input}
+                    type="number"
+                    disabled={!Boolean(values.isEnableSESSI)}
+                    placeholder="Employeer value"
+                    value={values.sessi_employeer_value_in_percent}
+                    label={<label>Employeer(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="">
+                  <Field
+                    name="sessi_employee_value_in_percent"
+                    component={Input}
+                    type="number"
+                    disabled={!Boolean(values.isEnableSESSI)}
+                    placeholder="Employee value"
+                    value={values.sessi_employee_value_in_percent}
+                    label={<label>Employee(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="">
+                  <label> Social Security Allowances </label>
 
 
 
-                        </td>
 
-                        <td>
-             
-                          <input className="form-control" onChange={(e) => {
-  handleFieldChanged(e);
-  // setotherErrors(validate());
-}}
- placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
+                  <div className="overflow-auto max-h-48 border-none">
+                    {dashboard.allEarnings.map((option) => (
+                      <div key={option.value} className="flex justify-start items-center border-none">
 
-                          {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
-                        </td>
-
-                        <td>
-                          <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
-  handleFieldChanged(e);
-  // setotherErrors(validate());
-}}
- id={"bankAccountNo-" + rightindex}></input>
-
-                          {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
-                        </td>
-                        <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
-
+                        <input
+                          name="sessi_earningId"
                           type="checkbox"
-                          id={"isDefault-" + rightindex}
-                          onChange={(e) => {
-  handleFieldChanged(e);
-  // setotherErrors(validate());
-  
-}}
-
-                          checked={obj.isDefault}
-
+                          disabled={!Boolean(values.isEnableSESSI)}
+                          checked={defSESSIAllowances?.includes(option.value)}
+                          onChange={() => handleCheckboxChangeFor_SESSIAllowances(option.value)}
                         />
-                    
+                        <label> {option.label} </label>
+                      </div>
+                    ))}
+                  </div>
 
-                        </td>
 
-                        {/* <td>
+
+                </div>
+              </div>
+
+              <hr></hr>
+
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Journal Accounts & Bank Information
+              </h6>
+
+              <div className="from-group row">
+                <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
+                  {/* <h7 ><b>Journal Accounts & Bank Info</b>
+                    </h7> */}
+                  <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
+                    {/* <td>Employee</td> */}
+                    <td>Action</td>
+                    <td className="col-2">Journal Bank Acc#</td>
+                    <td className="col-2">Bank Code Employer</td>
+                    <td className="col-2">Bank Account No</td>
+                    <td className="col-1">Default</td>
+                    <td className="col-2">Bank Name</td>
+                    <td className="col-2">Branch Name</td>
+                  </tr>
+                  {defBankInfoList?.map((obj, rightindex) => (
+
+                    <><tr>
+                      <td id={rightindex} >
+                        <button id={rightindex} className="btn btn-danger btn-sm" disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>Delete</button></td>
+                      <td>
+
+                        <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
+                          handleFieldChanged(e);
+                          // setotherErrors(validate());
+                        }}
+                          id={"journalBankAccountId-" + rightindex}>
+                          <option value="-1">--SELECT--</option>
+
+                          {
+                            dashboard.allPayrollAccounts?.map((x) => {
+                              return <option value={x.value}> {x.label} </option>
+                            })}
+                        </select>
+
+                        {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
+
+
+
+
+
+                      </td>
+
+                      <td>
+
+                        <input className="form-control" onChange={(e) => {
+                          handleFieldChanged(e);
+                          // setotherErrors(validate());
+                        }}
+                          placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
+
+                        {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
+                      </td>
+
+                      <td>
+                        <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
+                          handleFieldChanged(e);
+                          // setotherErrors(validate());
+                        }}
+                          id={"bankAccountNo-" + rightindex}></input>
+
+                        {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
+                      </td>
+                      <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
+
+                        type="checkbox"
+                        id={"isDefault-" + rightindex}
+                        onChange={(e) => {
+                          handleFieldChanged(e);
+                          // setotherErrors(validate());
+
+                        }}
+
+                        checked={obj.isDefault}
+
+                      />
+
+
+                      </td>
+
+                      {/* <td>
                           <input type="text" className="form-control" placeholder="Enter Bank Name" onChange={handleFieldChanged} value={obj.bankName} id={'bankName-' + rightindex}></input>
 
                           {otherErrors[`bankName-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankName-${rightindex}`]}</div>}
                         </td> */}
 
 
-                                <td>
+                      <td>
 
-                          <select value={obj.bankId} className="form-control"  
-                          
+                        <select value={obj.bankId} className="form-control"
+
                           onChange={(e) => {
-    const bankId = e.target.value;
+                            const bankId = e.target.value;
 
-    // Update the field
-    handleFieldChanged(e);
-
-    
-
-    // Fetch branches for selected bank
-    if (bankId && bankId !== "-1") {
-      filteredBranches(bankId);
-     
-   
-    }
-  
-    // setotherErrors(validate());
-  
-  }} 
-  
-  
-  id={"bankId-" + rightindex}>
-                            <option value="">--SELECT--</option>
-                
-                            {
-                              dashboard.allBanks?.map((x) => {
-                                return <option value={x.value}> {x.label} </option>
-                              })}
-                          </select>
-
-                          {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
-
-                     </td>   
-<td>
-  <select
-    value={obj.branchId}
-    className="form-control"
-    onChange={(e) => {
-  handleFieldChanged(e);
-  // setotherErrors(validate());
-}}
-
-    id={"branchId-" + rightindex}
-  >
-    <option value="">--SELECT--</option>
-
-    {filteredBranches(obj.bankId)?.map((x) => (
-    <option key={x.value} value={x.value}>
-      {x.label}
-    </option>
-  ))}
-  </select>
-
-  {otherErrors[`branchId-${rightindex}`] && (
-    <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
-  )}
-</td>
+                            // Update the field
+                            handleFieldChanged(e);
 
 
 
+                            // Fetch branches for selected bank
+                            if (bankId && bankId !== "-1") {
+                              filteredBranches(bankId);
 
-                      </tr>
-                      </>
-                    ))}
 
-                  </table>
+                            }
 
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
-                      <input type='button' className="btn btn-primary" id="bank_info" onClick={addRowBankInfo} value='+Add'></input>
-                    </div>
+                            // setotherErrors(validate());
 
+                          }}
+
+
+                          id={"bankId-" + rightindex}>
+                          <option value="">--SELECT--</option>
+
+                          {
+                            dashboard.allBanks?.map((x) => {
+                              return <option value={x.value}> {x.label} </option>
+                            })}
+                        </select>
+
+                        {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
+
+                      </td>
+                      <td>
+                        <select
+                          value={obj.branchId}
+                          className="form-control"
+                          onChange={(e) => {
+                            handleFieldChanged(e);
+                            // setotherErrors(validate());
+                          }}
+
+                          id={"branchId-" + rightindex}
+                        >
+                          <option value="">--SELECT--</option>
+
+                          {filteredBranches(obj.bankId)?.map((x) => (
+                            <option key={x.value} value={x.value}>
+                              {x.label}
+                            </option>
+                          ))}
+                        </select>
+
+                        {otherErrors[`branchId-${rightindex}`] && (
+                          <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
+                        )}
+                      </td>
+
+
+
+
+                    </tr>
+                    </>
+                  ))}
+
+                </table>
+
+                <div className="from-group row">
+                  <div className="col-12 col-md-4 mt-3">
+                    <input type='button' className="btn btn-primary" id="bank_info" onClick={addRowBankInfo} value='+Add'></input>
                   </div>
+
                 </div>
               </div>
-  {otherErrors["isDefault"] && (
-  <tr>
-    <td colSpan={6}>
-      <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
-    </td>
-  </tr>
-)}
+
+              {otherErrors["isDefault"] && (
+                <tr>
+                  <td colSpan={6}>
+                    <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
+                  </td>
+                </tr>
+              )}
 
             </fieldset>
 

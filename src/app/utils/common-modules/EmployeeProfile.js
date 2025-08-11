@@ -70,17 +70,17 @@
 //           <div className='accordion-header-btn '>
 //             <Accordion.Toggle eventKey="0" className="flex-between-center">
 //               Employee Detail
-       
+
 //             </Accordion.Toggle>
 //           </div>
 //         </Card.Header> */}
 //         <Accordion.Collapse eventKey="0">
 //           <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
-         
+
 //           {/* "rgb(235 243 255)" */}
 //             <div style={{ backgroundColor:  "#E6F8FF", padding: "20px", borderRadius: "5px", border: 'none' }}>
-     
-              
+
+
 
 //             <div className="d-flex justify-content-between flex-column flex-md-row align-items-center">
 
@@ -100,7 +100,7 @@
 //                   style={{
 //                     borderRadius: '50%',  // Make the image circular
 //                     objectFit: 'cover',   // Ensure the image covers the entire area without distortion
-                  
+
 //                   }}
 //                     onError={(e) => {
 //                     e.target.onerror = null; // Error loop rokne ke liye
@@ -119,7 +119,7 @@
 //                 SECTIONS.map((section, sectionIndex) => (
 //                   <div key={sectionIndex} style={{ marginBottom: "2%" }}>
 //                     <h5 className='text-bold mb-5 custom_color_1'>{section.heading}</h5>
-                
+
 //                     <Row>
 //                       {section.fields.map((field, fieldIndex) => (
 //                         <Col key={fieldIndex} md={3}> {/* Four columns layout */}
@@ -157,7 +157,7 @@ import { getEmployeeProfileById } from '../../../_metronic/redux/dashboardCrud';
 import { formatDates } from '../common';
 import { toAbsoluteUrl } from '../../../_metronic/_helpers';
 import './form.css';
-
+import { User } from 'lucide-react';
 // Field name and keys organized by sections
 const SECTIONS = [
   {
@@ -209,91 +209,152 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
   return (
     <>
       {panelMode && (
-        <Accordion defaultActiveKey="0" className="mx-6">
+        <Accordion defaultActiveKey="0" className="p-2">
           <Card>
             <Accordion.Collapse eventKey="0">
-              <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
-                <div
-                  style={{
-                    backgroundColor: '#E6F8FF',
-                    padding: '20px',
-                    borderRadius: '5px',
-                    border: 'none',
-                  }}
-                >
+
+              <Card.Body className='bg-tsecondary '>
+                <div>
                   {Object.keys(data).length ? (
-                    SECTIONS.map((section, sectionIndex) => (
-                      <div key={sectionIndex} style={{ marginBottom: '2%' }}>
-                        <h5 className="text-bold mb-5 custom_color_1">{section.heading}</h5>
+                    <Row>
+                      {/* Office Info */}
+                      <Col md={3}>
 
-                        <Row className="align-items-start">
-                          {/* Fields on the left */}
-                          <Col md={9}>
-                            <Row>
-                              {section.fields.map((field, fieldIndex) => (
-                                <Col key={fieldIndex} md={4} className="mb-3">
-                                  <strong>{field.name}: </strong>
-                                  {data[field.value]
-                                    ? field.isDate
-                                      ? formatDates(data[field.value])
-                                      : data[field.value]
-                                    : 'N/A'}
-                                </Col>
-                              ))}
+                        <h6 className="font-bold mb-0 text-primary my-2">
+                          Office Information
+                        </h6>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                          {SECTIONS[0].fields.map((field, idx) => (
 
-                              {/* Add Reporting To & Payroll Group below others in Office Info */}
-                              {sectionIndex === 0 && (
-                                <>
-                                  <Col md={4} className="mb-3">
-                                    <strong>Reporting To: </strong>
-                                    {data.reportToName ?? 'N/A'}
-                                  </Col>
-                                  <Col md={4} className="mb-3">
-                                    <strong>Payroll Group: </strong>
-                                    {data.payrollName ?? 'N/A'}
-                                  </Col>
-                                </>
-                              )}
-                            </Row>
-                          </Col>
 
-                          {/* Profile image on the right in Office Info only */}
-                          {sectionIndex === 0 && (
-                            <Col md={3} className="text-end">
-                              <img
-                                name="profile_image"
-                                src={
-                                  data.profile_image
-                                    ? `${data.profile_image}`
-                                    : toAbsoluteUrl('/media/users/profileImage.png')
-                                }
-                                alt="Profile"
-                                width={120}
-                                height={120}
-                                style={{
-                                  borderRadius: '50%',
-                                  objectFit: 'cover',
-                                }}
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
-                                }}
-                              />
-                            </Col>
-                          )}
-                        </Row>
+                            <React.Fragment key={idx}>
+                              <div className="font-medium">{field.name}</div>
+                              <div> {data[field.value]
+                                ? field.isDate
+                                  ? formatDates(data[field.value])
+                                  : data[field.value]
+                                : 'N/A'}</div>
+                            </React.Fragment>
 
-                        {/* <hr /> */}
-                      </div>
-                    ))
+                          ))}
+
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                          <React.Fragment>
+                            <div className="font-medium min-w-[180px]">Reporting To:</div>
+                            <div>{data.reportToName ?? 'N/A'}</div>
+                          </React.Fragment>
+
+
+
+
+                          <React.Fragment>
+                            <div className="font-medium">Payroll Group:</div>
+                            <div> {data?.payrollName ?? 'N/A'}</div>
+                          </React.Fragment>
+
+                        </div>
+
+                      </Col>
+
+                      {/* Personal Info */}
+                      <Col md={3} className=' lg:ml-36 '>
+                        <h6 className="font-bold mb-0 text-primary my-2 ">
+                          Personal Information
+                        </h6>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                          {SECTIONS[1].fields.map((field, idx) => (
+                            // <div key={idx} className="flex">
+                            //   <div className='min-w-[180px]'>
+                            //     <strong>{field.name}:</strong>{" "}
+                            //   </div>
+                            //   {data[field.value]
+                            //     ? field.isDate
+                            //       ? formatDates(data[field.value])
+                            //       : data[field.value]
+                            //     : 'N/A'}
+                            // </div>
+
+                            <React.Fragment key={idx}>
+                              <div className="font-medium">{field.name}</div>
+                              <div className=''> {data[field.value]
+                                ? field.isDate
+                                  ? formatDates(data[field.value])
+                                  : data[field.value]
+                                : 'N/A'}</div>
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </Col>
+
+                      {/* Profile Image */}
+                      <Col md={3} className="flex flex-col lg:ml-36  ">
+                        <h6 className="font-bold mb-0 text-primary my-2 ">
+                          Employee Picture
+                        </h6>
+                        {/* <img
+                      name="profile_image"
+                      src={
+                        data.profile_image
+                          // ? `${data.profile_image}`
+                         ? <User className='bg-white'/>
+                          // : toAbsoluteUrl('/media/users/profileImage.png')
+                          :<User  className='bg-white'/>
+                      }
+                      alt="Profile"
+                      width={120}
+                      height={120}
+                      style={{
+                        borderRadius: '10px',
+                        objectFit: 'cover',
+                        border: '1px solid #ddd',
+                        padding: '5px',
+                        // backgroundColor: '#fff',
+                      }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
+                      }}
+                    /> */}
+
+                        {/* {data.profile_image ? (
+                          <img
+                            name="profile_image"
+                            src={data.profile_image}
+                            alt="Profile"
+                            width={120}
+                            height={120}
+                            style={{
+                              borderRadius: '10px',
+                              objectFit: 'cover',
+                              border: '1px solid #ddd',
+                              padding: '5px',
+                              backgroundColor: '#fff',
+                            }}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
+                            }}
+                          />
+                        ) : ( */}
+                        <div className="w-[120px] h-[120px] rounded-[10px] border border-gray-300 bg-white flex justify-center items-center p-[5px]">
+                          <User className='text-primary' size={60} /> {/* Icon fallback */}
+                        </div>
+                        {/* )} */}
+
+                      </Col>
+                    </Row>
                   ) : (
-                    <p>Please Choose an Employee</p>
+                    <p>No profile data available</p>
                   )}
                 </div>
               </Card.Body>
+
+
             </Accordion.Collapse>
           </Card>
-        </Accordion>
+        </Accordion >
       )}
     </>
   );

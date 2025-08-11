@@ -141,9 +141,9 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
+             <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   {/* Subsidiary Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="subsidiaryId"
                       label={
@@ -168,7 +168,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Account Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="payroll_groupId"
                       label={
@@ -196,7 +196,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Employee Loan Account Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="cycle_typeId"
                       label={
@@ -229,15 +229,18 @@ export function FormEditForm({
               <FieldArray name="policies">
                 {({ push, remove }) => (
                   <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
+                    // style={{
+                    //   backgroundColor: "rgb(235 243 255)",
+                    //   padding: "20px",
+                    //   borderRadius: "5px",
+                    //   border: "2px solid #adceff",
+                    //   marginTop: "20px",
+                    // }}
                   >
-                    <h6>Reimbursement Policies</h6>
+                 
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                         Reimbursement Policies
+                        </h6>
                     <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                       <thead>
                         <tr
@@ -549,15 +552,18 @@ export function FormEditForm({
               <FieldArray name="accounts">
                 {({ push, remove }) => (
                   <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
+                    // style={{
+                    //   backgroundColor: "rgb(235 243 255)",
+                    //   padding: "20px",
+                    //   borderRadius: "5px",
+                    //   border: "2px solid #adceff",
+                    //   marginTop: "20px",
+                    // }}
                   >
-                    <h6>Accounts</h6>
+               
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                         Accounts
+                        </h6>
                     <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                       <thead>
                         <tr

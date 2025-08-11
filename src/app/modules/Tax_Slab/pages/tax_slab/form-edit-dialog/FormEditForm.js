@@ -104,8 +104,8 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
-                  <div className="col-12 col-md-4 mt-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
+                  <div className="col-span-1">
                     <AmountInput
                       field={{
                         name: `from_amount`,
@@ -118,15 +118,11 @@ export function FormEditForm({
                         setFieldTouched,
                       }}
                       placeholder="Enter From Amount"
-                      label={
-                        <>
-                          From Amount <span style={{ color: "red" }}>*</span>
-                        </>
-                      }
+                      label={<>From Amount <span style={{ color: "red" }}>*</span></>}
                     />
                   </div>
 
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="col-span-1">
                     <AmountInput
                       field={{
                         name: `to_amount`,
@@ -139,55 +135,30 @@ export function FormEditForm({
                         setFieldTouched,
                       }}
                       placeholder="Enter To Amount"
-                      label={
-                        <>
-                          To Amount <span style={{ color: "red" }}>*</span>
-                        </>
-                      }
+                      label={<>To Amount<span style={{ color: "red" }}>*</span></>}
                     />
                   </div>
 
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="col-span-1">
                     <label>
-                      Percentage <span style={{ color: "red" }}>*</span>
+                      Percentage<span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="percentage"
                       component={Input}
                       placeholder="Enter Percentage"
-                      // label="Percentage"
                       type="number"
                       onChange={(e) => {
                         if (Number(e.target.value) <= 100) {
-                          // e.target.value = e.target.value.slice(0,5);
-                          if (
-                            /^\d{0,3}(\.\d{1,2})?$/.test(
-                              e.target.value?.toString()
-                            )
-                          ) {
+                          if (/^\d{0,3}(\.\d{1,2})?$/.test(e.target.value?.toString())) {
                             setFieldValue("percentage", e.target.value);
                           }
                         }
                       }}
-
-                      // onInput={(e) => {
-                      //   const inputValue = e.target.value;
-
-                      //   // Allow the decimal point and check the format
-                      //   const regex = /^(?:100(?:\.0(?:0)?)?|\d{1,2}(?:\.\d{1,2})?)$/;
-
-                      //   // If the input matches the regex, accept it
-                      //   if (regex.test(inputValue)) {
-                      //     e.target.value = inputValue;
-                      //   } else {
-                      //     // If it doesn't match, find the last valid input
-                      //     const lastValidMatch = inputValue.match(/^(?:100(?:\.0(?:0)?)?|\d{1,2}(?:\.\d{1,2})?)$/);
-                      //     e.target.value = lastValidMatch ? lastValidMatch[0] : '';
-                      //   }
-                      // }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+
+                  <div className="col-span-1">
                     <AmountInput
                       field={{
                         name: `fixed_amount`,
@@ -200,14 +171,11 @@ export function FormEditForm({
                         setFieldTouched,
                       }}
                       placeholder="Enter Fixed Amount"
-                      label={
-                        <>
-                          Fixed Amount <span style={{ color: "red" }}>*</span>
-                        </>
-                      }
+                      label={<>Fixed Amount<span style={{ color: "red" }}>*</span></>}
                     />
                   </div>
                 </div>
+
               </fieldset>
             </Form>
           </Modal.Body>
