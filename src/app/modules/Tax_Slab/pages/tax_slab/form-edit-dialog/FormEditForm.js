@@ -118,7 +118,7 @@ export function FormEditForm({
                         setFieldTouched,
                       }}
                       placeholder="Enter From Amount"
-                      label={<>From Amount <span style={{ color: "red" }}>*</span></>}
+                      label={<>From Amount<span style={{ color: "red" }}>*</span></>}
                     />
                   </div>
 

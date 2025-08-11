@@ -15,6 +15,7 @@ import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { useHistory } from "react-router-dom";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
+import { Download } from "lucide-react";
 
 
 //Validation for date fields
@@ -391,9 +392,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                       >
                         Generate Register (PDF)
                         <span className="svg-icon svg-icon-md svg-icon-primary mr-1">
-                          <SVG
+                          {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          />
+                          /> */}
+                            <Download />
                         </span>
                         {registerLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -410,9 +412,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                       >
                         Generate Register (Excel)
                         <span className="svg-icon svg-icon-md svg-icon-primary">
-                          <SVG
+                          {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          />
+                          /> */}
+
+                           <Download />
                         </span>
                         {registerExcelLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -438,9 +442,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                       >
                         Generate Payment Advice
                         <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                          <SVG
+                          {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          />
+                          /> */}
+                           <Download />
                         </span>
                         {adviceLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -512,9 +517,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                         >
                           Generate Payslip
                           <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                            <SVG
+                            {/* <SVG
                               src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                            />
+                            /> */}
+
+                             <Download />
                           </span>
                           {pdfLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -665,9 +672,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             >
                               Generate JV Report (Payables)
                               <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                                <SVG
+                                {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                />
+                                /> */}
+                                 <Download />
                               </span>
                               {registerExcelLoading && (
                                 <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -682,9 +690,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                             >
                               Generate JV Report (Bank Transfer)
                               <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                                <SVG
+                                {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                />
+                                /> */}
+                                 <Download />
                               </span>
                               {registerExcelLoading && (
                                 <span className="ml-3 mr-3 spinner spinner-white"></span>
@@ -711,7 +720,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                   applyFilter(initialFilter.filter)
                   handleReset()
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-light btn-elevate"
               >
                 Cancel
               </button>

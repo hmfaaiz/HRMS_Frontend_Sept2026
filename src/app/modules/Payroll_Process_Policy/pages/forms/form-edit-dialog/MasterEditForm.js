@@ -4,14 +4,15 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 // Validation schema
 const formValidation = Yup.object().shape(
   {
     subsidiaryId: Yup.string()
-      .required("Required*"),
+      .required(VALIDATION_MESSAGES.required),
     endDate: Yup.string()
-      .required("Required*"),
+      .required(VALIDATION_MESSAGES.required),
 
 
   },

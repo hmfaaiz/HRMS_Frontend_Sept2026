@@ -944,7 +944,7 @@ export function FormTable(user) {
 
 
 
-                      <div className="overflow-auto max-h-48 border-none">
+                      <div className="overflow-auto max-h-16 border-none">
                         {dashboard.allEmployees.map((option) => (
                           <div key={option.value} className="flex justify-start items-center border-none">
                             <input className="mr-1"
@@ -1446,7 +1446,7 @@ export function FormTable(user) {
 
 
 
-                  <div className="overflow-auto max-h-48 border-none">
+                  <div className="overflow-auto max-h-16 border-none">
 
                     {dashboard.allEarnings.map((option) => (
                       <div key={option.value} className="flex justify-start items-center border-none">
@@ -1567,7 +1567,7 @@ export function FormTable(user) {
 
 
 
-                  <div className="overflow-auto max-h-48 border-none">
+                  <div className="overflow-auto max-h-16 border-none">
                     {dashboard.allEarnings.map((option) => (
                       <div key={option.value} className="flex justify-start items-center border-none">
 

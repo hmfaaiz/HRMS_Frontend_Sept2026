@@ -20,7 +20,7 @@ import { useFormUIContext } from "../FormUIContext";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { formatNumberWithCommas } from "../../../../../utils/common";
-
+import TCard from "../../../../../utils/common-modules/TCard";
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
@@ -206,20 +206,23 @@ export function FormTable() {
 
   return (
     <>
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
-              <Accordion.Toggle
+      {/* <Accordion defaultActiveKey=""> */}
+        {/* <TCard name="Details"> */}
+          {/* <Card.Header className="d-flex justify-content-center"> */}
+            {/* <div className="accordion-header-btn w-100  d-flex justify-content-center"> */}
+              {/* <Accordion.Toggle
                 eventKey="0"
                 className="flex-between-center text-bold"
-              >
-                Reimbursement Claim Details
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
+              > */}
+                
+                <h6 className="font-bold mb-0 text-primary my-2">
+                        Details
+                        </h6>
+                {/* <KeyboardArrowDown />
+              </Accordion.Toggle> */}
+            {/* </div> */}
+          {/* </Card.Header> */}
+          {/* <Accordion.Collapse eventKey="0"> */}
             <div className="w-full overflow-x-auto">
               <PaginationProvider
                 pagination={paginationFactory(paginationOptions)}
@@ -257,9 +260,9 @@ export function FormTable() {
                 }}
               </PaginationProvider>
             </div>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+          {/* </Accordion.Collapse> */}
+        {/* </TCard> */}
+      {/* </Accordion> */}
     </>
   );
 }

@@ -733,14 +733,23 @@ export function FormEditForm({
                       max={maxAmountLimit}
                       placeholder="Enter total loan amount"
                       label={
-                        <div className="d-flex">
-                          <div className="d-flex">Total Loan Amount   <span>
-                            (Amount Limit :
-                            {maxAmountLimit?.toLocaleString() || 0})
-                            <span style={{ color: "red" }}>*</span>
-                          </span></div>
+                        // <div className="d-flex">
+                        //   <div className="d-flex">Total Loan Amount   
+                        //     <span>{" "}(Limit:
+                        //     {maxAmountLimit?.toLocaleString() || 0})
+                        //     <span style={{ color: "red" }}>*</span>
+                        //   </span></div>
 
+                        // </div>
+
+                        <div className="d-flex">
+                          Total Loan Amount
+                             <span className="ml-1">
+                            (Limit: {maxAmountLimit?.toLocaleString() || 0})
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
                         </div>
+
                       }
                     />
                   </div>
@@ -777,7 +786,7 @@ export function FormEditForm({
                           <div className="d-flex">
                             {maxMonthlyAmountSuggest ? (
                               <span>
-                                (Suggested Installment Based on Policy :{" "}
+                                (Suggested Installment Based on Policy: {" "}
                                 {maxMonthlyAmountSuggest?.toLocaleString() || 0}
                                 )
                               </span>
@@ -796,10 +805,10 @@ export function FormEditForm({
                       placeholder="Total installments"
                       label={
                         <div className="d-flex">
-                          <div className="d-flex"> Total installments  <span>
-                            (Max installments :{" "}
+                          <div className="d-flex"> Total installments  <span className="ml-1">
+                            (Maximum:{" "}
                             {monthlyInstallmentsLimit?.toLocaleString() || 0})
-                            <span style={{ color: "red" }}>*</span>
+                            <span  style={{ color: "red" }}>*</span>
                           </span></div>
 
                         </div>
