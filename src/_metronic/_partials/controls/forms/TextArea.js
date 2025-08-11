@@ -33,7 +33,7 @@ export function TextArea({
         className={getFieldCSSClasses(touched[field.name], errors[field.name])}
         {...field}
         {...props}
-        rows={3}
+        rows={4}
       />
       {withFeedbackLabel && (
         <FieldFeedbackLabel
