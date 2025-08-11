@@ -34,6 +34,7 @@ import DatePicker from "react-datepicker";
 import { subYears } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { CirclePlus, Trash2, User } from "lucide-react";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
@@ -672,11 +673,11 @@ export function FormEditForm({
     if (formData.Id && formData?.profile_image) {
       setImage(formData.profile_image);
     }
-    else{
-       setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
-        
+    else {
+      setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
+
     }
-  }, [formData.Id,formData?.profile_image]);
+  }, [formData.Id, formData?.profile_image]);
 
   const deleteApplicantVacancyDetail = (Id) => {
     // server request for deleting customer by id
@@ -768,681 +769,252 @@ export function FormEditForm({
             <Form className="form form-label-right" autoComplete="off">
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
-                <div
-                  style={{
-                    padding: "10px 0 40px 0px",
-                    marginBottom: "15px",
-                    marginTop: "15px",
-                    borderRadius: "5px",
-                    borderBottom: "2px solid rgb(194, 194, 194)",
-                  }}
-                >
-                  {/* <h6>Applicant Profile</h6> */}
+                <div className="grid lg:grid-cols-10 gap-x-3 gap-y-1">
+                  <div className=" col-span-8">
+                    <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
-                  {/* Code Name Image */}
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    {/* Code Name  */}
-                    <div className="form-group row col-12 col-md-10  p-0 m-0">
-                      {/* Code  */}
-                      <div className="form-group row col-12 col-md-12  p-0 m-0">
-                        <div className="col-12 col-md-5 mt-3">
-                          <label>
+                      <div className="">
+                        <label>
+                          <span>
+                            Applicant Code
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="applicantCode"
+                          component={Input}
+                          placeholder="Enter code"
+                          disabled={true}
+                          type="text"
+                          minLength={6}
+                          maxLength={6}
+                        // error={ errors.applicantCode}
+                        />
+                      </div>
+
+                      <div className="">
+                        <SearchSelect
+                          name="subsidiaryId"
+                          isDisabled={isdataForRead}
+                          label={
                             <span>
-                              Applicant Code
+                              Subsidiary
                               <span style={{ color: "red" }}>*</span>
                             </span>
-                          </label>
-                          <Field
-                            name="applicantCode"
-                            component={Input}
-                            placeholder="Enter code"
-                            disabled={true}
-                            type="text"
-                            minLength={6}
-                            maxLength={6}
-                          // error={ errors.applicantCode}
-                          />
-                        </div>
-
-                        <div className="col-12 col-md-5 mt-3">
-                          <SearchSelect
-                            name="subsidiaryId"
-                            isDisabled={isdataForRead}
-                            label={
-                              <span>
-                                Subsidiary
-                                <span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            onChange={(e) => {
-                              setFieldValue("subsidiaryId", e.value || null);
-                            }}
-                            value={
-                              dashboard?.allSubsidiaryList?.find(
-                                (option) => option.value === values.subsidiaryId
-                              ) || null
-                            }
-                            options={dashboard?.allSubsidiaryList}
-                            error={errors.subsidiaryId}
-                            touched={touched.subsidiaryId}
-                          />
-                        </div>
+                          }
+                          onChange={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                          }}
+                          value={
+                            dashboard?.allSubsidiaryList?.find(
+                              (option) => option.value === values.subsidiaryId
+                            ) || null
+                          }
+                          options={dashboard?.allSubsidiaryList}
+                          error={errors.subsidiaryId}
+                          touched={touched.subsidiaryId}
+                        />
                       </div>
-                      {/* Following Mr. Mubin's instructions, I am using this type of code block. */}
 
-                      {/* Name  */}
+                    </div>
 
-                      <div className="form-group row col-12 col-md-12  p-0 m-0">
-                        <div className="col-12 col-md-2 mt-3">
-                          <Select
-                            label={
-                              <span>
-                                {" "}
-                                Title<span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            name="title"
-                            value={values.title}
-                            onChange={handleChange}
-                            style={{ display: "block" }}
-                          >
-                            <option label="Select Title" />
-                            <option value="Mr." label="Mr." />
-                            <option value="Mrs." label="Mrs." />
-                            <option value="Ms." label="Ms." />
-                            <option value="Dr." label="Dr." />
-                            <option value="Professor." label="Professor." />
-                          </Select>
-                          {errors.title && touched.title && (
-                            <div className="invalid-text">{errors.title}</div>
-                          )}
-                        </div>
+                    <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
 
-                        <div className="col-12 col-md-3 mt-3">
-                          <Field
-                            name="firstName"
-                            component={Input}
-                            placeholder=" first name"
-                            label={
-                              <span>
-                                {" "}
-                                First Name
-                                <span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            autoComplete="off"
-                          />
-                        </div>
-                        <div className="col-12 col-md-3 mt-3">
-                          <Field
-                            name="middleName"
-                            component={Input}
-                            placeholder=" middle name"
-                            label={<span> Middle Name</span>}
-                            autoComplete="off"
-                          />
-                        </div>
-                        <div className="col-12 col-md-3 mt-3">
-                          <Field
-                            name="lastName"
-                            component={Input}
-                            placeholder=" last name"
-                            label={
-                              <span>
-                                {" "}
-                                Last Name<span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            autoComplete="off"
-                          />
-                        </div>
+
+                      <div className="">
+                        <Select
+                          label={
+                            <span>
+                              {" "}
+                              Title<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          name="title"
+                          value={values.title}
+                          onChange={handleChange}
+                          style={{ display: "block" }}
+                        >
+                          <option label="Select Title" />
+                          <option value="Mr." label="Mr." />
+                          <option value="Mrs." label="Mrs." />
+                          <option value="Ms." label="Ms." />
+                          <option value="Dr." label="Dr." />
+                          <option value="Professor." label="Professor." />
+                        </Select>
+                        {errors.title && touched.title && (
+                          <div className="invalid-text">{errors.title}</div>
+                        )}
+                      </div>
+
+                      <div className="">
+                        <Field
+                          name="firstName"
+                          component={Input}
+                          placeholder=" first name"
+                          label={
+                            <span>
+                              {" "}
+                              First Name
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="">
+                        <Field
+                          name="middleName"
+                          component={Input}
+                          placeholder=" middle name"
+                          label={<span> Middle Name</span>}
+                          autoComplete="off"
+                        />
+                      </div>
+                      <div className="">
+                        <Field
+                          name="lastName"
+                          component={Input}
+                          placeholder=" last name"
+                          label={
+                            <span>
+                              {" "}
+                              Last Name<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
                       </div>
                     </div>
 
-                    {/* Image */}
-                    <div className="col-12 col-md-2 ">
-                      <div>
-                        <div>
-                          {/* <div>
-                            <img
-                              name="profile_image"
-                              width={120}
-                              height={120}
-                              src={profile_image || formData?.profile_image}
-                            />
-                            <h4>Select Image </h4>
-                            <input
-                              type="file"
-                              name="myImage"
-                              accept=".jpg, .jpeg, .png"
-                              onChange={onImageChange}
-                            />
-                            <ErrorMessage
-                              className="form-feedBack"
-                              name="myImage"
-                              component="div"
-                            />
-                          </div> */}
 
-                          <div className="text-center" style={{
-                            height: "220px",          // Fixed height
-                            width: "120px",          // Fixed height
-                            overflow: "hidden",       // Prevent stretching
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            // justifyContent: "space-between",
-                          }}>
-                            <img
-                              name="profile_image"
-                              width={120}
-                              height={120}
-                              src={profile_image || formData?.profile_image}
-                              alt="Profile"
-                              // className="img-thumbnail"
-                              style={{
-                                objectFit: "cover",
-                                borderRadius: "50%",
-                                // flexShrink: 0,           // Prevent image from shrinking
-                              }}
-                            />
 
-                            <h5 className="mt-2">Select Image</h5>
-
-                            {/* Custom upload button */}
-                            <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
-                              Upload Image
-                            </label>
-
-                            {/* Hidden file input */}
-                            <input
-                              id="myImage"
-                              type="file"
-                              name="myImage"
-                              accept=".jpg, .jpeg, .png"
-                              onChange={onImageChange}
-                              style={{ display: "none" }}
-                            />
-
-                            {/* File name truncation */}
-                            {/* {selectedFileName && (
-                              <div
-                                style={{
-                                  maxWidth: "100%",
-                                  height: "100%",
-                                  overflow: "hidden",
-                                  // textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                  fontSize: "0.8rem",
-                                  marginTop: "5px",
-                                }}
-                                title={selectedFileName} // Tooltip on hover
-                              >
-                                {selectedFileName}
-                              </div>
-                            )} */}
-
-                            {/* Formik error display */}
-                            <ErrorMessage
-                              className="form-feedBack text-danger"
-                              name="myImage"
-                              component="div"
-                            />
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
                   </div>
+
+
+                  {/* Image */}
+                  <div className="col-span-2 p-5">
+
+
+
+                    {/* <div className="text-center" style={{
+                      height: "220px",
+                      width: "120px",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+
+                    }}>
+                      <img
+                        name="profile_image"
+                        width={120}
+                        height={120}
+                        src={profile_image || formData?.profile_image}
+                        alt="Profile"
+
+                        style={{
+                          objectFit: "cover",
+                          borderRadius: "50%",
+
+                        }}
+                      />
+
+
+
+
+                      <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+                        Upload Image
+                      </label>
+
+
+                      <input
+                        id="myImage"
+                        type="file"
+                        name="myImage"
+                        accept=".jpg, .jpeg, .png"
+                        onChange={onImageChange}
+                        style={{ display: "none" }}
+                      />
+
+
+
+
+                      <ErrorMessage
+                        className="form-feedBack text-danger"
+                        name="myImage"
+                        component="div"
+                      />
+                    </div> */}
+
+                    <div className="w-[120px] h-[120px] rounded-[10px] border border-gray-300 bg-white flex justify-center items-center p-[5px] overflow-hidden">
+                      {formData?.profile_image ? (
+                        <img
+                          src={formData?.profile_image}
+                          alt="Profile"
+                          className="w-full h-full object-cover rounded-[10px]"
+                        />
+                      ) : (
+                        <User className="text-primary" size={60} />
+                      )}
+
+
+
+
+
+                      <ErrorMessage
+                        className="form-feedBack text-danger"
+                        name="myImage"
+                        component="div"
+                      />
+                    </div>
+
+                    <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+                        Upload Image
+                      </label>
+
+
+                    <input
+                      id="myImage"
+                      type="file"
+                      name="myImage"
+                      accept=".jpg, .jpeg, .png"
+                      onChange={onImageChange}
+                      style={{ display: "none" }}
+                    />
+
+
+
+                  </div>
+
+
+
+
                 </div>
+
+
+                {/* Name  */}
+
+
+
+
+
+
 
                 {/* Details Job Vacancy */}
 
                 <FieldArray name="details_applicant_vacancy">
                   {({ push, remove }) => (
-                    <div
-                      style={{
-                        backgroundColor: "rgb(235 243 255)",
-                        padding: "20px",
-                        borderRadius: "5px",
-                        border: "2px solid #adceff",
-                        marginTop: "20px",
-                      }}
-                    >
-                      <h6>Applicant Vacancy</h6>
-                      <table className="table table-head-custom table-vertical-center  table-hover">
-                        <thead>
-                          <tr
-                            style={{
-                              backgroundColor: "#4d5f7a",
-                              color: "#fff",
-                            }}
-                          >
-                            <th>Action</th>
-
-                            <th className="col-3">Job Vacancy</th>
-                            <th className="col-2">Application Date</th>
-                            <th className="col-2">Application Status</th>
-                            <th className="col-2"> Status Date</th>
-
-                            <th className="col-2">Appointment Type</th>
-                            <th className="col-1">Active Vacancy</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {values?.details_applicant_vacancy &&
-                            values?.details_applicant_vacancy?.length > 0 &&
-                            values?.details_applicant_vacancy?.map(
-                              (detail, index) => (
-                                <tr key={index}>
-                                  <td>
-                                    <button
-                                      disabled={
-                                        isdataForRead ||
-                                        selectedJobVacancy(
-                                          values.details_applicant_vacancy[
-                                          index
-                                          ]
-                                        )?.jobPostingStatus == 3
-                                      }
-                                      className="btn btn-danger btn-elevate"
-                                      type="button"
-                                      // onClick={async () => {
-                                      //   deleteApplicantVacancyDetail(detail.Id)
-                                      //   remove(index);
-
-                                      //   const result = await printSkills(formData, values.details_applicant_vacancy, { delete: detail.Id });
+                    <>
 
 
-
-                                      //   // ✅ Make sure result exists before setting
-                                      //   if (result?.details_applicant_skills) {
-                                      //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
-                                      //   }
-                                      // }}
-
-                                      onClick={async () => {
-                                        deleteApplicantVacancyDetail(detail.Id);
-                                        const updatedVacancies = values.details_applicant_vacancy.filter((_, i) => i !== index); // ❗️ manually filter
-
-                                        remove(index); // update Formik
-
-                                        const result = await printSkills(formData, updatedVacancies, detail.Id); // ❗️ directly pass updated
-
-                                        if (result?.details_applicant_skills) {
-                                          setFieldValue("details_applicant_skills", result.details_applicant_skills);
-                                        }
-                                      }}
-
-                                    >
-                                      Delete
-                                    </button>
-                                  </td>
-                                  {/* job vacancy selection */}
-                                  <td>
-                                    <SearchSelect
-                                      name={`details_applicant_vacancy[${index}].jobVacancyId`}
-                                      className="form-control"
-                                      style={{ width: "200px", zIndex: 9999 }}
-                                      isDisabled={
-                                        isdataForRead ||
-                                        selectedJobVacancy(
-                                          values.details_applicant_vacancy[
-                                          index
-                                          ]
-                                        )?.jobPostingStatus == 3
-                                      }
-                                      value={
-                                        dashboard?.allJobVacancyList?.find(
-                                          (x) =>
-                                            x.value ===
-                                            values.details_applicant_vacancy[
-                                              index
-                                            ]?.jobVacancyId
-                                        ) || null
-                                      }
-                                      // onChange={async (e) => {
-                                      //   setFieldValue(
-                                      //     `details_applicant_vacancy[${index}].jobVacancyId`,
-                                      //     e?.value
-                                      //   );
-                                      //   const result = await printSkills(formData, values.details_applicant_vacancy);
-
-
-
-                                      //   // ✅ Make sure result exists before setting
-                                      //   if (result?.details_applicant_skills) {
-                                      //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
-                                      //   }
-
-                                      // }}
-
-                                      onChange={async (e) => {
-                                        // Step 1: Update the field
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].jobVacancyId`,
-                                          e?.value
-                                        );
-
-                                        // Step 2: Manually construct updated array
-                                        const updatedVacancyArray = values.details_applicant_vacancy.map((item, i) =>
-                                          i === index ? { ...item, jobVacancyId: e?.value } : item
-                                        );
-
-                                        // Step 3: Call with updated array
-                                        const result = await printSkills(formData, updatedVacancyArray);
-
-                                        if (result?.details_applicant_skills) {
-                                          setFieldValue("details_applicant_skills", result.details_applicant_skills);
-                                        }
-                                      }}
-
-                                      options={
-                                        dashboard?.allJobVacancyList
-                                          ?.filter(
-                                            (x) =>
-                                              x?.jobPostingStatus === 1 && // ✅ Only include items where jobPostingStatus === 1
-                                              (!values?.subsidiaryId ||
-                                                x?.subsidiaryId ===
-                                                values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
-                                          )
-                                          .map((x) => ({
-                                            label: x.label,
-                                            value: x.value,
-                                            disabled: values.details_applicant_vacancy.some(
-                                              (el) =>
-                                                el.jobVacancyId === x.value
-                                            ),
-                                          })) || []
-                                      }
-                                      getOptionLabel={(x) => x.label}
-                                      getOptionValue={(x) => x.value}
-                                      isOptionDisabled={(x) => x.disabled}
-                                      placeholder="Select--"
-                                    />
-
-                                    {errors.details_applicant_vacancy?.[index]
-                                      ?.jobVacancyId &&
-                                      touched.details_applicant_vacancy?.[index]
-                                        ?.jobVacancyId && (
-                                        <div className="text-danger">
-                                          {
-                                            errors.details_applicant_vacancy[
-                                              index
-                                            ]?.jobVacancyId
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-
-                                  <td>
-                                    <DatePicker
-                                      className="form-control"
-                                      style={{ width: "130px" }}
-                                      placeholderText="Select Date"
-                                      selected={
-                                        values?.details_applicant_vacancy?.[
-                                          index
-                                        ]?.applicationDate
-                                          ? new Date(
-                                            values.details_applicant_vacancy[
-                                              index
-                                            ].applicationDate
-                                          )
-                                          : null
-                                      }
-                                      onChange={(date) => {
-                                        const selectedDate = formatDates(
-                                          date,
-                                          "yyyy-MM-dd"
-                                        ); // or use date.toISOString().split('T')[0]
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].applicationDate`,
-                                          selectedDate
-                                        );
-                                      }}
-                                      dateFormat="dd-MMM-yyyy"
-                                      name={`details_applicant_vacancy[${index}].applicationDate`}
-                                      disabled={
-                                        isdataForRead ||
-                                        selectedJobVacancy(
-                                          values.details_applicant_vacancy[
-                                          index
-                                          ]
-                                        )?.jobPostingStatus == 3
-                                      }
-                                      maxDate={new Date()} // optional: restrict future dates
-                                      showPopperArrow={false}
-                                    />
-
-                                    {errors.details_applicant_vacancy?.[index]
-                                      ?.applicationDate &&
-                                      touched.details_applicant_vacancy?.[index]
-                                        ?.applicationDate && (
-                                        <div className="text-danger">
-                                          {
-                                            errors.details_applicant_vacancy[
-                                              index
-                                            ].applicationDate
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-
-                                  {/* applicant status */}
-
-                                  <td>
-                                    <SearchSelect
-                                      name={`details_applicant_vacancy[${index}].applicationStatusId`}
-                                      className="form-control"
-                                      style={{ width: "130px" }}
-                                      isDisabled={
-                                        isdataForRead ||
-                                        selectedJobVacancy(
-                                          values.details_applicant_vacancy[
-                                          index
-                                          ]
-                                        )?.jobPostingStatus == 3
-                                      }
-                                      value={
-                                        dashboard?.allApplicationStatusList?.find(
-                                          (x) =>
-                                            x.value ===
-                                            values.details_applicant_vacancy[
-                                              index
-                                            ]?.applicationStatusId
-                                        ) || null
-                                      }
-                                      onChange={(e) => {
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].applicationStatusId`,
-                                          e?.value
-                                        );
-
-                                        const selectedDate = formatDates(
-                                          new Date(),
-                                          "yyyy-MM-dd"
-                                        );
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].statusDate`,
-                                          selectedDate
-                                        );
-                                      }}
-                                      options={
-                                        dashboard?.allApplicationStatusList ||
-                                        []
-                                      }
-                                      getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                      getOptionValue={(x) => x.value} // optional: customize value extraction
-                                      placeholder="Select Status"
-                                    />
-
-                                    {errors.details_applicant_vacancy?.[index]
-                                      ?.applicationStatusId &&
-                                      touched.details_applicant_vacancy?.[index]
-                                        ?.applicationStatusId && (
-                                        <div className="text-danger">
-                                          {
-                                            errors.details_applicant_vacancy[
-                                              index
-                                            ].applicationStatusId
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-
-                                  <td>
-                                    <DatePicker
-                                      className="form-control"
-                                      style={{ width: "130px" }}
-                                      placeholderText="Select Date"
-                                      selected={
-                                        values?.details_applicant_vacancy?.[
-                                          index
-                                        ]?.statusDate
-                                          ? new Date(
-                                            values.details_applicant_vacancy[
-                                              index
-                                            ].statusDate
-                                          )
-                                          : null
-                                      }
-                                      onChange={(date) => {
-                                        const selectedDate = formatDates(
-                                          date,
-                                          "yyyy-MM-dd"
-                                        ); // or use date.toISOString().split('T')[0]
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].statusDate`,
-                                          selectedDate
-                                        );
-                                      }}
-                                      dateFormat="dd-MMM-yyyy"
-                                      name={`details_applicant_vacancy[${index}].statusDate`}
-                                      autoComplete="off"
-                                      disabled={isdataForRead || true}
-                                      maxDate={new Date()} // optional: restrict future dates
-                                      showPopperArrow={false}
-                                    />
-
-                                    {errors.details_applicant_vacancy?.[index]
-                                      ?.statusDate &&
-                                      touched.details_applicant_vacancy?.[index]
-                                        ?.statusDate && (
-                                        <div className="text-danger">
-                                          {
-                                            errors.details_applicant_vacancy[
-                                              index
-                                            ].statusDate
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-
-                                  {/* allAppointmentTypeList */}
-                                  <td>
-                                    <SearchSelect
-                                      name={`details_applicant_vacancy[${index}].appointmentTypeId`}
-                                      className="form-control"
-                                      style={{ width: "130px" }}
-                                      isDisabled={
-                                        isdataForRead ||
-                                        selectedJobVacancy(
-                                          values.details_applicant_vacancy[
-                                          index
-                                          ]
-                                        )?.jobPostingStatus == 3
-                                      }
-                                      value={
-                                        dashboard?.allAppointmentTypeList?.find(
-                                          (x) =>
-                                            x.value ===
-                                            values.details_applicant_vacancy[
-                                              index
-                                            ]?.appointmentTypeId
-                                        ) || null
-                                      }
-                                      onChange={(e) => {
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].appointmentTypeId`,
-                                          e?.value
-                                        );
-                                      }}
-                                      options={
-                                        dashboard?.allAppointmentTypeList || []
-                                      }
-                                      getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                      getOptionValue={(x) => x.value} // optional: customize value extraction
-                                      placeholder="Select Status"
-                                    />
-
-                                    {errors.details_applicant_vacancy?.[index]
-                                      ?.appointmentTypeId &&
-                                      touched.details_applicant_vacancy?.[index]
-                                        ?.appointmentTypeId && (
-                                        <div className="text-danger">
-                                          {
-                                            errors.details_applicant_vacancy[
-                                              index
-                                            ].appointmentTypeId
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-
-                                  <td>
-                                    <input
-                                      name={`details_applicant_vacancy[${index}].activeCV`}
-                                      type="checkbox"
-                                      disabled={
-                                        isdataForRead ||
-                                        selectedJobVacancy(
-                                          values.details_applicant_vacancy[
-                                          index
-                                          ]
-                                        )?.jobPostingStatus == 3
-                                      }
-                                      checked={
-                                        values.details_applicant_vacancy?.[
-                                          index
-                                        ]?.activeCV
-                                      }
-                                      onChange={(e) => {
-                                        setFieldValue(
-                                          `details_applicant_vacancy[${index}].activeCV`,
-                                          e.target.checked
-                                        );
-
-                                        if (e.target.checked) {
-                                          setFieldValue(
-                                            `details_applicant_vacancy[${index}].applicationStatusId`,
-                                            values.applicantStatusId
-                                          );
-                                        }
-                                      }}
-                                    />
-                                    {errors.details_applicant_vacancy?.[index]
-                                      ?.activeCV &&
-                                      touched.details_applicant_vacancy?.[index]
-                                        ?.activeCV && (
-                                        <div className="text-danger">
-                                          {
-                                            errors.details_applicant_vacancy[
-                                              index
-                                            ].activeCV
-                                          }
-                                        </div>
-                                      )}
-                                  </td>
-                                </tr>
-                              )
-                            )}
-                        </tbody>
-                      </table>
-
-                      {!isdataForRead && (
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Other Earnings{"  "}
+                        </h6>
                         <button
                           type="button"
+                          className="btn btn-primary"
+                          id="Other"
                           onClick={() =>
                             push({
                               jobVacancyId: "",
@@ -1452,12 +1024,433 @@ export function FormEditForm({
                               appointmentTypeId: "", // ✅ fix this key name
                             })
                           }
-                          className="btn btn-primary btn-sm"
                         >
-                          + Add Detail
+                          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                          Add
                         </button>
-                      )}
-                    </div>
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+
+
+                              <th className="">Job Vacancy</th>
+                              <th className="">Application Date</th>
+                              <th className="">Application Status</th>
+                              <th className=""> Status Date</th>
+
+                              <th className="">Appointment Type</th>
+                              <th className="">Active Vacancy</th>
+                              <th className="text-right">Action</th>
+                            </tr>
+
+                            <tbody>
+                              {values?.details_applicant_vacancy &&
+                                values?.details_applicant_vacancy?.length > 0 &&
+                                values?.details_applicant_vacancy?.map(
+                                  (detail, index) => (
+                                    <tr key={index}>
+
+                                      {/* job vacancy selection */}
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_vacancy[${index}].jobVacancyId`}
+                                          className="form-control"
+                                          style={{ width: "200px", zIndex: 9999 }}
+                                          isDisabled={
+                                            isdataForRead ||
+                                            selectedJobVacancy(
+                                              values.details_applicant_vacancy[
+                                              index
+                                              ]
+                                            )?.jobPostingStatus == 3
+                                          }
+                                          value={
+                                            dashboard?.allJobVacancyList?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ]?.jobVacancyId
+                                            ) || null
+                                          }
+                                          // onChange={async (e) => {
+                                          //   setFieldValue(
+                                          //     `details_applicant_vacancy[${index}].jobVacancyId`,
+                                          //     e?.value
+                                          //   );
+                                          //   const result = await printSkills(formData, values.details_applicant_vacancy);
+
+
+
+                                          //   // ✅ Make sure result exists before setting
+                                          //   if (result?.details_applicant_skills) {
+                                          //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                          //   }
+
+                                          // }}
+
+                                          onChange={async (e) => {
+                                            // Step 1: Update the field
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].jobVacancyId`,
+                                              e?.value
+                                            );
+
+                                            // Step 2: Manually construct updated array
+                                            const updatedVacancyArray = values.details_applicant_vacancy.map((item, i) =>
+                                              i === index ? { ...item, jobVacancyId: e?.value } : item
+                                            );
+
+                                            // Step 3: Call with updated array
+                                            const result = await printSkills(formData, updatedVacancyArray);
+
+                                            if (result?.details_applicant_skills) {
+                                              setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                            }
+                                          }}
+
+                                          options={
+                                            dashboard?.allJobVacancyList
+                                              ?.filter(
+                                                (x) =>
+                                                  x?.jobPostingStatus === 1 && // ✅ Only include items where jobPostingStatus === 1
+                                                  (!values?.subsidiaryId ||
+                                                    x?.subsidiaryId ===
+                                                    values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
+                                              )
+                                              .map((x) => ({
+                                                label: x.label,
+                                                value: x.value,
+                                                disabled: values.details_applicant_vacancy.some(
+                                                  (el) =>
+                                                    el.jobVacancyId === x.value
+                                                ),
+                                              })) || []
+                                          }
+                                          getOptionLabel={(x) => x.label}
+                                          getOptionValue={(x) => x.value}
+                                          isOptionDisabled={(x) => x.disabled}
+                                          placeholder="Select--"
+                                        />
+
+                                        {errors.details_applicant_vacancy?.[index]
+                                          ?.jobVacancyId &&
+                                          touched.details_applicant_vacancy?.[index]
+                                            ?.jobVacancyId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_vacancy[
+                                                  index
+                                                ]?.jobVacancyId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      <td>
+                                        <DatePicker
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values?.details_applicant_vacancy?.[
+                                              index
+                                            ]?.applicationDate
+                                              ? new Date(
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ].applicationDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].applicationDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_vacancy[${index}].applicationDate`}
+                                          disabled={
+                                            isdataForRead ||
+                                            selectedJobVacancy(
+                                              values.details_applicant_vacancy[
+                                              index
+                                              ]
+                                            )?.jobPostingStatus == 3
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_vacancy?.[index]
+                                          ?.applicationDate &&
+                                          touched.details_applicant_vacancy?.[index]
+                                            ?.applicationDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_vacancy[
+                                                  index
+                                                ].applicationDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      {/* applicant status */}
+
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_vacancy[${index}].applicationStatusId`}
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          isDisabled={
+                                            isdataForRead ||
+                                            selectedJobVacancy(
+                                              values.details_applicant_vacancy[
+                                              index
+                                              ]
+                                            )?.jobPostingStatus == 3
+                                          }
+                                          value={
+                                            dashboard?.allApplicationStatusList?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ]?.applicationStatusId
+                                            ) || null
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].applicationStatusId`,
+                                              e?.value
+                                            );
+
+                                            const selectedDate = formatDates(
+                                              new Date(),
+                                              "yyyy-MM-dd"
+                                            );
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].statusDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          options={
+                                            dashboard?.allApplicationStatusList ||
+                                            []
+                                          }
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
+
+                                        {errors.details_applicant_vacancy?.[index]
+                                          ?.applicationStatusId &&
+                                          touched.details_applicant_vacancy?.[index]
+                                            ?.applicationStatusId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_vacancy[
+                                                  index
+                                                ].applicationStatusId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      <td>
+                                        <DatePicker
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values?.details_applicant_vacancy?.[
+                                              index
+                                            ]?.statusDate
+                                              ? new Date(
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ].statusDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].statusDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_vacancy[${index}].statusDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead || true}
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_vacancy?.[index]
+                                          ?.statusDate &&
+                                          touched.details_applicant_vacancy?.[index]
+                                            ?.statusDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_vacancy[
+                                                  index
+                                                ].statusDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      {/* allAppointmentTypeList */}
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_vacancy[${index}].appointmentTypeId`}
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          isDisabled={
+                                            isdataForRead ||
+                                            selectedJobVacancy(
+                                              values.details_applicant_vacancy[
+                                              index
+                                              ]
+                                            )?.jobPostingStatus == 3
+                                          }
+                                          value={
+                                            dashboard?.allAppointmentTypeList?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ]?.appointmentTypeId
+                                            ) || null
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].appointmentTypeId`,
+                                              e?.value
+                                            );
+                                          }}
+                                          options={
+                                            dashboard?.allAppointmentTypeList || []
+                                          }
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
+
+                                        {errors.details_applicant_vacancy?.[index]
+                                          ?.appointmentTypeId &&
+                                          touched.details_applicant_vacancy?.[index]
+                                            ?.appointmentTypeId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_vacancy[
+                                                  index
+                                                ].appointmentTypeId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      <td>
+                                        <input
+                                          name={`details_applicant_vacancy[${index}].activeCV`}
+                                          type="checkbox"
+                                          disabled={
+                                            isdataForRead ||
+                                            selectedJobVacancy(
+                                              values.details_applicant_vacancy[
+                                              index
+                                              ]
+                                            )?.jobPostingStatus == 3
+                                          }
+                                          checked={
+                                            values.details_applicant_vacancy?.[
+                                              index
+                                            ]?.activeCV
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_vacancy[${index}].activeCV`,
+                                              e.target.checked
+                                            );
+
+                                            if (e.target.checked) {
+                                              setFieldValue(
+                                                `details_applicant_vacancy[${index}].applicationStatusId`,
+                                                values.applicantStatusId
+                                              );
+                                            }
+                                          }}
+                                        />
+                                        {errors.details_applicant_vacancy?.[index]
+                                          ?.activeCV &&
+                                          touched.details_applicant_vacancy?.[index]
+                                            ?.activeCV && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_vacancy[
+                                                  index
+                                                ].activeCV
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      <td className="text-right">
+                                        <button
+                                          disabled={
+                                            isdataForRead ||
+                                            selectedJobVacancy(
+                                              values.details_applicant_vacancy[
+                                              index
+                                              ]
+                                            )?.jobPostingStatus == 3
+                                          }
+                                          className="border-none bg-transparent "
+                                          type="button"
+
+
+                                          onClick={async () => {
+                                            deleteApplicantVacancyDetail(detail.Id);
+                                            const updatedVacancies = values.details_applicant_vacancy.filter((_, i) => i !== index); // ❗️ manually filter
+
+                                            remove(index); // update Formik
+
+                                            const result = await printSkills(formData, updatedVacancies, detail.Id); // ❗️ directly pass updated
+
+                                            if (result?.details_applicant_skills) {
+                                              setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                            }
+                                          }}
+
+                                        >
+                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                            </tbody>
+                          </table>
+
+
+                        </div>
+                      </div>
+                    </>
+
                   )}
                 </FieldArray>
                 {typeof errors.details_applicant_vacancy === "string" && (
@@ -1466,110 +1459,106 @@ export function FormEditForm({
                   </div>
                 )}
 
+                <hr></hr>
+
                 {/* Applicant Status Information */}
 
-                <div
-                  style={{
-                    padding: "10px 0 40px 0px",
-                    marginBottom: "15px",
-                    borderRadius: "5px",
-                    marginTop: "15px",
-                    borderBottom: "2px solid rgb(194, 194, 194)",
-                  }}
-                >
-                  <h6>Applicant Status Information</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="applicantStatusId"
-                        label={
-                          <span>
-                            Applicant Status
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        className="form-control"
-                        style={{ width: "130px" }}
-                        isDisabled={isdataForRead}
-                        value={
-                          dashboard?.allApplicationStatusList?.find(
-                            (x) => x.value === values.applicantStatusId
-                          ) || null
-                        }
-                        onChange={(e) => {
-                          const selectedValue = e?.value;
-                          setFieldValue("applicantStatusId", selectedValue);
-                          const selectedDate = formatDates(
-                            new Date(),
-                            "yyyy-MM-dd"
-                          );
-                          // Update applicationStatusId for all rows where activeCV is true
-                          const updatedList = values.details_applicant_vacancy.map(
-                            (item, idx) => {
-                              if (item.activeCV) {
-                                return {
-                                  ...item,
-                                  applicationStatusId: selectedValue,
-                                  statusDate: selectedDate,
-                                };
-                              }
-                              return item;
+
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  Applicant Status Information
+                </h6>
+                <div className="grid lg:grid-cols-6 gap-x-3 gap-y-1">
+                  <div className="">
+                    <SearchSelect
+                      name="applicantStatusId"
+                      label={
+                        <span>
+                          Applicant Status
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      className="form-control"
+                      style={{ width: "130px" }}
+                      isDisabled={isdataForRead}
+                      value={
+                        dashboard?.allApplicationStatusList?.find(
+                          (x) => x.value === values.applicantStatusId
+                        ) || null
+                      }
+                      onChange={(e) => {
+                        const selectedValue = e?.value;
+                        setFieldValue("applicantStatusId", selectedValue);
+                        const selectedDate = formatDates(
+                          new Date(),
+                          "yyyy-MM-dd"
+                        );
+                        // Update applicationStatusId for all rows where activeCV is true
+                        const updatedList = values.details_applicant_vacancy.map(
+                          (item, idx) => {
+                            if (item.activeCV) {
+                              return {
+                                ...item,
+                                applicationStatusId: selectedValue,
+                                statusDate: selectedDate,
+                              };
                             }
-                          );
+                            return item;
+                          }
+                        );
 
-                          setFieldValue(
-                            "details_applicant_vacancy",
-                            updatedList
-                          );
-                        }}
-                        options={dashboard?.allApplicationStatusList || []}
-                        getOptionLabel={(x) => x.label} // optional: customize label rendering
-                        getOptionValue={(x) => x.value} // optional: customize value extraction
-                        placeholder="Select Status"
-                      />
+                        setFieldValue(
+                          "details_applicant_vacancy",
+                          updatedList
+                        );
+                      }}
+                      options={dashboard?.allApplicationStatusList || []}
+                      getOptionLabel={(x) => x.label} // optional: customize label rendering
+                      getOptionValue={(x) => x.value} // optional: customize value extraction
+                      placeholder="Select Status"
+                    />
 
-                      {errors.applicantStatusId &&
-                        touched.applicantStatusId && (
-                          <div className="text-danger">
-                            {errors.applicantStatusId}
-                          </div>
-                        )}
-                    </div>
-
-                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
-                      <Field
-                        name="applicantStatusReason"
-                        component={TextArea}
-                        placeholder="Enter applicant status reason"
-                        label={<span>Applicant Status Reason</span>}
-                        className="form-control h-100"  // Force full height
-                        autoComplete="off"
-                      />
-                    </div>
+                    {errors.applicantStatusId &&
+                      touched.applicantStatusId && (
+                        <div className="text-danger">
+                          {errors.applicantStatusId}
+                        </div>
+                      )}
                   </div>
                 </div>
 
+                <div className="mt-1">
+                  <Field
+                    name="applicantStatusReason"
+                    component={TextArea}
+                    placeholder="Enter applicant status reason"
+                    label={<span>Applicant Status Reason</span>}
+                    className="form-control "  // Force full height
+                    autoComplete="off"
+                  />
+                </div>
+
+
+
+                <hr></hr>
                 {/* Personal Information */}
 
-                <div
-                  style={{
-                    padding: "10px 0 40px 0px",
-                    marginBottom: "15px",
-                    borderRadius: "5px",
-                    marginTop: "15px",
-                    borderBottom: "2px solid rgb(194, 194, 194)",
-                  }}
-                >
-                  <h6>Personal Information</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-4 mt-3">
+
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Personal Information
+                  </h6>
+                  <div className="grid grid-cols-4 gap-x-3 ">
+                    <div className="">
                       <label>
-                        {" "}
+
                         Date Of Birth <span style={{ color: "red" }}>*</span>
                       </label>
-                      <DatePicker
+                      <Field
                         className="form-control"
                         placeholder="Date Of Birth"
+                        component={DatePickerField}
                         selected={
                           values?.dateOfBirth
                             ? new Date(values.dateOfBirth)
@@ -1592,7 +1581,7 @@ export function FormEditForm({
                       )}
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <Field
                         name="nic_no"
                         mask={[
@@ -1625,7 +1614,7 @@ export function FormEditForm({
                       {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <Field
                         name="passportNo"
                         maxLength="15"
@@ -1643,7 +1632,36 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
+                      <SearchSelect
+                        name="nationality"
+                        label={
+                          <span>
+
+                            Nationality<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isdataForRead}
+                        onChange={(e) => {
+                          setFieldValue(
+                            "nationality",
+                            e.value || null
+                          );
+                        }}
+                        value={
+                          dashboard.allNationalities?.find(
+                            (option) =>
+                              option.value === values.nationality
+                          ) || null
+                        }
+                        error={errors.nationality}
+                        touched={touched.nationality}
+                        options={dashboard.allNationalities}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-x-3 mt-1">
+                    <div className="">
                       <SearchSelect
                         label={
                           <span>
@@ -1669,7 +1687,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <Select
                         label={
                           <span>
@@ -1696,7 +1714,7 @@ export function FormEditForm({
                       )}
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="religionId"
                         label={
@@ -1720,55 +1738,14 @@ export function FormEditForm({
                       />
                     </div>
 
-                    {/* <div className="col-12 col-md-4 mt-3">
-                      <Select
-                        label={<span> Nationality</span>}
-                        name="nationality"
-                        value={values.nationality}
-                        onChange={handleChange}
-                        style={{ display: "block" }}
-                      >
-                        <option value="" label="Select Nationality" />
-                        <option value="Pakistani" label="Pakistani" />
-                        <option value="Other" label="Other" />
-                      </Select>
-                      {errors.nationality && touched.nationality && (
-                        <div className="invalid-text">{errors.nationality}</div>
-                      )}
-                    </div> */}
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="nationality"
-                        label={
-                          <span>
-                            {" "}
-                            Nationality<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue(
-                            "nationality",
-                            e.value || null
-                          );
-                        }}
-                        value={
-                          dashboard.allNationalities?.find(
-                            (option) =>
-                              option.value === values.nationality
-                          ) || null
-                        }
-                        error={errors.nationality}
-                        touched={touched.nationality}
-                        options={dashboard.allNationalities}
-                      />
-                    </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+
+
+                    <div className="">
                       <label>
                         <span>
-                          S/O, D/O, W/O <span style={{ color: "red" }}>*</span>
+                          S/O, D/O, W/O<span style={{ color: "red" }}>*</span>
                         </span>
                       </label>
                       <Field
@@ -1782,19 +1759,17 @@ export function FormEditForm({
                 </div>
 
                 {/* Current Address*/}
+                <hr></hr>
 
                 <div
-                  style={{
-                    padding: "10px 0 40px 0px",
-                    marginBottom: "15px",
-                    borderRadius: "5px",
-                    marginTop: "15px",
-                    borderBottom: "2px solid rgb(194, 194, 194)",
-                  }}
+
                 >
-                  <h6>Current Address</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-4 mt-3">
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Current Address
+                  </h6>
+                  <div className="grid grid-cols-5 gap-x-3">
+                    <div className="">
                       <SearchSelect
                         name="countryId"
                         label={<span>Country</span>}
@@ -1815,7 +1790,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="cityId"
                         label={<span>City</span>}
@@ -1834,30 +1809,8 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3 mb-9"style={{ height: '150px' }}>
-                      <Field
-                        name="additional_summary"
-                        component={TextArea}
-                        placeholder="Enter Address"
-                        className="form-control h-100"  // Force full height
-                        label={
-                          <span>
-                            {" "}
-                            Address<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                      />
-                         <div className="ml-1 mt-1">
-    <ErrorMessage
-      name="additional_summary"
-      component="div"
-      className="form-feedBack text-danger"
-    />
-  </div>
-                    </div>
 
-                    <div className="col-12 col-md-4 mt-5">
+                    <div className="">
                       <Field
                         name="phone_official"
                         component={Input}
@@ -1867,7 +1820,7 @@ export function FormEditForm({
                         autoComplete="off"
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-5">
+                    <div className="">
                       <Field
                         name="phone_cell"
                         component={Input}
@@ -1878,7 +1831,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-5">
+                    <div className="">
                       <label>
                         Personal Email<span style={{ color: "red" }}>*</span>
                       </label>
@@ -1892,63 +1845,80 @@ export function FormEditForm({
                       />
                     </div>
                   </div>
+
+                  <div className="mt-1">
+                    <Field
+                      name="additional_summary"
+                      component={TextArea}
+                      placeholder="Enter Address"
+                      className="form-control"  // Force full height
+                      label={
+                        <span>
+
+                          Address<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+
+                  </div>
+
                 </div>
 
                 {/* Applicant General Information*/}
+                <hr></hr>
 
                 <div
-                  style={{
-                    padding: "10px 0 40px 0px",
-                    marginBottom: "15px",
-                    borderRadius: "5px",
-                    marginTop: "15px",
-                    borderBottom: "2px solid rgb(194, 194, 194)",
-                  }}
-                >
-                  <h6>Applicant General Information</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="form-group row col-12 col-md-12  p-0 m-0">
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="applicantCanJoin"
-                          component={Input}
-                          placeholder="Enter applicant can join in days"
-                          label={
-                            <span>
-                              {" "}
-                              Applicant can join (Days)
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          autoComplete="off"
-                          type="number"
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(
-                              e.target.value,
-                              3
-                            ); // Limit to 3 digits
-                          }}
-                        />
-                      </div>
 
-                      <div className="col-12 col-md-4 mt-3">
-                        <Field
-                          name="currentDesignation"
-                          component={Input}
-                          placeholder="Enter current designation"
-                          label={
-                            <span>
-                              {" "}
-                              Current Designation
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          autoComplete="off"
-                        />
-                      </div>
+                >
+
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Applicant General Information
+                  </h6>
+
+
+                  <div className="grid grid-cols-5 gap-x-3 ">
+                    <div className="">
+                      <Field
+                        name="applicantCanJoin"
+                        component={Input}
+                        placeholder="Enter applicant can join in days"
+                        label={
+                          <span>
+                            {" "}
+                            Applicant can join (Days)
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        autoComplete="off"
+                        type="number"
+                        onInput={(e) => {
+                          e.target.value = amountLimitDynamic(
+                            e.target.value,
+                            3
+                          ); // Limit to 3 digits
+                        }}
+                      />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
-                    <AmountInput
+
+                    <div className="">
+                      <Field
+                        name="currentDesignation"
+                        component={Input}
+                        placeholder="Enter current designation"
+                        label={
+                          <span>
+                            {" "}
+                            Current Designation
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    <div className="">
+                      <AmountInput
                         field={{
                           name: `lastDawnSalary`,
                           value: values?.lastDawnSalary,
@@ -1969,26 +1939,10 @@ export function FormEditForm({
                           </span>
                         }
                       />
-                      {/* <Field
-                        name="lastDawnSalary"
-                        component={Input}
-                        placeholder="Enter last drawn salary"
-                        label={
-                          <span>
-                            {" "}
-                            Last Drawn Salary
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimit(e.target.value);
-                        }}
-                      /> */}
+
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="lastDawnSalaryCurrencyId"
                         label={
@@ -2016,7 +1970,8 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
+
+                    <div className="">
                       <SearchSelect
                         name="lastDawnSalaryPayTypeId"
                         isDisabled={isdataForRead}
@@ -2043,9 +1998,14 @@ export function FormEditForm({
                         touched={touched.lastDawnSalaryPayTypeId}
                       />
                     </div>
+                  </div>
 
-                    <div className="col-12 col-md-4 mt-3">
-                    <AmountInput
+                  <div className="grid grid-cols-5 gap-x-3 gap-y-1 mt-1">
+
+
+
+                    <div className="">
+                      <AmountInput
                         field={{
                           name: `expectedSalaryRangeFrom`,
                           value: values?.expectedSalaryRangeFrom,
@@ -2059,34 +2019,17 @@ export function FormEditForm({
                         disabled={isdataForRead}
                         placeholder="Enter expected salary range(from)"
                         label={
-                          <span>
-                            {" "}
+                          <span className="ml-1">
                             Expected Salary Range(From)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                       />
-                      {/* <Field
-                        name="expectedSalaryRangeFrom"
-                        component={Input}
-                        placeholder="Enter expected salary range(from)"
-                        label={
-                          <span>
-                            {" "}
-                            Expected Salary Range(From)
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        autoComplete="off"
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimit(e.target.value);
-                        }}
-                      /> */}
+
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
-                    <AmountInput
+                    <div className="">
+                      <AmountInput
                         field={{
                           name: `expectedSalaryRangeTo`,
                           value: values?.expectedSalaryRangeTo,
@@ -2100,8 +2043,8 @@ export function FormEditForm({
                         disabled={isdataForRead}
                         placeholder="Enter expected salary range(to)"
                         label={
-                          <span>
-                            {" "}
+                          <span className="ml-1">
+
                             Expected Salary Range(To)
                             <span style={{ color: "red" }}>*</span>
                           </span>
@@ -2109,7 +2052,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-2 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="expectedSalaryCurrencyId"
                         label={
@@ -2137,7 +2080,7 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-2 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="expectedSalaryPayTypeId"
                         label={
@@ -2166,20 +2109,24 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="col-12 col-md-12 mt-3" style={{ height: '150px' }}>
-                      <Field
-                        name="otherInformation"
-                        component={TextArea}
-                        placeholder="Enter other information"
-                        label={<span> Other Information</span>}
-                        className="form-control h-100"  // Force full height
-                        autoComplete="off"
-                      />
-                    </div>
+
+
+                  </div>
+
+                  <div className="mt-1" >
+                    <Field
+                      name="otherInformation"
+                      component={TextArea}
+                      placeholder="Enter other information"
+                      label={<span> Other Information</span>}
+                      className="form-control "  // Force full height
+                      autoComplete="off"
+                    />
                   </div>
                 </div>
 
-                <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
+
+                {/* <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
                   <label
                     style={{
                       "margin-right": "0.5rem",
@@ -2218,51 +2165,105 @@ export function FormEditForm({
                       </>
                     )}
                   </div>
+                </div> */}
+
+
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                  <div className="col-span-1">
+                    <label
+                      htmlFor="file"
+                    // className="block mb-2 text-xs font-normal text-gray-900"
+                    >
+                      Attachment
+                    </label>
+
+                    {/* Hidden input */}
+
+
+                    {/* Styled label as upload box */}
+                    <label
+                      htmlFor="file"
+                      className="form-control block w-full cursor-pointer"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
+                    >
+                      {formData.file ? formData.file : "Upload"}
+                      <input
+                        id="file"
+                        name="file"
+                        type="file"
+                        accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                        ref={inputFile}
+                        className="hidden"
+                        onChange={(event) => {
+                          const file = event.currentTarget.files[0];
+                          setFieldValue("file", file);
+                        }}
+                      />
+                    </label>
+
+                    {/* Show existing file if any */}
+                    {formData.file && formData.file === formData.file && (
+                      <div className="mt-2">
+                        <strong>Existing File: </strong>
+                        <a
+                          href={getUploadUrl(formData.file)}
+                          target="_blank"
+                          className="text-blue-600 underline"
+                        >
+                          {getFileName(formData.file)}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+
                 </div>
 
-                <div
-                  style={{
-                    padding: "10px 0 40px 0px",
-                    marginBottom: "15px",
-                    borderRadius: "5px",
-                    marginTop: "15px",
-                    borderBottom: "2px solid rgb(194, 194, 194)",
-                  }}
-                >
-                  <h6>User Credentials</h6>
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-6 mt-3">
-                      <label>
-                        Email <span style={{ color: "red" }}>*</span>
-                      </label>
-                      <Field
-                        disabled={isdataForRead}
-                        name="email"
-                        component={Input}
-                        placeholder="example@gmail.com"
-                        maxLength="30"
-                        autoComplete="off" // Add this to prevent autofill
-                      />
-                    </div>
 
-                    <div className="col-12 col-md-6 mt-3">
-                      <label>
-                        New Password{" "}
-                        {!formData.Id && (
-                          <span style={{ color: "red" }}>*</span>
-                        )}
-                      </label>
-                      <Field
-                        name="password"
-                        component={Input} // Custom component
-                        // disabled={id}
-                        placeholder="New password"
-                        type="password"
-                        autoComplete="off"
-                      />
-                    </div>
+
+                <hr></hr>
+
+
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  User Credentials
+                </h6>
+                <div className="grid grid-cols-4 gap-x-3 ">
+                  <div className="">
+                    <label>
+                      Email<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Field
+                      disabled={isdataForRead}
+                      name="email"
+                      component={Input}
+                      placeholder="example@gmail.com"
+                      maxLength="30"
+                      autoComplete="off" // Add this to prevent autofill
+                    />
+                  </div>
+
+                  <div className="">
+                    <label>
+                      New Password
+                      {!formData.Id && (
+                        <span style={{ color: "red" }}>*</span>
+                      )}
+                    </label>
+                    <Field
+                      name="password"
+                      component={Input} // Custom component
+                      // disabled={id}
+                      placeholder="New password"
+                      type="password"
+                      autoComplete="off"
+                    />
                   </div>
                 </div>
+
               </fieldset>
 
               {/* Details Work Experience */}
