@@ -18,6 +18,7 @@ import {
   getUploadUrl,
 } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
 export function MasterEditForm({
   submitForm,
@@ -133,19 +134,19 @@ export function MasterEditForm({
         }) => (
           <div className="mt-2">
             {/* Modal Body Start */}
-              {actionsLoading && (
-                <div className="overlay-layer bg-transparent">
-                  <div className="spinner spinner-lg spinner-success" />
-                </div>
-              )}
-              {/* Form Start */}
-              <Form className="form form-label-right">
-                <fieldset>
-                  {/* First Row Start */}
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-x-3">
-                    {/* Active payroll month */}
+            {actionsLoading && (
+              <div className="overlay-layer bg-transparent">
+                <div className="spinner spinner-lg spinner-success" />
+              </div>
+            )}
+            {/* Form Start */}
+            <Form className="form form-label-right">
+              <fieldset>
+                {/* First Row Start */}
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-x-3">
+                  {/* Active payroll month */}
 
-                    {/* <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end">
+                  {/* <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end">
 
   {activeFiscalYear ? (() => {
 
@@ -163,209 +164,186 @@ export function MasterEditForm({
     );
   })() : null}
 </div> */}
-                    {/* Leave Type Field Start */}
-                    <div>
-                      <Field
-                        name="leaveType"
-                        component={Select}
-                        disabled={isEdit || !employeeId}
-                        className={
-                          errors?.leaveType && touched?.leaveType
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        }
-                        placeholder=""
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.target.value == "Select"
-                              ? ""
-                              : Number(e.target.value);
-                          setFieldValue("leaveType", value);
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Leave Type<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.leaveType}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: allLeaveTypes })}
+                  {/* Leave Type Field Start */}
+                  <div>
+                    <Field
+                      name="leaveType"
+                      component={Select}
+                      disabled={isEdit || !employeeId}
+                      className={
+                        errors?.leaveType && touched?.leaveType
+                          ? "form-control is-invalid"
+                          : "form-control"
+                      }
+                      placeholder=""
+                      onBlur={handleBlur}
+                      onChange={(e) => {
+                        const value =
+                          e.target.value == "Select"
+                            ? ""
+                            : Number(e.target.value);
+                        setFieldValue("leaveType", value);
+                      }}
+                      label={
+                        <span>
+                          {" "}
+                          Leave Type<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      value={values.leaveType}
+                      autoComplete="off"
+                      children={CustomDropdown({ data: allLeaveTypes })}
+                    />
+                    {errors.leaveType && touched.leaveType && (
+                      <CustomErrorLabel
+                        touched={true}
+                        error={errors.leaveType}
                       />
-                      {errors.leaveType && touched.leaveType && (
-                        <CustomErrorLabel
-                          touched={true}
-                          error={errors.leaveType}
-                        />
-                      )}
-                    </div>
-                    {/* Leave Type Field End */}
-                    {/* Date from Field Start */}
-                    <div>
-                      <Field
-                        name="from"
-                        component={DatePickerField}
-                        disabled={isEdit}
-                        dateFormat="dd-MMM-yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date From<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue("from", date);
-                          setFieldValue(
-                            "days",
-                            getDateDiffInDays(date, values.to)
-                          ); //Set difference in to from days in days key
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Date from Field End */}
-
-                    {/* Date to Field Start */}
-                    <div>
-                      <Field
-                        name="to"
-                        component={DatePickerField}
-                        disabled={isEdit}
-                        dateFormat="dd-MMM-yyyy"
-                        label={
-                          <span>
-                            {" "}
-                            Date To<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        onChange={(date) => {
-                          setFieldValue("to", date);
-                          setFieldValue(
-                            "days",
-                            getDateDiffInDays(values.from, date)
-                          ); //Set difference in to from days in days key
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Date to Field End */}
-
-                    {/* Days Field Start */}
-                    <div>
-                      <Field
-                        name="days"
-                        component={Input}
-                        className={
-                          errors?.days &&
-                          touched?.days &&
-                          getDateDiffInDays(values.from, values.to) === 1
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        } //throw validation error if the difference in days is 1 day
-                        disabled={
-                          isEdit ||
-                          getDateDiffInDays(values.from, values.to) !== 1
-                        } //disable field if the difference in dates is more than 1 days
-                        type="number"
-                        min="0"
-                        onChange={handleChange}
-                        label={<span> Days</span>}
-                      />
-                    </div>
-                    {/* Days Field End */}
-
-                    {/* First Row End */}
-
-                    {/* Second Row Start */}
-                    <div>
-                      <Field
-                        name="days"
-                        component={Input}
-                        className={"form-control"} //throw validation error if the difference in days is 1 day
-                        disabled={true}
-                        type="number"
-                        min="0"
-                        value={
-                          values?.leaveType
-                            ? leaveBalances?.find(
-                                (el) => el?.leaveType === values.leaveType
-                              )?.remainingCount || ""
-                            : ""
-                        }
-                        onChange={handleChange}
-                        label={<span>Balance</span>}
-                      />
-                    </div>
-                    {/* File Field End */}
+                    )}
                   </div>
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-                      {/* Remarks Field Start */}
-                      <div className="col-span-4">
-                        <Field
-                          name="remarks"
-                          component={TextArea}
-                          placeholder=""
-                          onChange={handleChange}
-                          disabled={isEdit}
-                          onBlur={handleBlur}
-                          label={
-                            <span>
-                              {" "}
-                              Remarks<span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          value={values.remarks}
-                          autoComplete="off"
-                        />
-                      </div>
-                      {/* Remarks Field End */}
-                      {/* Second Row End */}
-                      {/* Third Row Start */}
+                  {/* Leave Type Field End */}
+                  {/* Date from Field Start */}
+                  <div>
+                    <Field
+                      name="from"
+                      component={DatePickerField}
+                      disabled={isEdit}
+                      dateFormat="dd-MMM-yyyy"
+                      label={
+                        <span>
+                          {" "}
+                          Date From<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      onChange={(date) => {
+                        setFieldValue("from", date);
+                        setFieldValue(
+                          "days",
+                          getDateDiffInDays(date, values.to)
+                        ); //Set difference in to from days in days key
+                      }}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Date from Field End */}
 
-                      {/* File Field Start */}
-                      <div className="col-span-1">
-                        <label>Attachment:</label>
-                        <input
-                          id="file_input"
-                          name="file"
-                          className="hidden"
-                          type="file"
-                          disabled={isEdit}
-                          accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                          ref={inputFile}
-                          onChange={(event) => {
-                            // Update Formik's value
-                            const file = event.currentTarget.files[0];
-                            setFieldValue("file", file);
-                          }}
-                        />
-                        <label
-                          htmlFor="file_input"
-                          className="form-control block w-full cursor-pointer"
-                        >
-                          {values.file ? values.file.name : "Upload"}
-                        </label>
+                  {/* Date to Field Start */}
+                  <div>
+                    <Field
+                      name="to"
+                      component={DatePickerField}
+                      disabled={isEdit}
+                      dateFormat="dd-MMM-yyyy"
+                      label={
+                        <span>
+                          {" "}
+                          Date To<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      onChange={(date) => {
+                        setFieldValue("to", date);
+                        setFieldValue(
+                          "days",
+                          getDateDiffInDays(values.from, date)
+                        ); //Set difference in to from days in days key
+                      }}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Date to Field End */}
 
-                        {/* Show existing file if any */}
-                        {values.fileName && values.file === values.fileName && (
-                          <div className="mt-2">
-                            <strong>Existing File: </strong>
-                            <a
-                              href={getUploadUrl(values.fileName)}
-                              target="_blank"
-                              className="text-blue-600 underline"
-                            >
-                              {getFileName(values.fileName)}
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  {/* Third Row End */}
-                </fieldset>
-              </Form>
-              {/* Form End */}
+                  {/* Days Field Start */}
+                  <div>
+                    <Field
+                      name="days"
+                      component={Input}
+                      className={
+                        errors?.days &&
+                        touched?.days &&
+                        getDateDiffInDays(values.from, values.to) === 1
+                          ? "form-control is-invalid"
+                          : "form-control"
+                      } //throw validation error if the difference in days is 1 day
+                      disabled={
+                        isEdit ||
+                        getDateDiffInDays(values.from, values.to) !== 1
+                      } //disable field if the difference in dates is more than 1 days
+                      type="number"
+                      min="0"
+                      onChange={handleChange}
+                      label={<span> Days</span>}
+                    />
+                  </div>
+                  {/* Days Field End */}
+
+                  {/* First Row End */}
+
+                  {/* Second Row Start */}
+                  <div>
+                    <Field
+                      name="days"
+                      component={Input}
+                      className={"form-control"} //throw validation error if the difference in days is 1 day
+                      disabled={true}
+                      type="number"
+                      min="0"
+                      value={
+                        values?.leaveType
+                          ? leaveBalances?.find(
+                              (el) => el?.leaveType === values.leaveType
+                            )?.remainingCount || ""
+                          : ""
+                      }
+                      onChange={handleChange}
+                      label={<span>Balance</span>}
+                    />
+                  </div>
+                  {/* File Field End */}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+                  {/* Remarks Field Start */}
+                  <div className="col-span-4">
+                    <Field
+                      name="remarks"
+                      component={TextArea}
+                      placeholder=""
+                      onChange={handleChange}
+                      disabled={isEdit}
+                      onBlur={handleBlur}
+                      label={
+                        <span>
+                          {" "}
+                          Remarks<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      value={values.remarks}
+                      autoComplete="off"
+                    />
+                  </div>
+                  {/* Remarks Field End */}
+                  {/* Second Row End */}
+                  {/* Third Row Start */}
+
+                  {/* File Field Start */}
+                  <div className="col-span-1">
+                    <FileUpload
+                      label={"Attachment"}
+                      name="file"
+                      onChange={(event) => {
+                        // Update Formik's value
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
+                      fileName={values?.file?.name || values.fileName}
+                      inputFile={inputFile}
+                      accept={".jpeg,.jpg,.png,.pdf,.doc,.docx"}
+                    />
+                  </div>
+                </div>
+                {/* Third Row End */}
+              </fieldset>
+            </Form>
+            {/* Form End */}
             {/* Modal Body End */}
 
             <Modal.Footer>

@@ -164,7 +164,7 @@ export function FormEditForm({
                   <div className="col-span-1">
                     <label>
                       <span>
-                        Holiday Name<span style={{ color: "red" }}>*</span>
+                        Title<span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
                     <Field
@@ -216,7 +216,7 @@ export function FormEditForm({
                   <div className="col-span-1">
                     <label>
                       <span>
-                        Number of days<span style={{ color: "red" }}>*</span>
+                        Number of Days<span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
                     <Field
@@ -234,7 +234,7 @@ export function FormEditForm({
                       name="holiday_typeId"
                       label={
                         <span>
-                          Holiday Type<span style={{ color: "red" }}>*</span>
+                          Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}

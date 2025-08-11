@@ -206,7 +206,7 @@ export function BankEditForm({
                         style={{ display: "block" }}
                         autoComplete="off"
                       >
-                        <option value="-1" label="Select..." />
+                        <option value="-1" label="Select" />
                         <option value="With Family" label="With Family" />
                         <option value="Without Family" label="Without Family" />
 

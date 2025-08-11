@@ -433,7 +433,7 @@ export function MasterEditForm({
                     <div className="grid grid-cols-4 gap-x-3 gap-y-1">
                       <div>
                         <label>
-                          Start Time <span style={{ color: "red" }}>*</span>
+                          Start Time<span style={{ color: "red" }}>*</span>
                         </label>
                         <Field
                           name="startTime"
@@ -446,7 +446,7 @@ export function MasterEditForm({
 
                       <div>
                         <label>
-                          End Time <span style={{ color: "red" }}>*</span>
+                          End Time<span style={{ color: "red" }}>*</span>
                         </label>
                         <Field
                           name="endTime"
@@ -462,7 +462,7 @@ export function MasterEditForm({
                         <Field
                           name="earlyIn"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           error={errors.earlyIn}
                           autoComplete="off"
                           // maxLength={4}
@@ -474,7 +474,7 @@ export function MasterEditForm({
                         <Field
                           name="earlyOut"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           error={errors.earlyOut}
                           autoComplete="off"
                           // maxLength={4}
@@ -486,7 +486,7 @@ export function MasterEditForm({
                         <Field
                           name="halfDayStart"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           error={errors.halfDayStart}
                           autoComplete="off"
@@ -498,7 +498,7 @@ export function MasterEditForm({
                         <Field
                           name="halfDayEnd"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           error={errors.halfDayEnd}
                           autoComplete="off"
@@ -510,7 +510,7 @@ export function MasterEditForm({
                         <Field
                           name="breakTimeStart"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           error={errors.breakTimeStart}
                           autoComplete="off"
@@ -522,7 +522,7 @@ export function MasterEditForm({
                         <Field
                           name="breakTimeEnd"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           error={errors.breakTimeEnd}
                           autoComplete="off"
@@ -539,7 +539,7 @@ export function MasterEditForm({
                         <Field
                           name="markAbsent"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           error={errors.markAbsent}
                           autoComplete="off"
@@ -554,7 +554,7 @@ export function MasterEditForm({
                         <Field
                           name="markHalfDay"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           error={errors.markHalfDay}
                           autoComplete="off"
@@ -607,7 +607,7 @@ export function MasterEditForm({
                     </div>
                   </div>
                   <hr />
-                  <h6 className="font-bold mb-0 text-primary">OverTime</h6>
+                  <h6 className="font-bold mb-0 text-primary mb-2">OverTime</h6>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1 space-y-1">
                       <div className="flex items-center gap-1">
@@ -641,7 +641,7 @@ export function MasterEditForm({
                         <Field
                           name="overTimeStart"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           onChange={(e) => {
                             setFieldValue("overTimeStart", e.target.value);
                             setFieldValue("interShiftGap", ""); // Clear the time field when Overtime is disabled
@@ -694,7 +694,7 @@ export function MasterEditForm({
                         <Field
                           name="interShiftGap"
                           component={TimeInput}
-                          placeholder="Enter Min:hours"
+                          placeholder="Enter TIme 00:00"
                           // maxLength={4}
                           disabled
                           onBlur={handleBlur}

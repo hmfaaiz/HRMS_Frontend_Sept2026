@@ -6,7 +6,6 @@ import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
 export function FormDeleteDialog({ id, status, show, onHide }) {
-
   const [loading, setLoading] = useState(false);
   // Customers UI Context
   const usersUIContext = useFormUIContext();
@@ -49,7 +48,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
       onHide();
       // refresh list after deletion
       dispatch(actions.fetchUser(usersUIProps.queryParams));
-   
+
       disableLoading();
     });
   };
@@ -69,8 +68,8 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure want to delete this record?</span>}
-        {isLoading && <span>user is deactivating...</span>}
+        {!isLoading && <label>Are you sure want to delete this record?</label>}
+        {isLoading && <label>user is deactivating...</label>}
       </Modal.Body>
       <Modal.Footer>
         <div>
@@ -82,12 +81,8 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
             Cancel
           </button>
           <> </>
-          <button
-            type="button"
-            onClick={deleteUser}
-            className="btn btn-primary btn-elevate"
-          >
-            Delete Record
+          <button type="button" onClick={deleteUser} className="btn btn-danger">
+            Delete
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}

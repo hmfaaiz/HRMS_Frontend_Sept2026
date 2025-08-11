@@ -299,8 +299,8 @@ export function FormEditForm({
                                     isUserForRead || values.policies[index]?.Id
                                   }
                                 >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
+                                  <option value="">Select</option>{" "}
+                                  {/* Default "Select" option */}
                                   {dashboard.allReimbursementTypeList?.map(
                                     (x) => {
                                       return (
@@ -599,8 +599,8 @@ export function FormEditForm({
                                   className="form-control"
                                   disabled={isUserForRead}
                                 >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
+                                  <option value="">Select</option>{" "}
+                                  {/* Default "Select" option */}
                                   {dashboard.allReimbursementTypeList?.map(
                                     (x) => {
                                       return (
@@ -643,8 +643,8 @@ export function FormEditForm({
                                   className="form-control"
                                   disabled={isUserForRead}
                                 >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
+                                  <option value="">Select</option>{" "}
+                                  {/* Default "Select" option */}
                                   {dashboard.allAccountList?.map((x) => {
                                     return (
                                       <option
@@ -680,8 +680,8 @@ export function FormEditForm({
                                   className="form-control"
                                   disabled={isUserForRead}
                                 >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
+                                  <option value="">Select</option>{" "}
+                                  {/* Default "Select" option */}
                                   {dashboard.allAccountList?.map((x) => {
                                     return (
                                       <option

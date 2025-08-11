@@ -91,60 +91,48 @@ export function FormCard() {
 
     //     {/* Card Ends */}
     //   </Card>
-    <TCard name={CurrentModuleName()}>
-      <br />
+    <>
+      <TCard isSecondChild={false} name={"Upload Date"}></TCard>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-3 gap-x-3 gap-y-2 mt-2">
+        {/* EmployeeProfileSection Starts */}
+        <EmployeeProfileSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+        {/* EmployeeProfileSection Ends */}
 
-      {/* EmployeeProfileSection Starts */}
-      <EmployeeProfileSection
-        downloadExcel={downloadExcel}
-        dispatch={dispatch}
-      />
-      {/* EmployeeProfileSection Ends */}
+        {/* EmployeeSalarySection Starts */}
+        <EmployeeSalarySection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+        {/* EmployeeSalarySection Ends */}
 
-      <br />
-      <hr />
+        {/* EmployeeLeaveSection Starts */}
+        <EmployeeLeaveSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+        {/* EmployeeLeaveSection Ends */}
 
-      {/* EmployeeSalarySection Starts */}
-      <EmployeeSalarySection
-        downloadExcel={downloadExcel}
-        dispatch={dispatch}
-      />
-      {/* EmployeeSalarySection Ends */}
+        {/* EmployeeAttendanceSection Starts */}
+        <EmployeeAttendanceSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+        {/* EmployeeAttendanceSection Ends */}
 
-      <br />
-      <hr />
+        {/* LoanOpeningSection Starts */}
+        <LoanOpeningSection downloadExcel={downloadExcel} dispatch={dispatch} />
+        {/* LoanOpeningSection Ends */}
 
-      {/* EmployeeLeaveSection Starts */}
-      <EmployeeLeaveSection downloadExcel={downloadExcel} dispatch={dispatch} />
-      {/* EmployeeLeaveSection Ends */}
-
-      <br />
-      <hr />
-
-      {/* EmployeeAttendanceSection Starts */}
-      <EmployeeAttendanceSection
-        downloadExcel={downloadExcel}
-        dispatch={dispatch}
-      />
-      {/* EmployeeAttendanceSection Ends */}
-
-      <br />
-      <hr />
-
-      {/* LoanOpeningSection Starts */}
-      <LoanOpeningSection downloadExcel={downloadExcel} dispatch={dispatch} />
-      {/* LoanOpeningSection Ends */}
-
-      <br />
-      <hr />
-
-      {/* IncomeTaxOpeningSection Starts */}
-      <IncomeTaxOpeningSection
-        downloadExcel={downloadExcel}
-        dispatch={dispatch}
-      />
-      {/* IncomeTaxOpeningSection Ends */}
-    </TCard>
+        {/* IncomeTaxOpeningSection Starts */}
+        <IncomeTaxOpeningSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+      </div>
+    </>
     // </>
   );
 }

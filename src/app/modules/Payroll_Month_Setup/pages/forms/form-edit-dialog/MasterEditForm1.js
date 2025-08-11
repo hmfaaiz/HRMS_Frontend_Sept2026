@@ -308,7 +308,7 @@ export function MasterEditForm({
 
 
   const basisOptions = [
-    { value: "-1", label: "Select..." },
+    { value: "-1", label: "Select" },
     { value: "1", label: "Jan" },
     { value: "2", label: "Feb" },
     { value: "3", label: "Mar" },
@@ -431,7 +431,7 @@ export function MasterEditForm({
                           setFieldValue("shortFormat", short);
 
                         }}>
-                        <option value="-1" label="Select..." />
+                        <option value="-1" label="Select" />
                         <option value="1" label="Jan" />
                         <option value="2" label="Feb" />
                         <option value="3" label="Mar" />

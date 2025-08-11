@@ -422,7 +422,7 @@ export function DesignationEditForm({
                         style={{ display: "block" }}
                         autoComplete="off"
                       >
-                        <option value="" label="Select..." />
+                        <option value="" label="Select" />
                         <option
                           selected
                           value="Gross to Basic"

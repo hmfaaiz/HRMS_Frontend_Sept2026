@@ -546,7 +546,7 @@ export function BankEditForm({
                         autoComplete="off"
                         disabled={salaryMethodDisabled}
                       >
-                        <option value="-1" label="Select..." />
+                        <option value="-1" label="Select" />
                         <option
                           selected
                           value="Gross to Basic"

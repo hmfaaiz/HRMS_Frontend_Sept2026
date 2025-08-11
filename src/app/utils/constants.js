@@ -346,7 +346,7 @@ export const WEEK_DAYS = [
 
 export const ATTENDANCE_TYPE = [
   {
-    label: "Select...",
+    label: "Select",
     value: -1
   },
   {

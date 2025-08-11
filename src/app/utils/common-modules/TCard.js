@@ -1,6 +1,6 @@
 import React from "react";
 
-const TCard = ({ name = "", children }) => {
+const TCard = ({ name = "", children, isSecondChild = true }) => {
   return (
     <div className="space-y-2">
       <div className="px-3 py-2 rounded-lg bg-white">
@@ -8,7 +8,9 @@ const TCard = ({ name = "", children }) => {
           {name}
         </h5>
       </div>
-      <div className="px-3 py-2 rounded-lg bg-white">{children}</div>
+      {isSecondChild && (
+        <div className="px-3 py-2 rounded-lg bg-white">{children}</div>
+      )}
     </div>
   );
 };

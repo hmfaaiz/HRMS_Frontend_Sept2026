@@ -190,80 +190,74 @@ export function RolesAccess({
           </CardBody>
         </Card>
       ))} */}
-      <TCard name={"Role Access page"}>
+      <TCard isSecondChild={false} name={"Role Access page"}></TCard>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-2 mt-2">
         {newdata?.map(
           (dd, index) =>
             dd[0] !== "Settings" && ( // Check if dd[0] is not "Settings"
-              <Card key={index}>
-                <CardBody>
-                  <Row>
-                    <Col lg={2}>
-                      {/* <Form.Text className="col-form-label fw-bold fs-6">
+              <div
+                className="px-3 py-2 rounded-lg bg-white min-h-48 max-h-48 overflow-y-auto"
+                key={index}
+              >
+                <div className="space-y-3">
+                  <div>
+                    {/* <Form.Text className="col-form-label fw-bold fs-6">
               {dd[0]
                 .split('_')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ')}
             </Form.Text> */}
 
-                      <Form.Text className="col-form-label fw-bold fs-6">
-                        {customMappings[
-                          dd[0]
-                            .split("_")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
-                            )
-                            .join(" ")
-                        ] ||
-                          dd[0]
-                            .split("_")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
-                            )
-                            .join(" ")}
-                      </Form.Text>
-                    </Col>
-                    <Col lg={10}>
-                      <Row>
-                        {[
-                          ...dd[1], // Create a shallow copy of dd[1]
-                        ]
-                          .sort((a, b) => {
-                            // If a or b has null sortOrder, place it last
-                            if (a.sortOrder == null) return 1;
-                            if (b.sortOrder == null) return -1;
-                            return a.sortOrder - b.sortOrder; // Standard sorting logic for non-null values
-                          })
-                          .map((right, rightindex) => (
-                            <Col lg={3} key={rightindex}>
-                              <div className="row">
-                                <input
-                                  type="checkbox"
-                                  className="form-check-input"
-                                  id={right.resourceId}
-                                  name={right.roleId}
-                                  label={right.name}
-                                  defaultChecked={right.isAccess}
-                                  onChange={onCheckboxChange}
-                                />
-                                <Form.Text
-                                  className={FormClasses.LABEL_NON_REQUIRED}
-                                >
-                                  {right.name}
-                                </Form.Text>
-                                {/* <Form.Text className={FormClasses.LABEL_NON_REQUIRED}>{right.rightName}</Form.Text> */}
-                              </div>
-                            </Col>
-                          ))}
-                      </Row>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      {customMappings[
+                        dd[0]
+                          .split("_")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          )
+                          .join(" ")
+                      ] ||
+                        dd[0]
+                          .split("_")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          )
+                          .join(" ")}
+                    </h6>
+                  </div>
+                  <div>
+                    {[
+                      ...dd[1], // Create a shallow copy of dd[1]
+                    ]
+                      .sort((a, b) => {
+                        // If a or b has null sortOrder, place it last
+                        if (a.sortOrder == null) return 1;
+                        if (b.sortOrder == null) return -1;
+                        return a.sortOrder - b.sortOrder; // Standard sorting logic for non-null values
+                      })
+                      .map((right, rightindex) => (
+                        <div className="text-black flex items-center gap-1">
+                          <input
+                            type="checkbox"
+                            // className="form-check-input"
+                            id={right.resourceId}
+                            name={right.roleId}
+                            label={right.name}
+                            defaultChecked={right.isAccess}
+                            onChange={onCheckboxChange}
+                          />
+                          <label>{right.name}</label>
+                          {/* <Form.Text className={FormClasses.LABEL_NON_REQUIRED}>{right.rightName}</Form.Text> */}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
             )
         )}
-      </TCard>
+      </div>
       <ToastContainer
         position="top-right"
         autoClose={5000}

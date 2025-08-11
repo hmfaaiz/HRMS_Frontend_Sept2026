@@ -139,7 +139,7 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg overflow-y-auto">
+    <div className="w-full font-size-xs  bg-white rounded-lg overflow-y-auto">
       <h6 className="font-bold mb-0 text-primary my-2">Employee Rosters</h6>
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {

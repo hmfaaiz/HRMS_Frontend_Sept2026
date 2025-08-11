@@ -23,7 +23,7 @@ export function RolesCard() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="btn btn-primary mr-2"
+            className="btn btn-primary"
             onClick={rolesUIProps.newRoleButtonClick}
           >
             <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}

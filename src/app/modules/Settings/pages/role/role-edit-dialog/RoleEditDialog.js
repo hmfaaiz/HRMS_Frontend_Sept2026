@@ -79,7 +79,7 @@ export function RoleEditDialog({ id, show, onHide }) {
   // console.log("RoleState", actionsLoading)
   return (
     <Modal
-      size="sm"
+      size="md"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
