@@ -134,11 +134,11 @@ export function ReligionCard() {
     <TCard
       name={
         CurrentModuleName() +
-        (usersUIProps.queryParams.isActive ? "  ( Active )" : "  ( Inactive )")
+        (usersUIProps.queryParams.isActive ? "  (Active)" : "  (Inactive)")
       }
     >
-      <div className="flex justify-between items-center">
-        <div>
+      <div className="flex flex-col-reverse gap-2 md:flex-row justify-start md:justify-between items-start md:items-center">
+        <div className="flex gap-1">
           <button
             type="button"
             className={`btn mr-2 rounded-xl ${
@@ -174,7 +174,7 @@ export function ReligionCard() {
                   onClick={DesignationUIProps.newDesignationButtonClick}
                 >
                   <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                  Add Employee Profile
+                  Add
                 </button>
               </>
             )}
