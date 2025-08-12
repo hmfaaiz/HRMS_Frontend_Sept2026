@@ -25,6 +25,7 @@ import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { CirclePlus, Trash2 } from "lucide-react";
 
 export function FormTable(user) {
   //Users UI Context
@@ -1590,181 +1591,203 @@ export function FormTable(user) {
 
               <hr></hr>
 
-              <h6 className="font-bold mb-0 text-primary my-2">
-                Journal Accounts & Bank Information
-              </h6>
+              <div>
+                
+                <div className="flex justify-between items-center">
+                  <h6 className="font-bold mb-0 text-primary">
+                    Journal Accounts & Bank Information{"  "}
+                  </h6>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    id="Other"
+                    onClick={addRowBankInfo}
+                  >
+                    <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                    Add
+                  </button>
+                </div>
+                <div className="w-full overflow-x-auto">
+                  <div className="react-bootstrap-table table-responsive">
+                    <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                      <tr className="custom-table-header">
+                        {/* <td>Employee</td> */}
 
-              <div className="from-group row">
-                <table class="table table table-head-custom table-vertical-center overflow-hidden table-hover">
-                  {/* <h7 ><b>Journal Accounts & Bank Info</b>
-                    </h7> */}
-                  <tr style={{ backgroundColor: '#4d5f7a', color: '#fff' }}>
-                    {/* <td>Employee</td> */}
-                    <td>Action</td>
-                    <td className="col-2">Journal Bank Acc#</td>
-                    <td className="col-2">Bank Code Employer</td>
-                    <td className="col-2">Bank Account No</td>
-                    <td className="col-1">Default</td>
-                    <td className="col-2">Bank Name</td>
-                    <td className="col-2">Branch Name</td>
-                  </tr>
-                  {defBankInfoList?.map((obj, rightindex) => (
+                        <td className="col-32">Journal Bank Acc#</td>
+                        <td className="col-32">Bank Code Employer</td>
+                        <td className="col-32">Bank Account No</td>
+                        <td className="col-31">Default</td>
+                        <td className="col-32">Bank Name</td>
+                        <td className="col-32">Branch Name</td>
+                        <td>Action</td>
+                      </tr>
+                      {defBankInfoList?.map((obj, rightindex) => (
 
-                    <><tr>
-                      <td id={rightindex} >
-                        <button id={rightindex} className="btn btn-danger btn-sm" disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>Delete</button></td>
-                      <td>
+                        <><tr>
 
-                        <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
-                          handleFieldChanged(e);
-                          // setotherErrors(validate());
-                        }}
-                          id={"journalBankAccountId-" + rightindex}>
-                          <option value="-1">--SELECT--</option>
+                          <td>
 
-                          {
-                            dashboard.allPayrollAccounts?.map((x) => {
-                              return <option value={x.value}> {x.label} </option>
-                            })}
-                        </select>
+                            <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
+                              handleFieldChanged(e);
+                              // setotherErrors(validate());
+                            }}
+                              id={"journalBankAccountId-" + rightindex}>
+                              <option value="-1">Select</option>
 
-                        {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
+                              {
+                                dashboard.allPayrollAccounts?.map((x) => {
+                                  return <option value={x.value}> {x.label} </option>
+                                })}
+                            </select>
 
-
-
-
-
-                      </td>
-
-                      <td>
-
-                        <input className="form-control" onChange={(e) => {
-                          handleFieldChanged(e);
-                          // setotherErrors(validate());
-                        }}
-                          placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
-
-                        {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
-                      </td>
-
-                      <td>
-                        <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
-                          handleFieldChanged(e);
-                          // setotherErrors(validate());
-                        }}
-                          id={"bankAccountNo-" + rightindex}></input>
-
-                        {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
-                      </td>
-                      <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
-
-                        type="checkbox"
-                        id={"isDefault-" + rightindex}
-                        onChange={(e) => {
-                          handleFieldChanged(e);
-                          // setotherErrors(validate());
-
-                        }}
-
-                        checked={obj.isDefault}
-
-                      />
+                            {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
 
 
-                      </td>
 
-                      {/* <td>
+
+
+                          </td>
+
+                          <td>
+
+                            <input className="form-control" onChange={(e) => {
+                              handleFieldChanged(e);
+                              // setotherErrors(validate());
+                            }}
+                              placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
+
+                            {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
+                          </td>
+
+                          <td>
+                            <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
+                              handleFieldChanged(e);
+                              // setotherErrors(validate());
+                            }}
+                              id={"bankAccountNo-" + rightindex}></input>
+
+                            {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
+                          </td>
+                          <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
+
+                            type="checkbox"
+                            id={"isDefault-" + rightindex}
+                            onChange={(e) => {
+                              handleFieldChanged(e);
+                              // setotherErrors(validate());
+
+                            }}
+
+                            checked={obj.isDefault}
+
+                          />
+
+
+                          </td>
+
+                          {/* <td>
                           <input type="text" className="form-control" placeholder="Enter Bank Name" onChange={handleFieldChanged} value={obj.bankName} id={'bankName-' + rightindex}></input>
 
                           {otherErrors[`bankName-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankName-${rightindex}`]}</div>}
                         </td> */}
 
 
-                      <td>
+                          <td>
 
-                        <select value={obj.bankId} className="form-control"
+                            <select value={obj.bankId} className="form-control"
 
-                          onChange={(e) => {
-                            const bankId = e.target.value;
+                              onChange={(e) => {
+                                const bankId = e.target.value;
 
-                            // Update the field
-                            handleFieldChanged(e);
-
-
-
-                            // Fetch branches for selected bank
-                            if (bankId && bankId !== "-1") {
-                              filteredBranches(bankId);
-
-
-                            }
-
-                            // setotherErrors(validate());
-
-                          }}
-
-
-                          id={"bankId-" + rightindex}>
-                          <option value="">--SELECT--</option>
-
-                          {
-                            dashboard.allBanks?.map((x) => {
-                              return <option value={x.value}> {x.label} </option>
-                            })}
-                        </select>
-
-                        {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
-
-                      </td>
-                      <td>
-                        <select
-                          value={obj.branchId}
-                          className="form-control"
-                          onChange={(e) => {
-                            handleFieldChanged(e);
-                            // setotherErrors(validate());
-                          }}
-
-                          id={"branchId-" + rightindex}
-                        >
-                          <option value="">--SELECT--</option>
-
-                          {filteredBranches(obj.bankId)?.map((x) => (
-                            <option key={x.value} value={x.value}>
-                              {x.label}
-                            </option>
-                          ))}
-                        </select>
-
-                        {otherErrors[`branchId-${rightindex}`] && (
-                          <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
-                        )}
-                      </td>
+                                // Update the field
+                                handleFieldChanged(e);
 
 
 
+                                // Fetch branches for selected bank
+                                if (bankId && bankId !== "-1") {
+                                  filteredBranches(bankId);
 
-                    </tr>
-                    </>
-                  ))}
 
-                </table>
+                                }
 
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
-                    <input type='button' className="btn btn-primary" id="bank_info" onClick={addRowBankInfo} value='+Add'></input>
+                                // setotherErrors(validate());
+
+                              }}
+
+
+                              id={"bankId-" + rightindex}>
+                              <option value="">Select</option>
+
+                              {
+                                dashboard.allBanks?.map((x) => {
+                                  return <option value={x.value}> {x.label} </option>
+                                })}
+                            </select>
+
+                            {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
+
+                          </td>
+                          <td>
+                            <select
+                              value={obj.branchId}
+                              className="form-control"
+                              onChange={(e) => {
+                                handleFieldChanged(e);
+                                // setotherErrors(validate());
+                              }}
+
+                              id={"branchId-" + rightindex}
+                            >
+                              <option value="">Select</option>
+
+                              {filteredBranches(obj.bankId)?.map((x) => (
+                                <option key={x.value} value={x.value}>
+                                  {x.label}
+                                </option>
+                              ))}
+                            </select>
+
+                            {otherErrors[`branchId-${rightindex}`] && (
+                              <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
+                            )}
+                          </td>
+
+                          <td id={rightindex} className="text-right">
+                            <button id={rightindex} className="bg-transparent border-none" disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>    <Trash2 className="w-4 h-4 text-black cursor-pointer" /></button></td>
+
+
+                        </tr>
+                        </>
+                      ))}
+
+                    </table>
+
+                    {/* <div className="from-group row">
+                      <div className="col-12 col-md-4 mt-3">
+                        <input type='button' className="btn btn-primary" id="bank_info" onClick={addRowBankInfo} value='+Add'></input>
+                      </div>
+
+                    </div> */}
                   </div>
+
+                  {otherErrors["isDefault"] && (
+                    <tr>
+                      <td colSpan={6}>
+                        <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
+                      </td>
+                    </tr>
+                  )}
+
+
+
+
+
+
 
                 </div>
               </div>
 
-              {otherErrors["isDefault"] && (
-                <tr>
-                  <td colSpan={6}>
-                    <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
-                  </td>
-                </tr>
-              )}
 
             </fieldset>
 
