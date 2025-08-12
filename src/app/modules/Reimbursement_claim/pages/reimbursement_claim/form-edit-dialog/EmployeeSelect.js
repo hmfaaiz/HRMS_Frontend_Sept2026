@@ -101,22 +101,7 @@ export function EmployeeSelect({
                     } */}
                   </div>
 
-                  {/* <div className="col-4 col-md-4 d-flex  align-items-center pt-10">
-                    <span
-                      className="svg-icon svg-icon-md svg-icon-primary"
-                      onClick={() => setPanelMode(!panelMode)}
-                    >
-                      <SVG
-                        src={toAbsoluteUrl(
-                          panelMode
-                            ? "/media/svg/icons/Communication/CancelButton.svg"
-                            : "/media/svg/icons/Communication/AddButton.svg"
-                        )}
-                      />
-                    </span>
-
-
-                  </div> */}
+                
 
                   <div className="mt-6">
 
