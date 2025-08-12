@@ -1828,7 +1828,8 @@ export function DesignationEditForm({
                       {id ||
                       profilePolicy?.data?.data[0]
                         .isEmployeeCodeGenerationAuto ? (
-                        <div className="col-12 col-md-3 ml-3 ">
+                     <>
+                     <div>
                           <Field
                             name="employeeCode"
                             component={Input}
@@ -1854,6 +1855,9 @@ export function DesignationEditForm({
                             disabled={true}
                           />
                         </div>
+                         <div className="hidden md:block"></div>
+                         <div className="hidden md:block"></div>
+                         </>
                       ) : (
                         <>
                           <div>
@@ -1928,9 +1932,10 @@ export function DesignationEditForm({
                               }
                             />
                           </div>
+                         <div className="hidden md:block"></div>
                         </>
                       )}
-                      <div className="hidden md:block"></div>
+                     
                       <div>
                         <Select
                           label={
