@@ -214,7 +214,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
       //   </Card>
       // </Accordion>
 
-  <div className="bg-white">
+  <div className="mt-3 bg-white">
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}

@@ -502,7 +502,7 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   const [profile_image, setImage] = useState(
-    formData?.profile_image || toAbsoluteUrl("/media/logos/defaultImg.png")
+    formData?.profile_image
   );
   const inputFile = useRef(null);
   const [file, setFile] = useState("");
@@ -892,7 +892,7 @@ export function FormEditForm({
 
 
                   {/* Image */}
-                  <div className="col-span-2 p-5">
+                  <div className=" gap-1 col-span-2 p-5 items-center justify-center bg-red-600 pt-0">
 
 
 
@@ -946,8 +946,8 @@ export function FormEditForm({
                       />
                     </div> */}
 
-                    <div className="w-[120px] h-[120px] rounded-[10px] border border-gray-300 bg-white flex justify-center items-center p-[5px] overflow-hidden">
-                      {formData?.profile_image ? (
+                    <div className="w-[70px] h-[70px] rounded-[10px] border border-gray-300 bg-tsecondary flex justify-center items-center p-[5px] overflow-hidden">
+                      {formData?.profile_image  ? (
                         <img
                           src={formData?.profile_image}
                           alt="Profile"
@@ -968,19 +968,60 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <label htmlFor="myImage" className="btn btn-sm btn-outline-primary mt-2">
+                    <div className="">
+                      {/* <label htmlFor="myImage" className="btn btn-sm btn-outline-primary items-center ">
                         Upload Image
                       </label>
 
 
-                    <input
-                      id="myImage"
-                      type="file"
-                      name="myImage"
-                      accept=".jpg, .jpeg, .png"
+                      <input
+                        id="myImage"
+                        type="file"
+                        name="myImage"
+                        accept=".jpg, .jpeg, .png"
+                        onChange={onImageChange}
+                        style={{ display: "none" }}
+                      /> */}
+
+                          <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                  <div className="col-span-1">
+                    {/* <label
+                      htmlFor="file"
+                    // className="block mb-2 text-xs font-normal text-gray-900"
+                    >
+                      Attachment
+                    </label> */}
+
+                    {/* Hidden input */}
+
+
+                    {/* Styled label as upload box */}
+                    <label
+                      htmlFor="myImage"
+                      className="form-control block w-full cursor-pointer"
                       onChange={onImageChange}
-                      style={{ display: "none" }}
-                    />
+                    >
+                      {formData.file ? formData.file : "Upload"}
+                      <input
+                        id="myImage"
+                        name="myImage"
+                        type="file"
+                        accept=".jpeg,.jpg,.png"
+                        ref={inputFile}
+                        className="hidden"
+                        myImage
+                      />
+                    </label>
+
+                    {/* Show existing file if any */}
+               
+                  </div>
+
+
+                </div>
+
+                    </div>
+
 
 
 
@@ -1009,7 +1050,7 @@ export function FormEditForm({
 
                       <div className="flex justify-between items-center">
                         <h6 className="font-bold mb-0 text-primary">
-                          Other Earnings{"  "}
+                          Applicant Vacancy{"  "}
                         </h6>
                         <button
                           type="button"
@@ -1150,9 +1191,9 @@ export function FormEditForm({
                                       </td>
 
                                       <td>
-                                        <DatePicker
+                                        <Field
                                           className="form-control"
-                                          style={{ width: "130px" }}
+                                          component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -1266,9 +1307,10 @@ export function FormEditForm({
                                       </td>
 
                                       <td>
-                                        <DatePicker
+                                        <Field
                                           className="form-control"
-                                          style={{ width: "130px" }}
+
+                                          component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -1520,7 +1562,7 @@ export function FormEditForm({
 
                     {errors.applicantStatusId &&
                       touched.applicantStatusId && (
-                        <div className="text-danger">
+                        <div className="invalid-feedback">
                           {errors.applicantStatusId}
                         </div>
                       )}
@@ -1549,11 +1591,11 @@ export function FormEditForm({
                   <h6 className="font-bold mb-0 text-primary my-2">
                     Personal Information
                   </h6>
-                  <div className="grid grid-cols-4 gap-x-3 ">
+                  <div className="grid lg:grid-cols-4 gap-x-3 ">
                     <div className="">
                       <label>
 
-                        Date Of Birth <span style={{ color: "red" }}>*</span>
+                        Date of Birth <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         className="form-control"
@@ -1574,11 +1616,11 @@ export function FormEditForm({
                         maxDate={new Date()}
                       />
 
-                      {touched.dateOfBirth && errors.dateOfBirth && (
+                      {/* {touched.dateOfBirth && errors.dateOfBirth && (
                         <div className="invalid-feedback d-block">
                           {errors.dateOfBirth}
                         </div>
-                      )}
+                      )} */}
                     </div>
 
                     <div className="">
@@ -1602,11 +1644,11 @@ export function FormEditForm({
                           /\d/,
                         ]}
                         component={MaskInput}
-                        placeholder=" ID Card No"
+                        placeholder=" ID Card No."
                         label={
                           <span>
                             {" "}
-                            Id Card No<span style={{ color: "red" }}>*</span>
+                            Id Card No.<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         autoComplete="off"
@@ -1619,8 +1661,8 @@ export function FormEditForm({
                         name="passportNo"
                         maxLength="15"
                         component={Input}
-                        placeholder=" Passport No"
-                        label=" Passport No"
+                        placeholder=" Passport No."
+                        label=" Passport No."
                         autoComplete="off"
                         onBlur={(e) => {
                           const value = e.target.value.trim();
@@ -1660,7 +1702,7 @@ export function FormEditForm({
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-4 gap-x-3 mt-1">
+                  <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
                     <div className="">
                       <SearchSelect
                         label={
@@ -1710,7 +1752,7 @@ export function FormEditForm({
                         <option value="Female" label="Female" />
                       </Select>
                       {errors.gender && touched.gender && (
-                        <div className="invalid-text">{errors.gender}</div>
+                        <div className="invalid-feedback">{errors.gender}</div>
                       )}
                     </div>
 
@@ -1768,7 +1810,7 @@ export function FormEditForm({
                   <h6 className="font-bold mb-0 text-primary">
                     Current Address
                   </h6>
-                  <div className="grid grid-cols-5 gap-x-3">
+                  <div className="grid lg:grid-cols-5 gap-x-3">
                     <div className="">
                       <SearchSelect
                         name="countryId"
@@ -1877,7 +1919,7 @@ export function FormEditForm({
                   </h6>
 
 
-                  <div className="grid grid-cols-5 gap-x-3 ">
+                  <div className="grid lg:grid-cols-5 gap-x-3 ">
                     <div className="">
                       <Field
                         name="applicantCanJoin"
@@ -1886,7 +1928,7 @@ export function FormEditForm({
                         label={
                           <span>
                             {" "}
-                            Applicant can join (Days)
+                            Applicant Can Join (Days)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -2000,7 +2042,7 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-5 gap-x-3 gap-y-1 mt-1">
+                  <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1 mt-1">
 
 
 
@@ -2019,8 +2061,8 @@ export function FormEditForm({
                         disabled={isdataForRead}
                         placeholder="Enter expected salary range(from)"
                         label={
-                          <span className="ml-1">
-                            Expected Salary Range(From)
+                          <span className="">
+                            Expected Salary Range (From)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -2043,9 +2085,9 @@ export function FormEditForm({
                         disabled={isdataForRead}
                         placeholder="Enter expected salary range(to)"
                         label={
-                          <span className="ml-1">
+                          <span className="">
 
-                            Expected Salary Range(To)
+                            Expected Salary Range (To)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -2231,7 +2273,7 @@ export function FormEditForm({
                 <h6 className="font-bold mb-0 text-primary my-2">
                   User Credentials
                 </h6>
-                <div className="grid grid-cols-4 gap-x-3 ">
+                <div className="grid lg:grid-cols-4 gap-x-3 ">
                   <div className="">
                     <label>
                       Email<span style={{ color: "red" }}>*</span>
@@ -2267,351 +2309,358 @@ export function FormEditForm({
               </fieldset>
 
               {/* Details Work Experience */}
+              <hr></hr>
 
-              <FieldArray name="details_applicant_work_experience">
-                {({ push, remove }) => (
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <h3>Work Experience</h3>
-                    <table className="table table-head-custom table-vertical-center  table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
-                        >
-                          <th>Action</th>
+              <div className="w-full overflow-x-auto">
+                <FieldArray name="details_applicant_work_experience">
+                  {({ push, remove }) => (
+                    <div>
+                      <div className="flex justify-between items-center ">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Work Experience{"  "}
+                        </h6>
+                        {!isdataForRead && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              push({
+                                companyName: "",
+                                countryId: "",
+                                positionHeld: "",
+                                cityId: "",
+                                startDate: "", // ✅ fix this key name
+                                endDate: "",
+                              })
+                            }
+                            className="btn btn-primary btn-sm"
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
 
-                          <td className="col-2">Company</td>
-                          <td className="col-2"> Position Held</td>
-                          <td className="col-2">Country</td>
-                          <td className="col-2">City</td>
-                          <td className="col-2">Start Date</td>
-                          <td className="col-2">End Date</td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values?.details_applicant_work_experience &&
-                          values?.details_applicant_work_experience?.length >
-                          0 &&
-                          values?.details_applicant_work_experience?.map(
-                            (detail, index) => (
-                              <tr key={index}>
-                                <td>
-                                  <button
-                                    disabled={isdataForRead}
-                                    className="btn btn-danger btn-elevate"
-                                    type="button"
-                                    onClick={() => {
-                                      remove(index);
-                                    }}
-                                  >
-                                    Delete
-                                  </button>
-                                </td>
-                                {/* job vacancy selection */}
-                                <td>
-                                  <Field
-                                    name={`details_applicant_work_experience[${index}].companyName`}
-                                    component={Input}
-                                    disabled={isdataForRead}
-                                    placeholder="Enter company"
-                                    autoComplete="off"
-                                  />
 
-                                  {errors.details_applicant_work_experience?.[
-                                    index
-                                  ]?.companyName &&
-                                    touched.details_applicant_work_experience?.[
-                                      index
-                                    ]?.companyName && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_work_experience[
-                                            index
-                                          ]?.companyName
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                              <td className="min-w-32">Company</td>
+                              <td className="min-w-32"> Position Held</td>
+                              <td className="min-w-32">Country</td>
+                              <td className="min-w-32">City</td>
+                              <td className="min-w-32">Start Date</td>
+                              <td className="min-w-32">End Date</td>
+                              <th className="text-right">Action</th>
+                            </tr>
 
-                                <td>
-                                  <Field
-                                    name={`details_applicant_work_experience[${index}].positionHeld`}
-                                    component={Input}
-                                    disabled={isdataForRead}
-                                    placeholder="Enter position"
-                                    autoComplete="off"
-                                  />
+                            <tbody>
+                              {values?.details_applicant_work_experience &&
+                                values?.details_applicant_work_experience?.length >
+                                0 &&
+                                values?.details_applicant_work_experience?.map(
+                                  (detail, index) => (
+                                    <tr key={index}>
 
-                                  {errors.details_applicant_work_experience?.[
-                                    index
-                                  ]?.positionHeld &&
-                                    touched.details_applicant_work_experience?.[
-                                      index
-                                    ]?.positionHeld && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_work_experience[
-                                            index
-                                          ].positionHeld
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                                {/* country */}
+                                      {/* job vacancy selection */}
+                                      <td>
+                                        <Field
+                                          name={`details_applicant_work_experience[${index}].companyName`}
+                                          component={Input}
+                                          disabled={isdataForRead}
+                                          placeholder="Enter company"
+                                          autoComplete="off"
+                                        />
 
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_work_experience[${index}].countryId`}
-                                    isDisabled={isdataForRead}
-                                    onChange={(e) => {
-                                      const selectedCountryId = e.value || null;
-                                      setFieldValue(
-                                        `details_applicant_work_experience[${index}].countryId`,
-                                        selectedCountryId
-                                      );
-                                      setFieldValue(
-                                        `details_applicant_work_experience[${index}].cityId`,
-                                        null
-                                      ); // Reset city on country change
-                                    }}
-                                    value={
-                                      dashboard?.allCountry?.find(
-                                        (x) =>
-                                          x.value ===
-                                          values
-                                            .details_applicant_work_experience[
-                                            index
-                                          ]?.countryId
-                                      ) || null
-                                    }
-                                    options={dashboard?.allCountry || []}
-                                    getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                    getOptionValue={(x) => x.value} // optional: customize value extraction
-                                    placeholder="Select Status"
-                                  />
-                                  {errors.details_applicant_work_experience?.[
-                                    index
-                                  ]?.countryId &&
-                                    touched.details_applicant_work_experience?.[
-                                      index
-                                    ]?.countryId && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_work_experience[
-                                            index
-                                          ].countryId
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* city  */}
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_work_experience[${index}].cityId`}
-                                    isDisabled={
-                                      isdataForRead ||
-                                      !values.details_applicant_work_experience[
-                                        index
-                                      ]?.countryId
-                                    }
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        `details_applicant_work_experience[${index}].cityId`,
-                                        e.value || null
-                                      );
-                                    }}
-                                    value={
-                                      filteredCities(
-                                        values
-                                          .details_applicant_work_experience[
+                                        {errors.details_applicant_work_experience?.[
                                           index
-                                        ]?.countryId
-                                      ).find(
-                                        (option) =>
-                                          option.value ===
-                                          values
-                                            .details_applicant_work_experience[
+                                        ]?.companyName &&
+                                          touched.details_applicant_work_experience?.[
                                             index
-                                          ]?.cityId
-                                      ) || null
-                                    }
-                                    options={filteredCities(
-                                      values.details_applicant_work_experience[
-                                        index
-                                      ]?.countryId
-                                    )}
-                                  />
+                                          ]?.companyName && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ]?.companyName
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                  {errors.details_applicant_work_experience?.[
-                                    index
-                                  ]?.cityId &&
-                                    touched.details_applicant_work_experience?.[
-                                      index
-                                    ]?.cityId && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_work_experience[
+                                      <td>
+                                        <Field
+                                          name={`details_applicant_work_experience[${index}].positionHeld`}
+                                          component={Input}
+                                          disabled={isdataForRead}
+                                          placeholder="Enter position"
+                                          autoComplete="off"
+                                        />
+
+                                        {errors.details_applicant_work_experience?.[
+                                          index
+                                        ]?.positionHeld &&
+                                          touched.details_applicant_work_experience?.[
                                             index
-                                          ].cityId
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                          ]?.positionHeld && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ].positionHeld
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+                                      {/* country */}
 
-                                {/* start date  */}
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    placeholderText="Select Date"
-                                    selected={
-                                      values
-                                        ?.details_applicant_work_experience?.[
-                                        index
-                                      ]?.startDate
-                                        ? new Date(
-                                          values.details_applicant_work_experience[
+                                      <td className="min-w-16">
+                                        <SearchSelect
+                                          name={`details_applicant_work_experience[${index}].countryId`}
+                                          isDisabled={isdataForRead}
+                                          onChange={(e) => {
+                                            const selectedCountryId = e.value || null;
+                                            setFieldValue(
+                                              `details_applicant_work_experience[${index}].countryId`,
+                                              selectedCountryId
+                                            );
+                                            setFieldValue(
+                                              `details_applicant_work_experience[${index}].cityId`,
+                                              null
+                                            ); // Reset city on country change
+                                          }}
+                                          value={
+                                            dashboard?.allCountry?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ]?.countryId
+                                            ) || null
+                                          }
+                                          options={dashboard?.allCountry || []}
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
+                                        {errors.details_applicant_work_experience?.[
+                                          index
+                                        ]?.countryId &&
+                                          touched.details_applicant_work_experience?.[
                                             index
-                                          ].startDate
-                                        )
-                                        : null
-                                    }
-                                    onChange={(date) => {
-                                      const selectedDate = formatDates(
-                                        date,
-                                        "yyyy-MM-dd"
-                                      ); // or use date.toISOString().split('T')[0]
-                                      setFieldValue(
-                                        `details_applicant_work_experience[${index}].startDate`,
-                                        selectedDate
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`details_applicant_work_experience[${index}].startDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
-                                    minDate={
-                                      values?.dateOfBirth
-                                        ? new Date(values.dateOfBirth)
-                                        : null
-                                    }
-                                    maxDate={new Date()} // optional: restrict future dates
-                                    showPopperArrow={false}
-                                  />
+                                          ]?.countryId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ].countryId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                  {errors.details_applicant_work_experience?.[
-                                    index
-                                  ]?.startDate &&
-                                    touched.details_applicant_work_experience?.[
-                                      index
-                                    ]?.startDate && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_work_experience[
+                                      {/* city  */}
+                                      <td className="min-w-16">
+                                        <SearchSelect
+                                          name={`details_applicant_work_experience[${index}].cityId`}
+                                          isDisabled={
+                                            isdataForRead ||
+                                            !values.details_applicant_work_experience[
+                                              index
+                                            ]?.countryId
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_work_experience[${index}].cityId`,
+                                              e.value || null
+                                            );
+                                          }}
+                                          value={
+                                            filteredCities(
+                                              values
+                                                .details_applicant_work_experience[
+                                                index
+                                              ]?.countryId
+                                            ).find(
+                                              (option) =>
+                                                option.value ===
+                                                values
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ]?.cityId
+                                            ) || null
+                                          }
+                                          options={filteredCities(
+                                            values.details_applicant_work_experience[
+                                              index
+                                            ]?.countryId
+                                          )}
+                                        />
+
+                                        {errors.details_applicant_work_experience?.[
+                                          index
+                                        ]?.cityId &&
+                                          touched.details_applicant_work_experience?.[
                                             index
-                                          ].startDate
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                          ]?.cityId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ].cityId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                {/* end date  */}
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    placeholderText="Select Date"
-                                    selected={
-                                      values
-                                        ?.details_applicant_work_experience?.[
-                                        index
-                                      ]?.endDate
-                                        ? new Date(
-                                          values.details_applicant_work_experience[
+                                      {/* start date  */}
+                                      <td className="max-w-18">
+                                        <Field
+                                          className="form-control"
+                                          component={DatePickerField}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values
+                                              ?.details_applicant_work_experience?.[
+                                              index
+                                            ]?.startDate
+                                              ? new Date(
+                                                values.details_applicant_work_experience[
+                                                  index
+                                                ].startDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_work_experience[${index}].startDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_work_experience[${index}].startDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead}
+                                          minDate={
+                                            values?.dateOfBirth
+                                              ? new Date(values.dateOfBirth)
+                                              : null
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_work_experience?.[
+                                          index
+                                        ]?.startDate &&
+                                          touched.details_applicant_work_experience?.[
                                             index
-                                          ].endDate
-                                        )
-                                        : null
-                                    }
-                                    onChange={(date) => {
-                                      const selectedDate = formatDates(
-                                        date,
-                                        "yyyy-MM-dd"
-                                      ); // or use date.toISOString().split('T')[0]
-                                      setFieldValue(
-                                        `details_applicant_work_experience[${index}].endDate`,
-                                        selectedDate
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`details_applicant_work_experience[${index}].endDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
-                                    minDate={
-                                      values?.dateOfBirth
-                                        ? new Date(values.dateOfBirth)
-                                        : null
-                                    }
-                                    maxDate={new Date()} // optional: restrict future dates
-                                    showPopperArrow={false}
-                                  />
+                                          ]?.startDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ].startDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                  {errors.details_applicant_work_experience?.[
-                                    index
-                                  ]?.endDate &&
-                                    touched.details_applicant_work_experience?.[
-                                      index
-                                    ]?.endDate && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_work_experience[
+                                      {/* end date  */}
+                                      <td className="max-w-18">
+                                        <Field
+                                          className="form-control"
+                                          component={DatePickerField}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values
+                                              ?.details_applicant_work_experience?.[
+                                              index
+                                            ]?.endDate
+                                              ? new Date(
+                                                values.details_applicant_work_experience[
+                                                  index
+                                                ].endDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_work_experience[${index}].endDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_work_experience[${index}].endDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead}
+                                          minDate={
+                                            values?.dateOfBirth
+                                              ? new Date(values.dateOfBirth)
+                                              : null
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_work_experience?.[
+                                          index
+                                        ]?.endDate &&
+                                          touched.details_applicant_work_experience?.[
                                             index
-                                          ].endDate
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                              </tr>
-                            )
-                          )}
-                      </tbody>
-                    </table>
+                                          ]?.endDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_work_experience[
+                                                  index
+                                                ].endDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                    {!isdataForRead && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          push({
-                            companyName: "",
-                            countryId: "",
-                            positionHeld: "",
-                            cityId: "",
-                            startDate: "", // ✅ fix this key name
-                            endDate: "",
-                          })
-                        }
-                        className="btn btn-primary btn-sm"
-                      >
-                        + Add Detail
-                      </button>
-                    )}
-                  </div>
-                )}
-              </FieldArray>
+                                      <td className="text-right">
+                                        <button className="bg-transparent border-none"
+                                          disabled={isdataForRead}
+
+                                          type="button"
+                                          onClick={() => {
+                                            remove(index);
+                                          }}
+                                        >
+                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                            </tbody>
+                          </table>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+              </div>
+
+
 
               {typeof errors.details_applicant_work_experience === "string" && (
                 <div className="text-danger">
@@ -2621,739 +2670,723 @@ export function FormEditForm({
 
               {/* Details Academic Info */}
 
-              <FieldArray name="details_applicant_academic_info">
-                {({ push, remove }) => (
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <h3>Academic Info</h3>
-                    <table className="table table-head-custom table-vertical-center  table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
-                        >
-                          <th>Action</th>
+              <hr></hr>
+              <div className="w-full overflow-x-auto">
+                <FieldArray name="details_applicant_academic_info">
+                  {({ push, remove }) => (
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Academic Info{"  "}
+                        </h6>
+                        {!isdataForRead && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              push({
+                                institutionId: "",
+                                degreeId: "",
+                                countryId: "",
+                                cityId: "",
+                                gpa: "",
+                                startDate: "",
+                                endDate: "",
+                              })
+                            }
+                            className="btn btn-primary btn-sm"
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
 
-                          <td className="col-2">Institution</td>
-                          <td className="col-2">Degree</td>
-                          <td className="col-2">Country</td>
-                          <td className="col-2">City</td>
-                          <td className="">CGPA</td>
-                          <td className="col-2">Start Date</td>
-                          <td className="col-2">End Date</td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values?.details_applicant_academic_info &&
-                          values?.details_applicant_academic_info?.length > 0 &&
-                          values?.details_applicant_academic_info?.map(
-                            (detail, index) => (
-                              <tr key={index}>
-                                <td>
-                                  <button
-                                    disabled={isdataForRead}
-                                    className="btn btn-danger btn-elevate"
-                                    type="button"
-                                    onClick={() => {
-                                      remove(index);
-                                    }}
-                                  >
-                                    Delete
-                                  </button>
-                                </td>
-                                {/* job vacancy selection */}
 
-                                {/* institution */}
+                              <td className="min-w-32">Institution</td>
+                              <td className="min-w-32">Degree</td>
+                              <td className="min-w-32">Country</td>
+                              <td className="min-w-32">City</td>
+                              <td className="min-w-32">CGPA</td>
+                              <td className="min-w-32">Start Date</td>
+                              <td className="min-w-32">End Date</td>
+                              <th className="text-right">Action</th>
+                            </tr>
 
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_academic_info[${index}].institutionId`}
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    isDisabled={isdataForRead}
-                                    value={
-                                      dashboard?.allInstitution?.find(
-                                        (x) =>
-                                          x.value ===
-                                          values
-                                            .details_applicant_academic_info[
-                                            index
-                                          ]?.institutionId
-                                      ) || null
-                                    }
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].institutionId`,
-                                        e?.value
-                                      );
-                                    }}
-                                    options={dashboard.allInstitution || []}
-                                    getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                    getOptionValue={(x) => x.value} // optional: customize value extraction
-                                    placeholder="Select Status"
-                                  />
+                            <tbody>
+                              {values?.details_applicant_academic_info &&
+                                values?.details_applicant_academic_info?.length > 0 &&
+                                values?.details_applicant_academic_info?.map(
+                                  (detail, index) => (
+                                    <tr key={index}>
 
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.institutionId &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.institutionId && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
-                                            index
-                                          ].institutionId
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                      {/* job vacancy selection */}
 
-                                {/* degree */}
+                                      {/* institution */}
 
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_academic_info[${index}].degreeId`}
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    isDisabled={isdataForRead}
-                                    value={
-                                      dashboard?.allDegreeTitle?.find(
-                                        (x) =>
-                                          x.value ===
-                                          values
-                                            .details_applicant_academic_info[
-                                            index
-                                          ]?.degreeId
-                                      ) || null
-                                    }
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].degreeId`,
-                                        e?.value
-                                      );
-                                    }}
-                                    options={dashboard?.allDegreeTitle || []}
-                                    getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                    getOptionValue={(x) => x.value} // optional: customize value extraction
-                                    placeholder="Select Status"
-                                  />
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_academic_info[${index}].institutionId`}
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          isDisabled={isdataForRead}
+                                          value={
+                                            dashboard?.allInstitution?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ]?.institutionId
+                                            ) || null
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].institutionId`,
+                                              e?.value
+                                            );
+                                          }}
+                                          options={dashboard.allInstitution || []}
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
 
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.degreeId &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.degreeId && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
-                                            index
-                                          ].degreeId
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* country */}
-
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_academic_info[${index}].countryId`}
-                                    isDisabled={isdataForRead}
-                                    onChange={(e) => {
-                                      const selectedCountryId = e.value || null;
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].countryId`,
-                                        selectedCountryId
-                                      );
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].cityId`,
-                                        null
-                                      ); // Reset city on country change
-                                    }}
-                                    value={
-                                      dashboard?.allCountry?.find(
-                                        (x) =>
-                                          x.value ===
-                                          values
-                                            .details_applicant_academic_info[
-                                            index
-                                          ]?.countryId
-                                      ) || null
-                                    }
-                                    options={dashboard?.allCountry || []}
-                                    getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                    getOptionValue={(x) => x.value} // optional: customize value extraction
-                                    placeholder="Select Status"
-                                  />
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.countryId &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.countryId && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
-                                            index
-                                          ].countryId
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* city  */}
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_academic_info[${index}].cityId`}
-                                    isDisabled={
-                                      isdataForRead ||
-                                      !values.details_applicant_academic_info[
-                                        index
-                                      ]?.countryId
-                                    }
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].cityId`,
-                                        e.value || null
-                                      );
-                                    }}
-                                    value={
-                                      filteredCities(
-                                        values.details_applicant_academic_info[
+                                        {errors.details_applicant_academic_info?.[
                                           index
-                                        ]?.countryId
-                                      ).find(
-                                        (option) =>
-                                          option.value ===
-                                          values
-                                            .details_applicant_academic_info[
+                                        ]?.institutionId &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ]?.cityId
-                                      ) || null
-                                    }
-                                    options={filteredCities(
-                                      values.details_applicant_academic_info[
-                                        index
-                                      ]?.countryId
-                                    )}
-                                  />
+                                          ]?.institutionId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ].institutionId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.cityId &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.cityId && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
+                                      {/* degree */}
+
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_academic_info[${index}].degreeId`}
+                                          className="form-control"
+                                          style={{ width: "130px" }}
+                                          isDisabled={isdataForRead}
+                                          value={
+                                            dashboard?.allDegreeTitle?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ]?.degreeId
+                                            ) || null
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].degreeId`,
+                                              e?.value
+                                            );
+                                          }}
+                                          options={dashboard?.allDegreeTitle || []}
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
+
+                                        {errors.details_applicant_academic_info?.[
+                                          index
+                                        ]?.degreeId &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ].cityId
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                          ]?.degreeId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ].degreeId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                {/* cgpa */}
+                                      {/* country */}
 
-                                <td>
-                                  <Field
-                                    name={`details_applicant_academic_info[${index}].gpa`}
-                                    component={Input}
-                                    disabled={isdataForRead}
-                                    placeholder="Enter company"
-                                    autoComplete="off"
-                                    type="number"
-                                  />
-
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.gpa &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.gpa && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
+                                      <td>
+                                        <SearchSelect
+                                          name={`details_applicant_academic_info[${index}].countryId`}
+                                          isDisabled={isdataForRead}
+                                          onChange={(e) => {
+                                            const selectedCountryId = e.value || null;
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].countryId`,
+                                              selectedCountryId
+                                            );
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].cityId`,
+                                              null
+                                            ); // Reset city on country change
+                                          }}
+                                          value={
+                                            dashboard?.allCountry?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ]?.countryId
+                                            ) || null
+                                          }
+                                          options={dashboard?.allCountry || []}
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
+                                        {errors.details_applicant_academic_info?.[
+                                          index
+                                        ]?.countryId &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ]?.gpa
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                          ]?.countryId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ].countryId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                {/* start date  */}
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    placeholderText="Select Date"
-                                    selected={
-                                      values?.details_applicant_academic_info?.[
-                                        index
-                                      ]?.startDate
-                                        ? new Date(
-                                          values.details_applicant_academic_info[
+                                      {/* city  */}
+                                      <td className="min-w-16">
+                                        <SearchSelect
+                                          name={`details_applicant_academic_info[${index}].cityId`}
+                                          isDisabled={
+                                            isdataForRead ||
+                                            !values.details_applicant_academic_info[
+                                              index
+                                            ]?.countryId
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].cityId`,
+                                              e.value || null
+                                            );
+                                          }}
+                                          value={
+                                            filteredCities(
+                                              values.details_applicant_academic_info[
+                                                index
+                                              ]?.countryId
+                                            ).find(
+                                              (option) =>
+                                                option.value ===
+                                                values
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ]?.cityId
+                                            ) || null
+                                          }
+                                          options={filteredCities(
+                                            values.details_applicant_academic_info[
+                                              index
+                                            ]?.countryId
+                                          )}
+                                        />
+
+                                        {errors.details_applicant_academic_info?.[
+                                          index
+                                        ]?.cityId &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ].startDate
-                                        )
-                                        : null
-                                    }
-                                    onChange={(date) => {
-                                      const selectedDate = formatDates(
-                                        date,
-                                        "yyyy-MM-dd"
-                                      ); // or use date.toISOString().split('T')[0]
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].startDate`,
-                                        selectedDate
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`details_applicant_academic_info[${index}].startDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
-                                    minDate={
-                                      values?.dateOfBirth
-                                        ? new Date(values.dateOfBirth)
-                                        : null
-                                    }
-                                    maxDate={new Date()} // optional: restrict future dates
-                                    showPopperArrow={false}
-                                  />
+                                          ]?.cityId && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ].cityId
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.startDate &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.startDate && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
+                                      {/* cgpa */}
+
+                                      <td className="max-w-16">
+                                        <Field
+                                          name={`details_applicant_academic_info[${index}].gpa`}
+                                          component={Input}
+                                          disabled={isdataForRead}
+                                          placeholder="Enter cgpa"
+                                          autoComplete="off"
+                                          type="number"
+                                        />
+
+                                        {errors.details_applicant_academic_info?.[
+                                          index
+                                        ]?.gpa &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ].startDate
-                                        }
-                                      </div>
-                                    )}
-                                </td>
+                                          ]?.gpa && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ]?.gpa
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                {/* end date  */}
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    placeholderText="Select Date"
-                                    selected={
-                                      values?.details_applicant_academic_info?.[
-                                        index
-                                      ]?.endDate
-                                        ? new Date(
-                                          values.details_applicant_academic_info[
+                                      {/* start date  */}
+                                      <td className="max-w-18">
+                                        <Field
+                                          className="form-control"
+                                          component={DatePickerField}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values?.details_applicant_academic_info?.[
+                                              index
+                                            ]?.startDate
+                                              ? new Date(
+                                                values.details_applicant_academic_info[
+                                                  index
+                                                ].startDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].startDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_academic_info[${index}].startDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead}
+                                          minDate={
+                                            values?.dateOfBirth
+                                              ? new Date(values.dateOfBirth)
+                                              : null
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_academic_info?.[
+                                          index
+                                        ]?.startDate &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ].endDate
-                                        )
-                                        : null
-                                    }
-                                    onChange={(date) => {
-                                      const selectedDate = formatDates(
-                                        date,
-                                        "yyyy-MM-dd"
-                                      ); // or use date.toISOString().split('T')[0]
+                                          ]?.startDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ].startDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                                      setFieldValue(
-                                        `details_applicant_academic_info[${index}].endDate`,
-                                        selectedDate
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`details_applicant_academic_info[${index}].endDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
-                                    minDate={
-                                      values?.dateOfBirth
-                                        ? new Date(values.dateOfBirth)
-                                        : null
-                                    }
-                                    maxDate={new Date()} // optional: restrict future dates
-                                    showPopperArrow={false}
-                                  />
+                                      {/* end date  */}
+                                      <td className="max-w-18">
+                                        <Field
+                                          className="form-control"
+                                          component={DatePickerField}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values?.details_applicant_academic_info?.[
+                                              index
+                                            ]?.endDate
+                                              ? new Date(
+                                                values.details_applicant_academic_info[
+                                                  index
+                                                ].endDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
 
-                                  {errors.details_applicant_academic_info?.[
-                                    index
-                                  ]?.endDate &&
-                                    touched.details_applicant_academic_info?.[
-                                      index
-                                    ]?.endDate && (
-                                      <div className="text-danger">
-                                        {
-                                          errors
-                                            .details_applicant_academic_info[
+                                            setFieldValue(
+                                              `details_applicant_academic_info[${index}].endDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_academic_info[${index}].endDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead}
+                                          minDate={
+                                            values?.dateOfBirth
+                                              ? new Date(values.dateOfBirth)
+                                              : null
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_academic_info?.[
+                                          index
+                                        ]?.endDate &&
+                                          touched.details_applicant_academic_info?.[
                                             index
-                                          ].endDate
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                              </tr>
-                            )
-                          )}
-                      </tbody>
-                    </table>
+                                          ]?.endDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors
+                                                  .details_applicant_academic_info[
+                                                  index
+                                                ].endDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
 
-                    {!isdataForRead && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          push({
-                            institutionId: "",
-                            degreeId: "",
-                            countryId: "",
-                            cityId: "",
-                            gpa: "",
-                            startDate: "",
-                            endDate: "",
-                          })
-                        }
-                        className="btn btn-primary btn-sm"
-                      >
-                        + Add Detail
-                      </button>
-                    )}
+                                      <td className="text-right">
+                                        <button className="bg-transparent border-none"
+                                          disabled={isdataForRead}
+
+                                          type="button"
+                                          onClick={() => {
+                                            remove(index);
+                                          }}
+                                        >
+                                          {" "}
+                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                            </tbody>
+                          </table>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+
+                {typeof errors.details_applicant_academic_info === "string" && (
+                  <div className="text-danger">
+                    {errors.details_applicant_academic_info}
                   </div>
                 )}
-              </FieldArray>
+              </div>
 
-              {typeof errors.details_applicant_academic_info === "string" && (
-                <div className="text-danger">
-                  {errors.details_applicant_academic_info}
-                </div>
-              )}
+              <hr></hr>
               {/* Details Skills  */}
+              <div className="w-full overflow-x-auto">
 
-              <FieldArray name="details_applicant_skills">
-                {({ push, remove }) => (
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <h3>Skills</h3>
-                    <table className="table table-head-custom table-vertical-center  table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
-                        >
-                          <th>Action</th>
+                <FieldArray name="details_applicant_skills">
+                  {({ push, remove }) => (
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Skills{"  "}
+                        </h6>
+                        {!isdataForRead && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              push({
+                                skill: "",
+                                description: "",
+                                ratingScale: "",
+                                startDate: "",
+                                endDate: "",
+                                jobVacancyId: "",
+                              })
+                              //  printSkills(values.details_applicant_vacancy)
 
-                          <td className="col-2"> Skill</td>
-                          <td className="col-3">Description</td>
-
-                          <td className="col-2">Rating</td>
-                          <td className="col-2">Start Date</td>
-                          <td className="col-2">End Date</td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values?.details_applicant_skills &&
-                          values?.details_applicant_skills?.length > 0 &&
-                          values?.details_applicant_skills?.map(
-                            (detail, index) => (
-                              <tr key={index}>
-                                <td>
-                                  <button
-                                    disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
-                                    className="btn btn-danger btn-elevate"
-                                    type="button"
-                                    onClick={() => {
-                                      remove(index);
-                                    }}
-                                  >
-                                    Delete
-                                  </button>
-                                </td>
-
-                                {/* skill */}
-
-                                <td>
-                                  <Field
-                                    name={`details_applicant_skills[${index}].skill`}
-                                    component={Input}
-                                    disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
-                                    placeholder="Enter skill"
-                                    autoComplete="off"
-                                  />
-
-                                  {errors.details_applicant_skills?.[index]
-                                    ?.skill &&
-                                    touched.details_applicant_skills?.[index]
-                                      ?.skill && (
-                                      <div className="text-danger">
-                                        {
-                                          errors.details_applicant_skills[index]
-                                            ?.skill
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* description */}
-
-                                <td>
-                                  <Field
-                                    name={`details_applicant_skills[${index}].description`}
-                                    component={Input}
-                                    disabled={isdataForRead}
-                                    placeholder="Enter description"
-                                    autoComplete="off"
-                                    onChange={(e) => {
-                                      setFieldValue(`details_applicant_skills[${index}].jobVacancyId`, values.details_applicant_skills?.[index]?.jobVacancyId)
-                                      setFieldValue(`details_applicant_skills[${index}].description`, e.target.value)
-                                    }}
-                                  />
-
-                                  {errors.details_applicant_skills?.[index]
-                                    ?.description &&
-                                    touched.details_applicant_skills?.[index]
-                                      ?.description && (
-                                      <div className="text-danger">
-                                        {
-                                          errors.details_applicant_skills[index]
-                                            ?.description
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* rating */}
-                                <td>
-                                  <SearchSelect
-                                    name={`details_applicant_skills[${index}].ratingScale`}
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    isDisabled={isdataForRead}
-                                    value={
-                                      ratingOptions?.find(
-                                        (x) =>
-                                          x.value ==
-                                          values.details_applicant_skills[index]
-                                            ?.ratingScale
-                                      ) || null
-                                    }
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        `details_applicant_skills[${index}].ratingScale`,
-                                        e?.value
-                                      );
-                                    }}
-                                    options={ratingOptions || []}
-                                    getOptionLabel={(x) => x.label} // optional: customize label rendering
-                                    getOptionValue={(x) => x.value} // optional: customize value extraction
-                                    placeholder="Select Status"
-                                  />
-
-                                  {errors.details_applicant_skills?.[index]
-                                    ?.ratingScale &&
-                                    touched.details_applicant_skills?.[index]
-                                      ?.ratingScale && (
-                                      <div className="text-danger">
-                                        {
-                                          errors.details_applicant_skills[index]
-                                            .ratingScale
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* start date  */}
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    placeholderText="Select Date"
-                                    selected={
-                                      values?.details_applicant_skills?.[index]
-                                        ?.startDate
-                                        ? new Date(
-                                          values.details_applicant_skills[
-                                            index
-                                          ].startDate
-                                        )
-                                        : null
-                                    }
-                                    onChange={(date) => {
-                                      const selectedDate = formatDates(
-                                        date,
-                                        "yyyy-MM-dd"
-                                      ); // or use date.toISOString().split('T')[0]
-                                      setFieldValue(
-                                        `details_applicant_skills[${index}].startDate`,
-                                        selectedDate
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`details_applicant_skills[${index}].startDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
-                                    minDate={
-                                      values?.dateOfBirth
-                                        ? new Date(values.dateOfBirth)
-                                        : null
-                                    }
-                                    maxDate={new Date()} // optional: restrict future dates
-                                    showPopperArrow={false}
-                                  />
-
-                                  {errors.details_applicant_skills?.[index]
-                                    ?.startDate &&
-                                    touched.details_applicant_skills?.[index]
-                                      ?.startDate && (
-                                      <div className="text-danger">
-                                        {
-                                          errors.details_applicant_skills[index]
-                                            .startDate
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-
-                                {/* end date  */}
-                                <td>
-                                  <DatePicker
-                                    className="form-control"
-                                    style={{ width: "130px" }}
-                                    placeholderText="Select Date"
-                                    selected={
-                                      values?.details_applicant_skills?.[index]
-                                        ?.endDate
-                                        ? new Date(
-                                          values.details_applicant_skills[
-                                            index
-                                          ].endDate
-                                        )
-                                        : null
-                                    }
-                                    onChange={(date) => {
-                                      const selectedDate = formatDates(
-                                        date,
-                                        "yyyy-MM-dd"
-                                      ); // or use date.toISOString().split('T')[0]
-                                      setFieldValue(
-                                        `details_applicant_skills[${index}].endDate`,
-                                        selectedDate
-                                      );
-                                    }}
-                                    dateFormat="dd-MMM-yyyy"
-                                    name={`details_applicant_skills[${index}].endDate`}
-                                    autoComplete="off"
-                                    disabled={isdataForRead}
-                                    minDate={
-                                      values?.dateOfBirth
-                                        ? new Date(values.dateOfBirth)
-                                        : null
-                                    }
-                                    maxDate={new Date()} // optional: restrict future dates
-                                    showPopperArrow={false}
-                                  />
-
-                                  {errors.details_applicant_skills?.[index]
-                                    ?.endDate &&
-                                    touched.details_applicant_skills?.[index]
-                                      ?.endDate && (
-                                      <div className="text-danger">
-                                        {
-                                          errors.details_applicant_skills[index]
-                                            .endDate
-                                        }
-                                      </div>
-                                    )}
-                                </td>
-                              </tr>
-                            )
-                          )}
-                      </tbody>
-                    </table>
-
-                    {!isdataForRead && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          push({
-                            skill: "",
-                            description: "",
-                            ratingScale: "",
-                            startDate: "",
-                            endDate: "",
-                            jobVacancyId: "",
-                          })
-                          //  printSkills(values.details_applicant_vacancy)
-
-                        }}
-
-                        // onClick={() => {
-                        //   if (!skillsAutoAdded && Array.isArray(allSkillNames) && allSkillNames.length > 0) {
-                        //     allSkillNames.forEach((name) => {
-                        //       const alreadyExists = values.details_applicant_skills.some(
-                        //         (item) => item.skill === name
-                        //       );
-
-                        //       if (!alreadyExists) {
-                        //         push({
-                        //           skill: name,
-                        //           description: "",
-                        //           ratingScale: "",
-                        //           startDate: "",
-                        //           endDate: "",
-                        //         });
-                        //       }
-                        //     });
-
-                        //     setSkillsAutoAdded(true); // prevent repeating auto-add
-                        //   } else {
-                        //     // Just manually add empty row
-                        //     push({
-                        //       skill: "",
-                        //       description: "",
-                        //       ratingScale: "",
-                        //       startDate: "",
-                        //       endDate: "",
-                        //     });
-                        //   }
-                        // }}
+                            }}
 
 
-                        className="btn btn-primary btn-sm"
-                      >
-                        + Add Detail
-                      </button>
-                    )}
+                            className="btn btn-primary btn-sm"
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+
+
+                            <td className="min-w-32"> Skill</td>
+                             <td className="min-w-32">Description</td>
+
+                              <td className="min-w-32">Rating</td>
+                              <td className="min-w-32">Start Date</td>
+                              <td className="min-w-32">End Date</td>
+                              <th className="text-right">Action</th>
+                            </tr>
+
+                            <tbody>
+                              {values?.details_applicant_skills &&
+                                values?.details_applicant_skills?.length > 0 &&
+                                values?.details_applicant_skills?.map(
+                                  (detail, index) => (
+                                    <tr key={index}>
+
+
+                                      {/* skill */}
+
+                                      <td>
+                                        <Field
+                                          name={`details_applicant_skills[${index}].skill`}
+                                          component={Input}
+                                          disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
+                                          placeholder="Enter skill"
+                                          autoComplete="off"
+                                        />
+
+                                        {errors.details_applicant_skills?.[index]
+                                          ?.skill &&
+                                          touched.details_applicant_skills?.[index]
+                                            ?.skill && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_skills[index]
+                                                  ?.skill
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      {/* description */}
+
+                                      <td>
+                                        <Field
+                                          name={`details_applicant_skills[${index}].description`}
+                                          component={Input}
+                                          disabled={isdataForRead}
+                                          placeholder="Enter description"
+                                          autoComplete="off"
+                                          onChange={(e) => {
+                                            setFieldValue(`details_applicant_skills[${index}].jobVacancyId`, values.details_applicant_skills?.[index]?.jobVacancyId)
+                                            setFieldValue(`details_applicant_skills[${index}].description`, e.target.value)
+                                          }}
+                                        />
+
+                                        {errors.details_applicant_skills?.[index]
+                                          ?.description &&
+                                          touched.details_applicant_skills?.[index]
+                                            ?.description && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_skills[index]
+                                                  ?.description
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      {/* rating */}
+                                      <td className="max-w-16">
+                                        <SearchSelect
+                                          name={`details_applicant_skills[${index}].ratingScale`}
+                                          className="form-control"
+                                          // style={{ width: "130px" }}
+                                          isDisabled={isdataForRead}
+                                          value={
+                                            ratingOptions?.find(
+                                              (x) =>
+                                                x.value ==
+                                                values.details_applicant_skills[index]
+                                                  ?.ratingScale
+                                            ) || null
+                                          }
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `details_applicant_skills[${index}].ratingScale`,
+                                              e?.value
+                                            );
+                                          }}
+                                          options={ratingOptions || []}
+                                          getOptionLabel={(x) => x.label} // optional: customize label rendering
+                                          getOptionValue={(x) => x.value} // optional: customize value extraction
+                                          placeholder="Select Status"
+                                        />
+
+                                        {errors.details_applicant_skills?.[index]
+                                          ?.ratingScale &&
+                                          touched.details_applicant_skills?.[index]
+                                            ?.ratingScale && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_skills[index]
+                                                  .ratingScale
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      {/* start date  */}
+                                      <td className="max-w-18">
+                                        <Field
+                                          className="form-control"
+                                          component={DatePickerField}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values?.details_applicant_skills?.[index]
+                                              ?.startDate
+                                              ? new Date(
+                                                values.details_applicant_skills[
+                                                  index
+                                                ].startDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_skills[${index}].startDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_skills[${index}].startDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead}
+                                          minDate={
+                                            values?.dateOfBirth
+                                              ? new Date(values.dateOfBirth)
+                                              : null
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_skills?.[index]
+                                          ?.startDate &&
+                                          touched.details_applicant_skills?.[index]
+                                            ?.startDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_skills[index]
+                                                  .startDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      {/* end date  */}
+                                      <td className="max-w-18">
+                                        <Field
+                                          className="form-control"
+                                          component={DatePickerField}
+                                          placeholderText="Select Date"
+                                          selected={
+                                            values?.details_applicant_skills?.[index]
+                                              ?.endDate
+                                              ? new Date(
+                                                values.details_applicant_skills[
+                                                  index
+                                                ].endDate
+                                              )
+                                              : null
+                                          }
+                                          onChange={(date) => {
+                                            const selectedDate = formatDates(
+                                              date,
+                                              "yyyy-MM-dd"
+                                            ); // or use date.toISOString().split('T')[0]
+                                            setFieldValue(
+                                              `details_applicant_skills[${index}].endDate`,
+                                              selectedDate
+                                            );
+                                          }}
+                                          dateFormat="dd-MMM-yyyy"
+                                          name={`details_applicant_skills[${index}].endDate`}
+                                          autoComplete="off"
+                                          disabled={isdataForRead}
+                                          minDate={
+                                            values?.dateOfBirth
+                                              ? new Date(values.dateOfBirth)
+                                              : null
+                                          }
+                                          maxDate={new Date()} // optional: restrict future dates
+                                          showPopperArrow={false}
+                                        />
+
+                                        {errors.details_applicant_skills?.[index]
+                                          ?.endDate &&
+                                          touched.details_applicant_skills?.[index]
+                                            ?.endDate && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.details_applicant_skills[index]
+                                                  .endDate
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+
+                                      <td className="text-right">
+                                        <button className="bg-transparent border-none"
+
+                                          disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
+
+                                          type="button"
+                                          onClick={() => {
+                                            remove(index);
+                                          }}
+                                        >
+                                          {" "}
+                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                            </tbody>
+                          </table>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+
+                {typeof errors.details_applicant_skills === "string" && (
+                  <div className="text-danger">
+                    {errors.details_applicant_skills}
                   </div>
-                )}
-              </FieldArray>
 
-              {typeof errors.details_applicant_skills === "string" && (
-                <div className="text-danger">
-                  {errors.details_applicant_skills}
-                </div>
-              )}
+                )}
+              </div>
             </Form>
           </Modal.Body>
           <Modal.Footer>
