@@ -14,6 +14,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit } from "../../../../../utils/common";
 import { toast } from "react-toastify";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { CirclePlus, Trash2 } from "lucide-react";
 
 // Define the validation schema for the main form and the policies
 const ReimbursementSchema = Yup.object().shape({
@@ -131,7 +132,7 @@ export function FormEditForm({
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue , setFieldTouched }) => (
+      {({ handleSubmit, errors, touched, values, setFieldValue, setFieldTouched }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -141,7 +142,7 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-             <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                   {/* Subsidiary Field */}
                   <div className="">
                     <SearchSelect
@@ -226,133 +227,116 @@ export function FormEditForm({
                 </div>
               </fieldset>
 
-              <FieldArray name="policies">
-                {({ push, remove }) => (
-                  <div
-                    // style={{
-                    //   backgroundColor: "rgb(235 243 255)",
-                    //   padding: "20px",
-                    //   borderRadius: "5px",
-                    //   border: "2px solid #adceff",
-                    //   marginTop: "20px",
-                    // }}
-                  >
-                 
-                    <h6 className="font-bold mb-0 text-primary my-2">
-                         Reimbursement Policies
-                        </h6>
-                    <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
-                        >
-                          <th> {!isUserForRead && <p> Action</p>}</th>
-                          <th>Reimbursement Type</th>
-                          <th>Max Amount Allowed</th>
-                          <th>Attachment Required</th>
-                          <th style={{ padding: "20px" }}>Salary Grade</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values.policies &&
-                          values.policies.length > 0 &&
-                          values.policies.map((detail, index) => (
-                            <tr key={index}>
-                              <td>
-                                {!isUserForRead && (
-                                  <button
-                                    type="button"
-                                    // onClick={() => remove(index)}
-                                    onClick={() => {
-                                      if (
-                                        values.policies[index]?.Id &&
-                                        values.policies.length > 1
-                                      ) {
-                                        deleteReimbursementConfigPolicy(
-                                          values.policies[index]?.Id,
-                                          values.policies[index]
-                                            ?.reimbursement_typeId,
-                                          values.subsidiaryId
-                                        );
-                                      } else if (
-                                        values.policies[index]?.Id &&
-                                        values.policies.length == 1
-                                      ) {
-                                        deleteNotification();
-                                      } else {
-                                        remove(index);
-                                      }
-                                    }}
-                                    className="btn btn-danger btn-sm"
-                                  >
-                                    Delete
-                                  </button>
-                                )}
-                              </td>
+              <div className="w-full overflow-x-auto mt-2">
 
-                              <td>
-                                <Field
-                                  name={`policies[${index}].reimbursement_typeId`}
-                                  as="select"
-                                  className="form-control"
-                                  disabled={
-                                    isUserForRead || values.policies[index]?.Id
-                                  }
-                                >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
-                                  {dashboard.allReimbursementTypeList?.map(
-                                    (x) => {
-                                      return (
-                                        <option
-                                          disabled={
-                                            values?.policies?.find(
-                                              (el) =>
-                                                el.reimbursement_typeId ==
-                                                x.value
-                                            )
-                                              ? true
-                                              : false
+
+
+                <FieldArray name="policies">
+                  {({ push, remove }) => (
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Reimbursement Policies{"  "}
+                        </h6>
+                        {!isUserForRead && (
+                          <button c
+                            type="button"
+                            onClick={() =>
+                              push({
+                                reimbursement_typeId: "",
+                                max_amount: "",
+                                attachment_required: "",
+                                grades: "",
+                              })
+                            }
+                            className="btn btn-primary btn-sm mt-1"
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "} Add
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+
+                              <td className="min-w-32">Reimbursement Type</td>
+                              <td className="min-w-32">Max Amount Allowed</td>
+                              <td className="min-w-32">Attachment Required</td>
+                              <td className="min-w-32">Salary Grade</td>
+                              <td className="min-w-32"> {!isUserForRead && <p> Action</p>}</td>
+                            </tr>
+
+                            <tbody>
+                              {values.policies &&
+                                values.policies.length > 0 &&
+                                values.policies.map((detail, index) => (
+                                  <tr key={index}>
+
+
+                                    <td>
+                                      <Field
+                                        name={`policies[${index}].reimbursement_typeId`}
+                                        as="select"
+                                        className="form-control"
+                                        disabled={
+                                          isUserForRead || values.policies[index]?.Id
+                                        }
+                                      >
+                                        <option value="">Select...</option>{" "}
+                                        {/* Default "Select..." option */}
+                                        {dashboard.allReimbursementTypeList?.map(
+                                          (x) => {
+                                            return (
+                                              <option
+                                                disabled={
+                                                  values?.policies?.find(
+                                                    (el) =>
+                                                      el.reimbursement_typeId ==
+                                                      x.value
+                                                  )
+                                                    ? true
+                                                    : false
+                                                }
+                                                value={x.value}
+                                              >
+                                                {" "}
+                                                {x.label}{" "}
+                                              </option>
+                                            );
                                           }
-                                          value={x.value}
-                                        >
-                                          {" "}
-                                          {x.label}{" "}
-                                        </option>
-                                      );
-                                    }
-                                  )}
-                                </Field>
-                                {errors.policies?.[index]
-                                  ?.reimbursement_typeId &&
-                                  touched.policies?.[index]
-                                    ?.reimbursement_typeId && (
-                                    <div className="text-danger">
-                                      {
-                                        errors.policies[index]
-                                          .reimbursement_typeId
-                                      }
-                                    </div>
-                                  )}
-                              </td>
-                             
-                              <td>
-                              <AmountInput
-                                field={{
-                                  name: `policies[${index}].max_amount`,
-                                  value: values?.policies[index].max_amount,
-                                }}
-                                form={{
-                                  touched,
-                                  errors,
-                                  setFieldValue,
-                                  setFieldTouched,
-                                }}
-                                label={null}
-                                disabled={isUserForRead}
-                                placeholder="Write amount"
-                              />
-                                {/* <Field
+                                        )}
+                                      </Field>
+                                      {errors.policies?.[index]
+                                        ?.reimbursement_typeId &&
+                                        touched.policies?.[index]
+                                          ?.reimbursement_typeId && (
+                                          <div className="text-danger">
+                                            {
+                                              errors.policies[index]
+                                                .reimbursement_typeId
+                                            }
+                                          </div>
+                                        )}
+                                    </td>
+
+                                    <td>
+                                      <AmountInput
+                                        field={{
+                                          name: `policies[${index}].max_amount`,
+                                          value: values?.policies[index].max_amount,
+                                        }}
+                                        form={{
+                                          touched,
+                                          errors,
+                                          setFieldValue,
+                                          setFieldTouched,
+                                        }}
+                                        label={null}
+                                        disabled={isUserForRead}
+                                        placeholder="Write amount"
+                                      />
+                                      {/* <Field
                                   name={`policies[${index}].max_amount`}
                                   type="number"
                                   placeholder="Write amount"
@@ -364,372 +348,344 @@ export function FormEditForm({
                                     ); // Limit to 3 digits
                                   }}
                                 /> */}
-                                {errors.policies?.[index]?.max_amount &&
-                                  touched.policies?.[index]?.max_amount && (
-                                    <div className="text-danger">
-                                      {errors.policies[index].max_amount}
-                                    </div>
-                                  )}
-                              </td>
+                                      {errors.policies?.[index]?.max_amount &&
+                                        touched.policies?.[index]?.max_amount && (
+                                          <div className="text-danger">
+                                            {errors.policies[index].max_amount}
+                                          </div>
+                                        )}
+                                    </td>
 
-                              <td>
-                                <div className="">
-                                  <Field
-                                    name={`policies[${index}].attachment_required`}
-                                    as="select"
-                                    className="form-control"
-                                    disabled={isUserForRead}
-                                    onChange={(e) => {
-                                      setFieldValue(
-                                        `policies[${index}].attachment_required`,
-                                        e.target.value
-                                      ); // Use the raw value
-                                    }}
-                                  >
-                                    <option value="">Select</option>
-                                    {basisOptions.map((option) => (
-                                      <option
-                                        key={option.value}
-                                        value={option.value}
-                                      >
-                                        {option.label}
-                                      </option>
-                                    ))}
-                                  </Field>
+                                    <td>
+                                      <div className="">
+                                        <Field
+                                          name={`policies[${index}].attachment_required`}
+                                          as="select"
+                                          className="form-control"
+                                          disabled={isUserForRead}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `policies[${index}].attachment_required`,
+                                              e.target.value
+                                            ); // Use the raw value
+                                          }}
+                                        >
+                                          <option value="">Select</option>
+                                          {basisOptions.map((option) => (
+                                            <option
+                                              key={option.value}
+                                              value={option.value}
+                                            >
+                                              {option.label}
+                                            </option>
+                                          ))}
+                                        </Field>
 
-                                  {/* {errors.attachment_required &&
+                                        {/* {errors.attachment_required &&
                                     touched.attachment_required && (
                                       <div className="text-danger">
                                         {errors.attachment_required}
                                       </div>
                                     )} */}
 
-                                  {errors.policies?.[index]
-                                    ?.attachment_required &&
-                                    touched.policies?.[index]
-                                      ?.attachment_required && (
-                                      <div className="text-danger">
-                                        {
-                                          errors.policies[index]
-                                            .attachment_required
-                                        }
+                                        {errors.policies?.[index]
+                                          ?.attachment_required &&
+                                          touched.policies?.[index]
+                                            ?.attachment_required && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.policies[index]
+                                                  .attachment_required
+                                              }
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
-                                </div>
-                              </td>
+                                    </td>
 
-                              <td>
-                                <div
-                                  style={{
-                                    maxHeight: "90px", // Set maxHeight for scrolling
-                                    overflowY: "auto", // Enable vertical scrolling
-                                    overflowX: "hidden", // Hide horizontal scrolling
-                                    padding: "10px",
-                                    // marginTop: "10px",
-                                  }}
-                                  className="bg-white m-2"
-                                >
-                                  {/* {dashboard.allEmployeeGradeList.map(
-                                    (option, i) => (
+                                    <td>
                                       <div
-                                        key={i}
-                                        className="bg-white p-2"
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
+
                                       >
-                                        <input
-                                          className="mr-2"
-                                          type="checkbox"
-                                          checked={values.policies[
-                                            index
-                                          ].grades.includes(option.value)}
-                                          onChange={(e) => {
-                                            checkIds(e)
-                                            const checked = e.target.checked;
-                                            const currentGrades =
-                                            values.policies[index].grades ||
-                                              [];
-                                            if (checked) {
-                                              // Add ID to the array
-                                              setFieldValue(
-                                                `policies[${index}].grades`,
-                                                [...currentGrades, option.value]
+                                        <div className="overflow-auto max-h-16 border-none">
+                                          {dashboard.allEmployeeGradeList
+                                            .filter((option) => option.value !== null) // Filter out the unwanted option
+                                            .map((option, i) => (
+
+                                              <div
+                                                key={i}
+
+                                              >
+                                                <label className="flex items-center space-x-1">
+
+                                                  <input
+
+                                                    disabled={isUserForRead}
+                                                    type="checkbox"
+                                                    checked={values.policies[
+                                                      index
+                                                    ].grades.includes(option.value)}
+                                                    onChange={(e) => {
+                                                      const checked = e.target.checked;
+                                                      const currentGrades =
+                                                        values.policies[index].grades ||
+                                                        [];
+
+                                                      const newGrades = checked
+                                                        ? [...currentGrades, option.value]
+                                                        : currentGrades.filter(
+                                                          (id) => id !== option.value
+                                                        );
+
+                                                      setFieldValue(
+                                                        `policies[${index}].grades`,
+                                                        newGrades
+                                                      );
+                                                    }}
+                                                  />
+
+                                                  {option.label}
+                                                </label>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                      {errors.policies?.[index]?.grades &&
+                                        touched.policies?.[index]?.grades && (
+                                          <div className="text-danger">
+                                            {errors.policies[index].grades}
+                                          </div>
+                                        )}
+                                    </td>
+
+                                    <td className="text-right">
+                                      {!isUserForRead && (
+                                        <button className="bg-transparent border-none"
+                                          type="button"
+                                          // onClick={() => remove(index)}
+                                          onClick={() => {
+                                            if (
+                                              values.policies[index]?.Id &&
+                                              values.policies.length > 1
+                                            ) {
+                                              deleteReimbursementConfigPolicy(
+                                                values.policies[index]?.Id,
+                                                values.policies[index]
+                                                  ?.reimbursement_typeId,
+                                                values.subsidiaryId
                                               );
+                                            } else if (
+                                              values.policies[index]?.Id &&
+                                              values.policies.length == 1
+                                            ) {
+                                              deleteNotification();
                                             } else {
-                                              // Remove ID from the array
-                                              setFieldValue(
-                                                `policies[${index}].grades`,
-                                                currentGrades.filter(
-                                                  (id) => id !== option.value
-                                                )
-                                              );
+                                              remove(index);
                                             }
                                           }}
-                                        />
-                                        <label className="form-check-label ms-2">
-                                          {option.label}
-                                        </label>
-                                      </div>
-                                    )
-                                  )} */}
 
-                                  {dashboard.allEmployeeGradeList
-                                    .filter((option) => option.value !== null) // Filter out the unwanted option
-                                    .map((option, i) => (
-                                      <div
-                                        key={i}
-                                        className="bg-white p-1"
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        <input
-                                          className="mr-2"
-                                          disabled={isUserForRead}
-                                          type="checkbox"
-                                          checked={values.policies[
-                                            index
-                                          ].grades.includes(option.value)}
-                                          onChange={(e) => {
-                                            const checked = e.target.checked;
-                                            const currentGrades =
-                                              values.policies[index].grades ||
-                                              [];
-
-                                            const newGrades = checked
-                                              ? [...currentGrades, option.value]
-                                              : currentGrades.filter(
-                                                  (id) => id !== option.value
-                                                );
-
-                                            setFieldValue(
-                                              `policies[${index}].grades`,
-                                              newGrades
-                                            );
-                                          }}
-                                        />
-                                        <label className="form-check-label ms-2">
-                                          {option.label}
-                                        </label>
-                                      </div>
-                                    ))}
-                                </div>
-                                {errors.policies?.[index]?.grades &&
-                                  touched.policies?.[index]?.grades && (
-                                    <div className="text-danger">
-                                      {errors.policies[index].grades}
-                                    </div>
-                                  )}
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-
-                    {!isUserForRead && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          push({
-                            reimbursement_typeId: "",
-                            max_amount: "",
-                            attachment_required: "",
-                            grades: "",
-                          })
-                        }
-                        className="btn btn-primary btn-sm"
-                      >
-                        + Add Detail
-                      </button>
-                    )}
-                  </div>
-                )}
-              </FieldArray>
-
-              <FieldArray name="accounts">
-                {({ push, remove }) => (
-                  <div
-                    // style={{
-                    //   backgroundColor: "rgb(235 243 255)",
-                    //   padding: "20px",
-                    //   borderRadius: "5px",
-                    //   border: "2px solid #adceff",
-                    //   marginTop: "20px",
-                    // }}
-                  >
-               
-                    <h6 className="font-bold mb-0 text-primary my-2">
-                         Accounts
-                        </h6>
-                    <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
-                        >
-                          <th> {!isUserForRead && <p> Action</p>}</th>
-                          <th>Reimbursement Type</th>
-                          <th>Expense Account</th>
-                          <th>Bank Account</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values.accounts &&
-                          values.accounts.length > 0 &&
-                          values.accounts.map((detail, index) => (
-                            <tr key={index}>
-                              <td>
-                                {!isUserForRead && (
-                                  <button
-                                    type="button"
-                                    onClick={() => remove(index)}
-                                    className="btn btn-danger btn-sm"
-                                  >
-                                    Delete
-                                  </button>
-                                )}
-                              </td>
-
-                              <td>
-                                <Field
-                                  name={`accounts[${index}].reimbursement_typeId`}
-                                  as="select"
-                                  className="form-control"
-                                  disabled={isUserForRead}
-                                >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
-                                  {dashboard.allReimbursementTypeList?.map(
-                                    (x) => {
-                                      return (
-                                        <option
-                                          disabled={
-                                            values.accounts.find(
-                                              (el) =>
-                                                el.reimbursement_typeId ==
-                                                x.value
-                                            )
-                                              ? true
-                                              : false
-                                          }
-                                          value={x.value}
                                         >
-                                          {" "}
-                                          {x.label}{" "}
-                                        </option>
-                                      );
-                                    }
-                                  )}
-                                </Field>
-                                {errors.accounts?.[index]
-                                  ?.reimbursement_typeId &&
-                                  touched.accounts?.[index]
-                                    ?.reimbursement_typeId && (
-                                    <div className="text-danger">
-                                      {
-                                        errors.accounts[index]
-                                          .reimbursement_typeId
-                                      }
-                                    </div>
-                                  )}
-                              </td>
+                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        </div>
 
-                              <td>
-                                <Field
-                                  name={`accounts[${index}].expense_accountId`}
-                                  as="select"
-                                  className="form-control"
-                                  disabled={isUserForRead}
-                                >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
-                                  {dashboard.allAccountList?.map((x) => {
-                                    return (
-                                      <option
-                                        disabled={
-                                          values.accounts.find(
-                                            (el) =>
-                                              el.expense_accountId == x.value
-                                          )
-                                            ? true
-                                            : false
-                                        }
-                                        value={x.value}
-                                      >
-                                        {" "}
-                                        {x.mergeLabel}{" "}
-                                      </option>
-                                    );
-                                  })}
-                                </Field>
-                                {errors.accounts?.[index]?.expense_accountId &&
-                                  touched.accounts?.[index]
-                                    ?.expense_accountId && (
-                                    <div className="text-danger">
-                                      {errors.accounts[index].expense_accountId}
-                                    </div>
-                                  )}
-                              </td>
 
-                              <td>
-                                <Field
-                                  name={`accounts[${index}].bank_accountId`}
-                                  as="select"
-                                  className="form-control"
-                                  disabled={isUserForRead}
-                                >
-                                  <option value="">Select...</option>{" "}
-                                  {/* Default "Select..." option */}
-                                  {dashboard.allAccountList?.map((x) => {
-                                    return (
-                                      <option
-                                        disabled={
-                                          values.accounts.find(
-                                            (el) => el.bank_accountId == x.value
-                                          )
-                                            ? true
-                                            : false
-                                        }
-                                        value={x.value}
-                                      >
-                                        {" "}
-                                        {x.mergeLabel}{" "}
-                                      </option>
-                                    );
-                                  })}
-                                </Field>
-                                {errors.accounts?.[index]?.bank_accountId &&
-                                  touched.accounts?.[index]?.bank_accountId && (
-                                    <div className="text-danger">
-                                      {errors.accounts[index].bank_accountId}
-                                    </div>
-                                  )}
-                              </td>
+                      </div>
+                    </div>
+                  )}
+
+                </FieldArray>
+
+              </div>
+
+
+              <div className="w-full overflow-x-auto">
+                <FieldArray name="accounts">
+                  {({ push, remove }) => (
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Accounts{"  "}
+                        </h6>
+                        {!isUserForRead && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              push({
+                                reimbursement_typeId: "",
+                                expense_accountId: "",
+                                bank_accountId: "",
+                              })
+                            }
+                            className="btn btn-primary btn-sm"
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
+                          </button>
+                        )}
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+                              <td className="min-w-32"> {!isUserForRead && <p> Action</p>}</td>
+                              <td className="min-w-32">Reimbursement Type</td>
+                              <td className="min-w-32">Expense Account</td>
+                              <td className="min-w-32">Bank Account</td>
                             </tr>
-                          ))}
-                      </tbody>
-                    </table>
 
-                    {!isUserForRead && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          push({
-                            reimbursement_typeId: "",
-                            expense_accountId: "",
-                            bank_accountId: "",
-                          })
-                        }
-                        className="btn btn-primary btn-sm"
-                      >
-                        + Add Detail
-                      </button>
-                    )}
-                  </div>
-                )}
-              </FieldArray>
+                            <tbody>
+                              {values.accounts &&
+                                values.accounts.length > 0 &&
+                                values.accounts.map((detail, index) => (
+                                  <tr key={index}>
+
+
+                                    <td>
+                                      <Field
+                                        name={`accounts[${index}].reimbursement_typeId`}
+                                        as="select"
+                                        className="form-control"
+                                        disabled={isUserForRead}
+                                      >
+                                        <option value="">Select...</option>{" "}
+                                        {/* Default "Select..." option */}
+                                        {dashboard.allReimbursementTypeList?.map(
+                                          (x) => {
+                                            return (
+                                              <option
+                                                disabled={
+                                                  values.accounts.find(
+                                                    (el) =>
+                                                      el.reimbursement_typeId ==
+                                                      x.value
+                                                  )
+                                                    ? true
+                                                    : false
+                                                }
+                                                value={x.value}
+                                              >
+                                                {" "}
+                                                {x.label}{" "}
+                                              </option>
+                                            );
+                                          }
+                                        )}
+                                      </Field>
+                                      {errors.accounts?.[index]
+                                        ?.reimbursement_typeId &&
+                                        touched.accounts?.[index]
+                                          ?.reimbursement_typeId && (
+                                          <div className="text-danger">
+                                            {
+                                              errors.accounts[index]
+                                                .reimbursement_typeId
+                                            }
+                                          </div>
+                                        )}
+                                    </td>
+
+                                    <td>
+                                      <Field
+                                        name={`accounts[${index}].expense_accountId`}
+                                        as="select"
+                                        className="form-control"
+                                        disabled={isUserForRead}
+                                      >
+                                        <option value="">Select...</option>{" "}
+                                        {/* Default "Select..." option */}
+                                        {dashboard.allAccountList?.map((x) => {
+                                          return (
+                                            <option
+                                              disabled={
+                                                values.accounts.find(
+                                                  (el) =>
+                                                    el.expense_accountId == x.value
+                                                )
+                                                  ? true
+                                                  : false
+                                              }
+                                              value={x.value}
+                                            >
+                                              {" "}
+                                              {x.mergeLabel}{" "}
+                                            </option>
+                                          );
+                                        })}
+                                      </Field>
+                                      {errors.accounts?.[index]?.expense_accountId &&
+                                        touched.accounts?.[index]
+                                          ?.expense_accountId && (
+                                          <div className="text-danger">
+                                            {errors.accounts[index].expense_accountId}
+                                          </div>
+                                        )}
+                                    </td>
+
+                                    <td>
+                                      <Field
+                                        name={`accounts[${index}].bank_accountId`}
+                                        as="select"
+                                        className="form-control"
+                                        disabled={isUserForRead}
+                                      >
+                                        <option value="">Select...</option>{" "}
+                                        {/* Default "Select..." option */}
+                                        {dashboard.allAccountList?.map((x) => {
+                                          return (
+                                            <option
+                                              disabled={
+                                                values.accounts.find(
+                                                  (el) => el.bank_accountId == x.value
+                                                )
+                                                  ? true
+                                                  : false
+                                              }
+                                              value={x.value}
+                                            >
+                                              {" "}
+                                              {x.mergeLabel}{" "}
+                                            </option>
+                                          );
+                                        })}
+                                      </Field>
+                                      {errors.accounts?.[index]?.bank_accountId &&
+                                        touched.accounts?.[index]?.bank_accountId && (
+                                          <div className="text-danger">
+                                            {errors.accounts[index].bank_accountId}
+                                          </div>
+                                        )}
+                                    </td>
+
+                                    <td className="text-right">
+                                      {!isUserForRead && (
+                                        <button className="bg-transparent border-none"
+                                          type="button"
+                                          onClick={() => remove(index)}
+                                          
+                                        >
+                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+
+              </div>
             </Form>
           </Modal.Body>
 
