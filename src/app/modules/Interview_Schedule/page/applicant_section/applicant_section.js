@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { amountFormat } from "../../../../utils/common";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
+import { Eye, XCircle } from "lucide-react";
 
 export default function ApplicationSection() {
   const dispatch = useDispatch();
@@ -58,8 +59,10 @@ export default function ApplicationSection() {
   return (
     <>
       {/* job selection area  */}
-      <div className="d-flex">
-        <div className="col-12 col-md-4 mt-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
+
+        {/* Employee Id Dropdown Starts */}
+        <div className="ml-3">
           <SearchSelect
             name="cityId"
             options={applicants}
@@ -77,7 +80,7 @@ export default function ApplicationSection() {
             isClearable={false}
           />
         </div>
-        <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
+        {/* <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
           <span
             className="svg-icon svg-icon-md svg-icon-primary"
             onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
@@ -92,14 +95,45 @@ export default function ApplicationSection() {
           </span>
 
 
+        </div> */}
+        <div className="mt-6">
+
+
+
+          {formUIProps.panelMode2 ? (
+            <button
+              type="button"
+              className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+              onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
+            >
+              <XCircle className="w-3 h-3 text-black" />
+              Cancel
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-primary d-flex align-items-center gap-2"
+              onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
+            >
+
+
+              <Eye className="w-4 h-4 text-white" />
+              View Details
+            </button>
+          )}
+
+
+
+
         </div>
+
       </div>
       <br />
       {/* job detail collapsable panel  */}
       {formUIProps.panelMode2 && (
 
 
-        <>
+        <div className="px-2">
           {formUIProps.selectedApplicant && applicantProfile && Object?.keys(applicantProfile)?.length > 0 ? (
 
             <>
@@ -242,7 +276,7 @@ export default function ApplicationSection() {
           ) : (
             <p className="text-center m-2">Please Select Applicant Profile</p> // Improved message for clarity
           )}
-        </>
+        </div>
 
       )}
     </>

@@ -34,7 +34,7 @@ import DatePicker from "react-datepicker";
 import { subYears } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
-import { CirclePlus, Trash2, User } from "lucide-react";
+import { CirclePlus, Trash2, Upload, User } from "lucide-react";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
@@ -674,7 +674,7 @@ export function FormEditForm({
       setImage(formData.profile_image);
     }
     else {
-      setImage(toAbsoluteUrl("/media/logos/defaultImg.png")); // new case
+      setImage(toAbsoluteUrl("/media/users/profileImage.png")); // new case
 
     }
   }, [formData.Id, formData?.profile_image]);
@@ -892,11 +892,8 @@ export function FormEditForm({
 
 
                   {/* Image */}
-                  <div className=" gap-1 col-span-2 p-5 items-center justify-center bg-red-600 pt-0">
 
-
-
-                    {/* <div className="text-center" style={{
+                  {/* <div className="text-center" style={{
                       height: "220px",
                       width: "120px",
                       overflow: "hidden",
@@ -946,8 +943,68 @@ export function FormEditForm({
                       />
                     </div> */}
 
+                  <div className="order-1 lg:order-2 col-span-1">
+                    <div
+                      className="text-center"
+                      style={{
+                        overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        name="myImage"
+                        width={70}
+                        height={70}
+                        src={profile_image || formData?.profile_image}
+                        className="object-cover rounded-lg"
+                        alt="Profile"
+                        style={{
+                          objectFit: "cover",
+                        }}
+                      />
+
+                      
+
+                   
+                      <label
+                        htmlFor="myImage"
+                        className="btn bg-tsecondary border border-black text-black mt-1"
+                      >
+                        
+                        Upload Square Image{" "}
+                        <Upload className="w-3 h-3 text-black" />
+                      </label>
+
+                      {/* Hidden file input */}
+                      <input
+                        id="myImage"
+                        type="file"
+                        name="myImage"
+                        accept=".jpg, .jpeg, .png"
+                        onChange={onImageChange}
+                        style={{ display: "none" }}
+                      />
+
+                      {/* Formik error display */}
+                      <ErrorMessage
+                        className="form-feedBack text-danger"
+                        name="myImage"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+
+
+                  {/* <div className=" gap-1 col-span-2 p-5 items-center justify-center bg-red-600 pt-0">
+
+
+
+
+
                     <div className="w-[70px] h-[70px] rounded-[10px] border border-gray-300 bg-tsecondary flex justify-center items-center p-[5px] overflow-hidden">
-                      {formData?.profile_image  ? (
+                      {formData?.profile_image ? (
                         <img
                           src={formData?.profile_image}
                           alt="Profile"
@@ -969,63 +1026,41 @@ export function FormEditForm({
                     </div>
 
                     <div className="">
-                      {/* <label htmlFor="myImage" className="btn btn-sm btn-outline-primary items-center ">
-                        Upload Image
-                      </label>
 
 
-                      <input
-                        id="myImage"
-                        type="file"
-                        name="myImage"
-                        accept=".jpg, .jpeg, .png"
-                        onChange={onImageChange}
-                        style={{ display: "none" }}
-                      /> */}
+                      <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
+                        <div className="col-span-1">
 
-                          <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
-                  <div className="col-span-1">
-                    {/* <label
-                      htmlFor="file"
-                    // className="block mb-2 text-xs font-normal text-gray-900"
-                    >
-                      Attachment
-                    </label> */}
-
-                    {/* Hidden input */}
-
-
-                    {/* Styled label as upload box */}
-                    <label
-                      htmlFor="myImage"
-                      className="form-control block w-full cursor-pointer"
-                      onChange={onImageChange}
-                    >
-                      {formData.file ? formData.file : "Upload"}
-                      <input
-                        id="myImage"
-                        name="myImage"
-                        type="file"
-                        accept=".jpeg,.jpg,.png"
-                        ref={inputFile}
-                        className="hidden"
-                        myImage
-                      />
-                    </label>
-
-                    {/* Show existing file if any */}
-               
-                  </div>
+                          <label
+                            htmlFor="myImage"
+                            className="form-control block w-full cursor-pointer"
+                            onChange={onImageChange}
+                          >
+                            {formData.file ? formData.file : "Upload"}
+                            <input
+                              id="myImage"
+                              name="myImage"
+                              type="file"
+                              accept=".jpeg,.jpg,.png"
+                              ref={inputFile}
+                              className="hidden"
+                              myImage
+                            />
+                          </label>
 
 
-                </div>
+
+                        </div>
+
+
+                      </div>
 
                     </div>
 
 
 
 
-                  </div>
+                  </div> */}
 
 
 
@@ -3140,8 +3175,8 @@ export function FormEditForm({
                             <tr className="custom-table-header">
 
 
-                            <td className="min-w-32"> Skill</td>
-                             <td className="min-w-32">Description</td>
+                              <td className="min-w-32"> Skill</td>
+                              <td className="min-w-32">Description</td>
 
                               <td className="min-w-32">Rating</td>
                               <td className="min-w-32">Start Date</td>

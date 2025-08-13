@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../utils/constants";
 import { RichTextInput } from "../../../../../_metronic/_partials/controls/forms/RichTextInput";
 import he from "he";
+import { CircleMinus, CirclePlus } from "lucide-react";
 
 const validationSchema = Yup.object().shape({
   applicationStatusId: Yup.string()
@@ -49,6 +50,7 @@ export default function HRRecomendation() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const FormUIContext = useFormUIContext();
+  const [showSection, setShowSection] = useState(false);
   const formUIProps = useMemo(() => {
     return {
       selectedApplicant: FormUIContext?.selectedApplicant,
@@ -101,26 +103,35 @@ export default function HRRecomendation() {
   }, [dispatch]);
 
   return (
-    <div className="col-12">
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header>
-            <div className="accordion-header-btn ">
-              <Accordion.Toggle eventKey="0" className="flex-between-center">
-                HR Recommendations
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
+    <div >
+
+
+
+      <div className="">
+        <div className="flex justify-end mt-1">
+
+          <button
+            type="button"
+            onClick={() => setShowSection(!showSection)}
+            className="btn btn-primary btn-sm mt-1 text-right"
+          >
+
+            {showSection ? (
+              <CircleMinus className="h-4 w-4 mr-1" />
+            ) : (
+              <CirclePlus className="h-4 w-4 mr-1" />
+            )}
+            HR Recommendations
+
+          </button>
+        </div>
+        {showSection && (
+          <>
             {formUIProps?.selectedApplicant ? (
-              <Card.Body>
+
+              <>
                 <div
-                  style={{
-                    backgroundColor: "#E6F8FF",
-                    borderRadius: "5px",
-                    border: "none",
-                  }}
+
                 >
                   <Formik
                     enableReinitialize
@@ -146,8 +157,8 @@ export default function HRRecomendation() {
                         <Modal.Body className="overlay overlay-block cursor-default">
                           <Form className="form form-label-right">
                             <fieldset>
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-4">
+                              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
+                                <div className="">
                                   <SearchSelect
                                     name="applicationStatusId"
                                     label={
@@ -174,10 +185,7 @@ export default function HRRecomendation() {
                                     touched={touched.applicationStatusId}
                                   />
                                 </div>
-                              </div>
-
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-4">
+                                <div className="">
                                   <SearchSelect
                                     name="locationId"
                                     label={
@@ -203,7 +211,7 @@ export default function HRRecomendation() {
                                     touched={touched.locationId}
                                   />
                                 </div>
-                                <div className="col-12 col-md-4">
+                                <div className="">
                                   <label>
                                     <span>
                                       Monthly Salary{" "}
@@ -219,9 +227,7 @@ export default function HRRecomendation() {
                                     amountFormat={true}
                                   />
                                 </div>
-                              </div>
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-4">
+                                <div className="">
                                   <SearchSelect
                                     name="appointmentTypeId"
                                     label={
@@ -248,7 +254,12 @@ export default function HRRecomendation() {
                                     touched={touched.appointmentTypeId}
                                   />
                                 </div>
-                                <div className="col-12 col-md-4">
+                              </div>
+
+
+                              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
+
+                                <div className="">
                                   <SearchSelect
                                     name="jobPreferencesId"
                                     label={
@@ -275,42 +286,50 @@ export default function HRRecomendation() {
                                     touched={touched.jobPreferencesId}
                                   />
                                 </div>
+
+                             
+                                  <div className="">
+                                    <label>
+                                      <span>
+                                        Date of Joining{" "}
+                                        <span style={{ color: "red" }}>*</span>
+                                      </span>
+                                    </label>
+                                    <Field
+                                      name="dateOfJoining"
+                                      component={DatePickerField}
+                                      value={values?.dateOfJoining || ""}
+                                      placeholder="Date of Joining"
+                                      type="date"
+                                      minDate={
+                                        entities?.length > 0
+                                          ? new Date(entities[0].interview_date)
+                                          : ""
+                                      }
+                                    />
+                                  </div>
+                                  
+                            <div className="">
+                                    <label>
+                                      <span>Probation Period</span>
+                                    </label>
+                                    <Field
+                                      name="probationPeriod"
+                                      component={Input}
+                                      placeholder="Probation Period"
+                                      type="number"
+                                    />
+                                  </div>
+
+
+
                               </div>
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-4">
-                                  <label>
-                                    <span>
-                                      Date of Joining{" "}
-                                      <span style={{ color: "red" }}>*</span>
-                                    </span>
-                                  </label>
-                                  <Field
-                                    name="dateOfJoining"
-                                    component={DatePickerField}
-                                    value={values?.dateOfJoining || ""}
-                                    placeholder="Date of Joining"
-                                    type="date"
-                                    minDate={
-                                      entities?.length > 0
-                                        ? new Date(entities[0].interview_date)
-                                        : ""
-                                    }
-                                  />
-                                </div>
-                                <div className="col-12 col-md-4">
-                                  <label>
-                                    <span>Probation Period</span>
-                                  </label>
-                                  <Field
-                                    name="probationPeriod"
-                                    component={Input}
-                                    placeholder="Probation Period"
-                                    type="number"
-                                  />
-                                </div>
-                              </div>
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-12">
+
+
+                              <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+
+
+                                <div className="">
                                   <label>
                                     <span>
                                       HR Remarks{" "}
@@ -325,8 +344,9 @@ export default function HRRecomendation() {
                                   />
                                 </div>
                               </div>
-                              <div className="row mt-2">
-                                <div className="col-12 col-md-12">
+
+                              <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                                <div className="">
                                   <RichTextInput
                                     label="Offer Letter"
                                     name="jobOfferLetter"
@@ -338,6 +358,7 @@ export default function HRRecomendation() {
                                     }}
                                   />
                                 </div>
+
                               </div>
                             </fieldset>
                           </Form>
@@ -359,13 +380,14 @@ export default function HRRecomendation() {
                     )}
                   </Formik>
                 </div>
-              </Card.Body>
+              </>
             ) : (
               <p className="text-center m-2">Please Select Applicant Profile</p> // Improved message for clarity
             )}
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+          </>
+        )}
+
+      </div>
     </div>
   );
 }

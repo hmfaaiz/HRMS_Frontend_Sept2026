@@ -13,6 +13,7 @@ import {} from "../../_redux/redux-Actions";
 import { FormFIlter } from "./form-filter/FormFIlter";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
+import { FormTable } from "./form-table/FormTable";
 
 export function FormPage({ history }) {
   const dispatch = useDispatch();
@@ -42,9 +43,12 @@ export function FormPage({ history }) {
 
       <TCard name={CurrentModuleName()}>
         <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-          <FormFIlter />
+         
         </div>
-        <FormCard />
+       
+         <FormFIlter />
+          {/* <FormCard /> */}
+              <FormTable />
       </TCard>
 
       <ToastContainer

@@ -9,6 +9,8 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
+import { Eye, XCircle } from "lucide-react";
+import { amountFormat } from "../../../../utils/common";
 
 export default function ApplicationSection() {
   const dispatch = useDispatch();
@@ -46,18 +48,20 @@ export default function ApplicationSection() {
   }, [formUIProps?.applicantVacancyId, formUIProps?.selectedApplicant]);
 
   return (
-    <>
+     <>
       {/* job selection area  */}
-      <div className="d-flex">
-        <div className="col-12 col-md-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
+
+        {/* Employee Id Dropdown Starts */}
+        <div className="ml-3">
           <SearchSelect
-            name="applicantId"
+            name="cityId"
             options={applicants}
             label="Applicant Name"
             onChange={(e) => {
               formUIProps.setSelectedApplicant(e?.value);
               formUIProps.setApplicantVacancyId(e?.applicantVacancyId);
-              formUIProps.setSignatoryisShow(e?.signatory)
+              formUIProps.setApplicantDetail(e?.applicantDetail);
             }}
             value={
               applicants?.find(
@@ -67,9 +71,7 @@ export default function ApplicationSection() {
             isClearable={false}
           />
         </div>
-
-
-        <div className="col-12 col-md-4 d-flex  align-items-center pt-7">
+        {/* <div className="col-12 col-md-4 d-flex  align-items-center pt-10">
           <span
             className="svg-icon svg-icon-md svg-icon-primary"
             onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
@@ -84,128 +86,189 @@ export default function ApplicationSection() {
           </span>
 
 
+        </div> */}
+        <div className="mt-6">
+
+
+
+          {formUIProps.panelMode2 ? (
+            <button
+              type="button"
+              className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+              onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
+            >
+              <XCircle className="w-3 h-3 text-black" />
+              Cancel
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-primary d-flex align-items-center gap-2"
+              onClick={() => formUIProps.setPanelMode2(!formUIProps.panelMode2)}
+            >
+
+
+              <Eye className="w-4 h-4 text-white" />
+              View Details
+            </button>
+          )}
+
+
+
+
         </div>
+
       </div>
       <br />
       {/* job detail collapsable panel  */}
       {formUIProps.panelMode2 && (
-        <Accordion defaultActiveKey="0" className="mx-4">
-          <Card>
-            {/* <Card.Header>
-            <div className="accordion-header-btn ">
-              <Accordion.Toggle eventKey="0" className="flex-between-center">
-                Applicant Detail
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header> */}
-            <Accordion.Collapse eventKey="0">
-              {formUIProps.selectedApplicant && applicantProfile && Object?.keys(applicantProfile)?.length > 0 ? (
-                <Card.Body style={{ backgroundColor: '#E6F8FF' }}>
-                  <div
-                    style={{
-                      backgroundColor: "#E6F8FF",
-                      // padding: "20px",
-                      borderRadius: "5px",
-                      border: "none",
-                    }}
-                  >
-                    <div style={{ marginBottom: "2%" }}>
-                      <h2>Applicant Detail</h2>
-                      <Row>
-                        <Col md={6}>
-                          <strong>Date Of Birth: </strong>
-                          {applicantProfile?.dateOfBirth
-                            ? format(
-                              new Date(applicantProfile?.dateOfBirth),
-                              "dd-MMM-yyyy"
-                            )
-                            : "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Email Address : </strong>
-                          {applicantProfile?.email_personal || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Gender: </strong>
-                          {applicantProfile?.gender || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Marital Status: </strong>
-                          {applicantProfile?.MaritalStatus?.formName || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>S/O , D/O , W/O: </strong>
-                          {applicantProfile?.relation_name || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Religion: </strong>
-                          {applicantProfile?.Religion?.formName || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Id Card No.: </strong>
-                          {applicantProfile?.nic_no || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Passport: </strong>
-                          {applicantProfile?.passportNo || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Country: </strong>
-                          {applicantProfile?.Country?.name || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>City: </strong>
-                          {applicantProfile?.City?.name || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Phone No (Home) : </strong>
-                          {applicantProfile?.phone_official || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Cell No : </strong>
-                          {applicantProfile?.phone_cell || "N/A"}
-                        </Col>
-                      </Row>
-                    </div>
-                    <hr />
-                    <div style={{ marginBottom: "2%" }}>
-                      <h2>Applicant Job Detail</h2>
-                      <Row>
-                        <Col md={6}>
-                          <strong>Designation : </strong>
-                          {applicantProfile?.currentDesignation || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Applicant Can Join (Days) : </strong>
-                          {applicantProfile?.applicantCanJoin || "N/A"}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Last Drawn Salary : </strong>
-                          {applicantProfile?.lastDawnSalaryCurrency?.formName ||
-                            ""}
-                          {applicantProfile?.lastDawnSalary || "N/A"}
-                        </Col>
 
-                        <Col md={3}>
-                          <strong>Expected Salary Range : </strong>
-                          {applicantProfile?.expectedSalaryRangeFrom || ""} to {" "}
-                          {applicantProfile?.expectedSalaryRangeTo || ""}
-                        </Col>
-                        <Col md={6}>
-                          <strong>Other Information: </strong>
-                          {applicantProfile?.otherInformation || "N/A"}
-                        </Col>
-                      </Row>
-                    </div>
+
+        <div className="px-2">
+          {formUIProps.selectedApplicant && applicantProfile && Object?.keys(applicantProfile)?.length > 0 ? (
+
+            <>
+              {/* <hr /> */}
+              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 bg-tsecondary px-4 py-3">
+
+
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Office Information
+                  </h6>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+
+                    <React.Fragment>
+                      <div className="font-medium">Date Of Birth: </div>
+                      <div> {applicantProfile?.dateOfBirth
+                        ? format(
+                          new Date(applicantProfile?.dateOfBirth),
+                          "dd-MMM-yyyy"
+                        )
+                        : "N/A"}</div>
+
+                    </React.Fragment>
+
+
+                    <React.Fragment>
+                      <div className="font-medium"> Email Address : </div>
+                      <div>    {applicantProfile?.email_personal || "N/A"}</div>
+                    </React.Fragment>
+
+
+
+                    <React.Fragment >
+
+                      <div className="font-medium">  Gender: </div>
+                      <div>  {applicantProfile?.gender || "N/A"} </div>
+
+                    </React.Fragment>
+
+
+                    <React.Fragment>
+                      <div className="font-medium">  Marital Status: </div>
+                      <div> {applicantProfile?.MaritalStatus?.formName || "N/A"} </div>
+                    </React.Fragment>
+
+
+
+                    <React.Fragment>
+                      <div className="font-medium">  S/O , D/O , W/O:  </div>
+                      <div> {applicantProfile?.relation_name || "N/A"} </div>
+                    </React.Fragment>
+
+
+
+                    <React.Fragment>
+                      <div className="font-medium">  Religion:  </div>
+
+
+                      <div> {applicantProfile?.Religion?.formName || "N/A"} </div>
+                    </React.Fragment>
+
+
+                    <React.Fragment>
+                      <div className="font-medium"> Id Card No.: </div>
+                      <div>  {applicantProfile?.nic_no || "N/A"} </div>
+                    </React.Fragment>
+
+                    <React.Fragment>
+                      <div className="font-medium"> Passport:  </div>
+                      <div>  {applicantProfile?.passportNo || "N/A"} </div>
+                    </React.Fragment>
+
+                    <React.Fragment>
+                      <div className="font-medium"> Country:  </div>
+                      <div>  {applicantProfile?.Country?.name || "N/A"}  </div>
+                    </React.Fragment>
+
+                    <React.Fragment>
+                      <div className="font-medium"> City:  </div>
+                      <div>  {applicantProfile?.City?.name || "N/A"} </div>
+                    </React.Fragment>
+
+                    <React.Fragment>
+                      <div className="font-medium"> Phone No (Home) :  </div>
+                      <div>   {applicantProfile?.phone_official || "N/A"} </div>
+                    </React.Fragment>
+
+                    <React.Fragment>
+                      <div className="font-medium"> Cell No : </div>
+                      <div> {applicantProfile?.phone_cell || "N/A"} </div>
+                    </React.Fragment>
+
                   </div>
-                </Card.Body>
-              ) : (
-                <p className="text-center m-2">Please Select Applicant Profile</p> // Improved message for clarity
-              )}
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
+                </div>
+
+                <div>
+
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Applicant Job Detail
+                  </h6>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                    <React.Fragment>
+                      <div className="font-medium">Designation : </div>
+                      <div>  {applicantProfile?.currentDesignation || "N/A"}</div>
+                    </React.Fragment>
+                    <React.Fragment>
+                      <div className="font-medium">Applicant Can Join (Days) : </div>
+                      <div>   {applicantProfile?.applicantCanJoin || "N/A"}</div>
+                    </React.Fragment>
+                    <React.Fragment>
+                      <div className="font-medium">Last Drawn Salary : </div>
+                      <div>   {applicantProfile?.LastDawnSalaryCurrency?.formName ||
+                        ""}{" "}
+                        {applicantProfile?.lastDawnSalary || "N/A"}</div>
+                    </React.Fragment>
+                    <React.Fragment>
+                      <div className="font-medium">Expected Salary Range : </div>
+                      <div>    {applicantProfile?.ExpectedSalaryCurrency?.formName ||
+                        ""}{" "}
+                        {amountFormat(
+                          applicantProfile?.expectedSalaryRangeFrom
+                        ) || ""}{" "}
+                        to{" "}
+                        {amountFormat(
+                          applicantProfile?.expectedSalaryRangeTo
+                        ) || ""}</div>
+                    </React.Fragment>
+                    <React.Fragment><div className="font-medium">Other Information: </div>
+                      <div>  {applicantProfile?.otherInformation || "N/A"}</div>
+
+                    </React.Fragment>
+
+                  </div>
+                </div>
+              </div>
+
+            </>
+          ) : (
+            <p className="text-center m-2">Please Select Applicant Profile</p> // Improved message for clarity
+          )}
+        </div>
+
       )}
     </>
   );
