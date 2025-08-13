@@ -59,7 +59,7 @@ export function FormEditForm({
     <Formik
       enableReinitialize={true}
       initialValues={user}
-      // validationSchema={news_event_tickerEditSchema}
+      validationSchema={news_event_tickerEditSchema}
       onSubmit={(values) => {
         enableLoading();
         console.log("aaaaa1111", values);
@@ -158,11 +158,11 @@ export function FormEditForm({
                       autoComplete="off"
                     />
                     <div>
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         name="ticker_description"
                         component="div"
                         className="form-feedBack text-danger"
-                      />
+                      /> */}
                     </div>
                   </div>
 
