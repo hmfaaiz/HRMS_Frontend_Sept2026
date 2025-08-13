@@ -17,6 +17,7 @@ import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatte
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
 import { getFileName, getUploadUrl } from "../../../../../utils/common";
+import { Eye } from "lucide-react";
 
 export function FormTable() {
   //Users UI Context
@@ -101,7 +102,7 @@ export function FormTable() {
 
     {
       dataField: "applicantCode",
-      text: "applicant Code",
+      text: "Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -112,7 +113,7 @@ export function FormTable() {
 
     {
       dataField: "FullName",
-      text: "Applicant Name",
+      text: "Name",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -170,7 +171,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "100px",
       },
     },
 
@@ -179,7 +180,7 @@ export function FormTable() {
 
     {
       dataField: "file",
-      text: "Attached CV",
+      text: "CV",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -191,7 +192,7 @@ export function FormTable() {
       
               return (
                 <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-                  View CV
+                   <Eye className="w-4 h-4 text-black cursor-pointer" />
                 </a>
               );
             },
@@ -215,7 +216,7 @@ export function FormTable() {
     },
     {
       dataField: "ApplicantStatus.formName",
-      text: "Applicant's Status",
+      text: "Status",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -226,7 +227,7 @@ export function FormTable() {
 
     {
       dataField: "InterviewRecommendations",
-      text: "Interview Recommendations",
+      text: "Recommendations",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

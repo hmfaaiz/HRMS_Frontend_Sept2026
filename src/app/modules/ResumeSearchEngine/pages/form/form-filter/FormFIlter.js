@@ -267,21 +267,17 @@ export function FormFIlter({ listLoading, user }) {
               </Card> */}
 
               <div
-                style={{
-                  backgroundColor: "rgb(235 243 255)",
-                  marginTop: "15px",
-                  marginBottom: "15px",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "2px solid #adceff",
-                }}
+
               >
 
-                <h6>Job Filter</h6>
-                <div className="form-group row">
+
+                <h6 className="font-bold mb-0 text-primary">
+                  Job Filter
+                </h6>
+                <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
 
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="">
                     <label>Job Title</label>
                     <Field
                       component={Input}
@@ -297,192 +293,187 @@ export function FormFIlter({ listLoading, user }) {
                     />
                   </div>
 
-
-                  <div className="row col-12 col-md-12">
-
-                    {/* Department */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="departmentId"
-                        label="Department"
-                        onChange={(e) => {
-                          setFieldValue("departmentId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allDept?.find(
-                            (option) => option.value === values.departmentId
-                          ) || null
-                        }
-                        // options={dashboard?.allDept}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
-                      />
-                    </div>
-
-                    {/* Designation */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="designationId"
-                        label="Designation"
-                        onChange={(e) => {
-                          setFieldValue("designationId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allDesignations?.find(
-                            (option) => option.value === values.designationId
-                          ) || null
-                        }
-                        // options={dashboard?.allDesignations}
-                           options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations: []),]}
-                      />
-                    </div>
-
-
-                    {/* Grade */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="gradeId"
-                        label="Grade"
-                        onChange={(e) => {
-                          setFieldValue("gradeId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allEmployeegradeList?.find(
-                            (option) => option.value === values.gradeId
-                          ) || null
-                        }
-                        // options={dashboard?.allEmployeegradeList}
-                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList: []),]}
-                      />
-                    </div>
-
-
-                    {/* Location */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="locationId"
-                        label="Location"
-                        onChange={(e) => {
-                          setFieldValue("locationId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard.allLocationChildMenus?.find(
-                            (option) => option.value === values.locationId
-                          ) || null
-                        }
-                        // options={dashboard.allLocationChildMenus}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus: []),]}
-                      />
-                    </div>
-
-
-                    {/* Country */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="countryId"
-                        label="Country"
-                        onChange={(e) => {
-                          const selectedCountryId = e.value || null;
-                          setFieldValue("countryId", selectedCountryId);
-                          console.log("selectedCountryId1111", selectedCountryId)
-                          setFieldValue("cityId", null); // Reset city on country change
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allCountry?.find(
-                            (option) => option.value === values.countryId
-                          ) || null
-                        }
-                        // options={dashboard?.allCountry}
-                           options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry: []),]}
-                      />
-                    </div>
-
-                    {/* City */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="cityId"
-                        label={<span>City</span>}
-                        // isDisabled={!values.countryId}
-                        onChange={(e) => {
-                          setFieldValue("cityId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          filteredCities(values.countryId).find(
-                            (option) => option.value === values.cityId
-                          ) || null
-                        }
-                        // options={filteredCities(values.countryId)}
-                               options={[{ label: 'Select', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId): []),]}
-
-                      />
-                    </div>
-
-                    {/* Appointment */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="appointmentTypeId"
-                        label={
-                          <span>
-                            Appointment Type
-                          </span>
-                        }
-
-                        onChange={(e) => {
-                          setFieldValue("appointmentTypeId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allAppointmentTypeList?.find(
-                            (option) => option.value === values.appointmentTypeId
-                          ) || null
-                        }
-
-                        // options={dashboard?.allAppointmentTypeList}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList: []),]}
-
-                      />
-                    </div>
-
-
-
+                  {/* Department */}
+                  <div className="">
+                    <SearchSelect
+                      name="departmentId"
+                      label="Department"
+                      onChange={(e) => {
+                        setFieldValue("departmentId", e.value || null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allDept?.find(
+                          (option) => option.value === values.departmentId
+                        ) || null
+                      }
+                      // options={dashboard?.allDept}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDept) ? dashboard?.allDept : []),]}
+                    />
                   </div>
 
+                  {/* Designation */}
+                  <div className="">
+                    <SearchSelect
+                      name="designationId"
+                      label="Designation"
+                      onChange={(e) => {
+                        setFieldValue("designationId", e.value || null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allDesignations?.find(
+                          (option) => option.value === values.designationId
+                        ) || null
+                      }
+                      // options={dashboard?.allDesignations}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allDesignations) ? dashboard?.allDesignations : []),]}
+                    />
+                  </div>
+
+
+                  {/* Grade */}
+                  <div className="">
+                    <SearchSelect
+                      name="gradeId"
+                      label="Grade"
+                      onChange={(e) => {
+                        setFieldValue("gradeId", e.value || null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allEmployeegradeList?.find(
+                          (option) => option.value === values.gradeId
+                        ) || null
+                      }
+                      // options={dashboard?.allEmployeegradeList}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allEmployeegradeList) ? dashboard?.allEmployeegradeList : []),]}
+                    />
+                  </div>
+                </div>
+
+
+
+                <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
+
+
+
+                  {/* Location */}
+                  <div className="">
+                    <SearchSelect
+                      name="locationId"
+                      label="Location"
+                      onChange={(e) => {
+                        setFieldValue("locationId", e.value || null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard.allLocationChildMenus?.find(
+                          (option) => option.value === values.locationId
+                        ) || null
+                      }
+                      // options={dashboard.allLocationChildMenus}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allLocationChildMenus) ? dashboard.allLocationChildMenus : []),]}
+                    />
+                  </div>
+
+
+                  {/* Country */}
+                  <div className="">
+                    <SearchSelect
+                      name="countryId"
+                      label="Country"
+                      onChange={(e) => {
+                        const selectedCountryId = e.value || null;
+                        setFieldValue("countryId", selectedCountryId);
+                        console.log("selectedCountryId1111", selectedCountryId)
+                        setFieldValue("cityId", null); // Reset city on country change
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allCountry?.find(
+                          (option) => option.value === values.countryId
+                        ) || null
+                      }
+                      // options={dashboard?.allCountry}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allCountry) ? dashboard?.allCountry : []),]}
+                    />
+                  </div>
+
+                  {/* City */}
+                  <div className="">
+                    <SearchSelect
+                      name="cityId"
+                      label={<span>City</span>}
+                      // isDisabled={!values.countryId}
+                      onChange={(e) => {
+                        setFieldValue("cityId", e.value || null);
+                        handleSubmit();
+                      }}
+                      value={
+                        filteredCities(values.countryId).find(
+                          (option) => option.value === values.cityId
+                        ) || null
+                      }
+                      // options={filteredCities(values.countryId)}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(filteredCities(values.countryId)) ? filteredCities(values.countryId) : []),]}
+
+                    />
+                  </div>
+
+                  {/* Appointment */}
+                  <div className="">
+                    <SearchSelect
+                      name="appointmentTypeId"
+                      label={
+                        <span>
+                          Appointment Type
+                        </span>
+                      }
+
+                      onChange={(e) => {
+                        setFieldValue("appointmentTypeId", e.value || null);
+                        handleSubmit();
+                      }}
+                      value={
+                        dashboard?.allAppointmentTypeList?.find(
+                          (option) => option.value === values.appointmentTypeId
+                        ) || null
+                      }
+
+                      // options={dashboard?.allAppointmentTypeList}
+                      options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
+
+                    />
+                  </div>
 
 
 
                 </div>
 
 
+
+
               </div>
 
 
+
+              <hr></hr>
+
               {/* Vacancy detail */}
-              <div
-                style={{
-                  backgroundColor: "rgb(235 243 255)",
-                  marginTop: "15px",
-                  marginBottom: "15px",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "2px solid #adceff",
-                }}
-              >
-                <h6>Vacancy Detail</h6>
-                <div className="form-group row">
+              <div className="grid lg:grid-cols-3 gap-x-3 ">
 
+                <div>
+                  <h6 className="font-bold mb-0 text-primary mt-1">
+                    Vacancy Detail
+                  </h6>
 
-
-                  <div className="row col-12 col-md-12">
+                  <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
 
 
 
                     {/* Applicant status */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
 
 
                       <SearchSelect
@@ -506,7 +497,7 @@ export function FormFIlter({ listLoading, user }) {
                         }}
 
                         // options={dashboard?.allApplicationStatusList || []}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allApplicationStatusList) ? dashboard?.allApplicationStatusList: []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allApplicationStatusList) ? dashboard?.allApplicationStatusList : []),]}
                         getOptionLabel={(x) => x.label} // optional: customize label rendering
                         getOptionValue={(x) => x.value} // optional: customize value extraction
                         placeholder="Select Status"
@@ -518,7 +509,7 @@ export function FormFIlter({ listLoading, user }) {
 
 
                     {/* Priority */}
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="priorityTypeId"
                         label="Priority"
@@ -532,17 +523,24 @@ export function FormFIlter({ listLoading, user }) {
                           ) || null
                         }
                         // options={dashboard?.allPriorityTypeList}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList: []),]}
+                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allPriorityTypeList) ? dashboard?.allPriorityTypeList : []),]}
                       />
                     </div>
                     {/* Job Status */}
-
-
                   </div>
-                  <div className="row col-12 col-md-12">
+                </div>
+
+
+                <div className="">
+                  <h6 className="font-bold mb-0 text-primary ">
+                    Date of Appointment
+                  </h6>
+
+                  <div className="grid lg:grid-cols-2 gap-x-3 mt-1 ">
+
                     {/* Date From */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>Desire Date of Appointment (From)</label>
+                    <div className="">
+                      <label>From</label>
                       <DatePicker
                         className="form-control"
                         placeholder="From"
@@ -564,8 +562,8 @@ export function FormFIlter({ listLoading, user }) {
                     </div>
 
                     {/* Date To */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>Desire Date of Appointment (To)</label>
+                    <div className="">
+                      <label> To</label>
                       <DatePicker
                         className="form-control"
                         placeholder="To"
@@ -584,16 +582,23 @@ export function FormFIlter({ listLoading, user }) {
                         minDate={values?.desireFromDateOfApp ? new Date(values.desireFromDateOfApp) : new Date()}
                       />
                     </div>
+
                   </div>
+                </div>
 
 
-                  {/* row 4*/}
-                  <div className="row col-12 col-md-12">
+                {/* row 4*/}
 
+                <div>
+                  <h6 className="font-bold mb-0 text-primary mt-1">
+                    Applied Date
+                  </h6>
+
+                  <div className="grid lg:grid-cols-2 gap-x-3 mt-1">
 
                     {/* Date From */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>Applied Date (From)</label>
+                    <div className="">
+                      <label>From</label>
                       <DatePicker
                         className="form-control"
                         placeholder="From"
@@ -616,8 +621,8 @@ export function FormFIlter({ listLoading, user }) {
                     </div>
 
                     {/* Date To */}
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>Applied Date (To)</label>
+                    <div className="">
+                      <label>To</label>
                       <DatePicker
                         className="form-control"
                         placeholder="To"
@@ -638,417 +643,427 @@ export function FormFIlter({ listLoading, user }) {
                     </div>
 
                   </div>
+
                 </div>
+
+
               </div>
 
 
+              <hr></hr>
 
               {/*Professional Information */}
 
 
-              <div
-                style={{
-                  backgroundColor: "rgb(235 243 255)",
-                  marginTop: "15px",
-                  marginBottom: "15px",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "2px solid #adceff",
-                }}
-              >
-                <h6>Professional Information</h6>
-                <div className="form-group row">
-                  <div className="row col-12 col-md-12">
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Work Experience From
-                        </span>
-                      </label>
-                      <Field
-                        name="workExpFrom"
-                        component={Input}
-                        placeholder="Enter work experience (from)"
-
-                        onChange={(e) => {
-                          const selectedValue = e.target.value;
-                          setFieldValue("workExpFrom", selectedValue);
-                          handleSubmit();
+              <div>
 
 
-                        }}
-
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimitDynamic(
-                            e.target.value,
-                            2
-                          );
-                        }}
-                      />
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Work Experience To
-                        </span>
-                      </label>
-                      <Field
-                        name="workExpTo"
-                        component={Input}
-                        placeholder="Enter work experience (to)"
-                        onChange={(e) => {
-                          const selectedValue = e.target.value;
-                          setFieldValue("workExpTo", selectedValue);
-                          handleSubmit();
-
-
-                        }}
-
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimitDynamic(
-                            e.target.value,
-                            2
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="row col-12 col-md-12">
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="expectedSalaryRangeFrom"
-                        component={Input}
-                        placeholder="Enter expected salary range(from)"
-                        label={<span> Expected Salary Range(From)</span>}
-                        autoComplete="off"
-                        type="number"
-                        onChange={(e) => {
-                          const selectedValue = e.target.value;
-                          console.log("selectedValue111", e.target.value)
-                          setFieldValue("expectedSalaryRangeFrom", selectedValue);
-                          handleSubmit();
-
-
-                        }}
-                      />
-                    </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="expectedSalaryRangeTo"
-                        component={Input}
-                        placeholder="Enter expected salary range(to)"
-                        label={<span> Expected Salary Range(To)</span>}
-                        autoComplete="off"
-                        type="number"
-                        onChange={(e) => {
-                          const selectedValue = e.target.value;
-                          setFieldValue("expectedSalaryRangeTo", selectedValue);
-                          handleSubmit();
-
-
-                        }}
-                      />
-                    </div>
-
-
-                    <div className="col-12 col-md-2 mt-3">
-                      <SearchSelect
-                        name="expectedSalaryCurrencyId"
-                        label={<span> Currency</span>}
-
-                        onChange={(e) => {
-                          setFieldValue("expectedSalaryCurrencyId", e.value || null);
-                          handleSubmit();
-
-
-                        }}
-                        value={
-                          dashboard.allCurrencyCodeList?.find(
-                            (option) => option.value === values.expectedSalaryCurrencyId
-                          ) || null
-                        }
-
-                        // options={dashboard.allCurrencyCodeList}
-                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList: []),]}
-                      />
-                    </div>
-
-
-                    <div className="col-12 col-md-2 mt-3">
-                      <SearchSelect
-                        name="expectedSalaryPayTypeId"
-                        label={<span> Per Month / Per Year</span>}
-
-                        value={salaryPayTypeIdOptions.find(
-                          (option) => option.value === values.expectedSalaryPayTypeId
-                        ) || null}
-                        onChange={(e) => {
-                          console.log("expectedSalaryPayTypeId00", e.value)
-                          setFieldValue("expectedSalaryPayTypeId", e.value)
-                          console.log("expectedSalaryPayTypeId111", values.expectedSalaryPayTypeId)
-                          handleSubmit();
-                        }}
-
-
-
-                        // options={salaryPayTypeIdOptions}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(salaryPayTypeIdOptions) ? salaryPayTypeIdOptions: []),]}
-                      />
-                    </div>
-
-
-
-                  </div>
-
-                  <div className="row col-12 col-md-12">
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="companyName"
-                        component={Input}
-                        label="Organization Name"
-                        placeholder="Enter company"
-                        autoComplete="off"
-                        onChange={(e) => {
-                          setFieldValue("companyName", e.target.value)
-                          handleSubmit();
-                        }}
-
-                      />
-
-                    </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="preferredQualificationId"
-                        label={
+                <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                  <div>
+                    <h6 className="font-bold mb-0 text-primary ">
+                      Work Experience 
+                    </h6>
+                    <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                      <div className="">
+                        <label>
                           <span>
-                            Preferred Qualification
+                         From
                           </span>
-                        }
+                        </label>
+                        <Field
+                          name="workExpFrom"
+                          component={Input}
+                          placeholder="Enter work experience (from)"
 
-                        onChange={(e) => {
-                          setFieldValue("preferredQualificationId", e.value || null);
-                          handleSubmit();
-                        }}
-                        value={
-                          dashboard?.allQualificationList?.find(
-                            (option) => option.value === values.preferredQualificationId
-                          ) || null
-                        }
-
-                        // options={dashboard?.allQualificationList}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allQualificationList) ? dashboard?.allQualificationList: []),]}
+                          onChange={(e) => {
+                            const selectedValue = e.target.value;
+                            setFieldValue("workExpFrom", selectedValue);
+                            handleSubmit();
 
 
-                      />
+                          }}
+
+                          type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(
+                              e.target.value,
+                              2
+                            );
+                          }}
+                        />
+                      </div>
+
+                      <div className="">
+                        <label>
+                          <span>
+                           To
+                          </span>
+                        </label>
+                        <Field
+                          name="workExpTo"
+                          component={Input}
+                          placeholder="Enter work experience (to)"
+                          onChange={(e) => {
+                            const selectedValue = e.target.value;
+                            setFieldValue("workExpTo", selectedValue);
+                            handleSubmit();
+
+
+                          }}
+
+                          type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(
+                              e.target.value,
+                              2
+                            );
+                          }}
+                        />
+                      </div>
+
+
                     </div>
 
 
                   </div>
 
+                  <div>
+                    <h6 className="font-bold mb-0 text-primary ">
+                      Expected Salary Range
+                    </h6>
+
+                    <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
+                      <div className="">
+                        <Field
+                          name="expectedSalaryRangeFrom"
+                          component={Input}
+                          placeholder="Enter expected salary range(from)"
+                          label={<span>From</span>}
+                          autoComplete="off"
+                          type="number"
+                          onChange={(e) => {
+                            const selectedValue = e.target.value;
+                            console.log("selectedValue111", e.target.value)
+                            setFieldValue("expectedSalaryRangeFrom", selectedValue);
+                            handleSubmit();
+
+
+                          }}
+                        />
+                      </div>
+
+
+                      <div className="">
+                        <Field
+                          name="expectedSalaryRangeTo"
+                          component={Input}
+                          placeholder="Enter expected salary range(to)"
+                          label={<span> To</span>}
+                          autoComplete="off"
+                          type="number"
+                          onChange={(e) => {
+                            const selectedValue = e.target.value;
+                            setFieldValue("expectedSalaryRangeTo", selectedValue);
+                            handleSubmit();
+
+
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+               
+              </div>
+              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
+
+                <div className="">
+                  <SearchSelect
+                    name="expectedSalaryCurrencyId"
+                    label={<span> Currency</span>}
+
+                    onChange={(e) => {
+                      setFieldValue("expectedSalaryCurrencyId", e.value || null);
+                      handleSubmit();
+
+
+                    }}
+                    value={
+                      dashboard.allCurrencyCodeList?.find(
+                        (option) => option.value === values.expectedSalaryCurrencyId
+                      ) || null
+                    }
+
+                    // options={dashboard.allCurrencyCodeList}
+                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard.allCurrencyCodeList) ? dashboard.allCurrencyCodeList : []),]}
+                  />
+                </div>
+
+
+                <div className="">
+                  <SearchSelect
+                    name="expectedSalaryPayTypeId"
+                    label={<span> Per Month / Per Year</span>}
+
+                    value={salaryPayTypeIdOptions.find(
+                      (option) => option.value === values.expectedSalaryPayTypeId
+                    ) || null}
+                    onChange={(e) => {
+                      console.log("expectedSalaryPayTypeId00", e.value)
+                      setFieldValue("expectedSalaryPayTypeId", e.value)
+                      console.log("expectedSalaryPayTypeId111", values.expectedSalaryPayTypeId)
+                      handleSubmit();
+                    }}
+
+
+
+                    // options={salaryPayTypeIdOptions}
+                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(salaryPayTypeIdOptions) ? salaryPayTypeIdOptions : []),]}
+                  />
+                </div>
+
+
+
+
+
+
+                <div className="">
+                  <Field
+                    name="companyName"
+                    component={Input}
+                    label="Organization Name"
+                    placeholder="Enter company"
+                    autoComplete="off"
+                    onChange={(e) => {
+                      setFieldValue("companyName", e.target.value)
+                      handleSubmit();
+                    }}
+
+                  />
 
                 </div>
+
+
+                <div className="">
+                  <SearchSelect
+                    name="preferredQualificationId"
+                    label={
+                      <span>
+                        Preferred Qualification
+                      </span>
+                    }
+
+                    onChange={(e) => {
+                      setFieldValue("preferredQualificationId", e.value || null);
+                      handleSubmit();
+                    }}
+                    value={
+                      dashboard?.allQualificationList?.find(
+                        (option) => option.value === values.preferredQualificationId
+                      ) || null
+                    }
+
+                    // options={dashboard?.allQualificationList}
+                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allQualificationList) ? dashboard?.allQualificationList : []),]}
+
+
+                  />
+                </div>
+
+
               </div>
 
+
+
+              <hr></hr>
 
               {/*Personal  Information */}
 
 
-              <div
-                style={{
-                  backgroundColor: "rgb(235 243 255)",
-                  marginTop: "15px",
-                  marginBottom: "15px",
-                  padding: "20px",
-                  borderRadius: "5px",
-                  border: "2px solid #adceff",
-                }}
-              >
-                <h6>Personal Information</h6>
-                <div className="form-group row">
-                  <div className="row col-12 col-md-12">
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Preferred Age From
-                        </span>
-                      </label>
-                      <Field
-                        name="preferredAgeFrom"
-                        component={Input}
-                        placeholder="Enter preferred age (from)"
-                        onChange={(e) => {
-                          setFieldValue("preferredAgeFrom", e.target.value || null);
-                          if (e.target.value && values.preferredAgeTo) {
-                            handleSubmit();
-                          }
-
-                        }}
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimitDynamic(
-                            e.target.value,
-                            2
-                          );
-                        }}
-
-                      />
-                  
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <label>
-                        <span>
-                          Preferred Age To
-                        </span>
-                      </label>
-                      <Field
-                        name="preferredAgeTo"
-                        component={Input}
-                        placeholder="Enter preferred age (to)"
-                        onChange={(e) => {
-                        
-                          setFieldValue("preferredAgeTo", e.target.value || null);
-                           
-                           if (values.preferredAgeFrom && e.target.value) {
-                            handleSubmit();
-                          }
-
-                        }}
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimitDynamic(
-                            e.target.value,
-                            2
-                          );
-                        }}
-
-                      />
-                 
-                    </div>
 
 
+              <h6 className="font-bold mb-0 text-primary ">
+                Personal Information
+              </h6>
 
-                  </div>
-                  <div className="row col-12 col-md-12">
+              <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        label={
-                          <span>
-                            Marital Status
-                          </span>
-                        }
+                <div className="">
+                  <label>
+                    <span>
+                      Preferred Age From
+                    </span>
+                  </label>
+                  <Field
+                    name="preferredAgeFrom"
+                    component={Input}
+                    placeholder="Enter preferred age (from)"
+                    onChange={(e) => {
+                      setFieldValue("preferredAgeFrom", e.target.value || null);
+                      if (e.target.value && values.preferredAgeTo) {
+                        handleSubmit();
+                      }
 
-                        name="maritalStatus"
-                        onChange={(e) => {
-                          setFieldValue("maritalStatus", e?.value ?? null);
-                          handleSubmit();
-                        }}
+                    }}
+                    type="number"
+                    onInput={(e) => {
+                      e.target.value = amountLimitDynamic(
+                        e.target.value,
+                        2
+                      );
+                    }}
 
-                        value={
-                          dashboard.allMaritalStatus?.find(
-                            (option) => String(option.value) === String(values.maritalStatus)
-                          ) || null
-                        }
-
-                        // options={dashboard.allMaritalStatus}
-                         options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus: []),]}
-                      />
-                    </div>
-                    <div className="col-12 col-md-4 mt-3">
-                      <Select
-                        label={<span> Gender</span>}
-                        name="gender"
-                        value={values.gender}
-                        // onChange={handleChange}
-
-                        style={{ display: "block" }}
-                        autoComplete="off"
-                        onChange={(e) => {
-                          setFieldValue("gender", e.target.value)
-
-                          handleSubmit()
-                        }}
-
-                      >
-                        <option label="Select Gender" />
-                        <option value="Male" label="Male" />
-                        <option value="Female" label="Female" />
-
-                      </Select>
-
-
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        name="religionId"
-                        label={<span> Religion</span>}
-
-                        onChange={(e) => {
-                          setFieldValue("religionId", e.value || null);
-                          handleSubmit()
-                        }}
-                        value={
-                          dashboard.allReligionChildMenus?.find(
-                            (option) => option.value === values.religionId
-                          ) || null
-                        }
-
-                        // options={dashboard.allReligionChildMenus}
-                          options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus: []),]}
-                      />
-                    </div>
-
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <SearchSelect
-                        label={<span> Nationality</span>}
-                        name="nationality"
-                        value={nationalityOptions.find(option => option.value === values.nationality) || null}
-                        onChange={(e) => {
-                          setFieldValue("nationality", e?.value ?? null);
-                          handleSubmit();
-                        }}
-                        // options={nationalityOptions}
-                        options={[{ label: 'Select', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions: []),]}
-                        placeholder="Select Nationality"
-                      />
-
-                    </div>
-
-                    <div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="applicantCanJoin"
-                        component={Input}
-                        placeholder="Enter applicant can join"
-                        label={<span> Applicants who can join within (Days)</span>}
-                        autoComplete="off"
-                        type="number"
-                        onChange={(selectedOption) => {
-                          setFieldValue("applicantCanJoin", selectedOption.target.value);
-                          console.log("applicantCanJoin1111", selectedOption.target.value)
-                          handleSubmit();
-                        }}
-                      />
-                    </div>
-                  </div>
-
-
-
-
+                  />
 
                 </div>
 
+                <div className="">
+                  <label>
+                    <span>
+                      Preferred Age To
+                    </span>
+                  </label>
+                  <Field
+                    name="preferredAgeTo"
+                    component={Input}
+                    placeholder="Enter preferred age (to)"
+                    onChange={(e) => {
+
+                      setFieldValue("preferredAgeTo", e.target.value || null);
+
+                      if (values.preferredAgeFrom && e.target.value) {
+                        handleSubmit();
+                      }
+
+                    }}
+                    type="number"
+                    onInput={(e) => {
+                      e.target.value = amountLimitDynamic(
+                        e.target.value,
+                        2
+                      );
+                    }}
+
+                  />
+
+                </div>
+
+
+
+
+
+
+                <div className="">
+                  <SearchSelect
+                    label={
+                      <span>
+                        Marital Status
+                      </span>
+                    }
+
+                    name="maritalStatus"
+                    onChange={(e) => {
+                      setFieldValue("maritalStatus", e?.value ?? null);
+                      handleSubmit();
+                    }}
+
+                    value={
+                      dashboard.allMaritalStatus?.find(
+                        (option) => String(option.value) === String(values.maritalStatus)
+                      ) || null
+                    }
+
+                    // options={dashboard.allMaritalStatus}
+                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allMaritalStatus) ? dashboard?.allMaritalStatus : []),]}
+                  />
+                </div>
+                <div className="">
+                  <Select
+                    label={<span> Gender</span>}
+                    name="gender"
+                    value={values.gender}
+                    // onChange={handleChange}
+
+                    style={{ display: "block" }}
+                    autoComplete="off"
+                    onChange={(e) => {
+                      setFieldValue("gender", e.target.value)
+
+                      handleSubmit()
+                    }}
+
+                  >
+                    <option label="Select Gender" />
+                    <option value="Male" label="Male" />
+                    <option value="Female" label="Female" />
+
+                  </Select>
+                </div>
               </div>
+
+              <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
+
+                <div className="">
+                  <SearchSelect
+                    name="religionId"
+                    label={<span> Religion</span>}
+
+                    onChange={(e) => {
+                      setFieldValue("religionId", e.value || null);
+                      handleSubmit()
+                    }}
+                    value={
+                      dashboard.allReligionChildMenus?.find(
+                        (option) => option.value === values.religionId
+                      ) || null
+                    }
+
+                    // options={dashboard.allReligionChildMenus}
+                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allReligionChildMenus) ? dashboard?.allReligionChildMenus : []),]}
+                  />
+                </div>
+
+
+                <div className="">
+                  <SearchSelect
+                    label={<span> Nationality</span>}
+                    name="nationality"
+                    value={nationalityOptions.find(option => option.value === values.nationality) || null}
+                    onChange={(e) => {
+                      setFieldValue("nationality", e?.value ?? null);
+                      handleSubmit();
+                    }}
+                    // options={nationalityOptions}
+                    options={[{ label: 'Select', value: '' }, ...(Array.isArray(nationalityOptions) ? nationalityOptions : []),]}
+                    placeholder="Select Nationality"
+                  />
+
+                </div>
+
+                <div className="">
+                  <Field
+                    name="applicantCanJoin"
+                    component={Input}
+                    placeholder="Enter applicant can join"
+                    label={<span> Applicants who can join within (Days)</span>}
+                    autoComplete="off"
+                    type="number"
+                    onChange={(selectedOption) => {
+                      setFieldValue("applicantCanJoin", selectedOption.target.value);
+                      console.log("applicantCanJoin1111", selectedOption.target.value)
+                      handleSubmit();
+                    }}
+                  />
+                </div>
+              </div>
+
+
+
+
+
+
 
             </form>
             <Modal.Footer>
@@ -1058,7 +1073,7 @@ export function FormFIlter({ listLoading, user }) {
                   handleReset(); // Resets form
                   applyFilter(initialFilterValues); // Clears filter state
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-light btn-elevate"
               >
                 Cancel
               </button>
