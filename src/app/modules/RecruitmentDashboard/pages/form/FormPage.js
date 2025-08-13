@@ -53,9 +53,9 @@ export function FormPage({ history }) {
       </Route>
 
       <TCard name={CurrentModuleName()}>
-        <div>
+      
           <FormFIlter />
-        </div>
+       
         <DashboardSummary />
         <FormCard />
       </TCard>

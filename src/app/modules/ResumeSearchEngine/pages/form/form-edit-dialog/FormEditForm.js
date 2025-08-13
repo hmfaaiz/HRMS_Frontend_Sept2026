@@ -1375,12 +1375,12 @@ export function FormEditForm({
                             <tr className="custom-table-header">
 
 
-                              <td className="col-2"> Skill</td>
-                              <td className="col-3">Description</td>
+                              <td className="min-w-32"> Skill</td>
+                              <td className="min-w-32">Description</td>
 
-                              <td className="col-2">Rating</td>
-                              <td className="col-2">Start Date</td>
-                              <td className="col-2">End Date</td>
+                              <td className="min-w-32">Rating</td>
+                              <td className="min-w-32">Start Date</td>
+                              <td className="min-w-32">End Date</td>
                               <th>Action</th>
                             </tr>
 

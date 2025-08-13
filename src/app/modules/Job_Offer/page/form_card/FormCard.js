@@ -48,14 +48,13 @@ export default function FormCard() {
     //     </CardBody>
     //   </Card>
     <TCard name={CurrentModuleName()}>
-      <br />
       {/* <hr /> */}
       <JobSection />
-      <br />
+    
       {/* <hr /> */}
       <ApplicationSection />
-      <br />
-      {/* <hr /> */}
+    
+      <hr />
       <GenerateSection />
     </TCard>
     // </>
