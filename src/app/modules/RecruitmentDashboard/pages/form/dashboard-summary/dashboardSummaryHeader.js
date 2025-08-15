@@ -6,7 +6,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import * as actions from "../../../_redux/redux-Actions";
-import { Banknote, Calendar, MapPin } from "lucide-react";
+import { Banknote, Calendar, MapPin, ArrowRight, MoveRight } from "lucide-react";
 
 export function DashboardSummaryHeader() {
     const [selectedJobIndex, setSelectedJobIndex] = useState(null);
@@ -229,7 +229,7 @@ export function DashboardSummaryHeader() {
                 entities.map((job, jobIndex) => (
                     <div
                         key={jobIndex}
-                        className={`mb-10 border-b border-gray-200   ${selectedJobIndex === jobIndex ? "bg-white" : ""
+                        className={` border-gray-200   ${selectedJobIndex === jobIndex ? "bg-white" : ""
                             }`}
                         onClick={() => setSelectedJobIndex(jobIndex)}
                         style={{
@@ -239,93 +239,73 @@ export function DashboardSummaryHeader() {
                     >
                         {/* Job Heading */}
 
-                        <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1">
-                            <div >
-                                <h6 className="font-bold mb-0 text-primary my-2">
+                        <div className=" flex gap-x-1 gap-y-1 ">
+                            <div className="">
+                                <h6 className="font-bold mb-0 text-primary my-2 ">
                                     {job.jobTitle}
                                 </h6>
                             </div>
-                            <div></div>
-                            <div className="text-right grid lg:grid-cols-4 col-span-3 md:place-items-end">
-                                <div className="flex gap-x-2 items-center">
 
-                                    <div><Calendar className="w-5 h-5 " /></div>
+                            <div className="flex gap-x-1 items-center  ">
 
-                                    <div className="font-medium">Posted:</div>
-                                    <div>{job.postedDate}</div>
+                                {/* <div><Calendar className="w-3 h-3" /></div> */}
+                                {/* <label> <MoveRight className="w-4 h-4" /> </label> */}
+                                <label className="text-gray-500">Posted:</label>
+                                <label  className="text-gray-500">{job.postedDate} | </label>
 
-                                </div>
-
-
-                                <div className="flex gap-x-2 items-center">
-
-                                    <div><Calendar className="w-5 h-5 " /></div>
-
-                                    <div className="font-medium">Expiry:</div>
-                                    <div>{job.expiryDate}</div>
-
-                                </div>
-
-
-
-
-                                <div className="flex gap-x-2 items-center">
-
-                                    <div><MapPin className="w-6 h-6" /></div>
-
-                                    <div className="font-medium"> <b
-                                        className=" truncate"
-                                        title={job.cityNames?.map((city) => city.name).join(", ")}
-                                    >
-                                        {Array.isArray(job.cityNames)
-                                            ? job.cityNames.map((city) => city.name).join(", ")
-                                            : "N/A"}
-                                    </b></div>
-
-
-                                </div>
-
-                                {/* <div className="">
-                                    <span className="mr-3">
-                                        <MapPin className="w-6 h-6" />
-                                    </span>
-                                    <b
-                                        className=" truncate"
-                                        title={job.cityNames?.map((city) => city.name).join(", ")}
-                                    >
-                                        {Array.isArray(job.cityNames)
-                                            ? job.cityNames.map((city) => city.name).join(", ")
-                                            : "N/A"}
-                                    </b>
-                                </div> */}
-
-
-                                <div className="flex gap-x-2 items-center">
-
-                                    <div><Banknote className="w-6 h-6 " /></div>
-
-
-                                    <div>{job.salaryRange}</div>
-
-                                </div>
-
-
-                                {/* <div className="">
-                                    <span className="">
-
-
-                                        <Banknote />
-                                    </span>
-                                    <b className="">{job.salaryRange}</b>
-                                </div> */}
                             </div>
+
+
+                            <div className="flex gap-x-1 items-center">
+
+                                {/* <div><Calendar className="w-3 h-3 " /></div> */}
+
+                                <label className="text-gray-500">Expiry:</label>
+                                <label  className="text-gray-500">{job.expiryDate} | </label>
+
+                            </div>
+
+
+                            <div className="flex gap-x-1 items-center ">
+
+                                {/* <div><Banknote className="w-4 h-4 " /></div> */}
+
+                                <label className="text-gray-500">Salary:</label>
+                                <label className="text-gray-500">{job.salaryRange} | </label>
+
+                            </div>
+
+
+                            <div className="flex gap-x-1 items-center">
+
+                                {/* <div><MapPin className="w-4 h-4" /></div> */}
+                                <label className="text-gray-500">City:</label>
+                                <label className=" truncate text-gray-500"
+                                    title={job.cityNames?.map((city) => city.name).join(", ")}
+                                >
+                                    {Array.isArray(job.cityNames)
+                                        ? job.cityNames.map((city) => city.name).join(", ")
+                                        : "N/A"}
+                                </label>
+
+
+                            </div>
+
+
+
+
+
+
+
+
+
                         </div>
 
                         {/* Job Info Row */}
 
 
                         {/* Phases for the Job */}
-                        <div className="flex flex-wrap gap-y-6 mt-5">
+                        <div className="flex flex-wrap gap-y-6 mt-1">
                             {job.entities.map((phase, index) => (
                                 <div key={index} className="flex w-full sm:w-1/2 lg:w-1/4">
                                     <div
@@ -337,17 +317,17 @@ export function DashboardSummaryHeader() {
 
                                     <div className="flex flex-col w-full ml-3">
                                         <div className="mb-0">
-                                            <strong>{phase.phaseTitle}</strong>
-                                        </div>
-                                        <div
-                                            style={{
-                                                width: "100%",
-                                                height: "2px",
-                                                backgroundColor: "#d4d5d6",
-                                            }}
-                                        ></div>
 
-                                        <div className="mt-5">
+
+                                            <h6 className="font-semibold mb-0 text-black my-2 text-sm">
+                                                {phase.phaseTitle}
+                                            </h6>
+                                        </div>
+
+
+
+
+                                        <div className="mt-1">
                                             <Accordion>
                                                 <Card>
                                                     <Accordion.Toggle
@@ -360,18 +340,18 @@ export function DashboardSummaryHeader() {
                                                     >
                                                         <span
                                                             className={`${phase.textColor}`}
-                                                        // style={{ fontSize: "1.3rem", fontWeight: "700" }}
-                                                        >
-                                                           
 
-                                                            <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
-                                                              {phase.dropdownTitle}
+                                                        >
+
+
+                                                            <h6 className={`font-semibold mb-0 text-${phase.textColor} my-2 text-sm pl-2`}>
+                                                                {phase.dropdownTitle}
                                                             </h6>
                                                         </span>
                                                         <span>
                                                             <KeyboardArrowDown
                                                                 className={`${phase.textColor}`}
-                                                                style={{ fontSize: "25px" }}
+
                                                             />
                                                         </span>
                                                     </Accordion.Toggle>
@@ -381,13 +361,8 @@ export function DashboardSummaryHeader() {
                                                             className={`${selectedJobIndex === jobIndex
                                                                 ? "bg-white"
                                                                 : "body-color"
-                                                                }`}
-                                                            style={{
-                                                                width: "100%",
-                                                                overflow: "auto",
-                                                                fontSize: "13px",
-                                                                fontWeight: "bold",
-                                                            }}
+                                                                } w-full overflow-auto text-[13px]`}
+
                                                         >
                                                             {phase.steps.map((step, idx) => (
                                                                 <div
@@ -403,10 +378,11 @@ export function DashboardSummaryHeader() {
                                                                             : undefined
                                                                     }
                                                                 >
-                                                                    <span>{step.title}</span>
-                                                                    <span className={`${phase.textColor}`}>
+                                                                    <label className="pl-2">{step.title}</label>
+
+                                                                    <h6 className={`font-bold mb-0 ${phase.textColor} pr-2`}>
                                                                         {step.count}
-                                                                    </span>
+                                                                    </h6>
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -414,10 +390,13 @@ export function DashboardSummaryHeader() {
                                                 </Card>
                                             </Accordion>
                                         </div>
+
                                     </div>
+
                                 </div>
                             ))}
                         </div>
+                        <hr></hr>
                     </div>
                 ))}
         </>
