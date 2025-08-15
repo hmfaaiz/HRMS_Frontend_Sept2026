@@ -3,6 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Eye } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -32,12 +33,13 @@ export function ActionsColumnFormatter(
         {isAccessForView && (
           <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
             <a
-              className="btn btn-icon view-button"
+               className=""
               onClick={() => openApplicantReadFormDialog(row.Id)}
             >
-              <span className="svg-icon svg-icon-md svg-icon-primary">
+              {/* <span className="svg-icon svg-icon-md svg-icon-primary">
                 <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
-              </span>
+              </span> */}
+                  <Eye className="w-4 h-4 text-black cursor-pointer p-l " />
             </a>
           </OverlayTrigger>
         )}

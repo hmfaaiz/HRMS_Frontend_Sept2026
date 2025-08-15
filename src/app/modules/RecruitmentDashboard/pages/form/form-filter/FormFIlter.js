@@ -193,20 +193,22 @@ export function FormFIlter({ listLoading, user }) {
               <Card>
                 <Card.Header className="d-flex justify-content-center">
                   <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
-                  <Accordion.Toggle
-                    as={Button}
-                    eventKey="0"
-                    className="flex justify-start text-bold"
-                  >
-                   
-                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
+                    <Accordion.Toggle
+                      as={Button}
+                      eventKey="0"
+                      className="flex justify-start text-bold"
+                    >
 
-                  </Accordion.Toggle>
-                </div>
+                      {activeKey === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Filters</span>
+
+                    </Accordion.Toggle>
+                  </div>
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
-                  <Card.Body>
+                  {/* <Card.Body>
+                   */}
 
+                  <>
 
                     <form onSubmit={handleSubmit}>
 
@@ -424,8 +426,8 @@ export function FormFIlter({ listLoading, user }) {
                         Cancel
                       </button>
                     </Modal.Footer>
-                  </Card.Body>
-
+                    {/* </Card.Body> */}
+                  </>
                 </Accordion.Collapse>
               </Card>
 

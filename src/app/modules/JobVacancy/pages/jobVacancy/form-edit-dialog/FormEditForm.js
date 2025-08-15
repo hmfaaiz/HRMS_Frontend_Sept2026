@@ -364,9 +364,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
-                <div
-                 
-                >
+                <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid grid-cols-6 gap-x-3">
                     <div className="">
@@ -418,6 +416,8 @@ export function FormEditForm({
                 </div>
 
                 {/* Request For */}
+
+                <hr></hr>
 
                 <div className="mt-1">
                   <h6 className="font-bold mb-0 text-primary my-2">
@@ -533,7 +533,7 @@ export function FormEditForm({
                     <div className="">
                       <label>City</label>
 
-                      <div className="overflow-auto max-h-16 border-none">
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                         {filteredCities(values.countryId).map((option) => (
                           <div key={option?.value}>
                             {" "}
@@ -561,172 +561,217 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1">
-                    <div className="">
-                      <SearchSelect
-                        name="employeeTypeId"
-                        label={<span>Employee Type</span>}
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("employeeTypeId", e.value || null);
-                        }}
-                        value={
-                          [
-                            ...(dashboard?.allEmpTypeDynamicChildMenus || []),
-                            ...(dashboard?.allEmpTypeChildMenus || []),
-                          ].find(
-                            (option) => option.value === values.employeeTypeId
-                          ) || null
-                        }
-                        options={[
-                          ...dashboard.allEmpTypeDynamicChildMenus,
-                          ...dashboard.allEmpTypeChildMenus,
-                        ]}
-                        error={errors.employeeTypeId}
-                        touched={touched.employeeTypeId}
-                      />
-                    </div>
 
-                    <div className="">
-                      <SearchSelect
-                        name="employeeStatusId"
-                        label={<span>Employee Status</span>}
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("employeeStatusId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allEmployeeStatus?.find(
-                            (option) => option.value === values.employeeStatusId
-                          ) || null
-                        }
-                        options={dashboard?.allEmployeeStatus}
-                        error={errors.employeeStatusId}
-                        touched={touched.employeeStatusId}
-                      />
-                    </div>
 
-                    <div className="">
-                      <SearchSelect
-                        name="departmentId"
-                        label={
-                          <span>
-                            Department <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("departmentId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allParentDept?.find(
-                            (option) => option.value === values.departmentId
-                          ) || null
-                        }
-                        options={dashboard?.allParentDept}
-                        error={errors.departmentId}
-                        touched={touched.departmentId}
-                      />
-                    </div>
 
+                  <div className="grid lg:grid-cols-2 gap-x-3 mt-1 ">
                     <div className="">
-                      <label>
-                        {" "}
-                        Job Posting (From)
-                        <span style={{ color: "red" }}>*</span>
-                      </label>
-                      <Field
-                        className="form-control"
-                        component={DatePickerField}
-                        placeholder="Job Posting Date"
-                        selected={
-                          values?.jobPostingDateFrom
-                            ? new Date(values.jobPostingDateFrom)
-                            : null
-                        }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("jobPostingDateFrom", selectedDate);
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="jobPostingDateFrom"
-                        autoComplete="off"
-                        minDate={new Date()}
-                        maxDate={values.jobPostingDateTo}
-                      />
+                      <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
+                        &nbsp;
+                      </h6>
 
-                      {touched.jobPostingDateFrom &&
-                        errors.jobPostingDateFrom && (
-                          <div className="invalid-feedback d-block">
-                            {errors.jobPostingDateFrom}
-                          </div>
-                        )}
-                    </div>
-                    <div className="">
-                      <label>
-                        {" "}
-                        Job Posting (To)
-                        <span style={{ color: "red" }}>*</span>
-                      </label>
-                      <Field
-                        className="form-control"
-                         component={DatePickerField}
-                        placeholder="Job Posting Date"
-                        selected={
-                          values?.jobPostingDateTo
-                            ? new Date(values.jobPostingDateTo)
-                            : null
-                        }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("jobPostingDateTo", selectedDate);
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="jobPostingDateTo"
-                        autoComplete="off"
-                        minDate={values.jobPostingDateFrom || new Date()}
-                      />
-
-                      {touched.jobPostingDateTo && errors.jobPostingDateTo && (
-                        <div className="invalid-feedback d-block">
-                          {errors.jobPostingDateTo}
+                      <div className="grid md:grid-cols-3 gap-x-3">
+                        <div className="">
+                          <SearchSelect
+                            name="employeeTypeId"
+                            label={<span>Employee Type</span>}
+                            isDisabled={isdataForRead}
+                            onChange={(e) => {
+                              setFieldValue("employeeTypeId", e.value || null);
+                            }}
+                            value={
+                              [
+                                ...(dashboard?.allEmpTypeDynamicChildMenus ||
+                                  []),
+                                ...(dashboard?.allEmpTypeChildMenus || []),
+                              ].find(
+                                (option) =>
+                                  option.value === values.employeeTypeId
+                              ) || null
+                            }
+                            options={[
+                              ...dashboard.allEmpTypeDynamicChildMenus,
+                              ...dashboard.allEmpTypeChildMenus,
+                            ]}
+                            error={errors.employeeTypeId}
+                            touched={touched.employeeTypeId}
+                          />
                         </div>
-                      )}
+
+                        <div className="">
+                          <SearchSelect
+                            name="employeeStatusId"
+                            label={<span>Employee Status</span>}
+                            isDisabled={isdataForRead}
+                            onChange={(e) => {
+                              setFieldValue(
+                                "employeeStatusId",
+                                e.value || null
+                              );
+                            }}
+                            value={
+                              dashboard?.allEmployeeStatus?.find(
+                                (option) =>
+                                  option.value === values.employeeStatusId
+                              ) || null
+                            }
+                            options={dashboard?.allEmployeeStatus}
+                            error={errors.employeeStatusId}
+                            touched={touched.employeeStatusId}
+                          />
+                        </div>
+
+                        <div className="">
+                          <SearchSelect
+                            name="departmentId"
+                            label={
+                              <span>
+                                Department{" "}
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            isDisabled={isdataForRead}
+                            onChange={(e) => {
+                              setFieldValue("departmentId", e.value || null);
+                            }}
+                            value={
+                              dashboard?.allParentDept?.find(
+                                (option) => option.value === values.departmentId
+                              ) || null
+                            }
+                            options={dashboard?.allParentDept}
+                            error={errors.departmentId}
+                            touched={touched.departmentId}
+                          />
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="">
-                      <label>
-                        {" "}
-                        Location<span style={{ color: "red" }}>*</span>
-                      </label>
-                      <div className="overflow-auto max-h-16 border-none">
-                        {dashboard.allLocationChildMenus?.map((option) => (
-                          <div key={option?.value}>
-                            <label className="flex items-center space-x-1">
-                              <input
-                                className="mr-1"
-                                name="locationId"
-                                type="checkbox"
-                                value={option?.value}
-                                checked={Boolean(
-                                  values?.locationId?.includes(
-                                    option?.value?.toString()
-                                  )
-                                )}
-                                onChange={handleChange}
-                              />
-                              {option?.label}{" "}
-                            </label>
+
+
+                    <div>
+                      <div>
+
+                        <h6 className="font-bold mb-0 text-primary my-2">
+                          Job Posting
+                        </h6>
+
+                      </div>
+
+                      <div className="grid md:grid-cols-3 gap-x-3">
+                        <div className="">
+                          <label>
+                            {" "}
+                            From
+                            <span style={{ color: "red" }}>*</span>
+                          </label>
+                          <Field
+                            className="form-control"
+                            component={DatePickerField}
+                            placeholder="Job Posting Date"
+                            selected={
+                              values?.jobPostingDateFrom
+                                ? new Date(values.jobPostingDateFrom)
+                                : null
+                            }
+                            onChange={(date) => {
+                              let selectedDate = formatDates(
+                                date,
+                                "yyyy-MM-dd"
+                              );
+                              setFieldValue("jobPostingDateFrom", selectedDate);
+                            }}
+                            dateFormat="dd-MMM-yyyy"
+                            name="jobPostingDateFrom"
+                            autoComplete="off"
+                            minDate={new Date()}
+                            maxDate={values.jobPostingDateTo}
+                          />
+
+                          {/* {touched.jobPostingDateFrom &&
+                            errors.jobPostingDateFrom && (
+                              <div className="invalid-feedback d-block">
+                                {errors.jobPostingDateFrom}
+                              </div>
+                            )} */}
+                        </div>
+                        <div className="">
+                          <label>
+                            {" "}
+                            To
+                            <span style={{ color: "red" }}>*</span>
+                          </label>
+                          <Field
+                            className="form-control"
+                            component={DatePickerField}
+                            placeholder="Job Posting Date"
+                            selected={
+                              values?.jobPostingDateTo
+                                ? new Date(values.jobPostingDateTo)
+                                : null
+                            }
+                            onChange={(date) => {
+                              let selectedDate = formatDates(
+                                date,
+                                "yyyy-MM-dd"
+                              );
+                              setFieldValue("jobPostingDateTo", selectedDate);
+                            }}
+                            dateFormat="dd-MMM-yyyy"
+                            name="jobPostingDateTo"
+                            autoComplete="off"
+                            minDate={values.jobPostingDateFrom || new Date()}
+                          />
+
+                          {/* {touched.jobPostingDateTo &&
+                            errors.jobPostingDateTo && (
+                              <div className="invalid-feedback d-block">
+                                {errors.jobPostingDateTo}
+                              </div>
+                            )} */}
+                        </div>
+
+                        <div className="">
+                          <label>
+                            {" "}
+                            Location<span style={{ color: "red" }}>*</span>
+                          </label>
+                          <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                            {dashboard.allLocationChildMenus?.map((option) => (
+                              <div key={option?.value}>
+                                <label className="flex items-center space-x-1">
+                                  <input
+                                    className="mr-1"
+                                    name="locationId"
+                                    type="checkbox"
+                                    value={option?.value}
+                                    checked={Boolean(
+                                      values?.locationId?.includes(
+                                        option?.value?.toString()
+                                      )
+                                    )}
+                                    onChange={handleChange}
+                                  />
+                                  {option?.label}{" "}
+                                </label>
+                              </div>
+                            ))}
+                            {errors.locationId && touched.locationId && (
+                              <div className="invalid-text">
+                                {errors.locationId}
+                              </div>
+                            )}
                           </div>
-                        ))}
-                        {errors.locationId && touched.locationId && (
-                          <div className="invalid-text">
-                            {errors.locationId}
-                          </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   </div>
+
+
+
+
+
+
                 </div>
 
                 {/* Position Detail */}
@@ -778,192 +823,213 @@ export function FormEditForm({
                       type="text"
                       className="form-control"
                     />
-                    <ErrorMessage
+                    {/* <ErrorMessage
                       className="form-feedBack"
                       name="relationshipWithReportTo"
                       component="div"
-                    />
+                    /> */}
                   </div>
                 </div>
-
-
 
                 {/* Job Vacany Detail */}
                 <hr></hr>
-                <h6 className="font-bold mb-0 text-primary my-2">
-                  Job Vacany Detail
-                </h6>
 
-                <div className="grid grid-cols-6 gap-x-3 gap-y-1">
-                  <div className="">
-                    <label>
-                      <span>
-                        No.of Positions<span style={{ color: "red" }}>*</span>
-                      </span>
-                    </label>
-                    <Field
-                      name="noOfPosition"
-                      component={Input}
-                      placeholder="Enter no of position"
-                      type="number"
-                    />
+                <div className="grid grid-cols-2 gap-x-3">
+                  <div>
+                    <div> <h6 className="font-bold mb-0 text-primary my-2">
+                      Job Vacany Detail
+                    </h6></div>
+                    <div className="grid grid-cols-3 gap-x-3">
+                      <div className="">
+                        <label>
+                          <span>
+                            No.of Positions<span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="noOfPosition"
+                          component={Input}
+                          placeholder="Enter no of position"
+                          type="number"
+                        />
+                      </div>
+
+                      <div className="">
+                        <SearchSelect
+                          name="hiringReasonId"
+                          label={
+                            <span>
+                              Hiring Reason<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={isdataForRead}
+                          onChange={(e) => {
+                            setFieldValue("hiringReasonId", e.value || null);
+                          }}
+                          value={
+                            dashboard?.allHiringReasonList?.find(
+                              (option) => option.value === values.hiringReasonId
+                            ) || null
+                          }
+                          options={dashboard?.allHiringReasonList}
+                          error={errors.hiringReasonId}
+                          touched={touched.hiringReasonId}
+                        />
+                      </div>
+
+                      <div className="">
+                        <SearchSelect
+                          name="jobPreferenceId"
+                          label={
+                            <span>
+                              Job Preference
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={isdataForRead}
+                          onChange={(e) => {
+                            setFieldValue("jobPreferenceId", e.value || null);
+                          }}
+                          value={
+                            dashboard?.alljobPreferenceList?.find(
+                              (option) => option.value === values.jobPreferenceId
+                            ) || null
+                          }
+                          options={dashboard?.alljobPreferenceList}
+                          error={errors.jobPreferenceId}
+                          touched={touched.jobPreferenceId}
+                        />
+                      </div>
+
+                    </div>
+
                   </div>
 
-                  <div className="">
-                    <SearchSelect
-                      name="hiringReasonId"
-                      label={
-                        <span>
-                          Hiring Reason<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isdataForRead}
-                      onChange={(e) => {
-                        setFieldValue("hiringReasonId", e.value || null);
-                      }}
-                      value={
-                        dashboard?.allHiringReasonList?.find(
-                          (option) => option.value === values.hiringReasonId
-                        ) || null
-                      }
-                      options={dashboard?.allHiringReasonList}
-                      error={errors.hiringReasonId}
-                      touched={touched.hiringReasonId}
-                    />
-                  </div>
+                  <div>
+                    <div> <h6 className="font-bold mb-0 text-primary my-2">
+                      Job Period
+                    </h6></div>
 
-                  <div className="">
-                    <SearchSelect
-                      name="jobPreferenceId"
-                      label={
-                        <span>
-                          Job Preference
+                    <div className="grid grid-cols-3 gap-x-3">
+
+
+                      <div className="">
+                        <label> From</label>
+                        <Field
+                          className="form-control"
+                          placeholder="Job period start"
+                          component={DatePickerField}
+                          selected={
+                            values?.jobPeriodStart
+                              ? new Date(values.jobPeriodStart)
+                              : null
+                          }
+                          onChange={(date) => {
+                            let selectedDate = formatDates(date, "yyyy-MM-dd");
+                            setFieldValue("jobPeriodStart", selectedDate);
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name="jobPeriodStart"
+                          autoComplete="off"
+                          minDate={
+                            values?.jobPostingDateFrom
+                              ? new Date(values.jobPostingDateFrom)
+                              : new Date()
+                          }
+                          maxDate={
+                            values?.jobPeriodEnd
+                              ? new Date(values.jobPeriodEnd)
+                              : null
+                          }
+                        />
+
+                        {touched.jobPeriodStart && errors.jobPeriodStart && (
+                          <div className="invalid-feedback d-block">
+                            {errors.jobPeriodStart}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="">
+                        <label>To</label>
+                        <Field
+                          className="form-control"
+                          component={DatePickerField}
+                          placeholder="Job period end"
+                          selected={
+                            values?.jobPeriodEnd
+                              ? new Date(values.jobPeriodEnd)
+                              : null
+                          }
+                          onChange={(date) => {
+                            let selectedDate = formatDates(date, "yyyy-MM-dd");
+                            setFieldValue("jobPeriodEnd", selectedDate);
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name="jobPeriodEnd"
+                          autoComplete="off"
+                          minDate={
+                            values?.jobPeriodStart
+                              ? new Date(values.jobPeriodStart)
+                              : new Date()
+                          }
+                        />
+
+                        {touched.jobPeriodEnd && errors.jobPeriodEnd && (
+                          <div className="invalid-feedback d-block">
+                            {errors.jobPeriodEnd}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="">
+                        <label>
+                          {" "}
+                          Desire Date of Appointment
                           <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isdataForRead}
-                      onChange={(e) => {
-                        setFieldValue("jobPreferenceId", e.value || null);
-                      }}
-                      value={
-                        dashboard?.alljobPreferenceList?.find(
-                          (option) => option.value === values.jobPreferenceId
-                        ) || null
-                      }
-                      options={dashboard?.alljobPreferenceList}
-                      error={errors.jobPreferenceId}
-                      touched={touched.jobPreferenceId}
-                    />
-                  </div>
+                        </label>
+                        <Field
+                          className="form-control"
+                          component={DatePickerField}
+                          placeholder="Desire Date of Appointment"
+                          selected={
+                            values?.desireDateOfApp
+                              ? new Date(values.desireDateOfApp)
+                              : null
+                          }
+                          onChange={(date) => {
+                            let selectedDate = formatDates(date, "yyyy-MM-dd");
+                            console.log("selectedDate111", selectedDate);
+                            setFieldValue("desireDateOfApp", selectedDate);
+                          }}
+                          dateFormat="dd-MMM-yyyy"
+                          name="desireDateOfApp"
+                          autoComplete="off"
+                          minDate={
+                            values?.jobPostingDateFrom
+                              ? new Date(values.jobPostingDateFrom)
+                              : new Date()
+                          }
+                        //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
+                        />
 
-                  <div className="">
-                    <label> Job Period Start</label>
-                    <Field
-                      className="form-control"
-                      placeholder="Job period start"
-                      component={DatePickerField}
-
-                      selected={
-                        values?.jobPeriodStart
-                          ? new Date(values.jobPeriodStart)
-                          : null
-                      }
-                      onChange={(date) => {
-                        let selectedDate = formatDates(date, "yyyy-MM-dd");
-                        setFieldValue("jobPeriodStart", selectedDate);
-                      }}
-                      dateFormat="dd-MMM-yyyy"
-                      name="jobPeriodStart"
-                      autoComplete="off"
-                      minDate={
-                        values?.jobPostingDateFrom
-                          ? new Date(values.jobPostingDateFrom)
-                          : new Date()
-                      }
-                      maxDate={
-                        values?.jobPeriodEnd
-                          ? new Date(values.jobPeriodEnd)
-                          : null
-                      }
-                    />
-
-                    {touched.jobPeriodStart && errors.jobPeriodStart && (
-                      <div className="invalid-feedback d-block">
-                        {errors.jobPeriodStart}
+                        {/* {touched.desireDateOfApp && errors.desireDateOfApp && (
+                          <div className="invalid-feedback d-block">
+                            {errors.desireDateOfApp}
+                          </div>
+                        )} */}
                       </div>
-                    )}
+
+                    </div>
+
                   </div>
 
-                  <div className="">
-                    <label> Job Period End</label>
-                    <Field
-                      className="form-control"
-                      component={DatePickerField}
-                      placeholder="Job period end"
-                      selected={
-                        values?.jobPeriodEnd
-                          ? new Date(values.jobPeriodEnd)
-                          : null
-                      }
-                      onChange={(date) => {
-                        let selectedDate = formatDates(date, "yyyy-MM-dd");
-                        setFieldValue("jobPeriodEnd", selectedDate);
-                      }}
-                      dateFormat="dd-MMM-yyyy"
-                      name="jobPeriodEnd"
-                      autoComplete="off"
-                      minDate={
-                        values?.jobPeriodStart
-                          ? new Date(values.jobPeriodStart)
-                          : new Date()
-                      }
-                    />
 
-                    {touched.jobPeriodEnd && errors.jobPeriodEnd && (
-                      <div className="invalid-feedback d-block">
-                        {errors.jobPeriodEnd}
-                      </div>
-                    )}
-                  </div>
 
-                  <div className="">
-                    <label>
-                      {" "}
-                      Desire Date of Appointment
-                      <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      className="form-control"
-                      component={DatePickerField}
-                      placeholder="Desire Date of Appointment"
-                      selected={
-                        values?.desireDateOfApp
-                          ? new Date(values.desireDateOfApp)
-                          : null
-                      }
-                      onChange={(date) => {
-                        let selectedDate = formatDates(date, "yyyy-MM-dd");
-                        console.log("selectedDate111", selectedDate);
-                        setFieldValue("desireDateOfApp", selectedDate);
-                      }}
-                      dateFormat="dd-MMM-yyyy"
-                      name="desireDateOfApp"
-                      autoComplete="off"
-                      minDate={
-                        values?.jobPostingDateFrom
-                          ? new Date(values.jobPostingDateFrom)
-                          : new Date()
-                      }
-                    //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
-                    />
-
-                    {touched.desireDateOfApp && errors.desireDateOfApp && (
-                      <div className="invalid-feedback d-block">
-                        {errors.desireDateOfApp}
-                      </div>
-                    )}
-                  </div>
                 </div>
+
+
+
 
                 <div className="grid grid-cols-6 gap-x-3 mt-1">
                   <div className="">
@@ -1014,7 +1080,7 @@ export function FormEditForm({
                   </div>
                 </div>
 
-                <div className=" col-span-6  mt-1" >
+                <div className=" col-span-6  mt-1">
                   <label>
                     <span>Job Vacancy Detail</span>
                   </label>
@@ -1031,121 +1097,211 @@ export function FormEditForm({
 
                 {/* Position Preferences */}
 
-                <h6 className="font-bold mb-0 text-primary my-2">
-                  Position Preferences
-                </h6>
-
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
-                  <div className="">
-                    <label>
-                      <span>Age From</span>
-                    </label>
-                    <Field
-                      name="preferredAgeFrom"
-                      component={Input}
-                      placeholder="Enter age (from)"
-                      type="number"
-                      onInput={(e) => {
-                        e.target.value = amountLimitDynamic(e.target.value, 2);
-                      }}
-                    />
-                  </div>
-
-                  <div className="">
-                    <label>
-                      <span>Age To</span>
-                    </label>
-                    <Field
-                      name="preferredAgeTo"
-                      component={Input}
-                      placeholder="Enter age (to)"
-                      type="number"
-                      onInput={(e) => {
-                        e.target.value = amountLimitDynamic(e.target.value, 2);
-                      }}
-                    />
-                  </div>
-
-                  <div className="">
-                    <label>  Shift<span style={{ color: "red" }}>*</span></label>
+                <div className="grid md:grid-cols-6 gap-x-3">
 
 
-                    <div className="overflow-auto max-h-48 border-none">
-                      {dashboard?.allJobShiftList?.map((option) => (
-                        <div
-                          key={option?.value}
+                  <div className="grid col-span-4">
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      Position Preferences
+                    </h6>
 
-                        >
-                          <label className="flex items-center space-x-1">
+                    <div className="grid grid-cols-4 gap-x-3">
+                      <div className="">
+                        <label>
+                          {" "}
+                          Shift<span style={{ color: "red" }}>*</span>
+                        </label>
 
-                            <input className="mr-1"
-
-
-                              name="preferredShiftId"
-                              type="checkbox"
-                              value={option?.value}
-                              checked={Boolean(
-                                values?.preferredShiftId?.includes(
-                                  option?.value?.toString()
-                                )
-                              )}
-                              onChange={handleChange}
-                            />
-                            {option?.label}</label>
+                        <div className="overflow-auto max-h-48 border-none scrollbar-fancy">
+                          {dashboard?.allJobShiftList?.map((option) => (
+                            <div key={option?.value}>
+                              <label className="flex items-center space-x-1">
+                                <input
+                                  className="mr-1"
+                                  name="preferredShiftId"
+                                  type="checkbox"
+                                  value={option?.value}
+                                  checked={Boolean(
+                                    values?.preferredShiftId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
+                                  onChange={handleChange}
+                                />
+                                {option?.label}
+                              </label>
+                            </div>
+                          ))}
+                          {errors.preferredShiftId && touched.preferredShiftId && (
+                            <div className="invalid-feedback">
+                              {errors.preferredShiftId}
+                            </div>
+                          )}
                         </div>
-                      ))}
-                      {errors.preferredShiftId &&
-                        touched.preferredShiftId && (
-                          <div className="invalid-text">
-                            {errors.preferredShiftId}
-                          </div>
-                        )}
-                    </div>
+                      </div>
 
+                      <div className="mt-1">
+                        <label>
+                          {" "}
+                          Gender<span style={{ color: "red" }}>*</span>
+                        </label>
 
-
-                  </div>
-                  <div className="">
-                    <label>Mandatory Job Skills
-                    </label>
-                    <span style={{ color: "red" }}>*</span>
-
-
-                    <div className="overflow-auto max-h-16 border-none">
-                      {dashboard?.allJobSkillList?.map((option) => (
-
-                        <label className="flex items-center space-x-1">
-                          <input className="mr-1"
-
-                            name="preferredJobSkillsId"
-                            type="checkbox"
-                            value={option?.value}
-                            checked={Boolean(
-                              values?.preferredJobSkillsId?.includes(
-                                option?.value?.toString()
-                              )
+                        <div className="overflow-auto max-h-16 border-none ">
+                          {dashboard?.allGenderList?.map((option) => (
+                            <div
+                              key={option.value}
+                              className="flex justify-start items-center border-none "
+                            >
+                              <input
+                                className="mr-1"
+                                name="preferredGenderId"
+                                type="checkbox"
+                                value={option?.value}
+                                checked={Boolean(
+                                  values?.preferredGenderId?.includes(
+                                    option?.value?.toString()
+                                  )
+                                )}
+                                onChange={handleChange}
+                              />
+                              {option?.label}
+                            </div>
+                          ))}
+                          {errors.preferredGenderId &&
+                            touched.preferredGenderId && (
+                              <div className="invalid-feedback">
+                                {errors.preferredGenderId}
+                              </div>
                             )}
-                            onChange={handleChange}
-                          />
-                          {option?.label}</label>
+                        </div>
+                      </div>
 
-                      ))}
-                      {errors.preferredJobSkillsId &&
-                        touched.preferredJobSkillsId && (
-                          <div className="invalid-text">
-                            {errors.preferredJobSkillsId}
+                      <div className="">
+                        <label>Mandatory Job Skills</label>
+                        <span style={{ color: "red" }}>*</span>
+
+                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy ">
+                          {dashboard?.allJobSkillList?.map((option) => (
+                            <label className="flex items-center space-x-1">
+                              <input
+                                className="mr-1"
+                                name="preferredJobSkillsId"
+                                type="checkbox"
+                                value={option?.value}
+                                checked={Boolean(
+                                  values?.preferredJobSkillsId?.includes(
+                                    option?.value?.toString()
+                                  )
+                                )}
+                                onChange={handleChange}
+                              />
+                              {option?.label}
+                            </label>
+                          ))}
+                          {errors.preferredJobSkillsId &&
+                            touched.preferredJobSkillsId && (
+                              <div className="invalid-feedback">
+                                {errors.preferredJobSkillsId}
+                              </div>
+                            )}
+                        </div>
+
+                        <ErrorMessage
+                          className="form-feedBack"
+                          name="preferredJobSkillsId"
+                          component="div"
+                        />
+                      </div>
+
+                      <div className="mt-1">
+                        <label> Optional Skills</label>
+                        <div>
+                          <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                            {dashboard?.allJobSkillList?.map((option) => (
+                              <div key={option?.value}>
+                                <label className="flex items-center space-x-1">
+                                  <input
+                                    className="mr-1"
+                                    name="optionalJobSkillsId"
+                                    type="checkbox"
+                                    value={option?.value}
+                                    checked={Boolean(
+                                      values?.optionalJobSkillsId?.includes(
+                                        option?.value?.toString()
+                                      )
+                                    )}
+                                    onChange={handleChange}
+                                  />
+                                  {option?.label}{" "}
+                                </label>
+                              </div>
+                            ))}
+                            {/* {errors.optionalJobSkillsId &&
+                              touched.optionalJobSkillsId && (
+                                <div className="invalid-text">
+                                  {errors.optionalJobSkillsId}
+                                </div>
+                              )} */}
                           </div>
-                        )}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+
+                  <div className="grid col-span-2 ">
+                    <div>
+
+
+                      <h6 className="font-bold mb-0 text-primary my-2">
+                        Age
+                      </h6>
+
+                      <div className="grid grid-cols-2 gap-x-3">
+                        <div className="">
+                          <label>
+                            <span> From</span>
+                          </label>
+                          <Field
+                            name="preferredAgeFrom"
+                            component={Input}
+                            placeholder="Enter age (from)"
+                            type="number"
+                            onInput={(e) => {
+                              e.target.value = amountLimitDynamic(e.target.value, 2);
+                            }}
+                          />
+                        </div>
+
+                        <div className="">
+                          <label>
+                            <span>Age To</span>
+                          </label>
+                          <Field
+                            name="preferredAgeTo"
+                            component={Input}
+                            placeholder="Enter age (to)"
+                            type="number"
+                            onInput={(e) => {
+                              e.target.value = amountLimitDynamic(e.target.value, 2);
+                            }}
+                          />
+                        </div>
+                      </div>
+
                     </div>
 
-
-                    <ErrorMessage
-                      className="form-feedBack"
-                      name="preferredJobSkillsId"
-                      component="div"
-                    />
                   </div>
+
+
+
+
                 </div>
+
+
+
+
 
                 <div className="grid grid-cols-4 gap-x-3 gap-y-1">
                   <div className="">
@@ -1204,92 +1360,6 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="mt-1">
-                   <label> Gender<span style={{ color: "red" }}>*</span></label>
-
-
-
-                    <div className="overflow-auto max-h-16 border-none">
-                      {dashboard?.allGenderList?.map((option) => (
-                        <div key={option.value} className="flex justify-start items-center border-none">
-
-                          <input className="mr-1"
-
-
-                            name="preferredGenderId"
-                            type="checkbox"
-                            value={option?.value}
-                            checked={Boolean(
-                              values?.preferredGenderId?.includes(
-                                option?.value?.toString()
-                              )
-                            )}
-                            onChange={handleChange}
-                          />
-                          {option?.label}
-                        </div>
-                      ))}
-                      {errors.preferredGenderId &&
-                        touched.preferredGenderId && (
-                          <div className="invalid-text">
-                            {errors.preferredGenderId}
-                          </div>
-                        )}
-                    </div>
-
-
-                  </div>
-
-                  <div className="mt-1">
-                    <label>  Optional Skills</label>
-                    <div
-
-                    >
-
-
-                      <div className="overflow-auto max-h-16 border-none">
-
-                        {dashboard?.allJobSkillList?.map((option) => (
-                          <div
-                            key={option?.value}
-
-                          >
-                            <label className="flex items-center space-x-1">
-
-
-                              <input className="mr-1"
-
-                                name="optionalJobSkillsId"
-                                type="checkbox"
-                                value={option?.value}
-                                checked={Boolean(
-                                  values?.optionalJobSkillsId?.includes(
-                                    option?.value?.toString()
-                                  )
-                                )}
-                                onChange={handleChange}
-                              />
-                              {option?.label} </label>
-                          </div>
-                        ))}
-                        {errors.optionalJobSkillsId &&
-                          touched.optionalJobSkillsId && (
-                            <div className="invalid-text">
-                              {errors.optionalJobSkillsId}
-                            </div>
-                          )}
-                      </div>
-
-                    </div>
-                  </div>
-
-
-
-
-                </div>
-
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
-
                   <div className="">
                     <label>
                       <span>
@@ -1327,11 +1397,7 @@ export function FormEditForm({
                   </div>
                 </div>
 
-
-                <div
-                  className="mt-1  "
-
-                >
+                <div className="mt-1  ">
                   <label>
                     <span>Work Experience Detail</span>
                   </label>
@@ -1342,14 +1408,9 @@ export function FormEditForm({
                     className="form-control"
                     type="text"
                   />
-
-
                 </div>
 
-                <div
-                  className=" mt-1"
-
-                >
+                <div className=" mt-1">
                   <label>
                     <span>Additional Requirement</span>
                   </label>
@@ -1364,17 +1425,14 @@ export function FormEditForm({
 
                 {/* Compensation & Benefits */}
 
-
                 <hr></hr>
 
                 <h6 className="font-bold mb-0 text-primary my-2">
-                  Compensation & Benefits
+                  Salary Range (Per Month)
                 </h6>
-
 
                 <div className="grid grid-cols-6 gap-x-3 gap-y-1">
                   <div className="">
-
                     <AmountInput
                       field={{
                         name: `salaryRangeFrom`,
@@ -1390,7 +1448,7 @@ export function FormEditForm({
                       placeholder="Enter salary range (from)"
                       label={
                         <span>
-                          Salary Range (Per Month) From
+                          From
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -1413,7 +1471,7 @@ export function FormEditForm({
                       disabled={isdataForRead}
                       label={
                         <span>
-                          Salary Range (Per Month) To
+                         To
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -1422,11 +1480,12 @@ export function FormEditForm({
                 </div>
 
 
+                <hr></hr>
+                     <h6 className="font-bold mb-0 text-primary my-2">
+                  Compensation & Benefits
+                </h6>
 
-                <div
-                  className="mt-1"
-
-                >
+                <div className="mt-1">
                   <label>
                     <span>Incentive Packages</span>
                   </label>
@@ -1439,11 +1498,7 @@ export function FormEditForm({
                   />
                 </div>
 
-
-                <div
-                  className="mt-1"
-
-                >
+                <div className="mt-1">
                   <label>
                     <span>Other Benefits</span>
                   </label>
@@ -1456,14 +1511,7 @@ export function FormEditForm({
                   />
                 </div>
 
-
-
-
-
-                <div
-                  className=" mt-1"
-
-                >
+                <div className=" mt-1">
                   <label>
                     <span>
                       Job Summary<span style={{ color: "red" }}>*</span>
@@ -1476,14 +1524,12 @@ export function FormEditForm({
                     className="form-control"
                     type="text"
                   />
-                  <ErrorMessage
+                  {/* <ErrorMessage
                     className="form-feedBack "
                     name="jobSummary"
                     component="div"
-                  />
+                  /> */}
                 </div>
-
-
               </fieldset>
             </Form>
           </Modal.Body>
