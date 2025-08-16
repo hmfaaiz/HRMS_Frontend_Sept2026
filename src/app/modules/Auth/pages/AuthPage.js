@@ -23,7 +23,7 @@ export function AuthPage() {
 
 
       <div
-        className=" d-flex flex-column"
+        className=""
         id="kt_login"
         style={{
           height: "100vh", // full viewport height ✅
@@ -35,10 +35,10 @@ export function AuthPage() {
       >
         {/* login div */}
 
-        <div className="container-fluid h-100">
-          <div className="row h-100 ">
+        <div className="grid md:grid-cols-6">
+       
             {/* Left Login Input */}
-            <div className="col-12 col-md-4 m-0 p-5 d-flex flex-column " style={{ borderRadius: '8px' }}>
+            <div className="col-span-2 m-0 p-5  h-screen" >
 
               <Switch>
                 <ContentRoute path="/auth/login" component={Login} />
@@ -60,7 +60,7 @@ export function AuthPage() {
             {/* Right  */}
 
 
-            <div className="col-12 col-md-8 pt-5 d-flex flex-column  opacity-97" >
+            <div className="col-span-4 p-5  opacity-97 hidden md:block h-screen" >
               {/*  style={{ display: window.innerWidth < 768 ? 'none' : 'flex' }} */}
               <div className="bg-white p-5 m-0 rounded-top">
    
@@ -272,9 +272,9 @@ export function AuthPage() {
 
 
 
-        </div >
+      
 
-        {/* left side */}
+
 
 
       </div >
