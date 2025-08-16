@@ -366,7 +366,7 @@ export function FormEditForm({
                 {/* Job */}
                 <div>
                   {/* <h6>Job</h6> */}
-                  <div className="grid grid-cols-6 gap-x-3">
+                  <div className="grid md:grid-cols-6 gap-x-3">
                     <div className="">
                       <label>
                         <span>
@@ -554,10 +554,11 @@ export function FormEditForm({
                             </label>
                           </div>
                         ))}
-                        {errors.cityId && touched.cityId && (
-                          <div className="invalid-text">{errors.cityId}</div>
-                        )}
+                        
                       </div>
+                      {errors.cityId && touched.cityId && (
+                          <div className="invalid-feedback">{errors.cityId}</div>
+                        )}
                     </div>
                   </div>
 
@@ -756,12 +757,13 @@ export function FormEditForm({
                                 </label>
                               </div>
                             ))}
-                            {errors.locationId && touched.locationId && (
-                              <div className="invalid-text">
+                            
+                          </div>
+                          {errors.locationId && touched.locationId && (
+                              <div className="invalid-feedback">
                                 {errors.locationId}
                               </div>
                             )}
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -781,7 +783,7 @@ export function FormEditForm({
                   Position Detail
                 </h6>
 
-                <div className="grid grid-cols-6 gap-x-3 gap-y-1">
+                <div className="grid md:grid-cols-6 gap-x-3 gap-y-1">
                   <div className="">
                     <SearchSelect
                       name="reportToDesignationId"
@@ -834,12 +836,12 @@ export function FormEditForm({
                 {/* Job Vacany Detail */}
                 <hr></hr>
 
-                <div className="grid grid-cols-2 gap-x-3">
+                <div className="grid md:grid-cols-2 gap-x-3">
                   <div>
                     <div> <h6 className="font-bold mb-0 text-primary my-2">
                       Job Vacany Detail
                     </h6></div>
-                    <div className="grid grid-cols-3 gap-x-3">
+                    <div className="grid md:grid-cols-3 gap-x-3">
                       <div className="">
                         <label>
                           <span>
@@ -910,7 +912,7 @@ export function FormEditForm({
                       Job Period
                     </h6></div>
 
-                    <div className="grid grid-cols-3 gap-x-3">
+                    <div className="grid md:grid-cols-3 gap-x-3">
 
 
                       <div className="">
@@ -1031,7 +1033,7 @@ export function FormEditForm({
 
 
 
-                <div className="grid grid-cols-6 gap-x-3 mt-1">
+                <div className="grid md:grid-cols-6 gap-x-3 mt-1">
                   <div className="">
                     <SearchSelect
                       name="appointmentTypeId"
@@ -1105,14 +1107,14 @@ export function FormEditForm({
                       Position Preferences
                     </h6>
 
-                    <div className="grid grid-cols-4 gap-x-3">
+                    <div className="grid md:grid-cols-4 gap-x-3">
                       <div className="">
                         <label>
                           {" "}
                           Shift<span style={{ color: "red" }}>*</span>
                         </label>
 
-                        <div className="overflow-auto max-h-48 border-none scrollbar-fancy">
+                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                           {dashboard?.allJobShiftList?.map((option) => (
                             <div key={option?.value}>
                               <label className="flex items-center space-x-1">
@@ -1132,12 +1134,13 @@ export function FormEditForm({
                               </label>
                             </div>
                           ))}
-                          {errors.preferredShiftId && touched.preferredShiftId && (
+                       
+                        </div>
+                           {errors.preferredShiftId && touched.preferredShiftId && (
                             <div className="invalid-feedback">
                               {errors.preferredShiftId}
                             </div>
                           )}
-                        </div>
                       </div>
 
                       <div className="mt-1">
@@ -1146,7 +1149,7 @@ export function FormEditForm({
                           Gender<span style={{ color: "red" }}>*</span>
                         </label>
 
-                        <div className="overflow-auto max-h-16 border-none ">
+                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy ">
                           {dashboard?.allGenderList?.map((option) => (
                             <div
                               key={option.value}
@@ -1167,13 +1170,14 @@ export function FormEditForm({
                               {option?.label}
                             </div>
                           ))}
-                          {errors.preferredGenderId &&
+                          
+                        </div>
+                        {errors.preferredGenderId &&
                             touched.preferredGenderId && (
                               <div className="invalid-feedback">
                                 {errors.preferredGenderId}
                               </div>
                             )}
-                        </div>
                       </div>
 
                       <div className="">
@@ -1198,19 +1202,16 @@ export function FormEditForm({
                               {option?.label}
                             </label>
                           ))}
-                          {errors.preferredJobSkillsId &&
+                         
+                        </div>
+                         {errors.preferredJobSkillsId &&
                             touched.preferredJobSkillsId && (
                               <div className="invalid-feedback">
                                 {errors.preferredJobSkillsId}
                               </div>
                             )}
-                        </div>
 
-                        <ErrorMessage
-                          className="form-feedBack"
-                          name="preferredJobSkillsId"
-                          component="div"
-                        />
+                       
                       </div>
 
                       <div className="mt-1">
@@ -1258,7 +1259,7 @@ export function FormEditForm({
                         Age
                       </h6>
 
-                      <div className="grid grid-cols-2 gap-x-3">
+                      <div className="grid md:grid-cols-2 gap-x-3">
                         <div className="">
                           <label>
                             <span> From</span>
@@ -1276,7 +1277,7 @@ export function FormEditForm({
 
                         <div className="">
                           <label>
-                            <span>Age To</span>
+                            <span>To</span>
                           </label>
                           <Field
                             name="preferredAgeTo"
@@ -1303,7 +1304,7 @@ export function FormEditForm({
 
 
 
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                   <div className="">
                     <SearchSelect
                       name="preferredQualificationId"
@@ -1431,7 +1432,7 @@ export function FormEditForm({
                   Salary Range (Per Month)
                 </h6>
 
-                <div className="grid grid-cols-6 gap-x-3 gap-y-1">
+                <div className="grid md:grid-cols-6 gap-x-3 gap-y-1">
                   <div className="">
                     <AmountInput
                       field={{
