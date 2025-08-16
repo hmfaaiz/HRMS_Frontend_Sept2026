@@ -840,7 +840,7 @@ export function FormEditForm({
                               <td className="min-w-32">City</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th>Action</th>
+                              <th className="text-right">Action</th>
 
                             </tr>
 
@@ -1088,7 +1088,7 @@ export function FormEditForm({
                               <td className="min-w-32">CGPA</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th>Action</th>
+                              <th className="text-right">Action</th>
 
                             </tr>
 
@@ -1381,7 +1381,7 @@ export function FormEditForm({
                               <td className="min-w-32">Rating</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th>Action</th>
+                              <th className="text-right">Action</th>
                             </tr>
 
                             <tbody>

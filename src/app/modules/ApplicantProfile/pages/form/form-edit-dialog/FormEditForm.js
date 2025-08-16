@@ -35,6 +35,7 @@ import { subYears } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2, Upload, User } from "lucide-react";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
@@ -955,8 +956,8 @@ export function FormEditForm({
                     >
                       <img
                         name="myImage"
-                        width={70}
-                        height={70}
+                        width={65}
+                        height={65}
                         src={profile_image || formData?.profile_image}
                         className="object-cover rounded-lg"
                         alt="Profile"
@@ -1073,7 +1074,7 @@ export function FormEditForm({
 
 
 
-
+<hr></hr>
 
 
                 {/* Details Job Vacancy */}
@@ -2247,27 +2248,29 @@ export function FormEditForm({
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
                   <div className="col-span-1">
-                    <label
+                    {/* <label
                       htmlFor="file"
                     // className="block mb-2 text-xs font-normal text-gray-900"
                     >
-                      Attachment
-                    </label>
+                      CV
+
+                    </label> */}
 
                     {/* Hidden input */}
 
 
                     {/* Styled label as upload box */}
-                    <label
+                    {/* <label
                       htmlFor="file"
                       className="form-control block w-full cursor-pointer"
                       onChange={(event) => {
                         const file = event.currentTarget.files[0];
                         setFieldValue("file", file);
                       }}
-                    >
-                      {formData.file ? formData.file : "Upload"}
-                      <input
+                    > */}
+                      {/* {formData.file ? formData.file : ""} */}
+                      <FileUpload
+                         label={"CV"}
                         id="file"
                         name="file"
                         type="file"
@@ -2278,8 +2281,12 @@ export function FormEditForm({
                           const file = event.currentTarget.files[0];
                           setFieldValue("file", file);
                         }}
+
+                        
                       />
-                    </label>
+                
+                   
+                    {/* </label> */}
 
                     {/* Show existing file if any */}
                     {formData.file && formData.file === formData.file && (

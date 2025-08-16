@@ -5,6 +5,8 @@ import * as actions from "../../_redux/formAction";
 import { ToastContainer } from 'react-toastify';
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Download, MailPlus } from 'lucide-react';
 
 const JobOfferPreview = () => {
     const [data, setData] = useState(null);
@@ -110,61 +112,66 @@ const JobOfferPreview = () => {
 
 
                     <div className="col-12 col-md-12 mt-4 row p-5">
-                        <div className="">
-                            <button
-                                className="ml-3 btn btn-primary btn-elevate"
-                                onClick={() => {
-                                    generateOfferLetter({
-                                        applicantId: formUIProps2?.applicantId,
-                                        applicantVacancyId: formUIProps2?.applicantVacancyId,
-                                        jobVacancyId: formUIProps2?.jobVacancyId,
-                                        headOfHrId: formUIProps2?.headOfHrId,
-                                        hrId: formUIProps2?.hrId,
+                        <div className="flex justify-between items-center gap-4">
 
-                                    },
-                                        { to_generate: true, to_send: false });
-                                }}
-                                type="button"
-                                disabled={
 
-                                    formUIProps2 == null || pdfGenerateLoading || emailSendLoading
-                                }
+                            <OverlayTrigger
+                                overlay={<Tooltip id="products-edit-tooltip">Generate Offer Letter</Tooltip>}
                             >
-                                Generate Offer Letter  
-                                  <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
-                                                <SVG
-                                                  src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                                                />
-                                              </span>
-                                {pdfGenerateLoading && (
-                                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                                )}
-                            </button>
+                                <a title="" className=""
+                                    disabled={
 
-                            <button
-                                className="ml-3 btn btn-primary btn-elevate"
-                                onClick={() => {
-                                    generateOfferLetter({
-                                        applicantId: formUIProps2?.applicantId,
-                                        applicantVacancyId: formUIProps2?.applicantVacancyId,
-                                        jobVacancyId: formUIProps2?.jobVacancyId,
-                                        headOfHrId: formUIProps2?.headOfHrId,
-                                        hrId: formUIProps2?.hrId,
+                                        formUIProps2 == null || pdfGenerateLoading || emailSendLoading
+                                    }
+                                    onClick={() => {
+                                        generateOfferLetter({
+                                            applicantId: formUIProps2?.applicantId,
+                                            applicantVacancyId: formUIProps2?.applicantVacancyId,
+                                            jobVacancyId: formUIProps2?.jobVacancyId,
+                                            headOfHrId: formUIProps2?.headOfHrId,
+                                            hrId: formUIProps2?.hrId,
 
-                                    },
-                                        { to_generate: false, to_send: true });
-                                }}
-                                type="button"
-                                disabled={
+                                        },
+                                            { to_generate: true, to_send: false });
+                                    }}>
 
-                                    formUIProps2 == null || pdfGenerateLoading || emailSendLoading
-                                }
+                                    <Download className="w-4 h-4 text-black cursor-pointer" />
+                                    {pdfGenerateLoading && (
+                                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                                    )}
+                                </a>
+                            </OverlayTrigger>
+
+
+
+
+                            <OverlayTrigger
+                                overlay={<Tooltip id="products-edit-tooltip">Send Offer Letter</Tooltip>}
                             >
-                                Send Offer Letter
-                                {emailSendLoading && (
-                                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                                )}
-                            </button>
+                                <a title="" className=""
+                                    disabled={
+
+                                        formUIProps2 == null || pdfGenerateLoading || emailSendLoading
+                                    }
+                                    onClick={() => {
+                                        generateOfferLetter({
+                                            applicantId: formUIProps2?.applicantId,
+                                            applicantVacancyId: formUIProps2?.applicantVacancyId,
+                                            jobVacancyId: formUIProps2?.jobVacancyId,
+                                            headOfHrId: formUIProps2?.headOfHrId,
+                                            hrId: formUIProps2?.hrId,
+
+                                        },
+                                            { to_generate: false, to_send: true });
+                                    }}>
+
+                                    <MailPlus className="w-4 h-4 text-black cursor-pointer" />
+                                    {emailSendLoading && (
+                                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                                    )}
+                                </a>
+                            </OverlayTrigger>
+
                         </div>
                     </div>
                     <div style={{

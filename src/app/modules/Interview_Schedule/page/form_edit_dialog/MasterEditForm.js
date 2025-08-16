@@ -303,12 +303,12 @@ export default function MasterEditForm({
                                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                   <tr className="custom-table-header">
 
-                                    <td className="col-3">Interviewer</td>
+                                    <td className="col-2">Interviewer</td>
                                     <td className="col-2">Department</td>
                                     <td className="col-2">Designation</td>
                                     <td className="col-2">Grade</td>
-                                    <td className="col-2">Employee Type</td>
-                                    <td className="col-2">Subsidiary</td>
+                                    <td className="col-1">Employee Type</td>
+                                    <td className="col-3">Subsidiary</td>
                                     <td className="col-2">Location</td>
                                     <td>Action</td>
                                   </tr>
