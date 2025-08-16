@@ -2555,9 +2555,9 @@ export function FormEditForm({
 
                                       {/* start date  */}
                                       <td className="max-w-18">
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values
@@ -2613,9 +2613,9 @@ export function FormEditForm({
 
                                       {/* end date  */}
                                       <td className="max-w-18">
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values
@@ -2988,9 +2988,9 @@ export function FormEditForm({
 
                                       {/* start date  */}
                                       <td className="max-w-18">
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_academic_info?.[
@@ -3045,9 +3045,9 @@ export function FormEditForm({
 
                                       {/* end date  */}
                                       <td className="max-w-18">
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_academic_info?.[
@@ -3286,9 +3286,9 @@ export function FormEditForm({
 
                                       {/* start date  */}
                                       <td className="max-w-18">
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_skills?.[index]
@@ -3338,9 +3338,9 @@ export function FormEditForm({
 
                                       {/* end date  */}
                                       <td className="max-w-18">
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_skills?.[index]

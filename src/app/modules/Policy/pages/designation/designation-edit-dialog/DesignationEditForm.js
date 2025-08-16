@@ -547,7 +547,7 @@ export function DesignationEditForm({
                     </div>
                   </div>
                   <hr></hr>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-3 gap-y-1">
+                  {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-3 gap-y-1">
                     <div className="col-span-1">
                       <h6 className="font-bold mb-0 text-primary">
                         Profile Policy
@@ -618,7 +618,7 @@ export function DesignationEditForm({
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div><h5>Picture Policy</h5></div> */}
                   <hr></hr>
                   <div className="grid grid-cols-2 gap-x-3 gap-y-1">
