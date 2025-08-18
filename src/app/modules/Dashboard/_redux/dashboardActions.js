@@ -299,18 +299,14 @@ export const fetchLoanDetail = (employeeId) => async (dispatch) => {
 };
 
 export const fetchHolidayDetail = (employeeId) => async (dispatch) => {
-  if (employeeId) {
-    return requestFromServer
-      .getHolidayDetail({ Id: employeeId })
-      .then((response) => {
-        dispatch(actions.AllHolidayFetch(response?.data?.data || null));
-      })
-      .catch((error) => {
-        error.clientMessage = "Can't find Holidays";
-      });
-  } else {
-    dispatch(actions.AllHolidayFetch(null));
-  }
+  return requestFromServer
+    .getHolidayDetail({ Id: employeeId })
+    .then((response) => {
+      dispatch(actions.AllHolidayFetch(response?.data?.data || null));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Holidays";
+    });
 };
 
 export const getPayrollMonth = (employeeId) => (dispatch) => {
@@ -349,7 +345,7 @@ export const fetchSummary = (filter) => async (dispatch) => {
     .getSummary(filter)
     .then((response) => {
       const entities = response.data?.data;
-      console.log("dataentitiesentities" , entities);
+      console.log("dataentitiesentities", entities);
       dispatch(actions.SummaryFetch(entities));
     })
     .catch((error) => {

@@ -92,7 +92,7 @@ export function FormCard() {
     //     {/* Card Ends */}
     //   </Card>
     <>
-      <TCard isSecondChild={false} name={"Upload Date"}></TCard>
+      <TCard isSecondChild={false} name={"Upload Data"}></TCard>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-3 gap-x-3 gap-y-2 mt-2">
         {/* EmployeeProfileSection Starts */}
         <EmployeeProfileSection

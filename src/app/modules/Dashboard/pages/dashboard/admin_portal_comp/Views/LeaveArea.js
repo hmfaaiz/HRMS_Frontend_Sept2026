@@ -6,6 +6,7 @@ import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
 import StatsCard from "../StatsCard";
 import { User, Briefcase } from "lucide-react";
+import { HolidayTable } from "../../EmpPortalComponent/HolidayCalendar";
 const LeaveArea = ({
   allSubsidiaryList,
   allLocationChildMenus,
@@ -17,6 +18,7 @@ const LeaveArea = ({
   summaryData,
   setSmallTableModalData,
   setBigTableModalData,
+  holidayList
 }) => {
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
@@ -206,6 +208,7 @@ const LeaveArea = ({
             }
             return null;
           })}
+                  <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
       </div>
     </div>
   );

@@ -47,6 +47,7 @@ export const AdminPortal = () => {
     allParentDept,
     summaryData,
     announcement,
+    holidayList,
   } = dashboard;
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export const AdminPortal = () => {
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllParentDept());
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(actions.fetchHolidayDetail());
     setIsLoading(false);
   }, []);
 
@@ -590,6 +592,7 @@ export const AdminPortal = () => {
               summaryData={summaryData}
               setBigTableModalData={setBigTableModalData}
               setSmallTableModalData={setSmallTableModalData}
+              holidayList={holidayList}
             />
           ) : activeTab === "employee" ? (
             <EmployeeArea
@@ -603,6 +606,7 @@ export const AdminPortal = () => {
               summaryData={summaryData}
               setBigTableModalData={setBigTableModalData}
               setSmallTableModalData={setSmallTableModalData}
+              holidayList={holidayList}
             />
           ) : activeTab === "leave_management" ? (
             <LeaveArea
@@ -616,6 +620,7 @@ export const AdminPortal = () => {
               summaryData={summaryData}
               setBigTableModalData={setBigTableModalData}
               setSmallTableModalData={setSmallTableModalData}
+              holidayList={holidayList}
             />
           ) : activeTab === "attendance_management" ? (
             <AttendanceArea
@@ -641,6 +646,7 @@ export const AdminPortal = () => {
               summaryData={summaryData}
               setBigTableModalData={setBigTableModalData}
               setSmallTableModalData={setSmallTableModalData}
+              holidayList={holidayList}
             />
           ) : (
             <PayrollArea
@@ -654,6 +660,7 @@ export const AdminPortal = () => {
               summaryData={summaryData}
               setBigTableModalData={setBigTableModalData}
               setSmallTableModalData={setSmallTableModalData}
+              holidayList={holidayList}
             />
           )}
           <BigTableModal
