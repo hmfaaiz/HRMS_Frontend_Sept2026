@@ -304,91 +304,119 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
 
 
 
-                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mt-2 mb-2">
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mt-2 mb-2 ">
+
+                    <div className="col-span-1">
+
+                      <div>
+                         <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
+                        &nbsp;
+                      </h6>
+
+                        <div className="">
+                          <Field
+                            name="monthId"
+                            component={SearchSelect}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const value = e.value == '--Select--' ? '' : Number(e.value)
+                              setFieldValue('monthId', value)
+                            }}
+                            label={
+                              <span>
+                                {" "}
+                                Payroll Month
+                              </span>
+                            }
+                            value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
+                            autoComplete="off"
+                            // options={allPayrollMonthYearList}
+                            options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allPayrollMonthYearList) ? allPayrollMonthYearList : []),]}
+                          />
+                        </div>
+
+                      </div>
 
 
-                    <div className="">
-                      <Field
-                        name="monthId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value = e.value == '--Select--' ? '' : Number(e.value)
-                          setFieldValue('monthId', value)
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Payroll Month
-                          </span>
-                        }
-                        value={allPayrollMonthMap?.get(values?.monthId || '') || ''}
-                        autoComplete="off"
-                        // options={allPayrollMonthYearList}
-                        options={[{ label: '--Select--', value: '' }, ...(Array.isArray(allPayrollMonthYearList) ? allPayrollMonthYearList : []),]}
-                      />
-                    </div>
-
-                    <div className="">
-
-
-                      <label>Date</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="From Date "
-                        selected={values?.from ? new Date(values.from) : null}
-
-                        maxDate={endDate}
-                        onChange={(date) => {
-                          let formattedFromDate = formatDates(date, 'yyyy-MM-dd')
-                          let formattedToDate = formatDates(date, 'yyyy-MM-dd')
-                          setFieldValue("from", formattedFromDate);
-                          setFieldValue("to", formattedToDate); // Sync from_date and to_date
-
-                        }}
-                        timeInputLabel="Time:"
-                        dateFormat="dd-MMM-yyyy"
-                        // showTimeInput
-                        name="from_date"
-
-                        autoComplete="off"
-
-
-
-                      />
 
                     </div>
 
-
-                    <div className="">
-
-
-                      <label>To</label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder="To Date "
-                        selected={values?.to ? new Date(values.to) : null}
-                        minDate={values.from ? new Date(values.from) : ""}
-                        maxDate={endDate}
-                        onChange={(date) => {
-                          let formattedToDate = formatDates(date, 'yyyy-MM-dd')
-                          setFieldValue("to", formattedToDate);
+                    <div className="col-span-3 ">
+                      <h6 className="font-semibold mb-0 text-primary my-2 text-sm">
+                        Date
+                      </h6>
 
 
+                      <div className="grid md:grid-cols-3 gap-x-3 ">
 
-                        }}
-                        timeInputLabel="Time:"
-                        dateFormat="dd-MMM-yyyy"
-                        // showTimeInput
-                        name="to"
-
-                        autoComplete="off"
+                        <div className="">
 
 
+                          <label>Date</label>
+                          <Field
+                            className="form-control"
+                            component={DatePickerField}
+                            placeholder="From Date "
+                            selected={values?.from ? new Date(values.from) : null}
 
-                      />
+                            maxDate={endDate}
+                            onChange={(date) => {
+                              let formattedFromDate = formatDates(date, 'yyyy-MM-dd')
+                              let formattedToDate = formatDates(date, 'yyyy-MM-dd')
+                              setFieldValue("from", formattedFromDate);
+                              setFieldValue("to", formattedToDate); // Sync from_date and to_date
+
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd-MMM-yyyy"
+                            // showTimeInput
+                            name="from_date"
+
+                            autoComplete="off"
+
+
+
+                          />
+
+                        </div>
+
+
+                        <div className="">
+
+
+                          <label>To</label>
+                          <Field
+                            className="form-control"
+                            component={DatePickerField}
+                            placeholder="To Date "
+                            selected={values?.to ? new Date(values.to) : null}
+                            minDate={values.from ? new Date(values.from) : ""}
+                            maxDate={endDate}
+                            onChange={(date) => {
+                              let formattedToDate = formatDates(date, 'yyyy-MM-dd')
+                              setFieldValue("to", formattedToDate);
+
+
+
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd-MMM-yyyy"
+                            // showTimeInput
+                            name="to"
+
+                            autoComplete="off"
+
+
+
+                          />
+
+                        </div>
+
+                      </div>
 
                     </div>
+
+
                   </div>
 
 
@@ -417,13 +445,13 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                   className="btn btn-primary btn-elevate"
                 >
                   Reimbursement Report
-                  <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                
                     {/* <SVG
                       src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                     /> */}
 
-                      <Download />
-                  </span>
+                    <Download className="w-4 h-4 ml-2 "/>
+                 
                   {reimbursementLoading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}

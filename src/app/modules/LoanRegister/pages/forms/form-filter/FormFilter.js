@@ -380,8 +380,9 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
 
 
                       <label>Date</label>
-                      <DatePicker
+                      <Field
                         className="form-control"
+                        component={DatePickerField}
                         placeholder="From Date "
                         selected={values?.from ? new Date(values.from) : null}
                         maxDate={endDate}
@@ -410,8 +411,9 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
 
 
                       <label>To</label>
-                      <DatePicker
+                      <Field
                         className="form-control"
+                         component={DatePickerField}
                         placeholder="To Date "
                         selected={values?.to ? new Date(values.to) : null}
                         minDate={values.from ? new Date(values.from) : ""}
@@ -445,12 +447,12 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
                         Loan Request Report
-                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                           {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                           /> */}
-                           <Download />
-                        </span>
+                               <Download className="w-4 h-4 ml-2   cursor-pointer" />
+                        {/* </span> */}
                         {loanReqLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -501,12 +503,12 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
                         Loan Position Report
-                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                           {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                           /> */}
-                           <Download />
-                        </span>
+                            <Download className="w-4 h-4 ml-2  cursor-pointer" />
+                        {/* </span> */}
                         {LoanPositionLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
