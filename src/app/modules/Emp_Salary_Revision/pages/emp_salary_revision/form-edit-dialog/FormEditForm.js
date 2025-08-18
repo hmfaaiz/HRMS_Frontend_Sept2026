@@ -1174,7 +1174,7 @@ export function FormEditForm({
                         autoComplete="off"
                       />
                     </div>
-                    <div className="mt-5" >
+                    <div className="mt-5">
                       <input
                         type="button"
                         class="btn btn-success"
@@ -2929,7 +2929,7 @@ export function FormEditForm({
                           checked={values.social_security_member}
                         />{" "}
                         Social Security Member
-                        {values.social_security_member}
+                        {/* {values.social_security_member} */}
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-x-3 gap-y-1">
@@ -2942,19 +2942,23 @@ export function FormEditForm({
                         </label>
                         <DatePicker
                           className="form-control"
-                          placeholder="Enter EOBI Reg Date"
-                          selected={values.eobi_member && defEOBIDate}
-                          label="EOBI Reg Date"
+                          placeholder="Enter Social Security Reg Date"
+                          selected={
+                            values.social_security_member && defSocialSecurity
+                          }
                           onChange={(date) => {
-                            setFieldValue("eobi_reg_date", date);
-                            setEOBIDate(date);
+                            setFieldValue("social_security_reg_date", date);
+                            setSocialSecurityDate(date);
                           }}
                           timeInputLabel="Time:"
                           dateFormat="dd-MMM-yyyy"
                           showTimeInput
-                          name="eobi_reg_date"
+                          name="social_security_reg_date"
                           autoComplete="off"
-                          disabled={!values.eobi_member || dataForRead}
+                          disabled={
+                            !values.social_security_member || dataForRead
+                          }
+                          // value = {values.dateOfJoining}
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -2964,27 +2968,29 @@ export function FormEditForm({
                       </div>
                       <div>
                         <Field
-                          name="eobi_accNo"
-                          type="number"
-                          component={Input}
                           onInput={(e) => {
                             e.target.value = amountLimitDynamic(
                               e.target.value,
                               15
                             ); // Limit to 3 digits
                           }}
-                          placeholder="Enter EOBI Account No"
+                          name="social_security_accNo"
+                          component={Input}
+                          type="number"
+                          placeholder="Enter Social Security AccNo"
                           label={
                             <span>
                               {" "}
-                              EOBI Account No
-                              {Boolean(values.eobi_member) && (
+                              Social Security Account No
+                              {Boolean(values.social_security_member) && (
                                 <span style={{ color: "red" }}>*</span>
-                              )}{" "}
+                              )}
                             </span>
                           }
                           autoComplete="off"
-                          disabled={!values.eobi_member || dataForRead}
+                          disabled={
+                            !values.social_security_member || dataForRead
+                          }
                         />
                       </div>
                     </div>
