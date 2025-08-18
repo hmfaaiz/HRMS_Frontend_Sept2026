@@ -86,6 +86,7 @@ export default function FormCard() {
         )}
       </div>
       <FormTable />
+      <br></br>
       {accessToHRRecommendation?.isAccess && <HRRecomendation />}
     </TCard>
     // </>

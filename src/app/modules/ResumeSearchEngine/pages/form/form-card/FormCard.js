@@ -59,7 +59,7 @@ export function FormCard() {
         <CardHeaderToolbar></CardHeaderToolbar>
       </div>
 
-      <FormTable />
+      {/* <FormTable /> */}
     </>
   );
 }

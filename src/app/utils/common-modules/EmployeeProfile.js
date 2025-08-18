@@ -294,31 +294,31 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                           Employee Picture
                         </h6>
                         {/* <img
-                      name="profile_image"
-                      src={
-                        data.profile_image
-                          // ? `${data.profile_image}`
-                         ? <User className='bg-white'/>
-                          // : toAbsoluteUrl('/media/users/profileImage.png')
-                          :<User  className='bg-white'/>
-                      }
-                      alt="Profile"
-                      width={120}
-                      height={120}
-                      style={{
-                        borderRadius: '10px',
-                        objectFit: 'cover',
-                        border: '1px solid #ddd',
-                        padding: '5px',
-                        // backgroundColor: '#fff',
-                      }}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
-                      }}
-                    /> */}
+                          name="profile_image"
+                          src={
+                            data.profile_image
+                              // ? `${data.profile_image}`
+                              ? <User className='bg-white' />
+                              // : toAbsoluteUrl('/media/users/profileImage.png')
+                              : <User className='bg-white' />
+                          }
+                          alt="Profile"
+                          width={120}
+                          height={120}
+                          style={{
+                            borderRadius: '10px',
+                            objectFit: 'cover',
+                            border: '1px solid #ddd',
+                            padding: '5px',
+                            // backgroundColor: '#fff',
+                          }}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
+                          }}
+                        /> */}
 
-                        {/* {data.profile_image ? (
+                        {data.profile_image ? (
                           <img
                             name="profile_image"
                             src={data.profile_image}
@@ -330,18 +330,18 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                               objectFit: 'cover',
                               border: '1px solid #ddd',
                               padding: '5px',
-                              backgroundColor: '#fff',
+                              // backgroundColor: '#fff',
                             }}
                             onError={(e) => {
                               e.target.onerror = null;
                               e.target.src = toAbsoluteUrl('/media/users/profileImage.png');
                             }}
                           />
-                        ) : ( */}
-                        <div className="w-[120px] h-[120px] rounded-[10px] border border-gray-300 bg-white flex justify-center items-center p-[5px]">
-                          <User className='text-primary' size={60} /> {/* Icon fallback */}
-                        </div>
-                        {/* )} */}
+                        ) : (
+                          // <div className="w-[120px] h-[120px] rounded-[10px] border border-gray-300 bg-white flex justify-center items-center p-[5px]">
+                          //   <User className='text-primary' size={60} /> {/* Icon fallback */}
+                          // </div>
+                          <></>)}
 
                       </Col>
                     </Row>

@@ -66,144 +66,115 @@ export default function GenerateSection() {
         >
             {({ values, setFieldValue }) => (
                 <Form>
-                    <div className="col-12">
 
 
-                        <div className="col-12 col-md-12  row  m-0 p-0">
-                            <div className="col-12 col-md-4 m-0 p-0">
-                                <SearchSelect
-                                    name="headOfHrId"
-                                    label={<span>Signatory 1</span>}
-                                    isDisabled={
-                                        !formUIProps.applicantVacancyId ||
-                                        !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId ||
-                                        formUIProps.signatoryisShow
-                                    }
-                                    onChange={(e) => {
-                                        setFieldValue("headOfHrId", e?.value || null);
 
-                                        formUIProps.setHeadOfHrId(e?.value);
+                    <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 pl-3">
+                        <div className="">
+                            <SearchSelect
+                                name="headOfHrId"
+                                label={<span>Signatory 1</span>}
+                                isDisabled={
+                                    !formUIProps.applicantVacancyId ||
+                                    !formUIProps.applicantId ||
+                                    !formUIProps.jobVacancyId ||
+                                    formUIProps.signatoryisShow
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("headOfHrId", e?.value || null);
 
-                                    }}
+                                    formUIProps.setHeadOfHrId(e?.value);
 
-                                    value={
-                                        dashboard?.allEmployeesWithNoPermissionList?.find(
-                                            (option) => option.value === values.headOfHrId
-                                        ) || null
-                                    }
-                                    options={
-                                        dashboard?.allEmployeesWithNoPermissionList?.filter(
-                                            (option) => option.value !== values.hrId // prevent same as Signatory 2
-                                        )
-                                    }
-                                />
-                            </div>
+                                }}
 
-                            <div className="col-12 col-md-4 ">
-                                <SearchSelect
-                                    name="hrId"
-                                    label={<span>Signatory 2</span>}
-                                    isDisabled={
-                                        !formUIProps.applicantVacancyId ||
-                                        !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId ||
-                                        formUIProps.signatoryisShow
-                                    }
-                                    onChange={(e) => {
-                                        setFieldValue("hrId", e?.value || null);
-                                        formUIProps.setHrId(e?.value);
-                                    }}
-                                    value={
-                                        dashboard?.allEmployeesWithNoPermissionList?.find(
-                                            (option) => option.value === values.hrId
-                                        ) || null
-                                    }
-                                    options={
-                                        dashboard?.allEmployeesWithNoPermissionList?.filter(
-                                            (option) => option.value !== values.headOfHrId // prevent same as Signatory 1
-                                        )
-                                    }
-                                />
-                            </div>
-
+                                value={
+                                    dashboard?.allEmployeesWithNoPermissionList?.find(
+                                        (option) => option.value === values.headOfHrId
+                                    ) || null
+                                }
+                                options={
+                                    dashboard?.allEmployeesWithNoPermissionList?.filter(
+                                        (option) => option.value !== values.hrId // prevent same as Signatory 2
+                                    )
+                                }
+                            />
                         </div>
 
-
-                        <div className="col-12 col-md-12 mt-3 row">
-
-
-
+                        <div className=" ">
+                            <SearchSelect
+                                name="hrId"
+                                label={<span>Signatory 2</span>}
+                                isDisabled={
+                                    !formUIProps.applicantVacancyId ||
+                                    !formUIProps.applicantId ||
+                                    !formUIProps.jobVacancyId ||
+                                    formUIProps.signatoryisShow
+                                }
+                                onChange={(e) => {
+                                    setFieldValue("hrId", e?.value || null);
+                                    formUIProps.setHrId(e?.value);
+                                }}
+                                value={
+                                    dashboard?.allEmployeesWithNoPermissionList?.find(
+                                        (option) => option.value === values.hrId
+                                    ) || null
+                                }
+                                options={
+                                    dashboard?.allEmployeesWithNoPermissionList?.filter(
+                                        (option) => option.value !== values.headOfHrId // prevent same as Signatory 1
+                                    )
+                                }
+                            />
                         </div>
 
-                        <div className="col-12 col-md-12 mt-4 row">
-                            {/* <div className="">
-                                <button
-                                    className="ml-3 btn btn-primary btn-elevate"
-                                    onClick={() => {
-                                        generateOfferLetter({
-                                            applicantId: formUIProps.applicantId,
-                                            applicantVacancyId: formUIProps.applicantVacancyId,
-                                            jobVacancyId: formUIProps.jobVacancyId,
-                                            headOfHrId: values.headOfHrId,
+                        <div className="mt-6">
+                            <button
+                                className="btn btn-primary btn-elevate"
+                                disabled={
+                                    !formUIProps.applicantVacancyId ||
+                                    !formUIProps.applicantId ||
+                                    !formUIProps.jobVacancyId ||
+                                    !values.hrId && !values.headOfHrId
+                                }
+                                onClick={() => {
 
-                                            hrId: values.hrId,
+                                    localStorage.setItem('formUIProps', JSON.stringify(formUIProps));
+                                    previewOfferLetter({
+                                        applicantId: formUIProps.applicantId,
+                                        applicantVacancyId: formUIProps.applicantVacancyId,
+                                        jobVacancyId: formUIProps.jobVacancyId,
+                                        headOfHrId: values.headOfHrId,
 
-                                        });
-                                    }}
-                                    type="button"
-                                    disabled={
-                                        !formUIProps.applicantVacancyId ||
-                                        !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId
-                                    }
-                                >
-                                    Generate Offer Letter
-                                </button>
-                            </div> */}
-
-                            <div className="">
-                                <button
-                                    className="ml-3 btn btn-primary btn-elevate"
-                                    disabled={
-                                        !formUIProps.applicantVacancyId ||
-                                        !formUIProps.applicantId ||
-                                        !formUIProps.jobVacancyId ||
-                                        !values.hrId && !values.headOfHrId
-                                    }
-                                    onClick={() => {
-
-                                        localStorage.setItem('formUIProps', JSON.stringify(formUIProps));
-                                        previewOfferLetter({
-                                            applicantId: formUIProps.applicantId,
-                                            applicantVacancyId: formUIProps.applicantVacancyId,
-                                            jobVacancyId: formUIProps.jobVacancyId,
-                                            headOfHrId: values.headOfHrId,
-
-                                            hrId: values.hrId,
+                                        hrId: values.hrId,
 
 
 
-                                        });
-                                     
-                                          
-                                    
+                                    });
 
 
-                                        // if (raw) {
 
-                                        window.open('/job_offer/read-job-offer-preview');
 
-                                          dispatch(actions.Clear());
-                                        // }
-                                    }}
-                                >
-                                    Preview Offer Letter
-                                </button>
-                            </div>
+
+                                    // if (raw) {
+
+                                    window.open('/job_offer/read-job-offer-preview');
+
+                                    dispatch(actions.Clear());
+                                    // }
+                                }}
+                            >
+                                Preview Offer Letter
+                            </button>
                         </div>
 
                     </div>
+
+
+
+
+
+
+
                 </Form>
             )
             }

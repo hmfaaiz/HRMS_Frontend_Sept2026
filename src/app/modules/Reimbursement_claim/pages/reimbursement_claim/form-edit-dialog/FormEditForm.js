@@ -30,6 +30,7 @@ import {
   fetchReimbursementClaim,
 } from "../../../_redux/redux-Actions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
 const ReimbursementSchema = Yup.object().shape({
   reimbursement_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -538,18 +539,18 @@ export function FormEditForm({
                   </div> */}
                   <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
                     <div className="col-span-1">
-                      <label
+                      {/* <label
                         htmlFor="file"
                       // className="block mb-2 text-xs font-normal text-gray-900"
                       >
                         Attachment
-                      </label>
+                      </label> */}
 
                       {/* Hidden input */}
 
 
                       {/* Styled label as upload box */}
-                      <label
+                      {/* <label
                         htmlFor="file_input"
                         className="form-control block w-full cursor-pointer"
                         onChange={(event) => {
@@ -557,8 +558,9 @@ export function FormEditForm({
                           setFieldValue("file", file);
                         }}
                       >
-                        {user.file ? user.file : "Upload"}
-                        <input
+                        {user.file ? user.file : "Upload"} */}
+                        <FileUpload
+                          label={"Attachment"}
                           id="file"
                           name="file"
                           type="file"
@@ -570,7 +572,7 @@ export function FormEditForm({
                             setFieldValue("file", file);
                           }}
                         />
-                      </label>
+                      {/* </label> */}
 
                       {/* Show existing file if any */}
                       {user.file && user.file === user.file && (
@@ -586,9 +588,9 @@ export function FormEditForm({
                         </div>
                       )}
                     </div>
-                    
-                    
-                    </div>
+
+
+                  </div>
                 </div>
               </fieldset>
             </Form>

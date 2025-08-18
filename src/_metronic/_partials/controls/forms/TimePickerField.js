@@ -47,7 +47,7 @@ export const TimePickerField = ({
           {label}
         </label>
       )}
-      <div className="form-time">
+      <div>
         <DatePicker
           disableDayPicker
           value={parseTimeStringToDateObject(value)}
@@ -58,6 +58,7 @@ export const TimePickerField = ({
           }}
           plugins={[<TimePicker hideSeconds position="bottom" />]}
           disabled={disabled}
+          inputClass="form-control"
         />
         {errors && touched ? (
           <div className="form-feedBack">{errors}</div>
