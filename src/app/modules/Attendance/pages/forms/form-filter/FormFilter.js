@@ -545,7 +545,7 @@ export function FormFilter({
                   )}
                 </div>
 
-                <div className="flex justify-end items-center ">
+                <div className="flex justify-end items-center gap-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -571,7 +571,7 @@ export function FormFilter({
                       !values.from ||
                       !values.to
                     }
-                    className="btn btn-primary btn-elevate ml-2 "
+                    className="btn btn-primary btn-elevate"
                   >
                     Filter
                     {loading && (
@@ -591,7 +591,7 @@ export function FormFilter({
                       csvLoading ||
                       excelLoading
                     }
-                    className="btn btn-success ml-2"
+                    className="btn btn-success"
                     onClick={() => runAllProcess(values)}
                   >
                     Run Process

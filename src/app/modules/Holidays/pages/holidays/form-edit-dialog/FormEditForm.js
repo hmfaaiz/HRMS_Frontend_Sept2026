@@ -140,7 +140,7 @@ export function FormEditForm({
                     {/* Active payroll month */}
 
                     <div className="col-span-2 text-xs text-black">
-                      {values?.subsidiaryId
+                      {/* {values?.subsidiaryId
                         ? (() => {
                             const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
                               (option) => option.value === values.subsidiaryId
@@ -151,14 +151,11 @@ export function FormEditForm({
                                   <b>Active Fiscal Year -</b>{" "}
                                   {selectedSubsidiary?.fiscalYearLabel}
                                 </div>
-                                {/* <div>
-        <b>Active Payroll Month -</b>{" "}
-        {selectedSubsidiary?.payrollMonthLabel}
-      </div> */}
+                
                               </>
                             );
                           })()
-                        : null}
+                        : null} */}
                     </div>
                   </div>
                   <div className="col-span-1">

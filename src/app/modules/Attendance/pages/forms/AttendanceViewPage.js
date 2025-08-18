@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
 import { FormTable } from "./form-table/FormTable";
 import { FormFilter } from "./form-filter/FormFilter";
-import { Card } from "react-bootstrap";
+import { Accordion, Button, Card } from "react-bootstrap";
+import { CircleMinus, CirclePlus } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchAllActiveEmployees,
@@ -19,6 +20,7 @@ import ReportButton from "./AttendanceReportButton";
 import TCard from "../../../../utils/common-modules/TCard";
 
 export function AttendanceViewPage() {
+  const [activeKey, setActiveKey] = useState(null);
   const dispatch = useDispatch();
   const {
     dashboard,
@@ -75,19 +77,41 @@ export function AttendanceViewPage() {
         <FormTable />
       </Card > */}
       <TCard name={CurrentModuleName()}>
-        <div>
-          <FormFilter
-            dispatch={dispatch}
-            pdfLoading={pdfLoading}
-            csvLoading={csvLoading}
-            excelLoading={excelLoading}
-            pdf2Loading={pdf2Loading}
-            loading={listLoading}
-            processLoading={processLoading}
-            consolidatedLoading={consolidatedLoading}
-            empWiseLoading={empWiseLoading}
-          />
-        </div>
+        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+          <Card>
+            <Card.Header className="d-flex justify-content-center">
+              <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                <Accordion.Toggle
+                  as={Button}
+                  eventKey="0"
+                  className="flex justify-start text-bold"
+                >
+                  {activeKey === "0" ? (
+                    <CircleMinus className="h-4 w-4 text-black mr-1" />
+                  ) : (
+                    <CirclePlus className="h-4 w-4 text-black mr-1" />
+                  )}
+                  <span className="text-black">Filters</span>
+                </Accordion.Toggle>
+              </div>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <>
+                <FormFilter
+                  dispatch={dispatch}
+                  pdfLoading={pdfLoading}
+                  csvLoading={csvLoading}
+                  excelLoading={excelLoading}
+                  pdf2Loading={pdf2Loading}
+                  loading={listLoading}
+                  processLoading={processLoading}
+                  consolidatedLoading={consolidatedLoading}
+                  empWiseLoading={empWiseLoading}
+                />
+              </>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
         <FormTable />
       </TCard>
       <ToastContainer
