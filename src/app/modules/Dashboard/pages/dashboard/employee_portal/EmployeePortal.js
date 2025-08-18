@@ -42,11 +42,13 @@ export const EmployeePortal = () => {
     holidayList,
     loanApprovalCount,
     attRecord,
+    announcement,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
       leaveBalances: state?.dashboard?.leaveBalances,
       logedInEmpoyee: state?.dashboard?.logedInEmpoyee,
+      announcement: state?.dashboard?.announcement,
       user: state?.auth?.user,
       leaveApprovalCount: state.leave_approval.entities,
       attendanceApprovalCount: state.attendance_approval?.entities,
@@ -119,6 +121,10 @@ export const EmployeePortal = () => {
     setIsLoading(false);
   }, [user?.employeeIdMapping, payrollData]);
 
+  useEffect(() => {
+    dispatch(action.fetchAnnouncementData());
+  }, []);
+
   return (
     <>
       {!isLoading && (
@@ -126,14 +132,22 @@ export const EmployeePortal = () => {
           {/* Sidebar: EmployeeSelection and EmployeeProfile */}
           <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
             <div className="lg:hidden block">
-              <EmployeePortalMenu name="Dashboard" />
+              <EmployeePortalMenu
+                announcement={announcement}
+                isAnouncement={true}
+                name="Dashboard"
+              />
             </div>
             <EmployeeProfile />
           </div>
           {/* Main Content: Dashboard, PendingRequestSelf, ReportingEmpTable, My Details, AttendanceSummary, LeaveApplicationTable, EmployeeLoanDetail */}
           <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
             <div className="hidden lg:block">
-              <EmployeePortalMenu name="Dashboard" />
+              <EmployeePortalMenu
+                announcement={announcement}
+                isAnouncement={true}
+                name="Dashboard"
+              />
             </div>
             {reportingEmployee && reportingEmployee?.length > 0 && (
               <>

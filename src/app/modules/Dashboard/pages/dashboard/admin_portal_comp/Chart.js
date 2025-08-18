@@ -8,8 +8,6 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
-import { Accordion, Button, Card } from "react-bootstrap";
-import { KeyboardArrowDown } from "@material-ui/icons";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState } from "react";
 import { BarChart, LineChart, PieChart, TorusIcon } from "lucide-react";
@@ -31,55 +29,129 @@ const colorPalette = [
   "#5cb85c",
 ];
 
-const options = {
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      enabled: true,
-      callbacks: {
-        label: function(context) {
-          let value = context.parsed;
-          // For vertical Bar/Line, use y; for horizontal Bar, use x
-          if (typeof value === 'object' && value !== null) {
-            const isHorizontal = context.chart.options.indexAxis === 'y';
-            value = isHorizontal ? value.x : value.y;
-          }
-          const dataArr = context.dataset.data.map(v => {
-            if (typeof v === 'object' && v !== null) {
-              return typeof v.x === 'number' ? v.x : v.y;
+// const options = {
+//   plugins: {
+//     legend: { display: false },
+//     tooltip: {
+//       enabled: true,
+//       callbacks: {
+//         label: function(context) {
+//           let value = context.parsed;
+//           // For vertical Bar/Line, use y; for horizontal Bar, use x
+//           if (typeof value === "object" && value !== null) {
+//             const isHorizontal = context.chart.options.indexAxis === "y";
+//             value = isHorizontal ? value.x : value.y;
+//           }
+//           const dataArr = context.dataset.data.map((v) => {
+//             if (typeof v === "object" && v !== null) {
+//               return typeof v.x === "number" ? v.x : v.y;
+//             }
+//             return v;
+//           });
+//           const total = dataArr.reduce((a, b) => a + b, 0);
+//           const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+//           return `${context.label}: ${value} (${percent}%)`;
+//         },
+//       },
+//     },
+//     datalabels: {
+//       display: false, // <--- This disables datalabels even if plugin is registered
+//     },
+
+//     // datalabels: {
+//     //   color: "#fff",
+//     //   font: { weight: "bold", size: 10 },
+//     //   formatter: (value, context) => {
+//     //     // For Pie/Doughnut, value is a number; for Bar/Line, it's an object
+//     //     let val = value;
+//     //     if (typeof val === "object" && val !== null) {
+//     //       const isHorizontal = context.chart.options.indexAxis === "y";
+//     //       val = isHorizontal ? val.x : val.y;
+//     //     }
+//     //     const dataArr = context.chart.data.datasets[0].data.map((v) => {
+//     //       if (typeof v === "object" && v !== null) {
+//     //         return typeof v.x === "number" ? v.x : v.y;
+//     //       }
+//     //       return v;
+//     //     });
+//     //     const total = dataArr.reduce((a, b) => a + b, 0);
+//     //     const percent = total ? ((val / total) * 100).toFixed(1) : 0;
+//     //     return percent > 2 ? percent + "%" : "";
+//     //   },
+//     // },
+//   },
+//   scales: {
+//     x: {
+//       ticks: {
+//         display: false, // Hide x-axis labels
+//       },
+//       // grid: {
+//       //   drawTicks: false, // Optional: hide tick marks
+//       // },
+//     },
+//     y: {
+//       ticks: {
+//         display: false, // Hide y-axis labels
+//       },
+//       // grid: {
+//       //   drawTicks: false, // Optional: hide tick marks
+//       // },
+//     },
+//   },
+// };
+
+const getOptions = (chartType) => {
+  const showGrid =
+    chartType === "bar" ||
+    chartType === "line" ||
+    chartType === "horizontalBar";
+
+  return {
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function(context) {
+            let value = context.parsed;
+            if (typeof value === "object" && value !== null) {
+              const isHorizontal = context.chart.options.indexAxis === "y";
+              value = isHorizontal ? value.x : value.y;
             }
-            return v;
-          });
-          const total = dataArr.reduce((a, b) => a + b, 0);
-          const percent = total ? ((value / total) * 100).toFixed(1) : 0;
-          return `${context.label}: ${value} (${percent}%)`;
+            const dataArr = context.dataset.data.map((v) => {
+              if (typeof v === "object" && v !== null) {
+                return typeof v.x === "number" ? v.x : v.y;
+              }
+              return v;
+            });
+            const total = dataArr.reduce((a, b) => a + b, 0);
+            const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+            return `${context.label}: ${value} (${percent}%)`;
+          },
+        },
+      },
+      datalabels: {
+        display: false,
+      },
+    },
+    scales: {
+      x: {
+        ticks: { display: false }, // Hide x-axis values
+        grid: {
+          display: showGrid, // Show grid only for bar/line
+          drawBorder: false,
+        },
+      },
+      y: {
+        ticks: { display: false }, // Hide y-axis values
+        grid: {
+          display: showGrid, // Show grid only for bar/line
+          drawBorder: false,
         },
       },
     },
-    datalabels: {
-      color: "#fff",
-      font: { weight: "bold", size: 10 },
-      formatter: (value, context) => {
-        // For Pie/Doughnut, value is a number; for Bar/Line, it's an object
-        let val = value;
-        if (typeof val === 'object' && val !== null) {
-          const isHorizontal = context.chart.options.indexAxis === 'y';
-          val = isHorizontal ? val.x : val.y;
-        }
-        const dataArr = context.chart.data.datasets[0].data.map(v => {
-          if (typeof v === 'object' && v !== null) {
-            return typeof v.x === 'number' ? v.x : v.y;
-          }
-          return v;
-        });
-        const total = dataArr.reduce((a, b) => a + b, 0);
-        const percent = total ? ((val / total) * 100).toFixed(1) : 0;
-        return percent > 2 ? percent + "%" : "";
-      },
-    },
-  },
+  };
 };
-
 
 const ChartData = ({ data }) => {
   const [chartType, setChartType] = useState("pie");
@@ -102,145 +174,118 @@ const ChartData = ({ data }) => {
     };
   }, [data]);
   const chartTypes = [
-    { key: "pie", label: "Pie", icon: <PieChart style={{ width: "12px" }} /> },
-    { key: "bar", label: "Bar", icon: <BarChart style={{ width: "12px" }} /> },
+    {
+      key: "pie",
+      label: "Pie",
+      icon: <PieChart className="w-3 h-3 stroke-3 " />,
+    },
+    {
+      key: "bar",
+      label: "Bar",
+      icon: <BarChart className="w-3 h-3 stroke-3 " />,
+    },
     {
       key: "doughnut",
       label: "Doughnut",
-      icon: <TorusIcon style={{ width: "12px" }} />,
+      icon: <TorusIcon className="w-3 h-3 stroke-3 " />,
     },
     {
       key: "line",
       label: "Line",
-      icon: <LineChart style={{ width: "12px" }} />,
+      icon: <LineChart className="w-3 h-3 stroke-3 " />,
     },
     {
       key: "horizontalBar",
       label: "Horizontal Bar",
-      icon: <BarChart style={{ width: "12px", transform: 'rotate(90deg)' }} />,
+      icon: <BarChart className="w-3 h-3 stroke-3  rotate-90" />,
     },
   ];
 
   return (
-    <Accordion
-      className="my-3"
-      defaultActiveKey={data?.accordian_open ? "0" : ""}
-    >
-      <Card className="dashboard_card">
-        {/* Chart type switcher */}
-
-        <Accordion.Toggle
-          as={Button}
-          variant="link"
-          eventKey="0"
-          style={{ backgroundColor: "#fafafc" }}
-          className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
+    <div className="bg-white rounded-lg px-3 py-2">
+      <div className="flex justify-between items-start">
+        <h6 className="font-bold mb-0 text-primary">
+          {" "}
+          {data?.days
+            ? data?.dashlet_name?.replace("${days}", data?.days)
+            : data?.dashlet_name}
+          <p className="text-xs m-0 text-black">Hover to see</p>
+        </h6>
+        {/* chart type selection */}
+        <div className="flex space-x-1">
+          {chartTypes.map((type) => (
+            <button
+              key={type.key}
+              type="button"
+              onClick={() => setChartType(type.key)}
+              className={`text-xs border-none rounded-sm w-6 h-6 ${
+                type.key === chartType ? "bg-tprimary" : "bg-tlight"
+              }`}
+            >
+              {type.icon}
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* {data?.data.length > 0 ? ( */}
+      <div className="flex justify-center items-center w-full h-full">
+        <div
+          style={{
+            width:
+              chartType === "pie" || chartType === "doughnut"
+                ? "180px"
+                : "240px",
+            position: "relative",
+          }}
+          className="my-2"
         >
-          <span style={{ fontSize: "1rem", fontWeight: "700" }}>
-            {data?.days
-              ? data?.dashlet_name?.replace("${days}", data?.days)
-              : data?.dashlet_name}
-          </span>
-          <span
-            style={{
-              borderRadius: "50%",
-              backgroundColor: "#0093dd",
-              color: "#fff",
-            }}
-          >
-            <KeyboardArrowDown style={{ fontSize: "25px" }} />
-          </span>
-        </Accordion.Toggle>
-
-        <Accordion.Collapse eventKey="0">
-          <div
-            style={{
-              maxHeight: "400px",
-              minHeight: "400px",
-              overflowY: "auto",
-            }}
-            className="pt-3 d-flex flex-column align-items-center"
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                width: "100%",
-              }}
-            >
-              <div
-                className="btn-group"
-                role="group"
-                aria-label="Chart type switcher"
-              >
-                {chartTypes.map((type) => (
-                  <button
-                    key={type.key}
-                    type="button"
-                    className={`btn btn-sm ${
-                      chartType === type.key
-                        ? "btn-primary"
-                        : "btn-outline-primary"
-                    }`}
-                    onClick={() => setChartType(type.key)}
-                    style={{ marginLeft: 1, marginRight: 1 }}
-                  >
-                    {type.icon}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div
-              style={{
-                width:
-                  chartType === "pie" || chartType === "doughnut"
-                    ? "350px"
-                    : "690px",
-                height: "350px",
-                position: "relative",
-                marginBottom: "10px",
-              }}
-            >
-              {chartType === "pie" && (
-                <Pie
-                  data={departmentData}
-                  options={options}
-                  plugins={[ChartDataLabels]}
-                />
-              )}
-              {chartType === "bar" && (
-                <Bar
-                  data={departmentData}
-                  options={options}
-                  plugins={[ChartDataLabels]}
-                />
-              )}
-              {chartType === "horizontalBar" && (
-                <Bar
-                  data={departmentData}
-                  options={{
-                    ...options,
-                    indexAxis: 'y',
-                  }}
-                  plugins={[ChartDataLabels]}
-                />
-              )}
-              {chartType === "doughnut" && (
-                <Doughnut
-                  data={departmentData}
-                  options={options}
-                  plugins={[ChartDataLabels]}
-                />
-              )}
-              {chartType === "line" && (
-                <Line
-                  data={departmentData}
-                  options={options}
-                  plugins={[ChartDataLabels]}
-                />
-              )}
-            </div>
-            {/* <div
+          {data?.data?.length === 0 && (
+            <label className="text-center">No Record Available</label>
+          )}
+          {chartType === "pie" && (
+            <Pie
+              data={departmentData}
+              options={getOptions(chartType)}
+              plugins={[ChartDataLabels]}
+            />
+          )}
+          {chartType === "bar" && (
+            <Bar
+              data={departmentData}
+              options={getOptions(chartType)}
+              plugins={[ChartDataLabels]}
+            />
+          )}
+          {chartType === "horizontalBar" && (
+            <Bar
+              data={departmentData}
+              options={{ ...getOptions(chartType), indexAxis: "y" }}
+              plugins={[ChartDataLabels]}
+            />
+          )}
+          {chartType === "doughnut" && (
+            <Doughnut
+              data={departmentData}
+              options={getOptions(chartType)}
+              plugins={[ChartDataLabels]}
+            />
+          )}
+          {chartType === "line" && (
+            <Line
+              data={departmentData}
+              options={getOptions(chartType)}
+              plugins={[ChartDataLabels]}
+            />
+          )}
+        </div>
+      </div>
+      {/* // ) : ( //{" "}
+      <div className="flex justify-center items-center w-full h-full min-h-68">
+        // <label>No Data Available</label>
+        //{" "}
+      </div>
+      // )} */}
+      {/* <div
               className="d-grid px-2"
               style={{
                 display: "grid",
@@ -260,10 +305,7 @@ const ChartData = ({ data }) => {
                 </div>
               ))}
             </div> */}
-          </div>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+    </div>
   );
 };
 

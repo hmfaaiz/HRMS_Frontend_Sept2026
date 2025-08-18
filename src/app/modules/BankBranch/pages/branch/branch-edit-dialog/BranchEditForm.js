@@ -215,7 +215,7 @@ export function BranchEditForm({
                         </div>
                       </div>
                     ) : (
-                      <p></p>
+                      <></>
                     )}
 
                     {
