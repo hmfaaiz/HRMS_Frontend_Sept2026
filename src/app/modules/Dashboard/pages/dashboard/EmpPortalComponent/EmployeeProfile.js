@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import { ArrowDown, ChevronUp, StarIcon } from "lucide-react";
+import {  ChevronUp, StarIcon } from "lucide-react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import useWindowSize from "../../../../../utils/useWindowSize";
@@ -96,6 +96,9 @@ const EmployeeProfile = () => {
             <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
           </div>
         </div>
+        {/* <div className="mt-2 rounded-lg p-3 bg-tsecondary">
+
+        </div> */}
       </div>
 
       {/* Employee Details */}
