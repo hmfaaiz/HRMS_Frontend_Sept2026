@@ -129,14 +129,21 @@ export function getPayrollMonth(body) {
   );
 }
 
+//// dashbaord related service
+
 export function getDashboardAlert() {
   return axios.get(`${USERS_URL}/dashboard/dashboard-alert` );
 }
 
-export function getEmployeeSummary(filter) {
-  return axios.post(`${USERS_URL}/dashboard/employee-summary`, filter );
+export function getSummary(filter) {
+  return axios.post(`${USERS_URL}/dashboard/summary`, filter );
 }
 
 export function getRecruitmentSummary(filter) {
   return axios.post(`${USERS_URL}/dashboard/recruitment-summary`, filter );
+}
+
+
+export function getAnnouncment(filter) {
+  return axios.get(`${USERS_URL}/dashboard/announcement` );
 }
