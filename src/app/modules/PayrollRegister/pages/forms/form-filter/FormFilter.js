@@ -391,12 +391,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
                         Generate Register (PDF)
-                        <span className="svg-icon svg-icon-md svg-icon-primary mr-1">
+                        {/* <span className="svg-icon svg-icon-md svg-icon-primary mr-1"> */}
                           {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                           /> */}
-                            <Download />
-                        </span>
+                            <Download className="w-4 h-4 ml-2" />
+                        {/* </span> */}
                         {registerLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -411,13 +411,13 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                         className="btn btn-primary btn-elevate h-9 mt-4 ml-1"
                       >
                         Generate Register (Excel)
-                        <span className="svg-icon svg-icon-md svg-icon-primary">
+                        {/* <span className="svg-icon svg-icon-md svg-icon-primary"> */}
                           {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                           /> */}
 
-                           <Download />
-                        </span>
+                              <Download className="w-4 h-4 ml-2" />
+                        {/* </span> */}
                         {registerExcelLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -441,12 +441,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                         className="btn btn-primary btn-elevate"
                       >
                         Generate Payment Advice
-                        <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                           {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                           /> */}
-                           <Download />
-                        </span>
+                                <Download className="w-4 h-4 ml-2" />
+                        {/* </span> */}
                         {adviceLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -516,13 +516,13 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                           className="btn btn-primary btn-elevate h-9 mt-4"
                         >
                           Generate Payslip
-                          <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                          {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                             {/* <SVG
                               src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                             /> */}
 
-                             <Download />
-                          </span>
+                                  <Download className="w-4 h-4 ml-2" />
+                          {/* </span> */}
                           {pdfLoading && (
                             <span className="ml-3 mr-3 spinner spinner-white"></span>
                           )}
@@ -671,12 +671,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                               className="btn btn-primary btn-elevate mt-3 h-9 mr-1"
                             >
                               Generate JV Report (Payables)
-                              <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                              {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                                 {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                                 /> */}
-                                 <Download />
-                              </span>
+                                      <Download className="w-4 h-4 ml-2" />
+                              {/* </span> */}
                               {registerExcelLoading && (
                                 <span className="ml-3 mr-3 spinner spinner-white"></span>
                               )}
@@ -689,12 +689,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, registerLoading, adv
                               className="btn btn-primary btn-elevate mt-3 h-9"
                             >
                               Generate JV Report (Bank Transfer)
-                              <span className="svg-icon svg-icon-md svg-icon-primary ml-1">
+                              {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                                 {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                                 /> */}
-                                 <Download />
-                              </span>
+                                      <Download className="w-4 h-4 ml-2" />
+                              {/* </span> */}
                               {registerExcelLoading && (
                                 <span className="ml-3 mr-3 spinner spinner-white"></span>
                               )}

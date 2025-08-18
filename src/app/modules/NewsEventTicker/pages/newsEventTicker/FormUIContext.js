@@ -28,7 +28,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   }, []);
   const initUser = {
     Id:"",
-    subsidiaryId: "",
+    subsidiaryId: null,
     ticker_description: "",
     ticker_date: "",
   isActive:1

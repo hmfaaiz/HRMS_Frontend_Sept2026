@@ -14,7 +14,9 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 // percentage: Yup.string().required("Required*"),
 const news_event_tickerEditSchema = Yup.object().shape({
-  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number()
+  .nullable(),
+  // .required(VALIDATION_MESSAGES.required),
 
   ticker_description: Yup.string()
     .trim()
@@ -85,20 +87,25 @@ export function FormEditForm({
                           Subsidiary<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || userForEdit}
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
                       }}
-                      value={
-                        dashboard?.allSubsidiaryList?.find(
-                          (option) => option.value === values.subsidiaryId
-                        ) || null
+
+                        value={
+                      
+                        values?.subsidiaryId == null
+                          ? { value: null, label: "All" }
+                          : dashboard?.allSubsidiaryList?.find(
+                              (option) => option.value === values.subsidiaryId
+                            ) || null
                       }
-                      options={dashboard?.allSubsidiaryList}
-                      // options={dashboard.allSubidiaryList.map(option => ({
-                      //   label: `${option.label} (${option.value})`, // Adding the value to the label
-                      //   value: option.value,
-                      // }))}
+                
+                      options={[
+                        { value:null, label: "All" },
+                        ...(dashboard?.allSubsidiaryList ?? []),
+                      ]}
+           
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                     />
