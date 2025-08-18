@@ -2,7 +2,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CalendarCheck, Eye, Pencil, Trash2 } from "lucide-react";
+import { CalendarCheck, Eye, MailPlus, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -35,7 +35,7 @@ export function ActionsColumnFormatter(
                 )}
               />
             </span> */}
-            <CalendarCheck className="w-4 h-4 text-black cursor-pointer" />
+             <MailPlus className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}

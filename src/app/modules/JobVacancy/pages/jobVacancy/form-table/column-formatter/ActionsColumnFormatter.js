@@ -39,7 +39,7 @@ export function ActionsColumnFormatter(
             overlay={<Tooltip id="post-tooltip">Post Job Vacancy</Tooltip>}
           >
             <a
-              className="btn btn-icon"
+              className=""
               onClick={() => openPostingFormDialog(row.Id)}
             >
               <span className="">
@@ -48,7 +48,7 @@ export function ActionsColumnFormatter(
                     "/media/svg/icons/Communication/vacancyPost.svg"
                   )}
                 /> */}
-                <ArrowUpRight/>
+                <ArrowUpRight className="w-5 h-5"/>
               </span>
             </a>
           </OverlayTrigger>
@@ -60,7 +60,7 @@ export function ActionsColumnFormatter(
           overlay={<Tooltip id="hold-tooltip">Hold Job Vacancy</Tooltip>}
         >
           <a
-            className="btn btn-icon "
+            className=" "
             onClick={() => openHoldFormDialog(row.Id)}
           >
             <span className="">
@@ -69,7 +69,7 @@ export function ActionsColumnFormatter(
                   "/media/svg/icons/Communication/vacancyHold.svg"
                 )}
               /> */}
-              <CirclePause/>
+              <CirclePause className="w-4 h-4"/>
             </span>
           </a>
         </OverlayTrigger>
@@ -82,7 +82,7 @@ export function ActionsColumnFormatter(
             overlay={<Tooltip id="close-tooltip">Close Job Vacancy</Tooltip>}
           >
             <a
-              className="btn btn-icon "
+              className=""
               onClick={() => openCloseFormDialog(row.Id)}
             >
               <span className="">
@@ -91,7 +91,7 @@ export function ActionsColumnFormatter(
                     "/media/svg/icons/Communication/vacancyClose.svg"
                   )}
                 /> */}
-                <CircleX/>
+                <CircleX className="w-4 h-4"/>
               </span>
             </a>
           </OverlayTrigger>

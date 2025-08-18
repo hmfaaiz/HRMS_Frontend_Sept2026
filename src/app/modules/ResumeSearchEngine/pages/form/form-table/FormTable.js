@@ -185,7 +185,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "10px",
       },
        formatter: (cell) => {
               if (!cell) return "";
@@ -211,8 +211,12 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "10px",
+        minWidth: "160px",
       },
+       formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+      }
     },
     {
       dataField: "ApplicantStatus.formName",

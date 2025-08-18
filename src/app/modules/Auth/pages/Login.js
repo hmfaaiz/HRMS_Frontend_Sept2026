@@ -40,16 +40,16 @@ function Login(props) {
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Wrong email format")
-      .min(3, "Minimum 3 symbols")
-      .max(50, "Maximum 50 symbols")
+      .min(10, "Minimum 10 characters")
+      .max(50, "Maximum 50 characters")
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
       ),
     password: Yup.string()
-      .min(3, "Minimum 3 symbols")
-      .max(50, "Maximum 50 symbols")
+      .min(5, "Minimum 5 characters")
+      .max(20, "Maximum 20 characters")
       .required(
         intl.formatMessage({
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
@@ -118,68 +118,46 @@ function Login(props) {
       <div
         className="bg-white p-10 h-100 rounded-top opacity-97"
         id="kt_login_signin_form"
-      // style={{
-      //   height: "72vh", // Full height of the viewport
-      //   width: "30vw", // Make the form take full width
-      //   justifyContent: "center", // Center horizontally
-      //   alignItems: "center", // Center vertically
-      //   backgroundColor: "white",
-      //   backgroundSize: "cover", // Ensures the gradient covers the entire area
-      //   backgroundPosition: "center", // Ensures the background is centered
-      //   padding: "60px", // Padding inside the form
-      // }}
+     
       >
 
 
         <div>
           <img
-          className="fluid"
+            className="fluid"
             src="/media/bg/Login/DSC-Logo.svg"
             alt="DSC"
-            style={{ height: 50, marginRight: 30 , backgroundSize: 'cover',}}
-            
+            style={{ height: "7vh", backgroundSize: 'cover', }}
+
           />
         </div>
 
         {/* <br /> */}
         <br />
 
-        <div>
+      
           <h1
-            className="fw-bold mt-10" style={{ color: '#000000', fontWeight: 400 }}
+            className="fw-bold mt-10 " style={{ color: '#000000', fontWeight: 400,height:"2vh" }}
           // style={{ color: "#2490CF", fontSize: "2rem" }}
           >
             Log In
           </h1>
 
 
-        </div>
+      
+        <br />
         <br />
         {/* end::Head */}
 
         {/*begin::Form*/}
         <form
           onSubmit={formik.handleSubmit}
-          className="form fv-plugins-bootstrap fv-plugins-framework "
+          className="form   "
         // className="login-form"
         >
-          {/* {formik.status ? (
-            <div className="mb-10 alert alert-custom alert-light-danger alert-dismissible">
-              <div className="alert-text font-weight-bold">{formik.status}</div>
-            </div>
-          ) : (
-            // (
-            //   <div className="mb-10 alert alert-custom alert-light-info alert-dismissible">
-            //     <div className="alert-text ">
-            //       Use account <strong>admin@demo.com</strong> and password{" "}
-            //       <strong>demo</strong> to continue.
-            //     </div>
-            //   </div>
-            // )
-            ""
-          )} */}
+         
 
-          <div className="form-group fv-plugins-icon-container ">
+          <div className="form-group ">
             <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
               Email address
             </label>
@@ -187,9 +165,9 @@ function Login(props) {
               placeholder="Email"
               type="text"
 
-              className={`form-control form-control-solid h-auto py-5 px-6  ${getInputClasses(
+              className={`form-control form-control-solid  ${getInputClasses(
                 "email"
-              )} inputcolor`}
+              )} inputcolor !h-[7vh]`}
               name="emails"
               {...formik.getFieldProps("email")}
             />
@@ -200,14 +178,14 @@ function Login(props) {
             ) : null}
           </div>
 
-          <div className="form-group fv-plugins-icon-container">
+          <div className="form-group">
             <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
               Password
             </label>
             <input
               placeholder="Password"
               type="password"
-              className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
+              className={`form-control form-control-solid !h-[7vh]  ${getInputClasses(
                 "password"
               )} inputcolor`}
               name="password"
@@ -218,12 +196,10 @@ function Login(props) {
                 {formik.errors.password && (
                   <div className="fv-help-block">{formik.errors.password}</div>
                 )}
-                {/* {formik.status && (
-                  <div className="fv-help-block">{formik.status}</div>
-                )} */}
+             
               </div>
             ) : null}
-  {/* <br />
+            {/* <br />
   <br /> */}
             {formik.status ? (
               <div className="alert alert-custom alert-light-danger alert-dismissible text-center h-2 mt-10">
@@ -236,19 +212,7 @@ function Login(props) {
 
           </div>
 
-          {/* <div className="d-flex align-items-center  ">
-            <input
-              type="checkbox"
-              style={{
-                transform: "scale(1.5)", // This will increase the size of the checkbox
-                height: "12px", // You can also adjust height directly, though it's less effective
-                width: "12px", // Increase width as well if needed
-              }}
-            />
-            <span className="ml-3" style={{ fontSize: "15px" }}>
-              Remember me
-            </span>
-          </div> */}
+     
           <br />
           {/* <br /> */}
 
@@ -257,10 +221,10 @@ function Login(props) {
               id=""
               type="submit"
               disabled={formik.isSubmitting}
-              className="custom-button rounded"
+              className="w-full bg-tprimary text-white text-base font-bold h-[7vh] cursor-pointer rounded border-none hover:bg-black"
             >
 
-              <span>Log in    <CircleArrowRight strokeWidth={3} className="w-5 h-5 cursor-pointer"/></span>
+              <span>Log in    <CircleArrowRight strokeWidth={3} className="w-5 h-5 cursor-pointer" /></span>
               {loading && <span className="ml-3 spinner spinner-white"></span>}
             </button>
           </div>
@@ -284,17 +248,37 @@ function Login(props) {
 
 
       </div>
-      <footer className="d-flex gap-4  login-footer rounded-bottom ">
-        <div></div>
+      <footer className="flex gap-4 bg-tsecondary p-4 rounded-bottom pl-7">
+
         <div>
-          <p className="mt-4 text-black">Privacy Policy</p>
+          <Link
+            to="/privacy-policy"
+            className=" text-black hover:underline cursor-pointer"
+          >
+            Privacy Policy
+          </Link>
         </div>
+
         <div>
-          <p className="ml-4 mt-4 text-black">Legal</p>
+          <Link
+            to="/disclaimer"
+            className=" text-black hover:underline cursor-pointer"
+          >
+            Disclaimer
+          </Link>
         </div>
+
         <div>
-          <p className="ml-4 mt-4 text-black">Contact Us</p>
+          <a
+            href="https://dynasoftcloud.com/contact-us.php"
+            target="_blank"
+            rel="noopener noreferrer"
+            className=" text-black hover:underline cursor-pointer"
+          >
+            Contact Us
+          </a>
         </div>
+
       </footer>
     </div>
   );

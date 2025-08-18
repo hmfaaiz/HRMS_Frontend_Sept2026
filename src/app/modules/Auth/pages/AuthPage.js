@@ -23,7 +23,7 @@ export function AuthPage() {
 
 
       <div
-        className=" d-flex flex-column"
+        className=""
         id="kt_login"
         style={{
           height: "100vh", // full viewport height ✅
@@ -35,10 +35,10 @@ export function AuthPage() {
       >
         {/* login div */}
 
-        <div className="container-fluid h-100">
-          <div className="row h-100 ">
+        <div className="grid md:grid-cols-6">
+       
             {/* Left Login Input */}
-            <div className="col-12 col-md-4 m-0 p-5 d-flex flex-column " style={{ borderRadius: '8px' }}>
+            <div className="col-span-2 m-0 p-5  h-screen" >
 
               <Switch>
                 <ContentRoute path="/auth/login" component={Login} />
@@ -60,9 +60,9 @@ export function AuthPage() {
             {/* Right  */}
 
 
-            <div className="col-12 col-md-8 pt-5 d-flex flex-column  opacity-97" >
-              {/*  style={{ display: window.innerWidth < 768 ? 'none' : 'flex' }} */}
-              <div className="bg-white p-5 m-0 rounded-top">
+            <div className="col-span-4 p-5  opacity-97 hidden md:block h-screen" >
+            
+              <div className="bg-white p-5 m-0 rounded-top h-[89vh]">
    
 
                 <Carousel interval={3000}>
@@ -77,7 +77,7 @@ export function AuthPage() {
                         <div
                           className="d-flex flex-column rounded"
                           style={{
-                            height: '63vh',
+                            height: '62.5vh',
                             backgroundImage: `url(${toAbsoluteUrl(`/media/bg/Slider/Slider${index + 1}.webp`)})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
@@ -89,57 +89,7 @@ export function AuthPage() {
                   ))}
                 </Carousel>
 
-                {/* <div
-                  id="carouselExampleIndicators"
-                  className="carousel slide"
-                  data-ride="carousel"
-                  data-interval="3000"
-                >
-                  <ol className="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                  </ol>
-
-                  <div className="carousel-inner">
-                    {[1, 2, 3].map((item, index) => (
-                      <div
-                        key={index}
-                        className={`carousel-item ${index === 0 ? 'active' : ''}`}
-                      >
-                        <div
-                          className="d-flex flex-column"
-                          style={{
-                            height: "63vh",
-                            backgroundImage: `url(${toAbsoluteUrl("/media/bg/login-pic.png")})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat",
-                          }}
-                        ></div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <a
-                    className="carousel-control-prev"
-                    href="#carouselExampleIndicators"
-                    role="button"
-                    data-slide="prev"
-                  >
-                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span className="sr-only">Previous</span>
-                  </a>
-                  <a
-                    className="carousel-control-next"
-                    href="#carouselExampleIndicators"
-                    role="button"
-                    data-slide="next"
-                  >
-                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="sr-only">Next</span>
-                  </a>
-                </div> */}
+           
 
 
                 <div className="d-flex flex-column">
@@ -210,23 +160,23 @@ export function AuthPage() {
               </div>
 
 
-              <footer className="d-flex gap-4  login-left-footer justify-content-between p-0 rounded-bottom ">
-                <div>
-                  <div className="mt-4">
+              <footer className="flex bg-tsecondary justify-between rounded-bottom h-15">
+             
+                  <div className=" flex gap-3 items-center pl-4 ">
                     {/* <Linkedin className="w-6 h-6 pl-2 text-black cursor-pointer"/> */}
                     <a href="https://pk.linkedin.com/company/dynasoftcloud" target="_blank" rel="noopener noreferrer">
                       <img
                         src="/media/bg/SM-Linkedin.svg"
 
                         // className="partner-image"
-                        className="ml-2 w-5 h-5"
+                        className=" w-5 h-5"
 
                       />
                     </a>
                     <a href="https://www.facebook.com/dynasoftcloud" target="_blank" rel="noopener noreferrer">
                       <img
                         src="/media/bg/SM-Facebook.svg"
-                        className="ml-2 w-5 h-5"
+                        className=" w-5 h-5"
                         alt="Facebook"
                       />
                     </a>
@@ -236,7 +186,7 @@ export function AuthPage() {
                         src="/media/bg/SM-Instagram.svg"
 
                         // className="partner-image"
-                        className="ml-2 w-5 h-5"
+                        className=" w-5 h-5"
 
                       />
 
@@ -248,15 +198,15 @@ export function AuthPage() {
                         src="/media/bg/SM-YouTube.svg"
 
                         // className="partner-image"
-                        className="ml-2 w-5 h-5"
+                        className=" w-5 h-5"
 
                       />
                     </a>
 
                   </div>
-                </div>
-                <div>
-                  <p className="mt-5 pr-2 text-black mr-2">2025 &copy; HRMS By Dynasoft Cloud</p>
+               
+                <div className="flex items-center mt-5 mr-5 ">
+                  <p className="  text-black ">2025 &copy; HRMS By Dynasoft Cloud</p>
                 </div>
 
 
@@ -272,9 +222,9 @@ export function AuthPage() {
 
 
 
-        </div >
+      
 
-        {/* left side */}
+
 
 
       </div >

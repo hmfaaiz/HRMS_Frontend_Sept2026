@@ -228,11 +228,11 @@ export function FormPage({ history }) {
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey="0">
-                <Card.Body>
+                
                   <>
                     <FormFIlter />
                   </>
-                </Card.Body>
+              
               </Accordion.Collapse>
             </Card>
           </Accordion>

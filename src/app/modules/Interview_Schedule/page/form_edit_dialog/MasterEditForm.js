@@ -196,7 +196,7 @@ export default function MasterEditForm({
                   <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                     <div className="">
                       <label>
-                        Interview Date <span style={{ color: "red" }}>*</span>
+                        Interview Date<span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         name="interview_date"
@@ -217,11 +217,12 @@ export default function MasterEditForm({
                     <div className="">
                       <TimePickerField
                         className="form-control"
+                       
                         name="interview_time"
                         label={
                           <span>
                             {" "}
-                            Interview Time{" "}
+                            Interview Time
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -241,7 +242,7 @@ export default function MasterEditForm({
                         name="locationId"
                         label={
                           <span>
-                            Location <span style={{ color: "red" }}>*</span>
+                            Location<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead}
@@ -303,14 +304,14 @@ export default function MasterEditForm({
                                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                   <tr className="custom-table-header">
 
-                                    <td className="col-3">Interviewer</td>
-                                    <td className="col-2">Department</td>
-                                    <td className="col-2">Designation</td>
-                                    <td className="col-2">Grade</td>
-                                    <td className="col-2">Employee Type</td>
-                                    <td className="col-2">Subsidiary</td>
-                                    <td className="col-2">Location</td>
-                                    <td>Action</td>
+                                    <td className="">Interviewer</td>
+                                    <td className="">Department</td>
+                                    <td className="">Designation</td>
+                                    <td className="">Grade</td>
+                                    <td className="">Employee Type</td>
+                                    <td className="">Subsidiary</td>
+                                    <td className="">Location</td>
+                                    <td className="">Action</td>
                                   </tr>
 
                                   <tbody>

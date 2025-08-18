@@ -22,7 +22,9 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
   corePlugins: {
     preflight: false,
   },
