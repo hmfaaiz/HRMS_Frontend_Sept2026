@@ -35,17 +35,13 @@ export function DeptTable() {
     };
   }, [deptUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => { return {
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
       currentState: state.dept,
       userAccess: state?.auth?.userAccess["Department"],
-    }},
-    shallowEqual
-  );
+    };
+  }, shallowEqual);
 
-  
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -54,7 +50,7 @@ export function DeptTable() {
 
   useEffect(() => {
     deptUIProps.setIds([]);
-  
+
     dispatch(actions.fetchUsers(deptUIProps.queryParams));
   }, [deptUIProps.queryParams, dispatch, totalCount]);
 
@@ -78,28 +74,25 @@ export function DeptTable() {
     //   },
     // },
 
-   
-   
     {
       dataField: "deptCode",
-      text: "Department Code",
+      text: "Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        textAlign: "center",
-      },
+      // style: {
+      //   minWidth: "160px",
+      // },
     },
     {
       dataField: "DepartmentTree",
-      text: "Department Name",
+      text: "Name",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
+      // style: {
+      //   minWidth: "160px",
+      // },
     },
     {
       dataField: "ParentDeptName",
@@ -107,27 +100,30 @@ export function DeptTable() {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
+      formatter: (cell) => {
+        return cell ? cell : "-";
       },
+      // formatter: (cell) => {
+      //   cell ? cell : "-";
+      // },
+      // style: {
+      //   minWidth: "160px",
+      // },
     },
-   
 
     {
       dataField: "budgetStrength",
-      text: "Department Strength",
+      text: "Strength",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        textAlign: "center",
-        
-      },
+      // style: {
+      //   minWidth: "160px",
+      //   textAlign: "center",
+      // },
     },
-   
-   
-       {
+
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -159,8 +155,8 @@ export function DeptTable() {
     page: deptUIProps.queryParams.pageNumber,
   };
 
-    return (
-    <>
+  return (
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -194,6 +190,6 @@ export function DeptTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

@@ -1,49 +1,47 @@
-import React, { useMemo } from "react"
-import { Formik } from "formik"
-import { isEqual } from "lodash"
-import { useFormUIContext } from "../FormUIContext"
+import React, { useMemo } from "react";
+import { Formik } from "formik";
+import { isEqual } from "lodash";
+import { useFormUIContext } from "../FormUIContext";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values
-  const newQueryParams = { ...queryParams }
-  const filter = {}
+  const { searchText } = values;
+  const newQueryParams = { ...queryParams };
+  const filter = {};
 
   if (searchText) {
-    filter.searchQuery = searchText
+    filter.searchQuery = searchText;
     // filter.email = searchText
   }
-  newQueryParams.filter = filter
-  return newQueryParams
-}
+  newQueryParams.filter = filter;
+  return newQueryParams;
+};
 
 export function FormFilter() {
-
-  const FormUIContext = useFormUIContext()
+  const FormUIContext = useFormUIContext();
 
   const formUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
       setQueryParams: FormUIContext.setQueryParams,
-    }
-  }, [FormUIContext])
+    };
+  }, [FormUIContext]);
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values)
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1
+      newQueryParams.pageNumber = 1;
       // update list by queryParams
-      formUIProps.setQueryParams(newQueryParams)
+      formUIProps.setQueryParams(newQueryParams);
     }
-  }
-
+  };
 
   //This is a Debounce Function that will run the function only after 500ms even if the function is triggered every second.
   const debouncedApplyFilter = useCallback(
-    debounce((values) => applyFilter(values), 500), 
+    debounce((values) => applyFilter(values), 500),
     []
   );
 
@@ -52,21 +50,15 @@ export function FormFilter() {
       <Formik
         enableReinitialize={true}
         initialValues={{
-          searchText: ""
+          searchText: "",
         }}
         onSubmit={(values) => {
-          debouncedApplyFilter(values)
+          debouncedApplyFilter(values);
         }}
       >
-        {({
-          values,
-          handleSubmit,
-          handleBlur,
-          setFieldValue,
-        }) => (
-          <form className="form form-label-right" style={{margin: '0.8rem 0'}}>
-            <div className="row">
-              {/* <div className="col-12 col-md-12">
+        {({ values, handleSubmit, handleBlur, setFieldValue }) => (
+          <form className="form form-label-right">
+            {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -84,19 +76,16 @@ export function FormFilter() {
                 </small>
               </div> */}
 
-                            <InputSearch
-  values={values}
-  fieldName="searchText"
-  setFieldValue={setFieldValue}
-  handleBlur={handleBlur}
-  handleSubmit={handleSubmit}
-/>
-
-
-            </div>
+            <InputSearch
+              values={values}
+              fieldName="searchText"
+              setFieldValue={setFieldValue}
+              handleBlur={handleBlur}
+              handleSubmit={handleSubmit}
+            />
           </form>
         )}
       </Formik>
     </>
-  )
+  );
 }

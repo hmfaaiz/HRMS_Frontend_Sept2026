@@ -195,7 +195,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                             onBlur={handleBlur}
                             onChange={(e) => {
                               const value =
-                                e.target.value == "--Select--"
+                                e.target.value == "Select"
                                   ? ""
                                   : Number(e.target.value);
                               setFieldValue("leaveTypes", e.target.value);

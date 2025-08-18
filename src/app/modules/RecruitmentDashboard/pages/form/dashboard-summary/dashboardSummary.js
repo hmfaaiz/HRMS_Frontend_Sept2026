@@ -29,24 +29,14 @@ export function DashboardSummary({ listLoading, user }) {
 
 
         <>
-            <div
-                style={{
-                  
-                    marginTop: "15px",
-                    marginBottom: "15px",
-                    padding: "20px",
-                    borderRadius: "5px",
-                    border: "2px solidrgb(255, 255, 255)",
-                }}
-            >
+           
 
               
                 <DashboardSummaryHeader/>
 
 
 
-            </div>
-
+           
         </>
 
     );

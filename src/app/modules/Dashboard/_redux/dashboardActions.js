@@ -68,43 +68,6 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
     });
 };
 
-export const fetchDashboardAlert = () => async (dispatch) => {
-  return await requestFromServer
-    .getDashboardAlert()
-    .then((response) => {
-      const entities = response.data?.data;
-      dispatch(actions.AllDashboardAlertsFetch(entities));
-    })
-    .catch((error) => {
-      dispatch(actions.AllDashboardAlertsFetch([]));
-    });
-};
-
-export const fetchEmployeeSummary = (filter) => async (dispatch) => {
-  return await requestFromServer
-    .getEmployeeSummary(filter)
-    .then((response) => {
-      const entities = response.data?.data;
-      dispatch(actions.EmployeeSummaryFetch(entities));
-    })
-    .catch((error) => {
-      dispatch(actions.EmployeeSummaryFetch({}));
-    });
-};
-
-
-export const fetchRecruitmentSummary = (filter) => async (dispatch) => {
-  return await requestFromServer
-    .getRecruitmentSummary(filter)
-    .then((response) => {
-      const entities = response.data?.data;
-      dispatch(actions.RecruitmentSummaryFetch(entities));
-    })
-    .catch((error) => {
-      dispatch(actions.RecruitmentSummaryFetch({}));
-    });
-};
-
 export const fetchStandByVehicles = (body) => async (dispatch) => {
   return await requestFromServer
     .getVehiclesByCenterAndSubcenterId(body)
@@ -336,18 +299,14 @@ export const fetchLoanDetail = (employeeId) => async (dispatch) => {
 };
 
 export const fetchHolidayDetail = (employeeId) => async (dispatch) => {
-  if (employeeId) {
-    return requestFromServer
-      .getHolidayDetail({ Id: employeeId })
-      .then((response) => {
-        dispatch(actions.AllHolidayFetch(response?.data?.data || null));
-      })
-      .catch((error) => {
-        error.clientMessage = "Can't find Holidays";
-      });
-  } else {
-    dispatch(actions.AllHolidayFetch(null));
-  }
+  return requestFromServer
+    .getHolidayDetail({ Id: employeeId })
+    .then((response) => {
+      dispatch(actions.AllHolidayFetch(response?.data?.data || null));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Holidays";
+    });
 };
 
 export const getPayrollMonth = (employeeId) => (dispatch) => {
@@ -365,4 +324,55 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
         error.clientMessage = "Can't Get Payroll Data";
       });
   }
+};
+
+//// dashbaord related service
+
+export const fetchDashboardAlert = () => async (dispatch) => {
+  return await requestFromServer
+    .getDashboardAlert()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllDashboardAlertsFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.AllDashboardAlertsFetch([]));
+    });
+};
+
+export const fetchSummary = (filter) => async (dispatch) => {
+  return await requestFromServer
+    .getSummary(filter)
+    .then((response) => {
+      const entities = response.data?.data;
+      console.log("dataentitiesentities", entities);
+      dispatch(actions.SummaryFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.SummaryFetch({}));
+    });
+};
+
+// export const fetchRecruitmentSummary = (filter) => async (dispatch) => {
+//   return await requestFromServer
+//     .getRecruitmentSummary(filter)
+//     .then((response) => {
+//       const entities = response.data?.data;
+//       dispatch(actions.RecruitmentSummaryFetch(entities));
+//     })
+//     .catch((error) => {
+//       dispatch(actions.RecruitmentSummaryFetch({}));
+//     });
+// };
+
+export const fetchAnnouncementData = () => async (dispatch) => {
+  return await requestFromServer
+    .getAnnouncment()
+    .then((response) => {
+      const data = response.data?.data;
+      dispatch(actions.AnnouncementFetch(data));
+    })
+    .catch((error) => {
+      dispatch(actions.AnnouncementFetch([]));
+    });
 };

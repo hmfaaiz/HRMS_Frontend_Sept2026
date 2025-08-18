@@ -18,7 +18,7 @@ export function RoleEditDialogHeader({ id }) {
   useEffect(() => {
     let _title = id ? "" : "Add New Role"
     if (roleForEdit && id) {
-      _title = `Edit Role '${roleForEdit.name}'`
+      _title = `Edit Role`
     }
 
     setTitle(_title)

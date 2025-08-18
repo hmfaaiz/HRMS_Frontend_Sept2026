@@ -88,12 +88,13 @@ export function BanksTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        textAlign: "center",
+        minWidth: "100px",
+        maxWidth: "100px",
+        // textAlign: "center",
       },
-      headerStyle: {
-        textAlign: "center", // Align header text to the left
-      },
+      // headerStyle: {
+      //   textAlign: "center", // Align header text to the left
+      // },
       // formatter: (cell) => cell ? `D - ${cell}` : "",
     },
 
@@ -104,7 +105,7 @@ export function BanksTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "190px",
       },
     },
 
@@ -116,7 +117,7 @@ export function BanksTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "190px",
       },
     },
      {
@@ -126,7 +127,7 @@ export function BanksTable() {
          sortCaret: sortCaret,
          headerSortingClasses,
          style: {
-           minWidth: "160px",
+           minWidth: "100px",
          },
        },
     
@@ -163,7 +164,7 @@ export function BanksTable() {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -197,6 +198,6 @@ export function BanksTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

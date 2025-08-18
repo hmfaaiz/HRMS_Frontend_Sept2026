@@ -50,7 +50,6 @@ export function LeaveApplicationTable() {
     (item) => item.componentName === "ReadLeaveApplication"
   );
 
-
   // Table columns
   const columns = [
     {
@@ -150,53 +149,38 @@ export function LeaveApplicationTable() {
   };
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn">
-            <Accordion.Toggle as={Button} eventKey="0">
-              Leave Applications
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <PaginationProvider
-              pagination={paginationFactory(paginationOptions)}
+    <div className="w-full font-size-xs px-3 py-2 mt-2 bg-white rounded-lg overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">Leave Applications</h6>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
             >
-              {({ paginationProps, paginationTableProps }) => {
-                return (
-                  <Pagination
-                    isLoading={listLoading}
-                    paginationProps={paginationProps}
-                  >
-                    <BootstrapTable
-                      noDataIndication={NoRecordsFoundMessage({ entities })}
-                      wrapperClasses="table-responsive"
-                      bordered={false}
-                      classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                      bootstrap4
-                      remote
-                      keyField="Id"
-                      data={entities === null ? [] : entities}
-                      columns={columns}
-                      defaultSorted={uiHelpers.defaultSorted}
-                      onTableChange={getHandlerTableChange(
-                        FormUIProps.setQueryParamsLeaveApp
-                      )}
-                      {...paginationTableProps}
-                    >
-                      <PleaseWaitMessage entities={entities} />
-                      <NoRecordsFoundMessage entities={entities} />
-                    </BootstrapTable>
-                  </Pagination>
-                );
-              }}
-            </PaginationProvider>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+              <BootstrapTable
+                noDataIndication={NoRecordsFoundMessage({ entities })}
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={entities === null ? [] : entities}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  FormUIProps.setQueryParamsLeaveApp
+                )}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={entities} />
+                <NoRecordsFoundMessage entities={entities} />
+              </BootstrapTable>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
   );
 }

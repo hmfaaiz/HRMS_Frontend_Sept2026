@@ -14,6 +14,7 @@ import { amountLimit } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { CirclePlus, Trash2 } from "lucide-react";
 
 // Define the validation schema for the main form and the details
 const loanManagementSchema = Yup.object().shape({
@@ -71,7 +72,7 @@ const loanManagementSchema = Yup.object().shape({
         .test(
           "salary-count-ge-max-loan-amount", // Name of the test
           "Can't be greater", // Error message
-          function(value) {
+          function (value) {
             const { max_loan_amount } = this.parent; // Accessing max_loan_amount from the parent object
             if (value > max_loan_amount) {
               return false; // Validation fails
@@ -188,7 +189,7 @@ export function FormEditForm({
         setFieldTouched,
       }) => (
         <>
-          <Modal.Body  className="overlay overlay-block cursor-default">
+          <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
                 <div className="spinner spinner-lg spinner-success" />
@@ -196,40 +197,40 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right" onSubmit={handleSubmit}>
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
+                <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                   {/* Subsidiary Field */}
-                  <div className="col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-6">
-                      <SearchSelect
-                        name="subsidiaryId"
-                        label={
-                          <span>
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isUserForRead}
-                        onChange={(e) => {
-                          setFieldValue("subsidiaryId", e.value || null);
-                          check_Existed_Data(e.value);
-                        }}
-                        value={
-                          dashboard?.allSubsidiaryList?.find(
-                            (option) => option?.value === values?.subsidiaryId
-                          ) || null
-                        }
-                        options={dashboard?.allSubsidiaryList}
-                        // options={dashboard.allSubidiaryList.map(option => ({
-                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
-                        //   value: option.value,
-                        // }))}
-                        error={errors.subsidiaryId}
-                        touched={touched.subsidiaryId}
-                      />
-                    </div>
+
+                  <div className="">
+                    <SearchSelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isUserForRead}
+                      onChange={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                        check_Existed_Data(e.value);
+                      }}
+                      value={
+                        dashboard?.allSubsidiaryList?.find(
+                          (option) => option?.value === values?.subsidiaryId
+                        ) || null
+                      }
+                      options={dashboard?.allSubsidiaryList}
+                      // options={dashboard.allSubidiaryList.map(option => ({
+                      //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                      //   value: option.value,
+                      // }))}
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                    />
                   </div>
 
+
                   {/* Account Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <SearchSelect
                       name="accountId"
                       label={
@@ -257,7 +258,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Employee Loan Account Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     {/* <Field
                       name="emp_loan_account"
                       component={Input}
@@ -293,11 +294,14 @@ export function FormEditForm({
                       touched={touched.accountId}
                     />
                   </div>
+                </div>
 
-                  {/* Installment Deduction Percentage Field */}
+                {/* Installment Deduction Percentage Field */}
 
-                  {/* Installment Deduction Basis Type Field */}
-                  <div className="col-12 col-md-6 mt-3">
+                {/* Installment Deduction Basis Type Field */}
+
+                <div className="grid lg:grid-cols-3 gap-x-3 mt-2">
+                  <div className="">
                     <label htmlFor="installment_deduction_basis_type">
                       Installment Deduction Basis Type
                       {/* <span style={{ color: "red" }}>*</span> */}
@@ -364,7 +368,7 @@ export function FormEditForm({
                       )}
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="">
                     <Field
                       name="installment_deduction_percentage"
                       component={Input}
@@ -401,145 +405,136 @@ export function FormEditForm({
                 </div>
               </fieldset>
 
+            <div className="w-full overflow-x-auto">
+
               <FieldArray name="details">
                 {({ push, remove }) => (
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <h6>Details</h6>
-                    <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
+                  <div>
+                    <div className="flex justify-between items-center mt-1">
+                      <h6 className="font-bold mb-0 text-primary">
+                        Details
+                      </h6>
+                      {!isUserForRead && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            push({
+                              loan_typeId: "",
+                              max_loan_amount: "",
+                              basis: null,
+                              salary_count: "",
+                              max_no_of_installment_for_loan: "",
+                              installment_start_date_policy: "",
+                              isAllowMultipleLoans: true,
+                              monthsToApplyForNewLoan: "",
+                              eligibilityPolicy: "",
+                            })
+                          }
+                          className="btn btn-primary btn-sm"
                         >
-                          <th>Action</th>
+                          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                          Add
+                        </button>
+                      )}
+                    </div>
+                    <div className="w-full overflow-x-auto">
+                      <div className="react-bootstrap-table table-responsive">
+                        <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                          <tr className="custom-table-header">
 
-                          <th>Loan Type</th>
-                          <th>Max Loan Amount</th>
-                          <th>Basis</th>
-                          <th>Salary Count</th>
-                          <th>Max. No. of Installment for Loan</th>
-                          <th>Installment Start date Policy</th>
 
-                          <th>Allow Multiple Loans at a time</th>
-                          <th>Months required to apply for new loan</th>
-                          <th>Eligibility policy for new loan</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values.details &&
-                          values.details.length > 0 &&
-                          values.details.map((detail, index) => (
-                            <tr key={index}>
-                              <td>
-                                {!isUserForRead && (
-                                  <button
-                                    type="button"
-                                    // onClick={() => remove(index)}
-                                    onClick={() => {
-                                      if (
-                                        values.details[index]?.Id &&
-                                        values.details.length > 1
-                                      ) {
-                                        deleteLoanManagConfigDetail(
-                                          values.details[index]?.Id,
-                                          values.details[index]?.loan_typeId,
-                                          values.subsidiaryId
-                                        );
-                                      } else if (
-                                        values.details[index]?.Id &&
-                                        values.details.length == 1
-                                      ) {
-                                        deleteNotification();
-                                      } else {
-                                        remove(index);
+                            <td className="max-lg:min-w-96">Loan Type</td>
+                             <td className="max-lg:min-w-96">Max. Amount</td>
+                             <td className="max-lg:min-w-96">Basis</td>
+                             <td className="max-lg:min-w-96">Salary Count</td>
+                             <td className="max-lg:min-w-96">Max. No. of Installments</td>
+                             <td className="max-lg:min-w-96">Installment Start Date</td>
+
+                             <td className="max-lg:min-w-96">Multiple Loans</td>
+                             <td className="max-lg:min-w-96">Months Required for New Loan</td>
+                             <td className="max-lg:min-w-96">Eligibility for New Loan</td>
+                             <td className="max-lg:min-w-96">Action</td>
+                          </tr>
+
+                          <tbody>
+                            {values.details &&
+                              values.details.length > 0 &&
+                              values.details.map((detail, index) => (
+                                <tr key={index}>
+                                
+
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].loan_typeId`}
+                                      as="select"
+                                      className="form-control"
+                                   
+                                      // disabled={isUserForRead}
+                                      disabled={
+                                        isUserForRead || values.details[index]?.Id
                                       }
-                                    }}
-                                    className="btn btn-danger btn-sm"
-                                  >
-                                    Delete
-                                  </button>
-                                )}
-                              </td>
+                                    >
+                                      <option value="">Select--</option>
 
-                              <td>
-                                <Field
-                                  name={`details[${index}].loan_typeId`}
-                                  as="select"
-                                  className="form-control"
-                                  style={{ width: "130px" }}
-                                  // disabled={isUserForRead}
-                                  disabled={
-                                    isUserForRead || values.details[index]?.Id
-                                  }
-                                >
-                                  <option value="">Select--</option>
-
-                                  {loan_type
-                                    ?.filter((x) =>
-                                      x.subsidiaryId?.includes(
-                                        String(values.subsidiaryId)
-                                      )
-                                    ) // Filter options based on subsidiaryId
-                                    .map((x) => (
-                                      <option
-                                        key={x.value} // Ensure each option has a unique key
-                                        disabled={
-                                          values.details.find(
-                                            (el) => el.loan_typeId === x.value
+                                      {loan_type
+                                        ?.filter((x) =>
+                                          x.subsidiaryId?.includes(
+                                            String(values.subsidiaryId)
                                           )
-                                            ? true
-                                            : false
-                                        }
-                                        value={x.value}
-                                      >
-                                        {x.label}
-                                      </option>
-                                    ))}
-                                </Field>
-                                {errors.details?.[index]?.loan_typeId &&
-                                  touched.details?.[index]?.loan_typeId && (
-                                    <div className="text-danger">
-                                      {errors.details[index]?.loan_typeId}
-                                    </div>
-                                  )}
-                              </td>
+                                        ) // Filter options based on subsidiaryId
+                                        .map((x) => (
+                                          <option
+                                            key={x.value} // Ensure each option has a unique key
+                                            disabled={
+                                              values.details.find(
+                                                (el) => el.loan_typeId === x.value
+                                              )
+                                                ? true
+                                                : false
+                                            }
+                                            value={x.value}
+                                          >
+                                            {x.label}
+                                          </option>
+                                        ))}
+                                    </Field>
+                                    {errors.details?.[index]?.loan_typeId &&
+                                      touched.details?.[index]?.loan_typeId && (
+                                        <div className="text-danger">
+                                          {errors.details[index]?.loan_typeId}
+                                        </div>
+                                      )}
+                                  </td>
 
-                              <td>
-                                <AmountInput
-                                  field={{
-                                    name: `details[${index}].max_loan_amount`,
-                                    value:
-                                      values?.details[index].max_loan_amount,
-                                  }}
-                                  style={{ width: "130px" }}
-                                  form={{
-                                    touched,
-                                    errors,
-                                    setFieldValue,
-                                    setFieldTouched,
-                                  }}
-                                  label={null}
-                                  disabled={isUserForRead}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      `details[${index}].max_loan_amount`,
-                                      e
-                                    );
+                                  <td>
+                                    <AmountInput
+                                      field={{
+                                        name: `details[${index}].max_loan_amount`,
+                                        value:
+                                          values?.details[index].max_loan_amount,
+                                      }}
+                                    
+                                      form={{
+                                        touched,
+                                        errors,
+                                        setFieldValue,
+                                        setFieldTouched,
+                                      }}
+                                      label={null}
+                                      disabled={isUserForRead}
+                                      onChange={(e) => {
+                                        setFieldValue(
+                                          `details[${index}].max_loan_amount`,
+                                          e
+                                        );
 
-                                    setFieldValue(
-                                      `details[${index}].salary_count`,
-                                      0
-                                    );
-                                  }}
-                                />
-                                {/* <Field
+                                        setFieldValue(
+                                          `details[${index}].salary_count`,
+                                          0
+                                        );
+                                      }}
+                                    />
+                                    {/* <Field
                                   name={`details[${index}].max_loan_amount`}
                                   type="number"
                                   className="form-control"
@@ -562,38 +557,38 @@ export function FormEditForm({
                                     );
                                   }}
                                 /> */}
-                                {errors.details?.[index]?.max_loan_amount &&
-                                  touched.details?.[index]?.max_loan_amount && (
-                                    <div className="text-danger">
-                                      {errors.details[index].max_loan_amount}
-                                    </div>
-                                  )}
-                              </td>
+                                    {errors.details?.[index]?.max_loan_amount &&
+                                      touched.details?.[index]?.max_loan_amount && (
+                                        <div className="text-danger">
+                                          {errors.details[index].max_loan_amount}
+                                        </div>
+                                      )}
+                                  </td>
 
-                              <td>
-                                <Field
-                                  name={`details[${index}].basis`}
-                                  as="select"
-                                  className="form-control"
-                                  style={{ width: "85px" }}
-                                  disabled={isUserForRead}
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      `details[${index}].basis`,
-                                      e.target.value === "N/A"
-                                        ? null
-                                        : e.target.value
-                                    );
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].basis`}
+                                      as="select"
+                                      className="form-control"
 
-                                    if (e.target.value == "N/A") {
-                                      setFieldValue(
-                                        `details[${index}].salary_count`,
-                                        0
-                                      );
-                                    }
-                                  }}
-                                >
-                                  {/* <option value="">Select</option>
+                                      disabled={isUserForRead}
+                                      onChange={(e) => {
+                                        setFieldValue(
+                                          `details[${index}].basis`,
+                                          e.target.value === "N/A"
+                                            ? null
+                                            : e.target.value
+                                        );
+
+                                        if (e.target.value == "N/A") {
+                                          setFieldValue(
+                                            `details[${index}].salary_count`,
+                                            0
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      {/* <option value="">Select</option>
                                   {basisOptions.map((option) => (
                                     <option
                                       key={option.value}
@@ -603,240 +598,258 @@ export function FormEditForm({
                                     </option>
                                   ))} */}
 
-                                  {[
-                                    { value: null, label: "N/A" }, // This renders the "N/A" option
-                                    ...basisOptions, // This renders the rest of the options
-                                  ].map((option) => (
-                                    <option
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </Field>
-                                {errors.details?.[index]?.basis &&
-                                  touched.details?.[index]?.basis && (
-                                    <div className="text-danger">
-                                      {errors.details[index].basis}
-                                    </div>
-                                  )}
-                              </td>
+                                      {[
+                                        { value: null, label: "N/A" }, // This renders the "N/A" option
+                                        ...basisOptions, // This renders the rest of the options
+                                      ].map((option) => (
+                                        <option
+                                          key={option.value}
+                                          value={option.value}
+                                        >
+                                          {option.label}
+                                        </option>
+                                      ))}
+                                    </Field>
+                                    {errors.details?.[index]?.basis &&
+                                      touched.details?.[index]?.basis && (
+                                        <div className="text-danger">
+                                          {errors.details[index].basis}
+                                        </div>
+                                      )}
+                                  </td>
 
-                              <td>
-                                <Field
-                                  name={`details[${index}].salary_count`}
-                                  type="number"
-                                  className="form-control"
-                                  style={{ width: "60px" }}
-                                  // disabled={isUserForRead}
-                                  disabled={
-                                    isUserForRead ||
-                                    values.details[index]?.basis == "N/A" ||
-                                    !values.details[index]?.basis
-                                  }
-                                  onInput={(e) => {
-                                    if (e.target.value.length > 2) {
-                                      e.target.value = e.target.value.slice(
-                                        0,
-                                        2
-                                      ); // Restrict to 2 digits
-                                    }
-                                  }}
-                                />
-                                {errors.details?.[index]?.salary_count &&
-                                  touched.details?.[index]?.salary_count && (
-                                    <div className="text-danger">
-                                      {errors.details[index].salary_count}
-                                    </div>
-                                  )}
-                              </td>
-
-                              <td>
-                                <Field
-                                  name={`details[${index}].max_no_of_installment_for_loan`}
-                                  type="number"
-                                  className="form-control"
-                                  style={{ width: "60px" }}
-                                  disabled={isUserForRead}
-                                  onInput={(e) => {
-                                    if (e.target.value.length > 2) {
-                                      e.target.value = e.target.value.slice(
-                                        0,
-                                        2
-                                      ); // Restrict to 2 digits
-                                    }
-                                  }}
-                                />
-                                {errors.details?.[index]
-                                  ?.max_no_of_installment_for_loan &&
-                                  touched.details?.[index]
-                                    ?.max_no_of_installment_for_loan && (
-                                    <div className="text-danger">
-                                      {
-                                        errors.details[index]
-                                          .max_no_of_installment_for_loan
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].salary_count`}
+                                      type="number"
+                                      className="form-control"
+                                   
+                                      // disabled={isUserForRead}
+                                      disabled={
+                                        isUserForRead ||
+                                        values.details[index]?.basis == "N/A" ||
+                                        !values.details[index]?.basis
                                       }
-                                    </div>
-                                  )}
-                              </td>
+                                      onInput={(e) => {
+                                        if (e.target.value.length > 2) {
+                                          e.target.value = e.target.value.slice(
+                                            0,
+                                            2
+                                          ); // Restrict to 2 digits
+                                        }
+                                      }}
+                                    />
+                                    {errors.details?.[index]?.salary_count &&
+                                      touched.details?.[index]?.salary_count && (
+                                        <div className="text-danger">
+                                          {errors.details[index].salary_count}
+                                        </div>
+                                      )}
+                                  </td>
 
-                              <td>
-                                <Field
-                                  name={`details[${index}].installment_start_date_policy`}
-                                  type="number"
-                                  className="form-control"
-                                  style={{ width: "60px" }}
-                                  disabled={isUserForRead}
-                                  onInput={(e) => {
-                                    if (e.target.value.length > 2) {
-                                      e.target.value = e.target.value.slice(
-                                        0,
-                                        2
-                                      ); // Restrict to 2 digits
-                                    }
-                                  }}
-                                />
-                                {errors.details?.[index]
-                                  ?.installment_start_date_policy &&
-                                  touched.details?.[index]
-                                    ?.installment_start_date_policy && (
-                                    <div className="text-danger">
-                                      {
-                                        errors.details[index]
-                                          .installment_start_date_policy
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].max_no_of_installment_for_loan`}
+                                      type="number"
+                                      className="form-control"
+                                    
+                                      disabled={isUserForRead}
+                                      onInput={(e) => {
+                                        if (e.target.value.length > 2) {
+                                          e.target.value = e.target.value.slice(
+                                            0,
+                                            2
+                                          ); // Restrict to 2 digits
+                                        }
+                                      }}
+                                    />
+                                    {errors.details?.[index]
+                                      ?.max_no_of_installment_for_loan &&
+                                      touched.details?.[index]
+                                        ?.max_no_of_installment_for_loan && (
+                                        <div className="text-danger">
+                                          {
+                                            errors.details[index]
+                                              .max_no_of_installment_for_loan
+                                          }
+                                        </div>
+                                      )}
+                                  </td>
+
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].installment_start_date_policy`}
+                                      type="number"
+                                      className="form-control"
+                                  
+                                      disabled={isUserForRead}
+                                      onInput={(e) => {
+                                        if (e.target.value.length > 2) {
+                                          e.target.value = e.target.value.slice(
+                                            0,
+                                            2
+                                          ); // Restrict to 2 digits
+                                        }
+                                      }}
+                                    />
+                                    {errors.details?.[index]
+                                      ?.installment_start_date_policy &&
+                                      touched.details?.[index]
+                                        ?.installment_start_date_policy && (
+                                        <div className="text-danger">
+                                          {
+                                            errors.details[index]
+                                              .installment_start_date_policy
+                                          }
+                                        </div>
+                                      )}
+                                  </td>
+
+                                  <td>
+                                    <input
+                                      name={`details[${index}].isAllowMultipleLoans`}
+                                      type="checkbox"
+                                      disabled={isUserForRead}
+                                      checked={
+                                        values.details?.[index]
+                                          ?.isAllowMultipleLoans
                                       }
-                                    </div>
-                                  )}
-                              </td>
+                                      onChange={(e) => {
+                                        setFieldValue(
+                                          `details[${index}].isAllowMultipleLoans`,
+                                          e.target.checked
+                                        );
 
-                              <td>
-                                <input
-                                  name={`details[${index}].isAllowMultipleLoans`}
-                                  type="checkbox"
-                                  disabled={isUserForRead}
-                                  checked={
-                                    values.details?.[index]
-                                      ?.isAllowMultipleLoans
-                                  }
-                                  onChange={(e) => {
-                                    setFieldValue(
-                                      `details[${index}].isAllowMultipleLoans`,
-                                      e.target.checked
-                                    );
+                                        if (e.target.checked) {
+                                          setFieldValue(
+                                            `details[${index}].monthsToApplyForNewLoan`,
+                                            ""
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    {errors.details?.[index]
+                                      ?.isAllowMultipleLoans &&
+                                      touched.details?.[index]
+                                        ?.isAllowMultipleLoans && (
+                                        <div className="text-danger">
+                                          {
+                                            errors.details[index]
+                                              .isAllowMultipleLoans
+                                          }
+                                        </div>
+                                      )}
+                                  </td>
 
-                                    if (e.target.checked) {
-                                      setFieldValue(
-                                        `details[${index}].monthsToApplyForNewLoan`,
-                                        ""
-                                      );
-                                    }
-                                  }}
-                                />
-                                {errors.details?.[index]
-                                  ?.isAllowMultipleLoans &&
-                                  touched.details?.[index]
-                                    ?.isAllowMultipleLoans && (
-                                    <div className="text-danger">
-                                      {
-                                        errors.details[index]
-                                          .isAllowMultipleLoans
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].monthsToApplyForNewLoan`}
+                                      type="number"
+                                      className="form-control"
+                                     
+                                      disabled={
+                                        isUserForRead ||
+                                        values.details?.[index]
+                                          ?.isAllowMultipleLoans
                                       }
-                                    </div>
-                                  )}
-                              </td>
+                                      onInput={(e) => {
+                                        if (e.target.value.length > 3) {
+                                          e.target.value = e.target.value.slice(
+                                            0,
+                                            3
+                                          ); // Restrict to 2 digits
+                                        }
+                                      }}
+                                    />
+                                    {errors.details?.[index]
+                                      ?.monthsToApplyForNewLoan &&
+                                      touched.details?.[index]
+                                        ?.monthsToApplyForNewLoan && (
+                                        <div className="text-danger">
+                                          {
+                                            errors.details[index]
+                                              .monthsToApplyForNewLoan
+                                          }
+                                        </div>
+                                      )}
+                                  </td>
 
-                              <td>
-                                <Field
-                                  name={`details[${index}].monthsToApplyForNewLoan`}
-                                  type="number"
-                                  className="form-control"
-                                  style={{ width: "60px" }}
-                                  disabled={
-                                    isUserForRead ||
-                                    values.details?.[index]
-                                      ?.isAllowMultipleLoans
-                                  }
-                                  onInput={(e) => {
-                                    if (e.target.value.length > 3) {
-                                      e.target.value = e.target.value.slice(
-                                        0,
-                                        3
-                                      ); // Restrict to 2 digits
-                                    }
-                                  }}
-                                />
-                                {errors.details?.[index]
-                                  ?.monthsToApplyForNewLoan &&
-                                  touched.details?.[index]
-                                    ?.monthsToApplyForNewLoan && (
-                                    <div className="text-danger">
-                                      {
-                                        errors.details[index]
-                                          .monthsToApplyForNewLoan
-                                      }
-                                    </div>
-                                  )}
-                              </td>
+                                  <td>
+                                    <Field
+                                      name={`details[${index}].eligibilityPolicy`}
+                                      type="number"
+                                      className="form-control"
+                                   
+                                      disabled={isUserForRead}
+                                      onInput={(e) => {
+                                        if (e.target.value.length > 3) {
+                                          e.target.value = e.target.value.slice(
+                                            0,
+                                            3
+                                          ); // Restrict to 2 digits
+                                        }
+                                      }}
+                                    />
+                                    {errors.details?.[index]?.eligibilityPolicy &&
+                                      touched.details?.[index]
+                                        ?.eligibilityPolicy && (
+                                        <div className="text-danger">
+                                          {errors.details[index].eligibilityPolicy}
+                                        </div>
+                                      )}
+                                  </td>
 
-                              <td>
-                                <Field
-                                  name={`details[${index}].eligibilityPolicy`}
-                                  type="number"
-                                  className="form-control"
-                                  style={{ width: "60px" }}
-                                  disabled={isUserForRead}
-                                  onInput={(e) => {
-                                    if (e.target.value.length > 3) {
-                                      e.target.value = e.target.value.slice(
-                                        0,
-                                        3
-                                      ); // Restrict to 2 digits
-                                    }
-                                  }}
-                                />
-                                {errors.details?.[index]?.eligibilityPolicy &&
-                                  touched.details?.[index]
-                                    ?.eligibilityPolicy && (
-                                    <div className="text-danger">
-                                      {errors.details[index].eligibilityPolicy}
-                                    </div>
-                                  )}
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
 
-                    {!isUserForRead && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          push({
-                            loan_typeId: "",
-                            max_loan_amount: "",
-                            basis: null,
-                            salary_count: "",
-                            max_no_of_installment_for_loan: "",
-                            installment_start_date_policy: "",
-                            isAllowMultipleLoans: true,
-                            monthsToApplyForNewLoan: "",
-                            eligibilityPolicy: "",
-                          })
-                        }
-                        className="btn btn-primary btn-sm"
-                      >
-                        + Add Detail
-                      </button>
-                    )}
+                                    <td
+                                    className="text-right">
+                                    {!isUserForRead && (
+                                         <button className="bg-transparent border-none"
+                                        type="button"
+                                        // onClick={() => remove(index)}
+                                        onClick={() => {
+                                          if (
+                                            values.details[index]?.Id &&
+                                            values.details.length > 1
+                                          ) {
+                                            deleteLoanManagConfigDetail(
+                                              values.details[index]?.Id,
+                                              values.details[index]?.loan_typeId,
+                                              values.subsidiaryId
+                                            );
+                                          } else if (
+                                            values.details[index]?.Id &&
+                                            values.details.length == 1
+                                          ) {
+                                            deleteNotification();
+                                          } else {
+                                            remove(index);
+                                          }
+                                        }}
+                                       
+                                      >
+                                        {" "}
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+
+
+                      </div>
+                    </div>
                   </div>
                 )}
               </FieldArray>
+
+              </div>
             </Form>
           </Modal.Body>
 
           <Modal.Footer>
-            {/* Cancel / Ok Button */}
+            {/* Cancel / OK Button */}
             {!isUserForRead ? (
               <button
                 type="button"
@@ -853,7 +866,7 @@ export function FormEditForm({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

@@ -6,9 +6,8 @@ import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls
 export function BankEditDialogHeader({ id, isUserForRead }) {
   //const userForEdit = false
   const [title, setTitle] = useState("");
- 
+
   const { userForEdit, actionsLoading } = useSelector(
-    
     (state) => ({
       userForEdit: state.employee_salary.userForEdit,
       actionsLoading: state.users.actionsLoading,
@@ -29,8 +28,11 @@ export function BankEditDialogHeader({ id, isUserForRead }) {
   return (
     <>
       {actionsLoading && <ModalProgressBar />}
-      <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-lg">
+      <Modal.Header>
+        <Modal.Title
+          className="text-black font-bold text-[1.25rem]"
+          id="example-modal-sizes-title-lg"
+        >
           {!isUserForRead ? title : "View Employee Salary"}
         </Modal.Title>
       </Modal.Header>

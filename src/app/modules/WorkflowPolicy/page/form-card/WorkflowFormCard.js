@@ -9,7 +9,9 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import { useFormUIContext } from "../FormUIContext";
 import WorkflowFormFilter from "../form-filter/WorkflowFormFilter";
 import { WorkflowPolicyTable } from "../form-table/WorkflowPolicyTable";
-const WorkflowFormCard = ({ accessPage }) => {
+import TCard from "../../../../utils/common-modules/TCard";
+import { CirclePlus } from "lucide-react";
+const WorkflowFormCard = ({ accessPage, value, setValue }) => {
   const formUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -17,33 +19,49 @@ const WorkflowFormCard = ({ accessPage }) => {
     };
   }, [formUIContext]);
   return (
-    <Card>
-      <CardHeader title={CurrentModuleName()}>
-        <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
-           <div className="col-6">
-
-              <WorkflowFormFilter />
-           </div>
-        <CardHeaderToolbar>
-          {/* <div className="pr-5">
-            <WorkflowFormFilter />
-            </div> */}
+    <TCard name={CurrentModuleName()}>
+      <div className="flex justify-between items-center flex-wrap gap-2">
+        <div>
+          {/* {FormUIProps.queryParams.moduleType == 2 ? ( */}
+          <button
+            type="button"
+            className={`btn mr-2 rounded-xl ${
+              value === 0 ? "bg-black text-white" : "btn-secondary"
+            }`}
+            onClick={() => setValue(0)}
+          >
+            Workflow Policy
+          </button>
+          {/* ) : ( */}
+          <button
+            type="button"
+            className={`btn mr-2 rounded-xl ${
+              value === 1 ? "bg-black text-white" : "btn-secondary"
+            }`}
+            onClick={() => setValue(1)}
+          >
+            Designation Workflow Policy
+          </button>
+          {/* )} */}
+        </div>
+        <div className="flex items-center gap-2">
+          <WorkflowFormFilter />
           {accessPage && (
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={formUIProps.newButtonClick}
-            >
-              Add Workflow Policy
-            </button>
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={formUIProps.newButtonClick}
+              >
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                Add
+              </button>
+            </>
           )}
-        </CardHeaderToolbar>
-              </div>
-      </CardHeader>
-      <CardBody>
-        <WorkflowPolicyTable />
-      </CardBody>
-    </Card>
+        </div>
+      </div>
+      <WorkflowPolicyTable />
+    </TCard>
   );
 };
 

@@ -85,7 +85,7 @@ export function RemarksFetchDialog() {
             onClick={remarksUIProps.closeFetchRemarksDialog}
             className="btn btn-primary btn-elevate"
           >
-            Ok
+            OK
           </button>
         </div>
       </Modal.Footer>

@@ -83,8 +83,8 @@ export function BanksFilter({ listLoading, user, setCity,
           touched,
 
         }) => (
-          <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
+          <form onSubmit={handleSubmit} className="">
+            {/* <div className="row"> */}
 
               {/* <div className="col-12 col-md-12">
                 <input
@@ -115,26 +115,26 @@ export function BanksFilter({ listLoading, user, setCity,
 
 
 
-            </div>
+            {/* </div> */}
           </form>
         )}
       </Formik>
 
-      <Formik
+      {/* <Formik
         enableReinitialize={true}
-        // initialValues={{
-        //   donorName: "", // values => All=""/Susspended=0/Active=1/Pending=2
-        //   receiptNo: "", // values => All=""/Business=0/Individual=1
-        //   searchText: "",
-        //   cityId: '0',
-        //   centerId: '0',
-        //   subCenterId: '0',
-        //   alarmTimeId: [],
-        // }}
+        initialValues={{
+          donorName: "", // values => All=""/Susspended=0/Active=1/Pending=2
+          receiptNo: "", // values => All=""/Business=0/Individual=1
+          searchText: "",
+          cityId: '0',
+          centerId: '0',
+          subCenterId: '0',
+          alarmTimeId: [],
+        }}
         onSubmit={(values) => {
       
-          //createPdf(values);
-          //applyFilter(values)
+          createPdf(values);
+          applyFilter(values)
         }}
       >
         {({
@@ -149,7 +149,7 @@ export function BanksFilter({ listLoading, user, setCity,
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
             <div className="row">
-              {/* <div className="col-12 col-md-4">
+              <div className="col-12 col-md-4">
                 <label>Date From</label>
                 <DatePicker
                   className="form-control"
@@ -165,8 +165,8 @@ export function BanksFilter({ listLoading, user, setCity,
                   name="incidentlocationReachdateTime"
                   disabled={isUserForRead}
                 />
-              </div> */}
-              {/* <div className="col-12 col-md-4">
+              </div>
+              <div className="col-12 col-md-4">
                 <label>Date To</label>
                 <DatePicker
                   className="form-control"
@@ -182,8 +182,8 @@ export function BanksFilter({ listLoading, user, setCity,
                   name="incidentlocationReachdateTime"
                   disabled={isUserForRead}
                 />
-              </div> */}
-             {/* <div className="col-12 col-md-12">
+              </div>
+             <div className="col-12 col-md-12">
              
                 <label>Bank</label>
                 <input
@@ -202,12 +202,12 @@ export function BanksFilter({ listLoading, user, setCity,
                 />
 
 
-              </div>*/}
+              </div>
 
              
             </div>
             <div className="row">
-            {/* <div className="col-12 col-md-4">
+            <div className="col-12 col-md-4">
                 <SearchSelect
                   name="cityId"
                   label="Select City*"
@@ -225,8 +225,8 @@ export function BanksFilter({ listLoading, user, setCity,
                   // touched={touched.cityId}
                   // options={dashboard.allCity}
                 />
-              </div> */}
-              {/* <div className="col-12 col-md-4">
+              </div>
+              <div className="col-12 col-md-4">
                 <SearchSelect
                   name="centerId"
                   label="Select Circle*"
@@ -244,8 +244,8 @@ export function BanksFilter({ listLoading, user, setCity,
                   // // touched={touched.centerId}
                   // options={dashboard.cityCenters}
                 />
-              </div> */}
-              {/* <div className="col-12 col-md-4">
+              </div>
+              <div className="col-12 col-md-4">
                 <SearchSelect
                   name="subCenterId"
                   label="Center*"
@@ -265,9 +265,9 @@ export function BanksFilter({ listLoading, user, setCity,
                   // touched={touched.subCenterId}
                   // options={dashboard.allSubCenter}
                 />
-              </div> */}
+              </div>
             </div>
-            {/* <div className="row">
+            <div className="row">
               <div className="col-md-12">
                 <button
                   type="submit"
@@ -281,10 +281,10 @@ export function BanksFilter({ listLoading, user, setCity,
                 </button>
               </div>
 
-            </div> */}
+            </div>
           </form>
         )}
-      </Formik>
+      </Formik> */}
     </>
   )
 

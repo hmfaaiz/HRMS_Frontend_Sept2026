@@ -37,7 +37,7 @@ export function LastTripsDialog({ id, show, isNew, onHide, userForRead }) {
           onClick={onHide}
           className="btn btn-primary btn-elevate"
         >
-          Ok
+          OK
         </button>
       </Modal.Footer>
     </Modal>

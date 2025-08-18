@@ -118,7 +118,7 @@ export function DesignationEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

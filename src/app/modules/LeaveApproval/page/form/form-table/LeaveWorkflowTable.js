@@ -15,10 +15,11 @@ import { format } from "date-fns";
 export function LeaveWorkflowTable({ onHide, show }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { workflowStatusList, actionsLoading } = useSelector(
+  const { workflowStatusList, actionsLoading, leaveBalances } = useSelector(
     (state) => ({
       workflowStatusList: state?.leave_approval?.workflowStatusList,
       actionsLoading: state?.leave_approval?.actionsLoading,
+      leaveBalances: state?.leave_approval?.leaveBalances,
     }),
     shallowEqual
   );
@@ -26,6 +27,7 @@ export function LeaveWorkflowTable({ onHide, show }) {
     return {
       leaveWorkflowId: FormUIContext?.leaveWorkflowId,
       leaveData: FormUIContext?.leaveData,
+      leaveBalanceId: FormUIContext?.leaveBalanceId,
     };
   });
   const columns = [
@@ -99,20 +101,18 @@ export function LeaveWorkflowTable({ onHide, show }) {
       },
       formatter: (cell) => {
         let text = "";
-        let style = {};
-
+        let classname = "";
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          classname = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          classname = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          classname = "text-rejected font-bold";
         }
-
-        return <span style={style}>{text}</span>;
+        return <span className={classname}>{text}</span>;
       },
     },
     {
@@ -144,6 +144,9 @@ export function LeaveWorkflowTable({ onHide, show }) {
   useEffect(() => {
     dispatch(actions.fetchLeaveWorkflow(formUIProps?.leaveWorkflowId));
   }, [formUIProps.leaveWorkflowId]);
+  useEffect(() => {
+    dispatch(actions.fetchLeaveBalances(formUIProps?.leaveBalanceId));
+  }, [formUIProps.leaveBalanceId]);
 
   return (
     <Modal
@@ -156,108 +159,155 @@ export function LeaveWorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          Leave Workflow
+          <h5 className="font-bold mb-0 text-black">Leave Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className="overlay overlay-block cursor-default">
+      <Modal.Body className="">
         {formUIProps?.leaveData && (
-          <div className="row mb-4">
-            <div className="col-3">
-              Employee Code :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.requestBelongToEmp?.employeeCode}
-              </span>
+          <div className="w-full grid grid-cols-12 text-sm text-black gap-x-2">
+            <div className="col-span-3 bg-tsecondary p-2 rounded-lg">
+              <h6 className="font-bold mb-0 text-primary my-2">
+                Employee Detail
+              </h6>
+              <div className="grid grid-cols-2 text-sm text-black">
+                <div className="font-medium">Employee Code</div>
+                <div>
+                  {formUIProps?.leaveData?.requestBelongToEmp?.employeeCode ||
+                    "N/A"}
+                </div>
+
+                <div className="font-medium">Name</div>
+                <div>
+                  {" "}
+                  {formUIProps?.leaveData?.requestBelongToEmp?.firstName ||
+                    ""}{" "}
+                  {formUIProps?.leaveData?.requestBelongToEmp?.middleName || ""}{" "}
+                  {formUIProps?.leaveData?.requestBelongToEmp?.lastName || ""}
+                </div>
+
+                <div className="font-medium">Department</div>
+                <div>
+                  {formUIProps?.leaveData?.requestBelongToEmp?.department
+                    ?.deptName || "N/A"}
+                </div>
+
+                <div className="font-medium">Designation</div>
+                <div>
+                  {formUIProps?.leaveData?.requestBelongToEmp?.designation
+                    ?.formName || "N/A"}
+                </div>
+
+                <div className="font-medium">Employee Type</div>
+                <div>
+                  {formUIProps?.leaveData?.requestBelongToEmp?.employeeType
+                    ?.formName || "N/A"}
+                </div>
+              </div>
             </div>
-            <div className="col-3">
-              Name :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.requestBelongToEmp?.firstName}{" "}
-                {formUIProps?.leaveData?.requestBelongToEmp?.middleName}{" "}
-                {formUIProps?.leaveData?.requestBelongToEmp?.lastName}
-              </span>
-            </div>
-            <div className="col-3">
-              Department :{" "}
-              <span className="font-weight-bold">
-                {
-                  formUIProps?.leaveData?.requestBelongToEmp?.department
-                    ?.deptName
-                }
-              </span>
-            </div>
-            <div className="col-3">
-              Designation :{" "}
-              <span className="font-weight-bold">
-                {
-                  formUIProps?.leaveData?.requestBelongToEmp?.designation
-                    ?.formName
-                }
-              </span>
-            </div>
-            <div className="col-3">
-              Leave Type :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.t_leave_type?.name}
-              </span>
-            </div>
-            <div className="col-3">
-              From Date :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.from
-                  ? format(
-                      new Date(formUIProps?.leaveData?.parentData?.from),
-                      "dd-MMM-yyyy"
-                    )
-                  : ""}
-              </span>
-            </div>
-            <div className="col-3">
-              To Date :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.to
-                  ? format(
-                      new Date(formUIProps?.leaveData?.parentData?.to),
-                      "dd-MMM-yyyy"
-                    )
-                  : ""}
-              </span>
-            </div>
-            <div className="col-3">
-              Days :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.days}
-              </span>
-            </div>
-            <div className="col-6">
-              Reason :{" "}
-              <span className="font-weight-bold">
-                {formUIProps?.leaveData?.parentData?.remarks}
-              </span>
+            <div className="col-span-9 bg-tsecondary p-2 rounded-lg">
+              <div className="grid grid-cols-10">
+                <div className="col-span-3">
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Leave Balance
+                  </h6>
+                  <div className=" text-sm text-black">
+                    {leaveBalances?.length > 0 &&
+                      leaveBalances?.map((el, i) => {
+                        return (
+                          <div
+                            className="grid grid-cols-2"
+                            key={el?.leaveTypeName || i}
+                          >
+                            <div className="font-medium col-span-1">
+                              {el?.leaveTypeName}
+                            </div>
+                            <div className="col-span-1">
+                              {el?.remainingCount || 0}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+                <div className="col-span-7">
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Leave Request
+                  </h6>
+                  <div className="text-sm text-black">
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Leave Type</div>
+                      <div className="col-span-3">
+                        {formUIProps?.leaveData?.parentData?.t_leave_type?.name}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">From</div>
+                      <div className="col-span-3">
+                        {formUIProps?.leaveData?.parentData?.from
+                          ? format(
+                              new Date(
+                                formUIProps?.leaveData?.parentData?.from
+                              ),
+                              "dd-MMM-yyyy"
+                            )
+                          : ""}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">To</div>
+                      <div className="col-span-3">
+                        {formUIProps?.leaveData?.parentData?.from
+                          ? format(
+                              new Date(
+                                formUIProps?.leaveData?.parentData?.from
+                              ),
+                              "dd-MMM-yyyy"
+                            )
+                          : ""}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Days</div>
+                      <div className="col-span-3">
+                        {formUIProps?.leaveData?.parentData?.days}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="font-medium col-span-1">Reason</div>
+                      <div className="col-span-3">
+                        {formUIProps?.leaveData?.parentData?.remarks}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
-        <BootstrapTable
-          noDataIndication={NoRecordsFoundMessage({
-            entities: workflowStatusList || [],
-          })}
-          wrapperClasses="table-responsive"
-          bordered={false}
-          classes="table table-head-custom table-vertical-center overflow-hidden table-hover fixed-layout-table"
-          bootstrap4
-          remote
-          keyField="Id"
-          data={workflowStatusList || []}
-          columns={columns}
-        >
-          <PleaseWaitMessage entities={workflowStatusList || []} />
-          <NoRecordsFoundMessage entities={workflowStatusList || []} />
-        </BootstrapTable>
+        <div className="mt-2">
+          <BootstrapTable
+            noDataIndication={NoRecordsFoundMessage({
+              entities: workflowStatusList || [],
+            })}
+            wrapperClasses="table-responsive"
+            bordered={false}
+            classes="table table-head-custom  table-vertical-center overflow-hidden table-hover fixed-layout-table"
+            bootstrap4
+            remote
+            keyField="Id"
+            data={workflowStatusList || []}
+            columns={columns}
+          >
+            <PleaseWaitMessage entities={workflowStatusList || []} />
+            <NoRecordsFoundMessage entities={workflowStatusList || []} />
+          </BootstrapTable>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <button
           type="submit"
           onClick={() => onHide()}
-          className="btn btn-danger btn-elevate"
+          className="btn btn-light"
         >
           Close
         </button>

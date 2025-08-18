@@ -149,8 +149,8 @@ const DesignationWorkflowEditForm = ({
           <Modal.Body className="overlay overlay-block cursor-default">
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-1">
+                  <div className="col-span-1">
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="subsidiaryId"
@@ -175,7 +175,7 @@ const DesignationWorkflowEditForm = ({
                     />
                   </div>
                   {/* designation workflow set  */}
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="col-span-1">
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="workflowTypeId"
@@ -198,7 +198,7 @@ const DesignationWorkflowEditForm = ({
                       options={dashboard.allEmployeeRequestTypeList}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div className="col-span-1">
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="designationId"
@@ -405,16 +405,8 @@ const DesignationWorkflowEditForm = ({
                     </div>
                   </div> */}
                   {/* custom approver workflow area  */}
-                  <div
-                    className="col-12 col-md-12 mt-3"
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      paddingTop: "20px",
-                      paddingBottom: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
+                  <hr className="col-span-full" />
+                  <div className="col-span-1 sm:col-span-3">
                     <fieldset disabled={!values?.isCustomApprover}>
                       <CustomApprovalWorkflowTable
                         isUserForRead={isUserForRead}
@@ -444,7 +436,7 @@ const DesignationWorkflowEditForm = ({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

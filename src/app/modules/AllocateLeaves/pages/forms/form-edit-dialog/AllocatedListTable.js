@@ -33,7 +33,7 @@ function AllocatedListTable({ values, setFieldValue, errors, touched, dropdownDa
                         component={Select}
                         className={errors.list?.[index]?.leaveType && touched.list?.[index]?.leaveType ? 'form-control is-invalid' : 'form-control'}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                          const value = e.target.value == 'Select' ? '' : Number(e.target.value)
                           setFieldValue(
                             `list[${index}].leaveType`,
                             value
@@ -79,7 +79,7 @@ function AllocatedListTable({ values, setFieldValue, errors, touched, dropdownDa
                         component={Select}
                         className={errors.list?.[index]?.policyType && touched.list?.[index]?.policyType ? 'form-control is-invalid' : 'form-control'}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                          const value = e.target.value == 'Select' ? '' : Number(e.target.value)
                           setFieldValue(
                             `list[${index}].policyType`,
                             value
@@ -87,7 +87,7 @@ function AllocatedListTable({ values, setFieldValue, errors, touched, dropdownDa
                         }}
                         value={row.policyType}
                         // children={createDropdown(dropdownData?.allPolicyType || [])}
-                        children={CustomDropdown({ data: dropdownData.allPolicyType, firstElement: { label: '--Select--', value: null } })}
+                        children={CustomDropdown({ data: dropdownData.allPolicyType, firstElement: { label: 'Select', value: null } })}
                       />
                       {errors.list?.[index]?.policyType &&
                         touched.list?.[index]?.policyType &&

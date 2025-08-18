@@ -1,33 +1,55 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
-import React, {  useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronDown, LayoutDashboard } from "lucide-react";
 import { useLocation } from "react-router";
-import {  checkIsActive } from "../../../../_helpers";
+import { checkIsActive } from "../../../../_helpers";
 import { shallowEqual, useSelector } from "react-redux";
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  
-} from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import "./navigation_menu.css";
-
+import { Header } from "../../header/Header";
+import { Link } from "react-router-dom";
 export function AsideMenuList({ layoutProps }) {
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
   const user = auth?.user;
   const Settings = auth?.userAccess?.Settings;
-
-  const [isVisible, setIsVisible] = useState(true);
+  // console.log("user", user);
+  const [isVisible, setIsVisible] = useState(false);
   const menuRef = useRef(null);
+  const dropdownContainerRef = useRef(null);
   // Hide menu when clicked outside
 
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+
+  const handleDropdown = (index) => {
+    setDropdownOpen(dropdownOpen === index ? null : index);
+  };
 
   // Toggle visibility of the menu
   const toggleMenuVisibility = () => {
     setIsVisible((prevState) => !prevState);
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownContainerRef.current &&
+        !dropdownContainerRef.current.contains(event.target)
+      ) {
+        setDropdownOpen(null);
+      }
+    }
+    if (dropdownOpen !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   const isDashboardAccess = Settings?.some((obj) =>
     Object.values(obj).includes("read-all-vehicles-dashboard")
@@ -40,7 +62,6 @@ export function AsideMenuList({ layoutProps }) {
           "menu-item-active"} menu-item-open menu-item-not-hightlighted`
       : "";
   };
-
 
   const res = Object.values(UserAccess).flatMap((items) => items);
   const portalRoutesLength = res.filter(
@@ -62,97 +83,86 @@ export function AsideMenuList({ layoutProps }) {
     : "2";
 
   return (
-    <>
-      {/* begin::Menu Nav */}
-
-      <ul className={`menu-nav ${layoutProps.ulClasses}`}>
-        {isDashboardAccess && (
-          <>
-            <li
-              className={`menu-item ${getMenuItemActive("/dashboard", false)}`}
-              aria-haspopup="true"
-            >
-              {/* <NavLink className="menu-link" to="/dashboard">
-                <span className="svg-icon menu-icon">
-                  <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/Design/Layers.svg")}
-                  />
-                </span>
-                <span className="menu-text">Dashboard</span>
-              </NavLink> */}
-            </li>
-          </>
-        )}
-
-        {/* {Object.keys(UserAccess).map((res) => {
-          return <AsideparentList element={res} key={res} />;
-        })} */}
-      </ul>
-
-      <div
-        className="bg-light"
-        style={{
-          position: "fixed",
-          width: "100%",
-          marginTop: "45px",
-          display: "flex",
-        }}
-      >
-        <Navbar
-          style={{ width: "100%" }}
-          className="navbar"
-          bg="light"
-          expand="lg"
-          variant="dark"
+    <div style={{ zIndex: "999" }} className="sticky top-0 w-full bg-[#0093dd]">
+      <Header
+        isEmployeePortal={isEmployeePortal}
+        company={user?.Company}
+        toggleMenuVisibility={toggleMenuVisibility}
+      />
+      {isEmployeePortal === "1" && (
+        <div
+          className="w-full flex container-fluid"
+          style={{ display: "flex", width: "100%" }}
+          ref={dropdownContainerRef}
         >
-          {/* <Navbar.Brand href="#home">MyApp</Navbar.Brand> */}
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <NavDropdown
-                title="Dashboard"
-                id="basic-nav-dropdown"
-                className="custom-nav-dropdown"
+          <nav className="w-full flex items-center justify-between py-1">
+            <div className="flex-1">
+              <div
+                className={`lg:flex ${isVisible ? "block" : "hidden"} w-full`}
               >
-                <NavDropdown.Item href="/dashboard">Dashboard</NavDropdown.Item>
-              </NavDropdown>
-              {UserAccess &&
-                Object.keys(UserAccess)?.map((res) => {
-                  return (
-                    UserAccess[res]
-                      .sort((a, b) => a.sortOrder - b.sortOrder)
-                      .some(
-                        (item) =>
-                          item.isResourceShow &&
-                          item?.portalType == isEmployeePortal
-                      ) && (
-                      <>
-                        <NavDropdown
-                          className="custom-nav-dropdown"
-                          title={res.replace(/_/g, " ")}
-                          id="basic-nav-dropdown"
-                        >
-                          {UserAccess[res].map((ce) => {
-                            return (
+                <ul className="flex flex-col items-start lg:items-end lg:flex-row lg:space-x-6 list-none mb-1">
+                  <li className="relative group">
+                    <Link
+                      className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl"
+                      to="/dashboard"
+                    >
+                      <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
+                      <span className="ml-2">Dashboard</span>
+                    </Link>
+                  </li>
+                </ul>
+                <ul className="flex flex-col justify-start items-start lg:items-end lg:justify-end w-full text-sm lg:flex-row lg:space-x-6 list-none mb-1">
+                  {UserAccess &&
+                    Object.keys(UserAccess)?.map((res, idx) => {
+                      const hasVisible = UserAccess[res]
+                        .sort((a, b) => a.sortOrder - b.sortOrder)
+                        .some(
+                          (item) =>
+                            item.isResourceShow && item?.portalType == "1"
+                        );
+                      if (!hasVisible) return null;
+                      return (
+                        <li className="relative group" key={res}>
+                          <button
+                            className="p-0 bg-transparent border-none font-bold text-white focus:outline-none capitalize flex items-center"
+                            onClick={() => handleDropdown(idx)}
+                          >
+                            {res.replace(/_/g, " ")}
+                            <ChevronDown
+                              className={`ml-1 w-4 h-4 stroke-2 transition-transform duration-200 ${
+                                dropdownOpen === idx ? "rotate-180" : "rotate-0"
+                              }`}
+                            />
+                          </button>
+                          {/* Dropdown menu */}
+                          <div
+                            className={`absolute right-0 mt-3 min-w-56 bg-white border rounded shadow-lg transition z-50 ${
+                              dropdownOpen === idx ? "block" : "hidden"
+                            }`}
+                          >
+                            {UserAccess[res].map((ce) =>
                               ce.isResourceShow &&
-                              ce?.portalType == isEmployeePortal && (
-                                <NavDropdown.Item href={`/${ce.url}`}>
+                              ce?.portalType == isEmployeePortal ? (
+                                <a
+                                  key={ce.url}
+                                  href={`/${ce.url}`}
+                                  className="block px-4 py-2 hover:bg-gray-100"
+                                >
                                   {ce.name}
-                                </NavDropdown.Item>
-                              )
-                            );
-                          })}
-                        </NavDropdown>
-                      </>
-                    )
-                  );
-                })}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        
-      </div>
+                                </a>
+                              ) : null
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      )}
       {/* end::Menu Nav */}
-    </>
+    </div>
   );
 }

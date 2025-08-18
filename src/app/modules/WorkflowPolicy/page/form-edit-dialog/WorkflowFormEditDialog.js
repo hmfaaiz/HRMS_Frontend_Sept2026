@@ -56,7 +56,7 @@ const WorkFlowFormEditDailog = ({ show, onHide, isUserForRead }) => {
   };
   return (
     <Modal
-      size="lg"
+      size="xl"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

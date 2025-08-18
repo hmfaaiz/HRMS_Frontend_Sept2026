@@ -35,18 +35,12 @@ export function BanksTable() {
     };
   }, [bankUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-  return {
-
-        currentState: state.loan_type,
-        userAccess: state?.auth?.userAccess["Loan_Type"],
-      }
-    },
-    shallowEqual
-  );
-
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.loan_type,
+      userAccess: state?.auth?.userAccess["Loan_Type"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -56,10 +50,9 @@ export function BanksTable() {
 
   useEffect(() => {
     bankUIProps.setIds([]);
-  
+
     dispatch(actions.fetchUsers(bankUIProps.queryParams));
   }, [bankUIProps.queryParams, dispatch, totalCount]);
-
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateLoanType"
@@ -97,14 +90,10 @@ export function BanksTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        textAlign: "center",
-      },
-      headerStyle: {
-        textAlign: "center", // Align header text to the left
+        minWidth: "100px",
+        maxWidth: "100px",
       },
       // formatter: (cell) => cell ? `L - ${cell}` : "",
-
     },
 
     {
@@ -114,11 +103,10 @@ export function BanksTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "190px",
       },
     },
 
-   
     // {
     //   dataField: "isTaxable",
     //   text: "Taxable",
@@ -194,7 +182,7 @@ export function BanksTable() {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -228,6 +216,6 @@ export function BanksTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

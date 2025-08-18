@@ -7,8 +7,8 @@ import { IncidentEditDialogHeader } from "./IncidentEditDialogHeader";
 // import * as actions from "../../../../../app/modules/IncidentDetails/_redux/incidents/incidentActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import { styles } from "@material-ui/core/styles";
+// import CircularProgress from "@material-ui/core/CircularProgress";
 import { fetchDashboardVehicles } from "../../../../redux/dashboardActions";
 
 const initIncident = {
@@ -27,14 +27,14 @@ const initIncident = {
   // centerId: undefined,
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "2rem",
-    marginBottom: "2rem",
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     display: "flex",
+//     justifyContent: "center",
+//     marginTop: "2rem",
+//     marginBottom: "2rem",
+//   },
+// }));
 
 export function IncidentCreateDialog({
   id,
@@ -53,7 +53,7 @@ export function IncidentCreateDialog({
   // console.log("center", center);
   // console.log("subCenter", subCenter);
   const title = "UserEditDialog";
-  const classes = useStyles();
+  // const classes = useStyles();
   const [centerId, setCenter] = useState("");
   const [loading, setLoading] = useState(false);
   //const [alaramTime, setAlaramTime] = useState();

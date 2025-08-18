@@ -258,7 +258,7 @@ export function MasterEditForm({
                               }}
 
                               id={'earning_Id-' + rightindex} value={obj.earning_Id}>
-                              <option value="-1"> --Select--</option>
+                              <option value="-1"> Select</option>
                               {
                                 dashboard.allEarnings?.map((x) => {
                                   return <option disabled={defMapEarningDeductionList.find(el => el.earning_Id == x.value) ? true : false} value={x.value}> {x.label} </option>
@@ -351,7 +351,7 @@ export function MasterEditForm({
 
                               }}
                               id={'earning_Id-' + rightindex} value={obj.earning_Id}>
-                              <option value="-1"> --Select--</option>
+                              <option value="-1"> Select</option>
                               {
                                 dashboard.allDeductions?.map((x) => {
                                   return <option disabled={defMapEarningDeductionList.find(el => el.earning_Id == x.value) ? true : false} value={x.value}> {x.label} </option>
@@ -439,7 +439,7 @@ export function MasterEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

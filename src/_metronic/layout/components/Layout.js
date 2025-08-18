@@ -47,33 +47,33 @@ export function Layout({ children }) {
   return layoutProps.selfLayout !== "blank" ? (
     <>
       {/*begin::Main*/}
-      <HeaderMobile />
+      {/* <HeaderMobile /> */}
 
-      <div className="d-flex flex-column flex-root">
+      {/* <div className="d-flex flex-column flex-root"> */}
         {/*begin::Page*/}
-        <div className="d-flex flex-row flex-column-fluid page">
+        {/* <div className="d-flex flex-row flex-column-fluid page"> */}
 
           {layoutProps.asideDisplay && <Aside />}
           {/*begin::Wrapper*/}
           <div
-            className="flex-column flex-row-fluid wrapper"
+            className="flex-column flex-row-fluid"
             id="kt_wrapper"
           >
-            <Header />
+
             {/*begin::Content*/}
 
             {/* <div><h2>test</h2></div> */}
-            <div
+            {/* <div
               id="kt_content" style={{ zIndex: "-2" }}
-              className={`content ${layoutProps.contentCssClasses} d-flex flex-column flex-column-fluid`}
-            >
+              className={`${layoutProps.contentCssClasses} d-flex flex-column flex-column-fluid`}
+            > */}
 
-              {layoutProps.subheaderDisplay && <SubHeader />}
+              {/* {layoutProps.subheaderDisplay && <SubHeader />} */}
               {/*begin::Entry*/}
 
               {!layoutProps.contentExtended && (
 
-                <div className="d-flex flex-column-fluid">
+                <div className="d-flex flex-column-fluid mt-4">
 
                   {/*begin::Container*/}
                   <div className={layoutProps.contentContainerClasses}>
@@ -87,21 +87,21 @@ export function Layout({ children }) {
 
               {layoutProps.contentExtended && { children }}
               {/*end::Entry*/}
-            </div>
+            {/* </div> */}
             {/*end::Content*/}
             <br/>
             <br/>
             <br/>
             <Footer />
-          </div>
+          {/* </div> */}
           {/*end::Wrapper*/}
         </div>
         {/*end::Page*/}
-      </div>
-      <QuickUser />
-      <QuickPanel />
-      <ScrollTop />
-      <StickyToolbar />
+      {/* </div> */}
+      {/* <QuickUser /> */}
+      {/* <QuickPanel /> */}
+      {/* <ScrollTop /> */}
+      {/* <StickyToolbar /> */}
       {/*end::Main*/}
       <LayoutInit />
     </>

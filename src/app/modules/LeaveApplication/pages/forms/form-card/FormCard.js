@@ -20,6 +20,7 @@ import { PendingLeaveTable } from "../form-table/PendingLeaveTable";
 import "../../../../../utils/common-modules/form.css";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { LeaveApplicationDetailTable } from "../form-table/LeaveApplicationDetailTable";
+import TCard from "../../../../../utils/common-modules/TCard";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -35,9 +36,8 @@ export function FormCard() {
       setId: FormUIContext.setId,
       leaveId: FormUIContext?.leaveId,
       setLeaveId: FormUIContext.setLeaveId,
-      panelMode:FormUIContext.panelMode,
-      setPanelMode:FormUIContext.setPanelMode,
-
+      panelMode: FormUIContext.panelMode,
+      setPanelMode: FormUIContext.setPanelMode,
     };
   }, [FormUIContext]);
 
@@ -82,41 +82,32 @@ export function FormCard() {
   };
 
   return (
-    <Card>
-      {/* Card Starts */}
-  <CardHeader title={CurrentModuleName()}></CardHeader>
-      <CardBody>
-      
-
-        <div className="justify-content-between align-items-center gap-3 ">
-          <div className="">
-            {/* EmployeeSelect Starts */}
-            <EmployeeSelect
-              setId={formUIProps.setId}
-              setemployeeId={formUIProps.setemployeeId} setPanelMode={formUIProps.setPanelMode} panelMode={formUIProps.panelMode}
-            />
-            {/* EmployeeSelect Ends */}
-
-            <br />
-          
-          </div>
-
-          {/* EmployeeProfile Starts */}
-          <EmployeeProfile employeeId={formUIProps.employeeId} panelMode={formUIProps.panelMode} />
-          {/* EmployeeProfile Ends */}
-      
-
-          {/* FormEditDialog Starts */}
-          <FormEditDialog
-            id={formUIProps.id}
-            employeeId={formUIProps.employeeId}
+    <>
+      <TCard name={CurrentModuleName()}>
+        <div className="">
+          <EmployeeSelect
+            setId={formUIProps.setId}
+            setemployeeId={formUIProps.setemployeeId}
+            setPanelMode={formUIProps.setPanelMode}
+            panelMode={formUIProps.panelMode}
           />
-          {/* FormEditDialog Ends */}
+          <div className="flex items-center gap-2">
+            <EmployeeProfile
+              employeeId={formUIProps.employeeId}
+              panelMode={formUIProps.panelMode}
+            />
+          </div>
         </div>
-        <br />
+        {/* EmployeeProfile Ends */}
+
+        {/* FormEditDialog Starts */}
+        <FormEditDialog
+          id={formUIProps.id}
+          employeeId={formUIProps.employeeId}
+        />
+        {/* FormEditDialog Ends */}
 
         {/* LeaveApplicationTable Starts */}
-        <LeaveApplicationTable />
         {/* LeaveApplicationTable Ends */}
         <LeaveApplicationDetailTable
           show={formUIProps?.leaveId !== null}
@@ -125,22 +116,13 @@ export function FormCard() {
           handleSubmit={SubmitLeaveDetail}
         />
 
-        <br />
-        <hr />
-
         {/* PendingLeaveTable Starts */}
-        <PendingLeaveTable />
+        {/* <PendingLeaveTable /> */}
         {/* PendingLeaveTable Ends */}
 
-        <br />
-        <hr />
-
-        {/* LeaveBalanceTable Starts */}
-        <LeaveBalanceTable />
-        {/* LeaveBalanceTable Ends */}
-      </CardBody>
-
-      {/* Card Ends */}
-    </Card>
+      </TCard>
+      <LeaveBalanceTable />
+      <LeaveApplicationTable />
+    </>
   );
 }

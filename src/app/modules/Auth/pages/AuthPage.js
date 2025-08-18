@@ -7,33 +7,39 @@ import Login from "./Login";
 import Registration from "./Registration";
 import ForgotPassword from "./ForgotPassword";
 import "../../../../_metronic/_assets/sass/pages/login/classic/login-1.scss";
+import { shallowEqual, useSelector } from "react-redux";
+import Marquee from "react-fast-marquee";
+import { Linkedin, Youtube, Facebook, Instagram } from 'lucide-react';
+import { Carousel } from 'react-bootstrap';
+
 
 export function AuthPage() {
+
+  const auth = useSelector(({ auth }) => auth, shallowEqual);
+  const UserAccess = auth?.userAccess;
+  const user = auth?.user;
   return (
     <>
+
+
       <div
-        className="d-flex flex-column flex-root"
+        className=""
+        id="kt_login"
         style={{
-          backgroundImage: `url(${toAbsoluteUrl("/media/bg/bg-4.png")})`,
+          height: "100vh", // full viewport height ✅
+          backgroundImage: `url(${toAbsoluteUrl("/media/bg/hero-bg.webp")})`,
+          backgroundSize: "cover", // covers full area ✅
+          backgroundPosition: "center", // centers the image ✅
+          backgroundRepeat: "no-repeat", // prevent tiling (optional)
         }}
       >
-        {/*begin::Login*/}
-        <div
-          className="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white"
-          id="kt_login"
-          style={{
-            height: "100vh", // Full height of the viewport
-            width: "100%", // Full width of the viewport
-            // backgroundImage: 'linear-gradient(to bottom, rgb(36, 144, 207), rgb(13, 114, 185)',  // Linear gradient background
-            backgroundImage: `url(${toAbsoluteUrl("/media/bg/login-bg.png")})`,
-            backgroundSize: "cover", // Ensures the gradient covers the entire area
-            backgroundPosition: "center", // Ensures the background is centered
-          }}
-        >
-          {/* login div */}
+        {/* login div */}
 
-          <div className="d-flex flex-column flex-row-fluid position-relative p-7 overflow-hidden">
-            <div className="d-flex flex-column-fluid flex-center mt-30 mt-lg-0 p-0">
+        <div className="grid md:grid-cols-6">
+       
+            {/* Left Login Input */}
+            <div className="col-span-2 m-0 p-5  h-screen" >
+
               <Switch>
                 <ContentRoute path="/auth/login" component={Login} />
                 <ContentRoute
@@ -47,130 +53,182 @@ export function AuthPage() {
                 <Redirect from="/auth" exact={true} to="/auth/login" />
                 <Redirect to="/auth/login" />
               </Switch>
+
             </div>
-          </div>
 
-          {/* left side */}
 
-          <div className="login-left-container d-none d-lg-block">
-            <div
-              className="login-left-container-inner"
-              style={{
-                width: "50vw",
-              }}
-            >
-              <div
-                className="login-left-container-inner-img"
-                style={{
-                  backgroundImage: `url(${toAbsoluteUrl(
-                    "/media/bg/login-pic.png"
-                  )})`,
-                  backgroundSize: "cover", // Ensures the gradient covers the entire area
-                  backgroundPosition: "center", // Ensures the background is centered
-                }}
-              ></div>
-              <div className="login-left-container-inner-bottom-img">
-                <div className="login-left-container-inner-bottom-img1 mt-5">
-                  <img
-                    src="/media/bg/partner-logo.png"
-                    alt="Partner Logo"
-                    style={{
-                      width: "100%", // Ensure the image takes full width of the container
-                      height: "100%", // Ensure the image takes full height of the container
-                      objectFit: "cover", // Ensures the image covers the container while maintaining aspect ratio
-                      objectPosition: "center", // Ensures the image stays centered if it gets cropped
-                    }}
-                  />
+            {/* Right  */}
+
+
+            <div className="col-span-4 p-5  opacity-97 hidden md:block h-screen" >
+            
+              <div className="bg-white p-5 m-0 rounded-top h-[89vh]">
+   
+
+                <Carousel interval={3000}>
+                  {[1, 2, 3, 4].map((item, index) => (
+                    <Carousel.Item key={index}>
+                      <a
+                        href="https://dynasoftcloud.com/contact-us.php"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: 'none' }}
+                      >
+                        <div
+                          className="d-flex flex-column rounded"
+                          style={{
+                            height: '62.5vh',
+                            backgroundImage: `url(${toAbsoluteUrl(`/media/bg/Slider/Slider${index + 1}.webp`)})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                          }}
+                        ></div>
+                      </a>
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+
+           
+
+
+                <div className="d-flex flex-column">
+                  {/* <div className="mt-10">
+                    <h1>Technology Partners</h1>
+                  </div> */}
+
+                  <h5 className="mt-8 text-black font-bold text-base sm:text-lg py-1">
+                    Technology Partners
+                  </h5>
+
+
+                  <div className="d-flex mt-6 mb-8">
+                    <Marquee
+                      speed={40}
+                      gradient={false}
+                      pauseOnHover={true}
+                    >
+                      <img
+                        src="/media/bg/Marquee/Marquee1.png"
+            
+                        style={{ height: 50, marginRight: 30 }}
+                      />
+                      <img
+                        src="/media/bg/Marquee/Marquee2.png"
+                   
+                        style={{ height: 50, marginRight: 30 }}
+                      />   <img
+                        src="/media/bg/Marquee/Marquee3.png"
+                   
+                        style={{ height: 50, marginRight: 30 }}
+                      />   <img
+                        src="/media/bg/Marquee/Marquee4.png"
+                    
+                        style={{ height: 50, marginRight: 30 }}
+                      />   <img
+                        src="/media/bg/Marquee/Marquee5.png"
+                   
+                        style={{ height: 50, marginRight: 30 }}
+                      />   <img
+                        src="/media/bg/Marquee/Marquee6.png"
+                     
+                        style={{ height: 50, marginRight: 30 }}
+                      />
+                      <img
+                        src="/media/bg/Marquee/Marquee7.png"
+                      
+                        style={{ height: 50, marginRight: 30 }}
+                      />
+                      <img
+                        src="/media/bg/Marquee/Marquee1.png"
+                   
+                        style={{ height: 50, marginRight: 30 }}
+                      />
+                      <img
+                        src="/media/bg/Marquee/Marquee2.png"
+                    
+                        style={{ height: 50, marginRight: 30 }}
+                      />
+                    </Marquee>
+                  </div>
+
+
 
 
                 </div>
 
-
-
-                <div className="login-left-container-inner-bottom-img2">
-                  <div className="login-left-container-inner-bottom-img2-heading">
-                    <h1  style={{ fontSize: '1.5vw' }}>Our Technology Partners</h1>
-                  </div>
-
-
-                  <div className="login-left-container-inner-bottom-img2-container ">
-                    <img
-                      src="/media/bg/tech-partner1.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
-                    />
-
-                    <img
-                      src="/media/bg/tech-partner2.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
-                    />
-                    <img
-                      src="/media/bg/tech-partner3.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
-                    />
-                    <img
-                      src="/media/bg/tech-partner4.png"
-                      alt="Partner Logo"
-                      className="partner-image"
-
-                    />
-                  </div>
-                </div>
-
               </div>
 
 
+              <footer className="flex bg-tsecondary justify-between rounded-bottom h-15">
+             
+                  <div className=" flex gap-3 items-center pl-4 ">
+                    {/* <Linkedin className="w-6 h-6 pl-2 text-black cursor-pointer"/> */}
+                    <a href="https://pk.linkedin.com/company/dynasoftcloud" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-Linkedin.svg"
 
+                        // className="partner-image"
+                        className=" w-5 h-5"
+
+                      />
+                    </a>
+                    <a href="https://www.facebook.com/dynasoftcloud" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-Facebook.svg"
+                        className=" w-5 h-5"
+                        alt="Facebook"
+                      />
+                    </a>
+
+                    <a href="https://www.instagram.com/dynasoftcloud/" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-Instagram.svg"
+
+                        // className="partner-image"
+                        className=" w-5 h-5"
+
+                      />
+
+                    </a>
+
+
+                    <a href="https://www.youtube.com/@DynasoftCloud" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="/media/bg/SM-YouTube.svg"
+
+                        // className="partner-image"
+                        className=" w-5 h-5"
+
+                      />
+                    </a>
+
+                  </div>
+               
+                <div className="flex items-center mt-5 mr-5 ">
+                  <p className="  text-black ">2025 &copy; HRMS By Dynasoft Cloud</p>
+                </div>
+
+
+              </footer>
 
 
 
 
             </div>
+            {/* right end */}
 
-            <footer className="d-flex gap-4  login-left-footer justify-content-between p-4 pl-0">
-              <div>
-               <div className="mt-4">
-               <img
-                      src="/media/bg/facebook-logo.png"
-                      alt="Partner Logo"
-                      // className="partner-image"
-                      className="ml-0" 
-
-                    />
-                    <img
-                      src="/media/bg/insta-logo.png"
-                      alt="Partner Logo"
-                      className="ml-4" 
-
-                    />
-                    <img
-                      src="/media/bg/youtube-logo.png"
-                      alt="Partner Logo"
-                      className="ml-4" 
-
-                    />
-                    <img
-                      src="/media/bg/linkedin-logo.png"
-                      alt="Partner Logo"
-                      className="ml-4" 
-
-                    />
-               </div>
-              </div>
-              <div>
-                <p className="mt-5 pr-2">&copy;Copyright © 2024, Powered by Dynasoft Cloud</p>
-              </div>
-
-
-            </footer>
           </div>
-        </div>
-      </div>
+
+
+
+      
+
+
+
+
+      </div >
+
     </>
   );
 }

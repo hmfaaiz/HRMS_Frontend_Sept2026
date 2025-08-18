@@ -8,6 +8,8 @@ import {
 import { RolesTable } from "./role-table/RolesTable";
 import { useRolesUIContext } from "./RolesUIContext";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
+import TCard from "../../../../utils/common-modules/TCard";
+import { CirclePlus } from "lucide-react";
 export function RolesCard() {
   const rolesUIContext = useRolesUIContext();
   const rolesUIProps = useMemo(() => {
@@ -16,21 +18,20 @@ export function RolesCard() {
     };
   }, [rolesUIContext]);
   return (
-    <Card>
-      <CardHeader title={CurrentModuleName()} >
-        <CardHeaderToolbar>
+    <TCard name={CurrentModuleName()}>
+      <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             className="btn btn-primary"
             onClick={rolesUIProps.newRoleButtonClick}
           >
-            New Role
+            <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
+            Add
           </button>
-        </CardHeaderToolbar>
-      </CardHeader>
-      <CardBody>
-        <RolesTable />
-      </CardBody>
-    </Card>
+        </div>
+      </div>
+      <RolesTable />
+    </TCard>
   );
 }

@@ -75,7 +75,6 @@ export function BanksFilter({ listLoading, user, setCity,
 
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
 
          
               <InputSearch
@@ -88,7 +87,6 @@ export function BanksFilter({ listLoading, user, setCity,
 
 
                  
-            </div>
           </form>
         )}
       </Formik>

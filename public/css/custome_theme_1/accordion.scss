@@ -2,16 +2,18 @@
 .accordion-header-btn > button {
     border: none;
     width: -webkit-fill-available;
-    background-color: #0093DD !important;
-    padding: 1.5%;
+    background-color: #E6F8FF !important;
+    padding: 0.5%;
     color: rgb(255, 255, 255);
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: flex;
+    // justify-content: space-between;
+    // transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .accordion-header-btn:hover > button {
    
-    background-color: #333333 !important;
-    transform: translateY(-2px);
+     background-color: #E6F8FF !important;
+    // transform: translateY(-2px);
   }
   .flex-between-center {
     display: flex;

@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
-import { shallowEqual,useDispatch, useSelector } from "react-redux";
+import {
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
@@ -11,8 +15,7 @@ import {
   fetchAllFormsMenu,
   fetchAllActiveEmployees,
   getLatestTableId,
-  fetchAllSubsidiaryData
-
+  fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -25,31 +28,24 @@ const cnicRegExp = /^[0-9]{5}-[0-9]{7}-[0-9]$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
 
-const formValidation = Yup.object().shape(
-  {
-    subsidiaryId: Yup.string()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required),
-    // earningCode: Yup.string()
-    //   .nullable()
-    //   .required(VALIDATION_MESSAGES.required),
-    earningName: Yup.string()
-      .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters.')
-      .required(VALIDATION_MESSAGES.required),
-    linkedAttendance: Yup.string()
-      .required(VALIDATION_MESSAGES.required),
-    isTaxable: Yup.string()
-      .required(VALIDATION_MESSAGES.required),
-    // mappedAllowance: Yup.string()
-    //   .required(VALIDATION_MESSAGES.required),
-    account: Yup.string()
-      // .matches(/^\d+$/, "Must contain only digits")
+const formValidation = Yup.object().shape({
+  subsidiaryId: Yup.string()
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
-
-
-  },
-
-);
+  // earningCode: Yup.string()
+  //   .nullable()
+  //   .required(VALIDATION_MESSAGES.required),
+  earningName: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Name must only contain letters.")
+    .required(VALIDATION_MESSAGES.required),
+  linkedAttendance: Yup.string().required(VALIDATION_MESSAGES.required),
+  isTaxable: Yup.string().required(VALIDATION_MESSAGES.required),
+  // mappedAllowance: Yup.string()
+  //   .required(VALIDATION_MESSAGES.required),
+  account: Yup.string()
+    // .matches(/^\d+$/, "Must contain only digits")
+    .required(VALIDATION_MESSAGES.required),
+});
 export function BankEditForm({
   saveEarning,
   user,
@@ -63,7 +59,7 @@ export function BankEditForm({
   enableLoading,
   loading,
   userForEdit,
-  id
+  id,
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -75,55 +71,55 @@ export function BankEditForm({
   const [defSubsidiary = null, setDefualtSubsidiaryList] = useState(null);
   const [defFormCode = null, setDefaultFormCode] = useState(null);
   useEffect(() => {
-
     if (!user.Id) {
       dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
     }
   }, [dispatch]);
 
-
   useEffect(() => {
-
     if (!user.Id) {
       dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"))
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       // dispatch(getLatestTableId("t_employee_earning", "Id", " 1 = 1 ", setValue));
     }
   }, [dispatch]);
 
-
   useEffect(() => {
-
-    const subsidiaryId = defSubsidiary?.value ? defSubsidiary.value : user.subsidiaryId;
+    const subsidiaryId = defSubsidiary?.value
+      ? defSubsidiary.value
+      : user.subsidiaryId;
 
     setDefualtSubsidiaryList(
       dashboard.allSubsidiaryList &&
-      dashboard.allSubsidiaryList.filter((item) => {
-        return item.value === subsidiaryId;
-      })
+        dashboard.allSubsidiaryList.filter((item) => {
+          return item.value === subsidiaryId;
+        })
     );
-
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
-    const { currentUser } = useSelector((state) => {
-      return {
-       
-        currentUser:state.auth.user,
-  
-      };
-    }, shallowEqual);
+  const { currentUser } = useSelector((state) => {
+    return {
+      currentUser: state.auth.user,
+    };
+  }, shallowEqual);
 
-  const fetchData = async ( setValue) => {
-
+  const fetchData = async (setValue) => {
     // if (subsidiaryId) {
-      // dispatch(getLatestTableId("t_employee_earning", "Id", " subsidiaryId = " + subsidiaryId, setValue));
-      if (!id) {
-      dispatch(getLatestTableId("t_employee_earning", "earningCode", "companyId="+ currentUser.companyId,setValue));
+    // dispatch(getLatestTableId("t_employee_earning", "Id", " subsidiaryId = " + subsidiaryId, setValue));
+    if (!id) {
+      dispatch(
+        getLatestTableId(
+          "t_employee_earning",
+          "earningCode",
+          "companyId=" + currentUser.companyId,
+          setValue
+        )
+      );
     }
   };
 
-useEffect (()=>{
-  fetchData(setDefaultEarningCode)
-},[])
+  useEffect(() => {
+    fetchData(setDefaultEarningCode);
+  }, []);
 
   return (
     <>
@@ -132,12 +128,13 @@ useEffect (()=>{
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-
           enableLoading();
-          if (values.mappedAllowance == "-1")
-            values.mappedAllowance = ""
+          if (values.mappedAllowance == "-1") values.mappedAllowance = "";
 
-          saveEarning({ ...values, earningCode: defEarningCode ? defEarningCode : values.earningCode });
+          saveEarning({
+            ...values,
+            earningCode: defEarningCode ? defEarningCode : values.earningCode,
+          });
         }}
       >
         {({
@@ -159,8 +156,6 @@ useEffect (()=>{
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-
-
                   {/* old subsidiary */}
                   {/* <div className="from-group row">
 
@@ -189,49 +184,60 @@ useEffect (()=>{
 
                   </div> */}
 
-
-                  <div className="from-group row">
-
-                    <div className="col-12 col-md-4 mt-3">
-                      Subsidiary
-                      <div style={{ backgroundColor: "#ffffff", height: "170px", padding: "10px", overflow: "scroll" }}>
-
+                  <div className="grid grid-cols-3 lg:grid-cols-12 gap-x-3 gap-y-1">
+                    <div className="col-span-3 text-black mt-1">
+                      <label>Subsidiary</label>
+                      <div className="overflow-auto">
                         <div className="multi-select">
-                          <div className="dropdown-label"></div>
-                          <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
+                          <div
+                            className="p-0 m-0 "
+                            style={{
+                              fontSize: "10.2px",
+                              // fontWeight: "bold",
+                              // padding: "2px",
+                            }}
+                          >
                             {dashboard?.allSubsidiaryList?.map((option) => (
-                              <div key={option.value} className="dropdown-option">
-                                <input style={{ width: "25px" }}
+                              <div
+                                key={option?.value}
+                                className="flex justify-start items-center"
+                              >
+                                <input
+                                  className="p-0 m-0 mr-1 "
                                   name="subsidiaryId"
                                   type="checkbox"
                                   value={option.value}
-                                  checked={Boolean(values?.subsidiaryId?.includes(option?.value?.toString()))}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
                                   onChange={handleChange}
                                 />
                                 {option.label}
                               </div>
                             ))}
-                                        {errors.subsidiaryId && touched.subsidiaryId && (
-                          <div className="invalid-text">{errors.subsidiaryId}</div>
-                        )}
+                            {errors.subsidiaryId && touched.subsidiaryId && (
+                              <div className="invalid-text">
+                                {errors.subsidiaryId}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="from-group row">
-                    {
-                      <div className="col-12 col-md-4 mt-3">
+                    <div className="col-span-9 grid grid-cols-2 gap-x-3 gap-y-1">
+                      <div className="">
                         <Field
                           name="earningCode"
                           component={Input}
                           maxLength={6}
                           onChange={(e) => {
-                            setFieldValue("earningCode", e.target.value || null);
+                            setFieldValue(
+                              "earningCode",
+                              e.target.value || null
+                            );
                             setDefaultEarningCode(e);
-                           
-
                           }}
                           disabled
                           placeholder="Earning Code"
@@ -241,25 +247,24 @@ useEffect (()=>{
                         />
                       </div>
 
-                    }
-                    {
-                      <div className="col-12 col-md-4 mt-3">
+                      <div className="">
                         <Field
                           name="earningName"
                           component={Input}
                           maxLength={30}
                           placeholder="Ener Earning Name"
                           autoComplete="off"
-                          label={<span> Earning Name<span style={{ color: 'red' }}>*</span></span>}
+                          label={
+                            <span>
+                              {" "}
+                              Earning Name
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
                         />
                       </div>
-                    }
 
-                  </div>
-
-
-                  <div className="from-group row">
-                    {/* {
+                      {/* {
                       <div className="col-12 col-md-4 mt-3">
                         <Select
                           label={<span> Mapped Allowance</span>}
@@ -280,16 +285,19 @@ useEffect (()=>{
                       </div>
 
                     } */}
-                    {
-                      <div className="col-12 col-md-4 mt-3">
 
+                      <div className="">
                         <SearchSelect
                           name="account"
-                          label={<span> Account<span style={{ color: 'red' }}>*</span></span>}
+                          label={
+                            <span>
+                              {" "}
+                              Account<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
                           isDisabled={isUserForRead}
                           onChange={(e) => {
                             setFieldValue("account", e.value || null);
-                          
                           }}
                           value={
                             dashboard.allAccountList.find(
@@ -301,22 +309,20 @@ useEffect (()=>{
                             label: `${option.mergeLabel}`, // Adding the value to the label
                             value: option.value,
                           }))}
-
                           error={errors.account}
                           touched={touched.account}
                         />
-
-
                       </div>
-                    }
-                  </div>
 
-                  <div className="from-group row">
-                    {
-
-                      <div className="col-12 col-md-4 mt-3">
+                      <div className="">
                         <Select
-                          label={<span> Linked With Attendance<span style={{ color: 'red' }}>*</span></span>}
+                          label={
+                            <span>
+                              {" "}
+                              Linked With Attendance
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
                           name="linkedAttendance"
                           value={values.linkedAttendance}
                           onChange={handleChange}
@@ -326,20 +332,23 @@ useEffect (()=>{
                           <option value="" label="Select" />
                           <option value="true" label="Yes" />
                           <option value="false" label="No" />
-
-
                         </Select>
-                        {errors.linkedAttendance && touched.linkedAttendance && (
-                          <div className="invalid-text">{errors.linkedAttendance}</div>
-                        )}
+                        {errors.linkedAttendance &&
+                          touched.linkedAttendance && (
+                            <div className="invalid-text">
+                              {errors.linkedAttendance}
+                            </div>
+                          )}
                       </div>
 
-                    }
-                    {
-
-                      <div className="col-12 col-md-4 mt-3">
+                      <div className="">
                         <Select
-                          label={<span> Taxable<span style={{ color: 'red' }}>*</span></span>}
+                          label={
+                            <span>
+                              {" "}
+                              Taxable<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
                           name="isTaxable"
                           value={values.isTaxable}
                           onChange={handleChange}
@@ -349,15 +358,12 @@ useEffect (()=>{
                           <option value="" label="Select" />
                           <option value="true" label="Yes" />
                           <option value="false" label="No" />
-
-
                         </Select>
                         {errors.isTaxable && touched.isTaxable && (
                           <div className="invalid-text">{errors.isTaxable}</div>
                         )}
                       </div>
-
-                    }
+                    </div>
                   </div>
                 </fieldset>
               </Form>
@@ -377,7 +383,7 @@ useEffect (()=>{
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

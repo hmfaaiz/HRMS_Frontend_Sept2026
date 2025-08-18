@@ -53,181 +53,147 @@ export const FormFilter = ({ loading, queryParams }) => {
     }
   };
   return (
-    <Accordion defaultActiveKey="">
-    <Card>
-      <Card.Header>
-        <div className="accordion-header-btn ">
-          <Accordion.Toggle eventKey="0" className="flex-between-center">
-            Filters
-            <KeyboardArrowDown />
-          </Accordion.Toggle>
-        </div>
-      </Card.Header>
-
-      <Accordion.Collapse eventKey="0">
-      <Formik
-        enableReinitialize={true}
-        initialValues={{ ...queryParams?.filter, reportingLevel: currentLevel }}
-        onSubmit={(values) => {
-          applyFilter(values);
-        }}
-      >
-        {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
-          <>
-            <Modal.Body className="overlay overlay-block cursor-default">
-              <Form className="form form-label-right">
-                <fieldset>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      marginTop: "15px",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
-                    <h6>Request Filter</h6>
-                    <div className="from-group row">
-                      {/* Reporting Level */}
-                      <div className="col-12 col-md-12 row">
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            name="reportingLevel"
-                            label={<span>Reporting Level</span>}
-                            onChange={({ value }) => {
-                              setFieldValue("reportingLevel", value);
-                              setCurrentLevel(value);
-                            }}
-                            value={
-                              levelList?.find(
-                                (opt) => opt?.value === values?.reportingLevel
-                              ) || ""
-                            }
-                            autoComplete="off"
-                            options={levelList}
-                          />
-                        </div>
-                        {/* Request Raised For */}
-                        <div className="col-12 col-md-4 mt-3">
-                          <Field
-                            component={SearchSelect}
-                            onBlur={handleBlur}
-                            name="requestRaisedFor"
-                            label={<span>Request Raised By</span>}
-                            onChange={({ value }) => {
-                              setFieldValue("requestRaisedFor", value);
-                            }}
-                            value={
-                              employeeList?.find(
-                                (opt) => opt.value === values?.requestRaisedFor
-                              ) || ""
-                            }
-                            autoComplete="off"
-                            options={employeeList}
-                          />
-                        </div>
+    <Formik
+      enableReinitialize={true}
+      initialValues={{ ...queryParams?.filter, reportingLevel: currentLevel }}
+      onSubmit={(values) => {
+        applyFilter(values);
+      }}
+    >
+      {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
+        <>
+          <Modal.Body className="overlay overlay-block cursor-default">
+            <Form className="form form-label-right">
+              <fieldset>
+                <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
+                <div className="grid grid-cols-12 gap-4">
+                  {/* Reporting Level */}
+                  <div className="col-span-4 sm:col-span-3">
+                    <Field
+                      component={SearchSelect}
+                      onBlur={handleBlur}
+                      name="reportingLevel"
+                      label={<span>Reporting Level</span>}
+                      onChange={({ value }) => {
+                        setFieldValue("reportingLevel", value);
+                        setCurrentLevel(value);
+                      }}
+                      value={
+                        levelList?.find(
+                          (opt) => opt?.value === values?.reportingLevel
+                        ) || ""
+                      }
+                      autoComplete="off"
+                      options={levelList}
+                    />
+                  </div>
+                  {/* Request Raised For */}
+                  <div className="col-span-4 sm:col-span-3">
+                    <Field
+                      component={SearchSelect}
+                      onBlur={handleBlur}
+                      name="requestRaisedFor"
+                      label={<span>Request Raised By</span>}
+                      onChange={({ value }) => {
+                        setFieldValue("requestRaisedFor", value);
+                      }}
+                      value={
+                        employeeList?.find(
+                          (opt) => opt.value === values?.requestRaisedFor
+                        ) || ""
+                      }
+                      autoComplete="off"
+                      options={employeeList}
+                    />
+                  </div>
+                  {/* Request Status */}
+                  <div className="col-span-4 sm:col-span-3">
+                    {/* Status Field  */}
+                    <SearchSelect
+                      name="requestStatus"
+                      label={<span>Request Status</span>}
+                      onChange={({ value }) => {
+                        setFieldValue("requestStatus", value);
+                      }}
+                      value={
+                        requestFilter?.find(
+                          (opt) => opt.value === values?.requestStatus
+                        ) || ""
+                      }
+                      autoComplete="off"
+                      options={requestFilter}
+                    />
+                  </div>
+                  {/* Request Date Failing */}
+                  <div className="col-span-12 sm:col-span-6">
+                    <p className="text-sm mb-0 text-black font-semibold">
+                      Request Date falling between
+                    </p>
+                    <div className="grid grid-cols-2 gap-x-4">
+                      <div className="col-span-1">
+                        <Field
+                          name="requestDate.from"
+                          component={DatePickerField}
+                          dateFormat="dd-MMM-yyyy"
+                          className="form-control"
+                          label={<span>From</span>}
+                          onChange={(date) => {
+                            setFieldValue("requestDate.from", date ? date : "");
+                          }}
+                          autoComplete="off"
+                        />
                       </div>
-                      {/* Request Status */}
-                      <div className="col-12 col-md-12 row">
-                        <div className="col-12 col-md-4 mt-3">
-                          {/* Status Field  */}
-                          <SearchSelect
-                            name="requestStatus"
-                            label={<span>Request Status</span>}
-                            onChange={({ value }) => {
-                              setFieldValue("requestStatus", value);
-                            }}
-                            value={
-                              requestFilter?.find(
-                                (opt) => opt.value === values?.requestStatus
-                              ) || ""
-                            }
-                            autoComplete="off"
-                            options={requestFilter}
-                          />
-                        </div>
-                      </div>
-                      {/* Request Date Failing */}
-                      <div className="col-12 col-md-12 mt-4">
-                        <h6>Request Date falling between</h6>
 
-                        <div className="from-group row">
-                          <div className="col-12 col-md-4">
-                            <Field
-                              name="requestDate.from"
-                              component={DatePickerField}
-                              dateFormat="dd-MMM-yyyy"
-                              className="form-control"
-                              label={<span> Date From</span>}
-                              onChange={(date) => {
-                                setFieldValue(
-                                  "requestDate.from",
-                                  date ? date : ""
-                                );
-                              }}
-                              autoComplete="off"
-                            />
-                          </div>
-
-                          <div className="col-12 col-md-4">
-                            <Field
-                              name="requestDate.to"
-                              component={DatePickerField}
-                              onBlur={handleBlur}
-                              className="form-control"
-                              dateFormat="dd-MMM-yyyy"
-                              label={<span> Date To</span>}
-                              onChange={(date) => {
-                                setFieldValue(
-                                  "requestDate.to",
-                                  date ? date : ""
-                                );
-                              }}
-                              autoComplete="off"
-                            />
-                          </div>
-                        </div>
+                      <div className="col-span-1">
+                        <Field
+                          name="requestDate.to"
+                          component={DatePickerField}
+                          onBlur={handleBlur}
+                          className="form-control"
+                          dateFormat="dd-MMM-yyyy"
+                          label={<span>To</span>}
+                          onChange={(date) => {
+                            setFieldValue("requestDate.to", date ? date : "");
+                          }}
+                          autoComplete="off"
+                        />
                       </div>
                     </div>
                   </div>
-                </fieldset>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                type="button"
-                // disabled={levelList?.length < 2}
-                onClick={() => {
-                  applyFilter(initialFilter.filter);
-                  handleReset();
-                }}
-                className="btn btn-danger btn-elevate"
-              >
-                Cancel
-              </button>
+                </div>
+              </fieldset>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              // disabled={levelList?.length < 2}
+              onClick={() => {
+                applyFilter(initialFilter.filter);
+                handleReset();
+              }}
+              className="btn btn-danger btn-elevate"
+            >
+              Cancel
+            </button>
 
-              <button
-                type="submit"
-                onClick={() => handleSubmit()}
-                disabled={
-                  loading
-                  // || levelList?.length < 2
-                }
-                className="btn btn-success btn-elevate"
-              >
-                Filter Record
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
-            </Modal.Footer>
-          </>
-        )}
-      </Formik>
-      </Accordion.Collapse>
-      </Card>
-    </Accordion>
+            <button
+              type="submit"
+              onClick={() => handleSubmit()}
+              disabled={
+                loading
+                // || levelList?.length < 2
+              }
+              className="btn btn-success btn-elevate"
+            >
+              Filter Record
+              {loading && (
+                <span className="ml-3 mr-3 spinner spinner-white"></span>
+              )}
+            </button>
+          </Modal.Footer>
+        </>
+      )}
+    </Formik>
   );
 };

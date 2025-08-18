@@ -78,12 +78,13 @@ body {
 }
 
 .react-bootstrap-table {
-  overflow-x: visible !important;
-  border-left: 1px solid #000 !important;
-  border-right: 1px solid #000 !important;
-  border-bottom: 1px solid #000 !important;
-  border-radius: 12px;
-  color:#000 
+
+  /* overflow-x: visible !important;
+  border-left: 0px solid #000 !important;
+  border-right: 0px solid #000 !important;
+  border-bottom: 0px solid #000 !important;
+  /* border-radius: 12px; */
+  /* color:#000   */
 }
 
 .fixed-layout-table {

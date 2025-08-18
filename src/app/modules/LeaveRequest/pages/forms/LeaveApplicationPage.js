@@ -26,6 +26,7 @@ export function LeaveRequestPage({ history }) {
         )}
       </Route>
       <FormCard />
+      
       <ToastContainer
         position="top-right"
         autoClose={5000}

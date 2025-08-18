@@ -22,15 +22,15 @@ const accrue_gratuity_configurationEditSchema = Yup.object().shape({
   // to_amount: Yup.string().required("Required*"),
 
   graduity_expense_accountId: Yup.number()
-  .required(VALIDATION_MESSAGES.required),
+    .required(VALIDATION_MESSAGES.required),
 
-    graduity_payable_accountId: Yup.number()
+  graduity_payable_accountId: Yup.number()
     .required(VALIDATION_MESSAGES.required),
 
   // fixed_amount: Yup.string().required("Required*"),
 
   bank_cash_accountId: Yup.number()
-   
+
     .required(VALIDATION_MESSAGES.required),
 
 });
@@ -50,7 +50,7 @@ export function FormEditForm({
     if (!user.Id) {
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList",null,false)); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllFormsMenu(45, "allAccountList",null,true));
+      dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
 
     }
   }, [dispatch, user.Id]);
@@ -72,7 +72,7 @@ export function FormEditForm({
     entities.forEach((i) => {
       if (i.subsidiaryId == subsidiaryId) {
         existedId = i.Id;
- 
+
         dispatch(actions.fetchAccrueGratuityConfig(existedId));
       } else {
         dispatch(actions.fetchAccrueGratuityConfig(0));
@@ -97,7 +97,7 @@ export function FormEditForm({
       initialValues={user}
       validationSchema={accrue_gratuity_configurationEditSchema}
       onSubmit={(values) => {
- 
+
         enableLoading();
         saveForm(values);
       }}
@@ -112,38 +112,37 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
-                  <div className="col-12 col-md-6 mt-3">
-                    <SearchSelect
-                      name="subsidiaryId"
-                      label={
-                        <span>
-                          Subsidiary<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isUserForRead}
-                      onChange={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        check_Existed_Data(e.value);
-                      }}
-                      value={
-                        dashboard?.allSubsidiaryList?.find(
-                          (option) => option?.value === values?.subsidiaryId
-                        ) || null
-                      }
-                      options={dashboard?.allSubsidiaryList}
-                      // options={dashboard.allAccountList.map((option) => ({
-                      //   label: `${option.mergeLabel}`, // Adding the value to the label
-                      //   value: option.value,
-                      // }))}
+                <div className="grid grid-cols-12 gap-x-3 gap-y-1">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
+                    <div className="col-span-1">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          check_Existed_Data(e.value);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option?.value === values?.subsidiaryId
+                          ) || null
+                        }
+                        options={dashboard?.allSubsidiaryList}
+                  
 
-              
-                      error={errors.subsidiaryId}
-                      touched={touched.subsidiaryId}
-                    />
+
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="graduity_expense_accountId"
                       label={
@@ -165,12 +164,12 @@ export function FormEditForm({
                         label: `${option.mergeLabel}`, // Adding the value to the label
                         value: option.value,
                       }))}
-               
+
                       error={errors.graduity_expense_accountId}
                       touched={touched.graduity_expense_accountId}
                     />
                   </div>
-                  <div className="col-12 col-md-6 mt-3">
+               <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="graduity_payable_accountId"
                       label={
@@ -192,12 +191,12 @@ export function FormEditForm({
                         label: `${option.mergeLabel}`, // Adding the value to the label
                         value: option.value,
                       }))}
-               
+
                       error={errors.graduity_payable_accountId}
                       touched={touched.graduity_payable_accountId}
                     />
                   </div>
-                  <div className="col-12 col-md-6 mt-3">
+                <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="bank_cash_accountId"
                       label={
@@ -219,7 +218,7 @@ export function FormEditForm({
                         label: `${option.mergeLabel}`, // Adding the value to the label
                         value: option.value,
                       }))}
-                 
+
                       error={errors.bank_cash_accountId}
                       touched={touched.bank_cash_accountId}
                     />
@@ -247,7 +246,7 @@ export function FormEditForm({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

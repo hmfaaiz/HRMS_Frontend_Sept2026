@@ -69,8 +69,8 @@ export function BankDeleteDialog({ id, status, show, onHide }) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isLoading && <span>Are you sure to delete this record?</span>}
-        {isLoading && <span>record is deleting...</span>}
+        {!isLoading && <label>Are you sure to delete this record?</label>}
+        {isLoading && <label>record is deleting...</label>}
       </Modal.Body>
       <Modal.Footer>
         <div>
@@ -85,7 +85,7 @@ export function BankDeleteDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={deleteEmployee_Salary}
-            className="btn btn-danger btn-elevate"
+            className="btn btn-danger"
           >
             Delete
             {loading && (

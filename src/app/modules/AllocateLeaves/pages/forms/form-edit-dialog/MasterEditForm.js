@@ -78,7 +78,7 @@ export function MasterEditForm({
                         placeholder=""
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                          const value = e.target.value == 'Select' ? '' : Number(e.target.value)
                           dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes", value));
                           setFieldValue('subsidiaryId', value)
                           const filter = { subsidiaryId: value, cycleTypeId: values.cycleTypeId, yearId: values.yearId }
@@ -92,7 +92,7 @@ export function MasterEditForm({
                         }
                         value={values.subsidiaryId}
                         autoComplete="off"
-                        children={CustomDropdown({ data: dropdownData.allSubsidiaryList, firstElement: { label: '--Select--', value: null } })}
+                        children={CustomDropdown({ data: dropdownData.allSubsidiaryList, firstElement: { label: 'Select', value: null } })}
                       />
                       {
                         errors.subsidiaryId && touched.subsidiaryId && <CustomErrorLabel touched={true} error={errors.subsidiaryId} />
@@ -109,7 +109,7 @@ export function MasterEditForm({
                         placeholder=""
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                          const value = e.target.value == 'Select' ? '' : Number(e.target.value)
                           setFieldValue('cycleTypeId', value)
                           const filter = { subsidiaryId: values.subsidiaryId, cycleTypeId: value, yearId: values.yearId }
                           getOldData(filter)
@@ -122,7 +122,7 @@ export function MasterEditForm({
                         }
                         value={values.cycleTypeId}
                         autoComplete="off"
-                        children={CustomDropdown({ data: dropdownData.allCycleTypeList, firstElement: { label: '--Select--', value: null } })}
+                        children={CustomDropdown({ data: dropdownData.allCycleTypeList, firstElement: { label: 'Select', value: null } })}
                       />
                       {
                         errors.cycleTypeId && touched.cycleTypeId && <CustomErrorLabel touched={true} error={errors.cycleTypeId} />
@@ -139,7 +139,7 @@ export function MasterEditForm({
                         placeholder=""
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          const value = e.target.value == '--Select--' ? '' : Number(e.target.value)
+                          const value = e.target.value == 'Select' ? '' : Number(e.target.value)
                           setFieldValue('yearId', value)
                           const filter = { subsidiaryId: values.subsidiaryId, cycleTypeId: values.cycleTypeId, yearId: value }
                           getOldData(filter)
@@ -147,7 +147,7 @@ export function MasterEditForm({
                         label={<span>{" "}Year<span style={{ color: "red" }}>*</span></span>}
                         value={values.yearId}
                         autoComplete="off"
-                        children={CustomDropdown({ data: dropdownData.allFiscalYears, firstElement: { label: '--Select--', value: null } })}
+                        children={CustomDropdown({ data: dropdownData.allFiscalYears, firstElement: { label: 'Select', value: null } })}
                       />
                       {
                         errors.yearId && touched.yearId && <CustomErrorLabel touched={true} error={errors.yearId} />

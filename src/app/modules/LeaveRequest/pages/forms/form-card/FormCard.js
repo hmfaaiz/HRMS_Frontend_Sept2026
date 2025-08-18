@@ -1,13 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-} from "../../../../../../_metronic/_partials/controls";
 import { LeaveApplicationTable } from "../form-table/LeaveApplicationTable";
 import { useFormUIContext } from "../FormUIContext";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
 import {
   fetchAllActiveEmployees,
@@ -17,11 +11,12 @@ import {
 import * as actions from "../../../_redux/formActions";
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
 import { LeaveBalanceTable } from "../form-table/LeaveBalanceTable";
-import { PendingLeaveTable } from "../form-table/PendingLeaveTable";
 import "../../../../../utils/common-modules/form.css";
-import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { useLocation } from "react-router-dom";
 import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
+import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -113,77 +108,86 @@ export function FormCard() {
     }
   }, [payrollData]);
   return (
-    <Card>
-      {/* Card Starts */}
-
-      <CardBody>
-        <CardHeader title={CurrentModuleName()}></CardHeader>
-
-        <div className="justify-content-between align-items-center gap-3 m-4">
-          {/* <div className="pt-5"> */}
-            {/* EmployeeSelect Starts */}
-            <EmployeeSelect
-              setId={formUIProps.setId}
-              setemployeeId={formUIProps.setemployeeId}
-              employeeId={formUIProps.employeeId?.value}
-              currentLevel={formUIProps.currentLevel}
-              initUser={formUIProps?.initUser}
-              setCurrentLevel={formUIProps.setCurrentLevel}
-            />
-            {/* EmployeeSelect Ends */}
-
-            {/* <br /> */}
-            {/* <hr /> */}
-          {/* </div> */}
-
-          {/* EmployeeProfile Starts */}
-          {/* <EmployeeProfile employeeId={formUIProps.employeeId.value} /> */}
-          {/* EmployeeProfile Ends */}
-          {/* <br /> */}
-          {/* <hr /> */}
-
-          {/* FormEditDialog Starts */}
-          <FormEditDialog
-            id={formUIProps.id}
-            currentLevel={formUIProps.currentLevel}
-            employeeId={formUIProps.employeeId.value}
-            empAuthorityList={empAuthorityList}
-            initUser={{
-              ...formUIProps?.initUser,
-              from: dateFromAtt !== null ? new Date(dateFromAtt) : "",
-              to: dateFromAtt !== null ? new Date(dateFromAtt) : "",
-              days: dateFromAtt !== null ? 1 : "",
-            }}
+    <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+        <div className="lg:hidden block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            menuOptions={[
+              {
+                name: "Approval",
+                link: "/leave-approval/read-all-leave-approval",
+                isShow: empAuthorityList?.length > 0,
+              },
+              {
+                name: "Workflow Status",
+                link: "/leave-workflow-status/read-all-leave-workflow-status",
+                isShow: empAuthorityList?.length > 0,
+              },
+              {
+                name: "Leave Calendar",
+                link: "/leave_calendar_team/read-leave-calendar",
+                isShow: true,
+              },
+            ]}
+            isDashboardIcon={true}
           />
-          {/* FormEditDialog Ends */}
         </div>
-        <br />
+        <EmployeeProfile />
+      </div>
+      <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+        <div className="hidden lg:block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            menuOptions={[
+              {
+                name: "Approval",
+                link: "/leave-approval/read-all-leave-approval",
+                isShow: empAuthorityList?.length > 0,
+              },
+              {
+                name: "Workflow Status",
+                link: "/leave-workflow-status/read-all-leave-workflow-status",
+                isShow: empAuthorityList?.length > 0,
+              },
+              {
+                name: "Leave Calendar",
+                link: "/leave_calendar_team/read-leave-calendar",
+                isShow: true,
+              },
+            ]}
+            isDashboardIcon={true}
+          />
+        </div>
+        <EmployeeSelect
+          setId={formUIProps.setId}
+          setemployeeId={formUIProps.setemployeeId}
+          employeeId={formUIProps.employeeId?.value}
+          currentLevel={formUIProps.currentLevel}
+          initUser={formUIProps?.initUser}
+          setCurrentLevel={formUIProps.setCurrentLevel}
+        />
 
-        {/* LeaveApplicationTable Starts */}
-        <LeaveApplicationTable />
-        {/* LeaveApplicationTable Ends */}
-        {/* 
-        <br />
-        <hr /> */}
-
-        {/* PendingLeaveTable Starts */}
-        {/* <PendingLeaveTable /> */}
-        {/* PendingLeaveTable Ends */}
-
-        <br />
-        <hr />
-
-        {/* LeaveBalanceTable Starts */}
         <LeaveBalanceTable />
 
-        <br />
-        <hr />
+        <FormEditDialog
+          id={formUIProps.id}
+          currentLevel={formUIProps.currentLevel}
+          employeeId={formUIProps.employeeId.value}
+          empAuthorityList={empAuthorityList}
+          initUser={{
+            ...formUIProps?.initUser,
+            from: dateFromAtt !== null ? new Date(dateFromAtt) : "",
+            to: dateFromAtt !== null ? new Date(dateFromAtt) : "",
+            days: dateFromAtt !== null ? 1 : "",
+          }}
+        />
 
+        <LeaveApplicationTable />
         <WorkflowAuthortiesTable />
-        {/* LeaveBalanceTable Ends */}
-      </CardBody>
-
-      {/* Card Ends */}
-    </Card>
+      </div>
+    </div>
   );
 }

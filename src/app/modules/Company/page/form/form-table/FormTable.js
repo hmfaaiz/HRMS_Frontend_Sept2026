@@ -161,7 +161,7 @@ export function CompanyTable() {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -195,6 +195,6 @@ export function CompanyTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

@@ -4,6 +4,8 @@ import { useFormUIContext } from "./FormUIContext";
 import * as actions from "../../_redux/formActions";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
+import { FileSpreadsheet, FileText, Sheet } from "lucide-react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const ReportButton = (values) => {
   const filterValues = values?.values || {};
@@ -17,20 +19,28 @@ const ReportButton = (values) => {
     };
   }, [formUIContext]);
 
-  const { pdf2Loading, pdfLoading, csvLoading, excelLoading, listLoading,
-    processLoading, consolidatedLoading, empWiseLoading } = useSelector(
-      (state) => ({
-        pdf2Loading: state?.attendance?.pdf2Loading,
-        pdfLoading: state?.attendance?.pdfLoading,
-        csvLoading: state?.attendance?.csvLoading,
-        excelLoading: state?.attendance?.excelLoading,
-        listLoading: state.attendance.listLoading,
-        processLoading: state.attendance.processLoading,
-        consolidatedLoading: state.attendance.consolidatedLoading,
-        empWiseLoading: state.attendance.empWiseLoading,
-      }),
-      shallowEqual
-    );
+  const {
+    pdf2Loading,
+    pdfLoading,
+    csvLoading,
+    excelLoading,
+    listLoading,
+    processLoading,
+    consolidatedLoading,
+    empWiseLoading,
+  } = useSelector(
+    (state) => ({
+      pdf2Loading: state?.attendance?.pdf2Loading,
+      pdfLoading: state?.attendance?.pdfLoading,
+      csvLoading: state?.attendance?.csvLoading,
+      excelLoading: state?.attendance?.excelLoading,
+      listLoading: state.attendance.listLoading,
+      processLoading: state.attendance.processLoading,
+      consolidatedLoading: state.attendance.consolidatedLoading,
+      empWiseLoading: state.attendance.empWiseLoading,
+    }),
+    shallowEqual
+  );
 
   const print = async (value) => {
     let updatedQueryParams = {
@@ -65,87 +75,117 @@ const ReportButton = (values) => {
   };
 
   return (
-    <>
-      <div className=" d-flex  justify-content-end mr-10">
+    <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Export PDF</Tooltip>}
+      >
+        <button
+          type="button"
+          className="border-none bg-transparent"
+          // disabled={pdfLoading}
+          disabled={
+            pdfLoading ||
+            pdf2Loading ||
+            csvLoading ||
+            excelLoading ||
+            listLoading ||
+            processLoading ||
+            consolidatedLoading ||
+            empWiseLoading ||
+            !filterValues.from ||
+            !filterValues.to
+          }
+          onClick={() => print("pdf2")}
+        >
+          <FileText className="w-4 h-4 text-black cursor-pointer" />
 
-        <div className="">
-          <button
-            type="button"
-            className="att-file-button position-relative "
-            // disabled={pdfLoading}
-            disabled={pdfLoading || pdf2Loading || csvLoading || excelLoading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
-            onClick={() => print("pdf2")}
-          >
-            <span className="att-file-button">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/PDF.svg")} />
-            </span>
-            {pdf2Loading && (
-              <span
-                className="spinner spinner-black"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "45%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 2,
-                }}
-              ></span>
-            )}
-          </button>
-        </div>
-        <div className="">
-          <button
-            type="button"
-            className="att-file-button position-relative"
-            disabled={csvLoading || excelLoading || pdfLoading || pdf2Loading || listLoading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
-            onClick={() => print("csv")}
-          >
-            <span className="att-file-button">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/CSV.svg")} />
-            </span>
-            {csvLoading && (
-              <span
-                className="spinner spinner-black"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "45%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 2,
-                }}
-              ></span>
-            )}
-          </button>
-        </div>
+          {pdf2Loading && (
+            <span
+              className="spinner spinner-black"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "45%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 2,
+              }}
+            ></span>
+          )}
+        </button>
+      </OverlayTrigger>
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Export CSV</Tooltip>}
+      >
+        <button
+          type="button"
+          className="border-none bg-transparent"
+          disabled={
+            csvLoading ||
+            excelLoading ||
+            pdfLoading ||
+            pdf2Loading ||
+            listLoading ||
+            processLoading ||
+            consolidatedLoading ||
+            empWiseLoading ||
+            !filterValues.from ||
+            !filterValues.to
+          }
+          onClick={() => print("csv")}
+        >
+          <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
 
-        <div className="">
-          <button
-            type="button"
-            className="att-file-button position-relative"
-            disabled={excelLoading || listLoading || pdfLoading || pdf2Loading || processLoading || consolidatedLoading || empWiseLoading || !filterValues.from || !filterValues.to}
-            onClick={() => print("excel")}
-          >
-            <span className="att-file-button">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/XLSX.svg")} />
-            </span>
+          {csvLoading && (
+            <span
+              className="spinner spinner-black"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "45%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 2,
+              }}
+            ></span>
+          )}
+        </button>
+      </OverlayTrigger>
 
-            {excelLoading && (
-              <span
-                className="spinner spinner-black"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "45%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 2,
-                }}
-              ></span>
-            )}
-          </button>
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Export Excel</Tooltip>}
+      >
+        <button
+          type="button"
+          className="border-none bg-transparent"
+          disabled={
+            excelLoading ||
+            listLoading ||
+            pdfLoading ||
+            pdf2Loading ||
+            processLoading ||
+            consolidatedLoading ||
+            empWiseLoading ||
+            !filterValues.from ||
+            !filterValues.to
+          }
+          onClick={() => print("excel")}
+        >
+          <Sheet className="w-4 h-4 text-black cursor-pointer" />
 
-        </div>
-      </div>
-    </>
+          {excelLoading && (
+            <span
+              className="spinner spinner-black"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "45%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 2,
+              }}
+            ></span>
+          )}
+        </button>
+      </OverlayTrigger>
+    </div>
   );
 };
 

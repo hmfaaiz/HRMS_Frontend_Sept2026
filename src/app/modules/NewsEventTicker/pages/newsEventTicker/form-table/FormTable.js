@@ -35,19 +35,12 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-      return {
-
-
-        currentState: state.news_event_ticker,
-        userAccess: state?.auth?.userAccess["news_event_ticker"],
-      }
-    },
-    shallowEqual
-  );
-
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.news_event_ticker,
+      userAccess: state?.auth?.userAccess["news_event_ticker"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -57,7 +50,6 @@ export function FormTable() {
 
   useEffect(() => {
     formUIProps.setIds([]);
-
 
     dispatch(actions.fetchHolidays(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
@@ -78,7 +70,6 @@ export function FormTable() {
   // Table columns
 
   const columns = [
-
     {
       dataField: "Subsidiary.name",
       text: "Subsidiary",
@@ -98,19 +89,21 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
-      }
+      },
     },
-    
+
     {
       dataField: "ticker_date",
       text: "ticker date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      formatter: (cell) => { return cell ? format(new Date(cell), "dd-MMM-yyyy") : "" }
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
       // style: {
       //   minWidth: "10px",
       //   textAlign: "center",
@@ -128,12 +121,8 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter: (cell) => (cell ? "Yes" : "No"),
+      formatter: (cell) => (cell ? "Active" : "Inactive"),
     },
-
-
-
-
 
     {
       dataField: "action",
@@ -169,7 +158,7 @@ export function FormTable() {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -203,6 +192,6 @@ export function FormTable() {
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

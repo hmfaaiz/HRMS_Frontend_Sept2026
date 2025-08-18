@@ -50,7 +50,7 @@ const gratuity_configurationEditSchema = Yup.object().shape({
 
 
   min_year: Yup.number()
-    .min(1,"Minimum Year at least 1")
+    .min(1, "Minimum Year at least 1")
     .max(99, "Maximum Year at most 99")
     .required(VALIDATION_MESSAGES.required)
     .typeError("Minimum Year must be a number"),
@@ -82,7 +82,7 @@ export function FormEditForm({
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(184, "allContractTypeList"));
-     
+
 
     }
   }, [dispatch, user.Id]);
@@ -130,36 +130,38 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
-                  <div className="col-12 col-md-6 mt-3">
-                    <SearchSelect
-                      name="subsidiaryId"
-                      label={
-                        <span>
-                          Subsidiary<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isUserForRead}
-                      onChange={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                      }}
-                      value={
-                        dashboard?.allSubsidiaryList?.find(
-                          (option) => option.value === values.subsidiaryId
-                        ) || null
-                      }
+                <div className="grid grid-cols-12 gap-x-3 gap-y-1">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
+                    <div className="col-span-1">
+                      <SearchSelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
 
-                      options={dashboard?.allSubsidiaryList}
-                      // options={dashboard.allSubidiaryList.map(option => ({
-                      //   label: `${option.label} (${option.value})`, // Adding the value to the label
-                      //   value: option.value,
-                      // }))}
-                      error={errors.subsidiaryId}
-                      touched={touched.subsidiaryId}
-                    />
+                        options={dashboard?.allSubsidiaryList}
+                        // options={dashboard.allSubidiaryList.map(option => ({
+                        //   label: `${option.label} (${option.value})`, // Adding the value to the label
+                        //   value: option.value,
+                        // }))}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                      />
+                    </div>
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="contract_typeId"
                       label={
@@ -182,9 +184,9 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
-                    Gratuity Basis <span style={{ color: "red" }}>*</span>
+                      Gratuity Basis<span style={{ color: "red" }}>*</span>
 
 
                     </label>
@@ -205,14 +207,14 @@ export function FormEditForm({
 
 
                       ))}
-                    
+
 
                     </Field>
                     {errors.basis_of_gratuityId && touched.basis_of_gratuityId && (
-                        <div className="text-danger">{errors.basis_of_gratuityId}</div>
-                      )}
+                      <div className="text-red-400 text-xs mt-1">{errors.basis_of_gratuityId}</div>
+                    )}
                   </div>
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <label>
                       <span>
                         Number of Days<span style={{ color: "red" }}>*</span>
@@ -237,7 +239,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <label>
                       <span>
                         Minimum Year<span style={{ color: "red" }}>*</span>
@@ -258,7 +260,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <label>
                       <span>
                         Maximum Year<span style={{ color: "red" }}>*</span>
@@ -279,7 +281,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
                       Gratuity Fraction
                     </label>
@@ -300,8 +302,8 @@ export function FormEditForm({
                       ))}
                     </Field>
                     {errors.gratuity_fraction && touched.gratuity_fraction && (
-                        <div className="text-danger">{errors.gratuity_fraction}</div>
-                      )}
+                      <div className="text-danger">{errors.gratuity_fraction}</div>
+                    )}
                   </div>
 
                 </div>
@@ -323,7 +325,7 @@ export function FormEditForm({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

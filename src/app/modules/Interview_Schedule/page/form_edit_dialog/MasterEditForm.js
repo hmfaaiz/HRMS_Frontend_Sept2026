@@ -17,6 +17,7 @@ import { VALIDATION_MESSAGES } from "../../../../utils/constants";
 import { getProfileInfo } from "../../_redux/formCrud";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { TimePickerField } from "../../../../../_metronic/_partials/controls/forms/TimePickerField";
+import { CircleMinus, CirclePlus, Trash2 } from "lucide-react";
 
 const formValidation = Yup.object().shape({
   interview_date: Yup.date()
@@ -57,16 +58,7 @@ const InterviewerRow = ({
   const selectedEmployeeIds = values.interviewers.map((i) => i.employeeId);
   return (
     <tr key={index}>
-      <td>
-        <button
-          disabled={isUserForRead}
-          className="btn btn-danger btn-elevate"
-          type="button"
-          onClick={() => remove(index)}
-        >
-          Delete
-        </button>
-      </td>
+
       <td>
         <SearchSelect
           name={`interviewers[${index}].employeeId`}
@@ -109,6 +101,16 @@ const InterviewerRow = ({
       <td>{empDetail?.employeeType?.formName || ""}</td>
       <td>{empDetail?.subsidiary?.name || ""}</td>
       <td>{empDetail?.location?.formName || ""}</td>
+      <td className="text-right">
+        <button className="bg-transparent border-none"
+          disabled={isUserForRead}
+
+          type="button"
+          onClick={() => remove(index)}
+        >
+          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </td>
     </tr>
   );
 };
@@ -124,6 +126,7 @@ export default function MasterEditForm({
 }) {
   const dispatch = useDispatch();
   const [employeeDetails, setEmployeeDetails] = useState({});
+  const [showSection, setShowSection] = useState(false);
   const { dashboard, applicantStatusList } = useSelector((state) => ({
     dashboard: state?.dashboard,
     applicantStatusList: state?.interview_schedule?.applicantStatusList,
@@ -188,12 +191,12 @@ export default function MasterEditForm({
               </div>
             )}
             <Form className="form form-label-right">
-              <div className="form-group row">
+              <div >
                 <fieldset disabled={isUserForRead}>
-                  <div className="form-group row">
-                    <div className="col-12 col-md-4 mt-3">
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="">
                       <label>
-                        Interview Date <span style={{ color: "red" }}>*</span>
+                        Interview Date<span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         name="interview_date"
@@ -211,13 +214,15 @@ export default function MasterEditForm({
                         minDate={new Date(minDate)}
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <TimePickerField
+                        className="form-control"
+                       
                         name="interview_time"
                         label={
                           <span>
                             {" "}
-                            Interview Time{" "}
+                            Interview Time
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
@@ -232,12 +237,12 @@ export default function MasterEditForm({
                         errors={errors.interview_time}
                       />
                     </div>
-                    <div className="col-12 col-md-4 mt-3">
+                    <div className="">
                       <SearchSelect
                         name="locationId"
                         label={
                           <span>
-                            Location <span style={{ color: "red" }}>*</span>
+                            Location<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead}
@@ -254,7 +259,10 @@ export default function MasterEditForm({
                         touched={touched.locationId}
                       />
                     </div>
-                    <div className="col-12 col-md-12 mt-3">
+                  </div>
+                  <div className="grid lg:grid-cols-1 gap-x-3 mt-1">
+
+                    <div className="">
                       <label>
                         <span>Interview Detail</span>
                       </label>
@@ -265,155 +273,163 @@ export default function MasterEditForm({
                         type="text"
                       />
                     </div>
-                    <div className="col-12 col-md-12">
+                  </div>
+
+                  <div className="grid lg:grid-cols-1 gap-x-3 mt-1">
+                    <div className="w-full overflow-x-auto">
                       <FieldArray name="interviewers">
                         {({ push, remove }) => (
-                          <div
-                            style={{
-                              backgroundColor: "rgb(235 243 255)",
-                              padding: "5px",
-                              borderRadius: "5px",
-                              border: "2px solid #adceff",
-                              marginTop: "10px",
-                            }}
-                          >
-                            <h6>Interviewers</h6>
-                            <table className="table table-head-custom table-vertical-center table-hover">
-                              <thead>
-                                <tr
-                                  style={{
-                                    backgroundColor: "#4d5f7a",
-                                    color: "#fff",
-                                  }}
+                          <div>
+                            <div className="flex justify-between items-center">
+                              <h6 className="font-bold mb-0 text-primary">
+                                Interviewers{"  "}
+                              </h6>
+                              {!isUserForRead && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    push({
+                                      employeeId: "",
+                                    })
+                                  }
+                                  className="btn btn-primary btn-sm mt-1"
                                 >
-                                  <th>Action</th>
-                                  <th className="col-3">Interviewer</th>
-                                  <th className="col-2">Department</th>
-                                  <th className="col-2">Designation</th>
-                                  <th className="col-2">Grade</th>
-                                  <th className="col-2">Employee Type</th>
-                                  <th className="col-2">Subsidiary</th>
-                                  <th className="col-2">Location</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {values?.interviewers?.map(
-                                  (interviewer, index) => (
-                                    <InterviewerRow
-                                      key={index}
-                                      index={index}
-                                      interviewer={interviewer}
-                                      errors={errors}
-                                      touched={touched}
-                                      values={values}
-                                      setFieldValue={setFieldValue}
-                                      dashboard={dashboard}
-                                      isUserForRead={isUserForRead}
-                                      remove={remove}
-                                      employeeDetails={employeeDetails}
-                                      setEmployeeDetails={setEmployeeDetails}
-                                    />
-                                  )
-                                )}
-                              </tbody>
-                            </table>
-                            {!isUserForRead && (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  push({
-                                    employeeId: "",
-                                  })
-                                }
-                                className="btn btn-primary btn-sm"
-                              >
-                                + Add Interviewer
-                              </button>
-                            )}
+                                  <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                                  Add Interviewer
+                                </button>
+                              )}
+                            </div>
+                            <div className="w-full overflow-x-auto">
+                              <div className="react-bootstrap-table table-responsive">
+                                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                                  <tr className="custom-table-header">
 
-                            {typeof errors?.interviewers === "string" && (
-                              <div>
-                                <span
-                                  style={{ color: "red", marginTop: "5px" }}
-                                >
-                                  {errors?.interviewers}
-                                </span>
+                                    <td className="">Interviewer</td>
+                                    <td className="">Department</td>
+                                    <td className="">Designation</td>
+                                    <td className="">Grade</td>
+                                    <td className="">Employee Type</td>
+                                    <td className="">Subsidiary</td>
+                                    <td className="">Location</td>
+                                    <td className="">Action</td>
+                                  </tr>
+
+                                  <tbody>
+                                    {values?.interviewers?.map(
+                                      (interviewer, index) => (
+                                        <InterviewerRow
+                                          key={index}
+                                          index={index}
+                                          interviewer={interviewer}
+                                          errors={errors}
+                                          touched={touched}
+                                          values={values}
+                                          setFieldValue={setFieldValue}
+                                          dashboard={dashboard}
+                                          isUserForRead={isUserForRead}
+                                          remove={remove}
+                                          employeeDetails={employeeDetails}
+                                          setEmployeeDetails={setEmployeeDetails}
+                                        />
+                                      )
+                                    )}
+                                  </tbody>
+                                </table>
+
+
+                                {typeof errors?.interviewers === "string" && (
+                                  <div>
+                                    <span
+                                      style={{ color: "red", marginTop: "5px" }}
+                                    >
+                                      {errors?.interviewers}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
-                            )}
+                            </div>
                           </div>
                         )}
                       </FieldArray>
+
                     </div>
                   </div>
                 </fieldset>
-                <div className="col-12 col-md-12 mt-3">
-                  <Accordion defaultActiveKey="">
-                    <Card>
-                      <Card.Header>
-                        <div className="accordion-header-btn ">
-                          <Accordion.Toggle
-                            eventKey="0"
-                            className="flex-between-center"
-                          >
-                            Post Interview Recommendations
-                            <KeyboardArrowDown />
-                          </Accordion.Toggle>
-                        </div>
-                      </Card.Header>
+                <div className="">
+                  <div className="flex justify-end">
 
-                      <Accordion.Collapse eventKey="0">
-                        <Card.Body style={{ backgroundColor: "#E6F8FF" }}>
-                          <div className="col-12 col-md-12 mt-3">
-                            <label>
-                              <span>Interview Remarks</span>
-                            </label>
-                            <Field
-                              name="interview_remarks"
-                              component={TextArea}
-                              disabled={isUserForRead}
-                              placeholder="Enter Interview Remarks"
-                              type="text"
-                            />
-                          </div>
-                          <div className="col-12 col-md-12 mt-3">
-                            <label>
-                              <span>Interviewer Recommendation</span>
-                            </label>
-                            <Field
-                              name="interview_recommendation"
-                              disabled={isUserForRead}
-                              component={TextArea}
-                              placeholder="Enter Interviewer Recommendation"
-                              type="text"
-                            />
-                          </div>
-                          <div className="col-12 col-md-4 mt-3">
-                            <SearchSelect
-                              name="recommendedApplicantStatusId"
-                              label={<span>Recommended Applicant Status</span>}
-                              isDisabled={isUserForRead}
-                              onChange={(e) => {
-                                setFieldValue(
-                                  "recommendedApplicantStatusId",
-                                  e.value || null
-                                );
-                              }}
-                              value={
-                                applicantStatusList?.find(
-                                  (option) =>
-                                    option.value ===
-                                    values.recommendedApplicantStatusId
-                                ) || null
-                              }
-                              options={applicantStatusList}
-                              error={errors.recommendedApplicantStatusId}
-                              touched={touched.recommendedApplicantStatusId}
-                            />
-                          </div>
-                        </Card.Body>
-                      </Accordion.Collapse>
-                    </Card>
-                  </Accordion>
+                    <button
+                      type="button"
+                      onClick={() => setShowSection(!showSection)}
+                      className="btn btn-primary btn-sm mt-1 text-right"
+                    >
+
+                      {showSection ? (
+                        <CircleMinus className="h-4 w-4 mr-1" />
+                      ) : (
+                        <CirclePlus className="h-4 w-4 mr-1" />
+                      )}
+                      Interview Recommendations
+
+                    </button>
+                  </div>
+                  {showSection && (
+                    <div className="">
+                      <div className="">
+                        <label>
+                          <span>Interview Remarks</span>
+                        </label>
+                        <Field
+                          name="interview_remarks"
+                          component={TextArea}
+                          disabled={isUserForRead}
+                          placeholder="Enter Interview Remarks"
+                          type="text"
+                        />
+                      </div>
+                      <div className="mt-1">
+                        <label>
+                          <span>Interviewer Recommendation</span>
+                        </label>
+                        <Field
+                          name="interview_recommendation"
+                          disabled={isUserForRead}
+                          component={TextArea}
+                          placeholder="Enter Interviewer Recommendation"
+                          type="text"
+                        />
+                      </div>
+                      <div className="grid lg:grid-cols-3">
+                        <div className="mt-1">
+                          <SearchSelect
+                            name="recommendedApplicantStatusId"
+                            label={<span>Recommended Applicant Status</span>}
+                            isDisabled={isUserForRead}
+                            onChange={(e) => {
+                              setFieldValue(
+                                "recommendedApplicantStatusId",
+                                e.value || null
+                              );
+                            }}
+                            value={
+                              applicantStatusList?.find(
+                                (option) =>
+                                  option.value ===
+                                  values.recommendedApplicantStatusId
+                              ) || null
+                            }
+                            options={applicantStatusList}
+                            error={errors.recommendedApplicantStatusId}
+                            touched={touched.recommendedApplicantStatusId}
+                          />
+                        </div>
+                      </div>
+
+                    </div>
+                  )}
+
+
+
                 </div>
               </div>
             </Form>
@@ -433,7 +449,7 @@ export default function MasterEditForm({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

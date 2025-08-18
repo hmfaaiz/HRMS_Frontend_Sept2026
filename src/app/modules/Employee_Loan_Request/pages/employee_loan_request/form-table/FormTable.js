@@ -206,10 +206,10 @@ export function FormTable() {
 
   return (
     <>
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
+   
+      
+       
+            {/* <div className="accordion-header-btn w-100  d-flex justify-content-center">
               <Accordion.Toggle
                 as={Button}
                 eventKey="0"
@@ -218,10 +218,12 @@ export function FormTable() {
                 Employee Loan Request
                 <KeyboardArrowDown />
               </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
+            </div> */}
+            <h6 className="font-bold mb-0 text-primary my-2">
+                        Details
+                        </h6>
+        
+            <div className="w-full overflow-x-auto">
               <PaginationProvider
                 pagination={paginationFactory(paginationOptions)}
               >
@@ -257,10 +259,10 @@ export function FormTable() {
                   );
                 }}
               </PaginationProvider>
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+            </div>
+      
+      
+     
     </>
   );
 }

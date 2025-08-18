@@ -159,8 +159,8 @@ export const EditForm = ({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="from-group row">
-                  <div className="col-12 col-md-4 mt-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
+                  <div>
                     <Field
                       name="companyCode"
                       MaxLength={40}
@@ -177,7 +177,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="name"
                       MaxLength={100}
@@ -197,7 +197,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="companyLegalName"
                       MaxLength={40}
@@ -212,7 +212,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       name="currencyId"
                       label={<span>Currency</span>}
@@ -228,7 +228,7 @@ export const EditForm = ({
                       options={allCurrency}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       name="countryId"
                       label={<span>Country</span>}
@@ -248,7 +248,7 @@ export const EditForm = ({
                       options={allCountry}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       name="cityId"
                       isDisabled={isUserForRead}
@@ -263,7 +263,7 @@ export const EditForm = ({
                       }
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       name="firstFiscalMonth"
                       isDisabled={isUserForRead}
@@ -279,7 +279,7 @@ export const EditForm = ({
                       options={fiscalMonthList}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
@@ -291,7 +291,7 @@ export const EditForm = ({
                       component={Input}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       MaxLength={15}
                       placeholder="Fax"
@@ -303,25 +303,23 @@ export const EditForm = ({
                       component={Input}
                     />
                   </div>
-                  <div className="col-12 col-md-12 row p-0 m-0">
-                    {
-                      <div className="col-12 col-md-12 mt-3">
-                        <Field
-                          name="address"
-                          component={TextArea}
-                          placeholder="Enter Address"
-                          label="Address"
-                          onInput={(e) => {
-                            e.target.value = amountLimitDynamic(
-                              e.target.value,
-                              300
-                            );
-                          }}
-                        />
-                      </div>
-                    }
+
+                  <div className="col-span-2 md:col-span-3">
+                    <Field
+                      name="address"
+                      component={TextArea}
+                      placeholder="Enter Address"
+                      label="Address"
+                      onInput={(e) => {
+                        e.target.value = amountLimitDynamic(
+                          e.target.value,
+                          300
+                        );
+                      }}
+                    />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+
+                  <div>
                     <Field
                       name="email"
                       component={Input}
@@ -332,7 +330,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="web"
                       component={Input}
@@ -343,7 +341,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="EIN"
                       component={Input}
@@ -354,7 +352,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="TIN"
                       component={Input}
@@ -365,7 +363,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  {/* <div>
                     <div>
                       <div>
                         <div>
@@ -392,44 +390,57 @@ export const EditForm = ({
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-12 col-md-12 mt-3">
-                    Modules
-                    <div
-                      style={{
-                        backgroundColor: "#ffffff",
-                        height: "170px",
-                        padding: "10px",
-                        overflow: "scroll",
-                      }}
+                  </div> */}
+
+                  <div>
+                    <label>Company Logo:</label>
+                    <input
+                      id="file_input"
+                      className="hidden"
+                      type="file"
+                      name="myImage"
+                      accept=".jpg, .jpeg, .png"
+                      onChange={onImageChange}
+                      // disabled={isEdit}
+                      // ref={inputFile}
+                    />
+                    <label
+                      htmlFor="file_input"
+                      className="form-control block w-full cursor-pointer"
                     >
+                      {companyLogo ? companyLogo : "Upload"}
+                    </label>
+
+                    {/* Show existing file if any */}
+                    {/* {companyLogo && (
+                      <div className="mt-2">
+                        <label>Existing File: {companyLogo}</label>
+                        <a
+                          href={getUploadUrl(companyLogo)}
+                          target="_blank"
+                          className="text-blue-600 underline"
+                        >
+                          {getFileName(companyLogo)}
+                        </a>
+                      </div>
+                    )} */}
+                  </div>
+
+                  <div className="text-black mt-1">
+                    <label>
+                      Subsidiary
+                      <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div className="overflow-auto min-h-16 overflow-y-auto">
                       <div className="multi-select">
-                        <div className="dropdown-label"></div>
                         <div
-                          className="dropdown-options"
+                          className="p-0 m-0 "
                           style={{
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            padding: "5px",
+                            fontSize: "10.2px",
+                            // fontWeight: "bold",
+                            // padding: "2px",
                           }}
                         >
-                          {/* {// Filter subsidiaries by companyId
-                          moduleList.map((option, index) => (
-                            <div
-                              key={option.value || `fallback-key-${index}`}
-                              className="dropdown-option"
-                            >
-                              <input
-                                style={{ width: "25px" }}
-                                name={option?.key}
-                                type="checkbox"
-                                value={option.value}
-                                checked={Boolean(values[option?.key])}
-                                onChange={handleChange}
-                              />
-                              {option.label}
-                            </div>
-                          ))} */}
                           {moduleList.map((option, index) => (
                             <div
                               key={option.value || `fallback-key-${index}`}
@@ -470,7 +481,7 @@ export const EditForm = ({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

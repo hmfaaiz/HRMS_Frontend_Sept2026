@@ -90,7 +90,6 @@ export const FormApproval = () => {
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
           <>
-            <Modal.Body className="overlay overlay-block cursor-default">
               <button
                 type="button"
                 onClick={() => {
@@ -98,9 +97,9 @@ export const FormApproval = () => {
                   handleSubmit();
                 }}
                 disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                className="btn btn-success btn-elevate"
+                className="btn btn-success"
               >
-                Approve Request
+                Approve
               </button>
               <button
                 type="button"
@@ -108,16 +107,16 @@ export const FormApproval = () => {
                 onClick={() =>
                   handleRejectClick(setFieldValue, handleSubmit, values)
                 }
-                className="btn btn-danger btn-elevate mx-2"
+                className="btn btn-danger mx-2"
               >
-                Reject Request
+                Reject
               </button>
               <Form className="form form-label-right">
                 <fieldset
                   disabled={formUIProps?.Ids?.length > 0 ? false : true}
                 >
                   <div className="from-group row">
-                    <div className="col-12 col-md-8 mt-3">
+                    <div className="col-12 col-md-12 mt-3">
                       <Field
                         name="authorityRemarks"
                         component={TextArea}
@@ -139,7 +138,6 @@ export const FormApproval = () => {
                   </div>
                 </fieldset>
               </Form>
-            </Modal.Body>
           </>
         )}
       </Formik>

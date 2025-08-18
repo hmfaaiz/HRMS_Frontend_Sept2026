@@ -162,7 +162,7 @@ export const fetchAllDept = (id) => async (dispatch) => {
  * text key is sent so that when fetching dopdown data if text key has value it will add default entry in array for that value
  *
  * like if text = 'All' the response will have 1 default object {label: 'All', value : null}
- * if text is not provided then response will have 1 default object {label: '--Select--', value: null}
+ * if text is not provided then response will have 1 default object {label: 'Select', value: null}
  *
  * @param {String|Number} id
  * @param {string} key

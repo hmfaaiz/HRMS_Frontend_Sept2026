@@ -67,13 +67,13 @@ export function FormTable() {
   const columns = [
     {
       dataField: "attDate",
-      text: "Attendance Date",
+      text: "Day & Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "100px",
+        maxWidth: "100px",
       },
       formatter: (cell) => {
         // Format the date without timestamp
@@ -87,61 +87,53 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "140px",
+        maxWidth: "140px",
       },
       formatter: (cell, row) => {
         return `${row.shiftCode}(${row.shiftDescription})`;
       },
     },
-    // {
-    //   dataField: "formattedDateIn",
-    //   text: "Date In",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //     maxWidth: "160px",
-    //   },
-    // },
     {
       dataField: "timeIn",
-      text: "Time In",
+      text: "In",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "40px",
+        maxWidth: "40px",
       },
       formatter: (cell) => formatTime(cell),
     },
 
     {
       dataField: "timeOut",
-      text: "Time Out",
+      text: "Out",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
-        maxWidth: "160px",
+        minWidth: "40px",
+        maxWidth: "40px",
       },
       formatter: (cell) => formatTime(cell),
     },
 
-    // {
-    //   dataField: "formattedDateOut",
-    //   text: "Date Out",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //     maxWidth: "160px",
-    //   },
-    // },
+    {
+      dataField: "formattedDateOut",
+      text: "Date Out",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+        maxWidth: "70px",
+      },
+      formatter: (cell) => {
+        return format(new Date(cell), "dd-MMM-yyyy");
+      },
+    },
     {
       dataField: "attendanceStatus",
       text: "Attendance Status",
@@ -149,8 +141,8 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "220px",
-        maxWidth: "220px",
+        minWidth: "140px",
+        maxWidth: "140px",
       },
       formatter: (cell, row) => {
         const showMainStatus =
@@ -176,19 +168,19 @@ export function FormTable() {
               <span
                 className={`${
                   uiHelpers.attendanceStatusMap[row?.attendanceStatus]
-                } cursor-pointer font-weight-bold text-underline-hover`}
+                } cursor-pointer font-bold text-underline-hover`}
                 onClick={() => FormUIProps?.newAttendanceRequest(row?.Id)}
               >
                 {cell}
               </span>
             ) : (
-              <span className="disabled-att">{cell}</span>
+              <span className="disabled-att font-bold">{cell}</span>
             )}
             {"  "}
             {showApplyLeave && (
               <span
                 onClick={() => handleNavigateToLeavePage(row?.attDate)}
-                className="cursor-pointer font-weight-bold text-underline-hover att-present"
+                className="cursor-pointer font-bold text-underline-hover att-present"
               >
                 (Apply Leave)
               </span>
@@ -199,13 +191,13 @@ export function FormTable() {
     },
     {
       dataField: "workedHours",
-      text: "Worked Hours",
+      text: "Working Hours",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "70px",
-        maxWidth: "70px",
+        minWidth: "100px",
+        maxWidth: "100px",
       },
       formatter: (cell) => formatTime(cell),
     },
@@ -235,7 +227,7 @@ export function FormTable() {
     // },
     {
       dataField: "request_status",
-      text: "Status",
+      text: "Request",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -244,21 +236,21 @@ export function FormTable() {
         maxWidth: "160px",
       },
       formatter: (cell) => {
-        let text = "";
-        let style = {};
+        let text = "-";
+        let className = "";
 
         if (cell === "P") {
           text = "Pending";
-          style = { color: "green", fontWeight: "bold" };
+          className = "text-pending font-bold";
         } else if (cell === "A") {
           text = "Approved";
-          style = { color: "black", fontWeight: "bold" };
+          className = "text-approved font-bold";
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          className = "text-rejected font-bold";
         }
 
-        return <span style={style}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     // {
@@ -319,87 +311,62 @@ export function FormTable() {
   };
 
   return (
-    <>
-      <Modal.Body className="overlay overlay-block cursor-default">
-        <div className="d-flex justify-content-left ">
-          <div className="d-flex align-items-center m-3">
-            <span className="dot bg_custom_color_25 me-2"></span> Present
-          </div>
-          <div className="d-flex align-items-center m-3">
-            <span className="dot bg_custom_color_15 me-2"></span> Absent
-          </div>
-          <div className="d-flex align-items-center m-3">
-            <span className="dot bg_custom_color_16 me-2"></span> Half day
-          </div>
-          <div className="d-flex align-items-center m-3">
-            <span className="dot bg_custom_color_1 me-2"></span> Leave
-          </div>
-
-          <div className="d-flex align-items-center m-3">
-            <span className="dot bg_custom_color_22 me-2"></span> Day Off /
-            Holiday
-          </div>
-          <div className="d-flex align-items-center m-3">
-            <span className="dot bg_custom_color_26 me-2"></span> Late In /
-            Early Out
-          </div>
-        </div>
-        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-          {({ paginationProps, paginationTableProps }) => {
-            return (
-              <Pagination
-                isLoading={listLoading}
-                paginationProps={paginationProps}
-              >
-                <div style={{ width: "100%", overflowX: "auto" }}>
-                  {!isAuthorityExists && (
-                    <>
-                      <span style={{ color: "red" }}>
-                        Designation workflow policy does not exist for this
-                        employee.
-                      </span>
-                      <br />
-                    </>
+    <div className="px-3 py-2 rounded-lg bg-white">
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
+            >
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                {!isAuthorityExists && (
+                  <>
+                    <span className="text-xs text-red-500 font-semibold">
+                      Designation workflow policy does not exist for this
+                      employee.
+                    </span>
+                    <br />
+                  </>
+                )}
+                {!allowRequestOnThisLevel && (
+                  <>
+                    <span style={{ color: "red" }}>
+                      Employee level request not permitted.
+                    </span>
+                    <br />
+                  </>
+                )}
+                <BootstrapTable
+                  responsive
+                  style={{ width: "100%", overflow: "auto" }}
+                  noDataIndication={NoRecordsFoundMessage({ entities })}
+                  wrapperClasses="table-responsive"
+                  bordered={false}
+                  classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                  bootstrap4
+                  remote
+                  keyField="Id"
+                  data={entities === null ? [] : entities}
+                  columns={columns}
+                  defaultSorted={uiHelpers.defaultSorted}
+                  onTableChange={getHandlerTableChange(
+                    FormUIProps.setQueryParams
                   )}
-                  {!allowRequestOnThisLevel && (
-                    <>
-                      <span style={{ color: "red" }}>
-                        Employee level request not permitted.
-                      </span>
-                      <br />
-                    </>
-                  )}
-                  <BootstrapTable
-                    responsive
-                    style={{ width: "100%", overflow: "auto" }}
-                    noDataIndication={NoRecordsFoundMessage({ entities })}
-                    wrapperClasses="table-responsive"
-                    bordered={false}
-                    classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                    bootstrap4
-                    remote
-                    keyField="Id"
-                    data={entities === null ? [] : entities}
-                    columns={columns}
-                    defaultSorted={uiHelpers.defaultSorted}
-                    onTableChange={getHandlerTableChange(
-                      FormUIProps.setQueryParams
-                    )}
-                    // selectRow={getSelectRow({
-                    //   entities,
+                  // selectRow={getSelectRow({
+                  //   entities,
 
-                    // })}
-                    {...paginationTableProps}
-                  >
-                    <PleaseWaitMessage entities={entities} />
-                    <NoRecordsFoundMessage entities={entities} />
-                  </BootstrapTable>
-                </div>
-              </Pagination>
-            );
-          }}
-        </PaginationProvider>
-      </Modal.Body>
-    </>
+                  // })}
+                  {...paginationTableProps}
+                >
+                  <PleaseWaitMessage entities={entities} />
+                  <NoRecordsFoundMessage entities={entities} />
+                </BootstrapTable>
+              </div>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
   );
 }

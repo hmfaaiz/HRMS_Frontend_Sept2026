@@ -1,6 +1,5 @@
 import React from "react";
-import { toAbsoluteUrl } from "../../../_metronic/_helpers";
-import SVG from "react-inlinesvg";
+import { CircleX } from "lucide-react";
 
 export const InputSearch = ({
     values,
@@ -10,10 +9,10 @@ export const InputSearch = ({
     handleSubmit,
 }) => {
     return (
-        <div className="position-relative col-12" style={{ height: "38px" }}>
+        <div className="position-relative">
             <input
                 type="text"
-                className="form-control pr-12"
+                className="form-control min-w-72"
                 name={fieldName}
                 placeholder="Search"
                 onBlur={handleBlur}
@@ -26,12 +25,12 @@ export const InputSearch = ({
 
             {values[fieldName] && (
                 <span
-                    className="position-absolute mr-5"
                     style={{
-                        top: "50%",
-                        right: "12px",
+                        position: "absolute",
+                        right: "18px",
+                        top: "40%",
                         transform: "translateY(-50%)",
-                        cursor: "pointer",
+                        color: "#000000",
                     }}
                     onClick={() => {
                         setFieldValue(fieldName, "");
@@ -40,13 +39,7 @@ export const InputSearch = ({
 
                     }
                 >
-                    <SVG
-                        src={toAbsoluteUrl(
-                            "/media/svg/icons/Communication/CancelButton.svg"
-                        )}
-                        style={{ width: "16px", height: "16px" }}
-                        className="svg-icon svg-icon-primary"
-                    />
+                <CircleX className="w-4 h-4 text-black cursor-pointer" />
                 </span>
             )}
         </div>

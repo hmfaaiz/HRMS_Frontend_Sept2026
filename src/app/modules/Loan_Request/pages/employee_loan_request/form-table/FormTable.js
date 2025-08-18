@@ -71,6 +71,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+        maxWidth: "160px",
       },
     },
     {
@@ -81,10 +82,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
-        textAlign: "center",
-      },
-      headerStyle: {
-        textAlign: "center", // Align header text to the left
+        maxWidth: "160px",
       },
       formatter: (cell) => formatNumberWithCommas(cell),
     },
@@ -96,10 +94,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
-        textAlign: "center",
-      },
-      headerStyle: {
-        textAlign: "center", // Align header text to the left
+        maxWidth: "160px",
       },
       formatter: (cell) => formatNumberWithCommas(cell),
     },
@@ -111,10 +106,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
-        textAlign: "center",
-      },
-      headerStyle: {
-        textAlign: "center", // Align header text to the left
+        maxWidth: "160px",
       },
       formatter: (cell) => formatNumberWithCommas(cell),
     },
@@ -144,21 +136,26 @@ export function FormTable() {
       },
       formatter: (cell, row) => {
         let text = "";
-        let style = {};
+        let className = "";
         if (cell === "P") {
           text = "Pending (Portal)";
-          style = { color: "green", fontWeight: "bold" };
+          className = "text-pending font-bold";
         } else if (cell === "A" && row?.approved_status === 0) {
           text = "Pending (HRMS)";
-          style = { color: "green", fontWeight: "bold" };
+          className = "text-pending font-bold";
         } else if (cell === "A") {
-          text = !row?.isLoanContinuing ? "Completed" : "Active";
-          style = { color: "black", fontWeight: "bold" };
+          if (row?.isLoanContinuing) {
+            className = "text-approved font-bold";
+            text = "Active";
+          } else {
+            className = "text-primary font-bold";
+            text = "Completed";
+          }
         } else if (cell === "R") {
           text = "Rejected";
-          style = { color: "red", fontWeight: "bold" };
+          className = "text-rejected font-bold";
         }
-        return <span style={style}>{text}</span>;
+        return <span className={className}>{text}</span>;
       },
     },
     // {
@@ -212,8 +209,7 @@ export function FormTable() {
             ? isAccessForReapply.isAccess
             : false,
       },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
+      headerClasses: "text-left",
       style: {
         minWidth: "10px",
       },
@@ -231,59 +227,44 @@ export function FormTable() {
 
   return (
     <>
-      <Accordion defaultActiveKey="">
-        <Card>
-          <Card.Header>
-            <div className="accordion-header-btn">
-              <Accordion.Toggle as={Button} eventKey="0">
-                Loan Applications
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
-              <PaginationProvider
-                pagination={paginationFactory(paginationOptions)}
+      <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg overflow-y-auto">
+        <h6 className="font-bold mb-0 text-primary my-2">Loan Applications</h6>
+        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+          {({ paginationProps, paginationTableProps }) => {
+            return (
+              <Pagination
+                isLoading={listLoading}
+                paginationProps={paginationProps}
               >
-                {({ paginationProps, paginationTableProps }) => {
-                  return (
-                    <Pagination
-                      isLoading={listLoading}
-                      paginationProps={paginationProps}
-                    >
-                      <div style={{ width: "100%", overflowX: "auto" }}>
-                        <BootstrapTable
-                          wrapperClasses="table-responsive"
-                          bordered={false}
-                          classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                          bootstrap4
-                          remote
-                          keyField="Id"
-                          data={entities === null ? [] : entities}
-                          columns={columns}
-                          defaultSorted={uiHelpers.defaultSorted}
-                          onTableChange={getHandlerTableChange(
-                            formUIProps.setQueryParams
-                          )}
-                          // selectRow={getSelectRow({
-                          //   entities,
+                <div style={{ width: "100%", overflowX: "auto" }}>
+                  <BootstrapTable
+                    wrapperClasses="table-responsive"
+                    bordered={false}
+                    classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                    bootstrap4
+                    remote
+                    keyField="Id"
+                    data={entities === null ? [] : entities}
+                    columns={columns}
+                    defaultSorted={uiHelpers.defaultSorted}
+                    onTableChange={getHandlerTableChange(
+                      formUIProps.setQueryParams
+                    )}
+                    // selectRow={getSelectRow({
+                    //   entities,
 
-                          // })}
-                          {...paginationTableProps}
-                        >
-                          <PleaseWaitMessage entities={entities} />
-                          <NoRecordsFoundMessage entities={entities} />
-                        </BootstrapTable>
-                      </div>
-                    </Pagination>
-                  );
-                }}
-              </PaginationProvider>
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+                    // })}
+                    {...paginationTableProps}
+                  >
+                    <PleaseWaitMessage entities={entities} />
+                    <NoRecordsFoundMessage entities={entities} />
+                  </BootstrapTable>
+                </div>
+              </Pagination>
+            );
+          }}
+        </PaginationProvider>
+      </div>
     </>
   );
 }

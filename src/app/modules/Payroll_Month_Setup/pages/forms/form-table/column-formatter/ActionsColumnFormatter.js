@@ -3,6 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { CirclePower, Eye } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -16,24 +17,17 @@ export function ActionsColumnFormatter(
     openReadUserDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog
+    openReadFormDialog,
   }
 ) {
   const isUserRead = false;
   return (
-    <>
+    <div className="space-x-2">
       <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
-        <a
-          title=""
-             className="btn btn-icon view-button"
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
-        >
-          <span className="svg-icon svg-icon-md svg-icon-primary">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-            />
-          </span>
+        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+      >
+        <a title="" onClick={() => openReadFormDialog(row.Id, isUserRead)}>
+          <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
       {/* {isAccessForEdit && row.isActive == "Yes" && (
@@ -81,14 +75,14 @@ export function ActionsColumnFormatter(
           ) : (
             <a
               title=""
-                className="btn btn-icon delete-button"
+              className=""
               onClick={() => openActiveFormDialog(row.Id, row.isActive)}
             >
-              <span className="svg-icon svg-icon-md svg-icon-success">A</span>
+              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
             </a>
           )}
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

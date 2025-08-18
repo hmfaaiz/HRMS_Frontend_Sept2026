@@ -1,7 +1,7 @@
-import React, { useMemo, useState, useEffect } from "react"
-import { Formik } from "formik"
-import { isEqual } from "lodash"
-import { useDesignationUIContext } from "../DesignationUIContext"
+import React, { useMemo, useState, useEffect } from "react";
+import { Formik } from "formik";
+import { isEqual } from "lodash";
+import { useDesignationUIContext } from "../DesignationUIContext";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import axios from "axios";
@@ -12,30 +12,30 @@ import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import {
   fetchAllCity,
-
   fetchAllSubCenter,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
-
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const API_URL = process.env.REACT_APP_API_URL;
 
-
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values
-  const newQueryParams = { ...queryParams }
-  const filter = {}
+  const { searchText } = values;
+  const newQueryParams = { ...queryParams };
+  const filter = {};
 
   if (searchText) {
-    filter.searchQuery = searchText
+    filter.searchQuery = searchText;
     // filter.email = searchText
   }
-  newQueryParams.filter = filter
-  return newQueryParams
-}
+  newQueryParams.filter = filter;
+  return newQueryParams;
+};
 
-export function BanksFilter({ listLoading, user, setCity,
+export function BanksFilter({
+  listLoading,
+  user,
+  setCity,
   seletCity,
   setCenter,
   center,
@@ -44,52 +44,38 @@ export function BanksFilter({ listLoading, user, setCity,
   subCenter,
   alarmTime,
   setAlarmTime,
-  setVehicle, }) {
-
+  setVehicle,
+}) {
   const [defCity, setDefaultCity] = useState({});
   const dispatch = useDispatch();
-  const banksUIContext = useDesignationUIContext()
-  const [Loading, setLoading] = useState(false)
-
-
-
-
+  const banksUIContext = useDesignationUIContext();
+  const [Loading, setLoading] = useState(false);
 
   const banksUIProps = useMemo(() => {
     return {
       queryParams: banksUIContext.queryParams,
       setQueryParams: banksUIContext.setQueryParams,
-    }
-  }, [banksUIContext])
-
-
-
-
-
-
+    };
+  }, [banksUIContext]);
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
-
-    const newQueryParams = prepareFilter(banksUIProps.queryParams, values)
+    const newQueryParams = prepareFilter(banksUIProps.queryParams, values);
     if (!isEqual(newQueryParams, banksUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1
+      newQueryParams.pageNumber = 1;
 
-      banksUIProps.setQueryParams(newQueryParams)
+      banksUIProps.setQueryParams(newQueryParams);
     }
-  }
+  };
 
   return (
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={{
-         
-        }}
+        initialValues={{}}
         onSubmit={(values) => {
-        
           // createPdf(values);
-          applyFilter(values)
+          applyFilter(values);
         }}
       >
         {({
@@ -100,12 +86,9 @@ export function BanksFilter({ listLoading, user, setCity,
           setFieldValue,
           errors,
           touched,
-
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
-
-              {/* <div className="col-12 col-md-12">
+            {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -123,26 +106,16 @@ export function BanksFilter({ listLoading, user, setCity,
                 </small>
               </div> */}
 
-
-              
-                            <InputSearch
-                values={values}
-                fieldName="searchText"
-                setFieldValue={setFieldValue}
-                handleBlur={handleBlur}
-                handleSubmit={handleSubmit}
-              />
-              
-
-
-            </div>
+            <InputSearch
+              values={values}
+              fieldName="searchText"
+              setFieldValue={setFieldValue}
+              handleBlur={handleBlur}
+              handleSubmit={handleSubmit}
+            />
           </form>
         )}
       </Formik>
-
-   
     </>
-  )
-
-
+  );
 }

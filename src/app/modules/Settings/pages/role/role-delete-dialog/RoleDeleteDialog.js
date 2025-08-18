@@ -4,7 +4,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux"
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls"
 import * as actions from "../../../_redux/roles/rolesAction"
 import { useRolesUIContext } from "../RolesUIContext"
-import Button from "@material-ui/core/Button"
+import {Button} from "@material-ui/core"
 
 export function RoleDeleteDialog({ id, show, onHide }) {
 
@@ -71,23 +71,23 @@ export function RoleDeleteDialog({ id, show, onHide }) {
       </Modal.Header>
       <Modal.Body>
         {isLoading && (
-          <span>Are you sure to permanently delete this role?</span>
+          <label>Are you sure to permanently delete this role?</label>
         )}
-        {/* {isLoading && <span>Role is deleting...</span>} */}
+        {/* {isLoading && <label>Role is deleting...</label>} */}
       </Modal.Body>
       <Modal.Footer>
         <div>
           <button
             type="button"
             onClick={onHide}
-            className="btn btn-light btn-elevate mr-3"
+            className="btn btn-light"
           >
             Cancel
           </button>
           <> </>
           <button
             type="button"
-            className="btn btn-primary btn-elevate"
+            className="btn btn-danger"
             onClick={deleteRole}
           >
             Delete

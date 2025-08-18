@@ -5,6 +5,7 @@
 /* Footer styles */
 /* General reset */
 
+
 .login-form{
   height: 40vh;
   width: 50vw;
@@ -22,12 +23,12 @@
   border: none; /* Remove default border */
   // border-radius: 8px; /* Rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  // transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
 .custom-button:hover {
   background-color: #333333; /* Darker background on hover */
-  transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  // transform: translateY(-2px); /* Slightly move the button upwards on hover */
 }
 
 // .custom-button:active {
@@ -151,8 +152,18 @@
   }
   
   .login-left-footer{
-    margin-top: auto;
+    // margin-top: auto;
     background-color: hsl(188, 88%, 93%);
     padding-left: 2% !important;
   }
-  
+  .hide-on-mobile {
+  display: none;
+}
+
+/* Show it on medium (md) and larger screens */
+@media (min-width:1000px) {
+  .hide-on-mobile {
+    display: flex; /* or block, grid, whatever suits your layout */
+  }
+}
+

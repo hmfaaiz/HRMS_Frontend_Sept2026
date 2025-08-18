@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect } from "react";
 import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
-import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
 
 import {
@@ -17,15 +16,18 @@ import { useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
+import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
+import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
 
-  const { employeeList, payrollData } = useSelector(
+  const { employeeList, payrollData, empAuthorityList } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
       payrollData: state?.loan_request?.payrollData,
+      empAuthorityList: state?.loan_request?.empAuthorityList,
     }),
     shallowEqual
   );
@@ -73,34 +75,65 @@ export function FormCard() {
   }, [payrollData]);
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <CardHeader title={CurrentModuleName()} />
-          <EmployeeSelect />
-          {/* <br />
-          <hr />
-
-          <EmployeeProfile employeeId={FormUIProps.employeeId?.value} /> */}
-          {/* EmployeeProfile Ends */}
-
-          {/* <br />
-          <hr /> */}
-          {/* FormEditDialog Starts */}
-          <FormEditDialog
-            id={FormUIProps.id}
-            employeeId={FormUIProps.employeeId?.value}
+    <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+        <div className="lg:hidden block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            menuOptions={[
+              {
+                name: "Approval",
+                link: "/loan-approval/read-all-loan-approval",
+              },
+              {
+                name: "Workflow Status",
+                link: "/loan-workflow-status/read-all-loan-workflow-status",
+              },
+              {
+                name: "Payslip",
+                link: "/payslip/read-payslip",
+              },
+            ]}
+            isDashboardIcon={true}
           />
-          {/* FormEditDialog Ends */}
+        </div>
+        <EmployeeProfile />
+      </div>
+      <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+        <div className="hidden lg:block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            menuOptions={[
+              {
+                name: "Approval",
+                link: "/loan-approval/read-all-loan-approval",
+                isShow: empAuthorityList?.length > 0 ? true : false,
+              },
+              {
+                name: "Workflow Status",
+                link: "/loan-workflow-status/read-all-loan-workflow-status",
+                isShow: empAuthorityList?.length > 0 ? true : false,
+              },
+              {
+                name: "Payslip",
+                link: "/payslip/read-payslip",
+                isShow: empAuthorityList?.length > 0 ? true : false,
+              },
+            ]}
+            isDashboardIcon={true}
+          />
+        </div>
+        <EmployeeSelect />
 
-          <br />
-          <hr />
-          <FormTable />
-          <br />
-          <hr />
-          <WorkflowAuthortiesTable />
-        </CardBody>
-      </Card>
-    </>
+        <FormEditDialog
+          id={FormUIProps.id}
+          employeeId={FormUIProps.employeeId?.value}
+        />
+        <FormTable />
+        <WorkflowAuthortiesTable />
+      </div>
+    </div>
   );
 }

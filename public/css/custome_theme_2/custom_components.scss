@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrollbar-fancy {
+  @apply scrollbar-thin scrollbar-thumb-tprimary scrollbar-track-tlight;
+}
+
+.rmdp-input {
+  @apply form-control w-full; /* bootstrap ya tailwind ke jesa look */
+  height: 38px;              /* baki input fields jitni height */
+  padding: 0.375rem 0.75rem; /* bootstrap input spacing */
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.375rem;
+}

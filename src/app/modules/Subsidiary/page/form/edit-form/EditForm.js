@@ -151,15 +151,15 @@ export const EditForm = ({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="from-group row">
-                  <div className="col-12 col-md-12 row p-0 m-0">
-                    <div className="col-12 col-md-4 mt-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
+                  <div className="col-span-2 md:col-span-3 grid grid-cols-2  md:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="col-span-1">
                       <SearchSelect
                         name="companyId"
                         isDisabled={isUserForRead}
                         label={
                           <span>
-                            Company Name <span style={{ color: "red" }}>*</span>
+                            Company Name<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         onChange={(e) => {
@@ -176,7 +176,7 @@ export const EditForm = ({
                       />
                     </div>
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="subsidiaryCode"
                       MaxLength={40}
@@ -185,7 +185,7 @@ export const EditForm = ({
                       label={
                         <span>
                           {" "}
-                          Subsidiary Code{" "}
+                          Subsidiary Code
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -194,7 +194,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="name"
                       MaxLength={100}
@@ -203,7 +203,7 @@ export const EditForm = ({
                       label={
                         <span>
                           {" "}
-                          Subsidiary Name{" "}
+                          Subsidiary Name
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -215,7 +215,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       name="currencyId"
                       isDisabled={isUserForRead}
@@ -231,7 +231,7 @@ export const EditForm = ({
                       options={allCurrency}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="countryId"
@@ -251,7 +251,7 @@ export const EditForm = ({
                       options={allCountry}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <SearchSelect
                       isDisabled={isUserForRead}
                       name="cityId"
@@ -266,7 +266,7 @@ export const EditForm = ({
                       }
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
@@ -278,7 +278,7 @@ export const EditForm = ({
                       component={Input}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       MaxLength={15}
                       placeholder="Fax"
@@ -290,7 +290,7 @@ export const EditForm = ({
                       component={Input}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="email"
                       component={Input}
@@ -301,7 +301,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="web"
                       component={Input}
@@ -312,9 +312,9 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-12 row p-0 m-0">
+                  <div className="col-span-2 md:col-span-3 grid  grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                     {
-                      <div className="col-12 col-md-12 mt-3">
+                      <div className="col-span-2 md:col-span-3">
                         <Field
                           name="address"
                           component={TextArea}
@@ -330,7 +330,7 @@ export const EditForm = ({
                       </div>
                     }
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="EIN"
                       component={Input}
@@ -341,7 +341,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  <div>
                     <Field
                       name="TIN"
                       component={Input}
@@ -352,7 +352,7 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-                  <div className="col-12 col-md-4 mt-3">
+                  {/* <div>
                     <div>
                       <div>
                         <div>
@@ -379,6 +379,39 @@ export const EditForm = ({
                         </div>
                       </div>
                     </div>
+                  </div> */}
+                  <div>
+                    <label>Subsidiary Logo</label>
+                    <input
+                      id="file_input"
+                      className="hidden"
+                      type="file"
+                      name="myImage"
+                      accept=".jpg, .jpeg, .png"
+                      onChange={onImageChange}
+                      // disabled={isEdit}
+                      // ref={inputFile}
+                    />
+                    <label
+                      htmlFor="file_input"
+                      className="form-control block w-full cursor-pointer"
+                    >
+                      {subsidiaryLogo ? subsidiaryLogo : "Upload"}
+                    </label>
+
+                    {/* Show existing file if any */}
+                    {/* {companyLogo && (
+                      <div className="mt-2">
+                        <label>Existing File: {companyLogo}</label>
+                        <a
+                          href={getUploadUrl(companyLogo)}
+                          target="_blank"
+                          className="text-blue-600 underline"
+                        >
+                          {getFileName(companyLogo)}
+                        </a>
+                      </div>
+                    )} */}
                   </div>
                 </div>
               </fieldset>
@@ -399,7 +432,7 @@ export const EditForm = ({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

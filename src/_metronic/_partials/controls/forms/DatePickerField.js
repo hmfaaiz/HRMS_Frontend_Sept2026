@@ -1,43 +1,60 @@
 import React from "react";
-import { useField, useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Calendar } from "lucide-react";
 
 const getFieldCSSClasses = (touched, errors) => {
   const classes = ["form-control"];
   if (touched && errors) {
     classes.push("is-invalid");
   }
-
   if (touched && !errors) {
     classes.push("is-valid");
   }
-
   return classes.join(" ");
 };
 
-export function DatePickerField({ ...props }) {
+export function DatePickerField({ field, label, ...props }) {
   const { setFieldValue, errors, touched } = useFormikContext();
-  // const [field] = useField(props);
-  const { field } = props
-  return (
-    <>
-      {props.label && <label>{props.label}</label>}
-      <DatePicker
-        className={getFieldCSSClasses(touched[field.name], errors[field.name])}
-        style={{ width: "100%" }}
-        {...field}
-        selected={(field.value && new Date(field.value)) || new Date()}
-        onChange={(val) => {
-          setFieldValue(field.name, val);
-        }}
-        {...props}
 
-      />
+  return (
+    <div>
+      {label && <label className="mb-1 block">{label}</label>}
+
+      {/* Wrap in a relative container so we can position icon */}
+      <div style={{ position: "relative", width: "100%" }}>
+        <DatePicker
+          className={getFieldCSSClasses(
+            touched[field.name],
+            errors[field.name]
+          )}
+          selected={(field.value && new Date(field.value)) || null}
+          onChange={(val) => setFieldValue(field.name, val)}
+          {...props}
+        />
+
+        {/* Icon positioned on the right */}
+        <div
+          style={{
+            position: "absolute",
+            right: "5px",
+            top: "40%",
+            transform: "translateY(-50%)",
+            pointerEvents: "none",
+            color: "#555",
+          }}
+        >
+          <Calendar className="w-3 h-3 text-gray-800" />
+        </div>
+      </div>
+
+      {/* Validation error */}
       {errors[field.name] && touched[field.name] && (
-        <div className="invalid-datepicker-feedback" style={{ color: '#F64E60', 'font-size': '0.9rem' }}>
-          {errors[field.name].toString()}
+        <div style={{ color: "#F64E60", fontSize: "0.7rem" }}>
+          {errors[field.name]}
         </div>
       )}
-    </>
+    </div>
   );
 }

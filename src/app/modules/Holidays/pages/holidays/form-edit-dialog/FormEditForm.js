@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import {
+  DatePickerField,
+  Input,
+} from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllFormsMenu,
-  
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -17,33 +19,22 @@ import { getDateDiffInDays } from "../../../../../utils/common";
 const holidaysEditSchema = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
 
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   // to_amount: Yup.string().required("Required*"),
 
   name: Yup.string()
-     .trim()
+    .trim()
     .required(VALIDATION_MESSAGES.required),
-
 
   from_date: Yup.date().required(VALIDATION_MESSAGES.required),
   to_date: Yup.date()
-    .min(
-      Yup.ref('from_date'),
-      "End date cannot be earlier than from date"
-    )
+    .min(Yup.ref("from_date"), "End date cannot be earlier than from date")
     .required(VALIDATION_MESSAGES.required),
 
+  holiday_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
 
-
-  holiday_typeId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
-
-  religionId: Yup.number()
-    .nullable(),
-    
-
+  religionId: Yup.number().nullable(),
 });
 
 export function FormEditForm({
@@ -57,9 +48,9 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [start_date, setStart_date] = useState()
-  const [end_date, setEnd_date] = useState()
-  const [diffInDate, setDiffInDate] = useState()
+  const [start_date, setStart_date] = useState();
+  const [end_date, setEnd_date] = useState();
+  const [diffInDate, setDiffInDate] = useState();
   useEffect(() => {
     if (!user.Id) {
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
@@ -67,11 +58,8 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(184, "allContractTypeList"));
       dispatch(fetchAllFormsMenu(213, "allHolidayTypeList"));
       dispatch(fetchAllFormsMenu(87, "allReligionChildMenus"));
-
-
     }
   }, [dispatch, user.Id]);
-
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
@@ -83,16 +71,13 @@ export function FormEditForm({
   const { userForEdit } = currentState;
 
   useEffect(() => {
-    setStart_date(userForEdit?.from_date)
-    setEnd_date(userForEdit?.to_date)
-  }, [userForEdit])
+    setStart_date(userForEdit?.from_date);
+    setEnd_date(userForEdit?.to_date);
+  }, [userForEdit]);
   useEffect(() => {
-
     if (start_date && end_date) {
-      setDiffInDate(getDateDiffInDays(start_date, end_date))
-
+      setDiffInDate(getDateDiffInDays(start_date, end_date));
     }
-
   }, [start_date, end_date]);
 
   return (
@@ -109,7 +94,6 @@ export function FormEditForm({
       initialValues={user}
       validationSchema={holidaysEditSchema}
       onSubmit={(values) => {
-
         enableLoading();
         saveForm(values, diffInDate);
       }}
@@ -124,9 +108,9 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="form-group row">
-                  <div className="form-group row col-12 col-md-12  p-0 m-0">
-                    <div className="col-12 col-md-6 mt-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
+                  <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="col-span-1">
                       <SearchSelect
                         name="subsidiaryId"
                         label={
@@ -143,7 +127,6 @@ export function FormEditForm({
                             (option) => option.value === values.subsidiaryId
                           ) || null
                         }
-
                         options={dashboard?.allSubsidiaryList}
                         // options={dashboard.allSubidiaryList.map(option => ({
                         //   label: `${option.label} (${option.value})`, // Adding the value to the label
@@ -154,40 +137,43 @@ export function FormEditForm({
                       />
                     </div>
 
-
                     {/* Active payroll month */}
 
-
-
-<div className="col-12 col-md-6 mt-3 d-flex flex-column align-items-end">
-
-{values?.subsidiaryId ? (() => {
-  const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-    (option) => option.value === values.subsidiaryId
-  );
-  return (
-    <>
-      <div>
-        <b>Active Fiscal Year -</b>{" "}
-        {selectedSubsidiary?.fiscalYearLabel}
-      </div>
-      {/* <div>
-        <b>Active Payroll Month -</b>{" "}
-        {selectedSubsidiary?.payrollMonthLabel}
-      </div> */}
-    </>
-  );
-})() : null}
-</div>
+                    <div className="col-span-2 text-xs text-black">
+                      {/* {values?.subsidiaryId
+                        ? (() => {
+                            const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                              (option) => option.value === values.subsidiaryId
+                            );
+                            return (
+                              <>
+                                <div>
+                                  <b>Active Fiscal Year -</b>{" "}
+                                  {selectedSubsidiary?.fiscalYearLabel}
+                                </div>
+                
+                              </>
+                            );
+                          })()
+                        : null} */}
+                    </div>
                   </div>
-
-
-
-            
-
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-1">
                     <label>
-                      From Date <span style={{ color: "red" }}>*</span>
+                      <span>
+                        Title<span style={{ color: "red" }}>*</span>
+                      </span>
+                    </label>
+                    <Field
+                      name="name"
+                      component={Input}
+                      placeholder="Enter Name"
+                      type="text"
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <label>
+                      From <span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="from_date"
@@ -196,56 +182,38 @@ export function FormEditForm({
                       placeholder="Select Date"
                       type="date"
                       onChange={(e) => {
-
-
                         setFieldValue("from_date", e);
                         setStart_date(e);
                       }}
                     />
                   </div>
 
-
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-1">
                     <label>
-                      To Date <span style={{ color: "red" }}>*</span>
+                      To <span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="to_date"
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
-
                       // type="date"
                       onChange={(e) => {
                         setFieldValue("to_date", e);
                         setEnd_date(e);
                       }}
 
-                    // minDate={dateOfJoining} 
-                    // disabled={userForEdit?.details[0]?.is_deducted }
+                      // minDate={dateOfJoining}
+                      // disabled={userForEdit?.details[0]?.is_deducted }
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+
+
+                  <div className="col-span-1">
                     <label>
                       <span>
-                        Holiday Name<span style={{ color: "red" }}>*</span>
-                      </span>
-                    </label>
-                    <Field
-                      name="name"
-                      component={Input}
-                      placeholder="Enter Name"
-
-                      type="text"
-
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6 mt-3">
-                    <label>
-                      <span>
-                        Number of days<span style={{ color: "red" }}>*</span>
+                        Number of Days<span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
                     <Field
@@ -255,19 +223,15 @@ export function FormEditForm({
                       disabled={true}
                       type="number"
                       value={diffInDate}
-
-
-
                     />
                   </div>
 
-
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-1">
                     <SearchSelect
                       name="holiday_typeId"
                       label={
                         <span>
-                          Holiday Type<span style={{ color: "red" }}>*</span>
+                          Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
@@ -279,7 +243,6 @@ export function FormEditForm({
                           (option) => option.value === values.holiday_typeId
                         ) || null
                       }
-
                       options={dashboard?.allHolidayTypeList}
                       // options={dashboard.allSubidiaryList.map(option => ({
                       //   label: `${option.label} (${option.value})`, // Adding the value to the label
@@ -290,26 +253,21 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="col-12 col-md-6 mt-3">
+                  <div className="col-span-1">
                     <SearchSelect
                       name="religionId"
-                      label={
-                        <span>
-                          Select Religion
-                        </span>
-                      }
+                      label={<span>Select Religion</span>}
                       isDisabled={isUserForRead}
                       onChange={(e) => {
                         setFieldValue("religionId", e.value || null);
                       }}
-
                       value={
                         // Default to "All" if religionId is null or undefined
-                        values?.religionId ==null
-                          ? { value: null, label: 'All' }
+                        values?.religionId == null
+                          ? { value: null, label: "All" }
                           : dashboard?.allReligionChildMenus?.find(
-                            (option) => option.value === values.religionId
-                          ) || null
+                              (option) => option.value === values.religionId
+                            ) || null
                       }
                       // value={
                       //   dashboard?.allReligionChildMenus?.find(
@@ -320,10 +278,9 @@ export function FormEditForm({
                       // options={dashboard?.allReligionChildMenus}
 
                       options={[
-                        { value: null, label: 'All' }, // Adding "All" option with value empty string
+                        { value: null, label: "All" }, // Adding "All" option with value empty string
                         ...dashboard?.allReligionChildMenus, // Spread the rest of the menu options
                       ]}
-
                       // options={dashboard.allSubidiaryList.map(option => ({
                       //   label: `${option.label} (${option.value})`, // Adding the value to the label
                       //   value: option.value,
@@ -332,10 +289,6 @@ export function FormEditForm({
                       touched={touched.religionId}
                     />
                   </div>
-
-
-
-
                 </div>
               </fieldset>
             </Form>
@@ -355,7 +308,7 @@ export function FormEditForm({
                 onClick={onHide}
                 className="btn btn-primary btn-elevate"
               >
-                Ok
+                OK
               </button>
             )}
 

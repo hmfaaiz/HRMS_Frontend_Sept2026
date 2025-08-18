@@ -12,6 +12,8 @@ import { Layout } from "../_metronic/layout"
 import BasePage from "./BasePage"
 import { Logout, AuthPage } from "./modules/Auth"
 import ErrorsPage from "./modules/ErrorsExamples/ErrorsPage"
+import PrivacyPolicyPage from "./modules/Auth/pages/Static/PrivacyPolicy"
+import DisclaimerPage from "./modules/Auth/pages/Static/Disclaimer"
 
 export function Routes() {
   const { isAuthorized } = useSelector(
@@ -26,6 +28,8 @@ export function Routes() {
   // // const isAuthorized = false
   return (
     <Switch>
+       <Route path="/privacy-policy" component={PrivacyPolicyPage} />
+       <Route path="/disclaimer" component={DisclaimerPage} />
       {!isAuthorized ? (
         <Route>
           <AuthPage />

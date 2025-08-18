@@ -234,7 +234,7 @@ export function BankEditForm({
                         style={{ display: "block" }}
                         autoComplete="off"
                       >
-                        <option value="-1" label="Select..." />
+                        <option value="-1" label="Select" />
                         <option value="% Of Basic" label="% Of Basic" />
                         <option value="Fixed Amount" label="Fixed Amount" />
 
@@ -251,7 +251,7 @@ export function BankEditForm({
                         style={{ display: "block" }}
                         autoComplete="off"
                       >
-                        <option value="-1" label="--Select--" />
+                        <option value="-1" label="Select" />
                         <option value="true" label="Yes" />
                         <option value="false" label="No" />
 
@@ -353,7 +353,7 @@ export function BankEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

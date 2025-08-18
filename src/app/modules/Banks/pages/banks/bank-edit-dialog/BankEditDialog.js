@@ -119,7 +119,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
 
   return (
     <Modal
-      size="lg"
+      size="md"
       show={show}
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"

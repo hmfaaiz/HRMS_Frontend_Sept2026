@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { DesignationEditForm } from "./DesignationEditForm";
-import { DesignationEditDialogHeader } from './DesignationEditDialogHeader'
+import { DesignationEditDialogHeader } from "./DesignationEditDialogHeader";
 
 import * as actions from "../../../_redux/designationActions";
 import { ToastContainer, toast } from "react-toastify";
@@ -10,22 +10,25 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 
-
-
-export function DesignationEditDialog({ id, show, onHide, userForRead,status }) {
+export function DesignationEditDialog({
+  id,
+  show,
+  onHide,
+  userForRead,
+  status,
+}) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "EmployeeProfileEditDialog";
   const DesignationUIContext = useDesignationUIContext();
 
- const [activeKey, setActiveKey] = useState("0");
+  const [activeKey, setActiveKey] = useState("0");
 
   useEffect(() => {
-  
-      setActiveKey("0"); // jab new user aaye to accordion open kar do
-   
-  }, [id,status]);
+    setActiveKey("0"); // jab new user aaye to accordion open kar do
+  }, [id, status]);
   const usersUIProps = useMemo(() => {
     return {
       queryParams: DesignationUIContext.queryParams,
@@ -56,7 +59,6 @@ export function DesignationEditDialog({ id, show, onHide, userForRead,status }) 
     userStatusTypes,
     isuserForRead,
   } = useSelector((state) => ({
-
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
     userForEdit: state.profile.userForEdit,
@@ -64,60 +66,73 @@ export function DesignationEditDialog({ id, show, onHide, userForRead,status }) 
     centers: state.users.centers,
     userStatusTypes: state.users.userStatusTypes,
     isuserForRead: state.profile.userForRead,
-
   }));
 
-  
   useEffect(() => {
     dispatch(actions.fetchUser(id));
 
     // dispatch(actions.fetchUser(banksUIProps.queryParams))
   }, [id, dispatch]);
 
+  const saveEmployeeProfile = async (
+    user,
+    image,
+    contactList,
+    workExperienceList,
+    academicList,
+    skillsList,
+    incidentList,
+    imagePolicy,
+    isImageReq
+  ) => {
+    delete user?.all_report_to;
+    delete user?.all_deligationId;
 
-  const saveEmployeeProfile = async (user, image,contactList,workExperienceList,academicList,skillsList,incidentList,imagePolicy,isImageReq) => {
-
-delete user?.all_report_to
-delete user?.all_deligationId
-
-if(user?.requireDeligation && !user?.deligationId){
-  disbaleLoading();
-  toast.error("Deligation is required.", {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-}
-    else if (imagePolicy && isImageReq) {
+    if (user?.requireDeligation && !user?.deligationId) {
       disbaleLoading();
-    
-       toast.error("Profile image is required.", {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-    }
+      toast.error("Deligation is required.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (imagePolicy && isImageReq) {
+      disbaleLoading();
 
-   else if (!id) {
-
-   
-      const finalObject = { user }
-      await dispatch(actions.createEmpProfile({ ...user,contactList,workExperienceList,academicList,skillsList,incidentList, profile_image: image }, disbaleLoading, onHide));
+      toast.error("Profile image is required.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (!id) {
+      const finalObject = { user };
+      await dispatch(
+        actions.createEmpProfile(
+          {
+            ...user,
+            contactList,
+            workExperienceList,
+            academicList,
+            skillsList,
+            incidentList,
+            profile_image: image,
+          },
+          disbaleLoading,
+          onHide
+        )
+      );
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     } else {
       // const getUserStatus = userStatusTypes.find((item) => {
       //   return item.value === +user.status;
       // });
-
- 
 
       const EmpProfileUpdatedFields = {
         Id: user.Id,
@@ -162,7 +177,7 @@ if(user?.requireDeligation && !user?.deligationId){
         attendanceType: user.attendanceType,
         dateOfBirth: user.dateOfBirth,
         dateOfRetirement: user.dateOfRetirement,
-        salesRep : user.salesRep,
+        salesRep: user.salesRep,
         supportRep: user.supportRep,
         sourceOfHire: user.sourceOfHire,
         lastReviewDate: user.lastReviewDate,
@@ -179,15 +194,25 @@ if(user?.requireDeligation && !user?.deligationId){
         contractTypeId: user.contractTypeId,
         cycleTypeId: user.cycleTypeId,
         requireDeligation: user.requireDeligation,
-        employeeStatusId:user.employeeStatusId,
-        approvedForPayroll:user.approvedForPayroll,
-        deligationId:user?.deligationId,
+        employeeStatusId: user.employeeStatusId,
+        approvedForPayroll: user.approvedForPayroll,
+        deligationId: user?.deligationId,
         relation_name: user?.relation_name,
         hod: user?.hod,
       };
 
-    
-      await dispatch(actions.updateEmpProfile(EmpProfileUpdatedFields,contactList,workExperienceList,academicList,skillsList,incidentList, disbaleLoading, onHide));
+      await dispatch(
+        actions.updateEmpProfile(
+          EmpProfileUpdatedFields,
+          contactList,
+          workExperienceList,
+          academicList,
+          skillsList,
+          incidentList,
+          disbaleLoading,
+          onHide
+        )
+      );
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };
@@ -201,27 +226,10 @@ if(user?.requireDeligation && !user?.deligationId){
     //   backdrop="static"
     // >
 
-
-     <Accordion activeKey={activeKey}>
-        <Card>
-          <Card.Header className="d-flex justify-content-center">
-            <div className="accordion-header-btn w-100  d-flex justify-content-center">
-              <Accordion.Toggle
-                as={Button}
-                eventKey="0"
-                className="flex-between-center text-bold"
-                onClick={() =>
-                setActiveKey(activeKey === "0" ? null : "0")
-              }
-              >
-                Employee Profile
-                <KeyboardArrowDown />
-              </Accordion.Toggle>
-            </div>
-          </Card.Header>
-          <Accordion.Collapse eventKey="0">
-            <Card.Body>
-         <>
+    <div className="w-full font-size-xs px-3 py-2 mt-2 bg-white rounded-lg overflow-y-auto">
+      <h5 className="m-0 text-black font-bold text-base sm:text-lg py-1">
+        Employee Profile
+      </h5>
       <DesignationEditDialogHeader id={id} isUserForRead={userForRead} />
       <DesignationEditForm
         saveEmployeeProfile={saveEmployeeProfile}
@@ -246,13 +254,7 @@ if(user?.requireDeligation && !user?.deligationId){
         draggable
         pauseOnHover
       />
-      </>
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-
-
+    </div>
 
     // </Modal>
   );

@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
-import { shallowEqual, useSelector, useDispatch } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import {
   getHandlerTableChange,
   NoRecordsFoundMessage,
@@ -10,9 +10,6 @@ import {
 } from "../../../../../../_metronic/_helpers";
 import * as uiHelpers from "../FormUIHelpers";
 import { useFormUIContext } from "../FormUIContext";
-import { Accordion, Button, Card } from "react-bootstrap";
-import { KeyboardArrowDown } from "@material-ui/icons";
-import * as actions from "../../../_redux/formActions";
 
 export function WorkflowAuthortiesTable() {
   //Users UI Context
@@ -41,17 +38,17 @@ export function WorkflowAuthortiesTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "70px",
       },
     },
     {
       dataField: "employeeCode",
-      text: "Emp. Code",
+      text: "Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "70px",
       },
     },
     {
@@ -61,7 +58,7 @@ export function WorkflowAuthortiesTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
       },
       formatter: (cell, row) => {
         return `${row?.firstName || ""} ${row?.middleName ||
@@ -75,7 +72,7 @@ export function WorkflowAuthortiesTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
       },
     },
     {
@@ -85,7 +82,7 @@ export function WorkflowAuthortiesTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
       },
     },
     {
@@ -95,19 +92,19 @@ export function WorkflowAuthortiesTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "120px",
       },
     },
-    {
-      dataField: "employeeType.formName",
-      text: "Employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+    // {
+    //   dataField: "employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "100px",
+    //   },
+    // },
     {
       dataField: "deligationAuthorityName",
       text: "Delegation Authority",
@@ -115,47 +112,37 @@ export function WorkflowAuthortiesTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "100px",
+      },
+      formatter: (cell, row) => {
+        return `${row?.deligationAuthorityName || "-"}`;
       },
     },
   ];
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className="accordion-header-btn">
-            <Accordion.Toggle as={Button} eventKey="0">
-              Workflow Authorties
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <BootstrapTable
-              noDataIndication={NoRecordsFoundMessage({
-                entities: empAuthorityList || [],
-              })}
-              wrapperClasses="table-responsive"
-              bordered={false}
-              classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-              bootstrap4
-              remote
-              keyField="Id"
-              data={empAuthorityList || []}
-              columns={columns}
-              defaultSorted={uiHelpers.defaultSorted}
-              onTableChange={getHandlerTableChange(
-                FormUIProps.setQueryParamsLeaveApp
-              )}
-            >
-              <PleaseWaitMessage entities={empAuthorityList || []} />
-              <NoRecordsFoundMessage entities={empAuthorityList || []} />
-            </BootstrapTable>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-56 overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">Workflow Authorties</h6>
+      <BootstrapTable
+        noDataIndication={NoRecordsFoundMessage({
+          entities: empAuthorityList || [],
+        })}
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={empAuthorityList || []}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(
+          FormUIProps.setQueryParamsLeaveApp
+        )}
+      >
+        <PleaseWaitMessage entities={empAuthorityList || []} />
+        <NoRecordsFoundMessage entities={empAuthorityList || []} />
+      </BootstrapTable>
+    </div>
   );
 }

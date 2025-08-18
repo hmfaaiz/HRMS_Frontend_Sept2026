@@ -80,7 +80,7 @@ export function MasterEditForm({
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
             "Time must be in HHMM format and valid 24-hour format"
           ),
-          oT: Yup.string()
+        oT: Yup.string()
           .required(VALIDATION_MESSAGES.required)
           .matches(
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
@@ -203,286 +203,205 @@ export function MasterEditForm({
                 </div>
               )}
               <Form className="form form-label-right">
-                <fieldset>
+                <fieldset className="space-y-4">
                   {/* EmployeeProfile Starts */}
                   {/* <EmployeeProfile employeeId={employeeId} /> */}
                   {/* EmployeeProfile Ends */}
-                  <div className="from-group row">
-                    {payrollData &&
-                      payrollData.startDate &&
-                      payrollData.endDate && (
-                        <div className="col-12 col-md-12">
-                          <div className="row  justify-content-center">
-                            <span className="mr-2">
-                              <b>Active Payroll Month:</b>{" "}
-                            </span>
-                            <span>
-                              <b>
-                                <ActivePayrollMonthLabel
-                                  className="date"
-                                  month={payrollData.month}
-                                  year={payrollData.year}
-                                  startDate={payrollData.startDate}
-                                  endDate={payrollData.endDate}
-                                />
-                              </b>
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      margin: "15px",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
-                    <p className="font-weight-bold">Time Request</p>
-                    <div className="from-group row">
-                      {/* Date In Field Start */}
-                      <div className="col-12 col-md-4 mt-3">
+
+                  <div>
+                    {/* Time Request Section */}
+                    <h6 className="font-bold text-primary my-2">
+                      Time Request
+                    </h6>
+
+                    {/* First Row */}
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Attendance Date */}
+                      <div className="col-span-1">
                         <Field
                           name="attDate"
                           component={DatePickerField}
                           dateFormat="dd-MMM-yyyy"
-                          onChange={(date) => {
-                            setFieldValue("attDate", date);
-                          }}
+                          onChange={(date) => setFieldValue("attDate", date)}
                           label={
                             <span>
-                              {" "}
                               Attendance Date{" "}
-                              <span style={{ color: "red" }}>*</span>
+                              <span className="text-red-500">*</span>
                             </span>
                           }
                           autoComplete="off"
                         />
                       </div>
-                      {/* Date In Field End */}
+                      {/* Worked Hours */}
+                      <div className="col-span-1">
+                        <Field
+                          name="workedHours"
+                          component={TimeInput}
+                          className="form-control"
+                          disabled
+                          label={<span>Worked Hours</span>}
+                          autoComplete="off"
+                        />
+                      </div>
+                      {/* Attendance Status */}
+                      <div className="col-span-1">
+                        <Field
+                          name="attendanceStatus"
+                          component={Input}
+                          className="form-control"
+                          disabled
+                          label={<span>Attendance Status</span>}
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
-                    <div className="from-group row">
-                      {/* Date In Field Start */}
-                      <div className="col-12 col-md-3 mt-3">
+
+                    {/* Second Row */}
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 mt-3">
+                      {/* Date In */}
+                      <div>
                         <Field
                           name="attDateIn"
                           component={DatePickerField}
                           dateFormat="dd-MMM-yyyy"
-                          onChange={(date) => {
-                            setFieldValue("attDateIn", date);
-                          }}
+                          onChange={(date) => setFieldValue("attDateIn", date)}
                           label={
                             <span>
-                              {" "}
-                              Date In<span style={{ color: "red" }}>*</span>
+                              Date In <span className="text-red-500">*</span>
                             </span>
                           }
                           autoComplete="off"
                         />
                       </div>
-                      {/* Date In Field End */}
-
-                      {/* Time In Field Start */}
-                      <div className="col-12 col-md-3 mt-3">
+                      {/* Time In */}
+                      <div>
                         <Field
                           name="timeIn"
                           component={TimeInput}
-                          // maxlength="4"
                           label={
                             <span>
-                              {" "}
-                              Time In<span style={{ color: "red" }}>*</span>
+                              Time In <span className="text-red-500">*</span>
                             </span>
                           }
                           autoComplete="off"
                         />
                       </div>
-                      {/* Time In Field End */}
-                      {/* Date Out Field Start */}
-                      <div className="col-12 col-md-3 mt-3">
+
+                      {/* Date Out */}
+                      <div>
                         <Field
                           name="attDateOut"
                           component={DatePickerField}
                           dateFormat="dd-MMM-yyyy"
                           label={
                             <span>
-                              {" "}
-                              Date Out<span style={{ color: "red" }}>*</span>
+                              Date Out <span className="text-red-500">*</span>
                             </span>
                           }
                           autoComplete="off"
                         />
                       </div>
-                      {/* Date Out Field End */}
-
-                      {/* Time Out Field Start */}
-                      <div className="col-12 col-md-3 mt-3">
+                      {/* Time Out */}
+                      <div>
                         <Field
                           name="timeOut"
                           component={TimeInput}
-                          // maxlength="4"
                           label={
                             <span>
-                              {" "}
-                              Time Out<span style={{ color: "red" }}>*</span>
+                              Time Out <span className="text-red-500">*</span>
                             </span>
                           }
                           autoComplete="off"
                         />
                       </div>
-                      {/* Time Out Field End */}
-                    </div>
-                    <div className="from-group row">
-                      {/* OT Hours Field start  */}
-                      <div className="col-12 col-md-3 mt-3">
+                      {/* OT Hours */}
+                      <div>
                         <Field
                           name="oT"
                           component={TimeInput}
-                          // maxlength="4"
                           label={
                             <span>
-                              {" "}
-                              OT Hours<span style={{ color: "red" }}>*</span>
+                              OT Hours <span className="text-red-500">*</span>
                             </span>
                           }
                           autoComplete="off"
                         />
                       </div>
-                      {/* OT Hours Field end  */}
-                      {/* Worked Hours Field Start */}
-                      <div className="col-12 col-md-3 mt-3">
-                        <Field
-                          name="workedHours"
-                          component={TimeInput}
-                          className="form-control"
-                          disabled
-                          label={<span> Worked Hours</span>}
-                          autoComplete="off"
-                        />
-                      </div>
-                      {/* Worked Hours Field End */}
-
-                      {/* Attendance Status Field Start */}
-                      <div className="col-12 col-md-6 mt-3">
-                        <Field
-                          name="attendanceStatus"
-                          component={Input}
-                          className="form-control"
-                          disabled
-                          label={<span> Attendance Status</span>}
-                          autoComplete="off"
-                        />
-                      </div>
-                      {/* Attendance Status Field End */}
                     </div>
                   </div>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      margin: "15px",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
+
+                  {/* Penalty Waive Off Section */}
+                  <div className="mt-4">
                     <fieldset>
-                      <p className="font-weight-bold">Penalty Waive Off</p>
-                      <div className="row">
-                        <div className="col-12 col-md-4 mt-2">
+                      <h6 className="font-bold text-primary my-2">
+                        Penalty Waive Off
+                      </h6>
+
+                      {/* Checkboxes */}
+                      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                        <label className="flex items-center gap-2">
                           <input
                             name="isLateComing"
                             type="checkbox"
-                            onChange={(e) => {
+                            onChange={() =>
                               setFieldValue(
                                 "isLateComing",
                                 !values?.isLateComing
-                              );
-                            }}
+                              )
+                            }
                             onBlur={handleBlur}
-                            value={values.isLateComing}
                             checked={values.isLateComing}
                           />
-                          <label className="px-2">Late Arrival</label>
-                          <ErrorMessage
-                            className="form-feedBack"
-                            name="isLateComing"
-                            component="div"
-                          />
-                        </div>
-                        <div className="col-12 col-md-4 mt-2">
+                          Late Arrival
+                        </label>
+
+                        <label className="flex items-center gap-2">
                           <input
                             name="isEarlyGoing"
                             type="checkbox"
-                            onChange={(e) => {
+                            onChange={() =>
                               setFieldValue(
                                 "isEarlyGoing",
                                 !values?.isEarlyGoing
-                              );
-                            }}
+                              )
+                            }
                             onBlur={handleBlur}
-                            value={values.isEarlyGoing}
                             checked={values.isEarlyGoing}
                           />
-                          <label className="px-2">Early Departure</label>
-                          <ErrorMessage
-                            className="form-feedBack"
-                            name="isEarlyGoing"
-                            component="div"
-                          />
-                        </div>
-                        <div className="col-12 col-md-4 mt-2">
+                          Early Departure
+                        </label>
+
+                        <label className="flex items-center gap-2">
                           <input
                             name="isHalfDay"
                             type="checkbox"
-                            onChange={(e) => {
-                              setFieldValue("isHalfDay", !values?.isHalfDay);
-                            }}
+                            onChange={() =>
+                              setFieldValue("isHalfDay", !values?.isHalfDay)
+                            }
                             onBlur={handleBlur}
-                            value={values.isHalfDay}
                             checked={values.isHalfDay}
                           />
-                          <label className="px-2">Half Day</label>
-                          <ErrorMessage
-                            className="form-feedBack"
-                            name="isHalfDay"
-                            component="div"
-                          />
-                        </div>
+                          Half Day
+                        </label>
                       </div>
-                    </fieldset>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "rgb(235 243 255)",
-                      margin: "15px",
-                      padding: "10px",
-                      borderRadius: "5px",
-                      border: "2px solid #adceff",
-                    }}
-                  >
-                    <div className="from-group row">
-                      {/* Comments Field Start */}
-                      <div className="col-12 col-md-9 mt-3">
+
+                      {/* Reason Field */}
+                      <div className="mt-3">
                         <Field
                           name="request_remarks"
                           component={TextArea}
-                          placeholder=""
                           onChange={handleChange}
                           onBlur={handleBlur}
                           label={
                             <span>
-                              {" "}
-                              Reason<span style={{ color: "red" }}>*</span>
+                              Reason <span className="text-red-500">*</span>
                             </span>
                           }
                           value={values?.request_remarks}
                           autoComplete="off"
                         />
                       </div>
-                      {/* Comments Field End */}
-                    </div>
+                    </fieldset>
                   </div>
                 </fieldset>
               </Form>

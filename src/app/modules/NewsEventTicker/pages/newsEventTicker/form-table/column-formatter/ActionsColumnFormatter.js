@@ -3,6 +3,7 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -16,48 +17,31 @@ export function ActionsColumnFormatter(
     openReadUserDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog,isAccessForRead
+    openReadFormDialog,
+    isAccessForRead,
   }
 ) {
   const isUserRead = false;
   return (
-    <>
-          {isAccessForRead &&  (
-      <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}>
-        <a
-          title=""
-          className="btn btn-icon  btn-hover-primary btn-sm mx-3 view-button"
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
-        >
-          <span className="svg-icon svg-icon-md svg-icon-primary">
-            <SVG
-              src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")}
-            />
-          </span>
-        </a>
-      </OverlayTrigger>
-
-          )}
-      {isAccessForEdit &&  (
+    <div className="space-x-2">
+      {isAccessForRead && (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
         >
-          <a
-            title=""
-            className="btn btn-icon btn-hover-primary btn-sm mx-3 edit-button"
-            onClick={() => openEditFormDialog(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
+          <a onClick={() => openReadFormDialog(row.Id, isUserRead)}>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
-
-      <> </>
+      {isAccessForEdit && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+        >
+          <a onClick={() => openEditFormDialog(row.Id)}>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
 
       {isAccessForDelete && (
         <OverlayTrigger
@@ -68,21 +52,12 @@ export function ActionsColumnFormatter(
           }
         >
           {
-            <a
-              title=""
-              className="btn btn-icon btn-hover-danger btn-sm mx-3 delete-button"
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-danger">
-                <SVG
-                  src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")}
-                  title=""
-                />
-              </span>
+            <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
-         }
+          }
         </OverlayTrigger>
       )}
-    </>
+    </div>
   );
 }

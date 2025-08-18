@@ -147,7 +147,7 @@ console.log("userAccess111",userAccess)
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
@@ -181,6 +181,6 @@ console.log("userAccess111",userAccess)
           );
         }}
       </PaginationProvider>
-    </>
+    </div>
   );
 }

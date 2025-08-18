@@ -429,330 +429,229 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleReset,
-        setFieldTouched
+        setFieldTouched,
       }) => (
         <>
-          <Modal.Body className="overlay overlay-block cursor-default">
+          {/* <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
                 <div className="spinner spinner-lg spinner-success" />
               </div>
-            )}
-            {empAuthorityList && empAuthorityList?.length === 0 && (
-              <span style={{ color: "red" }}>
-                Designation workflow policy does not exist for this employee.
-              </span>
-            )}
-            {formUIProps?.employeeId?.level > 1 && (
-              <>
-                <span style={{ color: "red" }}>
-                  Employee level request not permitted.
-                </span>
-                <br />
-              </>
-            )}
-            <Form className="form form-label-right" onSubmit={handleSubmit}>
-              <fieldset
-                disabled={
-                  isUserForRead ||
-                  formUIProps?.employeeId?.level > 1 ||
-                  !currentState?.loan_config_details_permission ||
-                  empAuthorityList?.length === 0
-                }
-              >
-                <div className="form-group row">
-                  {/* <div className="col-12 col-md-12  p-0 m-0"> */}
-                  <div className="col-12 col-md-6 mt-3">
-                    <SearchSelect
-                      name="loan_typeId"
-                      label={
-                        <span>
-                          Loan Type
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={
-                        isUserForRead ||
-                        formUIProps?.employeeId?.level > 1 ||
-                        !currentState?.loan_config_details_permission ||
-                        empAuthorityList?.length === 0
-                      }
-                      onChange={(e) => {
-                        setFieldValue("loan_typeId", e.value || null);
-                        setChangeLoanType(e.value);
-                        policyLoadByLoanType(e.value);
-                        setFieldValue("applied_date", "");
-                        setFieldValue("installment_start_date", "");
-                        setFieldValue("total_loan_amount", "");
-                        setFieldValue("monthly_installment", "");
-                        setFieldValue("total_installment", "");
-                        setFieldValue("reason", "");
-                        setTotalInstallments("");
-                      }}
-                      value={
-                        loan_type?.find(
-                          (option) => option.value === values.loan_typeId
-                        ) || null
-                      }
-                      options={filteredOptions}
-                      error={errors.loan_typeId}
-                      touched={touched.loan_typeId}
-                    />
-                  </div>
-                  {/* </div> */}
-
-                  <div className="col-12 col-md-6 mt-3">
-                    <label>
-                      Applied Date <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="applied_date"
-                      component={DatePickerField}
-                      dateFormat="dd-MMM-yyyy"
-                      placeholder="Select Date"
-                      type="date"
-                      onChange={(e) => {
-                        setFieldValue("applied_date", e || null);
-
-                        addMonthsToDate(payrollMonth, startDatePolicy);
-                      }}
-                      minDate={dateOfJoining}
-                      maxDate={new Date()}
-                      disabled={
-                        userForEdit ||
-                        userForEdit?.details[0]?.is_deducted ||
-                        !values.loan_typeId
-                      }
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6 mt-3">
-                    <label>
-                      Installment Start Date{""}
-                      <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="installment_start_date"
-                      component={DatePickerField}
-                      dateFormat="dd-MMM-yyyy"
-                      placeholder="Select Date"
-                      type="date"
-                      // maxDate={new Date()}
-                      minDate={payrollMonth ? payrollMonth : undefined}
-                      // minDate={values.applied_date ? values.applied_date : undefined}
-                      // minDate={new Date(values.applied_date) < new Date() ? new Date() : values.applied_date}
-                      maxDate={startDateLimit}
-                      // disabled={!payrollMonth || userForEdit?.details[0]?.is_deducted || !values.loan_typeId || !values.applied_date}
-                      disabled={
-                        userForEdit ||
-                        userForEdit?.details[0]?.is_deducted ||
-                        !values.loan_typeId ||
-                        !values.applied_date ||
-                        !payrollMonth
-                      }
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6 mt-3">
-                    {/* <Field
-                      name="total_loan_amount"
-                      component={Input}
-                      placeholder="Enter total loan amount"
-                      label={
-                        <div className="d-flex">
-                          <div className="d-flex">Total Loan Amount </div>
-                          <div className="d-flex ml-3">
-                            <span>
-                              ( Amount Limit :
-                              {maxAmountLimit?.toLocaleString() || 0})
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          </div>
-                        </div>
-                      }
-                      type="number"
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-
-                        if (
-                          maxAmountLimit !== undefined &&
-                          value > maxAmountLimit
-                        ) {
-                          return; // Prevent setting value above max
-                        }
-
-                        setFieldValue("total_loan_amount", value);
-                        setTotalLoanAmount(value);
-                      }}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                      }}
-                      // disabled={userForEdit?.details[0]?.is_deducted}
-                      // disabled={userForEdit}
-                    /> */}
-                    <AmountInput
-                      field={{
-                        name: `total_loan_amount`,
-                        value: values?.total_loan_amount,
-                      }}
-                      form={{
-                        touched,
-                        errors,
-                        setFieldValue,
-                        setFieldTouched,
-                      }}
-                      onChange={(e) => {
-                        const value = Number(e);
-                        if (
-                          maxAmountLimit !== undefined &&
-                          value > maxAmountLimit
-                        ) {
-                          return; // Prevent setting value above max
-                        }
-                        setTotalLoanAmount(value);
-                      }}
-                      // disabled={userForEdit}
-                      max={maxAmountLimit}
-                      placeholder="Enter total loan amount"
-                      label={
-                        <div className="d-flex">
-                          <div className="d-flex">Total Loan Amount </div>
-                          <div className="d-flex ml-3">
-                            <span>
-                              ( Amount Limit :
-                              {maxAmountLimit?.toLocaleString() || 0})
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6 mt-3">
-                    {/* <Field
-                      name="monthly_installment"
-                      component={Input}
-                      placeholder="Enter monthly installment"
-                      label={
-                        <div className="d-flex">
-                          <div className="d-flex"> Monthly Installment </div>
-                          <div className="d-flex ml-3">
-                            {maxMonthlyAmountSuggest ? (
-                              <span>
-                                (Max Suggested Installment Based on Salary :{" "}
-                                {maxMonthlyAmountSuggest?.toLocaleString() || 0}
-                                )
-                              </span>
-                            ) : null}
-                            <span style={{ color: "red" }}>*</span>
-                          </div>
-                        </div>
-                      }
-                      type="number"
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-
-                        if (
-                          totalLoanAmount !== undefined &&
-                          value > totalLoanAmount
-                        ) {
-                          return; // Prevent setting value above max
-                        }
-
-                        setFieldValue("monthly_installment", value);
-                        setMonthlyInstallments(value);
-                      }}
-                      onInput={(e) => {
-                        e.target.value = amountLimit(e.target.value); // Limit to 3 digits
-                      }}
-                      // disabled={userForEdit?.details[0]?.is_deducted}
-                      // disabled={userForEdit}
-                    /> */}
-                    <AmountInput
-                      field={{
-                        name: `monthly_installment`,
-                        value: values?.monthly_installment,
-                      }}
-                      form={{
-                        touched,
-                        errors,
-                        setFieldValue,
-                        setFieldTouched,
-                      }}
-                      max={maxAmountLimit}
-                      onChange={(e) => {
-                        const value = Number(e);
-                        if (
-                          totalLoanAmount !== undefined &&
-                          value > totalLoanAmount
-                        ) {
-                          return; // Prevent setting value above max
-                        }
-                        // setFieldValue("monthly_installment", value);
-                        setMonthlyInstallments(value);
-                      }}
-                      // disabled={userForEdit}
-                      placeholder="Enter monthly installment"
-                      label={
-                        <div className="d-flex">
-                          <div className="d-flex"> Monthly Installment </div>
-                          <div className="d-flex ml-3">
-                            {maxMonthlyAmountSuggest ? (
-                              <span>
-                                (Max Suggested Installment Based on Salary :{" "}
-                                {maxMonthlyAmountSuggest?.toLocaleString() || 0}
-                                )
-                              </span>
-                            ) : null}
-                            <span style={{ color: "red" }}>*</span>
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6 mt-3">
-                    <Field
-                      name="total_installment"
-                      component={Input}
-                      placeholder="Total installments"
-                      label={
-                        <div className="d-flex">
-                          <div className="d-flex"> Total installments</div>
-                          <div className="d-flex ml-3">
-                            <span>
-                              (Max installments :{" "}
-                              {monthlyInstallmentsLimit?.toLocaleString() || 0})
-                              <span style={{ color: "red" }}>*</span>
-                            </span>
-                          </div>
-                        </div>
-                      }
-                      type="number"
-                      value={totalInstallments}
-                      disabled={true}
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6 mt-3">
-                    <Field
-                      name="reason"
-                      component={TextArea}
-                      placeholder="Enter reason"
-                      label={
-                        <span>
-                          Reason <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      type="text"
-                    />
-                  </div>
+            )} */}
+          {empAuthorityList && empAuthorityList?.length === 0 && (
+            <span className="text-xs text-red-500 font-semibold">
+              Designation workflow policy does not exist for this employee.
+            </span>
+          )}
+          <Form className="form form-label-right" onSubmit={handleSubmit}>
+            <fieldset
+              disabled={
+                isUserForRead ||
+                formUIProps?.employeeId?.level > 1 ||
+                !currentState?.loan_config_details_permission ||
+                empAuthorityList?.length === 0
+              }
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Loan Type */}
+                <div>
+                  <SearchSelect
+                    name="loan_typeId"
+                    label={
+                      <span>
+                        Loan Type<span className="text-rejected">*</span>
+                      </span>
+                    }
+                    isDisabled={
+                      isUserForRead ||
+                      formUIProps?.employeeId?.level > 1 ||
+                      !currentState?.loan_config_details_permission ||
+                      empAuthorityList?.length === 0
+                    }
+                    onChange={(e) => {
+                      setFieldValue("loan_typeId", e.value || null);
+                      setChangeLoanType(e.value);
+                      policyLoadByLoanType(e.value);
+                      setFieldValue("applied_date", "");
+                      setFieldValue("installment_start_date", "");
+                      setFieldValue("total_loan_amount", "");
+                      setFieldValue("monthly_installment", "");
+                      setFieldValue("total_installment", "");
+                      setFieldValue("reason", "");
+                      setTotalInstallments("");
+                    }}
+                    value={
+                      loan_type?.find(
+                        (option) => option.value === values.loan_typeId
+                      ) || null
+                    }
+                    options={filteredOptions}
+                    error={errors.loan_typeId}
+                    touched={touched.loan_typeId}
+                  />
                 </div>
-              </fieldset>
-            </Form>
-          </Modal.Body>
 
+                {/* Applied Date */}
+                <div>
+                  <label>
+                    Applied Date<span className="text-rejected">*</span>
+                  </label>
+                  <Field
+                    name="applied_date"
+                    component={DatePickerField}
+                    dateFormat="dd-MMM-yyyy"
+                    placeholder="Select Date"
+                    onChange={(e) => {
+                      setFieldValue("applied_date", e || null);
+                      addMonthsToDate(payrollMonth, startDatePolicy);
+                    }}
+                    minDate={dateOfJoining}
+                    maxDate={new Date()}
+                    disabled={
+                      userForEdit ||
+                      userForEdit?.details[0]?.is_deducted ||
+                      !values.loan_typeId
+                    }
+                  />
+                </div>
+
+                {/* Installment Start Date */}
+                <div>
+                  <label>
+                    Installment Start Date
+                    <span className="text-rejected">*</span>
+                  </label>
+                  <Field
+                    name="installment_start_date"
+                    component={DatePickerField}
+                    dateFormat="dd-MMM-yyyy"
+                    placeholder="Select Date"
+                    minDate={payrollMonth || undefined}
+                    maxDate={startDateLimit}
+                    disabled={
+                      userForEdit ||
+                      userForEdit?.details[0]?.is_deducted ||
+                      !values.loan_typeId ||
+                      !values.applied_date ||
+                      !payrollMonth
+                    }
+                  />
+                </div>
+
+                {/* Total Loan Amount */}
+                <div>
+                  <AmountInput
+                    field={{
+                      name: "total_loan_amount",
+                      value: values?.total_loan_amount,
+                    }}
+                    form={{
+                      touched,
+                      errors,
+                      setFieldValue,
+                      setFieldTouched,
+                    }}
+                    onChange={(e) => {
+                      const value = Number(e);
+                      if (
+                        maxAmountLimit !== undefined &&
+                        value > maxAmountLimit
+                      )
+                        return;
+                      setTotalLoanAmount(value);
+                    }}
+                    max={maxAmountLimit}
+                    placeholder="Enter total loan amount"
+                    label={
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span>Total Loan Amount</span>
+                        <span>
+                          (Limit: {maxAmountLimit?.toLocaleString() || 0})
+                          <span className="text-rejected">*</span>
+                        </span>
+                      </div>
+                    }
+                  />
+                </div>
+
+                {/* Monthly Installment */}
+                <div>
+                  <AmountInput
+                    field={{
+                      name: "monthly_installment",
+                      value: values?.monthly_installment,
+                    }}
+                    form={{
+                      touched,
+                      errors,
+                      setFieldValue,
+                      setFieldTouched,
+                    }}
+                    max={maxAmountLimit}
+                    onChange={(e) => {
+                      const value = Number(e);
+                      if (
+                        totalLoanAmount !== undefined &&
+                        value > totalLoanAmount
+                      )
+                        return;
+                      setMonthlyInstallments(value);
+                    }}
+                    placeholder="Enter monthly installment"
+                    label={
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span>Monthly Installment</span>
+                        {maxMonthlyAmountSuggest && (
+                          <span>
+                            (Suggested Limit:{" "}
+                            {maxAmountLimit?.toLocaleString() || 0})
+                            <span className="text-rejected">*</span>
+                          </span>
+                        )}
+                      </div>
+                    }
+                  />
+                </div>
+
+                {/* Total Installment */}
+                <div>
+                  <Field
+                    name="total_installment"
+                    component={Input}
+                    placeholder="Total installments"
+                    label={
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span>Total installments</span>
+                        <span>
+                          (Max:{" "}
+                          {monthlyInstallmentsLimit?.toLocaleString() || 0})
+                          <span className="text-rejected">*</span>
+                        </span>
+                      </div>
+                    }
+                    type="number"
+                    value={totalInstallments}
+                    disabled
+                  />
+                </div>
+
+                {/* Reason - spans full width on desktop */}
+                <div className="md:col-span-3">
+                  <Field
+                    name="reason"
+                    component={TextArea}
+                    placeholder="Enter reason"
+                    label={
+                      <span>
+                        Reason<span className="text-rejected">*</span>
+                      </span>
+                    }
+                  />
+                </div>
+              </div>
+            </fieldset>
+          </Form>
+          {/* </Modal.Body> */}
           <Modal.Footer>
             <button
               type="reset"
@@ -782,7 +681,7 @@ export function FormEditForm({
                     empAuthorityList?.length === 0
                   }
                 >
-                  Save
+                  Submit Request
                   {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}

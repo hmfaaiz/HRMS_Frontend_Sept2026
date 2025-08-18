@@ -10,12 +10,16 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 //Validation for Form
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.array()
-  .of(Yup.string().required(VALIDATION_MESSAGES.required))
-  .required(VALIDATION_MESSAGES.required)
-  .min(1, "At least one subsidiary ID is required"),
+    .of(Yup.string().required(VALIDATION_MESSAGES.required))
+    .required(VALIDATION_MESSAGES.required)
+    .min(1, "At least one subsidiary ID is required"),
   type: Yup.number().required(VALIDATION_MESSAGES.required),
-  name: Yup.string().trim().required(VALIDATION_MESSAGES.required),
-  code: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^[A-Za-z]{1,3}$/, 'Code must contain only letters (A-Z)'),
+  name: Yup.string()
+    .trim()
+    .required(VALIDATION_MESSAGES.required),
+  code: Yup.string()
+    .required(VALIDATION_MESSAGES.required)
+    .matches(/^[A-Za-z]{1,3}$/, "Code must contain only letters (A-Z)"),
 });
 
 export function MasterEditForm({
@@ -27,19 +31,20 @@ export function MasterEditForm({
   isUserForRead,
   enableLoading,
   loading,
-  allSubsidiaryList
+  allSubsidiaryList,
 }) {
-
   const dropdown = (data) => {
-    return [{ value: "", label: "--Select--" }, ...data].map((el) => {
-      return (<>
-        <option value={el.value}>{el.label}</option>
-      </>)
-    })
-  }
+    return [{ value: "", label: "Select" }, ...data].map((el) => {
+      return (
+        <>
+          <option value={el.value}>{el.label}</option>
+        </>
+      );
+    });
+  };
 
   const allSubsidiaryMap = useMemo(() => {
-    return new Map(allSubsidiaryList?.map(item => [item.value, item]));
+    return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
   }, [allSubsidiaryList]);
 
   return (
@@ -50,7 +55,7 @@ export function MasterEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           enableLoading();
-          submitForm(values)
+          submitForm(values);
         }}
       >
         {({
@@ -60,7 +65,7 @@ export function MasterEditForm({
           handleBlur,
           handleChange,
           setFieldValue,
-          touched
+          touched,
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
@@ -71,22 +76,34 @@ export function MasterEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
-
-                    <div className="col-12 col-md-4 mt-3">
-                      Subsidiary
-                      <div style={{ backgroundColor: "#ffffff", height: "170px", padding: "10px", overflow: "scroll" }}>
-
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-1">
+                    <div className="text-black mt-1">
+                      <label>Subsidiary</label>
+                      <div className="overflow-auto">
                         <div className="multi-select">
-                          <div className="dropdown-label"></div>
-                          <div className="dropdown-options" style={{ fontSize: "12px", fontWeight: "bold", padding: "5px" }}>
+                          <div
+                            className="p-0 m-0 "
+                            style={{
+                              fontSize: "10.2px",
+                              // fontWeight: "bold",
+                              // padding: "2px",
+                            }}
+                          >
                             {allSubsidiaryList.map((option) => (
-                              <div key={option.value} className="dropdown-option">
-                                <input style={{ width: "25px" }}
+                              <div
+                                key={option.value}
+                                className="flex justify-start items-center"
+                              >
+                                <input
+                                  className="p-0 m-0 mr-1"
                                   name="subsidiaryId"
                                   type="checkbox"
                                   value={option.value}
-                                  checked={Boolean(values?.subsidiaryId?.includes(option?.value?.toString()))}
+                                  checked={Boolean(
+                                    values?.subsidiaryId?.includes(
+                                      option?.value?.toString()
+                                    )
+                                  )}
                                   onChange={handleChange}
                                 />
                                 {option.label}
@@ -96,12 +113,8 @@ export function MasterEditForm({
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="from-group row">
-
-                    
-                    <div className="col-12 col-md-6 mt-3">
+                    <div>
                       <Field
                         name="code"
                         component={Input}
@@ -120,8 +133,7 @@ export function MasterEditForm({
                       />
                     </div>
 
-                    
-                    <div className="col-12 col-md-6 mt-3">
+                    <div>
                       <Field
                         name="name"
                         component={Input}
@@ -139,21 +151,19 @@ export function MasterEditForm({
                       />
                     </div>
 
-
-             
-
-                  </div>
-
-                    <div className="from-group row">
-                         <div className="col-12 col-md-6 mt-3">
+                    <div>
                       <Field
                         name="type"
                         component={Select}
-                        className={errors.type && !values.type ? 'form-control is-invalid' : 'form-control'}
+                        className={
+                          errors.type && !values.type
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
                         placeholder=""
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          setFieldValue('type', e.target.value)
+                          setFieldValue("type", e.target.value);
                         }}
                         label={
                           <span>
@@ -165,9 +175,9 @@ export function MasterEditForm({
                         autoComplete="off"
                         children={dropdown(dropdownData)}
                       />
-                      {
-                        errors.type && !values.type && <CustomErrorLabel touched={true} error={errors.type} />
-                      }
+                      {errors.type && !values.type && (
+                        <CustomErrorLabel touched={true} error={errors.type} />
+                      )}
                     </div>
                   </div>
                 </fieldset>
@@ -188,7 +198,7 @@ export function MasterEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

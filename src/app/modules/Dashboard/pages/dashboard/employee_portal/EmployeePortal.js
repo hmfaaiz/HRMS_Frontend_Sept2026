@@ -1,77 +1,54 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useFormUIContext } from "../EmpUIContext";
-import { EmployeeSelection } from "../EmpPortalComponent/EmplyeeSelection";
+import React, { useEffect, useState } from "react";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import { getEmployeeHierarchy } from "../../../_redux/dashboardActions";
 import * as action from "../../../_redux/dashboardActions";
-import { LeaveBalanceTable } from "../EmpPortalComponent/LeaveBalanceTable";
 import { fetchLeaveApprovalApplication } from "../../../../LeaveApproval/redux/formAction";
 import {
   attendanceApprovalFilter,
   leaveApprovalFilter,
-  leaveDetailFilter,
   loanApprovalFilter,
-  loanDetailFilter,
 } from "../EmpUIHelper";
 import { fetchAttendanceApprovalApplication } from "../../../../AttendanceApproval/redux/formAction";
 import { EmployeeLoanDetail } from "../EmpPortalComponent/LoanDetailTable";
-import { fetchLeaveApplication } from "../../../../LeaveRequest/_redux/formActions";
-import { LeaveApplicationTable } from "../EmpPortalComponent/LeaveApplicationTable";
+import { LeaveBalanceDetail } from "../EmpPortalComponent/LeaveBalanceDetail";
 import EmployeeProfile from "../EmpPortalComponent/EmployeeProfile";
-import { EmployeeExtendedInfo } from "../EmpPortalComponent/EmployeeExtendedInfo";
 import { ReportingEmpTable } from "../EmpPortalComponent/ReportingEmpTable";
 import {
   fetchAttendance,
   fetchAttendanceSheetConsolidated,
 } from "../../../../AttendanceRequest/_redux/formActions";
 import { AttendanceSummary } from "../EmpPortalComponent/AttendanceSummary";
-import { HolidayTable } from "../EmpPortalComponent/HolidayTable";
-import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
+import { HolidayTable } from "../EmpPortalComponent/HolidayCalendar";
 import { fetchLoanApprovalApplication } from "../../../../LoanApproval/redux/formAction";
+import { PendingRequestSelf } from "../EmpPortalComponent/PendingRequest";
+import AttendanceBarChart from "../EmpPortalComponent/AttendanceBarChart";
+import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+
 export const EmployeePortal = () => {
-  const formUIContext = useFormUIContext();
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const [showEmpDetail, setShowEmpDetail] = useState(false);
-  const formUIProps = useMemo(() => {
-    return {
-      currentLevel: formUIContext?.currentLevel,
-      selectedEmp: formUIContext?.selectedEmp,
-      setCurrentLevel: formUIContext?.setCurrentLevel,
-      setSelectedEmp: formUIContext?.setSelectedEmp,
-      logedInEmp: formUIContext?.logedInEmp,
-      setLogedInEmp: formUIContext?.setLogedInEmp,
-    };
-  }, [formUIContext]);
-
   const {
-    employeeList,
-    levelList,
     user,
     logedInEmpoyee,
     leaveBalances,
     leaveApprovalCount,
     attendanceApprovalCount,
     loanList,
-    leaveRequest,
-    profileInfo,
-    contactInfo,
-    experienceInfo,
-    academicInfo,
-    skillsInfo,
+    // contactInfo,
+    // skillsInfo,
     payrollData,
     reportingEmployee,
     attendanceSummary,
     holidayList,
-    activeFiscalYear,
     loanApprovalCount,
     attRecord,
+    announcement,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
-      levelList: state?.dashboard?.levelList,
       leaveBalances: state?.dashboard?.leaveBalances,
       logedInEmpoyee: state?.dashboard?.logedInEmpoyee,
+      announcement: state?.dashboard?.announcement,
       user: state?.auth?.user,
       leaveApprovalCount: state.leave_approval.entities,
       attendanceApprovalCount: state.attendance_approval?.entities,
@@ -79,44 +56,17 @@ export const EmployeePortal = () => {
       loanList: state.dashboard?.loanList,
       holidayList: state.dashboard?.holidayList,
       leaveRequest: state?.leave_request?.entities,
-      profileInfo: state?.dashboard?.profileInfo,
-      contactInfo: state?.dashboard?.contactInfo,
-      experienceInfo: state?.dashboard?.experienceInfo,
-      academicInfo: state?.dashboard?.academicInfo,
-      skillsInfo: state?.dashboard?.skillsInfo,
+      // contactInfo: state?.dashboard?.contactInfo,
+      // skillsInfo: state?.dashboard?.skillsInfo,
       payrollData: state?.dashboard?.payrollData,
       reportingEmployee: state?.dashboard?.reportingEmployee,
       attendanceSummary: state?.attendance_request?.attendanceSummary,
       attRecord: state?.attendance_request?.entities,
-      activeFiscalYear: state?.dashboard?.activeFiscalYear,
     }),
     shallowEqual
   );
 
-  useEffect(() => {
-    dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
-  }, [formUIProps.currentLevel]);
-
-  useEffect(() => {
-    if (
-      !formUIProps.selectedEmp?.value &&
-      user?.employeeIdMapping &&
-      employeeList.length > 0
-    ) {
-      let findEmp = employeeList.find(
-        (e) => e?.value === user?.employeeIdMapping
-      );
-      formUIProps.setSelectedEmp(findEmp);
-      dispatch(action?.getLogedInEmployee());
-    }
-    if (formUIProps.selectedEmp?.value && formUIProps?.currentLevel === 0) {
-      let findEmp = employeeList.find(
-        (e) => e?.value === user?.employeeIdMapping
-      );
-      formUIProps.setSelectedEmp(findEmp);
-    }
-  }, [formUIProps?.selectedEmp, employeeList]);
-
+  /// fetch pending request info
   useEffect(() => {
     if (logedInEmpoyee) {
       dispatch(
@@ -136,39 +86,21 @@ export const EmployeePortal = () => {
 
   // First useEffect: Fetch basic data when selectedEmp changes
   useEffect(() => {
-    if (formUIProps?.selectedEmp) {
-      dispatch(action.fetchLeaveBalances(formUIProps.selectedEmp.value));
-      dispatch(action.fetchProfileInfo(formUIProps.selectedEmp.value));
-      dispatch(action.fetchAcademicInfo(formUIProps.selectedEmp.value));
-      dispatch(action.fetchContactInfo(formUIProps.selectedEmp.value));
-      dispatch(action.fetchExperienceInfo(formUIProps.selectedEmp.value));
-      dispatch(action.fetchSkillsInfo(formUIProps.selectedEmp.value));
-      dispatch(action.getPayrollMonth(formUIProps.selectedEmp.value));
-      dispatch(action.fetchReportingEmployee(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchLoanDetail(formUIProps?.selectedEmp?.value));
-      dispatch(action.fetchHolidayDetail(formUIProps?.selectedEmp?.value));
-    }
-  }, [formUIProps?.selectedEmp]);
+    dispatch(action.fetchLeaveBalances(user?.employeeIdMapping));
+    // dispatch(action.fetchContactInfo(user?.employeeIdMapping));
+    // dispatch(action.fetchSkillsInfo(user?.employeeIdMapping));
+    dispatch(action.getPayrollMonth(user?.employeeIdMapping));
+    dispatch(action.fetchReportingEmployee(user?.employeeIdMapping));
+    dispatch(action.fetchLoanDetail(user?.employeeIdMapping));
+    dispatch(action.fetchHolidayDetail(user?.employeeIdMapping));
+  }, [user?.employeeIdMapping]);
 
   // Second useEffect: Fetch leave & attendance when payrollData and selectedEmp are both available
   useEffect(() => {
-    if (formUIProps?.selectedEmp && payrollData) {
-      dispatch(
-        fetchLeaveApplication(
-          {
-            ...leaveDetailFilter,
-            filter: {
-              ...leaveDetailFilter?.filter,
-              from: new Date(payrollData?.startDate),
-              to: new Date(payrollData?.endDate),
-            },
-          },
-          formUIProps.selectedEmp.value
-        )
-      );
+    if (user?.employeeIdMapping && payrollData) {
       dispatch(
         fetchAttendanceSheetConsolidated({
-          employeeId: formUIProps.selectedEmp.value,
+          employeeId: user?.employeeIdMapping,
           from: payrollData.startDate,
           to: payrollData.endDate,
         })
@@ -179,74 +111,84 @@ export const EmployeePortal = () => {
           pageNumber: 1,
           sortOrder: "asc",
           filter: {
-            employeeId: formUIProps.selectedEmp.value,
+            employeeId: user?.employeeIdMapping,
             from: payrollData.startDate,
             to: payrollData.endDate,
           },
         })
       );
-      dispatch(
-        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
-      );
     }
-  }, [formUIProps?.selectedEmp, payrollData]);
+    setIsLoading(false);
+  }, [user?.employeeIdMapping, payrollData]);
 
-  console.log("profileInfoprofileInfo" , profileInfo);
+  useEffect(() => {
+    dispatch(action.fetchAnnouncementData());
+  }, []);
 
   return (
     <>
-      <EmployeeSelection
-        currentLevel={formUIProps?.currentLevel}
-        setCurrentLevel={formUIProps?.setCurrentLevel}
-        selectedEmp={formUIProps?.selectedEmp}
-        setSelectedEmp={formUIProps?.setSelectedEmp}
-        setShowEmpDetail={setShowEmpDetail}
-        showEmpDetail={showEmpDetail}
-        employeeList={employeeList}
-        levelList={levelList}
-        logedInEmpoyee={profileInfo}
-        leaveApprovalCount={leaveApprovalCount?.length || 0}
-        attendanceApprovalCount={attendanceApprovalCount?.length || 0}
-        loanApprovalCount={loanApprovalCount?.length || 0}
-      />
-      {showEmpDetail && (
-        <>
-          <EmployeeProfile data={profileInfo} />
-          <hr />
-          <ReportingEmpTable
-            empAuthorityList={
-              reportingEmployee?.length > 0 ? reportingEmployee : []
-            }
-          />{" "}
-        </>
+      {!isLoading && (
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+          {/* Sidebar: EmployeeSelection and EmployeeProfile */}
+          <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+            <div className="lg:hidden block">
+              <EmployeePortalMenu
+                announcement={announcement}
+                isAnouncement={true}
+                name="Dashboard"
+              />
+            </div>
+            <EmployeeProfile />
+          </div>
+          {/* Main Content: Dashboard, PendingRequestSelf, ReportingEmpTable, My Details, AttendanceSummary, LeaveApplicationTable, EmployeeLoanDetail */}
+          <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+            <div className="hidden lg:block">
+              <EmployeePortalMenu
+                announcement={announcement}
+                isAnouncement={true}
+                name="Dashboard"
+              />
+            </div>
+            {reportingEmployee && reportingEmployee?.length > 0 && (
+              <>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <PendingRequestSelf
+                    leaveApprovalCount={leaveApprovalCount?.length || 0}
+                    attendanceApprovalCount={
+                      attendanceApprovalCount?.length || 0
+                    }
+                    loanApprovalCount={loanApprovalCount?.length || 0}
+                  />
+                  <ReportingEmpTable
+                    empAuthorityList={
+                      reportingEmployee?.length > 0 ? reportingEmployee : []
+                    }
+                  />
+                </div>
+                <EmployeePortalMenu name="My Details" />
+              </>
+            )}
+            <div className="flex flex-col md:flex-row gap-4">
+              <AttendanceSummary attendanceSummary={attendanceSummary} />
+              <LeaveBalanceDetail leaveBalances={leaveBalances} />
+              <EmployeeLoanDetail
+                entities={loanList?.length > 0 ? loanList : []}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <AttendanceBarChart data={attRecord} />
+              <HolidayTable
+                entities={holidayList?.length > 0 ? holidayList : []}
+              />
+            </div>
+          </div>
+        </div>
       )}
-      <hr />
-      <AttendanceSummary
-        payrollData={payrollData}
-        attendanceSummary={attendanceSummary}
-        attRecord={attRecord}
-      />
-      <hr />
-      <LeaveBalanceTable leaveBalances={leaveBalances} />
-      <hr />
-      <HolidayTable
-        activeFiscalYear={activeFiscalYear}
-        entities={holidayList?.length > 0 ? holidayList : []}
-      />
-      <hr />
-      <LeaveApplicationTable
-        entities={leaveRequest?.length > 0 ? leaveRequest : []}
-        payrollData={payrollData}
-      />
-      <hr />
-      <EmployeeLoanDetail entities={loanList?.length > 0 ? loanList : []} />
-      <hr />
-      <EmployeeExtendedInfo
-        contactInfo={contactInfo}
-        experienceInfo={experienceInfo}
-        academicInfo={academicInfo}
-        skillsInfo={skillsInfo}
-      />
+      {isLoading && (
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      )}
     </>
   );
 };

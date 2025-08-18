@@ -25,10 +25,11 @@ export function Brand() {
       {/* begin::Brand */}
       <div
         className={`brand flex-column-auto ${layoutProps.brandClasses}`}
-        id="kt_brand" style={{ position: "fixed", width: "100%",zIndex:"10" ,backgroundColor:"#0093DD"}}
+        id="kt_brand" 
+        // style={{ position: "fixed", width: "100%",zIndex:"10" ,backgroundColor:"#0093DD"}}
       >
         {/* begin::Logo */}
-        <Link to="" className="brand-logo">
+        <Link to="/dashboard" className="brand-logo">
           <div style={{ float: "left" }}> <img alt="logo" width={55} height={50} src={layoutProps.headerLogo} /></div>
           <div style={{ float: "left", color: "white", fontSize: "22px", marginLeft: "5px", marginTop: "5px" }}>Dynasoft Cloud</div>
         </Link>
@@ -37,7 +38,7 @@ export function Brand() {
         {layoutProps.asideSelfMinimizeToggle && (
           <>
             {/* begin::Toggle */}
-            <button
+            {/* <button
               className="brand-toggle btn btn-sm px-0"
               id="kt_aside_toggle"
             >
@@ -48,7 +49,7 @@ export function Brand() {
                   )}
                 />
               </span>
-            </button>
+            </button> */}
             {/* end::Toolbar */}
           </>
         )}

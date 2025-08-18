@@ -20,7 +20,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import axios from 'axios';
-import { red } from "@material-ui/core/colors";
+// import { red } from "@material-ui/core/colors";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Link } from "@material-ui/core";
 import { useDesignationUIContext } from "../DesignationUIContext";
@@ -3095,7 +3095,7 @@ export function DesignationEditForm({
                                   }}
 
                                   id={'countryId-' + rightindex} >
-                                  <option value="-1"> --Select--</option>
+                                  <option value="-1"> Select</option>
                                   {
                                     dashboard.allCountry?.map((x) => {
                                       return <option value={x.value}> {x.label} </option>
@@ -3114,7 +3114,7 @@ export function DesignationEditForm({
                                   }}
 
                                   id={'cityId-' + rightindex} >
-                                  <option value="-1"> --Select--</option>
+                                  <option value="-1"> Select</option>
                                   {
 
                                     dashboard.allCity?.map((x) => {
@@ -3253,7 +3253,7 @@ export function DesignationEditForm({
                                     }}
 
                                     id={'countryId-' + rightindex} >
-                                    <option value="-1">--Select--</option>
+                                    <option value="-1">Select</option>
                                     {
                                       dashboard.allCountry?.map((x) => {
                                         return <option value={x.value}> {x.label} </option>
@@ -3271,7 +3271,7 @@ export function DesignationEditForm({
                                     }}
 
                                     id={'cityId-' + rightindex} >
-                                    <option value="-1"> --Select--</option>
+                                    <option value="-1"> Select</option>
 
                                     {
 
@@ -3519,7 +3519,7 @@ export function DesignationEditForm({
                                     }}
 
                                     id={'actionTakenBy-' + rightindex} >
-                                    <option value='-1'>--Select--</option>
+                                    <option value='-1'>Select</option>
                                     {
                                       dashboard.allEmployees?.filter(x => x.value != values.Id).map((x) => {
                                         return <option value={x.value}> {x.label} </option>
@@ -3590,7 +3590,7 @@ export function DesignationEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

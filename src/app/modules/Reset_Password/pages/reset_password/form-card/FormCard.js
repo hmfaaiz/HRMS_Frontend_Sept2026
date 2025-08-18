@@ -13,6 +13,7 @@ import {
 import { useFormUIContext } from "../FormUIContext"
 
 import { useSelector, shallowEqual, useDispatch } from "react-redux"
+import TCard from "../../../../../utils/common-modules/TCard"
 
 
 export function FormCard() {
@@ -65,7 +66,7 @@ export function FormCard() {
   return (
     <>
 
-      <Card>
+      {/* <Card>
       
 
         <CardBody>
@@ -78,7 +79,10 @@ export function FormCard() {
  
           
         </CardBody>
-      </Card>
+      </Card> */}
+          <TCard name={"Reset password"}>
+         <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
+    </TCard>
     </>
   )
 }

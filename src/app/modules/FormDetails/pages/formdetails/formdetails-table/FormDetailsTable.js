@@ -36,22 +36,19 @@ import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/l
 import { Link } from "@material-ui/core";
 import axios from "axios";
 import { setData } from "../../../../../../_metronic/redux/tripLogTable/tripLogTableSlice";
+import { ChevronRight } from "lucide-react";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
 
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-       return {
-
-        currentState: state.formDetails,
-        userAccess: state?.auth?.userAccess["FormDetails"],
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.formDetails,
+      userAccess: state?.auth?.userAccess["FormDetails"],
+    };
+  }, shallowEqual);
   const formUIProps = useMemo(() => {
     return {
       ids: formUIContext.ids,
@@ -63,18 +60,15 @@ export function FormTable() {
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       queryParams: formUIContext.queryParams,
-      setQueryParams: formUIContext.setQueryParams
+      setQueryParams: formUIContext.setQueryParams,
     };
   }, [currentState]);
-  
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
-  const [heading, setHeading] = useState('');
-
+  const [heading, setHeading] = useState("");
 
   const { totalCount, entities, listLoading } = currentState;
-
 
   //totalCount = 10
 
@@ -82,15 +76,13 @@ export function FormTable() {
 
   // const newdata = Object.entries(currentState);
 
-  const newdata = currentState.entities
+  const newdata = currentState.entities;
   const customList = currentState.customList || [];
-
 
   useEffect(() => {
     formUIProps.setIds([]);
     dispatch(actions.fetchUsers(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, formUIProps.setIds]);
-
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateChildForms"
@@ -131,7 +123,7 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-   
+
     // {
     //   dataField: "MenuName",
     //   text: "Parent",
@@ -172,47 +164,39 @@ export function FormTable() {
     sizePerPageList: uiHelpers.sizePerPageList,
     sizePerPage: formUIProps.queryParams.pageSize,
     page: formUIProps.queryParams.pageNumber,
-    parentId:formUIProps?.queryParams?.parentId
+    parentId: formUIProps?.queryParams?.parentId,
   };
   const [handleClickTriggered, setHandleClickTriggered] = useState(false);
 
   // Handle click event for fetching child forms
-  const handleClick = async (parentId,formName) => {
-
+  const handleClick = async (parentId, formName) => {
     setLoading(true);
     try {
+      let updatedQueryParams = {
+        ...formUIProps.queryParams,
 
-let updatedQueryParams = {
-  ...formUIProps.queryParams,
+        parentId,
+      };
 
-  parentId,
-};
-
-// Set the updated queryParams
-formUIProps.setQueryParams(updatedQueryParams);
-     dispatch(actions.customfetchFormDetail(parentId));
-      setHeading(formName)
+      // Set the updated queryParams
+      formUIProps.setQueryParams(updatedQueryParams);
+      dispatch(actions.customfetchFormDetail(parentId));
+      setHeading(formName);
     } catch (error) {
       console.error("Error fetching data:", error);
-
     } finally {
       setLoading(false);
     }
-
   };
 
   useEffect(() => {
-    
     if (newdata) {
-
       // const firstMatchingObj = newdata?.find(obj => obj?.Id);
       // 2-7-2025
-      const firstMatchingObj = newdata?.find(obj => obj?.isActive === true);
-
+      const firstMatchingObj = newdata?.find((obj) => obj?.isActive === true);
 
       if (firstMatchingObj && !paginationOptions.parentId) {
-      
-        handleClick( firstMatchingObj?.Id, firstMatchingObj?.formName);
+        handleClick(firstMatchingObj?.Id, firstMatchingObj?.formName);
       }
       // newdata.filter(obj => obj?.Id == 45).forEach(obj => {
       //   handleClick(obj?.Id, obj?.formName);
@@ -220,43 +204,37 @@ formUIProps.setQueryParams(updatedQueryParams);
     }
   }, [newdata]);
 
-
   return (
     <>
-
-
-      {/* <h1 className="mb-10">General Setups</h1> */}
-      {['1']?.map((dd, index) => (
-
-
-        <Card key={index}>
-          <CardBody>
-            <Row>
-              {/* <Col lg={2}>
-                <Form.Text className="col-form-label fw-bold fs-6">
-                  {'Parent Forms'}
-                </Form.Text>
-              </Col> */}
-              <Col lg={10}>
-                <Row>
-                  {/* {newdata?.map((obj, rightindex) => ( */}
-                  {newdata?.filter(obj => obj.isActive == true).map((obj, rightindex) => (
-                    <Col lg={3} key={rightindex}>
-                      <div className="row">
-               
-                        <Link id={obj.Id} href="javascript:void(0)" onClick={() => handleClick(obj.Id,obj.formName)}>{obj.formName}</Link>
-
-                       
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
+      {["1"]?.map((dd, index) => (
+        <div className="grid grid-cols-3 sm:grid-cols-4  md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 my-4 gap-1 text-sm">
+          {newdata
+            ?.filter((obj) => obj.isActive == true)
+            .map((obj, rightindex) => (
+              <div
+                className={`col-span-1 ${
+                  heading === obj.formName
+                    ? " text-tprimary font-bold underline"
+                    : "text-black font-semibold"
+                }`}
+                key={rightindex}
+              >
+                <div
+                  className="cursor-pointer hover:text-tprimary"
+                  id={obj.Id}
+                  onClick={() => {
+                    handleClick(obj.Id, obj.formName);
+                  }}
+                >
+                  <ChevronRight className="inline-block w-3 h-3" />
+                  {obj.formName}
+                </div>
+              </div>
+            ))}
+        </div>
       ))}
-      {heading && <h1> {heading} </h1>}
+      <hr />
+      {heading && <h6 className="font-bold mb-0 text-primary">{heading} </h6>}
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -268,14 +246,14 @@ formUIProps.setQueryParams(updatedQueryParams);
         draggable
         pauseOnHover
       />
-
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            // <Pagination
-            //   isLoading={listLoading}
-            //   paginationProps={paginationProps}
-            // >
+      <div className="w-full overflow-x-auto">
+        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+          {({ paginationProps, paginationTableProps }) => {
+            return (
+              // <Pagination
+              //   isLoading={listLoading}
+              //   paginationProps={paginationProps}
+              // >
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
@@ -298,10 +276,11 @@ formUIProps.setQueryParams(updatedQueryParams);
                 <PleaseWaitMessage entities={customList} />
                 <NoRecordsFoundMessage entities={customList} />
               </BootstrapTable>
-            // </Pagination>
-          );
-        }}
-      </PaginationProvider>
+              // </Pagination>
+            );
+          }}
+        </PaginationProvider>
+      </div>
     </>
   );
 }

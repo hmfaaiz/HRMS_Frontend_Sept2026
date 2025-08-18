@@ -89,7 +89,6 @@ export function FormFilter({ listLoading, user, setCity,
 
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
 {/* 
               <div className="col-12 col-md-12">
                 <input
@@ -118,7 +117,6 @@ export function FormFilter({ listLoading, user, setCity,
 />
 
 
-            </div>
           </form>
         )}
       </Formik>

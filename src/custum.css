@@ -7,6 +7,14 @@
     color: #F64E60;
 }
 
+#webpack-dev-server-client-overlay-div {
+  display: none !important;
+}
+
+iframe {
+    display: none !important;
+}
+
 .table-box {
     height: 350px;
     overflow-y: auto;
@@ -32,7 +40,7 @@
     /* border-left: 1px solid #000 !important;
     border-right: 1px solid #000 !important;
     border-bottom: 1px solid #000 !important; */
-    border-radius: 12px;
+    border-radius: 0px;
     color:#000 
 }
 

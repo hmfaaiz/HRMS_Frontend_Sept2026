@@ -34,16 +34,13 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess, payrollData } = useSelector(
-    (state) => {
-      return {
-        payrollData: state.employee_roster.payrollData,
-        currentState: state.employee_roster,
-        userAccess: state?.auth?.userAccess["Employee_Roster"],
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess, payrollData } = useSelector((state) => {
+    return {
+      payrollData: state.employee_roster.payrollData,
+      currentState: state.employee_roster,
+      userAccess: state?.auth?.userAccess["Employee_Roster"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -82,7 +79,7 @@ export function FormTable() {
         minWidth: "160px",
       },
 
-        formatter: (cell) => cell? cell:"Roster Via Roster Pattern",
+      formatter: (cell) => (cell ? cell : "Roster Via Roster Pattern"),
     },
     {
       dataField: "from",
@@ -93,7 +90,9 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "to",
@@ -104,7 +103,9 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
     },
     {
       dataField: "action",
@@ -138,56 +139,42 @@ export function FormTable() {
   };
 
   return (
-    <Accordion defaultActiveKey="">
-      <Card>
-        <Card.Header>
-          <div className='accordion-header-btn'>
-            <Accordion.Toggle as={Button} eventKey="0">
-              Employee Rosters
-              <KeyboardArrowDown />
-            </Accordion.Toggle>
-          </div>
-        </Card.Header>
-        <Accordion.Collapse eventKey="0">
-          <Card.Body>
-            <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-              {({ paginationProps, paginationTableProps }) => {
-                return (
-                  <Pagination
-                    isLoading={listLoading}
-                    paginationProps={paginationProps}
-                  >
-                    <BootstrapTable
-                      noDataIndication={NoRecordsFoundMessage({ entities })}
-                      wrapperClasses="table-responsive"
-                      bordered={false}
-                      classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                      bootstrap4
-                      remote
-                      keyField="Id"
-                      data={entities === null ? [] : entities}
-                      columns={columns}
-                      defaultSorted={uiHelpers.defaultSorted}
-                      onTableChange={getHandlerTableChange(
-                        FormUIProps.setQueryParams
-                      )}
-                      // selectRow={getSelectRow({
-                      //   entities,
+    <div className="w-full font-size-xs  bg-white rounded-lg overflow-y-auto">
+      <h6 className="font-bold mb-0 text-primary my-2">Employee Rosters</h6>
+      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+        {({ paginationProps, paginationTableProps }) => {
+          return (
+            <Pagination
+              isLoading={listLoading}
+              paginationProps={paginationProps}
+            >
+              <BootstrapTable
+                noDataIndication={NoRecordsFoundMessage({ entities })}
+                wrapperClasses="table-responsive"
+                bordered={false}
+                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                bootstrap4
+                remote
+                keyField="Id"
+                data={entities === null ? [] : entities}
+                columns={columns}
+                defaultSorted={uiHelpers.defaultSorted}
+                onTableChange={getHandlerTableChange(
+                  FormUIProps.setQueryParams
+                )}
+                // selectRow={getSelectRow({
+                //   entities,
 
-                      // })}
-                      {...paginationTableProps}
-                    >
-
-                      <PleaseWaitMessage entities={entities} />
-                      <NoRecordsFoundMessage entities={entities} />
-                    </BootstrapTable>
-                  </Pagination>
-                );
-              }}
-            </PaginationProvider>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+                // })}
+                {...paginationTableProps}
+              >
+                <PleaseWaitMessage entities={entities} />
+                <NoRecordsFoundMessage entities={entities} />
+              </BootstrapTable>
+            </Pagination>
+          );
+        }}
+      </PaginationProvider>
+    </div>
   );
 }

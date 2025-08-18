@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import { DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
@@ -44,7 +44,7 @@ const formValidation = Yup.object().shape(
       //   }
       // ),
       subsidiaryId: Yup.number()
-      .nullable().required("Required*")
+      .nullable().required(VALIDATION_MESSAGES.required)
       
   },
 
@@ -142,8 +142,8 @@ export function MasterEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                <div className="from-group row">
-                <div className="col-12 col-md-4 mt-3">
+                   <div className="grid grid-cols-12 gap-x-3 gap-y-1">
+                    <div className="col-span-6 lg:col-span-4">
                       <SearchSelect
                         name="subsidiaryId"
                         label={<span> Subsidiary<span style={{ color: 'red' }}>*</span></span>}
@@ -163,14 +163,19 @@ export function MasterEditForm({
                         options={dashboard.allSubsidiaryList}
                       />
                     </div>
-                  </div>
-                  <div className="from-group row">
-                    <div className="col-12 col-md-4 mt-3">
-
-                      <span> Start Date<span style={{ color: 'red' }}>*</span></span>
-                      <DatePicker
+             
+                  <div className="col-span-6 lg:col-span-4">
+                      {/* <span> Start Date<span style={{ color: 'red' }}>*</span></span> */}
+                      <Field
                         className="form-control"
+                        component={DatePickerField}
                         placeholder="Enter Start Date"
+                           label={
+                          <span>
+                            {" "}
+                            Start Date<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         selected={defstartDate}
                         onChange={(date) => {
                           setFieldValue("startDate", date);
@@ -186,7 +191,7 @@ export function MasterEditForm({
                                    setDefaultEndDate(endDate);
                         }}
                       
-                        timeInputLabel="Time:"
+                        // timeInputLabel="Time:"
                         dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="startDate"
@@ -196,18 +201,24 @@ export function MasterEditForm({
                     <ErrorMessage className="form-feedBack" name="startDate" component="div" />
                     </div>
 
-                    <div className="col-12 col-md-4 mt-3">
-                      <span> End Date<span style={{ color: 'red' }}>*</span></span>
-                      <DatePicker
+                  <div className="col-span-6 lg:col-span-4">
+                      <Field
                         className="form-control"
+                        component={DatePickerField}
                         placeholder="Enter End Date"
                         selected={defendDate}
+                          label={
+                          <span>
+                            {" "}
+                            End Date<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         onChange={(date) => {
                           setFieldValue("endDate", date);
                           setDefaultEndDate(date);
                         }}
 
-                        timeInputLabel="Time:"
+                        // timeInputLabel="Time:"
                         dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="endDate"
@@ -221,7 +232,7 @@ export function MasterEditForm({
 
 
 
-                  <div className="form-group row"></div>
+           
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -240,7 +251,7 @@ export function MasterEditForm({
                   onClick={onHide}
                   className="btn btn-primary btn-elevate"
                 >
-                  Ok
+                  OK
                 </button>
               )}
 

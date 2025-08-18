@@ -3,11 +3,13 @@ import SVG from "react-inlinesvg";
 import { shallowEqual, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import {Generatejob_offer_letter} from "../../../../_redux/redux-Actions";
+import { Generatejob_offer_letter } from "../../../../_redux/redux-Actions";
+import { CirclePower, Download, Eye, Pencil, Send, Trash2 } from "lucide-react";
 export function ActionsColumnFormatter(
   cellContent,
   row,
-  rowIndex, {
+  rowIndex,
+  {
     dispatch,
     pdfGenerateLoading,
     openEditFormDialog,
@@ -18,80 +20,73 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForView,
     isAccessForDelete,
-    isAccessForConvert,isAccessForOfferLetter
-
+    isAccessForConvert,
+    isAccessForOfferLetter,
   }
 ) {
   const isUserRead = false;
 
-
   return (
-
-
-
-    <div className="d-flex flex-nowrap align-items-center">
-
-
-      {(isAccessForConvert && row.isToConvertToEmployee) && (
-        <OverlayTrigger overlay={<Tooltip id="emp-convert-tooltip">Convert to Employee</Tooltip>}>
-          <a
-            className="btn btn-icon posting-button"
-            onClick={() => openConvertFormDialog(row.Id)}
-          >
-             <span className="svg-icon svg-icon-md svg-icon-primary">
-                     <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/vacancyPost.svg")} />
-                   </span>
+    <div className="space-x-2">
+      {isAccessForConvert && row.isToConvertToEmployee && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="emp-convert-tooltip">Convert to Employee</Tooltip>
+          }
+        >
+          <a className="" onClick={() => openConvertFormDialog(row.Id)}>
+            {/* <span className="svg-icon svg-icon-md svg-icon-primary">
+              <SVG
+                src={toAbsoluteUrl(
+                  "/media/svg/icons/Communication/vacancyPost.svg"
+                )}
+              />
+            </span> */}
+            <Send className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
 
-      {(isAccessForOfferLetter && row.isToShowOfferLetter) && (
-        <OverlayTrigger overlay={<Tooltip id="emp-letter-tooltip">Download Offer Letter</Tooltip>}>
-          <button
-          disabled={pdfGenerateLoading}
-            className="btn btn-icon posting-button"
+      {isAccessForOfferLetter && row.isToShowOfferLetter && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="emp-letter-tooltip">Download Offer Letter</Tooltip>
+          }
+        >
+          <a
+            disabled={pdfGenerateLoading}
+            className=""
             onClick={() => {
-            
               dispatch(Generatejob_offer_letter(row.Id));
             }}
           >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")} />
-            </span>
-          </button>
+            <Download className="w-4 h-4 text-black cursor-pointer" />
+          </a>
         </OverlayTrigger>
-      )} 
+      )}
 
       {/* View */}
       {isAccessForView && (
         <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
-          <a
-            className="btn btn-icon view-button"
-            onClick={() => openReadFormDialog(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/view.svg")} />
-            </span>
+          <a className="" onClick={() => openReadFormDialog(row.Id)}>
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
 
       {/* Edit */}
-      {isAccessForEdit && !row?.jobPostingStatus && row.isToUpdateDelete &&(
-        <OverlayTrigger overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}>
-          <a
-            className="btn btn-icon edit-button"
-            onClick={() => openEditFormDialog(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")} />
-            </span>
+      {isAccessForEdit && !row?.jobPostingStatus && row.isToUpdateDelete && (
+        <OverlayTrigger
+          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
+        >
+          <a onClick={() => openEditFormDialog(row.Id)}>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
 
       {/* Delete or Activate */}
-      {isAccessForDelete && !row?.jobPostingStatus && row.isToUpdateDelete &&(
+      {isAccessForDelete && !row?.jobPostingStatus && row.isToUpdateDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="delete-tooltip">
@@ -100,41 +95,34 @@ export function ActionsColumnFormatter(
           }
         >
           {row.isActive ? (
-            <a
-              className="btn btn-icon delete-button"
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-danger">
-                <SVG src={toAbsoluteUrl("/media/svg/icons/General/disable.svg")} />
-              </span>
+            <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
+              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
           ) : (
-            <a
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-1"
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <span className="svg-icon svg-icon-md svg-icon-success">A</span>
+            <a onClick={() => openActiveFormDialog(row.Id, row.isActive)}>
+              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
             </a>
           )}
         </OverlayTrigger>
       )}
 
-
       {/* Reopening */}
       {isAccessForEdit && row?.jobPostingStatus == 3 && (
-        <OverlayTrigger overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}>
+        <OverlayTrigger
+          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}
+        >
           <a
             className="btn btn-icon posting-button"
             onClick={() => openEditFormDialog(row.Id)}
           >
             <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")} />
+              <SVG
+                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
+              />
             </span>
           </a>
         </OverlayTrigger>
       )}
-
     </div>
-
   );
 }

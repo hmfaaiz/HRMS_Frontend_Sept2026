@@ -7,12 +7,12 @@
 
 // Variables
 // $brand-bg: #1a1a27;
-$brand-bg: rgb(96, 119, 153);
+$brand-bg: #0093dd;
 $brand-icon-color: #494b74;
 $brand-icon-color-hover: $primary;
 
 // $header-mobile-bg: #1a1a27;
-$header-mobile-bg: rgb(96, 119, 153);
+$header-mobile-bg: #0093dd;
 $header-mobile-shadow: 0px 1px 9px -3px rgba(0,0,0,0.1);
 $header-mobile-icon-color: #484f66;
 $header-mobile-icon-color-hover: $primary;
@@ -53,10 +53,6 @@ $header-mobile-icon-color-hover: $primary;
 		background-color: $header-mobile-bg;
 		//box-shadow: $header-mobile-shadow;
 
-		// Burger Icon
-		.burger-icon {
-			@include burger-icon-theme($header-mobile-icon-color, $header-mobile-icon-color-hover, $header-mobile-icon-color-hover);
-		}
 
 		// Button
 		.btn {

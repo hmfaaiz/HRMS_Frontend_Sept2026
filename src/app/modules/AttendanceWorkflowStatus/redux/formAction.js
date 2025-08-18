@@ -9,18 +9,38 @@ export const fetchAttendanceApprovalApplication = (
   employeeId
 ) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.list }));
-  if (employeeId) {
-    return requestFromServer
-      .getAllAttendanceApproval({ ...queryparm, employeeId })
-      .then((response) => {
-        dispatch(actions.LeaveApprovalApplicationFetched(response));
-      })
-      .catch((error) => {
-        error.clientMessage = "Can't find Leave Data";
-        dispatch(actions.catchError({ error, callType: callTypes.list }));
+
+  try {
+    if (employeeId) {
+      const response = await requestFromServer.getAllAttendanceApproval({
+        ...queryparm,
+        employeeId,
       });
-  } else {
-    dispatch(actions.LeaveApplicationFetched({}));
+
+      // Normalize so reducer always gets the same structure
+      const normalizedResponse = {
+        data: {
+          data: {
+            rows: Array.isArray(response?.data?.data?.rows)
+              ? response.data.data.rows
+              : [],
+            totalResults: Number(response?.data?.data?.totalResults) || 0,
+          },
+        },
+      };
+
+      dispatch(actions.LeaveApprovalApplicationFetched(normalizedResponse));
+    } else {
+      // Empty array fallback with the same structure as API success
+      dispatch(
+        actions.LeaveApplicationFetched({
+          data: { data: { rows: [], totalResults: 0 } },
+        })
+      );
+    }
+  } catch (error) {
+    error.clientMessage = "Can't find Leave Data";
+    dispatch(actions.catchError({ error, callType: callTypes.list }));
   }
 };
 

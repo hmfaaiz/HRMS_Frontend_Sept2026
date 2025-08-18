@@ -91,7 +91,7 @@ export function FormTable() {
   }, [attendanceCalendar, dispatch]);
 
   return (
-    <div style={{ height: "1550px" }}>
+    <div style={{ height: "1200px" }}>
       {/* Render the calendar */}
       {defaultCalendarDate && (
         <Calendar
