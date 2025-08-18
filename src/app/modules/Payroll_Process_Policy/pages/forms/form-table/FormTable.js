@@ -821,7 +821,7 @@ export function FormTable(user) {
 
 
 
-                        <div className="dropdown-options">
+                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                           {roles?.map((option) => (
                             <div key={option.Id} className="flex justify-start items-center">
                               <input className="mr-1"
@@ -855,7 +855,7 @@ export function FormTable(user) {
 
 
 
-                        <div className="dropdown-options">
+                                             <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                           {roles?.map((option) => (
                             <div key={option.Id} className="flex justify-start items-center">
                               <input className="mr-1"
@@ -887,7 +887,7 @@ export function FormTable(user) {
 
 
 
-                        <div className="dropdown-options">
+                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                           {roles?.map((option) => (
                             <div key={option.Id} className="flex justify-start items-center">
                               <input className="mr-1"
@@ -945,7 +945,7 @@ export function FormTable(user) {
 
 
 
-                      <div className="overflow-auto max-h-16 border-none">
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                         {dashboard.allEmployees.map((option) => (
                           <div key={option.value} className="flex justify-start items-center border-none">
                             <input className="mr-1"
@@ -1447,7 +1447,7 @@ export function FormTable(user) {
 
 
 
-                  <div className="overflow-auto max-h-16 border-none">
+                  <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
 
                     {dashboard.allEarnings.map((option) => (
                       <div key={option.value} className="flex justify-start items-center border-none">
@@ -1568,7 +1568,7 @@ export function FormTable(user) {
 
 
 
-                  <div className="overflow-auto max-h-16 border-none">
+                  <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                     {dashboard.allEarnings.map((option) => (
                       <div key={option.value} className="flex justify-start items-center border-none">
 
