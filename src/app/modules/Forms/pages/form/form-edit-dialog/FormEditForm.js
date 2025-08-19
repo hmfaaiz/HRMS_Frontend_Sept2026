@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
-
   fetchAllSubCenter,
   getLatestBookingNo,
   fetchAllFormsMenu,
-  getLatestTableId
+  getLatestTableId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
@@ -22,24 +25,16 @@ const cnicRegExp = /^[0-9]{5}-[0-9]{7}-[0-9]$/;
 // Password Regex
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
-const FormEditSchema = Yup.object().shape(
-  {
-    formName: Yup.string()
-      .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters.')
-      .required(VALIDATION_MESSAGES.required),
-    formCode: Yup.string()
-   .required(VALIDATION_MESSAGES.required),
+const FormEditSchema = Yup.object().shape({
+  formName: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Name must only contain letters.")
+    .required(VALIDATION_MESSAGES.required),
+  formCode: Yup.string().required(VALIDATION_MESSAGES.required),
 
-    moduleType:Yup.string()
-     .required(VALIDATION_MESSAGES.required),
+  moduleType: Yup.string().required(VALIDATION_MESSAGES.required),
 
-    isActive:Yup.string()
-     .required(VALIDATION_MESSAGES.required),
-    
-
-  },
-  
-);
+  isActive: Yup.string().required(VALIDATION_MESSAGES.required),
+});
 export function FormEditForm({
   saveReligion,
   user,
@@ -53,16 +48,12 @@ export function FormEditForm({
   enableLoading,
   loading,
 }) {
-
-
-
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   // Get User Details
   const { auth } = useSelector((state) => state);
   const [defFormMenu = null, setDefaultParentFormMenu] = useState(null);
   const [defFormCode = null, setDefaultFormCode] = useState(null);
-
 
   const isActiveOptions = [
     { value: false, label: "No" },
@@ -78,21 +69,28 @@ export function FormEditForm({
   //   }
   // }, [dispatch]);
 
-
   // This method is used for when edit record and get selected dept where id save in DB
   useEffect(() => {
-    const parentFormID = defFormMenu?.value ? defFormMenu.value : user.parentFormID;
+    const parentFormID = defFormMenu?.value
+      ? defFormMenu.value
+      : user.parentFormID;
     setDefaultParentFormMenu(
       dashboard.allDept &&
-      dashboard.allDept.filter((item) => {
-        return item.value === parentFormID;
-      })
+        dashboard.allDept.filter((item) => {
+          return item.value === parentFormID;
+        })
     );
   }, [user?.parentFormID, dashboard.parentFormID]);
 
   const fetchData = async (subsidiaryId, setValue) => {
-  
-    dispatch(getLatestTableId("t_form_menu", "formCode", " parentFormID is " + null   , setValue));
+    dispatch(
+      getLatestTableId(
+        "t_form_menu",
+        "formCode",
+        " parentFormID is " + null,
+        setValue
+      )
+    );
   };
 
   const moduleOptions = [
@@ -107,9 +105,11 @@ export function FormEditForm({
         initialValues={user}
         validationSchema={FormEditSchema}
         onSubmit={(values) => {
-    
           enableLoading();
-          saveReligion({ ...values, formCode: values.formCode ? values.formCode : defFormCode });
+          saveReligion({
+            ...values,
+            formCode: values.formCode ? values.formCode : defFormCode,
+          });
         }}
       >
         {({
@@ -131,38 +131,47 @@ export function FormEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="from-group row">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                    {}
                     {
-
-
+                      <div>
+                        <Field
+                          name="formCode"
+                          // disabled
+                          maxLength={6}
+                          component={Input}
+                          placeholder="Enter Form Code"
+                          label={
+                            <span>
+                              {" "}
+                              Code<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          value={values.formCode || defFormCode}
+                        />
+                      </div>
                     }
-                    {<div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="formCode"
-                        // disabled
-                        maxLength={6}
-                        component={Input}
-                        placeholder="Enter Form Code"
-                        label={<span> Code<span style={{ color: 'red' }}>*</span></span>}
-                        value={values.formCode || defFormCode}
-                      />
-                    </div>}
-                    {<div className="col-12 col-md-4 mt-3">
-                      <Field
-                        name="formName"
-                        maxLength={50}
-                        component={Input}
-                        placeholder="Enter Form Name"
-                        label={<span>  Name<span style={{ color: 'red' }}>*</span></span>}
+                    {
+                      <div>
+                        <Field
+                          name="formName"
+                          maxLength={50}
+                          component={Input}
+                          placeholder="Enter Form Name"
+                          label={
+                            <span>
+                              {" "}
+                              Name<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                        />
+                      </div>
+                    }
 
-                      />
-                    </div>}
-
-                   
-
-                    <div className="col-12 col-md-4 mt-3">
+                    <div>
                       <label htmlFor="basis_of_gratuityId">
-                      Select Active Status<span style={{ color: "red" }}>*</span>
+                        Select Active Status
+                        <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         name="isActive"
@@ -179,9 +188,7 @@ export function FormEditForm({
                         //   ) || null
                         // }
                         value={values.isActive}
-  
                       >
-                        
                         <option value="">Select </option>
                         {isActiveOptions.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -194,25 +201,20 @@ export function FormEditForm({
                       )}
                     </div>
 
-
-                         <div className="col-12 col-md-4 mt-3">
+                    <div>
                       <label htmlFor="moduleType">
-                      Select Module<span style={{ color: "red" }}>*</span>
+                        Select Module<span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
                         name="moduleType"
                         as="select"
                         className="form-control"
                         disabled={isUserForRead}
-                   
                         onChange={(e) => {
                           setFieldValue("moduleType", e.target.value); // Use the raw value
                         }}
-                  
                         value={values.moduleType}
-  
                       >
-                        
                         <option value="">Select </option>
                         {moduleOptions.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -225,7 +227,6 @@ export function FormEditForm({
                       )}
                     </div>
                   </div>
-                  <div className="form-group row"></div>
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -234,7 +235,7 @@ export function FormEditForm({
                 <button
                   type="button"
                   onClick={onHide}
-                  className="btn btn-light btn-elevate"
+                  className="btn btn-light"
                 >
                   Cancel
                 </button>
@@ -264,7 +265,7 @@ export function FormEditForm({
             </Modal.Footer>
           </>
         )}
-      </Formik >
+      </Formik>
     </>
   );
 }

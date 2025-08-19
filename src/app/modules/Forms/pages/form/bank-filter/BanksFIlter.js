@@ -1,7 +1,7 @@
-import React, { useMemo, useState, useEffect } from "react"
-import { Formik } from "formik"
-import { isEqual } from "lodash"
-import { useFormUIContext } from "../FormUIContext"
+import React, { useMemo, useState, useEffect } from "react";
+import { Formik } from "formik";
+import { isEqual } from "lodash";
+import { useFormUIContext } from "../FormUIContext";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import axios from "axios";
@@ -12,29 +12,30 @@ import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import {
   fetchAllCity,
-
   fetchAllSubCenter,
 } from "../../../../../../_metronic/redux/dashboardActions";
-
+import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const API_URL = process.env.REACT_APP_API_URL;
 
-
 const prepareFilter = (queryParams, values) => {
-  const { searchText } = values
-  const newQueryParams = { ...queryParams }
-  const filter = {}
+  const { searchText } = values;
+  const newQueryParams = { ...queryParams };
+  const filter = {};
 
   if (searchText) {
-    filter.searchQuery = searchText
+    filter.searchQuery = searchText;
     // filter.email = searchText
   }
-  newQueryParams.filter = filter
-  return newQueryParams
-}
+  newQueryParams.filter = filter;
+  return newQueryParams;
+};
 
-export function BanksFilter({ listLoading, user, setCity,
+export function BanksFilter({
+  listLoading,
+  user,
+  setCity,
   seletCity,
   setCenter,
   center,
@@ -43,12 +44,12 @@ export function BanksFilter({ listLoading, user, setCity,
   subCenter,
   alarmTime,
   setAlarmTime,
-  setVehicle, }) {
-
+  setVehicle,
+}) {
   const [defCity, setDefaultCity] = useState({});
   const dispatch = useDispatch();
-  const formUIContext = useFormUIContext()
-  const [Loading, setLoading] = useState(false)
+  const formUIContext = useFormUIContext();
+  const [Loading, setLoading] = useState(false);
   const { countryId, cityId } = useSelector((state) => state.auth.user);
   const dashboard = useSelector((state) => state.dashboard);
   const [defCenter, setDefaultCenter] = useState({});
@@ -56,18 +57,13 @@ export function BanksFilter({ listLoading, user, setCity,
   const [receiptDateFrom, setReceiptDateFrom] = useState(null);
   const [receiptDateTo, setReceiptDateTo] = useState(null);
   useEffect(() => {
-
     if (countryId) {
-  
       dispatch(fetchAllCity(1));
     }
   }, [countryId, dispatch]);
 
   useEffect(() => {
     if (cityId) {
-
-     
-     
     }
   }, [cityId, dispatch]);
 
@@ -75,14 +71,11 @@ export function BanksFilter({ listLoading, user, setCity,
     return {
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
-    }
-  }, [formUIContext])
+    };
+  }, [formUIContext]);
 
   async function fetchDonationReport(filterVal) {
     try {
-   
-    
-
       const response = await axios.post(`${API_URL}/edrs/donation-report`, {
         bookNo: filterVal.txtBookNo,
         cityId: filterVal.cityId || "0",
@@ -90,12 +83,10 @@ export function BanksFilter({ listLoading, user, setCity,
         subCenterId: filterVal.subCenterId || "0",
         dateFrom: filterVal.receiptDateFrom || "",
         dateTo: filterVal.receiptDateTo,
-               
       });
-   
+
       return response?.data?.data;
     } catch (error) {
-     
       console.error("Error fetching data:", error);
     }
   }
@@ -127,7 +118,6 @@ export function BanksFilter({ listLoading, user, setCity,
   }
 
   async function createPdf(filterVal) {
-
     // setStartDate(e);
     // const getYear = moment(e).format("yyyy");
     //pbookNo = e;
@@ -136,8 +126,7 @@ export function BanksFilter({ listLoading, user, setCity,
     if (filterVal != null) {
       setLoading(true);
       const data = await fetchDonationReport(filterVal);
- 
-      
+
       const table = {
         headerRow: [
           "SNo",
@@ -153,13 +142,13 @@ export function BanksFilter({ listLoading, user, setCity,
         body: [],
         footer: {
           columns: [
-            'test123',
+            "test123",
             {
-              alignment: 'right',
-              text: 'Footer text'
-            }
+              alignment: "right",
+              text: "Footer text",
+            },
           ],
-          margin: [10, 0]
+          margin: [10, 0],
         },
       };
 
@@ -167,14 +156,13 @@ export function BanksFilter({ listLoading, user, setCity,
       let t = 0;
       data &&
         data.forEach((item, index) => {
-   
-
           if (data.length - 1 == index) {
-            data.forEach((item) => { total += parseFloat(item.amount) })
-
+            data.forEach((item) => {
+              total += parseFloat(item.amount);
+            });
           }
           const row = [
-            index+1,
+            index + 1,
             item.receiptNo,
             item.donorName,
             item.amount,
@@ -184,8 +172,7 @@ export function BanksFilter({ listLoading, user, setCity,
             item.clerkName,
             item.center,
             item.subcenter,
-            item.createdon
-
+            item.createdon,
           ];
           table.body.push(row);
         });
@@ -200,8 +187,8 @@ export function BanksFilter({ listLoading, user, setCity,
         "",
         "",
         "",
-        ""
-      ]
+        "",
+      ];
 
       table.body.push(totall); // For Adding Total Amount in ROW
 
@@ -211,20 +198,20 @@ export function BanksFilter({ listLoading, user, setCity,
         let mm = today.getMonth() + 1; // Months start at 0!
         let dd = today.getDate();
 
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
+        if (dd < 10) dd = "0" + dd;
+        if (mm < 10) mm = "0" + mm;
 
-        const formattedToday = dd + '/' + mm + '/' + yyyy;
+        const formattedToday = dd + "/" + mm + "/" + yyyy;
         return formattedToday;
         // document.getElementById('DATE').value = formattedToday;
       }
 
       const documentDefinition = {
-        pageSize: 'A4',
-        pageOrientation: 'landscape',
+        pageSize: "A4",
+        pageOrientation: "landscape",
         fontSize: 6,
         margin: [5, 0, 0, 30],
-        width:250,
+        width: 250,
         content: [
           {
             alignment: "justify",
@@ -239,8 +226,8 @@ export function BanksFilter({ listLoading, user, setCity,
               {
                 width: "*",
                 alignment: "center",
-                margin:[5,0,0,30],
-                top:[50],
+                margin: [5, 0, 0, 30],
+                top: [50],
                 text: [
                   `DONATION REPORT\n 20-Receipt(s)
                   BookNo# ${pbookNo} KARACHI`,
@@ -257,28 +244,28 @@ export function BanksFilter({ listLoading, user, setCity,
           },
           {
             table: {
-              headerRows:1,
+              headerRows: 1,
               body: [table.headerRow, ...table.body],
               fontSize: 2,
               style: {
                 body: {
                   fontSize: 1,
-                  margin: [10, 0]
-                  
+                  margin: [10, 0],
                 },
-              }
+              },
             },
           },
         ],
         footer: {
           columns: [
-            'Date: ' + GetDate(),
+            "Date: " + GetDate(),
             {
-              alignment: 'right',
-              text: 'Signature________________________ \n Zonal Office                \xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\ '
-            }
+              alignment: "right",
+              text:
+                "Signature________________________ \n Zonal Office                \xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0 ",
+            },
           ],
-          margin: [10, 0]
+          margin: [10, 0],
         },
         styles: {
           header: {
@@ -290,15 +277,15 @@ export function BanksFilter({ listLoading, user, setCity,
           body: {
             fontSize: 2,
             bold: false,
-            pageSize: 'A4',
-            pageOrientation: 'landscape'
-          }
+            pageSize: "A4",
+            pageOrientation: "landscape",
+          },
         },
 
         defaultStyle: {
           columnGap: 20,
-          pageSize: 'A4',
-          pageOrientation: 'landscape'
+          pageSize: "A4",
+          pageOrientation: "landscape",
         },
       };
 
@@ -314,29 +301,27 @@ export function BanksFilter({ listLoading, user, setCity,
   }
 
   function addCommas(nStr) {
-    nStr += '';
-    let x = nStr.split('.');
+    nStr += "";
+    let x = nStr.split(".");
     let x1 = x[0];
-    let x2 = x.length > 1 ? '.' + x[1] : '';
+    let x2 = x.length > 1 ? "." + x[1] : "";
     let rgx = /(\d+)(\d{3})/;
     while (rgx.test(x1)) {
-      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+      x1 = x1.replace(rgx, "$1" + "," + "$2");
     }
     return x1 + x2;
   }
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
-
-    const newQueryParams = prepareFilter(banksUIProps.queryParams, values)
+    const newQueryParams = prepareFilter(banksUIProps.queryParams, values);
     if (!isEqual(newQueryParams, banksUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1
+      newQueryParams.pageNumber = 1;
       // update list by queryParams
-  
 
-      banksUIProps.setQueryParams(newQueryParams)
+      banksUIProps.setQueryParams(newQueryParams);
     }
-  }
+  };
 
   return (
     <>
@@ -352,25 +337,21 @@ export function BanksFilter({ listLoading, user, setCity,
           alarmTimeId: [],
         }}
         onSubmit={(values) => {
-  
           // createPdf(values);
-          applyFilter(values)
+          applyFilter(values);
         }}
       >
         {({
-          values,
-          handleSubmit,
+           handleSubmit,
           handleBlur,
           handleChange,
           setFieldValue,
+          values,
           errors,
           touched,
-
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
-
-              <div className="col-12 col-md-12">
+              {/* <div className="col-12 col-md-12">
                 <input
                   type="text"
                   className="form-control"
@@ -386,183 +367,17 @@ export function BanksFilter({ listLoading, user, setCity,
                 <small className="form-text text-muted">
                   <b>Search</b> in all fields
                 </small>
-              </div>
-            </div>
-          </form>
-        )}
-      </Formik>
-
-      <Formik
-        enableReinitialize={true}
-        // initialValues={{
-        //   donorName: "", // values => All=""/Susspended=0/Active=1/Pending=2
-        //   receiptNo: "", // values => All=""/Business=0/Individual=1
-        //   searchText: "",
-        //   cityId: '0',
-        //   centerId: '0',
-        //   subCenterId: '0',
-        //   alarmTimeId: [],
-        // }}
-        onSubmit={(values) => {
-       
-          //createPdf(values);
-          //applyFilter(values)
-        }}
-      >
-        {({
-          values,
-          handleSubmit,
-          handleBlur,
-          handleChange,
-          setFieldValue,
-          errors,
-          touched,
-
-        }) => (
-          <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="row">
-              {/* <div className="col-12 col-md-4">
-                <label>Date From</label>
-                <DatePicker
-                  className="form-control"
-                  placeholder="Enter Date From"
-                  // selected={receiptDateFrom}
-                  // onChange={(date) => {
-                  //   setFieldValue("receiptDateFrom", date);
-                  //   setReceiptDateFrom(date);
-                  // }}
-                  timeInputLabel="Time:"
-                  dateFormat="dd/MM/yyyy"
-                  showTimeInput
-                  name="incidentlocationReachdateTime"
-                  disabled={isUserForRead}
-                />
               </div> */}
-              {/* <div className="col-12 col-md-4">
-                <label>Date To</label>
-                <DatePicker
-                  className="form-control"
-                  placeholder="Enter Date To"
-                  // selected={receiptDateTo}
-                  // onChange={(date) => {
-                  //   setFieldValue("receiptDateTo", date);
-                  //   setReceiptDateTo(date);
-                  // }}
-                  timeInputLabel="Time:"
-                  dateFormat="dd/MM/yyyy"
-                  showTimeInput
-                  name="incidentlocationReachdateTime"
-                  disabled={isUserForRead}
-                />
-              </div> */}
-             {/* <div className="col-12 col-md-12">
-             
-                <label>Bank</label>
-                <input
-
-                  className="form-control"
-                  //onBlur={(e) => createPdf(e.target.value)}
-                  // values={values.txtBookNo}
-                  // onChange={(e) => {
-                  //   setFieldValue("txtBookNo", e.target.value.trim())
-                  //   // handleSubmit()
-                  // }}
-                  name="txtBankSearch"
-                  placeholder="Enter Bank Name"
-                // onBlur={handleBlur}
-
-                />
-
-
-              </div>*/}
-
-             
-            </div>
-            <div className="row">
-            {/* <div className="col-12 col-md-4">
-                <SearchSelect
-                  name="cityId"
-                  label="Select City*"
-                  isDisabled={false}
-                  onBlur={() => {
-                    //   handleBlur({ target: { name: "cityId" } });
-                  }}
-                  // onChange={(e) => {
-                  //   setFieldValue("cityId", e.value || null);
-                  //   setDefaultCity(e);
-                  //   dispatch(fetchAllCityCenters(e.value));
-                  // }}
-                  // value={defCity}
-                  // error={errors.cityId}
-                  // touched={touched.cityId}
-                  // options={dashboard.allCity}
-                />
-              </div> */}
-              {/* <div className="col-12 col-md-4">
-                <SearchSelect
-                  name="centerId"
-                  label="Select Circle*"
-                  isDisabled={isUserForRead && true}
-                  // onBlur={() => {
-                  //   handleBlur({ target: { name: "centerId" } });
-                  // }}
-                  // onChange={(e) => {
-                  //   setFieldValue("centerId", e.value || '0');
-                  //   setDefaultCenter(e);
-                  //   dispatch(fetchAllSubCenter(e.value));
-                  // }}
-                  // value={defCenter}
-                  // // error={user.centerId}
-                  // // touched={touched.centerId}
-                  // options={dashboard.cityCenters}
-                />
-              </div> */}
-              {/* <div className="col-12 col-md-4">
-                <SearchSelect
-                  name="subCenterId"
-                  label="Center*"
-                  isDisabled={isUserForRead && true}
-                  // onBlur={() => {
-                  //   handleBlur({ target: { name: "subCenterId" } });
-                  // }}
-                  // onChange={(e) => {
-                  //   setFieldValue("subCenterId", e.value || null);
-                  //   setDefaultSubCenter(e);
-               
-                  //   // setDefaultDriver([]);
-                  //   // dispatch(fetchDrivers(e.value));
-                  // }}
-                  // value={defSubcenter}
-                  // error={errors.subCenterId}
-                  // touched={touched.subCenterId}
-                  // options={dashboard.allSubCenter}
-                />
-              </div> */}
-            </div>
-            {/* <div className="row">
-              <div className="col-md-12">
-                <button
-                  type="submit"
-                  onClick={() => handleSubmit()}
-                  className="btn btn-primary btn-elevate"
-                >
-                  Search
-                  {(
-                    <span className="ml-3 mr-3"></span>
-                  )}
-                </button>
-              </div>
-
-            </div> */}
+              <InputSearch
+                values={values}
+                fieldName="searchText"
+                setFieldValue={setFieldValue}
+                handleBlur={handleBlur}
+                handleSubmit={handleSubmit}
+              />
           </form>
         )}
       </Formik>
     </>
-  )
-
-  return (
-    <>
-
-    </>
-  )
+  );
 }

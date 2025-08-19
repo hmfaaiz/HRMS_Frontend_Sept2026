@@ -9,7 +9,7 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
           ? data?.dashlet_name?.replace("${days}", data?.days)
           : data?.dashlet_name}
       </h6>
-      <div className="space-y-3 my-2 min-h-72 overflow-auto">
+      <div className={data?.data.length > 0 ? "space-y-3 my-2 min-h-72 overflow-auto" : `space-y-0 my-2 max-h-6 overflow-auto`} >
         {data?.data.length > 0 ? (
           data?.data.map((person) => (
             <div key={person?.Id} className="flex justify-between items-center">

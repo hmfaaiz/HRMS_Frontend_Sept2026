@@ -100,7 +100,7 @@ const colorPalette = [
 //   },
 // };
 
-const getOptions = (chartType) => {
+const getOptions = (chartType, chartId) => {
   const showGrid =
     chartType === "bar" ||
     chartType === "line" ||
@@ -110,24 +110,43 @@ const getOptions = (chartType) => {
     plugins: {
       legend: { display: false },
       tooltip: {
-        enabled: true,
-        callbacks: {
-          label: function(context) {
-            let value = context.parsed;
-            if (typeof value === "object" && value !== null) {
-              const isHorizontal = context.chart.options.indexAxis === "y";
-              value = isHorizontal ? value.x : value.y;
-            }
-            const dataArr = context.dataset.data.map((v) => {
-              if (typeof v === "object" && v !== null) {
-                return typeof v.x === "number" ? v.x : v.y;
-              }
-              return v;
-            });
-            const total = dataArr.reduce((a, b) => a + b, 0);
-            const percent = total ? ((value / total) * 100).toFixed(1) : 0;
-            return `${context.label}: ${value} (${percent}%)`;
-          },
+        enabled: false,
+        external: function(context) {
+          const uniqueId = `chartjs-tooltip-${chartId}`;
+          let tooltipEl = document.getElementById(uniqueId);
+
+          if (!tooltipEl) {
+            tooltipEl = document.createElement("div");
+            tooltipEl.id = uniqueId;
+            tooltipEl.style.position = "absolute";
+            tooltipEl.style.background = "#E6F8FF";
+            tooltipEl.style.color = "#0093DD";
+            tooltipEl.style.fontSize = "10.4px";
+            tooltipEl.style.fontWeight = "500";
+            tooltipEl.style.padding = "4px";
+            tooltipEl.style.borderRadius = "6px";
+            tooltipEl.style.pointerEvents = "none";
+            tooltipEl.style.whiteSpace = "nowrap";
+            tooltipEl.style.transition = "all .1s ease";
+            tooltipEl.style.zIndex = "1000";
+            context.chart.canvas.parentNode.appendChild(tooltipEl);
+          }
+
+          const tooltipModel = context.tooltip;
+
+          if (tooltipModel.opacity === 0) {
+            tooltipEl.style.opacity = 0;
+            return;
+          }
+
+          if (tooltipModel.body) {
+            tooltipEl.innerHTML = tooltipModel.body[0].lines[0];
+          }
+
+          const { caretX, caretY } = tooltipModel;
+          tooltipEl.style.opacity = 1;
+          tooltipEl.style.left = caretX + "px";
+          tooltipEl.style.top = caretY + "px";
         },
       },
       datalabels: {
@@ -136,18 +155,12 @@ const getOptions = (chartType) => {
     },
     scales: {
       x: {
-        ticks: { display: false }, // Hide x-axis values
-        grid: {
-          display: showGrid, // Show grid only for bar/line
-          drawBorder: false,
-        },
+        ticks: { display: false },
+        grid: { display: showGrid, drawBorder: false },
       },
       y: {
-        ticks: { display: false }, // Hide y-axis values
-        grid: {
-          display: showGrid, // Show grid only for bar/line
-          drawBorder: false,
-        },
+        ticks: { display: false },
+        grid: { display: showGrid, drawBorder: false },
       },
     },
   };
@@ -228,7 +241,7 @@ const ChartData = ({ data }) => {
         </div>
       </div>
       {/* {data?.data.length > 0 ? ( */}
-      <div className="flex justify-center items-center w-full h-full">
+      <div className="flex justify-center items-center w-full h-full relative">
         <div
           style={{
             width:
@@ -245,39 +258,51 @@ const ChartData = ({ data }) => {
           {chartType === "pie" && (
             <Pie
               data={departmentData}
-              options={getOptions(chartType)}
+              options={getOptions(chartType, data?.Id)}
               plugins={[ChartDataLabels]}
             />
           )}
           {chartType === "bar" && (
             <Bar
               data={departmentData}
-              options={getOptions(chartType)}
+              options={getOptions(chartType, data?.Id)}
               plugins={[ChartDataLabels]}
             />
           )}
           {chartType === "horizontalBar" && (
             <Bar
               data={departmentData}
-              options={{ ...getOptions(chartType), indexAxis: "y" }}
+              options={{ ...getOptions(chartType, data?.Id), indexAxis: "y" }}
               plugins={[ChartDataLabels]}
             />
           )}
           {chartType === "doughnut" && (
             <Doughnut
               data={departmentData}
-              options={getOptions(chartType)}
+              options={getOptions(chartType, data?.Id)}
               plugins={[ChartDataLabels]}
             />
           )}
           {chartType === "line" && (
             <Line
               data={departmentData}
-              options={getOptions(chartType)}
+              options={getOptions(chartType, data?.Id)}
               plugins={[ChartDataLabels]}
             />
           )}
         </div>
+        {/* <div className="grid grid-cols-2 gap-2">
+          {departmentData.labels.map((label, idx) => (
+            <div key={label} className="flex items-start">
+              <label
+                style={{
+                  background: departmentData.datasets[0].backgroundColor[idx],
+                }}
+              />
+              <label>{label}</label>
+            </div>
+          ))}
+        </div> */}
       </div>
       {/* // ) : ( //{" "}
       <div className="flex justify-center items-center w-full h-full min-h-68">
@@ -285,26 +310,6 @@ const ChartData = ({ data }) => {
         //{" "}
       </div>
       // )} */}
-      {/* <div
-              className="d-grid px-2"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "8px",
-                alignItems: "center",
-              }}
-            >
-              {departmentData.labels.map((label, idx) => (
-                <div key={label} className="d-flex align-items-start">
-                  <span
-                    style={legendDotStyle(
-                      departmentData.datasets[0].backgroundColor[idx]
-                    )}
-                  />
-                  <span style={{ fontSize: "10px" }}>{label}</span>
-                </div>
-              ))}
-            </div> */}
     </div>
   );
 };
