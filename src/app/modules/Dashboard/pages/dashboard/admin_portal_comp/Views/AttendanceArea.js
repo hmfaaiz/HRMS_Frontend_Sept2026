@@ -18,7 +18,7 @@ const AttendanceArea = ({
   summaryData,
   setBigTableModalData,
   setSmallTableModalData,
-  holidayList
+  holidayList,
 }) => {
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
@@ -121,20 +121,20 @@ const AttendanceArea = ({
           {/* stats card area  */}
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Active Employees"}
-              value={summaryData?.activeEmployee || 0}
+              name={"Present Today"}
+              value={summaryData?.presentToday || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Inactive Employees"}
-              value={summaryData?.inActiveEmployee || 0}
+              name={"Absent Today"}
+              value={summaryData?.absentToday || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"New Employees"}
-              value={summaryData?.newEmployee || 0}
+              name={"Late Today"}
+              value={summaryData?.lateToday || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
@@ -143,7 +143,7 @@ const AttendanceArea = ({
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+          {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
@@ -166,7 +166,7 @@ const AttendanceArea = ({
               value={summaryData?.applicantInFinalPhase || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
-          </div>
+          </div> */}
         </div>
         {/* chart area  */}
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
@@ -209,7 +209,7 @@ const AttendanceArea = ({
             }
             return null;
           })}
-                  <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
+        <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
       </div>
     </div>
   );

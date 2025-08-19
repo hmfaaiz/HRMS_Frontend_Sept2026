@@ -93,7 +93,7 @@ export function BigTable({ data, setBigTableModalData }) {
           View All
         </lable>
       </div>
-      <div className="min-h-64 overflow-auto">
+      <div className={data?.data.length > 0 ? "min-h-64 overflow-auto" : `max-h-6 overflow-auto`}>
         {data?.data.length > 0 ? (
           <BootstrapTable
             wrapperClasses="table-responsive"

@@ -19,9 +19,8 @@ const EmployeeArea = ({
   summaryData,
   setSmallTableModalData,
   setBigTableModalData,
-  holidayList
+  holidayList,
 }) => {
-
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
@@ -134,40 +133,40 @@ const EmployeeArea = ({
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"New Employees"}
+              name={"Joined this Year"}
               value={summaryData?.newEmployee || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
-            {/* <StatsCard
-              name={"Employees On Leave"}
-              value={summaryData?.employeeOnLeave || 0}
-              icon={<User className="w-5 h-5 text-white" />}
-            /> */}
-          </div>
-          {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Active Jobs"}
-              value={summaryData?.openJobs || 0}
-              icon={<Briefcase className="w-5 h-5 text-white" />}
-            />
-            <StatsCard
-              name={"Active Applicants"}
-              value={summaryData?.applicant || 0}
+              name={"Separated this Year"}
+              value={summaryData?.leftEmployee || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Applicants Hired"}
-              value={summaryData?.applicantHiredThisYear || 0}
+              name={"Male Employees"}
+              value={summaryData?.maleEmployee || 0}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              name={"Female Employees"}
+              value={summaryData?.femaleEmployee || 0}
+              icon={<User className="w-5 h-5 text-white" />}
+            />
+          </div>
+           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+            <StatsCard
+              name={"Average Age"}
+              value={summaryData?.averageAgeEmployee || 0}
+              icon={<User className="w-5 h-5 text-white" />}
+            />
+            {/* <StatsCard
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
               icon={<User className="w-5 h-5 text-white" />}
-            />
-          </div> */}
+            /> */}
+          </div>
         </div>
         {/* chart area  */}
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
@@ -210,7 +209,7 @@ const EmployeeArea = ({
             }
             return null;
           })}
-                  <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
+        <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
       </div>
     </div>
   );
