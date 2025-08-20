@@ -5,7 +5,7 @@ import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
 import StatsCard from "../StatsCard";
-import { User, Briefcase } from "lucide-react";
+import {  HouseWifi, ClockArrowUp } from "lucide-react";
 import { HolidayTable } from "../../EmpPortalComponent/HolidayCalendar";
 const LeaveArea = ({
   allSubsidiaryList,
@@ -18,7 +18,8 @@ const LeaveArea = ({
   summaryData,
   setSmallTableModalData,
   setBigTableModalData,
-  holidayList
+  setSummaryModalHeading,
+  holidayList,
 }) => {
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
@@ -122,35 +123,45 @@ const LeaveArea = ({
             <StatsCard
               name={"Active Employees"}
               value={summaryData?.activeEmployee || 0}
+              keyName={"activeEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Inactive Employees"}
               value={summaryData?.inActiveEmployee || 0}
+              keyName={"inActiveEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div> */}
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Pending Leave Request"}
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+              name={"Leave Request"}
               value={summaryData?.pendingLeavesRequest || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"pendingLeavesRequest"}
+              icon={<ClockArrowUp className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"employeeOnLeave"}
+              icon={<HouseWifi className="w-5 h-5 text-white" />}
             />
           </div>
           {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
+              keyName={"openJobs"}
               icon={<Briefcase className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Active Applicants"}
               value={summaryData?.applicant || 0}
+              keyName={"applicant"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div> */}
@@ -158,11 +169,13 @@ const LeaveArea = ({
             <StatsCard
               name={"Applicants Hired"}
               value={summaryData?.applicantHiredThisYear || 0}
+              keyName={"applicantHiredThisYear"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
+              keyName={"applicantInFinalPhase"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div> */}
@@ -208,7 +221,7 @@ const LeaveArea = ({
             }
             return null;
           })}
-                  <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
+        <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
       </div>
     </div>
   );

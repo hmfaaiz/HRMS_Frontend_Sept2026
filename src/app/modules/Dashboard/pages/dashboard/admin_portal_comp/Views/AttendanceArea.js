@@ -1,7 +1,12 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import { User, Briefcase } from "lucide-react";
+import {
+  HouseWifi,
+  LogIn,
+  LogOut,
+  ClockAlert,
+} from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -18,6 +23,7 @@ const AttendanceArea = ({
   summaryData,
   setBigTableModalData,
   setSmallTableModalData,
+  setSummaryModalHeading,
   holidayList,
 }) => {
   return (
@@ -121,49 +127,73 @@ const AttendanceArea = ({
           {/* stats card area  */}
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Present Today"}
               value={summaryData?.presentToday || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"presentToday"}
+              icon={<LogIn className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Absent Today"}
               value={summaryData?.absentToday || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"absentToday"}
+              icon={<LogOut className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Late Today"}
               value={summaryData?.lateToday || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"lateToday"}
+              icon={<ClockAlert className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"employeeOnLeave"}
+              icon={<HouseWifi className="w-5 h-5 text-white" />}
             />
           </div>
           {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
+              keyName={"openJobs"}
               icon={<Briefcase className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Applicants"}
               value={summaryData?.applicant || 0}
+              keyName={"applicant"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Hired"}
               value={summaryData?.applicantHiredThisYear || 0}
+              keyName={"applicantHiredThisYear"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
+              keyName={"applicantInFinalPhase"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div> */}

@@ -1,7 +1,7 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import { User, Briefcase } from "lucide-react";
+import {  NotepadText, HeartHandshake, Users, BriefcaseBusiness, FileUser, ListCheck } from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -18,6 +18,7 @@ const RecuritmentArea = ({
   summaryData,
   setSmallTableModalData,
   setBigTableModalData,
+  setSummaryModalHeading,
   holidayList,
 }) => {
   return (
@@ -118,50 +119,74 @@ const RecuritmentArea = ({
           {/* stats card area  */}
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
-              icon={<Briefcase className="w-5 h-5 text-white" />}
+              keyName={"openJobs"}
+              icon={<BriefcaseBusiness className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Applicants"}
               value={summaryData?.applicant || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicant"}
+              icon={<Users className="w-5 h-5 text-white" />}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Hired"}
               value={summaryData?.applicantHiredThisYear || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicantHiredThisYear"}
+              icon={<HeartHandshake className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicantInFinalPhase"}
+              icon={<NotepadText className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Application Phase"}
               value={summaryData?.applicantInApplicationPhase || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicantInApplicationPhase"}
+              icon={<FileUser className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Evaluation Phase"}
               value={summaryData?.applicantInEvaluationPhase || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicantInEvaluationPhase"}
+              icon={<ListCheck className="w-5 h-5 text-white" />}
             />
           </div>
           {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
+              keyName={"openJobs"}
               icon={<Briefcase className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Applicants"}
               value={summaryData?.applicant || 0}
+              keyName={"applicant"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div> */}

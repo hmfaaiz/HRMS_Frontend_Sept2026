@@ -16,6 +16,7 @@ const PayrollArea = ({
   allDashboardAlerts,
   summaryData,
   setSmallTableModalData,
+  setSummaryModalHeading,
   setBigTableModalData,
   holidayList
 }) => {
@@ -24,7 +25,7 @@ const PayrollArea = ({
       <div className="col-span-4 space-y-2">
         <div className="grid grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
           {/* dropdown area  */}
-          <div>
+          {/* <div>
             <SearchSelect
               name="subsidiaryId"
               isDisabled={!allSubsidiaryList}
@@ -115,17 +116,21 @@ const PayrollArea = ({
                   : []),
               ]}
             />
-          </div>
+          </div> */}
           {/* stats card area  */}
           {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               name={"Active Employees"}
               value={summaryData?.activeEmployee || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"activeEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Inactive Employees"}
               value={summaryData?.inActiveEmployee || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"inActiveEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
@@ -133,11 +138,15 @@ const PayrollArea = ({
             <StatsCard
               name={"New Employees"}
               value={summaryData?.newEmployee || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"newEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"employeeOnLeave"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
@@ -145,11 +154,15 @@ const PayrollArea = ({
             <StatsCard
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"openJobs"}
               icon={<Briefcase className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Active Applicants"}
               value={summaryData?.applicant || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"applicant"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div>
@@ -157,11 +170,15 @@ const PayrollArea = ({
             <StatsCard
               name={"Applicants Hired"}
               value={summaryData?.applicantHiredThisYear || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"applicantHiredThisYear"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
+              setSummaryModalHeading={setSummaryModalHeading}
+              keyName={"applicantInFinalPhase"}
               icon={<User className="w-5 h-5 text-white" />}
             />
           </div> */}

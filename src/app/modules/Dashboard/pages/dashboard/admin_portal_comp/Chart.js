@@ -167,7 +167,7 @@ const getOptions = (chartType, chartId) => {
 };
 
 const ChartData = ({ data }) => {
-  const [chartType, setChartType] = useState("pie");
+  const [chartType, setChartType] = useState(data?.color_theme_class || "pie");
   // Memoize departmentData and total
   const departmentData = useMemo(() => {
     const labels =
@@ -222,7 +222,9 @@ const ChartData = ({ data }) => {
           {data?.days
             ? data?.dashlet_name?.replace("${days}", data?.days)
             : data?.dashlet_name}
-          <p className="text-xs m-0 text-black">Hover to see</p>
+          <p className="text-xs m-0 font-normal text-black">
+            Interactive chart — hover to explore values.
+          </p>
         </h6>
         {/* chart type selection */}
         <div className="flex space-x-1">
@@ -231,8 +233,10 @@ const ChartData = ({ data }) => {
               key={type.key}
               type="button"
               onClick={() => setChartType(type.key)}
-              className={`text-xs border-none rounded-sm w-6 h-6 ${
-                type.key === chartType ? "bg-tprimary" : "bg-tlight"
+              className={`text-xs border-none rounded-sm w-6 h-6  ${
+                type.key === chartType
+                  ? "text-tprimary bg-tsecondary"
+                  : "text-black bg-tlight"
               }`}
             >
               {type.icon}
@@ -241,7 +245,7 @@ const ChartData = ({ data }) => {
         </div>
       </div>
       {/* {data?.data.length > 0 ? ( */}
-      <div className="flex justify-center items-center w-full h-full relative">
+      <div className="relative  max-h-72 overflow-y-auto">
         <div
           style={{
             width:
@@ -250,7 +254,7 @@ const ChartData = ({ data }) => {
                 : "240px",
             position: "relative",
           }}
-          className="my-2"
+          className="my-2  mx-auto"
         >
           {data?.data?.length === 0 && (
             <label className="text-center">No Record Available</label>
@@ -291,18 +295,39 @@ const ChartData = ({ data }) => {
             />
           )}
         </div>
-        {/* <div className="grid grid-cols-2 gap-2">
-          {departmentData.labels.map((label, idx) => (
-            <div key={label} className="flex items-start">
-              <label
-                style={{
-                  background: departmentData.datasets[0].backgroundColor[idx],
-                }}
-              />
-              <label>{label}</label>
-            </div>
-          ))}
-        </div> */}
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          {data?.data?.length > 0 &&
+            data?.data?.map((e, idx) => (
+              <div
+                key={idx}
+                className="grid grid-cols-5 gap-x-2 gap-y-1 items-center text-xs"
+              >
+                {/* <label
+                  style={{
+                    color: departmentData.datasets[0].backgroundColor[idx],
+                  }}
+                  className="w-2 h-2 rounded-full"
+                /> */}
+                <p
+                  style={{
+                    color: departmentData.datasets[0].backgroundColor[idx],
+                  }}
+                  className="text-black m-0 p-0 col-span-4 truncate"
+                  title={e?.label}
+                >
+                  {e?.label}
+                </p>
+                <p
+                  style={{
+                    color: departmentData.datasets[0].backgroundColor[idx],
+                  }}
+                  className="font-extrabold m-0"
+                >
+                  {e?.total || 0}
+                </p>
+              </div>
+            ))}
+        </div>
       </div>
       {/* // ) : ( //{" "}
       <div className="flex justify-center items-center w-full h-full min-h-68">
