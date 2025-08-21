@@ -1,7 +1,16 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import { Briefcase, User } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Handshake,
+  HeartHandshake,
+  HouseWifi,
+  NotepadText,
+  UserCheck,
+  Users,
+  UserX,
+} from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -18,6 +27,7 @@ const DefaultArea = ({
   summaryData,
   setBigTableModalData,
   setSmallTableModalData,
+  setSummaryModalHeading,
   holidayList,
 }) => {
   return (
@@ -120,50 +130,74 @@ const DefaultArea = ({
           {/* stats card area  */}
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Employees"}
               value={summaryData?.activeEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"activeEmployee"}
+              icon={<UserCheck className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Inactive Employees"}
               value={summaryData?.inActiveEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"inActiveEmployee"}
+              icon={<UserX className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"New Employees"}
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+              name={"Joined this Year"}
               value={summaryData?.newEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"newEmployee"}
+              icon={<Handshake className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"employeeOnLeave"}
+              icon={<HouseWifi className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
-              icon={<Briefcase className="w-5 h-5 text-white" />}
+              keyName={"openJobs"}
+              icon={<BriefcaseBusiness className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Applicants"}
               value={summaryData?.applicant || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicant"}
+              icon={<Users className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Hired"}
               value={summaryData?.applicantHiredThisYear || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicantHiredThisYear"}
+              icon={<HeartHandshake className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"applicantInFinalPhase"}
+              icon={<NotepadText className="w-5 h-5 text-white" />}
             />
           </div>
         </div>
@@ -180,12 +214,9 @@ const DefaultArea = ({
         {/* chart area  */}
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (
-                // e?.master_Id === panels[activeKey]?.resourceId &&
-                e?.dashlet_type === "big_table" &&
-                e?.is_fav
-              ) {
+            allDashboardAlerts
+              .filter((el) => el?.dashlet_type === "big_table" && el?.is_fav)
+              ?.map((e, alertIdx) => {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -193,9 +224,7 @@ const DefaultArea = ({
                     data={e}
                   />
                 );
-              }
-              return null;
-            })}
+              })}
         </div>
       </div>
       <div className="col-span-1 space-y-2">
