@@ -110,7 +110,7 @@ const getOptions = (chartType, chartId) => {
     plugins: {
       legend: { display: false },
       tooltip: {
-        enabled: false,
+        enabled: false, // disable default
         external: function(context) {
           const uniqueId = `chartjs-tooltip-${chartId}`;
           let tooltipEl = document.getElementById(uniqueId);
@@ -123,13 +123,13 @@ const getOptions = (chartType, chartId) => {
             tooltipEl.style.color = "#0093DD";
             tooltipEl.style.fontSize = "10.4px";
             tooltipEl.style.fontWeight = "500";
-            tooltipEl.style.padding = "4px";
+            tooltipEl.style.padding = "4px 8px";
             tooltipEl.style.borderRadius = "6px";
             tooltipEl.style.pointerEvents = "none";
             tooltipEl.style.whiteSpace = "nowrap";
             tooltipEl.style.transition = "all .1s ease";
-            tooltipEl.style.zIndex = "1000";
-            context.chart.canvas.parentNode.appendChild(tooltipEl);
+            tooltipEl.style.zIndex = "9999"; // high z-index
+            document.body.appendChild(tooltipEl); // <--- append to body instead of chart container
           }
 
           const tooltipModel = context.tooltip;
@@ -139,14 +139,35 @@ const getOptions = (chartType, chartId) => {
             return;
           }
 
-          if (tooltipModel.body) {
-            tooltipEl.innerHTML = tooltipModel.body[0].lines[0];
+          if (tooltipModel.dataPoints?.length) {
+            const dp = tooltipModel.dataPoints[0];
+            let value = dp.raw;
+            if (typeof value === "object" && value !== null) {
+              const isHorizontal = context.chart.options.indexAxis === "y";
+              value = isHorizontal ? value.x : value.y;
+            }
+
+            const dataArr = dp.dataset.data.map((v) =>
+              typeof v === "object" && v !== null
+                ? typeof v.x === "number"
+                  ? v.x
+                  : v.y
+                : v
+            );
+            const total = dataArr.reduce((a, b) => a + b, 0);
+            const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+
+            tooltipEl.innerHTML = `${dp.label}: ${value} (${percent}%)`;
           }
 
+          // --- position relative to the page, not container ---
+          const canvasRect = context.chart.canvas.getBoundingClientRect();
           const { caretX, caretY } = tooltipModel;
+
           tooltipEl.style.opacity = 1;
-          tooltipEl.style.left = caretX + "px";
-          tooltipEl.style.top = caretY + "px";
+          tooltipEl.style.left =
+            canvasRect.left + window.scrollX + caretX + "px";
+          tooltipEl.style.top = canvasRect.top + window.scrollY + caretY + "px";
         },
       },
       datalabels: {
@@ -244,14 +265,14 @@ const ChartData = ({ data }) => {
           ))}
         </div>
       </div>
-      {/* {data?.data.length > 0 ? ( */}
-      <div className="relative  max-h-72 overflow-y-auto">
+      <div className="relative  max-h-72 overflow-auto">
         <div
           style={{
             width:
               chartType === "pie" || chartType === "doughnut"
                 ? "180px"
-                : "240px",
+                : "250px",
+            height: "180px",
             position: "relative",
           }}
           className="my-2  mx-auto"
@@ -329,12 +350,6 @@ const ChartData = ({ data }) => {
             ))}
         </div>
       </div>
-      {/* // ) : ( //{" "}
-      <div className="flex justify-center items-center w-full h-full min-h-68">
-        // <label>No Data Available</label>
-        //{" "}
-      </div>
-      // )} */}
     </div>
   );
 };

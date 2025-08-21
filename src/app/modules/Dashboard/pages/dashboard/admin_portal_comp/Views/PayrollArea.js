@@ -18,14 +18,13 @@ const PayrollArea = ({
   setSmallTableModalData,
   setSummaryModalHeading,
   setBigTableModalData,
-  holidayList
+  holidayList,
 }) => {
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
-        <div className="grid grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
-          {/* dropdown area  */}
-          {/* <div>
+        {/* <div className="grid grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
+          <div>
             <SearchSelect
               name="subsidiaryId"
               isDisabled={!allSubsidiaryList}
@@ -116,9 +115,8 @@ const PayrollArea = ({
                   : []),
               ]}
             />
-          </div> */}
-          {/* stats card area  */}
-          {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+          </div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               name={"Active Employees"}
               value={summaryData?.activeEmployee || 0}
@@ -181,8 +179,8 @@ const PayrollArea = ({
               keyName={"applicantInFinalPhase"}
               icon={<User className="w-5 h-5 text-white" />}
             />
-          </div> */}
-        </div>
+          </div>
+        </div> */}
         {/* chart area  */}
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
@@ -224,7 +222,7 @@ const PayrollArea = ({
             }
             return null;
           })}
-                  <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
+        <HolidayTable entities={holidayList?.length > 0 ? holidayList : []} />
       </div>
     </div>
   );
