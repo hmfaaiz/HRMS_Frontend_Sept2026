@@ -214,12 +214,9 @@ const DefaultArea = ({
         {/* chart area  */}
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
-            allDashboardAlerts?.map((e, alertIdx) => {
-              if (
-                // e?.master_Id === panels[activeKey]?.resourceId &&
-                e?.dashlet_type === "big_table" &&
-                e?.is_fav
-              ) {
+            allDashboardAlerts
+              .filter((el) => el?.dashlet_type === "big_table" && el?.is_fav)
+              ?.map((e, alertIdx) => {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -227,9 +224,7 @@ const DefaultArea = ({
                     data={e}
                   />
                 );
-              }
-              return null;
-            })}
+              })}
         </div>
       </div>
       <div className="col-span-1 space-y-2">
