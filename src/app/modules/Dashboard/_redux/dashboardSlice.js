@@ -78,6 +78,7 @@ const initialDashboardState = {
   //// dashbaord related service
   allDashboardAlerts: [],
   summaryData: {},
+  summaryDetailData: null,
   allPayrollAccountList: [],
   announcement: [],
 };
@@ -323,6 +324,9 @@ export const dashboardSlice = createSlice({
     },
     SummaryFetch: (state, action) => {
       state.summaryData = action.payload;
+    },
+    SummaryDetailFetch: (state, action) => {
+      state.summaryDetailData = action.payload;
     },
     AnnouncementFetch: (state, action) => {
       state.announcement = action.payload;

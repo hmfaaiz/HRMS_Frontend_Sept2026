@@ -353,6 +353,22 @@ export const fetchSummary = (filter) => async (dispatch) => {
     });
 };
 
+export const fetchSummaryDetail = (filter, name) => async (dispatch) => {
+  if (filter && name) {
+    return await requestFromServer
+      .getSummaryDetail({ filter, name })
+      .then((response) => {
+        const entities = response.data?.data;
+        dispatch(actions.SummaryDetailFetch(entities));
+      })
+      .catch((error) => {
+        dispatch(actions.SummaryDetailFetch(null));
+      });
+  } else {
+    dispatch(actions.SummaryDetailFetch(null));
+  }
+};
+
 // export const fetchRecruitmentSummary = (filter) => async (dispatch) => {
 //   return await requestFromServer
 //     .getRecruitmentSummary(filter)

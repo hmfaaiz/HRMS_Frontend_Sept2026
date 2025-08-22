@@ -87,13 +87,23 @@ export function BigTable({ data, setBigTableModalData }) {
             : data?.dashlet_name}
         </h6>
         <lable
-          className="text-black cursor-pointer font-medium underline text-xs hover:text-tprimary"
+          className={
+            data?.data.length > 0
+              ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`
+              : `text-gray-500 cursor-not-allowed font-medium text-xs`
+          }
           onClick={() => setBigTableModalData(data)}
         >
           View All
         </lable>
       </div>
-      <div className={data?.data.length > 0 ? "min-h-64 overflow-auto" : `max-h-6 overflow-auto`}>
+      <div
+        className={
+          data?.data.length > 0
+            ? "min-h-64 overflow-auto"
+            : `max-h-6 overflow-auto`
+        }
+      >
         {data?.data.length > 0 ? (
           <BootstrapTable
             wrapperClasses="table-responsive"

@@ -5,7 +5,15 @@ import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
 import StatsCard from "../StatsCard";
-import { User, Briefcase } from "lucide-react";
+import {
+  UserCheck,
+  UserX,
+  Handshake,
+  CalendarClock,
+  Mars,
+  Venus,
+  Cake,
+} from "lucide-react";
 import { HolidayTable } from "../../EmpPortalComponent/HolidayCalendar";
 
 const EmployeeArea = ({
@@ -20,6 +28,7 @@ const EmployeeArea = ({
   setSmallTableModalData,
   setBigTableModalData,
   holidayList,
+  setSummaryModalHeading,
 }) => {
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
@@ -121,49 +130,74 @@ const EmployeeArea = ({
           {/* stats card area  */}
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Employees"}
               value={summaryData?.activeEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"activeEmployee"}
+              icon={<UserCheck className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Inactive Employees"}
               value={summaryData?.inActiveEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"inActiveEmployee"}
+              icon={<UserX className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Joined this Year"}
               value={summaryData?.newEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"newEmployee"}
+              icon={<Handshake className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Separated this Year"}
               value={summaryData?.leftEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"leftEmployee"}
+              icon={<CalendarClock className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Male Employees"}
               value={summaryData?.maleEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"maleEmployee"}
+              icon={<Mars className="w-5 h-5 text-white" />}
             />
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Female Employees"}
               value={summaryData?.femaleEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"femaleEmployee"}
+              icon={<Venus className="w-5 h-5 text-white" />}
             />
           </div>
-           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Average Age"}
               value={summaryData?.averageAgeEmployee || 0}
-              icon={<User className="w-5 h-5 text-white" />}
+              keyName={"averageAgeEmployee"}
+              icon={<Cake className="w-5 h-5 text-white" />}
             />
             {/* <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+
               name={"Applicants Final Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
+              keyName={"applicantInFinalPhase"}
               icon={<User className="w-5 h-5 text-white" />}
             /> */}
           </div>

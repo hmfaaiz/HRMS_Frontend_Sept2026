@@ -139,6 +139,10 @@ export function getSummary(filter) {
   return axios.post(`${USERS_URL}/dashboard/summary`, filter );
 }
 
+export function getSummaryDetail(filter) {
+  return axios.post(`${USERS_URL}/dashboard/summary-detail`, filter );
+}
+
 export function getRecruitmentSummary(filter) {
   return axios.post(`${USERS_URL}/dashboard/recruitment-summary`, filter );
 }

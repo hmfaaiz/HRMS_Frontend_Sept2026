@@ -9,7 +9,13 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
           ? data?.dashlet_name?.replace("${days}", data?.days)
           : data?.dashlet_name}
       </h6>
-      <div className={data?.data.length > 0 ? "space-y-3 my-2 min-h-72 overflow-auto" : `space-y-0 my-2 max-h-6 overflow-auto`} >
+      <div
+        className={
+          data?.data.length > 0
+            ? "space-y-3 my-2 min-h-72 overflow-auto"
+            : `space-y-0 my-2 max-h-6 overflow-auto`
+        }
+      >
         {data?.data.length > 0 ? (
           data?.data.map((person) => (
             <div key={person?.Id} className="flex justify-between items-center">
@@ -40,12 +46,17 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
           <label className="text-center">No Record Available</label>
         )}
       </div>
-      <lable
-        className="text-black cursor-pointer text-right font-medium underline text-xs hover:text-tprimary flex justify-end"
-        onClick={() => setSmallTableModalData(data)}
-      >
-        Expand
-      </lable>
+        <lable
+        className={
+            data?.data.length > 0
+              ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary flex justify-end`
+              : `text-gray-500 cursor-not-allowed font-medium text-xs flex justify-end`
+          }
+          // className="text-black cursor-pointer text-right font-medium underline text-xs hover:text-tprimary flex justify-end"
+          onClick={() => setSmallTableModalData(data)}
+        >
+          Expand
+        </lable>
     </div>
   );
 };
