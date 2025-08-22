@@ -222,18 +222,43 @@ const LoanApproval = lazy(() => import("./modules/LoanApproval/page/index"));
 const InterviewSchedule = lazy(() =>
   import("./modules/Interview_Schedule/index")
 );
-const ApplicantProfileModule = lazy(() => import("./modules/ApplicantProfile/pages/index"));
-const ResumeSearchEngineModule = lazy(() => import("./modules/ResumeSearchEngine/pages/index"));
+const ApplicantProfileModule = lazy(() =>
+  import("./modules/ApplicantProfile/pages/index")
+);
+const ResumeSearchEngineModule = lazy(() =>
+  import("./modules/ResumeSearchEngine/pages/index")
+);
 const JobOfferModule = lazy(() => import("./modules/Job_Offer/page/index"));
-const RecruitmentDashboardModule = lazy(() => import("./modules/RecruitmentDashboard/pages/index"));
-const LeaveWorkflowStatus = lazy(()=> import('./modules/LeaveWorkflowStatus/page/index'))
-const LoanWorkflowStatus = lazy(()=> import("./modules/LoanWorkflowStatus/page/index"))
-const AttendanceWorkflowStatus = lazy(()=> import("./modules/AttendanceWorkflowStatus/page/index"))
-const TeamLeaveCalender = lazy(()=> import("./modules/Leave_Calendar_Team/pages/index"))
-const TeamAttendanceCalender = lazy(()=> import("./modules/Attendance_Calendar_Team/pages/index"))
-const PortalHolidayCalendar = lazy(()=> import("./modules/PortalHolidayCalendar/pages/index"))
-const EmpSalaryRevisionModule = lazy(() => import("./modules/Emp_Salary_Revision/pages/index"));
-const NewsEventTickerModule = lazy(() => import("./modules/NewsEventTicker/pages/index"));
+const RecruitmentDashboardModule = lazy(() =>
+  import("./modules/RecruitmentDashboard/pages/index")
+);
+const LeaveWorkflowStatus = lazy(() =>
+  import("./modules/LeaveWorkflowStatus/page/index")
+);
+const LoanWorkflowStatus = lazy(() =>
+  import("./modules/LoanWorkflowStatus/page/index")
+);
+const AttendanceWorkflowStatus = lazy(() =>
+  import("./modules/AttendanceWorkflowStatus/page/index")
+);
+const TeamLeaveCalender = lazy(() =>
+  import("./modules/Leave_Calendar_Team/pages/index")
+);
+const TeamAttendanceCalender = lazy(() =>
+  import("./modules/Attendance_Calendar_Team/pages/index")
+);
+const PortalHolidayCalendar = lazy(() =>
+  import("./modules/PortalHolidayCalendar/pages/index")
+);
+const EmpSalaryRevisionModule = lazy(() =>
+  import("./modules/Emp_Salary_Revision/pages/index")
+);
+const NewsEventTickerModule = lazy(() =>
+  import("./modules/NewsEventTicker/pages/index")
+);
+const RecruitmentConfiguration = lazy(() =>
+  import("./modules/Recruitment_Portal_Config/pages/index")
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -326,18 +351,19 @@ const ROUTES = {
   payslip: PayrollPreview,
   applicant_profile: ApplicantProfileModule,
   interview_schedule: InterviewSchedule,
-  applicant_profile:ApplicantProfileModule,
-  resume_search_engine:ResumeSearchEngineModule,
-  job_offer:JobOfferModule,
-  recruitment_dashboard:RecruitmentDashboardModule,
+  applicant_profile: ApplicantProfileModule,
+  resume_search_engine: ResumeSearchEngineModule,
+  job_offer: JobOfferModule,
+  recruitment_dashboard: RecruitmentDashboardModule,
   leaveworkflowstatus: LeaveWorkflowStatus,
-  loanworkflowstatus : LoanWorkflowStatus,
+  loanworkflowstatus: LoanWorkflowStatus,
   attendanceworkflowstatus: AttendanceWorkflowStatus,
-  leave_calendar_team : TeamLeaveCalender,
-  attendance_calendar_team : TeamAttendanceCalender,
-  holiday_calendar : PortalHolidayCalendar,
-  emp_salary_revision : EmpSalaryRevisionModule,
-  news_event_ticker : NewsEventTickerModule,
+  leave_calendar_team: TeamLeaveCalender,
+  attendance_calendar_team: TeamAttendanceCalender,
+  holiday_calendar: PortalHolidayCalendar,
+  emp_salary_revision: EmpSalaryRevisionModule,
+  news_event_ticker: NewsEventTickerModule,
+  career: RecruitmentConfiguration,
 };
 
 export default function BasePage() {
