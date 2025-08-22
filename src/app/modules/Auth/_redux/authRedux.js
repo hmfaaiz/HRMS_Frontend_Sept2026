@@ -16,6 +16,7 @@ const initialAuthState = {
   user: undefined,
   tokens: undefined,
   userAccess: undefined,
+  menu: undefined,
   // authToken: undefined,
 };
 
@@ -23,7 +24,7 @@ export const reducer = persistReducer(
   {
     storage,
     key: "v726-demo1-auth",
-    whitelist: ["tokens", "user", "userAccess"],
+    whitelist: ["tokens", "user", "userAccess","menu"],
   },
   (state = initialAuthState, action) => {
     switch (action.type) {

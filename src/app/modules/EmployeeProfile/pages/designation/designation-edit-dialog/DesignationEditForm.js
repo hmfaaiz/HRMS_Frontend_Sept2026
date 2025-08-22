@@ -2797,9 +2797,22 @@ export function DesignationEditForm({
                           touched={touched.dateOfJoining}
                           minDate={
                             values.dateOfBirth
-                              ? new Date(values.dateOfBirth)
-                              : null
+                              ? minAgeLimin !== null
+                                ? new Date(
+                                    new Date(values.dateOfBirth).getFullYear() + minAgeLimin,
+                                    new Date(values.dateOfBirth).getMonth(),
+                                    new Date(values.dateOfBirth).getDate()
+                                  )
+                                : new Date(values.dateOfBirth)
+                              : new Date()
                           }
+                          
+
+                          // minDate={
+                          //   values.dateOfBirth
+                          //     ? new Date(values.dateOfBirth)
+                          //     : null
+                          // }
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -3037,11 +3050,11 @@ export function DesignationEditForm({
                         autoComplete="off"
                         className="form-control" // Force full height
                       />
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         name="additional_summary"
                         component="div"
                         className="invalid-feedback"
-                      />
+                      /> */}
                     </div>
                   </div>
 
