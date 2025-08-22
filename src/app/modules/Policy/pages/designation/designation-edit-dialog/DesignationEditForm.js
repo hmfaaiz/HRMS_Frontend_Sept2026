@@ -50,15 +50,6 @@ const formValidationSchema = Yup.object().shape({
     .max(99, "At most 99"),
   // .required("Required*"),
 
-  // maximumAge: Yup.number()
-  // .nullable()
-  // .min(1, 'At least 1')
-  // .max(99, 'At most 99')
-  // .test('minimumAge', 'Maximum Age must be equal or greater than Minimum Age', function (value) {
-  //   const { minimumAge } = this.parent;
-  //   return value > minimumAge;
-  // }),
-  // .required("Required*"),
 
   maximumAge: Yup.number()
     // .min(18, 'At least 18')
@@ -144,6 +135,11 @@ const formValidationSchema = Yup.object().shape({
   codePrefix: Yup.string()
     .matches(/^[A-Za-z]{1,6}$/, "Must be alphabetic and up to 6 characters")
     .required(VALIDATION_MESSAGES.required),
+
+
+  localizationId: Yup.string()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
 });
 
 const employeeCodeGenerationOptions = [
@@ -221,6 +217,13 @@ export function DesignationEditForm({
   }, shallowEqual);
 
   const { entities } = currentState;
+
+  const localizationOptions = [
+    { value: 1, label: "Pakistan" },
+    { value: 2, label: "United Arab Emirates" },
+    { value: 2, label: "Saudi Arabia" },
+  ];
+
 
   return (
     <>
@@ -515,7 +518,7 @@ export function DesignationEditForm({
                               placeholder="Enter minimum age"
                               value={
                                 values.minimumAge ||
-                                (id ? undefined : initialMinAgeLimit)
+                                (id ? undefined : "")
                               }
                               // label="Minimum Age"
                               //  value="18"
@@ -537,7 +540,11 @@ export function DesignationEditForm({
                               }}
                               name="maximumAge"
                               component={Input}
-                              placeholder="60"
+                              placeholder="Enter maximum age"
+                              value={
+                                values.maximumAge ||
+                                (id ? undefined : initialMinAgeLimit)
+                              }
                               // label="Maximum Age"
                               // value="60"
                             />
@@ -698,6 +705,47 @@ export function DesignationEditForm({
                               </div>
                             )}
                         </div>
+
+
+                        <div className="col-span-1">
+                      <Select
+                        label={
+                          <span>
+                            {" "}
+                            Localization<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        name="localizationId"
+                     
+                        value={values.localizationId}
+                        onChange={(e) => {
+                          setFieldValue("localizationId", e.target.value);
+                        }}
+                        error={errors.localizationId}
+                        touched={touched.localizationId}
+                        onBlur={handleBlur}
+                   
+                        autoComplete="off"
+                      >
+                    <option value="">Select </option>
+                      {localizationOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+
+
+                      ))}
+                      </Select>
+                      {errors.localizationId && touched.localizationId && (
+                       <ErrorMessage
+                       className="form-feedBack"
+                       name="localizationId"
+                       component="div"
+                     />
+                        
+              
+                      )}
+                    </div>
                       </div>
                     </div>
                   </div>

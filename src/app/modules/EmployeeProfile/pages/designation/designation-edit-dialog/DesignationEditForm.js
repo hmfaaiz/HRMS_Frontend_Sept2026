@@ -462,6 +462,7 @@ export function DesignationEditForm({
   const [defemployeeStatus = null, setDefemployeeStatus] = useState(null);
   const [profilePolicy, setProfilePolicy] = useState(null);
   const [minAgeLimin, setMinAgeLimin] = useState(null);
+  const [localizationId, setLocalizationId] = useState(null);
   const [maxAgeLimin, setMaxAgeLimin] = useState(null);
   const [hidehideRetirementAgeDate, setHidehideRetirementAgeDate] = useState(
     false
@@ -1177,6 +1178,8 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
+      setLocalizationId(response?.data?.data[0]?.localizationId);
+
       // setDefaultProbationPolicyMonth(new Date(newDate));
 
       if (!id && response?.data?.data[0].isEmployeeCodeGenerationAuto) {
@@ -1828,36 +1831,36 @@ export function DesignationEditForm({
                       {id ||
                       profilePolicy?.data?.data[0]
                         .isEmployeeCodeGenerationAuto ? (
-                     <>
-                     <div>
-                          <Field
-                            name="employeeCode"
-                            component={Input}
-                            maxLength="10"
-                            placeholder=" Employee Code"
-                            label={
-                              <span>
-                                Employee Code
-                                <span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            autoComplete="off"
-                            onChange={(e) => {
-                              setFieldValue(
-                                "employeeCode",
-                                e.target.value || null
-                              );
-                              setEmployeeCode(
-                                e.target.value || defEmployeeCode
-                              );
-                            }}
-                            value={defEmployeeCode || null}
-                            disabled={true}
-                          />
-                        </div>
-                         <div className="hidden md:block"></div>
-                         <div className="hidden md:block"></div>
-                         </>
+                        <>
+                          <div>
+                            <Field
+                              name="employeeCode"
+                              component={Input}
+                              maxLength="10"
+                              placeholder=" Employee Code"
+                              label={
+                                <span>
+                                  Employee Code
+                                  <span style={{ color: "red" }}>*</span>
+                                </span>
+                              }
+                              autoComplete="off"
+                              onChange={(e) => {
+                                setFieldValue(
+                                  "employeeCode",
+                                  e.target.value || null
+                                );
+                                setEmployeeCode(
+                                  e.target.value || defEmployeeCode
+                                );
+                              }}
+                              value={defEmployeeCode || null}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="hidden md:block"></div>
+                          <div className="hidden md:block"></div>
+                        </>
                       ) : (
                         <>
                           <div>
@@ -1932,10 +1935,10 @@ export function DesignationEditForm({
                               }
                             />
                           </div>
-                         <div className="hidden md:block"></div>
+                          <div className="hidden md:block"></div>
                         </>
                       )}
-                     
+
                       <div>
                         <Select
                           label={
@@ -2799,14 +2802,14 @@ export function DesignationEditForm({
                             values.dateOfBirth
                               ? minAgeLimin !== null
                                 ? new Date(
-                                    new Date(values.dateOfBirth).getFullYear() + minAgeLimin,
+                                    new Date(values.dateOfBirth).getFullYear() +
+                                      minAgeLimin,
                                     new Date(values.dateOfBirth).getMonth(),
                                     new Date(values.dateOfBirth).getDate()
                                   )
                                 : new Date(values.dateOfBirth)
                               : new Date()
                           }
-                          
 
                           // minDate={
                           //   values.dateOfBirth
@@ -3327,7 +3330,7 @@ export function DesignationEditForm({
                           type="text"
                         />
                       </div>
-                      <div>
+                      {localizationId==2 &&   <div>
                         <Field
                           name="sourceOfHire"
                           maxLength="20"
@@ -3336,9 +3339,10 @@ export function DesignationEditForm({
                           label="Source Of Hire"
                           autoComplete="off"
                         />
-                      </div>
+                      </div>}
+                    
                       <div className="flex items-center gap-2">
-                        <div className="flex items-center mt-5">
+                        {localizationId==2 &&      <div className="flex items-center mt-5">
                           <input
                             name="salesRep"
                             type="checkbox"
@@ -3354,24 +3358,28 @@ export function DesignationEditForm({
                           <label>
                             <span className="ml-2">Sales Representative</span>
                           </label>
-                        </div>
+                        </div>}
+                   
+                   {localizationId==2 &&
                         <div className="flex items-center mt-5">
-                          <input
-                            name="supportRep"
-                            type="checkbox"
-                            // onChange={handleChange}
-                            onChange={() =>
-                              setFieldValue("supportRep", !values?.supportRep)
-                            }
-                            onBlur={handleBlur}
-                            value={values.supportRep}
-                            checked={values.supportRep}
-                            label="Support Representative"
-                          />
-                          <label>
-                            <span className="ml-2">Support Representative</span>
-                          </label>
-                        </div>
+                        <input
+                          name="supportRep"
+                          type="checkbox"
+                          // onChange={handleChange}
+                          onChange={() =>
+                            setFieldValue("supportRep", !values?.supportRep)
+                          }
+                          onBlur={handleBlur}
+                          value={values.supportRep}
+                          checked={values.supportRep}
+                          label="Support Representative"
+                        />
+                        <label>
+                          <span className="ml-2">Support Representative</span>
+                        </label>
+                      </div>
+                   }
+                   
                       </div>
                     </div>
 
@@ -3480,62 +3488,68 @@ export function DesignationEditForm({
                           />
                         </div>
 
-                        <div>
-                          <SearchSelect
-                            name="cycleTypeId"
-                            label={<span> Cycle Type</span>}
-                            isDisabled={isUserForRead && true}
-                            onBlur={() => {
-                              // handleBlur({ target: { name: "countryId" } });
-                            }}
-                            onChange={(e) => {
-                              setFieldValue("cycleTypeId", e.value || null);
-                              setcycleType(e);
-                              // dispatch(fetchAllFormsMenu(e.value));
-                            }}
-                            value={defcycleType || null}
-                            error={errors.cycleTypeId}
-                            touched={touched.cycleTypeId}
-                            options={dashboard.allCycleTypeList}
-                          />
-                        </div>
-                        <div>
-                          <Field
-                            name="passportNo"
-                            maxLength="15"
-                            component={Input}
-                            placeholder=" Passport No"
-                            label=" Passport No"
-                            autoComplete="off"
-                          />
-                        </div>
+                        {/* hard coded On the instructionof Mr.Mubin */}
+                        {localizationId == 2 && (
+                          <div>
+                            <SearchSelect
+                              name="cycleTypeId"
+                              label={<span> Cycle Type</span>}
+                              isDisabled={isUserForRead && true}
+                              onBlur={() => {
+                                // handleBlur({ target: { name: "countryId" } });
+                              }}
+                              onChange={(e) => {
+                                setFieldValue("cycleTypeId", e.value || null);
+                                setcycleType(e);
+                                // dispatch(fetchAllFormsMenu(e.value));
+                              }}
+                              value={defcycleType || null}
+                              error={errors.cycleTypeId}
+                              touched={touched.cycleTypeId}
+                              options={dashboard.allCycleTypeList}
+                            />
+                          </div>
+                        )}
 
-                        <div>
-                          <label>Passport Expiry Date</label>
-                          <DatePicker
-                            className="form-control"
-                            placeholder="Passport Expiry Date"
-                            selected={defpassportExpiry}
-                            showYearDropdown
-                            scrollableMonthYearDropdown
-                            onChange={(date) => {
-                              setFieldValue("passportExpiry", date);
-                              setpassportExpiry(date);
-                            }}
-                            timeInputLabel="Time:"
-                            dateFormat="dd-MMM-yyyy"
-                            // showTimeInput
-                            name="passportExpiry"
-                            autoComplete="off"
-                            minDate={new Date()}
-                          />
-                          <ErrorMessage
-                            className="form-feedBack"
-                            name="passportExpiry"
-                            component="div"
-                          />
-                        </div>
-
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="passportNo"
+                              maxLength="15"
+                              component={Input}
+                              placeholder=" Passport No"
+                              label=" Passport No"
+                              autoComplete="off"
+                            />
+                          </div>
+                        )}
+                        {localizationId == 2 && (
+                          <div>
+                            <label>Passport Expiry Date</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="Passport Expiry Date"
+                              selected={defpassportExpiry}
+                              showYearDropdown
+                              scrollableMonthYearDropdown
+                              onChange={(date) => {
+                                setFieldValue("passportExpiry", date);
+                                setpassportExpiry(date);
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd-MMM-yyyy"
+                              // showTimeInput
+                              name="passportExpiry"
+                              autoComplete="off"
+                              minDate={new Date()}
+                            />
+                            <ErrorMessage
+                              className="form-feedBack"
+                              name="passportExpiry"
+                              component="div"
+                            />
+                          </div>
+                        )}
                         <div>
                           <label>ID Card Expiry</label>
                           <DatePicker
@@ -3561,43 +3575,48 @@ export function DesignationEditForm({
                             component="div"
                           />
                         </div>
-                        <div>
-                          <Field
-                            name="laborCardNo"
-                            maxLength="20"
-                            component={Input}
-                            placeholder="Enter Labour Card No"
-                            label={<span> Labour Card No</span>}
-                            autoComplete="off"
-                          />
-                          {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
-                        </div>
 
-                        <div>
-                          <Field
-                            name="emiratesNo"
-                            maxLength="20"
-                            component={Input}
-                            placeholder="Enter Emirates Id Number"
-                            label={<span> Emirates Id Number</span>}
-                            autoComplete="off"
-                          />
-                          {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
-                        </div>
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="laborCardNo"
+                              maxLength="20"
+                              component={Input}
+                              placeholder="Enter Labour Card No"
+                              label={<span> Labour Card No</span>}
+                              autoComplete="off"
+                            />
+                            {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
+                          </div>
+                        )}
 
-                        <div>
-                          <Field
-                            name="routingCode"
-                            maxLength="20"
-                            component={Input}
-                            placeholder="Enter Routing Code"
-                            label={<span> Routing Code</span>}
-                            autoComplete="off"
-                          />
-                          {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
-                        </div>
-
-                        <div>
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="emiratesNo"
+                              maxLength="20"
+                              component={Input}
+                              placeholder="Enter Emirates Id Number"
+                              label={<span> Emirates Id Number</span>}
+                              autoComplete="off"
+                            />
+                            {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
+                          </div>
+                        )}
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="routingCode"
+                              maxLength="20"
+                              component={Input}
+                              placeholder="Enter Routing Code"
+                              label={<span> Routing Code</span>}
+                              autoComplete="off"
+                            />
+                            {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
+                          </div>
+                        )}
+{localizationId==2   && <div>
                           <SearchSelect
                             name="contractTypeId"
                             label={<span> Contract Type</span>}
@@ -3617,6 +3636,8 @@ export function DesignationEditForm({
                             options={dashboard.allContractTypeList}
                           />
                         </div>
+                        }
+                     
                         <div className="col-span-3 md:col-span-4 lg:col-span-5">
                           <Field
                             name="professional_summary"
