@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { KeyboardArrowDown } from "@material-ui/icons";
+
 import {
   fetchAllCountry,
   fetchAllCity,
@@ -1417,10 +1418,10 @@ export function DesignationEditForm({
     const newErrors = {};
     defContactList.forEach((contact, index) => {
       if (!contact.relation_name) {
-        newErrors[`relation_name-${index}`] = "Relation Name is required";
+        newErrors[`relation_name-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!contact.relation_text) {
-        newErrors[`relation_text-${index}`] = "Relation is required";
+        newErrors[`relation_text-${index}`] =  VALIDATION_MESSAGES.required;
       }
       // if (!contact.contactNo || !/^\d{11}$/.test(contact.contactNo)) {
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 t0 15 digits';
@@ -1436,7 +1437,7 @@ export function DesignationEditForm({
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 to 15 digits';
       // }
       if (!contactNo) {
-        newErrors[`contactNo-${index}`] = "Contact no. is required";
+        newErrors[`contactNo-${index}`] =  VALIDATION_MESSAGES.required;
       } else if (!/^\d{7,15}$/.test(contactNo)) {
         newErrors[`contactNo-${index}`] =
           "Contact No must be between 7 to 15 digits";
@@ -1446,17 +1447,17 @@ export function DesignationEditForm({
     // Validations for Work Experience
     workExperienceList.forEach((obj, index) => {
       if (!obj.companyName) {
-        newErrors[`companyName-${index}`] = "Required";
+        newErrors[`companyName-${index}`] =  VALIDATION_MESSAGES.required;
       }
       if (!obj.positionHeld) {
-        newErrors[`positionHeld-${index}`] = "Required";
+        newErrors[`positionHeld-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!obj.countryId) {
-        newErrors[`countryId-W-${index}`] = "Required";
+        newErrors[`countryId-W-${index}`] =  VALIDATION_MESSAGES.required;
       }
 
       if (!obj.cityId) {
-        newErrors[`cityId-W-${index}`] = "Required";
+        newErrors[`cityId-W-${index}`] =  VALIDATION_MESSAGES.required;
       }
 
       const num = getDateDiffInDays(obj.startDate, new Date().getTime());
@@ -1472,13 +1473,49 @@ export function DesignationEditForm({
           "End Date must be later than Start Date";
       }
 
-      if (!obj?.startDate) {
-        newErrors[`startDate_W-${index}`] = "Required";
+      // if (!obj?.startDate) {
+      //   newErrors[`startDate_W-${index}`] = "Required";
+      // }
+
+      // if (!obj?.endDate) {
+      //   newErrors[`endDate_W-${index}`] = "Required";
+      // }
+
+      if (obj?.startDate && !obj?.endDate) {
+        newErrors[`endDate_W-${index}`] = VALIDATION_MESSAGES.required;
+      }
+      
+      if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate_W-${index}`] = VALIDATION_MESSAGES.required;
+      }
+      
+      // Dono agar filled hain, to endDate > startDate check karo
+      if (obj?.startDate && obj?.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
+      
+        if (end <= start) {
+          newErrors[`endDate_W-${index}`] = VALIDATION_MESSAGES.endDateMustBeGreater;
+        }
       }
 
-      if (!obj?.endDate) {
-        newErrors[`endDate_W-${index}`] = "Required";
+
+      if (obj?.lengthInYear) {
+        // Must be a valid number (decimal allowed)
+        if (!/^\d+(\.\d{1,2})?$/.test(obj.lengthInYear)) {
+          newErrors[`lengthInYear_W-${index}`] = "Must be a valid number ";
+        }
+        // Must be >= 0
+        else if (parseFloat(obj.lengthInYear) < 0) {
+          newErrors[`lengthInYear_W-${index}`] = "Cannot be negative";
+        }
+        // Optional upper limit (e.g., 99 years)
+        else if (parseFloat(obj.lengthInYear) > 99.99) {
+          newErrors[`lengthInYear_W-${index}`] = "Must be less than 100";
+        }
       }
+      
+      
     });
 
     // Validations for Academic
@@ -1495,45 +1532,89 @@ export function DesignationEditForm({
       }
 
       // GPA Validation
-      if (!obj.gpa) {
-        newErrors[`gpa-${index}`] = "Required";
-      } else if (isNaN(obj.gpa) || obj.gpa === "") {
-        newErrors[`gpa-${index}`] = "GPA must be a number";
-      } else if (obj.gpa < 1 || obj.gpa > 5.0) {
-        newErrors[`gpa-${index}`] = "GPA must be between 1.0 and 5.0";
-      } else if (!/^\d+(\.\d+)?$/.test(obj.gpa)) {
-        newErrors[`gpa-${index}`] = "GPA must be a valid digit";
+      // if (!obj.gpa) {
+      //   newErrors[`gpa-${index}`] = "Required";
+      // } 
+      // else if (isNaN(obj.gpa) || obj.gpa === "") {
+      //   newErrors[`gpa-${index}`] = "GPA must be a number";
+      // }
+      //   if (obj.gpa < 1 || obj.gpa > 5.0) {
+      //   newErrors[`gpa-${index}`] = "GPA must be between 1.0 and 5.0";
+      // } else if (!/^\d+(\.\d+)?$/.test(obj.gpa)) {
+      //   newErrors[`gpa-${index}`] = "GPA must be a valid digit";
+      // }
+
+      if (obj?.gpa) {
+        if (obj.gpa < 0 || obj.gpa > 5.0) {
+          newErrors[`gpa-${index}`] = "Must be between 0.0 & 5.0";
+        } else if (!/^\d+(\.\d+)?$/.test(obj.gpa)) {
+          newErrors[`gpa-${index}`] = "Must be a valid digit";
+        }
       }
+      
       if (!obj.cityId) {
-        newErrors[`cityId-A-${index}`] = "Required";
+        newErrors[`cityId-A-${index}`] =VALIDATION_MESSAGES.required;
       }
-      if (new Date(obj.startDate) > new Date()) {
-        newErrors[`startDate_A-${index}`] =
-          "Start Date cannot be a future date";
-      }
+      // if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate_A-${index}`] =
+      //     "Start Date cannot be a future date";
+      // }
 
       // Validate endDate
       // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
       //   newErrors[`endDate_A-${index}`] = 'End Date must be later than Start Date';
       // }
 
-      if (!obj?.startDate) {
-        newErrors[`startDate_A-${index}`] = "Required";
-      } else if (new Date(obj.startDate) > new Date()) {
-        newErrors[`startDate_A-${index}`] =
-          "Start Date cannot be a future date";
-      }
+      // if (!obj?.startDate) {
+      //   newErrors[`startDate_A-${index}`] = "Required";
+      // } else if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate_A-${index}`] =
+      //     "Start Date cannot be a future date";
+      // }
 
-      if (!obj.endDate) {
-        newErrors[`endDate_A-${index}`] = "Required";
-      } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
-        newErrors[`endDate_A-${index}`] =
-          "End Date must be later than Start Date";
+      // if (!obj.endDate) {
+      //   newErrors[`endDate_A-${index}`] = "Required";
+      // } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate_A-${index}`] =
+      //     "End Date must be later than Start Date";
+      // }
+
+
+     if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate_A-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (obj?.startDate && obj?.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
+      
+        if (start > new Date()) {
+          newErrors[`startDate_A-${index}`] = "Cannot be a future date";
+        }
+      
+        if (end <= start) {
+          newErrors[`endDate_A-${index}`] = "Must be later than Start Date";
+        }
       }
+      
 
       // if (!obj?.endDate) {
       //   newErrors[`endDate_A-${index}`] = 'Required';
       // }
+
+      if (obj?.lengthInYear) {
+        // Must be a valid number (decimal allowed)
+        if (!/^\d+(\.\d{1,2})?$/.test(obj.lengthInYear)) {
+          newErrors[`lengthInYear_A-${index}`] = "Must be a valid number";
+        }
+        // Must be >= 0
+        else if (parseFloat(obj.lengthInYear) < 0) {
+          newErrors[`lengthInYear_A-${index}`] = "Cannot be negative";
+        }
+        // Optional upper limit (e.g., 99 years)
+        else if (parseFloat(obj.lengthInYear) > 99.99) {
+          newErrors[`lengthInYear_A-${index}`] = "Must be less than 100";
+        }
+      }
+      
     });
 
     // Validations for Skills
@@ -1553,23 +1634,58 @@ export function DesignationEditForm({
       //   newErrors[`startDate-${index}`] = 'Start Date cannot be a future date';
       // }
 
-      if (!obj.startDate) {
-        newErrors[`startDate-${index}`] = "Required";
-      } else if (new Date(obj.startDate) > new Date()) {
-        newErrors[`startDate-${index}`] = "Start Date cannot be a future date";
-      }
+      // if (!obj.startDate) {
+      //   newErrors[`startDate-${index}`] = "Required";
+      // } else if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate-${index}`] = "Start Date cannot be a future date";
+      // }
 
       // Validate endDate
       // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
       //   newErrors[`endDate-${index}`] = 'End Date must be later than Start Date';
       // }
 
-      if (!obj.endDate) {
-        newErrors[`endDate-${index}`] = "Required";
-      } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
-        newErrors[`endDate-${index}`] =
-          "End Date must be later than Start Date";
+      // if (!obj.endDate) {
+      //   newErrors[`endDate-${index}`] = "Required";
+      // } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate-${index}`] =
+      //     "End Date must be later than Start Date";
+      // }
+
+
+      if (obj?.startDate && !obj?.endDate) {
+        newErrors[`endDate-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate-${index}`] =  VALIDATION_MESSAGES.required;
+      } else if (obj?.startDate && obj?.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
+      
+        if (start > new Date()) {
+          newErrors[`startDate-${index}`] = "Cannot be a future date";
+        }
+      
+        if (end <= start) {
+          newErrors[`endDate-${index}`] = "Must be later than Start Date";
+        }
       }
+
+      if (obj?.lengthInMonths) {
+        // Must be a valid number (decimal allowed)
+        if (!/^\d+(\.\d{1,2})?$/.test(obj.lengthInMonths)) {
+          newErrors[`lengthInMonths-${index}`] = "Must be a valid number";
+        }
+        // Must be >= 0
+        else if (parseFloat(obj.lengthInMonths) < 0) {
+          newErrors[`lengthInMonths-${index}`] = "Cannot be negative";
+        }
+        // Optional upper limit (e.g., 1200 months = 100 years)
+        else if (parseFloat(obj.lengthInMonths) > 99.99) {
+          newErrors[`lengthInMonths-${index}`] = "Must be less than 100";
+        }
+      }
+      
+      
     });
 
     // Validations for Incident
@@ -1593,7 +1709,7 @@ export function DesignationEditForm({
         newErrors[`incidentDate-${index}`] = "Required";
       } else if (new Date(obj.incidentDate) > new Date()) {
         newErrors[`incidentDate-${index}`] =
-          "Incident Date cannot be a future date";
+          "Cannot be a future date";
       }
     });
 
@@ -3832,6 +3948,7 @@ export function DesignationEditForm({
                           <td className="min-w-40">City</td>
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
+                          <td className="min-w-40">Length In Year</td>
                           <td className="text-right">Action</td>
                         </tr>
 
@@ -4045,6 +4162,32 @@ export function DesignationEditForm({
                                   </div>
                                 )}
                               </td>
+
+                              
+                              <td>
+                                <input
+                                  className="form-control"
+                                  type="number"
+                                  onChange={(e) => {
+                                    handleFieldChangedExperience(
+                                      rightindex,
+                                      "lengthInYear",
+                                      e.target.value
+                                    );
+                                    setErrors((prev) => ({
+                                      ...prev,
+                                      [`lengthInYear_W-${rightindex}`]: "",
+                                    })); // Clear error on change
+                                  }}
+                                  value={obj.lengthInYear}
+                                  id={"lengthInYear-" + rightindex}
+                                ></input>
+                                {deferrors[`lengthInYear_W-${rightindex}`] && (
+                                  <div className="form-feedBack">
+                                    {deferrors[`lengthInYear_W-${rightindex}`]}
+                                  </div>
+                                )}
+                              </td>
                               <td
                                 className="text-right"
                                 id={rightindex}
@@ -4104,6 +4247,7 @@ export function DesignationEditForm({
                           <td className="min-w-40">CGPA</td>
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
+                          <td className="min-w-40">Length In Year</td>
                           <td className="text-right">Action</td>
                         </tr>
 
@@ -4354,6 +4498,32 @@ export function DesignationEditForm({
                                   </div>
                                 )}
                               </td>
+
+                                   
+                              <td>
+                                <input
+                                  className="form-control"
+                                  type="number"
+                                  onChange={(e) => {
+                                    handleFieldChangedAcademic(
+                                      rightindex,
+                                      "lengthInYear",
+                                      e.target.value
+                                    );
+                                    setErrors((prev) => ({
+                                      ...prev,
+                                      [`lengthInYear_A-${rightindex}`]: "",
+                                    })); // Clear error on change
+                                  }}
+                                  value={obj.lengthInYear}
+                                  id={"lengthInYear-" + rightindex}
+                                ></input>
+                                {deferrors[`lengthInYear_A-${rightindex}`] && (
+                                  <div className="form-feedBack">
+                                    {deferrors[`lengthInYear_A-${rightindex}`]}
+                                  </div>
+                                )}
+                              </td>
                               <td
                                 className="text-right"
                                 id={rightindex}
@@ -4414,6 +4584,7 @@ export function DesignationEditForm({
                           <td className="min-w-40">Rating</td>
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
+                          <td className="min-w-40">Length In Months</td>
                           <td className="text-right">Action</td>
                         </tr>
                         {skillsList?.map((obj, rightindex) => (
@@ -4578,6 +4749,31 @@ export function DesignationEditForm({
                                 {deferrors[`endDate-${rightindex}`] && (
                                   <div className="form-feedBack">
                                     {deferrors[`endDate-${rightindex}`]}
+                                  </div>
+                                )}
+                              </td>
+                                    
+                              <td>
+                                <input
+                                  className="form-control"
+                                  type="number"
+                                  onChange={(e) => {
+                                    handleFieldChangedSkills(
+                                      rightindex,
+                                      "lengthInMonths",
+                                      e.target.value
+                                    );
+                                    setErrors((prev) => ({
+                                      ...prev,
+                                      [`lengthInMonths-${rightindex}`]: "",
+                                    })); // Clear error on change
+                                  }}
+                                  value={obj.lengthInMonths}
+                                  id={"lengthInMonths-" + rightindex}
+                                ></input>
+                                {deferrors[`lengthInMonths-${rightindex}`] && (
+                                  <div className="form-feedBack">
+                                    {deferrors[`lengthInMonths-${rightindex}`]}
                                   </div>
                                 )}
                               </td>
