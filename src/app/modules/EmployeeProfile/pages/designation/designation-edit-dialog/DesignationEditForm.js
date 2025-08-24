@@ -349,6 +349,8 @@ export function DesignationEditForm({
   loading,
   id,
 }) {
+
+
   const designationUIContext = useDesignationUIContext();
   const DesignationUIProps = useMemo(() => {
     return {
@@ -390,6 +392,7 @@ export function DesignationEditForm({
   const [joiningDateSelected, setJoiningDate] = useState(null);
 
   const [confirmationDateSelected, setConfirmationDate] = useState(null);
+  const [professionalSummary, setProfessionalSummary] = useState(null);
   const [
     disabledConfirmationDateSelected,
     setDisabledConfirmationDate,
@@ -477,6 +480,10 @@ export function DesignationEditForm({
   const [imgAlreadySet, setImgAlreadySet] = useState(false);
   const [allEmpTypes, setAllEmpTypes] = useState([]);
   const scrollRef = useRef(null);
+
+
+
+
   //off for temp
   // useEffect(() => {
   //   if (user.Id) {
@@ -608,6 +615,9 @@ export function DesignationEditForm({
     if (user.dateOfJoining) {
       setJoiningDate(new Date(user.dateOfJoining));
     }
+  else {
+    setJoiningDate(null);
+  }
   }, [user.dateOfJoining]);
 
   //=========== END
@@ -617,24 +627,33 @@ export function DesignationEditForm({
     if (user.dateOfBirth) {
       setDOBDate(new Date(user.dateOfBirth));
     }
+    else{
+      setDOBDate(null);
+    }
   }, [user.dateOfBirth]);
 
   useEffect(() => {
-    if (user?.dateOfRetirement) {
+    if (user.dateOfRetirement) {
       setDRetirmentDate(new Date(user?.dateOfRetirement));
+    }else{
+      setDRetirmentDate(null);
     }
-  }, [user?.dateOfRetirement]);
+  }, [user.dateOfRetirement]);
 
   useEffect(() => {
-    if (user?.dateOfConfirmationDue) {
+    if (user.dateOfConfirmationDue) {
       setConfirmationDueDate(new Date(user?.dateOfConfirmationDue));
+    }else{
+      setConfirmationDueDate(null)
     }
-  }, [user?.dateOfConfirmationDue]);
+  }, [user.dateOfConfirmationDue]);
 
   //===== lastReviewDate
   useEffect(() => {
     if (user.lastReviewDate) {
       setlastReviewDate(new Date(user.lastReviewDate));
+    }else{
+      setlastReviewDate(null)
     }
   }, [user.lastReviewDate]);
 
@@ -648,6 +667,8 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.nextReviewDate) {
       setnextReviewDate(new Date(user.nextReviewDate));
+    }else{
+      setnextReviewDate(null)
     }
   }, [user.nextReviewDate]);
 
@@ -656,12 +677,17 @@ export function DesignationEditForm({
     if (user.passportExpiry) {
       setpassportExpiry(new Date(user.passportExpiry));
     }
+    else{
+      setpassportExpiry(null)
+    }
   }, [user.passportExpiry]);
 
   //===== lastReviewDate
   useEffect(() => {
     if (user.drivingLicenseExpiry) {
       setdrivingLicenseExpiry(new Date(user.drivingLicenseExpiry));
+    }else{
+      setdrivingLicenseExpiry(null)
     }
   }, [user.drivingLicenseExpiry]);
 
@@ -674,7 +700,21 @@ export function DesignationEditForm({
     if (user?.dateOfConfirmation) {
       setConfirmationDate(new Date(user?.dateOfConfirmation));
     }
-  }, [user?.dateOfConfirmation]);
+    else{
+      setConfirmationDate(null);
+    }
+
+  }, [user.dateOfConfirmation]);
+
+  useEffect(() => {
+    if (user?.professional_summary) {
+      setProfessionalSummary(user.professional_summary);
+    }
+    else{
+      setProfessionalSummary(null);
+    }
+
+  }, [user.professional_summary]);
 
   //=========== END
 
@@ -729,20 +769,12 @@ export function DesignationEditForm({
     );
   }, [user?.maritalStatus, dashboard.maritalStatus]);
 
-  //===== Date Of Confirmation Due
-  //off
-  // useEffect(() => {
-  //   if (user.dateOfConfirmationDue) {
-  //     setConfirmationDueDate(new Date(user.dateOfConfirmationDue));
-  //   }
-  // }, [user.dateOfConfirmationDue]);
 
-  //=========== END
-
-  //===== Date Of dateOfConfirmationEnter
   useEffect(() => {
     if (user.dateOfConfirmationEnter) {
       setConfirmationEnterDate(new Date(user.dateOfConfirmationEnter));
+    }else{
+      setConfirmationEnterDate(null)
     }
   }, [user.dateOfConfirmationEnter]);
 
@@ -753,27 +785,12 @@ export function DesignationEditForm({
     if (user.dateOfContractExpiry) {
       setContractExpiryDate(new Date(user.dateOfContractExpiry));
     }
+    else{
+      setContractExpiryDate(null)
+    }
   }, [user.dateOfContractExpiry]);
 
-  //=========== END
 
-  //===== Date Of Retirement
-  // useEffect(() => {
-  //   if (user?.gender == "Female") {
-  //     const retirementDate = new Date(user.dateOfBirth);
-  //     // retirementDate.setFullYear(retirementDate.getFullYear() + user.retirementAgeFemale);
-
-  //     // setDRetirmentDate(new Date(retirementDate));
-  //   }
-  //   else if (user?.gender == "Male") {
-  //     const retirementDate = new Date(user.dateOfBirth);
-  //     // retirementDate.setFullYear(retirementDate.getFullYear() + user.retirementAgeMale);
-
-  //     // setDRetirmentDate(new Date(retirementDate));
-  //   }
-  // }, [user?.retirementAgeFemale || user.retirementAgeMale]);
-
-  //=========== END
 
   useEffect(() => {
     const gradeId = defEmployeeGrade?.value
@@ -924,13 +941,7 @@ export function DesignationEditForm({
         })
     );
   }, [user?.locationId, dashboard.locationId]);
-  //======================= End
 
-  // useEffect(() => {
-  //   if (!user.countryId) {
-  //     dispatch(fetchAllCity(1));
-  //   }
-  // }, [user.countryId, dispatch]);
 
   useEffect(() => {
     const cityId = defCity?.value ? defCity.value : user.cityId;
@@ -943,19 +954,7 @@ export function DesignationEditForm({
     );
   }, [user?.cityId, dashboard.allCity]);
 
-  // useEffect(() => {
-  //   if (user.cityId) {
 
-  //     setImage(user.profile_image || '');
-
-  //   }
-  // }, [user.cityId, dispatch]);
-
-  // useEffect(() => {
-  //   if (user?.profile_image) {
-  //     setImage(user.profile_image);
-  //   }
-  // }, [user?.profile_image]);
 
   useEffect(() => {
     if (id && user?.profile_image) {
@@ -1092,24 +1091,7 @@ export function DesignationEditForm({
     ]);
   };
 
-  // const handleFieldChangedExperience = (el) => {
 
-  //   const index = el?.target?.id.split('-')[1]
-  //   const key = el?.target?.id.split('-')[0]
-
-  //   if (key == "countryId") {
-
-  //     //  dispatch(fetchAllCity(el.target.value));
-
-  //   }
-
-  //   setworkExperienceList([...workExperienceList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el?.target?.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   // Function to handle changes in input fields
   const handleFieldChangedExperience = (index, field, value) => {
@@ -1309,24 +1291,7 @@ export function DesignationEditForm({
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setDisableConfDueDate(true);
   };
-  // const handleFieldChangedAcademic = (el) => {
 
-  //   const index = el.target.id.split('-')[1]
-  //   const key = el.target.id.split('-')[0]
-
-  //   if (key == "countryId") {
-
-  //     // dispatch(fetchAllCity(el.target.value));
-
-  //   }
-
-  //   setAcademicList([...academicList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el.target.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   const handleFieldChangedAcademic = (index, field, value) => {
     const newAcademicList = [...academicList];
@@ -1369,17 +1334,7 @@ export function DesignationEditForm({
     ]);
   };
 
-  // const handleFieldChangedSkills = (el) => {
 
-  //   const index = el?.target.id.split('-')[1]
-  //   const key = el?.target.id.split('-')[0]
-  //   setSkillList([...skillsList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el.target.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   const handleFieldChangedSkills = (index, field, value) => {
     const newSkillList = [...skillsList];
@@ -1421,17 +1376,7 @@ export function DesignationEditForm({
     newIncidentList[index][field] = value;
     setIncidentList(newIncidentList);
   };
-  // const handleFieldChangedIncident = (el) => {
 
-  //   const index = el?.target.id.split('-')[1]
-  //   const key = el?.target.id.split('-')[0]
-  //   setIncidentList([...incidentList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el.target.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   const deleteRowIncident = (element) => {
     const data = incidentList;
@@ -1687,12 +1632,20 @@ export function DesignationEditForm({
     );
   };
 
-  console.log("aaaa111", dashboard?.allEmployeesWithNoPermissionList);
   return (
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={user}
+        // initialValues={user}
+        initialValues={{
+          ...user,
+          professional_summary: user?.professional_summary || "",
+          email_official:user?.email_official || "",
+          email_personal:user?.email_personal || "",
+
+  
+        }}
+      
         validationSchema={profileValidation}
         onSubmit={async (values) => {
           //const t =  handleSubmit();
@@ -2264,7 +2217,9 @@ export function DesignationEditForm({
                         value={defchildTeamMenus || null}
                         error={errors.teamId}
                         touched={touched.teamId}
-                        options={dashboard.allTeamsChildMenus}
+                        options={[
+                          { value: null, label: "Select" },
+                          ...dashboard.allTeamsChildMenus]}
                       />
                     </div>
 
@@ -2994,6 +2949,7 @@ export function DesignationEditForm({
                         label="Official Email"
                         autoComplete="off"
                         maxLength="30"
+                        
                       />
                     </div>
 
@@ -3005,6 +2961,7 @@ export function DesignationEditForm({
                         label="Personal Email"
                         autoComplete="off"
                         maxLength="30"
+                       
                       />
                     </div>
 
@@ -3158,7 +3115,11 @@ export function DesignationEditForm({
                           value={defchildRegionMenus || null}
                           error={errors.regionId}
                           touched={touched.regionId}
-                          options={dashboard.allRegionChildMenus}
+                          options=
+                            {[
+                              { value: null, label: "Select" },
+                            ...dashboard.allRegionChildMenus]}
+
                         />
                       </div>
 
@@ -3179,7 +3140,9 @@ export function DesignationEditForm({
                           value={defCountry}
                           error={errors.countryId}
                           touched={touched.countryId}
-                          options={dashboard.allCountry}
+                          options={[
+                            { value: null, label: "Select" },
+                            ...dashboard.allCountry]}
                         />
                       </div>
 
@@ -3506,7 +3469,10 @@ export function DesignationEditForm({
                               value={defcycleType || null}
                               error={errors.cycleTypeId}
                               touched={touched.cycleTypeId}
-                              options={dashboard.allCycleTypeList}
+                              options=
+                                {[
+                                  { value: null, label: "Select" },
+                                ...dashboard.allCycleTypeList]}
                             />
                           </div>
                         )}
@@ -3633,7 +3599,10 @@ export function DesignationEditForm({
                             value={defcontractType || values.contractTypeId}
                             error={errors.contractTypeId}
                             touched={touched.contractTypeId}
-                            options={dashboard.allContractTypeList}
+                            options=
+                              {[
+                                { value: null, label: "Select" },
+                              ...dashboard.allContractTypeList]}
                           />
                         </div>
                         }
@@ -3641,6 +3610,7 @@ export function DesignationEditForm({
                         <div className="col-span-3 md:col-span-4 lg:col-span-5">
                           <Field
                             name="professional_summary"
+                            values={user.professional_summary || null}
                             component={TextArea}
                             placeholder="Enter Professional Summary"
                             label="Professional Summary"
