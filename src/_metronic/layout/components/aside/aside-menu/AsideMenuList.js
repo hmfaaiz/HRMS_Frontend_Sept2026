@@ -26,6 +26,7 @@ export function AsideMenuList({ layoutProps }) {
 
   const handleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
+    closeSubMenu()
   };
 
   // Toggle visibility of the menu
@@ -96,6 +97,10 @@ const toggleSubMenu = (parentKey, childHeading) => {
       [childHeading]: !prev[parentKey]?.[childHeading],
     },
   }));
+};
+const closeSubMenu = (parentKey, childHeading) => {
+
+ setOpenSubMenu({})
 };
 
 
@@ -278,7 +283,8 @@ const toggleSubMenu = (parentKey, childHeading) => {
         <li className="relative" key={parentKey}>
           <button
             className="p-0 bg-transparent border-none font-bold text-white focus:outline-none capitalize flex items-center"
-            onClick={() => handleDropdown(idx)}
+            // onClick={() => handleDropdown(idx)}
+               onMouseEnter={() => handleDropdown(idx)}
           >
             {parentKey.replace(/_/g, " ")}
             <ChevronDown
@@ -308,8 +314,11 @@ const toggleSubMenu = (parentKey, childHeading) => {
                  
                     <div
                       className="px-4 py-2 font-semibold text-gray-700 uppercase text-xs cursor-pointer flex justify-between items-center"
-                      onClick={() => toggleSubMenu(parentKey, childHeading)}
-                    >
+                      // onClick={() => toggleSubMenu(parentKey, childHeading)}
+
+                      onMouseEnter={() => toggleSubMenu(parentKey, childHeading, true)}
+                      // onMouseLeave={() => toggleSubMenu(parentKey, childHeading, false)}
+                      >
                       {childHeading.replace(/_/g, " ")}
                       {hasChild && (
           

@@ -19,7 +19,7 @@ import { useDesignationUIContext } from "../DesignationUIContext";
 import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/last-trips-vehicles-table/column-formatter/CreatedColumnFormatter";
 import { format } from "date-fns";
 
-export function DesignationTable() {
+export function DesignationTable({onHide}) {
   //Users UI Context
   const designationUIContext = useDesignationUIContext();
 
