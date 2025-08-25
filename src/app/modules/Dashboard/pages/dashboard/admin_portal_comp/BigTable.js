@@ -7,6 +7,7 @@ import {
   toAbsoluteUrl,
 } from "../../../../../../_metronic/_helpers";
 import { format } from "date-fns";
+import { PeriodType } from "../EmpUIHelper";
 
 export function BigTable({ data, setBigTableModalData }) {
   const columnData = data?.data?.length > 0 ? data?.data[0] : {};
@@ -77,15 +78,22 @@ export function BigTable({ data, setBigTableModalData }) {
     }
   });
 
+  const getHeading = () => {
+    if (data?.isPeriodType) {
+      if (PeriodType[data?.PeriodType]) {
+        return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
+      } else {
+        return `${data.dashlet_name} In Next ${data?.days} Days`;
+      }
+    } else {
+      return data?.dashlet_name;
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg px-3 py-2 col-span-2">
       <div className="flex justify-between">
-        <h6 className="font-bold mb-0 text-primary">
-          {" "}
-          {data?.days
-            ? data?.dashlet_name?.replace("${days}", data?.days)
-            : data?.dashlet_name}
-        </h6>
+        <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
         <lable
           className={
             data?.data.length > 0
@@ -100,7 +108,7 @@ export function BigTable({ data, setBigTableModalData }) {
       <div
         className={
           data?.data.length > 0
-            ? "min-h-64 overflow-auto"
+            ? "max-h-64 overflow-auto"
             : `max-h-6 overflow-auto`
         }
       >

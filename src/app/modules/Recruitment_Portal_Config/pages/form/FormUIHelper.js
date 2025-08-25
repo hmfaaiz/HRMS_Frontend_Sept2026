@@ -82,42 +82,53 @@ export const initialVal = {
 export const themeColor = [
   {
     color_name: "Red",
-    primary_color: "#ff0000",
-    secondary_color: "#FBE2D5",
+    primary_color: "#c1121f",
+    secondary_color: "#fffafa",
   },
   {
     color_name: "Green",
-    primary_color: "#3c7d22",
-    secondary_color: "#D5E8D4",
+    primary_color: "#31572c",
+    secondary_color: "#fdfffc",
   },
   {
     color_name: "Blue",
-    primary_color: "#0000ff",
-    secondary_color: "#D5E8F4",
+    primary_color: "#023e8a",
+    secondary_color: "#fafcff",
   },
-//   {
-//     color_name: "Yellow",
-//     primary_color: "#ffff00",
-//     secondary_color: "#FDFD96",
-//   },
-//   {
-//     color_name: "Pink",
-//     primary_color: "#FFC0CB",
-//     secondary_color: "#FFB6C1",
-//   },
-//   {
-//     color_name: "Light Green",
-//     primary_color: "#F0FFF0",
-//     secondary_color: "#D5E8D4",
-//   },
   {
-    color_name: "Brown",
-    primary_color: "#A52A2A",
-    secondary_color: "#D2B48C",
+    color_name: "DeepSea",
+    primary_color: "#fcfdff",
+    secondary_color: "#fafcff",
   },
-//   {
-//     color_name: "Light Blue",
-//     primary_color: "#ADD8E6",
-//     secondary_color: "#B0E0E6",
-//   },
+  {
+    color_name: "Yellow",
+    primary_color: "#e9c46a",
+    secondary_color: "#fffdf7",
+  },
+  {
+    color_name: "Pink",
+    primary_color: "#ff70a6",
+    secondary_color: "#fff7fa",
+  },
+  {
+    color_name: "Orange",
+    primary_color: "#f48c06",
+    secondary_color: "#fffdfa",
+  },
+  {
+    color_name: "Black",
+    primary_color: "#000000",
+    secondary_color: "#f8f9fa",
+  },
+  {
+    color_name: "Purple",
+    primary_color: "#3c096c",
+    secondary_color: "#fcfaff",
+  },
+
+  {
+    color_name: "Default",
+    primary_color: "#0093DD",
+    secondary_color: "#E6F8FF",
+  },
 ];

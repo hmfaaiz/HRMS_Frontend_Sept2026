@@ -11,6 +11,7 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState } from "react";
 import { BarChart, LineChart, PieChart, TorusIcon } from "lucide-react";
+import { PeriodType } from "../EmpUIHelper";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(ChartDataLabels);
@@ -188,7 +189,7 @@ const getOptions = (chartType, chartId) => {
 };
 
 const ChartData = ({ data }) => {
-  const [chartType, setChartType] = useState(data?.color_theme_class || "pie");
+  const [chartType, setChartType] = useState(data?.graph_type || "pie");
   // Memoize departmentData and total
   const departmentData = useMemo(() => {
     const labels =
@@ -235,17 +236,26 @@ const ChartData = ({ data }) => {
     },
   ];
 
+ const getHeading = () => {
+    if (data?.isPeriodType) {
+      if (PeriodType[data?.PeriodType]) {
+        return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
+      } else {
+        return `${data.dashlet_name} In Next ${data?.days} Days`;
+      }
+    } else {
+      return data?.dashlet_name;
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg px-3 py-2">
       <div className="flex justify-between items-start">
         <h6 className="font-bold mb-0 text-primary">
-          {" "}
-          {data?.days
-            ? data?.dashlet_name?.replace("${days}", data?.days)
-            : data?.dashlet_name}
-          <p className="text-xs m-0 font-normal text-black">
+          {getHeading()}
+          {/* <p className="text-xs m-0 font-normal text-black">
             Interactive chart — hover to explore values.
-          </p>
+          </p> */}
         </h6>
         {/* chart type selection */}
         <div className="flex space-x-1">

@@ -1,12 +1,7 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import {
-  HouseWifi,
-  LogIn,
-  LogOut,
-  ClockAlert,
-} from "lucide-react";
+import { HouseWifi, LogIn, LogOut, ClockAlert } from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -202,7 +197,7 @@ const AttendanceArea = ({
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.master_Id === 1726) {
+              if (e?.dashlet_type === "chart" && e?.tab_key === "attendance") {
                 return <ChartData key={`chart-${alertIdx}`} data={e} />;
               }
               return null;
@@ -212,7 +207,10 @@ const AttendanceArea = ({
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.master_Id === 1726 && e?.dashlet_type === "big_table") {
+              if (
+                e?.tab_key === "attendance" &&
+                e?.dashlet_type === "big_table"
+              ) {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -228,7 +226,10 @@ const AttendanceArea = ({
       <div className="col-span-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
-            if (e?.dashlet_type === "small_table" && e?.master_Id === 1726) {
+            if (
+              e?.dashlet_type === "small_table" &&
+              e?.tab_key === "attendance"
+            ) {
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}

@@ -345,7 +345,6 @@ export const fetchSummary = (filter) => async (dispatch) => {
     .getSummary(filter)
     .then((response) => {
       const entities = response.data?.data;
-      console.log("dataentitiesentities", entities);
       dispatch(actions.SummaryFetch(entities));
     })
     .catch((error) => {

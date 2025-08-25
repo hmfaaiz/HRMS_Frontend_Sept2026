@@ -260,6 +260,10 @@ const RecruitmentConfiguration = lazy(() =>
   import("./modules/Recruitment_Portal_Config/pages/index")
 );
 
+const DashboardAlertConfig = lazy(() =>
+  import("./modules/Dashboard_Alert_Config/pages/index")
+);
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -364,6 +368,7 @@ const ROUTES = {
   emp_salary_revision: EmpSalaryRevisionModule,
   news_event_ticker: NewsEventTickerModule,
   career: RecruitmentConfiguration,
+  configuration: DashboardAlertConfig,
 };
 
 export default function BasePage() {

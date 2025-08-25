@@ -206,7 +206,7 @@ const EmployeeArea = ({
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.master_Id === 1784) {
+              if (e?.dashlet_type === "chart" && e?.tab_key === "employee") {
                 return <ChartData key={`chart-${alertIdx}`} data={e} />;
               }
               return null;
@@ -216,7 +216,10 @@ const EmployeeArea = ({
         <div className="grid grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.master_Id === 1784 && e?.dashlet_type === "big_table") {
+              if (
+                e?.tab_key === "employee" &&
+                e?.dashlet_type === "big_table"
+              ) {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -232,7 +235,10 @@ const EmployeeArea = ({
       <div className="col-span-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
-            if (e?.dashlet_type === "small_table" && e?.master_Id === 1784) {
+            if (
+              e?.dashlet_type === "small_table" &&
+              e?.tab_key === "employee"
+            ) {
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}
