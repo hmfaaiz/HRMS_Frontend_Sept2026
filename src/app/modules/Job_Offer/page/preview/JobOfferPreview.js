@@ -7,6 +7,7 @@ import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Download, MailPlus } from 'lucide-react';
+import { amountFormat } from '../../../../utils/common';
 
 const JobOfferPreview = () => {
     const [data, setData] = useState(null);
@@ -227,7 +228,7 @@ const JobOfferPreview = () => {
                                 <tbody>
                                     {designation && <tr><td style={{ fontWeight: '900' }}>Designation (Position)</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{designation}</td></tr>}
                                     {department && <tr><td style={{ fontWeight: '900' }}>Department</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{department}</td></tr>}
-                                    {monthlySalary && <tr><td style={{ fontWeight: '900' }}>Monthly Fixed Salary</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{monthlySalary}</td></tr>}
+                                    {monthlySalary && <tr><td style={{ fontWeight: '900' }}>Monthly Fixed Salary</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{amountFormat(monthlySalary)}</td></tr>}
                                     {nic_no && <tr><td style={{ fontWeight: '900' }}>ID Card No</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{nic_no}</td></tr>}
                                     {passportNo && <tr><td style={{ fontWeight: '900' }}>Passport No</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{passportNo}</td></tr>}
                                     {appointmentType && <tr><td style={{ fontWeight: '900' }}>Appointment Type</td><td style={{ padding: '0 20px', textAlign: 'center' }}>:</td><td style={{ fontWeight: '' }}>{appointmentType}</td></tr>}

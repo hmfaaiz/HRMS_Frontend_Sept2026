@@ -24,6 +24,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { format } from "date-fns";
 import { actions } from "../../../../Auth";
 import { getLastExchangeRateBySubsidiaryId } from "../../../_redux/bankActions";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -361,7 +362,7 @@ export function BankEditForm({
                       <Field
                         name="exchange_rate"
                         maxLength={6}
-                        component={Input}
+                        component={AmountInput}
                         placeholder="Enter Exchange Rate"
                         label={
                           <span>
