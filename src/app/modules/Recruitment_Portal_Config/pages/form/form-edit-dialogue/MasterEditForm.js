@@ -352,7 +352,6 @@ const JobDetailVisibleInfoField = [
 
 const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
   const [totalProfileConfigPerc, setTotalProfileConfigPerc] = useState(0);
-  const [RECRUITMENT_PORTAL_URL, setRECRUITMENT_PORTAL_URL] = useState("");
 
   // Calculate total %
   const calculateTotalProfileConfigPerc = (portalConfig) => {
@@ -391,13 +390,6 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
     });
   };
 
-  useEffect(() => {
-    if (companyId) {
-      setRECRUITMENT_PORTAL_URL(
-        `${process.env.REACT_APP_PORTAL_URL + companyId}`
-      );
-    }
-  }, [companyId]);
 
   return (
     <Formik
@@ -425,7 +417,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
                 </label>
               </div>
               <p className="m-0 underline font-size-xs text-black">
-                <a target="_blank" href={`${RECRUITMENT_PORTAL_URL}`}>
+                <a target="_blank" href={`${process.env.REACT_APP_PORTAL_URL + companyId}`}>
                   Go to Portal
                 </a>
               </p>
