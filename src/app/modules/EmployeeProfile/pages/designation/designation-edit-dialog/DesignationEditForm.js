@@ -3081,6 +3081,11 @@ Date of Retirement (Optional)
                           className="form-control"
                           placeholder=" Date Of Retirement (Optional)"
                           // selected={RetirementSelectedOptional || null} 
+                             selected={
+        values.dateOfRetirementOptional
+          ? new Date(values.dateOfRetirementOptional)
+          : null
+      }
                           showYearDropdown
                           scrollableMonthYearDropdown
                           onChange={(date) => {
