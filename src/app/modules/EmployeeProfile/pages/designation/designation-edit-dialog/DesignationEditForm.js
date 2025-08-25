@@ -1893,7 +1893,7 @@ export function DesignationEditForm({
                               <span style={{ color: "red" }}>*</span>
                             </span>
                           }
-                          isDisabled={user.id || isUserForRead}
+                          isDisabled={user.Id || isUserForRead}
                           onBlur={() => {
                             // handleBlur({ target: { name: "countryId" } });
                           }}
