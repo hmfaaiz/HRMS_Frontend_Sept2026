@@ -293,7 +293,12 @@ export function DesignationEditForm({
                           // Optionally, you can call additional functions like setDefaultCurrencyChildMenus
                           setDefualtCurrencyCodeList(e);
                         }}
-                        value={defSubsidiary || null}
+                        // value={defSubsidiary || null}
+                         value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         // options={dashboard.allSubsidiaryList}
