@@ -157,7 +157,7 @@ export function EmployeeAttendanceSection({ downloadExcel, dispatch }) {
         <div className="px-3 py-2 rounded-lg bg-white overflow-y-auto">
           <div className="flex justify-between">
             <h6 className="font-bold mb-0 text-primary my-2">
-              Employee Attendance
+             Attendance Machine
             </h6>
             <button className="btn bg-tsecondary" onClick={onClick}>
               Template{" "}
