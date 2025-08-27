@@ -14,6 +14,7 @@ import { LoanOpeningSection } from "../form-edit-dialog/LoanOpeningBalanceSectio
 import { IncomeTaxOpeningSection } from "../form-edit-dialog/IncomeTaxOpeningSection";
 import * as actions from "../../../_redux/formActions";
 import TCard from "../../../../../utils/common-modules/TCard";
+import { EmployeeAttendanceManualSection } from "../form-edit-dialog/EmployeeAttendanceManualSection";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -128,6 +129,12 @@ export function FormCard() {
 
         {/* IncomeTaxOpeningSection Starts */}
         <IncomeTaxOpeningSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+
+{/* Emp Att New Version */}
+        <EmployeeAttendanceManualSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
         />
