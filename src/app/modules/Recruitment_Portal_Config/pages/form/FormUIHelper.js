@@ -97,7 +97,7 @@ export const themeColor = [
   },
   {
     color_name: "DeepSea",
-    primary_color: "#fcfdff",
+    primary_color: "#176087",
     secondary_color: "#fafcff",
   },
   {
@@ -121,7 +121,7 @@ export const themeColor = [
     secondary_color: "#f8f9fa",
   },
   {
-    color_name: "Purple",
+    color_name: "Indigo",
     primary_color: "#3c096c",
     secondary_color: "#fcfaff",
   },
