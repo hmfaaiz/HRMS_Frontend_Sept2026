@@ -11,7 +11,8 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-
+import { formatDates } from "../../../../../utils/common";
+import DatePicker from "react-datepicker";
 // percentage: Yup.string().required("Required*"),
 const news_event_tickerEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number()
@@ -111,21 +112,47 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div>
+                  {/* <div>
                     <label>
                       Ticker Date<span style={{ color: "red" }}>*</span>
                     </label>
-                    <Field
+                    <DatePicker
                       name="ticker_date"
-                      component={DatePickerField} // Custom component
+                      // component={DatePickerField} // Custom component
                       dateFormat="dd-MMM-yyyy"
                       placeholder="Select Date"
                       type="date"
                       onChange={(e) => {
-                        setFieldValue("ticker_date", e);
+                            let a=formatDates(e, "yyyy-MM-dd")
+                        setFieldValue("ticker_date", a);
                       }}
                     />
-                  </div>
+                  </div> */}
+
+                    <div>
+                                              <label>
+                                                ticker date<span style={{ color: "red" }}>*</span>
+                                              </label>
+                                              <DatePicker
+                                                className="form-control"
+                                                placeholder="ticker_date "
+                                                selected={
+                                                  values?.ticker_date
+                                                    ? new Date(values.ticker_date)
+                                                    : null
+                                                }
+                                                onChange={(date) => {
+                                                  let a= formatDates(date, "dd-MMM-yyyy");
+                                                  setFieldValue("ticker_date", a);
+                                                
+                                                }}
+                                                timeInputLabel="Time:"
+                                                dateFormat="dd-MMM-yyyy"
+                                                // showTimeInput
+                                                name="ticker_date"
+                                                autoComplete="off"
+                                              />
+                                            </div>
 
                   <div>
                     <label>
