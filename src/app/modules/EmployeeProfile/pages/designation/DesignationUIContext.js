@@ -93,6 +93,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     deligationId:"",
     relation_name:"",
     hod:0,
+    dateOfRetirementOptional:"",
   };
 
  

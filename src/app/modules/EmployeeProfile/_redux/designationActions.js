@@ -44,7 +44,7 @@ export const fetchContactInfo = (queryparm) => async (dispatch) => {
 
 export const fetchUser = (id) => (dispatch) => {
 
-
+  dispatch(clearForm());
   if (!id) {
     return dispatch(actions.emp_profileFetchedForEdit({ userForEdit: undefined }));
   }
@@ -216,3 +216,8 @@ export const fetchUserStatusTypes = (body) => (dispatch) => {
   });
 };
 
+
+export const clearForm = () => (dispatch) => {
+
+    return dispatch(actions.emp_profileFetchedForEdit({ userForEdit: undefined }));
+};
