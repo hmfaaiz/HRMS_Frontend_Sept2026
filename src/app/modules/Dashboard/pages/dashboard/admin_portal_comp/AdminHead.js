@@ -7,38 +7,30 @@ const options = [
   {
     title: "Default View",
     key: "default",
-    resourceId: null,
   },
   {
     title: "Employee",
     key: "employee",
-    resourceId: 1784,
   },
   {
     title: "Leave",
-    key: "leave_management",
-    resourceId: 308,
+    key: "leave",
   },
   {
     title: "Attendance",
-    key: "attendance_management",
-    resourceId: 1726,
+    key: "attendance",
   },
   {
     title: "Payroll",
     key: "payroll",
-    resourceId: 252,
   },
   {
     title: "Recruitment",
     key: "recruitment",
-    resourceId: 1893,
   },
 ];
 
-
 const AdminHead = ({ activeTab, handleChange, announcement }) => {
-  
   return (
     <div className="grid grid-cols-5 gap-x-2 gap-y-2">
       <div className="col-span-4 content-center px-3 py-2 rounded-lg bg-white">
@@ -59,7 +51,7 @@ const AdminHead = ({ activeTab, handleChange, announcement }) => {
                 ?.find((opt) => opt.value === activeTab) || ""
             }
             onChange={(e) => {
-              handleChange(e)
+              handleChange(e);
             }}
             className="col-span-1"
           />

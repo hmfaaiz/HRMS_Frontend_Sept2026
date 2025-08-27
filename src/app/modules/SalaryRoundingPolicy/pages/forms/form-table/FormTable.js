@@ -16,6 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
+import { amountFormat } from "../../../../../utils/common";
 
 export function FormTable() {
   //Users UI Context
@@ -33,15 +34,12 @@ export function FormTable() {
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector(
-    (state) => {
-      return {
-        currentState: state.salary_rounding_policy,
-        userAccess: state?.auth?.userAccess["Salary_Rounding_Policy"],
-      }
-    },
-    shallowEqual
-  );
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
+      currentState: state.salary_rounding_policy,
+      userAccess: state?.auth?.userAccess["Salary_Rounding_Policy"],
+    };
+  }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
 
@@ -61,7 +59,6 @@ export function FormTable() {
   );
   // Table columns
   const columns = [
-
     {
       dataField: "Subsidiary.name",
       text: "Subsidiary",
@@ -71,7 +68,8 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-    },    {
+    },
+    {
       dataField: "formName",
       text: "Payment Mode",
       sort: false,
@@ -90,6 +88,9 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         minWidth: "160px",
+      },
+      formatter: (cell) => {
+        return cell ? amountFormat(cell) : "";
       },
     },
     {

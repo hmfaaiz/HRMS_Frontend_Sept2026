@@ -21,24 +21,26 @@ import StatsCardModal from "../admin_portal_comp/ExpandViews/StatsCardModal";
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth?.user || {});
+  const dashboard = useSelector((state) => state.dashboard || []);
+
   const [isLoading, setIsLoading] = useState(false);
   //for dropdown of tab intially default
   const [activeTab, setActiveTab] = useState("default"); // Default to Employee
-
   const [bigTableModalData, setBigTableModalData] = useState(null);
   const [smallTableModalData, setSmallTableModalData] = useState(null);
-  const [summaryModalHeading , setSummaryModalHeading] = useState("");
+  const [summaryModalHeading, setSummaryModalHeading] = useState("");
   const [summaryFilter, setSummaryFilter] = useState({
-    subsidiaryId: user?.EmployeeMapping?.subsidiaryId || "",
+    subsidiaryId: user?.EmployeeMapping?.subsidiaryId
+      ? user.EmployeeMapping.subsidiaryId
+      : user?.subsidiaryId?.length > 0
+      ? Number(user?.subsidiaryId?.[0]) || ""
+      : "",
     gradeId: "",
     departmentId: "",
     designationId: "",
     locationId: "",
   });
-
-  const user = useSelector((state) => state.auth?.user || {});
-  const dashboard = useSelector((state) => state.dashboard || []);
-
 
   const {
     allDashboardAlerts,
@@ -126,7 +128,7 @@ export const AdminPortal = () => {
               setSummaryModalHeading={setSummaryModalHeading}
               holidayList={holidayList}
             />
-          ) : activeTab === "leave_management" ? (
+          ) : activeTab === "leave" ? (
             <LeaveArea
               allSubsidiaryList={allSubsidiaryList}
               allLocationChildMenus={allLocationChildMenus}
@@ -141,7 +143,7 @@ export const AdminPortal = () => {
               setSummaryModalHeading={setSummaryModalHeading}
               holidayList={holidayList}
             />
-          ) : activeTab === "attendance_management" ? (
+          ) : activeTab === "attendance" ? (
             <AttendanceArea
               allSubsidiaryList={allSubsidiaryList}
               allLocationChildMenus={allLocationChildMenus}
@@ -168,7 +170,7 @@ export const AdminPortal = () => {
               setSummaryModalHeading={setSummaryModalHeading}
               holidayList={holidayList}
             />
-          ) : (
+          ) : activeTab === "payroll" ? (
             <PayrollArea
               allSubsidiaryList={allSubsidiaryList}
               allLocationChildMenus={allLocationChildMenus}
@@ -183,7 +185,7 @@ export const AdminPortal = () => {
               setSummaryModalHeading={setSummaryModalHeading}
               holidayList={holidayList}
             />
-          )}
+          ) : null}
           <BigTableModal
             show={bigTableModalData}
             data={bigTableModalData}

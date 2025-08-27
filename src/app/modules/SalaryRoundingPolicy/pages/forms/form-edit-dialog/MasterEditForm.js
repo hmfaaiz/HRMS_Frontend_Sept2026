@@ -9,6 +9,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 
 //Validation for Form
 const formValidation = Yup.object().shape({
@@ -147,7 +148,7 @@ export function MasterEditForm({
                        <div className="col-span-1">
                       <Field
                         name="amount"
-                        component={Input}
+                        component={AmountInput}
                         placeholder=""
                         onChange={handleChange}
                         onBlur={handleBlur}

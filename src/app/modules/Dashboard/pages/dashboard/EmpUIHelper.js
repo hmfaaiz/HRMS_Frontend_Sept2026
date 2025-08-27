@@ -60,3 +60,11 @@ export const leaveDetailFilter = {
   pageSize: 100,
   pageNumber: 1,
 };
+
+export const PeriodType = {
+  "1": "Next Month",
+  "2": "Previous Month",
+  "3": "Current Month",
+  "4": "Current Year",
+  "5": "Next Year",
+};

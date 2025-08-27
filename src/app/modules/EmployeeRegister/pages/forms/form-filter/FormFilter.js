@@ -25,6 +25,7 @@ import {
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { FileText, Sheet } from "lucide-react";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 //Validation for date fields
 const formValidation = Yup.object()
   .shape({
@@ -576,9 +577,9 @@ export function FormFilter({
                             ))}
                           </Field>
                           {errors.salary_type && touched.salary_type && (
-                            <div className="error-message">
+                            <label className="invalid-feedback">
                               {errors.salary_type}
-                            </div>
+                            </label>
                           )}
                         </div>
 
@@ -604,6 +605,7 @@ export function FormFilter({
                         <div className="col-span-1">
                           <label>Amount</label>
                           <Field
+                            component={AmountInput}
                             name="amount"
                             as="input"
                             className="form-control"

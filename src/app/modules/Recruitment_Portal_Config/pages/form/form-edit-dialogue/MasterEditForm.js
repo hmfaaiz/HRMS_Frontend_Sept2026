@@ -425,7 +425,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
             <div className="grid grid-cols-12 gap-x-3 gap-y-1">
               <div className="col-span-8 flex gap-4">
                 {themeColor.map((el, ind) => (
-                  <div key={ind}>
+                  <div title={el.color_name} key={ind}>
                     <button
                       style={{ backgroundColor: el.primary_color }}
                       className={
