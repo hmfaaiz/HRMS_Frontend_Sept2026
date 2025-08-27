@@ -113,6 +113,7 @@ import { EmpSalaryRevisionSlice } from "../app/modules/Emp_Salary_Revision/_redu
 import { NewsEventTickerSlice } from "../app/modules/NewsEventTicker/_redux/redux-Slice";
 import { RecruitmentPortalConfigSlice } from "../app/modules/Recruitment_Portal_Config/_redux/redux-Slice";
 import { DashboardAlertConfigSlice } from "../app/modules/Dashboard_Alert_Config/_redux/redux-Slice";
+import { EmailConfigurationSlice } from "../app/modules/EmailConfiguration/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -224,6 +225,7 @@ export const rootReducer = combineReducers({
   news_event_ticker: NewsEventTickerSlice.reducer,
   recruitment_portal_config: RecruitmentPortalConfigSlice.reducer,
   dashboard_alert_config: DashboardAlertConfigSlice.reducer,
+  email_config: EmailConfigurationSlice.reducer,
 });
 
 export function* rootSaga() {

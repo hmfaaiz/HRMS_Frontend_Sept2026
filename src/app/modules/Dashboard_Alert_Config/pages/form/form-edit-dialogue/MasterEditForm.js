@@ -1,4 +1,4 @@
-import { Field, Formik } from "formik";
+import { ErrorMessage, Field, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import {
@@ -14,12 +14,42 @@ import {
 } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import * as Yup from "yup";
+
+const validationSchema = Yup.array().of(
+  Yup.object().shape({
+    days: Yup.number()
+      .transform((value, originalValue) =>
+        String(originalValue).trim() === "" ? null : Number(originalValue)
+      )
+      .nullable()
+      .when(["isPeriodType", "PeriodType"], {
+        is: (isPeriodType, PeriodType) => isPeriodType === true,
+        then: Yup.number().when("PeriodType", {
+          is: 0,
+          then: (schema) =>
+            schema
+              .required("Days is required")
+              .min(0, "Days must be at least 0"),
+          otherwise: (schema) =>
+            schema
+              .required("Days is required")
+              .min(1, "Days must be at least 1"),
+        }),
+        otherwise: (schema) => schema.notRequired().nullable(),
+      }),
+  })
+);
 
 const MasterEditForm = ({ initialValues, loading, dispatch }) => {
   return (
     <Formik
       enableReinitialize={true}
       initialValues={initialValues}
+      validationSchema={validationSchema}
+      validateOnChange={true}
+      validateOnBlur={true}
+      validateOnMount={true}
       onSubmit={(values) => {
         dispatch(actions.updateDashboardAlertConfig(values));
       }}
@@ -132,18 +162,39 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                           </td>
                           <td>
                             {row?.isPeriodType ? (
-                              <Field
-                                name={`[${index}].days`}
-                                disabled={values[index]?.PeriodType !== 0}
-                                component={Input}
-                                type="number"
-                                min="1"
-                                autoComplete="off"
-                              />
+                              <>
+                                <Field
+                                  name={`[${index}].days`}
+                                  disabled={values[index]?.PeriodType !== 0}
+                                  component={Input}
+                                  type="number"
+                                  min="1"
+                                  autoComplete="off"
+                                  onChange={(e) => {
+                                    if (
+                                      e.target.value.trim() === "" ||
+                                      e.target.value.trim() === "0"
+                                    ) {
+                                      setFieldValue(`[${index}].days`, 1);
+                                    } else {
+                                      setFieldValue(
+                                        `[${index}].days`,
+                                        e.target.value
+                                      );
+                                    }
+                                  }}
+                                />
+                                <ErrorMessage
+                                  name={`[${index}].days`}
+                                  component="div"
+                                  className="invalid-feedback d-block"
+                                />
+                              </>
                             ) : (
                               "-"
                             )}
                           </td>
+
                           <td>
                             <Checkbox
                               isSelected={values[index]?.is_fav} // or === true depending on backend

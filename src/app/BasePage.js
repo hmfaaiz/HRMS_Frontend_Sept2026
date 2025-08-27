@@ -264,6 +264,10 @@ const DashboardAlertConfig = lazy(() =>
   import("./modules/Dashboard_Alert_Config/pages/index")
 );
 
+const EmailConfiguration = lazy(() =>
+  import("./modules/EmailConfiguration/pages/index")
+);
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -369,6 +373,7 @@ const ROUTES = {
   news_event_ticker: NewsEventTickerModule,
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
+  email_configuration : EmailConfiguration,
 };
 
 export default function BasePage() {
