@@ -1138,7 +1138,9 @@ export function DesignationEditForm({
       ...workExperienceList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+              let e = formatDates(el, "dd-MMM-yyyy");
+              val[key] = e || null;
         }
         return val;
       }),
@@ -1182,7 +1184,9 @@ export function DesignationEditForm({
       ...academicList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+              let e = formatDates(el, "dd-MMM-yyyy");
+              val[key] = e || null;
         }
         return val;
       }),
@@ -1383,7 +1387,9 @@ export function DesignationEditForm({
       ...skillsList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+          let e = formatDates(el, "dd-MMM-yyyy");
+          val[key] = e || null;
         }
         return val;
       }),
@@ -1420,7 +1426,9 @@ export function DesignationEditForm({
       ...incidentList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+             let e = formatDates(el, "dd-MMM-yyyy");
+              val[key] = e || null;
         }
         return val;
       }),
