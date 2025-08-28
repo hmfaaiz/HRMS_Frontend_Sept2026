@@ -32,7 +32,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Link } from "@material-ui/core";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import MaskedInput from "react-text-mask";
-import { getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { CirclePlus, Trash2, Upload } from "lucide-react";
@@ -176,20 +176,51 @@ const profileValidation = Yup.object()
             )
           : schema;
       }),
-    dateOfContractExpiry: Yup.date()
-      .nullable()
-      .when("dateOfConfirmationEnter", (dateOfConfirmationEnter, schema) => {
-        return dateOfConfirmationEnter
-          ? schema.min(
-              dateOfConfirmationEnter,
-              "Contract expiry date cannot be earlier than date confirmation extended"
-            )
-          : schema;
-      })
-       .min(
-    Yup.ref("dateOfJoining"),
-    "Contract expiry date cannot be earlier than Date of Joining"
+  //   dateOfContractExpiry: Yup.date()
+  //     .nullable()
+  //     .when("dateOfConfirmationEnter", (dateOfConfirmationEnter, schema) => {
+  //       return dateOfConfirmationEnter
+  //         ? schema.min(
+  //             dateOfConfirmationEnter,
+  //             "Contract expiry date cannot be earlier than date confirmation extended"
+  //           )
+  //         : schema;
+  //     })
+  //      .min(
+  //   Yup.ref("dateOfJoining"),
+  //   "Contract expiry date cannot be earlier than Date of Joining"
+  // ),
+
+dateOfContractExpiry: Yup.date()
+  .nullable()
+  .test(
+    "check-contract-expiry",
+    "Contract expiry date validation failed",
+    function (value) {
+      const { employeeTypeId, dateOfConfirmationEnter, dateOfJoining } = this.parent;
+
+      // Only validate if employeeTypeId = 147
+      if (employeeTypeId === "147" || employeeTypeId === 147) {
+        if (dateOfConfirmationEnter && value < dateOfConfirmationEnter) {
+          return this.createError({
+            path: "dateOfContractExpiry",
+            message: "Contract expiry date cannot be earlier than date confirmation extended",
+          });
+        }
+
+        if (dateOfJoining && value < dateOfJoining) {
+          return this.createError({
+            path: "dateOfContractExpiry",
+            message: "Contract expiry date cannot be earlier than Date of Joining",
+          });
+        }
+      }
+
+      return true;
+    }
   ),
+
+
     nic_no: Yup.string()
       .matches(
         /^\d{5}-\d{7}-\d{1}$/,
@@ -277,7 +308,7 @@ const profileValidation = Yup.object()
     "Invalid marital status for selected title",
     function(value) {
       // if (title === 'Mrs.' && maritalStatus === '261') {
-      const { title, maritalStatus, gender } = value;
+      const { title, maritalStatus, gender ,employeeTypeId} = value;
 
       // Check conditions based on title // 196 == Single
       if (title === "Mrs." && maritalStatus !== "267") {
@@ -1819,6 +1850,49 @@ export function DesignationEditForm({
             setErrors({});
 
             enableLoading();
+             const payload = {
+        ...values,
+        dateOfBirth: values.dateOfBirth
+          ? formatDates(values.dateOfBirth, "dd-MMM-yyyy")
+          : null,
+           dateOfConfirmation: values.dateOfConfirmation
+          ? formatDates(values.dateOfConfirmation, "dd-MMM-yyyy")
+          : null,
+            dateOfConfirmationDue: values.dateOfConfirmationDue
+          ? formatDates(values.dateOfConfirmationDue, "dd-MMM-yyyy")
+          : null,
+  dateOfConfirmationEnter: values?.dateOfConfirmationEnter
+          ? formatDates(values?.dateOfConfirmationEnter, "dd-MMM-yyyy")
+          : null,
+            dateOfContractExpiry: values.dateOfContractExpiry
+          ? formatDates(values.dateOfContractExpiry, "dd-MMM-yyyy")
+          : null,
+            dateOfJoining: values.dateOfJoining
+          ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
+          : null, 
+          dateOfRetirement: values.dateOfRetirement
+          ? formatDates(values.dateOfRetirement, "dd-MMM-yyyy")
+          : null, 
+          dateOfRetirementOptional: values.dateOfRetirementOptional
+          ? formatDates(values.dateOfRetirementOptional, "dd-MMM-yyyy")
+          : null,
+           drivingLicenseExpiry: values.drivingLicenseExpiry
+          ? formatDates(values.drivingLicenseExpiry, "dd-MMM-yyyy")
+          : null,  
+          passportExpiry: values.passportExpiry
+          ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
+          : null, 
+           nextReviewDate: values.nextReviewDate
+          ? formatDates(values.nextReviewDate, "dd-MMM-yyyy")
+          : null, 
+          nicExpiry: values.nicExpiry
+          ? formatDates(values.nicExpiry, "dd-MMM-yyyy")
+          : null,
+passportExpiry: values.passportExpiry
+          ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
+          : null,
+
+      };
 
             if (file) {
               let formData = new FormData();
@@ -1828,7 +1902,7 @@ export function DesignationEditForm({
                 .then((res) => {
                   setImage(res.data.imageUrl);
                   saveEmployeeProfile(
-                    values,
+                    payload,
                     res.data.imageUrl,
                     defContactList,
                     workExperienceList,
@@ -1841,7 +1915,7 @@ export function DesignationEditForm({
                 });
             } else {
               saveEmployeeProfile(
-                values,
+                payload,
                 profile_image,
                 defContactList,
                 workExperienceList,
