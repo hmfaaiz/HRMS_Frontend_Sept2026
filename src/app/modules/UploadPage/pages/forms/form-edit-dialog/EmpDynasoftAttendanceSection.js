@@ -25,7 +25,7 @@ export function EmployeeDynasoftAttendanceSection({ downloadExcel, dispatch }) {
     downloadExcel(
       document,
       "dynasoft_employee_attendance",
-      "dynasoft_employee_attendance_template"
+      "Dynasoft_Employee_Attendance_Template"
     );
   };
 
