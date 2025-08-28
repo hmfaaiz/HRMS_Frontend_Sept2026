@@ -112,7 +112,6 @@ export function FormEditForm({
   }, shallowEqual);
 
   const { loan_type, userForEdit } = currentState;
-  console.log("currentStatecurrentState", currentState);
 
   //set the values limit
   useEffect(() => {
