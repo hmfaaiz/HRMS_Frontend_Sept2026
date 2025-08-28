@@ -18,25 +18,20 @@ import * as Yup from "yup";
 
 const validationSchema = Yup.array().of(
   Yup.object().shape({
+    isPeriodType: Yup.boolean().default(false),
+    PeriodType: Yup.number().nullable(),
     days: Yup.number()
       .transform((value, originalValue) =>
-        String(originalValue).trim() === "" ? null : Number(originalValue)
+        originalValue === "" || originalValue === null ? undefined : value
       )
-      .nullable()
       .when(["isPeriodType", "PeriodType"], {
-        is: (isPeriodType, PeriodType) => isPeriodType === true,
-        then: Yup.number().when("PeriodType", {
-          is: 0,
-          then: (schema) =>
-            schema
-              .required("Days is required")
-              .min(0, "Days must be at least 0"),
-          otherwise: (schema) =>
-            schema
-              .required("Days is required")
-              .min(1, "Days must be at least 1"),
-        }),
-        otherwise: (schema) => schema.notRequired().nullable(),
+        is: (isPeriodType, periodType) => !!isPeriodType && Number(periodType) === 0,
+        then: (schema) =>
+          schema
+            .min(1, "Day must be at least 1")
+            .max(90, "Day must be at most 90")
+            .required("Day is required"),
+        otherwise: (schema) => schema.notRequired(),
       }),
   })
 );
@@ -51,10 +46,29 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
       validateOnBlur={true}
       validateOnMount={true}
       onSubmit={(values) => {
-        dispatch(actions.updateDashboardAlertConfig(values));
+        // Sanitize days: if empty when required, set to 1; also clamp to [1, 90]
+        const sanitized = (values || []).map((row) => {
+          if (row?.isPeriodType && Number(row?.PeriodType) === 0) {
+            const numericDays = Number(row?.days);
+            if (!row?.days && row?.days !== 0) {
+              return { ...row, days: 1 };
+            }
+            if (Number.isNaN(numericDays)) {
+              return { ...row, days: 1 };
+            }
+            if (numericDays < 1) {
+              return { ...row, days: 1 };
+            }
+            if (numericDays > 90) {
+              return { ...row, days: 90 };
+            }
+          }
+          return row;
+        });
+        dispatch(actions.updateDashboardAlertConfig(sanitized));
       }}
     >
-      {({ handleSubmit, values, setFieldValue }) => (
+      {({ handleSubmit, values, setFieldValue, errors }) => (
         <Form className="form form-label-right">
           <fieldset disabled={loading}>
             <div className="flex justify-between items-center">
@@ -70,9 +84,9 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                       <td>Dashboard Name</td>
                       <td>Dashboard Type</td>
                       <td>Graph Type</td>
-                      <td>Small Table Theme</td>
+                      <td>Reminder Theme</td>
                       <td>Period Type</td>
-                      <td>Days</td>
+                      <td className="w-36">Days</td>
                       <td>Default View</td>
                       <td>Active</td>
                     </tr>
@@ -143,7 +157,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                                     e.value
                                   );
                                   if (e?.value === 0) {
-                                    setFieldValue(`[${index}].days`, 10);
+                                    setFieldValue(`[${index}].days`, 1);
                                   } else {
                                     setFieldValue(`[${index}].days`, "");
                                   }
@@ -160,7 +174,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                               "-"
                             )}
                           </td>
-                          <td>
+                          <td className="w-36">
                             {row?.isPeriodType ? (
                               <>
                                 <Field
@@ -168,20 +182,20 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                                   disabled={values[index]?.PeriodType !== 0}
                                   component={Input}
                                   type="number"
-                                  min="1"
+                                  min={1}
+                                  max={90}
                                   autoComplete="off"
-                                  onChange={(e) => {
-                                    if (
-                                      e.target.value.trim() === "" ||
-                                      e.target.value.trim() === "0"
-                                    ) {
-                                      setFieldValue(`[${index}].days`, 1);
-                                    } else {
-                                      setFieldValue(
-                                        `[${index}].days`,
-                                        e.target.value
-                                      );
+                                  validate={(value) => {
+                                    const periodEnabled = values[index]?.isPeriodType && Number(values[index]?.PeriodType) === 0;
+                                    if (!periodEnabled) return undefined;
+                                    if (value === "" || value === null || value === undefined) {
+                                      return "Day is required";
                                     }
+                                    const num = Number(value);
+                                    if (Number.isNaN(num)) return "Day is required";
+                                    if (num < 1) return "Day must be at least 1";
+                                    if (num > 90) return "Day must be at most 90";
+                                    return undefined;
                                   }}
                                 />
                                 <ErrorMessage

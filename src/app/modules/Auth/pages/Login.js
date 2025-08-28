@@ -157,7 +157,7 @@ function Login(props) {
         >
          
 
-          <div className="form-group ">
+          <div className="flex flex-col" >
             <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
               Email address
             </label>
@@ -165,7 +165,7 @@ function Login(props) {
               placeholder="Email"
               type="text"
 
-              className={`form-control form-control-solid  ${getInputClasses(
+              className={`login-control form-control-solid  ${getInputClasses(
                 "email"
               )} inputcolor !h-[7vh]`}
               name="emails"
@@ -178,14 +178,14 @@ function Login(props) {
             ) : null}
           </div>
 
-          <div className="form-group">
+          <div className="flex flex-col mt-4" >
             <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
               Password
             </label>
             <input
               placeholder="Password"
               type="password"
-              className={`form-control form-control-solid !h-[7vh]  ${getInputClasses(
+              className={`login-control form-control-solid !h-[7vh]  ${getInputClasses(
                 "password"
               )} inputcolor`}
               name="password"

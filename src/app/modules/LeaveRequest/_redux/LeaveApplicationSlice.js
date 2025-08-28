@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   listLoading: false,
   actionsLoading: null,
-  
+
   totalCount: 0,
   entities: null,
   roles: null,
@@ -15,6 +15,7 @@ const initialState = {
   payrollData: null,
   leaveBalances: [],
   empAuthorityList: [],
+  isPolicyExists: false,
 };
 
 export const callTypes = {
@@ -100,7 +101,9 @@ export const LeaveRequestSlice = createSlice({
     EmployeeAuthorityFetched: (state, action) => {
       state.listLoading = false;
       state.error = null;
-      state.empAuthorityList = action.payload;
+      const { data, isPolicyExists } = action.payload;
+      state.empAuthorityList = data;
+      state.isPolicyExists = isPolicyExists;
     },
   },
 });

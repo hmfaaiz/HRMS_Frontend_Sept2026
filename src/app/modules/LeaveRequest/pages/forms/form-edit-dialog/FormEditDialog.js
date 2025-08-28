@@ -11,6 +11,7 @@ export function FormEditDialog({
   id,
   employeeId,
   empAuthorityList,
+  isPolicyExists,
   currentLevel,
   initUser,
 }) {
@@ -99,6 +100,7 @@ export function FormEditDialog({
           submitForm={submitForm}
           user={userForEdit || initUser}
           empAuthorityList={empAuthorityList}
+          isPolicyExists={isPolicyExists}
           enableLoading={enableLoading}
           loading={loading}
           employeeId={formUIProps?.employeeId}

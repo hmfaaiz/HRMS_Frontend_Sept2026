@@ -157,7 +157,7 @@ export function WorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          <h5 className="font-bold mb-0 text-black">Leave Approval Flow</h5>
+          <h5 className="font-bold mb-0 text-black">Attendance Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="">

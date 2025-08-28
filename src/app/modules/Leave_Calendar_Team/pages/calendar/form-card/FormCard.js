@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {  Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import {  Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import * as actions from "../../../_redux/redux-Actions";
 import { FormTable } from "../form-table/FormTable";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
@@ -40,10 +40,11 @@ export function FormCard() {
     );
   };
 
-  const { currentState, user, payrollData } = useSelector((state) => {
+  const { currentState, user, payrollData, leave } = useSelector((state) => {
     return {
       currentState: state?.team_leave_calender,
       payrollData: state?.team_leave_calender.payrollData,
+      leave: state?.auth?.userAccess["Leave"],
       user: state?.auth?.user,
     };
   });
@@ -73,7 +74,7 @@ export function FormCard() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -81,14 +82,29 @@ export function FormCard() {
               {
                 name: "Request",
                 link: "/leave-request/read-all-leave-request",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Approval",
                 link: "/leave-approval/read-all-leave-approval",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/leave-workflow-status/read-all-leave-workflow-status",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -97,7 +113,7 @@ export function FormCard() {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -105,14 +121,29 @@ export function FormCard() {
               {
                 name: "Request",
                 link: "/leave-request/read-all-leave-request",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Approval",
                 link: "/leave-approval/read-all-leave-approval",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/leave-workflow-status/read-all-leave-workflow-status",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}

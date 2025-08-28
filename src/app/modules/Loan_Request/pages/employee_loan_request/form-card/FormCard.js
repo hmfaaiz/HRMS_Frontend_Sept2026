@@ -23,11 +23,12 @@ export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
 
-  const { employeeList, payrollData, empAuthorityList } = useSelector(
+  const { employeeList, payrollData, empAuthorityList, loan } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
       payrollData: state?.loan_request?.payrollData,
       empAuthorityList: state?.loan_request?.empAuthorityList,
+      loan: state?.auth?.userAccess["Payroll"],
     }),
     shallowEqual
   );
@@ -77,22 +78,36 @@ export function FormCard() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
             menuOptions={[
               {
                 name: "Approval",
-                link: "/loan-approval/read-all-loan-approval",
+                link: "/loan_approval/read-all-loan-approval",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/loan-workflow-status/read-all-loan-workflow-status",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Payslip",
                 link: "/payslip/read-payslip",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadPayslip" && el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -101,25 +116,36 @@ export function FormCard() {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
             menuOptions={[
               {
                 name: "Approval",
-                link: "/loan-approval/read-all-loan-approval",
-                isShow: empAuthorityList?.length > 0 ? true : false,
+                link: "/loan_approval/read-all-loan-approval",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/loan-workflow-status/read-all-loan-workflow-status",
-                isShow: empAuthorityList?.length > 0 ? true : false,
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Payslip",
                 link: "/payslip/read-payslip",
-                isShow: empAuthorityList?.length > 0 ? true : false,
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadPayslip" && el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}

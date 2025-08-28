@@ -58,8 +58,8 @@ const EmployeePortalMenu = ({
           )}
 
           {menuOptions
-            // .filter((option) => option.isShow)
-            .map((option) => (
+            ?.filter((option) => option.isShow)
+            ?.map((option) => (
               <Link
                 key={option.name}
                 className="text-xs sm:text-sm font-semibold text-primary hover:underline"
