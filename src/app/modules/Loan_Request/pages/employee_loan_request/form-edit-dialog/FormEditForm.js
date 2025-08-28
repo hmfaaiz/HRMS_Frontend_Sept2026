@@ -95,19 +95,24 @@ export function FormEditForm({
     setPayrollConfigApproverPermission,
   ] = useState(false);
 
-  const { currentState, auth, entities, empAuthorityList } = useSelector(
-    (state) => {
-      return {
-        currentState: state.loan_request,
-        auth: state.auth.user,
-        entities: state?.loan_request?.entities,
-        empAuthorityList: state?.loan_request?.empAuthorityList,
-      };
-    },
-    shallowEqual
-  );
+  const {
+    currentState,
+    auth,
+    entities,
+    empAuthorityList,
+    isPolicyExists,
+  } = useSelector((state) => {
+    return {
+      currentState: state.loan_request,
+      auth: state.auth.user,
+      entities: state?.loan_request?.entities,
+      empAuthorityList: state?.loan_request?.empAuthorityList,
+      isPolicyExists: state?.loan_request?.isPolicyExists,
+    };
+  }, shallowEqual);
 
   const { loan_type, userForEdit } = currentState;
+  console.log("currentStatecurrentState", currentState);
 
   //set the values limit
   useEffect(() => {
@@ -438,9 +443,25 @@ export function FormEditForm({
                 <div className="spinner spinner-lg spinner-success" />
               </div>
             )} */}
-          {empAuthorityList && empAuthorityList?.length === 0 && (
+          {empAuthorityList &&
+          empAuthorityList?.length === 0 &&
+          !isPolicyExists ? (
             <span className="text-xs text-red-500 font-semibold">
               Designation workflow policy does not exist for this employee.
+            </span>
+          ) : (
+            empAuthorityList &&
+            empAuthorityList?.length === 0 &&
+            isPolicyExists && (
+              <span className="text-xs text-gray-500 font-semibold">
+                Workflow Policy is defined but there is not Workflow Authorities
+                exists as per the policy.
+              </span>
+            )
+          )}
+          {!currentState?.loan_config_details_permission && (
+            <span className="text-xs text-gray-500 font-semibold">
+              Please create Employee Salary before proceeding with Loan Request
             </span>
           )}
           <Form className="form form-label-right" onSubmit={handleSubmit}>

@@ -321,7 +321,7 @@ export function MasterEditForm({
 
                     {/* Active payroll month */}
 
-                    <div className="mt-4 text-xs d-flex flex-column align-items-start">
+                    <div className="mt-4 col-span-4 text-xs d-flex flex-column align-items-start">
                       {activeFiscalYear
                         ? (() => {
                             return (
@@ -589,8 +589,9 @@ export function MasterEditForm({
                         setFieldValue(`isOverTime`, e.target.checked);
                       }}
                       isSelected={values.isOverTime}
+                      children={"Allow OverTime"}
                     />
-                    <span className="mt-7 ml-3"> Allow OverTime</span>
+                    {/* <span className="mt-7 ml-3"> Allow OverTime</span> */}
                   </div>
                   {/* Allow OverTime Field End */}
 
@@ -607,8 +608,9 @@ export function MasterEditForm({
                       }}
                       disabled
                       isSelected={values.isIncludeInterShifGap}
+                      children={"Include Inter-Shift Gap"}
                     />
-                    <span className="mt-7 ml-3">Include Inter-Shift Gap</span>
+                    {/* <span className="mt-7 ml-3">Include Inter-Shift Gap</span> */}
                   </div>
                   {/* Include Inter-Shift Gap Field End */}
 

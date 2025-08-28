@@ -17,10 +17,10 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { listLoading, user } = useSelector(
+  const { user, attendance } = useSelector(
     (state) => ({
-      listLoading: state?.attendance_approval?.listLoading,
       user: state?.auth?.user,
+      attendance: state?.auth?.userAccess["Attendance"],
     }),
     shallowEqual
   );
@@ -45,7 +45,7 @@ export const FormCard = () => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -53,19 +53,39 @@ export const FormCard = () => {
               {
                 name: "Request",
                 link: "/attendance_request/read-all-attendance-request",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link:
                   "/attendance-workflow-status/read-all-attendance-workflow-status",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Attendance Calendar",
                 link: "/attendance_calendar_team/read-attendance-calendar",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAttendanceCalendar" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Holiday Calendar",
                 link: "/holiday_calendar/my-holiday-calendar",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "MyHolidayCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -74,7 +94,7 @@ export const FormCard = () => {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -82,19 +102,39 @@ export const FormCard = () => {
               {
                 name: "Request",
                 link: "/attendance_request/read-all-attendance-request",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link:
                   "/attendance-workflow-status/read-all-attendance-workflow-status",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Attendance Calendar",
                 link: "/attendance_calendar_team/read-attendance-calendar",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAttendanceCalendar" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Holiday Calendar",
                 link: "/holiday_calendar/my-holiday-calendar",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "MyHolidayCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}

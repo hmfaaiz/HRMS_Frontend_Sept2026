@@ -43,14 +43,18 @@ export function FormCard() {
     dashboard,
     entities,
     empAuthorityList,
+    isPolicyExists,
     payrollData,
     employeeList,
+    leave,
   } = useSelector(
     (state) => ({
       dashboard: state.dashboard,
       entities: state.leave_request.entities,
+      leave: state?.auth?.userAccess["Leave"],
       payrollData: state.leave_request?.payrollData,
       empAuthorityList: state?.leave_request?.empAuthorityList,
+      isPolicyExists: state?.leave_request?.isPolicyExists,
       employeeList: state?.dashboard?.employeeList,
     }),
     shallowEqual
@@ -110,7 +114,7 @@ export function FormCard() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -118,17 +122,29 @@ export function FormCard() {
               {
                 name: "Approval",
                 link: "/leave-approval/read-all-leave-approval",
-                isShow: empAuthorityList?.length > 0,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/leave-workflow-status/read-all-leave-workflow-status",
-                isShow: empAuthorityList?.length > 0,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Leave Calendar",
                 link: "/leave_calendar_team/read-leave-calendar",
-                isShow: true,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadLeaveCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -137,7 +153,7 @@ export function FormCard() {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -145,17 +161,29 @@ export function FormCard() {
               {
                 name: "Approval",
                 link: "/leave-approval/read-all-leave-approval",
-                isShow: empAuthorityList?.length > 0,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/leave-workflow-status/read-all-leave-workflow-status",
-                isShow: empAuthorityList?.length > 0,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Leave Calendar",
                 link: "/leave_calendar_team/read-leave-calendar",
-                isShow: true,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadLeaveCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -177,6 +205,7 @@ export function FormCard() {
           currentLevel={formUIProps.currentLevel}
           employeeId={formUIProps.employeeId.value}
           empAuthorityList={empAuthorityList}
+          isPolicyExists={isPolicyExists}
           initUser={{
             ...formUIProps?.initUser,
             from: dateFromAtt !== null ? new Date(dateFromAtt) : "",

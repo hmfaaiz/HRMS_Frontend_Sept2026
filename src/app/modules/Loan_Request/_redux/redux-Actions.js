@@ -261,8 +261,9 @@ export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer
     .getEmployeeAuthorties(empId, "457")
     .then((res) => {
-      const data = Array.isArray(res.data?.data) ? res.data?.data : [];
-      dispatch(actions.EmployeeAuthorityFetched(data));
+      const data = Array.isArray(res.data?.data?.data) ? res.data?.data?.data : [];
+      const isPolicyExists = res.data?.data?.isPolicyExists || false;
+      dispatch(actions.EmployeeAuthorityFetched({data, isPolicyExists}));
     })
     .catch((error) => {
       error.clientMessage = "Can't Get Employee Authorities";

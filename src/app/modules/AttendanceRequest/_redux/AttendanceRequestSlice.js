@@ -17,6 +17,7 @@ const initialState = {
   payrollData: null,
   consolidatedLoading: false,
   empAuthorityList: [],
+  isPolicyExists: false,
   attendanceSummary: null,
 };
 
@@ -98,7 +99,9 @@ export const AttendanceRequestSlice = createSlice({
     EmployeeAuthorityFetched: (state, action) => {
       state.listLoading = false;
       state.error = null;
-      state.empAuthorityList = action.payload;
+      const { data, isPolicyExists } = action.payload;
+      state.empAuthorityList = data;
+      state.isPolicyExists = isPolicyExists;
     },
   },
 });
