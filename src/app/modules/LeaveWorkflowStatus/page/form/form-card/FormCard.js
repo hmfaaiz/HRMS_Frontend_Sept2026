@@ -18,10 +18,11 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { listLoading, user } = useSelector(
+  const { listLoading, user, leave } = useSelector(
     (state) => ({
       listLoading: state?.LeaveWorkflowStatus?.listLoading,
       user: state?.auth?.user,
+      leave: state?.auth?.userAccess["Leave"],
     }),
     shallowEqual
   );
@@ -48,23 +49,37 @@ export const FormCard = () => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[
+           menuOptions={[
               {
                 name: "Request",
                 link: "/leave-request/read-all-leave-request",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Approval",
                 link: "/leave-approval/read-all-leave-approval",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Leave Calendar",
                 link: "/leave_calendar_team/read-leave-calendar",
-                isShow: true,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadLeaveCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -73,7 +88,7 @@ export const FormCard = () => {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -81,15 +96,29 @@ export const FormCard = () => {
               {
                 name: "Request",
                 link: "/leave-request/read-all-leave-request",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Approval",
                 link: "/leave-approval/read-all-leave-approval",
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLeaveApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Leave Calendar",
                 link: "/leave_calendar_team/read-leave-calendar",
-                isShow: true,
+                isShow: leave?.find(
+                  (el) =>
+                    el?.componentName === "ReadLeaveCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}

@@ -51,13 +51,16 @@ export function FormCard() {
     );
   };
 
-  const { currentState, payrollData, user } = useSelector((state) => {
-    return {
-      currentState: state?.attendance_calendar_team,
-      payrollData: state?.attendance_calendar_team.payrollData,
-      user: state?.auth?.user,
-    };
-  });
+  const { currentState, payrollData, user, attendance } = useSelector(
+    (state) => {
+      return {
+        currentState: state?.attendance_calendar_team,
+        payrollData: state?.attendance_calendar_team.payrollData,
+        user: state?.auth?.user,
+        attendance: state?.auth?.userAccess["Attendance"],
+      };
+    }
+  );
 
   const { attendanceCalendar } = currentState;
 
@@ -85,7 +88,7 @@ export function FormCard() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -93,19 +96,39 @@ export function FormCard() {
               {
                 name: "Request",
                 link: "/attendance_request/read-all-attendance-request",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Approval",
                 link: "/attendance_approval/read-all-attendance-approval",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link:
                   "/attendance-workflow-status/read-all-attendance-workflow-status",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Holiday Calendar",
                 link: "/holiday_calendar/my-holiday-calendar",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "MyHolidayCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -114,7 +137,7 @@ export function FormCard() {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -122,19 +145,39 @@ export function FormCard() {
               {
                 name: "Request",
                 link: "/attendance_request/read-all-attendance-request",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Approval",
                 link: "/attendance_approval/read-all-attendance-approval",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceApproval" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link:
                   "/attendance-workflow-status/read-all-attendance-workflow-status",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAttendanceWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Holiday Calendar",
                 link: "/holiday_calendar/my-holiday-calendar",
+                isShow: attendance?.find(
+                  (el) =>
+                    el?.componentName === "MyHolidayCalendar" &&
+                    el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}

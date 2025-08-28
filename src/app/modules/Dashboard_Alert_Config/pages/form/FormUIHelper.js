@@ -30,22 +30,22 @@ export const chartTypes = [
 export const smallTableTheme = [
   {
     value: "success-card",
-    label: "Success Card",
+    label: "Green",
   },
   {
     value: "danger-card",
-    label: "Danger Card",
+    label: "Red",
   },
   {
     value: "warning-card",
-    label: "Warning Card",
+    label: "Yellow",
   },
 ];
 
 export const PeriodType = [
   {
     value: 0,
-    label: "In Next Days",
+    label: "In Days",
   },
   {
     value: 1,

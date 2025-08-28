@@ -31,6 +31,7 @@ export function MasterEditForm({
   payrollData,
   employeeId,
   empAuthorityList,
+  isPolicyExists,
   currentLevel,
 }) {
   //Get all leave types from dashboard global state
@@ -134,10 +135,21 @@ export function MasterEditForm({
                 <div className="spinner spinner-lg spinner-success" />
               </div>
             )}
-            {empAuthorityList && empAuthorityList?.length === 0 && (
+            {empAuthorityList &&
+            empAuthorityList?.length === 0 &&
+            !isPolicyExists ? (
               <span className="text-xs text-red-500 font-semibold">
                 Designation workflow policy does not exist for this employee.
               </span>
+            ) : (
+              empAuthorityList &&
+              empAuthorityList?.length === 0 &&
+              isPolicyExists && (
+                <span className="text-xs text-gray-500 font-semibold">
+                  Workflow Policy is defined but there is not Workflow
+                  Authorities exists as per the policy.
+                </span>
+              )
             )}
             {/* Form Start */}
             <Form className="form form-label-right">
