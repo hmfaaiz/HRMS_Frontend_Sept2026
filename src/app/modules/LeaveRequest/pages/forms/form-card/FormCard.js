@@ -190,20 +190,20 @@ export function FormCard() {
           />
         </div>
         <EmployeeSelect
-          setId={formUIProps.setId}
-          setemployeeId={formUIProps.setemployeeId}
-          employeeId={formUIProps.employeeId?.value}
-          currentLevel={formUIProps.currentLevel}
+          setId={formUIProps?.setId}
+          setemployeeId={formUIProps?.setemployeeId}
+          employeeId={formUIProps?.employeeId?.value}
+          currentLevel={formUIProps?.currentLevel}
           initUser={formUIProps?.initUser}
-          setCurrentLevel={formUIProps.setCurrentLevel}
+          setCurrentLevel={formUIProps?.setCurrentLevel}
         />
 
         <LeaveBalanceTable />
 
         <FormEditDialog
           id={formUIProps.id}
-          currentLevel={formUIProps.currentLevel}
-          employeeId={formUIProps.employeeId.value}
+          currentLevel={formUIProps?.currentLevel}
+          employeeId={formUIProps?.employeeId?.value}
           empAuthorityList={empAuthorityList}
           isPolicyExists={isPolicyExists}
           initUser={{
