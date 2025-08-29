@@ -80,6 +80,7 @@ export function FormEmailDialog({ id, show, onHide }) {
           <button
             type="button"
             onClick={sendEmail}
+            disabled={loading}
             className="btn btn-primary btn-elevate"
           >
             Send Email

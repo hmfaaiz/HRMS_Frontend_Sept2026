@@ -60,9 +60,11 @@ const AttendanceArea = ({
                 })
               }
               value={
-                allEmployeegradeList?.find(
-                  (e) => e?.value === summaryFilter?.gradeId
-                ) || ""
+                summaryFilter?.gradeId == ""
+                  ? { value: "", label: "All" }
+                  : allEmployeegradeList?.find(
+                      (option) => option.value === summaryFilter.gradeId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -84,9 +86,11 @@ const AttendanceArea = ({
                 })
               }
               value={
-                allParentDept?.find(
-                  (e) => e?.value === summaryFilter?.departmentId
-                ) || ""
+                summaryFilter?.departmentId == ""
+                  ? { value: "", label: "All" }
+                  : allParentDept?.find(
+                      (option) => option.value === summaryFilter?.departmentId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -106,9 +110,11 @@ const AttendanceArea = ({
                 })
               }
               value={
-                allLocationChildMenus?.find(
-                  (e) => e?.value === summaryFilter?.locationId
-                ) || ""
+                summaryFilter?.locationId == ""
+                  ? { value: "", label: "All" }
+                  : allLocationChildMenus?.find(
+                      (option) => option.value === summaryFilter?.locationId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },

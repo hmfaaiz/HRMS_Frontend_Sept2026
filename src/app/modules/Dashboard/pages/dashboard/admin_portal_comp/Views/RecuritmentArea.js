@@ -33,6 +33,7 @@ const RecuritmentArea = ({
       <div className="col-span-4 space-y-2">
         <div className="grid grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
           {/* dropdown area  */}
+
           <div>
             <SearchSelect
               name="subsidiaryId"
@@ -67,9 +68,11 @@ const RecuritmentArea = ({
                 })
               }
               value={
-                allDesignations?.find(
-                  (e) => e?.value === summaryFilter?.designationId
-                ) || ""
+                summaryFilter?.designationId == ""
+                  ? { value: "", label: "All" }
+                  : allDesignations?.find(
+                      (option) => option.value === summaryFilter?.designationId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -77,6 +80,7 @@ const RecuritmentArea = ({
               ]}
             />
           </div>
+
           <div>
             <SearchSelect
               name="departmentId"
@@ -89,9 +93,11 @@ const RecuritmentArea = ({
                 })
               }
               value={
-                allParentDept?.find(
-                  (e) => e?.value === summaryFilter?.departmentId
-                ) || ""
+                summaryFilter?.departmentId == ""
+                  ? { value: "", label: "All" }
+                  : allParentDept?.find(
+                      (option) => option.value === summaryFilter?.departmentId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -111,9 +117,11 @@ const RecuritmentArea = ({
                 })
               }
               value={
-                allLocationChildMenus?.find(
-                  (e) => e?.value === summaryFilter?.locationId
-                ) || ""
+                summaryFilter?.locationId == ""
+                  ? { value: "", label: "All" }
+                  : allLocationChildMenus?.find(
+                      (option) => option.value === summaryFilter?.locationId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
