@@ -206,6 +206,9 @@ export function MasterEditForm({
                     : null,attDateOut: values.attDateOut
                     ? formatDates(values.attDateOut, "dd-MMM-yyyy")
                     : null,
+                    attDateIn: values.attDateIn
+                    ? formatDates(values.attDateIn, "dd-MMM-yyyy")
+                    : null,
 
                     }
 
