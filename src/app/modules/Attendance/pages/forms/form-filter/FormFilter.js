@@ -27,6 +27,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import ReportButton from "../AttendanceReportButton";
 import { Download } from "lucide-react";
+import { formatDates } from "../../../../../utils/common";
 //Validation for date fields
 const formValidation = Yup.object().shape({
   from: Yup.date()
@@ -168,7 +169,17 @@ export function FormFilter({
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          applyFilter(values);
+            const payload = {
+                  ...values,
+                  from: values.from
+                    ? formatDates(values.from, "dd-MMM-yyyy")
+                    : null,to: values.to
+                    ? formatDates(values.to, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+          applyFilter(payload);
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
