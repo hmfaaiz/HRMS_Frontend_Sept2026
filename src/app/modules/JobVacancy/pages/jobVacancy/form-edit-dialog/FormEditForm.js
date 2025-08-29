@@ -181,6 +181,7 @@ const jobVacancyEditSchema = Yup.object().shape({
   preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
   // preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredJobSkillsId: Yup.string()
+  .nullable()
     .required(VALIDATION_MESSAGES.required)
     .test(
       "no-duplicate-skills",
@@ -200,7 +201,8 @@ const jobVacancyEditSchema = Yup.object().shape({
       }
     ),
 
-  optionalJobSkillsId: Yup.string(),
+  optionalJobSkillsId: Yup.string()
+  .nullable(),
   preferredJobIndustryId: Yup.number().required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
@@ -364,6 +366,9 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
+              {
+                console.log("errors111",errors)
+              }
                 <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid md:grid-cols-6 gap-x-3">

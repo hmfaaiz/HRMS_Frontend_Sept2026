@@ -20,7 +20,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import axios from "axios";
-import { amountLimit, amountLimitDynamic } from "../../../../../utils/common";
+import { amountLimit, amountLimitDynamic, formatDates } from "../../../../../utils/common";
 import {
   DEFAULT_CALCULATION_TYPE_DROPDOWN,
   DROPDOWN,
@@ -751,6 +751,16 @@ export function BankEditForm({
             saveEarningDeductionTran(
               {
                 ...values,
+                
+                 gratuity_startDate: values.gratuity_startDate
+                    ? formatDates(values.gratuity_startDate, "dd-MMM-yyyy")
+                    : null,
+                     eobi_reg_date: values.eobi_reg_date
+                    ? formatDates(values.eobi_reg_date, "dd-MMM-yyyy")
+                    : null, 
+                      social_security_reg_date: values.social_security_reg_date
+                    ? formatDates(values.social_security_reg_date, "dd-MMM-yyyy")
+                    : null,
                 basicFactor: defBasicSalaryFactor,
                 grossPackage:
                   values.grossSalary > 0

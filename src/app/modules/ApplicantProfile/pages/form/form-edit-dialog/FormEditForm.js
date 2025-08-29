@@ -1227,9 +1227,9 @@ export function FormEditForm({
                                       </td>
 
                                       <td>
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -1343,10 +1343,10 @@ export function FormEditForm({
                                       </td>
 
                                       <td>
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
 
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[

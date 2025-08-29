@@ -825,6 +825,15 @@ export function FormEditForm({
             {
               ...values,
               basicFactor: defBasicSalaryFactor || values.basicFactor,
+                 gratuity_startDate: values.gratuity_startDate
+                                  ? formatDates(values.gratuity_startDate, "dd-MMM-yyyy")
+                                  : null,
+                                   eobi_reg_date: values.eobi_reg_date
+                                  ? formatDates(values.eobi_reg_date, "dd-MMM-yyyy")
+                                  : null, 
+                                    social_security_reg_date: values.social_security_reg_date
+                                  ? formatDates(values.social_security_reg_date, "dd-MMM-yyyy")
+                                  : null,
               grossPackage:
                 values.grossSalary > 0
                   ? Number(values.grossSalary) + Number(totalGross)

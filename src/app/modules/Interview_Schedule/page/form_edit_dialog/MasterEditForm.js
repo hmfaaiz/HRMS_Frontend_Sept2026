@@ -18,6 +18,7 @@ import { getProfileInfo } from "../../_redux/formCrud";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { TimePickerField } from "../../../../../_metronic/_partials/controls/forms/TimePickerField";
 import { CircleMinus, CirclePlus, Trash2 } from "lucide-react";
+import { formatDates } from "../../../../utils/common";
 
 const formValidation = Yup.object().shape({
   interview_date: Yup.date()
@@ -90,7 +91,7 @@ const InterviewerRow = ({
 
         {errors.interviewers?.[index]?.employeeId &&
           touched.interviewers?.[index]?.employeeId && (
-            <div className="text-danger">
+            <div className="invalid-feedback">
               {errors.interviewers[index]?.employeeId}
             </div>
           )}
@@ -172,7 +173,16 @@ export default function MasterEditForm({
       initialValues={data}
       validationSchema={formValidation}
       onSubmit={(values) => {
-        saveForm(values);
+         const payload = {
+                  ...values,
+                  interview_date: values.interview_date
+                    ? formatDates(values.interview_date, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+
+        saveForm(payload);
       }}
     >
       {({
