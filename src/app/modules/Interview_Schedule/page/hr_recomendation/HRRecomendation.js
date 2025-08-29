@@ -18,6 +18,7 @@ import { RichTextInput } from "../../../../../_metronic/_partials/controls/forms
 import he from "he";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { AmountInput } from "../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { formatDates } from "../../../../utils/common";
 
 const validationSchema = Yup.object().shape({
   applicationStatusId: Yup.string()
@@ -135,7 +136,16 @@ export default function HRRecomendation() {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
-                      handleSubmitHRRecommendation(values);
+                       const payload = {
+                  ...values,
+                  dateOfJoining: values.dateOfJoining
+                    ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+
+                      handleSubmitHRRecommendation(payload);
                     }}
                   >
                     {({
