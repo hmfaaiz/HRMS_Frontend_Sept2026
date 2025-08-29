@@ -542,11 +542,22 @@ export function FormEditForm({
       onSubmit={(values, { resetForm }) => {
         enableLoading();
 
+            const payload = {
+                ...values,
+                applied_date: values.applied_date
+                  ? formatDates(values.applied_date, "dd-MMM-yyyy")
+                  : null,
+                   installment_start_date: values.installment_start_date
+                  ? formatDates(values.installment_start_date, "dd-MMM-yyyy")
+                  : null,
+
+            }
+
         const clearForm = () => {
           resetForm();
         };
         saveForm(
-          values,
+          payload,
           totalInstallments,
           maxAmountLimit,
           setTotalInstallments,
