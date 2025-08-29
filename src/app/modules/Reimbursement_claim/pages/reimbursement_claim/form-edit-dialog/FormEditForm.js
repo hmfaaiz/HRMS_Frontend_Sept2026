@@ -193,13 +193,24 @@ export function FormEditForm({
           currentState?.reimbursement_config_policies_permission?.policies,
           values
         );
+
         const clearForm = () => {
           resetForm();
           if (inputFile?.current) {
             inputFile.current.value = "";
           }
         };
-        saveForm(values, finalAmountLimit, isFileReq, clearForm);
+
+          const payload = {
+                        ...values,
+                        date: values.date
+                          ? formatDates(values.date, "dd-MMM-yyyy")
+                          : null,
+                          
+        
+                    }
+        
+        saveForm(payload, finalAmountLimit, isFileReq, clearForm);
       }}
     >
       {({
