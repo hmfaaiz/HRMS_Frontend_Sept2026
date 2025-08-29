@@ -1,0 +1,24 @@
+
+.accordion-header-btn > button {
+    border: none;
+    width: -webkit-fill-available;
+    background-color: #E6F8FF !important;
+    padding: 0.5%;
+    color: rgb(255, 255, 255);
+    display: flex;
+    // justify-content: space-between;
+    // transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.accordion-header-btn:hover > button {
+   
+     background-color: #E6F8FF !important;
+    // transform: translateY(-2px);
+  }
+  .flex-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+

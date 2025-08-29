@@ -1,0 +1,93 @@
+/* Add this CSS to your global stylesheet or component styles */
+.custom-tooltip {
+    height: 40px;
+    overflow-wrap: break-word; /* Ensures long words break and wrap onto the next line */
+    word-break: break-word;    /* Allows unbreakable words to be broken and wrap onto the next line */
+    white-space: normal;       /* Ensures that white spaces are handled normally */
+    display: block;            /* Ensures the div behaves as a block-level element */
+    word-wrap: break-word;
+  
+  }
+  
+
+  .tooltip-absent{
+    background-color:  #06c00f !important;
+    height: 45px;
+    overflow-wrap: break-word; 
+    word-break: break-word;   
+    white-space: normal;   
+    display: block;         
+    word-wrap: break-word;
+}
+
+
+
+
+
+.tooltip-absent-att{
+  background-color:#E23F35 !important;
+  height: 45px;
+    overflow-wrap: break-word;
+    word-break: break-word;  
+    white-space: normal;     
+    display: block;          
+    word-wrap: break-word;
+}
+
+.tooltip-present{
+  background-color: #06c00f !important;;
+  height: 45px;
+    overflow-wrap: break-word; 
+    word-break: break-word;    
+    white-space: normal;      
+    display: block;          
+    word-wrap: break-word;
+}
+
+.tooltip-presents{
+  background-color: hsl(62, 78%, 41%) !important;
+  height: 45px;
+    overflow-wrap: break-word; 
+    word-break: break-word;    
+    white-space: normal;      
+    display: block;          
+    word-wrap: break-word;
+}
+
+.tooltip-HD{
+  background-color: #DD8941 !important;;
+  height: 45px;
+    overflow-wrap: break-word; 
+    word-break: break-word;   
+    white-space: normal;       
+    display: block;           
+    word-wrap: break-word;
+}
+
+.tooltip-dayoff{
+  background-color: #662D91 !important;;
+  height: 45px;
+    overflow-wrap: break-word; 
+    word-break: break-word;    
+    white-space: normal;      
+    display: block;          
+    word-wrap: break-word;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right:2px ;
+}
+
+.tooltip-Leave{
+  background-color: #0093DD !important;
+  height: 45px;
+    overflow-wrap: break-word; 
+    word-break: break-word;   
+    white-space: normal;       
+    display: block;           
+    word-wrap: break-word;
+}

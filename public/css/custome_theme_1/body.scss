@@ -1,0 +1,22 @@
+
+
+  body{
+    background-color: #E6F8FF !important;
+    height: 100vh;  
+    font-family: "Noto Sans", sans-serif;
+  }
+  .body-color{
+    background-color: #E6F8FF !important;
+  }
+  .text-bold {
+    font-weight: bold;
+  }  
+
+
+.user-dropdown .dropdown-menu {
+  right: 0 !important;
+  left: auto !important;
+  transform: translateX(0%) !important;
+  margin-top: 114px !important;
+  z-index: 9999 !important;
+}

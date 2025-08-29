@@ -1,0 +1,483 @@
+// 3rd-party Plugins
+@import "~highlight.js/styles/googlecode.css";
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+
+// Theme Styles
+@import "./_metronic/_assets/sass/style.react.scss";
+
+// Default Layout themes
+@import "./_metronic/_assets/sass/themes/layout/header/base/light.scss";
+@import "./_metronic/_assets/sass/themes/layout/header/menu/light.scss";
+@import "./_metronic/_assets/sass/themes/layout/brand/dark.scss";
+@import "./_metronic/_assets/sass/themes/layout/aside/dark.scss";
+
+//Theme_1
+@import "../public/css/custome_theme_1/login-screen.scss";
+@import "../public/css/custome_theme_1/table-icon.scss";
+@import "../public/css/custome_theme_1/accordion.scss";
+@import "../public/css/custome_theme_1/custom_color.scss";
+@import "../public/css/custome_theme_1/body.scss";
+@import "../public/css/custome_theme_1/font.scss";
+@import "../public/css/custome_theme_1/bg_custom_color.scss";
+@import "../public/css/custome_theme_1/custom_button.scss";
+@import "../public/css/custome_theme_1/event_calendar.scss";
+@import "../public/css/custome_theme_1/preview_payroll_register.scss";
+@import "../public/css/custome_theme_1/preview_payslip.scss";
+@import "../public/css/custome_theme_1/attendance_status.scss";
+@import "../public/css/custome_theme_1/dashboard_alert.scss";
+// New design 
+@import "../public/css/custome_theme_2/custom_components.scss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Header themes
+// Light
+//@import "./_metronic/_assets/sass/themes/layout/header/base/light.scss";
+// Dark
+// @import "./_metronic/_assets/sass/themes/layout/header/base/dark.scss";
+
+// Header Menu themes
+// Light
+//@import "./_metronic/_assets/sass/themes/layout/header/menu/light.scss";
+// Dark
+// @import "./_metronic/_assets/sass/themes/layout/header/menu/dark.scss";
+
+// Brand themes
+.brand-dark {
+  @import "./_metronic/_assets/sass/themes/layout/brand/dark.scss";
+}
+// Light
+.brand-light {
+  @import "./_metronic/_assets/sass/themes/layout/brand/light.scss";
+}
+
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 100 to 900
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 100 to 900
+
+// Aside themes
+// Dark
+//@import "./_metronic/_assets/sass/themes/layout/aside/dark.scss";
+// Light
+// @import "./_metronic/_assets/sass/themes/layout/aside/light.scss";
+
+// .example-highlight {
+//   padding: 0rem 1.5rem 1.75rem !important;
+// }
+#webpack-dev-server-client-overlay-div {
+  display: none !important;
+}
+
+.example-highlight > pre {
+  background: none transparent !important;
+  margin: 0 !important;
+  padding-top: 0.5rem;
+  code {
+    overflow-y: auto;
+    display: block;
+
+    span {
+      background: none transparent !important;
+    }
+  }
+}
+
+.json > pre {
+  background: none #fff !important;
+}
+
+.example-code > .json {
+  background: none #fff !important;
+}
+
+.symbol.symbol-45 > svg {
+  width: 100%;
+  max-width: 40px;
+  height: 40px;
+}
+
+.table-head-custom {
+  margin-bottom: 0px !important;
+}
+
+.react-bootstrap-table {
+  margin: 10px 0px !important;
+  overflow-x: auto;
+  // padding: 12px !important;
+  background: #ffffff;
+  // border: none !important;
+  font-family: "Noto Sans", sans-serif;
+  color: #000000;
+  th {
+    outline: none;
+    background-color: #ffffff;
+    border-radius: 0;
+
+    &.sortable {
+      .svg-icon-sort {
+        opacity: 0;
+      }
+
+      &:hover {
+        cursor: pointer;
+
+        .svg-icon-sort {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .table.table-head-custom {
+    thead {
+      tr {
+        color: #000000 !important;
+
+        .sortable-active {
+          color: #ffffff !important; // If $white is a variable, use it; otherwise, white
+        }
+      }
+
+      th {
+        color: #000000 !important;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+        letter-spacing: 0;
+        background-color: transparent;
+        border-bottom: 0.2px solid #000000;
+        padding: 3px !important;
+      }
+    }
+
+    tr td {
+      padding: 3px !important;
+      font-size: 10px;
+      font-weight: 400;
+      border-bottom: 0.2px solid #000000 !important;
+      // white-space: nowrap;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+    }
+
+    /* Always show a border at the bottom of the table */
+    border-bottom: 0.2px solid #000000 !important;
+  }
+}
+
+.table th,
+.table td {
+  border-top: 0px solid #ebedf3 !important;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.display-block {
+  display: block;
+}
+
+.react-bootstrap-table table {
+  table-layout: auto;
+  border-left: 0px solid #dbdbdb;
+  border-right: 0px solid #e5e5e5;
+  border-bottom: 0.5px solid #000000;
+  border-radius: 0px;
+}
+
+.react-bootstrap-table table thead tr td {
+  color: #000000 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-transform: capitalize !important;
+  letter-spacing: 0 !important;
+  background-color: transparent !important;
+  border-bottom: 0.2px solid #000000 !important;
+  padding: 3px !important;
+}
+
+// for modal width
+.modal-75vw {
+  max-width: 75vw;
+}
+.modal-70vw {
+  max-width: 70vw;
+}
+
+.modal {
+  padding: 40px 0px 40px 0px !important;
+}
+
+.text-underline-hover:hover {
+  text-decoration: underline;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+// for date picker
+.rmdp-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  border-radius: 0px !important;
+  height: auto !important;
+  margin: 0px !important;
+  padding: 0.65rem 0.9rem !important;
+}
+.rmdp-input:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
+.rmdp-container {
+  width: 100% !important;
+}
+
+// for form time
+.form-time {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 1.3rem + 2px);
+  padding: 0px !important;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #3f4254;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 1px solid #e4e6ef;
+  border-radius: 0.22rem;
+  box-shadow: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+// for col-md-2-5
+.col-md-2-5 {
+  flex: 0 0 20%;
+  max-width: 20%;
+}
+
+// for checkbox
+input[type="checkbox"] {
+  accent-color: #0093dd !important;
+  background-color: #e6f8ff !important ;
+  border: 1px solid #000 !important;
+  border-radius: 6px !important;
+}
+
+// for w-full
+.w-full {
+  width: 100%;
+}
+
+// for rbc-toolbar
+.rbc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+// for collapse
+.collapse.show {
+  display: block !important;
+  height: auto !important;
+  overflow: visible !important;
+  visibility: visible !important;
+}
+
+// for dropdown-toggle
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+// for form-control
+.form-control {
+  height: calc(1.1em + 0.85rem + 2px);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  border: 0.5px solid #000000 !important;
+  border-radius: 0.32rem;
+  background-color: #e6f8ff !important;
+}
+
+.login-control {
+  height: calc(1.1em + 0.85rem + 2px);
+  padding: 0.35rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  border: 0.5px solid #000000 !important;
+  border-radius: 0.32rem;
+  background-color: #e6f8ff !important;
+}
+
+// for form-control:disabled
+.form-control:disabled {
+  border: 0.5px solid #f5f5f5 !important;
+  border-radius: 0.32rem;
+  background-color: #f5f5f5 !important;
+}
+
+.select_option__control--is-disabled {
+  border: 0.5px solid #f5f5f5 !important;
+  border-radius: 0.32rem;
+  background-color: #f5f5f5 !important;
+}
+// for invalid-feedback
+.invalid-feedback {
+  font-size: 0.7rem;
+  display: block !important;
+}
+
+// for label of input
+label {
+  font-size: 0.85rem;
+  color: #000000;
+  margin-bottom: 0px !important;
+}
+
+/* Control (main input box) */
+.select_option__control {
+  min-height: unset !important;
+  height: calc(1.1em + 0.85rem + 2px) !important;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.5rem;
+  font-weight: 400;
+  border: 0.5px solid #000000 !important;
+  border-radius: 0.32rem !important;
+  background-color: #e6f8ff !important;
+  display: flex;
+  align-items: center; /* vertically center content */
+}
+
+.select_option__value-container {
+  padding: 0px !important;
+  position: static !important;
+}
+/* Option list dropdown menu */
+.select_option__menu {
+  font-size: 0.7rem;
+  background-color: #e6f8ff !important;
+  font-weight: 400;
+  background-color: #ffffff;
+  z-index: 10 !important;
+}
+
+.select_option__indicator {
+  padding: 0px 1px !important;
+  width: 15px !important;
+  color: #000000 !important;
+  -webkit-align-items: flex-start !important;
+  align-items: flex-start !important;
+  position: absolute !important;
+  top: 2px !important;
+  right: 2px !important;
+}
+.css-1okebmr-indicatorSeparator {
+  display: none !important;
+}
+
+.css-b8ldur-Input {
+  margin: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+}
+
+// for underline
+.underline:hover {
+  text-decoration: underline #0093dd !important;
+}
+
+// modal center overwrite css
+.modal-dialog {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 100% !important;
+  // margin: 7rem auto auto auto !important;
+}
+
+/// button stype overwrite css
+.btn {
+  padding: 5px 7px !important;
+  font-size: 0.8rem !important;
+}
+
+/// request pending , approved and reject text css
+.text-pending {
+  color: #dd8941 !important;
+}
+
+.text-approved {
+  color: #34b9a3 !important;
+}
+
+.text-rejected {
+  color: #e23f35 !important;
+}
+
+// pagination css
+.btn.btn-light i {
+  color: #000000 !important;
+  font-size: 9px !important;
+}
+.btn.btn-icon.btn-sm,
+.btn-group-sm > .btn.btn-icon {
+  height: calc(1.05em + 0.75rem + 1px) !important;
+  width: calc(1.05em + 0.75rem + 1px) !important;
+}
+
+.stroke-3 {
+  stroke-width: 3 !important;
+}
+
+//checkbox
+
+.checkbox > span {
+  border-radius: 0.12rem !important;
+}
+
+.checkbox > span {
+  height: 13px !important;
+  width: 13px !important;
+}
+
+// pagination new css for dsahboard big table
+.pagination {
+  gap: 5px;
+  font-size: 9.75px;
+  margin-bottom: 0px;
+  color: black;
+}
+
+.page-link {
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+  font-size: 9.75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.375rem;
+  border: none;
+}
+
+.react-bootstrap-table-pagination-total {
+  margin: 0px;
+}
+
+.react-bootstrap-table-pagination {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}

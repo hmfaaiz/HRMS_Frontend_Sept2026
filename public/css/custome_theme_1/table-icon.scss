@@ -1,0 +1,197 @@
+
+.view-button{
+
+    background-color: hsl(171, 92%, 37%) !important; 
+    // fill: rgb(255, 255, 255); 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+    margin-right:7px !important;
+}
+  
+  .view-button:hover {
+    background-color: hsl(171, 93%, 22%) !important; 
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
+
+  .read-button{
+
+    background-color: hsl(197.1, 100%, 43.3%) !important; 
+    // fill: rgb(255, 255, 255); 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+    margin-right:7px !important;
+}
+  
+  .read-button:hover {
+    background-color: hsl(197.1, 100%, 29%) !important; 
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
+  
+  
+  
+  .edit-button{
+    background-color: hsl(39, 93%, 46%) !important; 
+    fill: rgb(255, 255, 255) !important; 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+    margin-right:3px !important;
+}
+  
+  .edit-button:hover {
+    background-color: hsl(43, 97%, 35%) !important; 
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
+  
+  
+  .delete-button{
+  
+    background-color: hsl(0, 98%, 50%) !important; 
+    fill: rgb(255, 255, 255); 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    margin-right:5px !important;
+
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+}
+  
+  .delete-button:hover {
+    background-color: hsl(0, 94%, 33%) !important; 
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
+  
+  .btn-primary{
+    background-color: #0093DD !important; 
+    border:0;
+  }
+
+  .btn-primary:hover{
+    background-color: #000000 !important;/* Darker background on hover */
+    // transform: translateY(-1px);
+  }
+  
+.input-field{
+  border-color: #333333;
+}
+
+.btn-red{
+  background-color: #E23F35 !important; 
+  border:0;
+  color:#ffffff;
+}
+
+.btn-red:hover{
+  background-color: #000000 !important;/* Darker background on hover */
+  // transform: translateY(-1px);
+  color:#ffffff;
+}
+
+
+.btn-green{
+  background-color: #34B9A3 !important; 
+  border:0;
+  color:#ffffff;
+}
+
+.btn-green:hover{
+  background-color: #000000 !important;/* Darker background on hover */
+  // transform: translateY(-1px);
+  color:#ffffff;
+}
+
+.file-button{
+  background-color: #ffffff !important;
+  fill: #ffffff; 
+  // border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;  /* Ensure there is no underline */
+  // transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+  width: 30px !important;                /* Button width (adjustable) */
+  height: 30px !important;
+  margin-right:0px !important;
+  border:0;
+  margin-left: 2px !important;
+}
+
+
+ .posting-button{
+
+    background-color: #7B7474 !important;; 
+    // fill: rgb(255, 255, 255); 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    // transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+    margin-right:7px !important;
+}
+  
+  .posting-button:hover {
+    background-color: #05457d !important;
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
+
+
+
+   .convertToEmp-button{
+
+    background-color: #ff0202 !important;; 
+    // fill: rgb(255, 255, 255); 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;  /* Ensure there is no underline */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+    width: 30px !important;                /* Button width (adjustable) */
+    height: 30px !important;
+    margin-right:7px !important;
+}
+  
+  .convertToEmp-button:hover {
+    background-color: #05457d !important;
+    transform: translateY(-2px); /* Slightly move the button upwards on hover */
+  }
+
+  .att-file-button{
+  background-color: #ffffff !important;
+  fill: rgb(255, 255, 255); 
+  // border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;  /* Ensure there is no underline */
+  // transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+  width: 30px !important;                /* Button width (adjustable) */
+  height: 30px !important;
+  margin-right:0px !important;
+  border:0;
+  margin-left: 2px !important;
+}

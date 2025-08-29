@@ -1,0 +1,118 @@
+.invalid-text {
+    font-size: 0.9rem;
+    font-weight: 400;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: #F64E60;
+}
+
+#webpack-dev-server-client-overlay-div {
+  display: none !important;
+}
+
+iframe {
+    display: none !important;
+}
+
+.table-box {
+    height: 350px;
+    overflow-y: auto;
+}
+
+/* .dasboard-table thead {
+    display: none;
+} */
+
+.image-box {
+    background-color: #e4e6ef29;
+    padding: 10px;
+    text-align: center;
+    border: 2px dotted #E4E6EF;
+}
+
+.dashboard-table tbody tr td {
+    padding: 0.4rem !important;
+}
+
+.react-bootstrap-table table {
+    table-layout: auto;
+    /* border-left: 1px solid #000 !important;
+    border-right: 1px solid #000 !important;
+    border-bottom: 1px solid #000 !important; */
+    border-radius: 0px;
+    color:#000 
+}
+
+.custom-backdrop {
+    background-color: #000000a6 !important;
+}
+
+.modal-bg {
+    height: 100%;
+    background-color: #000000a6 !important;
+}
+
+.img-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.img-dialog .modal-content {
+    height: 100% !important;
+}
+
+/* .modal-backdrop {
+    background-color: rgb(151, 0, 0) !important;
+    
+} */
+
+/* .card-body {
+    overflow-x: scroll;
+} */
+
+::-webkit-scrollbar-thumb {
+    background: 0 0;
+    background-color: rgba(58, 58, 58, 0.25);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar {
+
+    height: 1px;
+    /* height of horizontal scrollbar ← You're missing this */
+    width: 1px;
+    /* width of vertical scrollbar */
+    border: 1px solid #d5d5d5;
+}
+
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* ::-webkit-scrollbar-thumb {
+    background: #88888861;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+    background: #555;
+} */
+
+.table-body {
+    overflow: auto;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Correctly spelled 'appearance' */
+    margin: 0;
+}

@@ -1,0 +1,169 @@
+
+/* General reset */
+/* General reset */
+
+/* Footer styles */
+/* General reset */
+
+
+.login-form{
+  height: 40vh;
+  width: 50vw;
+  // background-color: brown;
+
+}
+
+.custom-button {
+  width: 100%; 
+  background-color: #0093DD; /* Background color */
+  color: white; /* Text color */
+  font-size: 16px; /* Text size */
+  font-weight: bold; /* Bold text */
+  padding: 15px 24px; /* Padding inside the button */
+  border: none; /* Remove default border */
+  // border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  // transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+}
+
+.custom-button:hover {
+  background-color: #333333; /* Darker background on hover */
+  // transform: translateY(-2px); /* Slightly move the button upwards on hover */
+}
+
+// .custom-button:active {
+//   background-color: #333333; /* Even darker background when the button is pressed */
+//   transform: translateY(0); /* Reset the movement when clicked */
+// }
+
+
+
+
+
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure the HTML and body take full height */
+  html, body {
+    height: 100%; /* Full height for both HTML and body */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+  }
+  
+  /* Body adjustments */
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: flex-start; /* Align content to the top */
+    flex-grow: 1; /* Make the body take up the remaining space */
+  }
+  
+  /* Footer styles */
+  
+  
+  
+  
+  .login-left-container{
+  
+    padding: 5%;
+    // background-color: #49628a;
+  }
+  
+  .login-left-container-inner{
+    height: 73vh;
+    width: "50vw";
+    padding: 2%;
+      background-color: #fff;
+  }
+  .login-left-container-inner-img{
+         height: 69%;
+          width: 100%;
+  }
+  
+  .login-left-container-inner-bottom-img{
+    height: 26%;
+     width: 100%;
+    //  background-color: #a01414;
+     padding: 1%;
+     display: flex;
+  }
+  
+  .login-left-container-inner-bottom-img1{
+    width:30%; /* Adjust width as needed for smaller image */
+    height:100%; /* Set a fixed height or a percentage based on your layout */
+  }
+  
+  
+  .login-left-container-inner-bottom-img2 {
+    // background-color:red ;
+    height: 20vh;
+    width: 30vw;
+    // width: 65%;
+    // height: 100%;
+    // padding:40px 0px 0px 60px; /* Adds padding around the images inside the container */
+    padding-left: 75px;
+  }
+  
+  .login-left-container-inner-bottom-img2-heading {
+    text-align: left;
+    margin: 16px 0px 25px 0px;
+    // margin: 3% 0% 3% 0%;
+  
+  
+  }
+  
+  .login-left-container-inner-bottom-img2-container {
+  
+    display: flex;
+    justify-content: space-between; /* Spaces out images evenly */
+    gap: 10px; /* Adjusts spacing between the images */
+
+  }
+  
+  
+  .partner-image {
+    width: 10vw;
+    height: 7vh;
+    // width:150px;
+    // height:75px;/* Maintain aspect ratio of images */
+    // object-fit: cover; /* Ensure the image covers the container without stretching */
+    object-position: center; /* Keeps the image centered if it gets cropped */
+  
+  }
+  
+  .login-footer{
+    margin-top: auto;
+    background-color: hsl(188, 88%, 93%);
+    padding-left: 8% !important;
+  }
+  
+  .inputcolor{
+    background-color: hsl(188, 88%, 93%) !important; 
+    border: none;
+  }
+  
+  .login-left-footer{
+    // margin-top: auto;
+    background-color: hsl(188, 88%, 93%);
+    padding-left: 2% !important;
+  }
+  .hide-on-mobile {
+  display: none;
+}
+
+/* Show it on medium (md) and larger screens */
+@media (min-width:1000px) {
+  .hide-on-mobile {
+    display: flex; /* or block, grid, whatever suits your layout */
+  }
+}
+

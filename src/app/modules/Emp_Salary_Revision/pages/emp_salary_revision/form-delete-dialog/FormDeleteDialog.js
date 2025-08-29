@@ -1,0 +1,120 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { Modal } from "react-bootstrap";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
+import * as actions from "../../../_redux/redux-Actions";
+import { useFormUIContext } from "../FormUIContext";
+
+export function FormDeleteDialog({ id, status, show, onHide }) {
+
+  const [loading, setLoading] = useState(false);
+  // Customers UI Context
+  // const usersUIContext = useFormUIContext();
+  // const usersUIProps = useMemo(() => {
+  //   return {
+  //     queryParams: usersUIContext.queryParams,
+  //   };
+  // }, [usersUIContext]);
+
+  const formUIContext = useFormUIContext();
+  const formUIProps = useMemo(() => {
+ 
+    return {
+      ids: formUIContext.ids,
+      setIds: formUIContext.setIds,
+      employeeId: formUIContext.employeeId,
+      queryParams: formUIContext.queryParams,
+      setQueryParams: formUIContext.setQueryParams,
+      openEditFormDialog: formUIContext.openEditFormDialog,
+      openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      openActiveFormDialog: formUIContext.openActiveFormDialog,
+      openReadFormDialog: formUIContext.openReadFormDialog,
+    };
+  }, [formUIContext]);
+
+
+
+
+
+  // Customers Redux state
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector(
+    (state) => ({ isLoading: state.customers.actionsLoading }),
+    shallowEqual
+  );
+
+  const enableLoading = () => {
+    setLoading(true);
+  };
+
+  const disableLoading = () => {
+    setLoading(false);
+  };
+
+  // if !id we should close modal
+  useEffect(() => {
+    if (!id) {
+      onHide();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  // looking for loading/dispatch
+  useEffect(() => {}, [isLoading, dispatch]);
+
+  const deleteEmpSalaryRevision = () => {
+    // server request for deleting customer by id
+    enableLoading();
+    dispatch(actions.deleteEmpSalaryRevById(id)).then(() => {
+      onHide();
+      // refresh list after deletion
+  
+      dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
+   
+      disableLoading();
+    });
+  };
+ 
+  return (
+    <Modal
+      show={show}
+      onHide={onHide}
+      aria-labelledby="example-modal-sizes-title-lg"
+    >
+      {/*begin::Loading*/}
+      {isLoading && <ModalProgressBar />}
+      {/*end::Loading*/}
+      <Modal.Header closeButton>
+        <Modal.Title id="example-modal-sizes-title-lg">
+          Delete Record
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {!isLoading && <label>Are you sure want to delete this record?</label>}
+        {isLoading && <label>user is deactivating...</label>}
+      </Modal.Body>
+      <Modal.Footer>
+        <div>
+          <button
+            type="button"
+            onClick={onHide}
+            className="btn btn-light"
+          >
+            Cancel
+          </button>
+          <> </>
+          <button
+            type="button"
+            onClick={deleteEmpSalaryRevision}
+            className="btn btn-danger"
+          >
+            Delete
+            {loading && (
+              <span className="ml-3 mr-3 spinner spinner-white"></span>
+            )}
+          </button>
+        </div>
+      </Modal.Footer>
+    </Modal>
+  );
+}
