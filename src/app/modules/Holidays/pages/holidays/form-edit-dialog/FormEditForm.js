@@ -13,7 +13,7 @@ import {
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 
 // percentage: Yup.string().required("Required*"),
 const holidaysEditSchema = Yup.object().shape({
@@ -95,7 +95,17 @@ export function FormEditForm({
       validationSchema={holidaysEditSchema}
       onSubmit={(values) => {
         enableLoading();
-        saveForm(values, diffInDate);
+        const payload = {
+                  ...values,
+                  from_date: values.from_date
+                    ? formatDates(values.from_date, "dd-MMM-yyyy")
+                    : null,to_date: values.to_date
+                    ? formatDates(values.to_date, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+        saveForm(payload, diffInDate);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
@@ -140,7 +150,7 @@ export function FormEditForm({
                     {/* Active payroll month */}
 
                     <div className="col-span-2 text-xs text-black">
-                      {values?.subsidiaryId
+                      {/* {values?.subsidiaryId
                         ? (() => {
                             const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
                               (option) => option.value === values.subsidiaryId
@@ -151,14 +161,11 @@ export function FormEditForm({
                                   <b>Active Fiscal Year -</b>{" "}
                                   {selectedSubsidiary?.fiscalYearLabel}
                                 </div>
-                                {/* <div>
-        <b>Active Payroll Month -</b>{" "}
-        {selectedSubsidiary?.payrollMonthLabel}
-      </div> */}
+                
                               </>
                             );
                           })()
-                        : null}
+                        : null} */}
                     </div>
                   </div>
                   <div className="col-span-1">

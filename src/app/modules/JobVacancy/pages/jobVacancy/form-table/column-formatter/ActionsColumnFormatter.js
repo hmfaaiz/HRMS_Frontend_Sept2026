@@ -149,7 +149,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}
         >
-          <a
+          {/* <a
             className="btn btn-icon posting-button"
             onClick={() => openEditFormDialog(row.Id)}
           >
@@ -158,6 +158,9 @@ export function ActionsColumnFormatter(
                 src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
               />
             </span>
+          </a> */}
+             <a className="" onClick={() => openEditFormDialog(row.Id)}>
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}

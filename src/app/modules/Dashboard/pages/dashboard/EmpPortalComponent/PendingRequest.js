@@ -1,10 +1,43 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector, shallowEqual } from "react-redux";
 export const PendingRequestSelf = ({
   attendanceApprovalCount,
   leaveApprovalCount,
   loanApprovalCount,
 }) => {
+  const { leave, loan, attendance } = useSelector(
+    (state) => ({
+      leave: state?.auth?.userAccess["Leave"],
+      loan: state?.auth?.userAccess["Payroll"],
+      attendance: state?.auth?.userAccess["Attendance"],
+    }),
+    shallowEqual
+  );
+  const isLeaveApproval = leave?.find(
+    (el) => el?.componentName === "ReadAllLeaveApproval" && el?.isResourceShow
+  );
+  const isLeaveWorkflowStatus = leave?.find(
+    (el) =>
+      el?.componentName === "ReadAllLeaveWorkflowStatus" && el?.isResourceShow
+  );
+  const isLoanApproval = loan?.find(
+    (el) => el?.componentName === "ReadAllLoanApproval" && el?.isResourceShow
+  );
+  const isLoanWorkflowStatus = loan?.find(
+    (el) =>
+      el?.componentName === "ReadAllLoanWorkflowStatus" && el?.isResourceShow
+  );
+  const isAttApproval = attendance?.find(
+    (el) =>
+      el?.componentName === "ReadAllAttendanceApproval" && el?.isResourceShow
+  );
+  const isAttWorkflowStatus = attendance?.find(
+    (el) =>
+      el?.componentName === "ReadAllAttendanceWorkflowStatus" &&
+      el?.isResourceShow
+  );
+
   return (
     <div className="p-3 rounded-lg bg-white w-full flex flex-col max-h-max sm:max-h-56 overflow-y-auto justify-between">
       <h6 className="font-bold mb-0 text-primary my-2">Pending Request</h6>
@@ -16,18 +49,30 @@ export const PendingRequestSelf = ({
           </div>
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline">
-              <Link to={"/attendance_approval/read-all-attendance-approval"}>
-                Request Approval{" "}
-              </Link>
+              {isAttApproval ? (
+                <Link to={"/attendance_approval/read-all-attendance-approval"}>
+                  Request Approval{" "}
+                </Link>
+              ) : (
+                <label className="opacity-50 cursor-not-allowed">
+                  Request Approval{" "}
+                </label>
+              )}
             </p>
             <p className="m-0 underline">
-              <Link
-                to={
-                  "/attendance-workflow-status/read-all-attendance-workflow-status"
-                }
-              >
-                Workflow Status
-              </Link>
+              {isAttWorkflowStatus ? (
+                <Link
+                  to={
+                    "/attendance-workflow-status/read-all-attendance-workflow-status"
+                  }
+                >
+                  Workflow Status
+                </Link>
+              ) : (
+                <label className="opacity-50 cursor-not-allowed">
+                  Workflow Status{" "}
+                </label>
+              )}
             </p>
           </div>
         </div>
@@ -38,16 +83,28 @@ export const PendingRequestSelf = ({
           </div>
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline ">
-              <Link to={"/leave-approval/read-all-leave-approval"}>
-                Request Approval{" "}
-              </Link>
+              {isLeaveApproval ? (
+                <Link to={"/leave-approval/read-all-leave-approval"}>
+                  Request Approval{" "}
+                </Link>
+              ) : (
+                <label className="opacity-50 cursor-not-allowed">
+                  Request Approval{" "}
+                </label>
+              )}
             </p>
             <p className="m-0 underline">
-              <Link
-                to={"/leave-workflow-status/read-all-leave-workflow-status"}
-              >
-                Workflow Status
-              </Link>
+              {isLeaveWorkflowStatus ? (
+                <Link
+                  to={"/leave-workflow-status/read-all-leave-workflow-status"}
+                >
+                  Workflow Status
+                </Link>
+              ) : (
+                <label className="opacity-50 cursor-not-allowed">
+                  Workflow Status{" "}
+                </label>
+              )}
             </p>
           </div>
         </div>
@@ -58,14 +115,28 @@ export const PendingRequestSelf = ({
           </div>
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline">
-              <Link to={"/loan_approval/read-all-loan-approval"}>
-                Request Approval{" "}
-              </Link>
+              {isLoanApproval ? (
+                <Link to={"/loan_approval/read-all-loan-approval"}>
+                  Request Approval{" "}
+                </Link>
+              ) : (
+                <label className="opacity-50 cursor-not-allowed">
+                  Request Approval{" "}
+                </label>
+              )}
             </p>
             <p className="m-0 underline">
-              <Link to={"/loan-workflow-status/read-all-loan-workflow-status"}>
-                Workflow Status
-              </Link>
+              {isLoanWorkflowStatus ? (
+                <Link
+                  to={"/loan-workflow-status/read-all-loan-workflow-status"}
+                >
+                  Workflow Status
+                </Link>
+              ) : (
+                <label className="opacity-50 cursor-not-allowed">
+                  Workflow Status{" "}
+                </label>
+              )}
             </p>
           </div>
         </div>

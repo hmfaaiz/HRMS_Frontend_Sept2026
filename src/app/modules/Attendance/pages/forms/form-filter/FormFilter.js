@@ -27,6 +27,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import ReportButton from "../AttendanceReportButton";
 import { Download } from "lucide-react";
+import { formatDates } from "../../../../../utils/common";
 //Validation for date fields
 const formValidation = Yup.object().shape({
   from: Yup.date()
@@ -115,7 +116,16 @@ export function FormFilter({
   };
 
   const runAllProcess = (values) => {
-    dispatch(runProcess(values));
+      const formattedValues = {
+    ...values,
+    from: values.from
+                    ? formatDates(values.from, "dd-MMM-yyyy")
+                    : null,to: values.to
+                    ? formatDates(values.to, "dd-MMM-yyyy")
+                    : null,
+  };
+
+    dispatch(runProcess(formattedValues));
   };
 
   useEffect(() => {
@@ -168,7 +178,17 @@ export function FormFilter({
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          applyFilter(values);
+            const payload = {
+                  ...values,
+                  from: values.from
+                    ? formatDates(values.from, "dd-MMM-yyyy")
+                    : null,to: values.to
+                    ? formatDates(values.to, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+          applyFilter(payload);
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
@@ -545,7 +565,7 @@ export function FormFilter({
                   )}
                 </div>
 
-                <div className="flex justify-end items-center ">
+                <div className="flex justify-end items-center gap-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -571,7 +591,7 @@ export function FormFilter({
                       !values.from ||
                       !values.to
                     }
-                    className="btn btn-primary btn-elevate ml-2 "
+                    className="btn btn-primary btn-elevate"
                   >
                     Filter
                     {loading && (
@@ -591,7 +611,7 @@ export function FormFilter({
                       csvLoading ||
                       excelLoading
                     }
-                    className="btn btn-success ml-2"
+                    className="btn btn-success"
                     onClick={() => runAllProcess(values)}
                   >
                     Run Process

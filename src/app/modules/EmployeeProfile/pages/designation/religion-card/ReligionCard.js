@@ -17,7 +17,7 @@ import * as actions from "../../../_redux/designationActions";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
 
-export function ReligionCard() {
+export function ReligionCard({onHide}) {
   const designationUIContext = useDesignationUIContext();
 
   const dispatch = useDispatch();
@@ -49,6 +49,8 @@ export function ReligionCard() {
   }, [DesignationUIContext]);
 
   const fetchInctive = () => {
+    onHide()
+    dispatch(actions.clearForm());
     const updatedQueryParams = {
       ...usersUIProps.queryParams,
       isActive: false,
@@ -63,6 +65,8 @@ export function ReligionCard() {
   };
 
   const fetchActive = () => {
+    onHide()
+    dispatch(actions.clearForm());
     const updatedQueryParams = {
       ...usersUIProps.queryParams,
       isActive: true,
@@ -182,7 +186,7 @@ export function ReligionCard() {
           </div>
         </div>
       </div>
-      <DesignationTable />
+      <DesignationTable onHide={onHide} />
     </TCard>
     // </>
   );

@@ -14,6 +14,8 @@ import { LoanOpeningSection } from "../form-edit-dialog/LoanOpeningBalanceSectio
 import { IncomeTaxOpeningSection } from "../form-edit-dialog/IncomeTaxOpeningSection";
 import * as actions from "../../../_redux/formActions";
 import TCard from "../../../../../utils/common-modules/TCard";
+import { EmployeeAttendanceManualSection } from "../form-edit-dialog/EmployeeAttendanceManualSection";
+import { EmployeeDynasoftAttendanceSection } from "../form-edit-dialog/EmpDynasoftAttendanceSection";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -92,7 +94,7 @@ export function FormCard() {
     //     {/* Card Ends */}
     //   </Card>
     <>
-      <TCard isSecondChild={false} name={"Upload Date"}></TCard>
+      <TCard isSecondChild={false} name={"Upload Data"}></TCard>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-3 gap-x-3 gap-y-2 mt-2">
         {/* EmployeeProfileSection Starts */}
         <EmployeeProfileSection
@@ -128,6 +130,17 @@ export function FormCard() {
 
         {/* IncomeTaxOpeningSection Starts */}
         <IncomeTaxOpeningSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+
+{/* Emp Att New Version */}
+        <EmployeeAttendanceManualSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+
+        />{/* Employee Dynasoft Attendance*/}
+        <EmployeeDynasoftAttendanceSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
         />

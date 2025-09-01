@@ -161,6 +161,10 @@ export function FormEditForm({
                     </div>
                   </div>
 
+                  {dashboard?.allSubsidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.policyData?.localizationId === 2 && (
+
                   <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="contract_typeId"
@@ -184,6 +188,7 @@ export function FormEditForm({
                     />
                   </div>
 
+                    )}
                   <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
                       Gratuity Basis<span style={{ color: "red" }}>*</span>
@@ -281,6 +286,10 @@ export function FormEditForm({
                     />
                   </div>
 
+                  {dashboard?.allSubsidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.policyData?.localizationId === 2 && (
+
                   <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
                       Gratuity Fraction
@@ -305,6 +314,7 @@ export function FormEditForm({
                       <div className="text-danger">{errors.gratuity_fraction}</div>
                     )}
                   </div>
+)}
 
                 </div>
               </fieldset>

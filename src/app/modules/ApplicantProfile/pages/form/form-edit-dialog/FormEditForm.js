@@ -760,7 +760,7 @@ export function FormEditForm({
         handleChange,
         setFieldTouched
       }) => (
-        <>
+        <> {console.log("eeeee1111", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -966,14 +966,14 @@ export function FormEditForm({
                         }}
                       />
 
-                      
 
-                   
+
+
                       <label
                         htmlFor="myImage"
                         className="btn bg-tsecondary border border-black text-black mt-1"
                       >
-                        
+
                         Upload Square Image{" "}
                         <Upload className="w-3 h-3 text-black" />
                       </label>
@@ -1074,7 +1074,7 @@ export function FormEditForm({
 
 
 
-<hr></hr>
+                <hr></hr>
 
 
                 {/* Details Job Vacancy */}
@@ -1227,9 +1227,9 @@ export function FormEditForm({
                                       </td>
 
                                       <td>
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -1343,10 +1343,10 @@ export function FormEditForm({
                                       </td>
 
                                       <td>
-                                        <Field
+                                        <DatePicker
                                           className="form-control"
 
-                                          component={DatePickerField}
+                                          // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -2268,24 +2268,34 @@ export function FormEditForm({
                         setFieldValue("file", file);
                       }}
                     > */}
-                      {/* {formData.file ? formData.file : ""} */}
-                      <FileUpload
-                         label={"CV"}
-                        id="file"
-                        name="file"
-                        type="file"
-                        accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                        ref={inputFile}
-                        className="hidden"
-                        onChange={(event) => {
-                          const file = event.currentTarget.files[0];
-                          setFieldValue("file", file);
-                        }}
+                    {/* {formData.file ? formData.file : ""} */}
+                    {/* <label>
+                      CV<span style={{ color: "red" }}>*</span>
+                    </label> */}
+                    <FileUpload
+                      label={
+                        <>
+                          CV<span style={{ color: "red" }}>*</span>
+                        </>
+                      }
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
 
-                        
-                      />
-                
-                   
+
+                    />
+                    {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
+                    )}
+
+
                     {/* </label> */}
 
                     {/* Show existing file if any */}

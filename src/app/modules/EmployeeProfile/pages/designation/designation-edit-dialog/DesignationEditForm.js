@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { KeyboardArrowDown } from "@material-ui/icons";
+
 import {
   fetchAllCountry,
   fetchAllCity,
@@ -31,10 +32,11 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { Link } from "@material-ui/core";
 import { useDesignationUIContext } from "../DesignationUIContext";
 import MaskedInput from "react-text-mask";
-import { getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { CirclePlus, Trash2, Upload } from "lucide-react";
+import { format } from "date-fns";
 
 export const USERS_URL = process.env.REACT_APP_API_URL;
 const currentDate = new Date();
@@ -174,16 +176,51 @@ const profileValidation = Yup.object()
             )
           : schema;
       }),
-    dateOfContractExpiry: Yup.date()
-      .nullable()
-      .when("dateOfConfirmationEnter", (dateOfConfirmationEnter, schema) => {
-        return dateOfConfirmationEnter
-          ? schema.min(
-              dateOfConfirmationEnter,
-              "Contract expiry date cannot be earlier than date confirmation extended"
-            )
-          : schema;
-      }),
+  //   dateOfContractExpiry: Yup.date()
+  //     .nullable()
+  //     .when("dateOfConfirmationEnter", (dateOfConfirmationEnter, schema) => {
+  //       return dateOfConfirmationEnter
+  //         ? schema.min(
+  //             dateOfConfirmationEnter,
+  //             "Contract expiry date cannot be earlier than date confirmation extended"
+  //           )
+  //         : schema;
+  //     })
+  //      .min(
+  //   Yup.ref("dateOfJoining"),
+  //   "Contract expiry date cannot be earlier than Date of Joining"
+  // ),
+
+dateOfContractExpiry: Yup.date()
+  .nullable()
+  .test(
+    "check-contract-expiry",
+    "Contract expiry date validation failed",
+    function (value) {
+      const { employeeTypeId, dateOfConfirmationEnter, dateOfJoining } = this.parent;
+
+      // Only validate if employeeTypeId = 147
+      if (employeeTypeId === "147" || employeeTypeId === 147) {
+        if (dateOfConfirmationEnter && value < dateOfConfirmationEnter) {
+          return this.createError({
+            path: "dateOfContractExpiry",
+            message: "Contract expiry date cannot be earlier than date confirmation extended",
+          });
+        }
+
+        if (dateOfJoining && value < dateOfJoining) {
+          return this.createError({
+            path: "dateOfContractExpiry",
+            message: "Contract expiry date cannot be earlier than Date of Joining",
+          });
+        }
+      }
+
+      return true;
+    }
+  ),
+
+
     nic_no: Yup.string()
       .matches(
         /^\d{5}-\d{7}-\d{1}$/,
@@ -271,7 +308,7 @@ const profileValidation = Yup.object()
     "Invalid marital status for selected title",
     function(value) {
       // if (title === 'Mrs.' && maritalStatus === '261') {
-      const { title, maritalStatus, gender } = value;
+      const { title, maritalStatus, gender ,employeeTypeId} = value;
 
       // Check conditions based on title // 196 == Single
       if (title === "Mrs." && maritalStatus !== "267") {
@@ -333,6 +370,7 @@ const profileValidation = Yup.object()
     }
   );
 
+
 // Step 1: Set up state to manage visibility
 
 export function DesignationEditForm({
@@ -349,6 +387,8 @@ export function DesignationEditForm({
   loading,
   id,
 }) {
+
+
   const designationUIContext = useDesignationUIContext();
   const DesignationUIProps = useMemo(() => {
     return {
@@ -388,8 +428,11 @@ export function DesignationEditForm({
   const [defCountry, setDefaultCountry] = useState({});
   const [defCity, setDefaultCity] = useState({});
   const [joiningDateSelected, setJoiningDate] = useState(null);
+  const [employeeStatusLabel, setEmployeeStatusLabel] = useState(null);
+
 
   const [confirmationDateSelected, setConfirmationDate] = useState(null);
+  const [professionalSummary, setProfessionalSummary] = useState(null);
   const [
     disabledConfirmationDateSelected,
     setDisabledConfirmationDate,
@@ -417,6 +460,7 @@ export function DesignationEditForm({
 
   const [DOBDateSelected, setDOBDate] = useState(null);
   const [RetirementSelected, setDRetirmentDate] = useState(null);
+  const [RetirementSelectedOptional, setDRetirmentDateOptional] = useState(null);
 
   const [deflastReviewDate, setlastReviewDate] = useState(null);
   const [defnextReviewDate, setnextReviewDate] = useState(null);
@@ -462,6 +506,7 @@ export function DesignationEditForm({
   const [defemployeeStatus = null, setDefemployeeStatus] = useState(null);
   const [profilePolicy, setProfilePolicy] = useState(null);
   const [minAgeLimin, setMinAgeLimin] = useState(null);
+  const [localizationId, setLocalizationId] = useState(null);
   const [maxAgeLimin, setMaxAgeLimin] = useState(null);
   const [hidehideRetirementAgeDate, setHidehideRetirementAgeDate] = useState(
     false
@@ -476,6 +521,10 @@ export function DesignationEditForm({
   const [imgAlreadySet, setImgAlreadySet] = useState(false);
   const [allEmpTypes, setAllEmpTypes] = useState([]);
   const scrollRef = useRef(null);
+
+
+
+
   //off for temp
   // useEffect(() => {
   //   if (user.Id) {
@@ -607,6 +656,9 @@ export function DesignationEditForm({
     if (user.dateOfJoining) {
       setJoiningDate(new Date(user.dateOfJoining));
     }
+  else {
+    setJoiningDate(null);
+  }
   }, [user.dateOfJoining]);
 
   //=========== END
@@ -616,24 +668,40 @@ export function DesignationEditForm({
     if (user.dateOfBirth) {
       setDOBDate(new Date(user.dateOfBirth));
     }
+    else{
+      setDOBDate(null);
+    }
   }, [user.dateOfBirth]);
 
   useEffect(() => {
-    if (user?.dateOfRetirement) {
+    if (user.dateOfRetirement) {
       setDRetirmentDate(new Date(user?.dateOfRetirement));
+    }else{
+      setDRetirmentDate(null);
     }
-  }, [user?.dateOfRetirement]);
+  }, [user.dateOfRetirement]);
+  //   useEffect(() => {
+  //   if (user?.dateOfRetirementOptional) {
+  //     setDRetirmentDateOptional(new Date(user?.dateOfRetirementOptional));
+  //   }else{
+  //     setDRetirmentDateOptional(null);
+  //   }
+  // }, [user.dateOfRetirementOptional]);
 
   useEffect(() => {
-    if (user?.dateOfConfirmationDue) {
+    if (user.dateOfConfirmationDue) {
       setConfirmationDueDate(new Date(user?.dateOfConfirmationDue));
+    }else{
+      setConfirmationDueDate(null)
     }
-  }, [user?.dateOfConfirmationDue]);
+  }, [user.dateOfConfirmationDue]);
 
   //===== lastReviewDate
   useEffect(() => {
     if (user.lastReviewDate) {
       setlastReviewDate(new Date(user.lastReviewDate));
+    }else{
+      setlastReviewDate(null)
     }
   }, [user.lastReviewDate]);
 
@@ -647,6 +715,8 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.nextReviewDate) {
       setnextReviewDate(new Date(user.nextReviewDate));
+    }else{
+      setnextReviewDate(null)
     }
   }, [user.nextReviewDate]);
 
@@ -655,12 +725,17 @@ export function DesignationEditForm({
     if (user.passportExpiry) {
       setpassportExpiry(new Date(user.passportExpiry));
     }
+    else{
+      setpassportExpiry(null)
+    }
   }, [user.passportExpiry]);
 
   //===== lastReviewDate
   useEffect(() => {
     if (user.drivingLicenseExpiry) {
       setdrivingLicenseExpiry(new Date(user.drivingLicenseExpiry));
+    }else{
+      setdrivingLicenseExpiry(null)
     }
   }, [user.drivingLicenseExpiry]);
 
@@ -673,7 +748,21 @@ export function DesignationEditForm({
     if (user?.dateOfConfirmation) {
       setConfirmationDate(new Date(user?.dateOfConfirmation));
     }
-  }, [user?.dateOfConfirmation]);
+    else{
+      setConfirmationDate(null);
+    }
+
+  }, [user.dateOfConfirmation]);
+
+  useEffect(() => {
+    if (user?.professional_summary) {
+      setProfessionalSummary(user.professional_summary);
+    }
+    else{
+      setProfessionalSummary(null);
+    }
+
+  }, [user.professional_summary]);
 
   //=========== END
 
@@ -728,20 +817,12 @@ export function DesignationEditForm({
     );
   }, [user?.maritalStatus, dashboard.maritalStatus]);
 
-  //===== Date Of Confirmation Due
-  //off
-  // useEffect(() => {
-  //   if (user.dateOfConfirmationDue) {
-  //     setConfirmationDueDate(new Date(user.dateOfConfirmationDue));
-  //   }
-  // }, [user.dateOfConfirmationDue]);
 
-  //=========== END
-
-  //===== Date Of dateOfConfirmationEnter
   useEffect(() => {
     if (user.dateOfConfirmationEnter) {
       setConfirmationEnterDate(new Date(user.dateOfConfirmationEnter));
+    }else{
+      setConfirmationEnterDate(null)
     }
   }, [user.dateOfConfirmationEnter]);
 
@@ -752,27 +833,12 @@ export function DesignationEditForm({
     if (user.dateOfContractExpiry) {
       setContractExpiryDate(new Date(user.dateOfContractExpiry));
     }
+    else{
+      setContractExpiryDate(null)
+    }
   }, [user.dateOfContractExpiry]);
 
-  //=========== END
 
-  //===== Date Of Retirement
-  // useEffect(() => {
-  //   if (user?.gender == "Female") {
-  //     const retirementDate = new Date(user.dateOfBirth);
-  //     // retirementDate.setFullYear(retirementDate.getFullYear() + user.retirementAgeFemale);
-
-  //     // setDRetirmentDate(new Date(retirementDate));
-  //   }
-  //   else if (user?.gender == "Male") {
-  //     const retirementDate = new Date(user.dateOfBirth);
-  //     // retirementDate.setFullYear(retirementDate.getFullYear() + user.retirementAgeMale);
-
-  //     // setDRetirmentDate(new Date(retirementDate));
-  //   }
-  // }, [user?.retirementAgeFemale || user.retirementAgeMale]);
-
-  //=========== END
 
   useEffect(() => {
     const gradeId = defEmployeeGrade?.value
@@ -909,6 +975,12 @@ export function DesignationEditForm({
           return item.value === empStatusId;
         })
     );
+     setEmployeeStatusLabel(
+  dashboard.allEmployeeStatus &&
+    dashboard.allEmployeeStatus.find((item) => item.value === empStatusId)?.label
+);
+
+       
   }, [user?.employeeStatusId]);
   //======================= End
 
@@ -923,13 +995,7 @@ export function DesignationEditForm({
         })
     );
   }, [user?.locationId, dashboard.locationId]);
-  //======================= End
 
-  // useEffect(() => {
-  //   if (!user.countryId) {
-  //     dispatch(fetchAllCity(1));
-  //   }
-  // }, [user.countryId, dispatch]);
 
   useEffect(() => {
     const cityId = defCity?.value ? defCity.value : user.cityId;
@@ -942,19 +1008,7 @@ export function DesignationEditForm({
     );
   }, [user?.cityId, dashboard.allCity]);
 
-  // useEffect(() => {
-  //   if (user.cityId) {
 
-  //     setImage(user.profile_image || '');
-
-  //   }
-  // }, [user.cityId, dispatch]);
-
-  // useEffect(() => {
-  //   if (user?.profile_image) {
-  //     setImage(user.profile_image);
-  //   }
-  // }, [user?.profile_image]);
 
   useEffect(() => {
     if (id && user?.profile_image) {
@@ -1084,31 +1138,16 @@ export function DesignationEditForm({
       ...workExperienceList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+              let e = formatDates(el, "dd-MMM-yyyy");
+              val[key] = e || null;
         }
         return val;
       }),
     ]);
   };
 
-  // const handleFieldChangedExperience = (el) => {
 
-  //   const index = el?.target?.id.split('-')[1]
-  //   const key = el?.target?.id.split('-')[0]
-
-  //   if (key == "countryId") {
-
-  //     //  dispatch(fetchAllCity(el.target.value));
-
-  //   }
-
-  //   setworkExperienceList([...workExperienceList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el?.target?.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   // Function to handle changes in input fields
   const handleFieldChangedExperience = (index, field, value) => {
@@ -1145,7 +1184,9 @@ export function DesignationEditForm({
       ...academicList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+              let e = formatDates(el, "dd-MMM-yyyy");
+              val[key] = e || null;
         }
         return val;
       }),
@@ -1177,6 +1218,8 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
+      setLocalizationId(response?.data?.data[0]?.localizationId);
+
       // setDefaultProbationPolicyMonth(new Date(newDate));
 
       if (!id && response?.data?.data[0].isEmployeeCodeGenerationAuto) {
@@ -1226,6 +1269,8 @@ export function DesignationEditForm({
 
       setDRetirmentDate(new Date(retirementDate));
       setFieldValue("dateOfRetirement", new Date(retirementDate));
+      // setDRetirmentDateOptional(new Date(retirementDate));
+      // setFieldValue("dateOfRetirementOptional", new Date(retirementDate));
     } else {
       return;
     }
@@ -1306,24 +1351,7 @@ export function DesignationEditForm({
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setDisableConfDueDate(true);
   };
-  // const handleFieldChangedAcademic = (el) => {
 
-  //   const index = el.target.id.split('-')[1]
-  //   const key = el.target.id.split('-')[0]
-
-  //   if (key == "countryId") {
-
-  //     // dispatch(fetchAllCity(el.target.value));
-
-  //   }
-
-  //   setAcademicList([...academicList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el.target.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   const handleFieldChangedAcademic = (index, field, value) => {
     const newAcademicList = [...academicList];
@@ -1359,24 +1387,16 @@ export function DesignationEditForm({
       ...skillsList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+          let e = formatDates(el, "dd-MMM-yyyy");
+          val[key] = e || null;
         }
         return val;
       }),
     ]);
   };
 
-  // const handleFieldChangedSkills = (el) => {
 
-  //   const index = el?.target.id.split('-')[1]
-  //   const key = el?.target.id.split('-')[0]
-  //   setSkillList([...skillsList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el.target.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   const handleFieldChangedSkills = (index, field, value) => {
     const newSkillList = [...skillsList];
@@ -1406,7 +1426,9 @@ export function DesignationEditForm({
       ...incidentList.map((val, ind) => {
         if (ind == index) {
           // val[key] = new Date(el)
-          val[key] = el ? new Date(el) : null;
+          // val[key] = el ? new Date(el) : null;
+             let e = formatDates(el, "dd-MMM-yyyy");
+              val[key] = e || null;
         }
         return val;
       }),
@@ -1418,17 +1440,7 @@ export function DesignationEditForm({
     newIncidentList[index][field] = value;
     setIncidentList(newIncidentList);
   };
-  // const handleFieldChangedIncident = (el) => {
 
-  //   const index = el?.target.id.split('-')[1]
-  //   const key = el?.target.id.split('-')[0]
-  //   setIncidentList([...incidentList.map((val, ind) => {
-  //     if (ind == index) {
-  //       val[key] = el.target.value
-  //     }
-  //     return val
-  //   })])
-  // }
 
   const deleteRowIncident = (element) => {
     const data = incidentList;
@@ -1469,10 +1481,10 @@ export function DesignationEditForm({
     const newErrors = {};
     defContactList.forEach((contact, index) => {
       if (!contact.relation_name) {
-        newErrors[`relation_name-${index}`] = "Relation Name is required";
+        newErrors[`relation_name-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!contact.relation_text) {
-        newErrors[`relation_text-${index}`] = "Relation is required";
+        newErrors[`relation_text-${index}`] =  VALIDATION_MESSAGES.required;
       }
       // if (!contact.contactNo || !/^\d{11}$/.test(contact.contactNo)) {
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 t0 15 digits';
@@ -1488,7 +1500,7 @@ export function DesignationEditForm({
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 to 15 digits';
       // }
       if (!contactNo) {
-        newErrors[`contactNo-${index}`] = "Contact no. is required";
+        newErrors[`contactNo-${index}`] =  VALIDATION_MESSAGES.required;
       } else if (!/^\d{7,15}$/.test(contactNo)) {
         newErrors[`contactNo-${index}`] =
           "Contact No must be between 7 to 15 digits";
@@ -1498,39 +1510,94 @@ export function DesignationEditForm({
     // Validations for Work Experience
     workExperienceList.forEach((obj, index) => {
       if (!obj.companyName) {
-        newErrors[`companyName-${index}`] = "Required";
+        newErrors[`companyName-${index}`] =  VALIDATION_MESSAGES.required;
       }
       if (!obj.positionHeld) {
-        newErrors[`positionHeld-${index}`] = "Required";
+        newErrors[`positionHeld-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!obj.countryId) {
-        newErrors[`countryId-W-${index}`] = "Required";
+        newErrors[`countryId-W-${index}`] =  VALIDATION_MESSAGES.required;
       }
 
       if (!obj.cityId) {
-        newErrors[`cityId-W-${index}`] = "Required";
+        newErrors[`cityId-W-${index}`] =  VALIDATION_MESSAGES.required;
       }
 
       const num = getDateDiffInDays(obj.startDate, new Date().getTime());
 
-      if (new Date(obj.startDate).getTime() > new Date().getTime()) {
-        newErrors[`startDate_W-${index}`] =
-          "Start Date cannot be a future date";
+      // if (new Date(obj.startDate).getTime() > new Date().getTime()) {
+      //   newErrors[`startDate_W-${index}`] =
+      //     "Start Date cannot be a future date";
+      // }
+
+      // // Validate endDate
+      // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate_W-${index}`] =
+      //     "End Date must be later than Start Date";
+      // }
+
+      // if (!obj?.startDate) {
+      //   newErrors[`startDate_W-${index}`] = "Required";
+      // }
+
+      // if (!obj?.endDate) {
+      //   newErrors[`endDate_W-${index}`] = "Required";
+      // }
+
+      if (obj?.startDate && !obj?.endDate) {
+        newErrors[`endDate_W-${index}`] = VALIDATION_MESSAGES.required;
+      }
+      
+      if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate_W-${index}`] = VALIDATION_MESSAGES.required;
+      }
+      
+      // Dono agar filled hain, to endDate > startDate check karo
+      // if (obj?.startDate && obj?.endDate) {
+      //   const start = new Date(obj.startDate);
+      //   const end = new Date(obj.endDate);
+      
+      //   if (end <= start) {
+      //     newErrors[`endDate_W-${index}`] = VALIDATION_MESSAGES.endDateMustBeGreater;
+      //   }
+      // }
+
+
+         if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate_W-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (obj?.startDate && obj?.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
+      
+        if (start > new Date()) {
+          newErrors[`startDate_W-${index}`] = "Cannot be a future date";
+        }
+      
+        if (end <= start) {
+          newErrors[`endDate_W-${index}`] = "Must be later than Start Date";
+        }
+          if (end > new Date()) {
+           newErrors[`startDate_W-${index}`] = "Cannot be a future date";
+        }
       }
 
-      // Validate endDate
-      if (new Date(obj.endDate) <= new Date(obj.startDate)) {
-        newErrors[`endDate_W-${index}`] =
-          "End Date must be later than Start Date";
-      }
 
-      if (!obj?.startDate) {
-        newErrors[`startDate_W-${index}`] = "Required";
+      if (obj?.lengthInYear) {
+        // Must be a valid number (decimal allowed)
+        if (!/^\d+(\.\d{1,2})?$/.test(obj.lengthInYear)) {
+          newErrors[`lengthInYear_W-${index}`] = "Must be a valid number ";
+        }
+        // Must be >= 0
+        else if (parseFloat(obj.lengthInYear) < 0) {
+          newErrors[`lengthInYear_W-${index}`] = "Cannot be negative";
+        }
+        // Optional upper limit (e.g., 99 years)
+        else if (parseFloat(obj.lengthInYear) > 99.99) {
+          newErrors[`lengthInYear_W-${index}`] = "Must be less than 100";
+        }
       }
-
-      if (!obj?.endDate) {
-        newErrors[`endDate_W-${index}`] = "Required";
-      }
+      
+      
     });
 
     // Validations for Academic
@@ -1547,45 +1614,89 @@ export function DesignationEditForm({
       }
 
       // GPA Validation
-      if (!obj.gpa) {
-        newErrors[`gpa-${index}`] = "Required";
-      } else if (isNaN(obj.gpa) || obj.gpa === "") {
-        newErrors[`gpa-${index}`] = "GPA must be a number";
-      } else if (obj.gpa < 1 || obj.gpa > 5.0) {
-        newErrors[`gpa-${index}`] = "GPA must be between 1.0 and 5.0";
-      } else if (!/^\d+(\.\d+)?$/.test(obj.gpa)) {
-        newErrors[`gpa-${index}`] = "GPA must be a valid digit";
+      // if (!obj.gpa) {
+      //   newErrors[`gpa-${index}`] = "Required";
+      // } 
+      // else if (isNaN(obj.gpa) || obj.gpa === "") {
+      //   newErrors[`gpa-${index}`] = "GPA must be a number";
+      // }
+      //   if (obj.gpa < 1 || obj.gpa > 5.0) {
+      //   newErrors[`gpa-${index}`] = "GPA must be between 1.0 and 5.0";
+      // } else if (!/^\d+(\.\d+)?$/.test(obj.gpa)) {
+      //   newErrors[`gpa-${index}`] = "GPA must be a valid digit";
+      // }
+
+      if (obj?.gpa) {
+        if (obj.gpa < 0 || obj.gpa > 5.0) {
+          newErrors[`gpa-${index}`] = "Must be between 0.0 & 5.0";
+        } else if (!/^\d+(\.\d+)?$/.test(obj.gpa)) {
+          newErrors[`gpa-${index}`] = "Must be a valid digit";
+        }
       }
+      
       if (!obj.cityId) {
-        newErrors[`cityId-A-${index}`] = "Required";
+        newErrors[`cityId-A-${index}`] =VALIDATION_MESSAGES.required;
       }
-      if (new Date(obj.startDate) > new Date()) {
-        newErrors[`startDate_A-${index}`] =
-          "Start Date cannot be a future date";
-      }
+      // if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate_A-${index}`] =
+      //     "Start Date cannot be a future date";
+      // }
 
       // Validate endDate
       // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
       //   newErrors[`endDate_A-${index}`] = 'End Date must be later than Start Date';
       // }
 
-      if (!obj?.startDate) {
-        newErrors[`startDate_A-${index}`] = "Required";
-      } else if (new Date(obj.startDate) > new Date()) {
-        newErrors[`startDate_A-${index}`] =
-          "Start Date cannot be a future date";
-      }
+      // if (!obj?.startDate) {
+      //   newErrors[`startDate_A-${index}`] = "Required";
+      // } else if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate_A-${index}`] =
+      //     "Start Date cannot be a future date";
+      // }
 
-      if (!obj.endDate) {
-        newErrors[`endDate_A-${index}`] = "Required";
-      } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
-        newErrors[`endDate_A-${index}`] =
-          "End Date must be later than Start Date";
+      // if (!obj.endDate) {
+      //   newErrors[`endDate_A-${index}`] = "Required";
+      // } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate_A-${index}`] =
+      //     "End Date must be later than Start Date";
+      // }
+
+
+     if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate_A-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (obj?.startDate && obj?.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
+      
+        if (start > new Date()) {
+          newErrors[`startDate_A-${index}`] = "Cannot be a future date";
+        }
+      
+        if (end <= start) {
+          newErrors[`endDate_A-${index}`] = "Must be later than Start Date";
+        }
       }
+      
 
       // if (!obj?.endDate) {
       //   newErrors[`endDate_A-${index}`] = 'Required';
       // }
+
+      if (obj?.lengthInYear) {
+        // Must be a valid number (decimal allowed)
+        if (!/^\d+(\.\d{1,2})?$/.test(obj.lengthInYear)) {
+          newErrors[`lengthInYear_A-${index}`] = "Must be a valid number";
+        }
+        // Must be >= 0
+        else if (parseFloat(obj.lengthInYear) < 0) {
+          newErrors[`lengthInYear_A-${index}`] = "Cannot be negative";
+        }
+        // Optional upper limit (e.g., 99 years)
+        else if (parseFloat(obj.lengthInYear) > 99.99) {
+          newErrors[`lengthInYear_A-${index}`] = "Must be less than 100";
+        }
+      }
+      
     });
 
     // Validations for Skills
@@ -1605,23 +1716,58 @@ export function DesignationEditForm({
       //   newErrors[`startDate-${index}`] = 'Start Date cannot be a future date';
       // }
 
-      if (!obj.startDate) {
-        newErrors[`startDate-${index}`] = "Required";
-      } else if (new Date(obj.startDate) > new Date()) {
-        newErrors[`startDate-${index}`] = "Start Date cannot be a future date";
-      }
+      // if (!obj.startDate) {
+      //   newErrors[`startDate-${index}`] = "Required";
+      // } else if (new Date(obj.startDate) > new Date()) {
+      //   newErrors[`startDate-${index}`] = "Start Date cannot be a future date";
+      // }
 
       // Validate endDate
       // if (new Date(obj.endDate) <= new Date(obj.startDate)) {
       //   newErrors[`endDate-${index}`] = 'End Date must be later than Start Date';
       // }
 
-      if (!obj.endDate) {
-        newErrors[`endDate-${index}`] = "Required";
-      } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
-        newErrors[`endDate-${index}`] =
-          "End Date must be later than Start Date";
+      // if (!obj.endDate) {
+      //   newErrors[`endDate-${index}`] = "Required";
+      // } else if (new Date(obj.endDate) <= new Date(obj.startDate)) {
+      //   newErrors[`endDate-${index}`] =
+      //     "End Date must be later than Start Date";
+      // }
+
+
+      if (obj?.startDate && !obj?.endDate) {
+        newErrors[`endDate-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (!obj?.startDate && obj?.endDate) {
+        newErrors[`startDate-${index}`] =  VALIDATION_MESSAGES.required;
+      } else if (obj?.startDate && obj?.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
+      
+        if (start > new Date()) {
+          newErrors[`startDate-${index}`] = "Cannot be a future date";
+        }
+      
+        if (end <= start) {
+          newErrors[`endDate-${index}`] = "Must be later than Start Date";
+        }
       }
+
+      if (obj?.lengthInMonths) {
+        // Must be a valid number (decimal allowed)
+        if (!/^\d+(\.\d{1,2})?$/.test(obj.lengthInMonths)) {
+          newErrors[`lengthInMonths-${index}`] = "Must be a valid number";
+        }
+        // Must be >= 0
+        else if (parseFloat(obj.lengthInMonths) < 0) {
+          newErrors[`lengthInMonths-${index}`] = "Cannot be negative";
+        }
+        // Optional upper limit (e.g., 1200 months = 100 years)
+        else if (parseFloat(obj.lengthInMonths) > 99.99) {
+          newErrors[`lengthInMonths-${index}`] = "Must be less than 100";
+        }
+      }
+      
+      
     });
 
     // Validations for Incident
@@ -1645,7 +1791,7 @@ export function DesignationEditForm({
         newErrors[`incidentDate-${index}`] = "Required";
       } else if (new Date(obj.incidentDate) > new Date()) {
         newErrors[`incidentDate-${index}`] =
-          "Incident Date cannot be a future date";
+          "Cannot be a future date";
       }
     });
 
@@ -1684,12 +1830,22 @@ export function DesignationEditForm({
     );
   };
 
-  console.log("aaaa111", dashboard?.allEmployeesWithNoPermissionList);
+
   return (
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={user}
+        // initialValues={user}
+        
+        initialValues={{
+          ...user,
+          professional_summary: user?.professional_summary || "",
+          email_official:user?.email_official || "",
+          email_personal:user?.email_personal || "",
+
+  
+        }}
+      
         validationSchema={profileValidation}
         onSubmit={async (values) => {
           //const t =  handleSubmit();
@@ -1702,6 +1858,49 @@ export function DesignationEditForm({
             setErrors({});
 
             enableLoading();
+             const payload = {
+        ...values,
+        dateOfBirth: values.dateOfBirth
+          ? formatDates(values.dateOfBirth, "dd-MMM-yyyy")
+          : null,
+           dateOfConfirmation: values.dateOfConfirmation
+          ? formatDates(values.dateOfConfirmation, "dd-MMM-yyyy")
+          : null,
+            dateOfConfirmationDue: values.dateOfConfirmationDue
+          ? formatDates(values.dateOfConfirmationDue, "dd-MMM-yyyy")
+          : null,
+  dateOfConfirmationEnter: values?.dateOfConfirmationEnter
+          ? formatDates(values?.dateOfConfirmationEnter, "dd-MMM-yyyy")
+          : null,
+            dateOfContractExpiry: values.dateOfContractExpiry
+          ? formatDates(values.dateOfContractExpiry, "dd-MMM-yyyy")
+          : null,
+            dateOfJoining: values.dateOfJoining
+          ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
+          : null, 
+          dateOfRetirement: values.dateOfRetirement
+          ? formatDates(values.dateOfRetirement, "dd-MMM-yyyy")
+          : null, 
+          dateOfRetirementOptional: values.dateOfRetirementOptional
+          ? formatDates(values.dateOfRetirementOptional, "dd-MMM-yyyy")
+          : null,
+           drivingLicenseExpiry: values.drivingLicenseExpiry
+          ? formatDates(values.drivingLicenseExpiry, "dd-MMM-yyyy")
+          : null,  
+          passportExpiry: values.passportExpiry
+          ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
+          : null, 
+           nextReviewDate: values.nextReviewDate
+          ? formatDates(values.nextReviewDate, "dd-MMM-yyyy")
+          : null, 
+          nicExpiry: values.nicExpiry
+          ? formatDates(values.nicExpiry, "dd-MMM-yyyy")
+          : null,
+passportExpiry: values.passportExpiry
+          ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
+          : null,
+
+      };
 
             if (file) {
               let formData = new FormData();
@@ -1711,7 +1910,7 @@ export function DesignationEditForm({
                 .then((res) => {
                   setImage(res.data.imageUrl);
                   saveEmployeeProfile(
-                    values,
+                    payload,
                     res.data.imageUrl,
                     defContactList,
                     workExperienceList,
@@ -1719,12 +1918,12 @@ export function DesignationEditForm({
                     skillsList,
                     incidentList,
                     imagePolicy,
-                    isImageReq
+                    isImageReq,employeeStatusLabel
                   );
                 });
             } else {
               saveEmployeeProfile(
-                values,
+                payload,
                 profile_image,
                 defContactList,
                 workExperienceList,
@@ -1732,7 +1931,7 @@ export function DesignationEditForm({
                 skillsList,
                 incidentList,
                 imagePolicy,
-                isImageReq
+                isImageReq,employeeStatusLabel
               );
             }
           }
@@ -1776,7 +1975,7 @@ export function DesignationEditForm({
                               <span style={{ color: "red" }}>*</span>
                             </span>
                           }
-                          isDisabled={isUserForRead && true}
+                          isDisabled={user.Id || isUserForRead}
                           onBlur={() => {
                             // handleBlur({ target: { name: "countryId" } });
                           }}
@@ -1796,6 +1995,8 @@ export function DesignationEditForm({
                               setJoiningDate(null);
                               setFieldValue("dateOfRetirement", null);
                               setDRetirmentDate(null);
+                              setFieldValue("dateOfRetirementOptional", null);
+                              setDRetirmentDateOptional(null);
                               setFieldValue("dateOfConfirmation", null);
                               setConfirmationDate(null);
                               setFieldValue("dateOfConfirmationDue", null);
@@ -1828,36 +2029,36 @@ export function DesignationEditForm({
                       {id ||
                       profilePolicy?.data?.data[0]
                         .isEmployeeCodeGenerationAuto ? (
-                     <>
-                     <div>
-                          <Field
-                            name="employeeCode"
-                            component={Input}
-                            maxLength="10"
-                            placeholder=" Employee Code"
-                            label={
-                              <span>
-                                Employee Code
-                                <span style={{ color: "red" }}>*</span>
-                              </span>
-                            }
-                            autoComplete="off"
-                            onChange={(e) => {
-                              setFieldValue(
-                                "employeeCode",
-                                e.target.value || null
-                              );
-                              setEmployeeCode(
-                                e.target.value || defEmployeeCode
-                              );
-                            }}
-                            value={defEmployeeCode || null}
-                            disabled={true}
-                          />
-                        </div>
-                         <div className="hidden md:block"></div>
-                         <div className="hidden md:block"></div>
-                         </>
+                        <>
+                          <div>
+                            <Field
+                              name="employeeCode"
+                              component={Input}
+                              maxLength="10"
+                              placeholder=" Employee Code"
+                              label={
+                                <span>
+                                  Employee Code
+                                  <span style={{ color: "red" }}>*</span>
+                                </span>
+                              }
+                              autoComplete="off"
+                              onChange={(e) => {
+                                setFieldValue(
+                                  "employeeCode",
+                                  e.target.value || null
+                                );
+                                setEmployeeCode(
+                                  e.target.value || defEmployeeCode
+                                );
+                              }}
+                              value={defEmployeeCode || null}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="hidden md:block"></div>
+                          <div className="hidden md:block"></div>
+                        </>
                       ) : (
                         <>
                           <div>
@@ -1932,10 +2133,10 @@ export function DesignationEditForm({
                               }
                             />
                           </div>
-                         <div className="hidden md:block"></div>
+                          <div className="hidden md:block"></div>
                         </>
                       )}
-                     
+
                       <div>
                         <Select
                           label={
@@ -1958,7 +2159,7 @@ export function DesignationEditForm({
                           <option value="Professor." label="Professor." />
                         </Select>
                         {errors.title && touched.title && (
-                          <div className="invalid-text">{errors.title}</div>
+                          <div className="invalid-feedback">{errors.title}</div>
                         )}
                       </div>
                       <div>
@@ -2261,7 +2462,9 @@ export function DesignationEditForm({
                         value={defchildTeamMenus || null}
                         error={errors.teamId}
                         touched={touched.teamId}
-                        options={dashboard.allTeamsChildMenus}
+                        options={[
+                          { value: null, label: "Select" },
+                          ...dashboard.allTeamsChildMenus]}
                       />
                     </div>
 
@@ -2390,6 +2593,7 @@ export function DesignationEditForm({
                           setFieldValue("employeeStatusId", e.value || null);
 
                           setDefemployeeStatus(e);
+                          setEmployeeStatusLabel(e.label);
                           //probation
 
                           // if (e.value == 276) {
@@ -2622,8 +2826,9 @@ export function DesignationEditForm({
                         <option value="Female" label="Female" />
                       </Select>
                       {errors.gender && touched.gender && (
-                        <div className="invalid-text">{errors.gender}</div>
+                        <label className="invalid-feedback">{errors.gender}</label>
                       )}
+                      
                     </div>
                     <div>
                       <SearchSelect
@@ -2692,15 +2897,16 @@ export function DesignationEditForm({
                           onChange={(date) => {
                             setFieldValue("dateOfBirth", date);
                             setDOBDate(date);
-                            if (!id) {
+                            // if (!id) {
                               updateRetirmentPolicy(
                                 setFieldValue,
                                 date,
                                 values?.gender
                               );
-                            } else {
-                              doBnotify();
-                            }
+                            // }
+                            //  else {
+                            //   doBnotify();
+                            // }
                           }}
                           timeInputLabel="Time:"
                           dateFormat="dd-MMM-yyyy"
@@ -2731,7 +2937,7 @@ export function DesignationEditForm({
                           }
                         />
                         <ErrorMessage
-                          className="form-feedBack"
+                          className="invalid-feedback"
                           name="dateOfBirth"
                           component="div"
                         />
@@ -2750,7 +2956,7 @@ export function DesignationEditForm({
                           onChange={(date) => {
                             setFieldValue("dateOfJoining", date);
                             setJoiningDate(date);
-                            if (!id) {
+                            // if (!id) {
                               updateConfirmationDuePolicy(
                                 setFieldValue,
                                 values.employeeTypeId,
@@ -2763,9 +2969,9 @@ export function DesignationEditForm({
                                 values.employeeStatusId,
                                 date
                               );
-                            } else {
-                              doJnotify();
-                            }
+                            // } else {
+                            //   doJnotify();
+                            // }
 
                             // *********************************************************************************************************
 
@@ -2797,9 +3003,22 @@ export function DesignationEditForm({
                           touched={touched.dateOfJoining}
                           minDate={
                             values.dateOfBirth
-                              ? new Date(values.dateOfBirth)
-                              : null
+                              ? minAgeLimin !== null
+                                ? new Date(
+                                    new Date(values.dateOfBirth).getFullYear() +
+                                      minAgeLimin,
+                                    new Date(values.dateOfBirth).getMonth(),
+                                    new Date(values.dateOfBirth).getDate()
+                                  )
+                                : new Date(values.dateOfBirth)
+                              : new Date()
                           }
+
+                          // minDate={
+                          //   values.dateOfBirth
+                          //     ? new Date(values.dateOfBirth)
+                          //     : null
+                          // }
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -2927,6 +3146,55 @@ export function DesignationEditForm({
                           component="div"
                         />
                       </div>
+
+                      
+                    )}
+
+
+                     {values.employeeTypeId !== 147 && (
+                      <div>
+              
+
+<label>
+Date of Retirement (Optional)
+</label>
+
+                        <DatePicker
+                          className="form-control"
+                          placeholder=" Date Of Retirement (Optional)"
+                          // selected={RetirementSelectedOptional || null} 
+                             selected={
+        values.dateOfRetirementOptional
+          ? new Date(values.dateOfRetirementOptional)
+          : null
+      }
+                          showYearDropdown
+                          scrollableMonthYearDropdown
+                          onChange={(date) => {
+                            setFieldValue("dateOfRetirementOptional", date);
+                            setDRetirmentDateOptional(date);
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd-MMM-yyyy"
+                          // showTimeInput
+                          name="dateOfRetirementOptional"
+                          disabled={isUserForRead || !values?.subsidiaryId}
+                          autoComplete="off"
+
+                           minDate={
+                            values.dateOfJoining
+                              ? new Date(values.dateOfJoining)
+                              : null
+                          }
+                        />
+                        <ErrorMessage
+                          className="form-feedBack"
+                          name="dateOfRetirementOptional"
+                          component="div"
+                        />
+                      </div>
+
+                    
                     )}
                   </div>
                 </div>
@@ -2978,6 +3246,7 @@ export function DesignationEditForm({
                         label="Official Email"
                         autoComplete="off"
                         maxLength="30"
+                        
                       />
                     </div>
 
@@ -2989,6 +3258,7 @@ export function DesignationEditForm({
                         label="Personal Email"
                         autoComplete="off"
                         maxLength="30"
+                       
                       />
                     </div>
 
@@ -3037,11 +3307,11 @@ export function DesignationEditForm({
                         autoComplete="off"
                         className="form-control" // Force full height
                       />
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         name="additional_summary"
                         component="div"
                         className="invalid-feedback"
-                      />
+                      /> */}
                     </div>
                   </div>
 
@@ -3142,7 +3412,11 @@ export function DesignationEditForm({
                           value={defchildRegionMenus || null}
                           error={errors.regionId}
                           touched={touched.regionId}
-                          options={dashboard.allRegionChildMenus}
+                          options=
+                            {[
+                              { value: null, label: "Select" },
+                            ...dashboard.allRegionChildMenus]}
+
                         />
                       </div>
 
@@ -3163,7 +3437,9 @@ export function DesignationEditForm({
                           value={defCountry}
                           error={errors.countryId}
                           touched={touched.countryId}
-                          options={dashboard.allCountry}
+                          options={[
+                            { value: null, label: "Select" },
+                            ...dashboard.allCountry]}
                         />
                       </div>
 
@@ -3314,7 +3590,7 @@ export function DesignationEditForm({
                           type="text"
                         />
                       </div>
-                      <div>
+                      {localizationId==2 &&   <div>
                         <Field
                           name="sourceOfHire"
                           maxLength="20"
@@ -3323,9 +3599,10 @@ export function DesignationEditForm({
                           label="Source Of Hire"
                           autoComplete="off"
                         />
-                      </div>
+                      </div>}
+                    
                       <div className="flex items-center gap-2">
-                        <div className="flex items-center mt-5">
+                        {localizationId==2 &&      <div className="flex items-center mt-5">
                           <input
                             name="salesRep"
                             type="checkbox"
@@ -3341,24 +3618,28 @@ export function DesignationEditForm({
                           <label>
                             <span className="ml-2">Sales Representative</span>
                           </label>
-                        </div>
+                        </div>}
+                   
+                   {localizationId==2 &&
                         <div className="flex items-center mt-5">
-                          <input
-                            name="supportRep"
-                            type="checkbox"
-                            // onChange={handleChange}
-                            onChange={() =>
-                              setFieldValue("supportRep", !values?.supportRep)
-                            }
-                            onBlur={handleBlur}
-                            value={values.supportRep}
-                            checked={values.supportRep}
-                            label="Support Representative"
-                          />
-                          <label>
-                            <span className="ml-2">Support Representative</span>
-                          </label>
-                        </div>
+                        <input
+                          name="supportRep"
+                          type="checkbox"
+                          // onChange={handleChange}
+                          onChange={() =>
+                            setFieldValue("supportRep", !values?.supportRep)
+                          }
+                          onBlur={handleBlur}
+                          value={values.supportRep}
+                          checked={values.supportRep}
+                          label="Support Representative"
+                        />
+                        <label>
+                          <span className="ml-2">Support Representative</span>
+                        </label>
+                      </div>
+                   }
+                   
                       </div>
                     </div>
 
@@ -3467,62 +3748,71 @@ export function DesignationEditForm({
                           />
                         </div>
 
-                        <div>
-                          <SearchSelect
-                            name="cycleTypeId"
-                            label={<span> Cycle Type</span>}
-                            isDisabled={isUserForRead && true}
-                            onBlur={() => {
-                              // handleBlur({ target: { name: "countryId" } });
-                            }}
-                            onChange={(e) => {
-                              setFieldValue("cycleTypeId", e.value || null);
-                              setcycleType(e);
-                              // dispatch(fetchAllFormsMenu(e.value));
-                            }}
-                            value={defcycleType || null}
-                            error={errors.cycleTypeId}
-                            touched={touched.cycleTypeId}
-                            options={dashboard.allCycleTypeList}
-                          />
-                        </div>
-                        <div>
-                          <Field
-                            name="passportNo"
-                            maxLength="15"
-                            component={Input}
-                            placeholder=" Passport No"
-                            label=" Passport No"
-                            autoComplete="off"
-                          />
-                        </div>
+                        {/* hard coded On the instructionof Mr.Mubin */}
+                        {localizationId == 2 && (
+                          <div>
+                            <SearchSelect
+                              name="cycleTypeId"
+                              label={<span> Cycle Type</span>}
+                              isDisabled={isUserForRead && true}
+                              onBlur={() => {
+                                // handleBlur({ target: { name: "countryId" } });
+                              }}
+                              onChange={(e) => {
+                                setFieldValue("cycleTypeId", e.value || null);
+                                setcycleType(e);
+                                // dispatch(fetchAllFormsMenu(e.value));
+                              }}
+                              value={defcycleType || null}
+                              error={errors.cycleTypeId}
+                              touched={touched.cycleTypeId}
+                              options=
+                                {[
+                                  { value: null, label: "Select" },
+                                ...dashboard.allCycleTypeList]}
+                            />
+                          </div>
+                        )}
 
-                        <div>
-                          <label>Passport Expiry Date</label>
-                          <DatePicker
-                            className="form-control"
-                            placeholder="Passport Expiry Date"
-                            selected={defpassportExpiry}
-                            showYearDropdown
-                            scrollableMonthYearDropdown
-                            onChange={(date) => {
-                              setFieldValue("passportExpiry", date);
-                              setpassportExpiry(date);
-                            }}
-                            timeInputLabel="Time:"
-                            dateFormat="dd-MMM-yyyy"
-                            // showTimeInput
-                            name="passportExpiry"
-                            autoComplete="off"
-                            minDate={new Date()}
-                          />
-                          <ErrorMessage
-                            className="form-feedBack"
-                            name="passportExpiry"
-                            component="div"
-                          />
-                        </div>
-
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="passportNo"
+                              maxLength="15"
+                              component={Input}
+                              placeholder=" Passport No"
+                              label=" Passport No"
+                              autoComplete="off"
+                            />
+                          </div>
+                        )}
+                        {localizationId == 2 && (
+                          <div>
+                            <label>Passport Expiry Date</label>
+                            <DatePicker
+                              className="form-control"
+                              placeholder="Passport Expiry Date"
+                              selected={defpassportExpiry}
+                              showYearDropdown
+                              scrollableMonthYearDropdown
+                              onChange={(date) => {
+                                setFieldValue("passportExpiry", date);
+                                setpassportExpiry(date);
+                              }}
+                              timeInputLabel="Time:"
+                              dateFormat="dd-MMM-yyyy"
+                              // showTimeInput
+                              name="passportExpiry"
+                              autoComplete="off"
+                              minDate={new Date()}
+                            />
+                            <ErrorMessage
+                              className="form-feedBack"
+                              name="passportExpiry"
+                              component="div"
+                            />
+                          </div>
+                        )}
                         <div>
                           <label>ID Card Expiry</label>
                           <DatePicker
@@ -3548,43 +3838,48 @@ export function DesignationEditForm({
                             component="div"
                           />
                         </div>
-                        <div>
-                          <Field
-                            name="laborCardNo"
-                            maxLength="20"
-                            component={Input}
-                            placeholder="Enter Labour Card No"
-                            label={<span> Labour Card No</span>}
-                            autoComplete="off"
-                          />
-                          {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
-                        </div>
 
-                        <div>
-                          <Field
-                            name="emiratesNo"
-                            maxLength="20"
-                            component={Input}
-                            placeholder="Enter Emirates Id Number"
-                            label={<span> Emirates Id Number</span>}
-                            autoComplete="off"
-                          />
-                          {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
-                        </div>
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="laborCardNo"
+                              maxLength="20"
+                              component={Input}
+                              placeholder="Enter Labour Card No"
+                              label={<span> Labour Card No</span>}
+                              autoComplete="off"
+                            />
+                            {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
+                          </div>
+                        )}
 
-                        <div>
-                          <Field
-                            name="routingCode"
-                            maxLength="20"
-                            component={Input}
-                            placeholder="Enter Routing Code"
-                            label={<span> Routing Code</span>}
-                            autoComplete="off"
-                          />
-                          {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
-                        </div>
-
-                        <div>
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="emiratesNo"
+                              maxLength="20"
+                              component={Input}
+                              placeholder="Enter Emirates Id Number"
+                              label={<span> Emirates Id Number</span>}
+                              autoComplete="off"
+                            />
+                            {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
+                          </div>
+                        )}
+                        {localizationId == 2 && (
+                          <div>
+                            <Field
+                              name="routingCode"
+                              maxLength="20"
+                              component={Input}
+                              placeholder="Enter Routing Code"
+                              label={<span> Routing Code</span>}
+                              autoComplete="off"
+                            />
+                            {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
+                          </div>
+                        )}
+{localizationId==2   && <div>
                           <SearchSelect
                             name="contractTypeId"
                             label={<span> Contract Type</span>}
@@ -3601,12 +3896,18 @@ export function DesignationEditForm({
                             value={defcontractType || values.contractTypeId}
                             error={errors.contractTypeId}
                             touched={touched.contractTypeId}
-                            options={dashboard.allContractTypeList}
+                            options=
+                              {[
+                                { value: null, label: "Select" },
+                              ...dashboard.allContractTypeList]}
                           />
                         </div>
+                        }
+                     
                         <div className="col-span-3 md:col-span-4 lg:col-span-5">
                           <Field
                             name="professional_summary"
+                            values={user.professional_summary || null}
                             component={TextArea}
                             placeholder="Enter Professional Summary"
                             label="Professional Summary"
@@ -3828,6 +4129,7 @@ export function DesignationEditForm({
                           <td className="min-w-40">City</td>
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
+                          <td className="min-w-40">Length In Year</td>
                           <td className="text-right">Action</td>
                         </tr>
 
@@ -4041,6 +4343,32 @@ export function DesignationEditForm({
                                   </div>
                                 )}
                               </td>
+
+                              
+                              <td>
+                                <input
+                                  className="form-control"
+                                  type="number"
+                                  onChange={(e) => {
+                                    handleFieldChangedExperience(
+                                      rightindex,
+                                      "lengthInYear",
+                                      e.target.value
+                                    );
+                                    setErrors((prev) => ({
+                                      ...prev,
+                                      [`lengthInYear_W-${rightindex}`]: "",
+                                    })); // Clear error on change
+                                  }}
+                                  value={obj.lengthInYear}
+                                  id={"lengthInYear-" + rightindex}
+                                ></input>
+                                {deferrors[`lengthInYear_W-${rightindex}`] && (
+                                  <div className="form-feedBack">
+                                    {deferrors[`lengthInYear_W-${rightindex}`]}
+                                  </div>
+                                )}
+                              </td>
                               <td
                                 className="text-right"
                                 id={rightindex}
@@ -4100,6 +4428,7 @@ export function DesignationEditForm({
                           <td className="min-w-40">CGPA</td>
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
+                          <td className="min-w-40">Length In Year</td>
                           <td className="text-right">Action</td>
                         </tr>
 
@@ -4350,6 +4679,32 @@ export function DesignationEditForm({
                                   </div>
                                 )}
                               </td>
+
+                                   
+                              <td>
+                                <input
+                                  className="form-control"
+                                  type="number"
+                                  onChange={(e) => {
+                                    handleFieldChangedAcademic(
+                                      rightindex,
+                                      "lengthInYear",
+                                      e.target.value
+                                    );
+                                    setErrors((prev) => ({
+                                      ...prev,
+                                      [`lengthInYear_A-${rightindex}`]: "",
+                                    })); // Clear error on change
+                                  }}
+                                  value={obj.lengthInYear}
+                                  id={"lengthInYear-" + rightindex}
+                                ></input>
+                                {deferrors[`lengthInYear_A-${rightindex}`] && (
+                                  <div className="form-feedBack">
+                                    {deferrors[`lengthInYear_A-${rightindex}`]}
+                                  </div>
+                                )}
+                              </td>
                               <td
                                 className="text-right"
                                 id={rightindex}
@@ -4410,6 +4765,7 @@ export function DesignationEditForm({
                           <td className="min-w-40">Rating</td>
                           <td className="min-w-40">Start Date</td>
                           <td className="min-w-40">End Date</td>
+                          <td className="min-w-40">Length In Months</td>
                           <td className="text-right">Action</td>
                         </tr>
                         {skillsList?.map((obj, rightindex) => (
@@ -4574,6 +4930,31 @@ export function DesignationEditForm({
                                 {deferrors[`endDate-${rightindex}`] && (
                                   <div className="form-feedBack">
                                     {deferrors[`endDate-${rightindex}`]}
+                                  </div>
+                                )}
+                              </td>
+                                    
+                              <td>
+                                <input
+                                  className="form-control"
+                                  type="number"
+                                  onChange={(e) => {
+                                    handleFieldChangedSkills(
+                                      rightindex,
+                                      "lengthInMonths",
+                                      e.target.value
+                                    );
+                                    setErrors((prev) => ({
+                                      ...prev,
+                                      [`lengthInMonths-${rightindex}`]: "",
+                                    })); // Clear error on change
+                                  }}
+                                  value={obj.lengthInMonths}
+                                  id={"lengthInMonths-" + rightindex}
+                                ></input>
+                                {deferrors[`lengthInMonths-${rightindex}`] && (
+                                  <div className="form-feedBack">
+                                    {deferrors[`lengthInMonths-${rightindex}`]}
                                   </div>
                                 )}
                               </td>

@@ -17,6 +17,8 @@ import { VALIDATION_MESSAGES } from "../../../../utils/constants";
 import { RichTextInput } from "../../../../../_metronic/_partials/controls/forms/RichTextInput";
 import he from "he";
 import { CircleMinus, CirclePlus } from "lucide-react";
+import { AmountInput } from "../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { formatDates } from "../../../../utils/common";
 
 const validationSchema = Yup.object().shape({
   applicationStatusId: Yup.string()
@@ -103,36 +105,27 @@ export default function HRRecomendation() {
   }, [dispatch]);
 
   return (
-    <div >
-
-
-
+    <div>
       <div className="">
         <div className="flex justify-end mt-1">
-
           <button
             type="button"
             onClick={() => setShowSection(!showSection)}
             className="btn btn-primary btn-sm mt-1 text-right"
           >
-
             {showSection ? (
               <CircleMinus className="h-4 w-4 mr-1" />
             ) : (
               <CirclePlus className="h-4 w-4 mr-1" />
             )}
             HR Recommendations
-
           </button>
         </div>
         {showSection && (
           <>
             {formUIProps?.selectedApplicant ? (
-
               <>
-                <div
-
-                >
+                <div>
                   <Formik
                     enableReinitialize
                     initialValues={{
@@ -143,7 +136,16 @@ export default function HRRecomendation() {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
-                      handleSubmitHRRecommendation(values);
+                       const payload = {
+                  ...values,
+                  dateOfJoining: values.dateOfJoining
+                    ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+
+                      handleSubmitHRRecommendation(payload);
                     }}
                   >
                     {({
@@ -221,7 +223,7 @@ export default function HRRecomendation() {
                                   <Field
                                     name="monthlySalary"
                                     value={values.monthlySalary}
-                                    component={Input}
+                                    component={AmountInput}
                                     placeholder="Monthly Salary"
                                     type="number"
                                     amountFormat={true}
@@ -256,9 +258,7 @@ export default function HRRecomendation() {
                                 </div>
                               </div>
 
-
                               <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1 mt-1">
-
                                 <div className="">
                                   <SearchSelect
                                     name="jobPreferencesId"
@@ -287,48 +287,41 @@ export default function HRRecomendation() {
                                   />
                                 </div>
 
-                             
-                                  <div className="">
-                                    <label>
-                                      <span>
-                                        Date of Joining{" "}
-                                        <span style={{ color: "red" }}>*</span>
-                                      </span>
-                                    </label>
-                                    <Field
-                                      name="dateOfJoining"
-                                      component={DatePickerField}
-                                      value={values?.dateOfJoining || ""}
-                                      placeholder="Date of Joining"
-                                      type="date"
-                                      minDate={
-                                        entities?.length > 0
-                                          ? new Date(entities[0].interview_date)
-                                          : ""
-                                      }
-                                    />
-                                  </div>
-                                  
-                            <div className="">
-                                    <label>
-                                      <span>Probation Period</span>
-                                    </label>
-                                    <Field
-                                      name="probationPeriod"
-                                      component={Input}
-                                      placeholder="Probation Period"
-                                      type="number"
-                                    />
-                                  </div>
+                                <div className="">
+                                  <label>
+                                    <span>
+                                      Date of Joining{" "}
+                                      <span style={{ color: "red" }}>*</span>
+                                    </span>
+                                  </label>
+                                  <Field
+                                    name="dateOfJoining"
+                                    component={DatePickerField}
+                                    value={values?.dateOfJoining || ""}
+                                    placeholder="Date of Joining"
+                                    type="date"
+                                    minDate={
+                                      entities?.length > 0
+                                        ? new Date(entities[0].interview_date)
+                                        : ""
+                                    }
+                                  />
+                                </div>
 
-
-
+                                <div className="">
+                                  <label>
+                                    <span>Probation Period</span>
+                                  </label>
+                                  <Field
+                                    name="probationPeriod"
+                                    component={Input}
+                                    placeholder="Probation Period"
+                                    type="number"
+                                  />
+                                </div>
                               </div>
 
-
                               <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
-
-
                                 <div className="">
                                   <label>
                                     <span>
@@ -358,7 +351,6 @@ export default function HRRecomendation() {
                                     }}
                                   />
                                 </div>
-
                               </div>
                             </fieldset>
                           </Form>
@@ -386,7 +378,6 @@ export default function HRRecomendation() {
             )}
           </>
         )}
-
       </div>
     </div>
   );

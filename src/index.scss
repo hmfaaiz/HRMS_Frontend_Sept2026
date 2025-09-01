@@ -312,6 +312,16 @@ input[type="checkbox"] {
   background-color: #e6f8ff !important;
 }
 
+.login-control {
+  height: calc(1.1em + 0.85rem + 2px);
+  padding: 0.35rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  border: 0.5px solid #000000 !important;
+  border-radius: 0.32rem;
+  background-color: #e6f8ff !important;
+}
+
 // for form-control:disabled
 .form-control:disabled {
   border: 0.5px solid #f5f5f5 !important;
@@ -432,14 +442,42 @@ label {
   stroke-width: 3 !important;
 }
 
-
 //checkbox
 
 .checkbox > span {
-    border-radius: 0.12rem !important;
+  border-radius: 0.12rem !important;
 }
 
 .checkbox > span {
-    height: 13px !important;
-    width: 13px !important;
+  height: 13px !important;
+  width: 13px !important;
+}
+
+// pagination new css for dsahboard big table
+.pagination {
+  gap: 5px;
+  font-size: 9.75px;
+  margin-bottom: 0px;
+  color: black;
+}
+
+.page-link {
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+  font-size: 9.75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.375rem;
+  border: none;
+}
+
+.react-bootstrap-table-pagination-total {
+  margin: 0px;
+}
+
+.react-bootstrap-table-pagination {
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }

@@ -163,7 +163,16 @@ export function MasterEditForm({
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
           enableLoading();
-          submitForm(values, resetForm);
+                    const payload = {
+                  ...values,
+                  from: values.from
+                    ? formatDates(values.from, "dd-MMM-yyyy")
+                    : null,to: values.to
+                    ? formatDates(values.to, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+          submitForm(payload, resetForm);
         }}
       >
         {({

@@ -83,10 +83,38 @@ export function DesignationEditDialog({
     skillsList,
     incidentList,
     imagePolicy,
-    isImageReq
+    isImageReq,employeeStatusLabel
   ) => {
     delete user?.all_report_to;
     delete user?.all_deligationId;
+
+     if (!user?.dateOfConfirmation && user?.employeeTypeId == 148 &&  employeeStatusLabel == "Confirmed") {
+       disbaleLoading();
+      toast.error("Date of confirmation is required.", {
+        position: "top-right",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return
+     }
+       if (!user?.dateOfContractExpiry &&  user?.employeeTypeId == 147) {
+       disbaleLoading();
+      toast.error("Date of contract expiry is required.", {
+        position: "top-right",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return
+     }
+
 
     if (user?.requireDeligation && !user?.deligationId) {
       disbaleLoading();
@@ -177,6 +205,7 @@ export function DesignationEditDialog({
         attendanceType: user.attendanceType,
         dateOfBirth: user.dateOfBirth,
         dateOfRetirement: user.dateOfRetirement,
+        dateOfRetirementOptional: user.dateOfRetirementOptional,
         salesRep: user.salesRep,
         supportRep: user.supportRep,
         sourceOfHire: user.sourceOfHire,

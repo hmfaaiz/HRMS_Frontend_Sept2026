@@ -9,8 +9,23 @@ import {
 import { formatNumberWithCommas } from "../../../../../utils/common";
 import { Link } from "react-router-dom";
 import DonutChart from "../../../../../../component/DonutChart";
+import { useSelector, shallowEqual } from "react-redux";
 
 export function EmployeeLoanDetail({ entities }) {
+  const { loan } = useSelector(
+    (state) => ({
+      loan: state?.auth?.userAccess["Payroll"],
+    }),
+    shallowEqual
+  );
+
+  const isLoanRequest = loan?.find(
+    (el) => el?.componentName === "ReadAllLoanRequest" && el?.isResourceShow
+  );
+  const isPayslip = loan?.find(
+    (el) => el?.componentName === "ReadPayslip" && el?.isResourceShow
+  );
+
   const columns = [
     {
       dataField: "LoanType.name",
@@ -105,12 +120,22 @@ export function EmployeeLoanDetail({ entities }) {
         </div>
         <div className="font-size-xs font-semibold flex gap-x-4 items-end text-black mt-2 flex-wrap">
           <p className="m-0 underline hover:text-primary">
-            <Link to={"/loan_request/read-all-loan-request"}>
-              Loan Request{" "}
-            </Link>
+            {isLoanRequest ? (
+              <Link to={"/loan_request/read-all-loan-request"}>
+                Loan Request{" "}
+              </Link>
+            ) : (
+              <label className="opacity-50 cursor-not-allowed">
+                Loan Request
+              </label>
+            )}
           </p>
           <p className="m-0 underline">
-            <Link to={"/payslip/read-payslip"}>Payslip</Link>
+            {isPayslip ? (
+              <Link to={"/payslip/read-payslip"}>Payslip</Link>
+            ) : (
+              <label className="opacity-50 cursor-not-allowed">Payslip</label>
+            )}
           </p>
         </div>
       </div>

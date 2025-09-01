@@ -111,6 +111,9 @@ import { TeamAttendanceCalendarSlice } from "../app/modules/Attendance_Calendar_
 import { PortalHolidayCalendarSlice } from "../app/modules/PortalHolidayCalendar/_redux/redux-Slice";
 import { EmpSalaryRevisionSlice } from "../app/modules/Emp_Salary_Revision/_redux/redux-Slice";
 import { NewsEventTickerSlice } from "../app/modules/NewsEventTicker/_redux/redux-Slice";
+import { RecruitmentPortalConfigSlice } from "../app/modules/Recruitment_Portal_Config/_redux/redux-Slice";
+import { DashboardAlertConfigSlice } from "../app/modules/Dashboard_Alert_Config/_redux/redux-Slice";
+import { EmailConfigurationSlice } from "../app/modules/EmailConfiguration/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -209,17 +212,20 @@ export const rootReducer = combineReducers({
   loan_approval: LoanApprovalSlice.reducer,
   applicant_profile: ApplicantProfileSlice?.reducer,
   interview_schedule: InterviewScheduleSlice.reducer,
-  resume_search_engine:ResumeSearchEngineSlice.reducer,
-  job_offer:JobOfferSlice.reducer,
-  recruitment_dashboard:RecruitmentDashboardSlice.reducer,
-  LeaveWorkflowStatus : LeaveWorkflowStatusSlice.reducer,
-  loan_workflow_status : LoanWorkflowStatusSlice.reducer,
-  attendance_workflow_status : AttendanceWorkflowStatusSlice.reducer,
-  team_leave_calender : TeamLeaveCalendarSlice.reducer,
-  attendance_calendar_team : TeamAttendanceCalendarSlice.reducer,
-  portal_holiday_calendar : PortalHolidayCalendarSlice.reducer,
-  emp_salary_revision : EmpSalaryRevisionSlice.reducer,
-  news_event_ticker : NewsEventTickerSlice.reducer,
+  resume_search_engine: ResumeSearchEngineSlice.reducer,
+  job_offer: JobOfferSlice.reducer,
+  recruitment_dashboard: RecruitmentDashboardSlice.reducer,
+  LeaveWorkflowStatus: LeaveWorkflowStatusSlice.reducer,
+  loan_workflow_status: LoanWorkflowStatusSlice.reducer,
+  attendance_workflow_status: AttendanceWorkflowStatusSlice.reducer,
+  team_leave_calender: TeamLeaveCalendarSlice.reducer,
+  attendance_calendar_team: TeamAttendanceCalendarSlice.reducer,
+  portal_holiday_calendar: PortalHolidayCalendarSlice.reducer,
+  emp_salary_revision: EmpSalaryRevisionSlice.reducer,
+  news_event_ticker: NewsEventTickerSlice.reducer,
+  recruitment_portal_config: RecruitmentPortalConfigSlice.reducer,
+  dashboard_alert_config: DashboardAlertConfigSlice.reducer,
+  email_config: EmailConfigurationSlice.reducer,
 });
 
 export function* rootSaga() {

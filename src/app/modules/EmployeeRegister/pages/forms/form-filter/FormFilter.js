@@ -25,6 +25,7 @@ import {
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { FileText, Sheet } from "lucide-react";
+import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 //Validation for date fields
 const formValidation = Yup.object()
   .shape({
@@ -51,7 +52,7 @@ const formValidation = Yup.object()
   .test(
     "all-fields-required",
     "All fields  must be selected together",
-    function(value) {
+    function (value) {
       const { salary_type, operator, amount } = value;
 
       // Check if any of the fields is selected but the others are not
@@ -224,7 +225,16 @@ export function FormFilter({
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          applyFilter(values);
+          const formattedValues = {
+            ...values,
+            dojFrom: values.dojFrom ? formatDates(values.dojFrom, "dd-MMM-yyyy") : null,
+            dojTo: values.dojTo ? formatDates(values.dojTo, "dd-MMM-yyyy") : null,
+            dobFrom: values.dobFrom ? formatDates(values.dobFrom, "dd-MMM-yyyy") : null,
+            dobTo: values.dobTo ? formatDates(values.dobTo, "dd-MMM-yyyy") : null,
+            docFrom: values.docFrom ? formatDates(values.docFrom, "dd-MMM-yyyy") : null,
+            docTo: values.docTo ? formatDates(values.docTo, "dd-MMM-yyyy") : null,
+          };
+          applyFilter(formattedValues);
         }}
       >
         {({
@@ -247,30 +257,7 @@ export function FormFilter({
                     <div className="grid gird-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-1">
                       {/* Subsidiary Field Start */}
                       <div className="col-span-1">
-                        {/* <Field
-                          name="subsidiaryId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value == 'Select' ? '' : Number(e.value)
-                            setFieldValue('subsidiaryId', value)
-                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                            dispatch(fetchAllDept(value));
-                            setFieldValue('employeeId', '')
-                            setFieldValue('departmentId', '')
-                          }}
-                      
-                          label={
-                            <span>
-                              {" "}
-                              Subsidiary <span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          value={allSubsidiaryMap?.get(values?.subsidiaryId || '') || ''}
-                          autoComplete="off"
-                          options={allSubsidiaryList}
-                          error={errors.subsidiaryId}
-                        /> */}
+
 
                         <SearchSelect
                           name="subsidiaryId"
@@ -293,8 +280,8 @@ export function FormFilter({
                           value={
                             allSubsidiaryMap?.get(
                               values?.subsidiaryId ||
-                                (allSubsidiaryList &&
-                                  allSubsidiaryList[0]?.value)
+                              (allSubsidiaryList &&
+                                allSubsidiaryList[0]?.value)
                             ) || ""
                           }
                           autoComplete="off"
@@ -576,9 +563,9 @@ export function FormFilter({
                             ))}
                           </Field>
                           {errors.salary_type && touched.salary_type && (
-                            <div className="error-message">
+                            <label className="invalid-feedback">
                               {errors.salary_type}
-                            </div>
+                            </label>
                           )}
                         </div>
 
@@ -604,6 +591,7 @@ export function FormFilter({
                         <div className="col-span-1">
                           <label>Amount</label>
                           <Field
+                            component={AmountInput}
                             name="amount"
                             as="input"
                             className="form-control"

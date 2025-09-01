@@ -119,7 +119,19 @@ export function MasterEditForm({
               inputFile.current.value = "";
             }
           };
-          submitForm(values, clearForm);
+
+           const payload = {
+                  ...values,
+                  to: values.to
+                    ? formatDates(values.to, "dd-MMM-yyyy")
+                    : null,from: values.from
+                    ? formatDates(values.from, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+
+          submitForm(payload, clearForm);
         }}
       >
         {({

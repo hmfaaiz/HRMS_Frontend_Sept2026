@@ -13,6 +13,7 @@ const initialLoanRequestState = {
   loan_config_details_permission: null,
   loan_type: null,
   empAuthorityList: [],
+  isPolicyExists: false,
   payrollData: null,
 };
 
@@ -120,7 +121,9 @@ export const LoanRequestSlice = createSlice({
     EmployeeAuthorityFetched: (state, action) => {
       state.listLoading = false;
       state.error = null;
-      state.empAuthorityList = action.payload;
+      const { data, isPolicyExists } = action.payload;
+      state.empAuthorityList = data;
+      state.isPolicyExists = isPolicyExists;
     },
     PayrollMonthFetched: (state, action) => {
       const payrollData = action?.payload?.payrollData;

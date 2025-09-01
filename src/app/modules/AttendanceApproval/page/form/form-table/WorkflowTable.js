@@ -157,7 +157,7 @@ export function WorkflowTable({ onHide, show }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          <h5 className="font-bold mb-0 text-black">Leave Approval Flow</h5>
+          <h5 className="font-bold mb-0 text-black">Attendance Approval Flow</h5>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="">
@@ -285,10 +285,10 @@ export function WorkflowTable({ onHide, show }) {
                         Attendance Date
                       </div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.attDate
+                        {formUIProps?.currentData?.requestData?.attDate
                           ? format(
                               new Date(
-                                formUIProps?.currentData?.parentData?.attDate
+                                formUIProps?.currentData?.requestData?.attDate
                               ),
                               "dd-MMM-yyyy"
                             )
@@ -299,7 +299,7 @@ export function WorkflowTable({ onHide, show }) {
                       <div className="font-medium col-span-1">Time In</div>
                       <div className="col-span-1">
                         {formatTime(
-                          formUIProps?.currentData?.parentData?.timeIn
+                          formUIProps?.currentData?.requestData?.timeIn
                         )}
                       </div>
                     </div>
@@ -307,20 +307,20 @@ export function WorkflowTable({ onHide, show }) {
                       <div className="font-medium col-span-1">Time Out</div>
                       <div className="col-span-1">
                         {formatTime(
-                          formUIProps?.currentData?.parentData?.timeOut
+                          formUIProps?.currentData?.requestData?.timeOut
                         )}
                       </div>
                     </div>
                     <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Reason</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.comments}
+                        {formUIProps?.currentData?.requestData?.comments}
                       </div>
                     </div>
                     <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Late Arrival</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.isLateComing
+                        {formUIProps?.currentData?.requestData?.isLateComing
                           ? "Yes"
                           : "No"}
                       </div>
@@ -330,7 +330,7 @@ export function WorkflowTable({ onHide, show }) {
                         Early Departure
                       </div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.isEarlyGoing
+                        {formUIProps?.currentData?.requestData?.isEarlyGoing
                           ? "Yes"
                           : "No"}
                       </div>
@@ -338,7 +338,7 @@ export function WorkflowTable({ onHide, show }) {
                     <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Half Day</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.parentData?.isHalfDay
+                        {formUIProps?.currentData?.requestData?.isHalfDay
                           ? "Yes"
                           : "No"}
                       </div>

@@ -20,3 +20,11 @@ export function saveAttendanceSheetData(body) {
 export function saveLoanData(body) {
     return axios.post(`${USERS_URL}/upload/save-loan-data`, body);
 }
+
+export function saveEmployeeAttendanceSheetData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-attendance-data`, body);
+}
+
+export function saveEmployeeDynasoftAttendanceSheetData(body) {
+    return axios.post(`${USERS_URL}/upload/save-dynasoft-employee-attendance`, body);
+}

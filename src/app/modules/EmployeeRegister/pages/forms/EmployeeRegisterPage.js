@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Card } from "react-bootstrap";
+import { Accordion, Button, Card } from "react-bootstrap";
+import { CircleMinus, CirclePlus } from "lucide-react";
 import { FormTable } from "./form-table/FormTable";
 import { FormFilter } from "./form-filter/FormFilter";
 import {
@@ -17,6 +18,7 @@ import TCard from "../../../../utils/common-modules/TCard";
 
 export function EmployeeRegisterPage() {
   const dispatch = useDispatch();
+  const [activeKey, setActiveKey] = useState(null);
   const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.employee_register.listLoading,
@@ -47,13 +49,36 @@ export function EmployeeRegisterPage() {
   return (
     <FormUIProvider FormUIEvents={{}}>
       <TCard name={CurrentModuleName()}>
-        <div>
-          <FormFilter
-            loading={listLoading}
-            pdfLoading={pdfLoading}
-            dispatch={dispatch}
-          />
-        </div>
+        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+          <Card>
+            <Card.Header className="d-flex justify-content-center">
+              <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                <Accordion.Toggle
+                  as={Button}
+                  eventKey="0"
+                  className="flex justify-start text-bold"
+                >
+                  {activeKey === "0" ? (
+                    <CircleMinus className="h-4 w-4 text-black mr-1" />
+                  ) : (
+                    <CirclePlus className="h-4 w-4 text-black mr-1" />
+                  )}
+                  <span className="text-black">Filters</span>
+                </Accordion.Toggle>
+              </div>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <>
+                <FormFilter
+                  loading={listLoading}
+                  pdfLoading={pdfLoading}
+                  dispatch={dispatch}
+                />
+              </>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+
         <FormTable />
       </TCard>
       <ToastContainer

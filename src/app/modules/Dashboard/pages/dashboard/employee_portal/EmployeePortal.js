@@ -29,7 +29,6 @@ export const EmployeePortal = () => {
 
   const {
     user,
-    logedInEmpoyee,
     leaveBalances,
     leaveApprovalCount,
     attendanceApprovalCount,
@@ -42,11 +41,12 @@ export const EmployeePortal = () => {
     holidayList,
     loanApprovalCount,
     attRecord,
+    announcement,
   } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
       leaveBalances: state?.dashboard?.leaveBalances,
-      logedInEmpoyee: state?.dashboard?.logedInEmpoyee,
+      announcement: state?.dashboard?.announcement,
       user: state?.auth?.user,
       leaveApprovalCount: state.leave_approval.entities,
       attendanceApprovalCount: state.attendance_approval?.entities,
@@ -66,21 +66,21 @@ export const EmployeePortal = () => {
 
   /// fetch pending request info
   useEffect(() => {
-    if (logedInEmpoyee) {
+    if (user?.employeeIdMapping) {
       dispatch(
-        fetchLeaveApprovalApplication(leaveApprovalFilter, logedInEmpoyee?.Id)
+        fetchLeaveApprovalApplication(leaveApprovalFilter, user?.employeeIdMapping)
       );
       dispatch(
         fetchAttendanceApprovalApplication(
           attendanceApprovalFilter,
-          logedInEmpoyee?.Id
+          user?.employeeIdMapping
         )
       );
       dispatch(
-        fetchLoanApprovalApplication(loanApprovalFilter, logedInEmpoyee?.Id)
+        fetchLoanApprovalApplication(loanApprovalFilter, user?.employeeIdMapping)
       );
     }
-  }, [logedInEmpoyee]);
+  }, [user?.employeeIdMapping]);
 
   // First useEffect: Fetch basic data when selectedEmp changes
   useEffect(() => {
@@ -119,21 +119,33 @@ export const EmployeePortal = () => {
     setIsLoading(false);
   }, [user?.employeeIdMapping, payrollData]);
 
+  useEffect(() => {
+    dispatch(action.fetchAnnouncementData());
+  }, []);
+
   return (
     <>
       {!isLoading && (
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
           {/* Sidebar: EmployeeSelection and EmployeeProfile */}
           <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-            <div className="lg:hidden block">
-              <EmployeePortalMenu name="Dashboard" />
+            <div className="xl:hidden block">
+              <EmployeePortalMenu
+                announcement={announcement}
+                isAnouncement={true}
+                name="Dashboard"
+              />
             </div>
             <EmployeeProfile />
           </div>
           {/* Main Content: Dashboard, PendingRequestSelf, ReportingEmpTable, My Details, AttendanceSummary, LeaveApplicationTable, EmployeeLoanDetail */}
           <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-            <div className="hidden lg:block">
-              <EmployeePortalMenu name="Dashboard" />
+            <div className="hidden xl:block">
+              <EmployeePortalMenu
+                announcement={announcement}
+                isAnouncement={true}
+                name="Dashboard"
+              />
             </div>
             {reportingEmployee && reportingEmployee?.length > 0 && (
               <>

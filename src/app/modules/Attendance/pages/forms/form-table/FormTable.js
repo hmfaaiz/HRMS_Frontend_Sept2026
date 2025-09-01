@@ -83,8 +83,10 @@ export function FormTable() {
       },
       formatter: (cell) => {
         // Format the date without timestamp
-        return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
+        // return format(new Date(cell), "dd-MMM-yyyy"); // Customize format as needed
+          return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
+      
     },
     {
       dataField: "formattedDateIn",

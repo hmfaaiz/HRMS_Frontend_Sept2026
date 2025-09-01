@@ -52,6 +52,7 @@ export function FormTable() {
     entities,
     listLoading,
     empAuthorityList,
+    isPolicyExists,
     payrollData,
   } = currentState;
 
@@ -320,7 +321,7 @@ export function FormTable() {
               paginationProps={paginationProps}
             >
               <div style={{ width: "100%", overflowX: "auto" }}>
-                {!isAuthorityExists && (
+                {/* {!isAuthorityExists && (
                   <>
                     <span className="text-xs text-red-500 font-semibold">
                       Designation workflow policy does not exist for this
@@ -328,6 +329,23 @@ export function FormTable() {
                     </span>
                     <br />
                   </>
+                )} */}
+                {empAuthorityList &&
+                empAuthorityList?.length === 0 &&
+                !isPolicyExists ? (
+                  <span className="text-xs text-red-500 font-semibold">
+                    Designation workflow policy does not exist for this
+                    employee.
+                  </span>
+                ) : (
+                  empAuthorityList &&
+                  empAuthorityList?.length === 0 &&
+                  isPolicyExists && (
+                    <span className="text-xs text-gray-500 font-semibold">
+                      Workflow Policy is defined but there is not Workflow
+                      Authorities exists as per the policy.
+                    </span>
+                  )
                 )}
                 {!allowRequestOnThisLevel && (
                   <>

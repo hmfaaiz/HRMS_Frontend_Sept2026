@@ -6,11 +6,10 @@ import {
   PleaseWaitMessage,
   toAbsoluteUrl,
 } from "../../../../../../_metronic/_helpers";
-import { Accordion, Button, Card } from "react-bootstrap";
-import { KeyboardArrowDown } from "@material-ui/icons";
 import { format } from "date-fns";
+import { PeriodType } from "../EmpUIHelper";
 
-export function BigTable({ data }) {
+export function BigTable({ data, setBigTableModalData }) {
   const columnData = data?.data?.length > 0 ? data?.data[0] : {};
 
   let columns = Object.keys(columnData).map((key) => {
@@ -18,13 +17,7 @@ export function BigTable({ data }) {
       return {
         dataField: "profile_image",
         text: "Picture",
-        style: { textAlign: "left", minWidth: `25px`, maxWidth: `25px` },
-        headerStyle: {
-          textAlign: "left",
-          backgroundColor: "#0093dd",
-          color: "#fff",
-          fontSize: "14px",
-        },
+
         formatter: (cell) => {
           return (
             <img
@@ -35,12 +28,9 @@ export function BigTable({ data }) {
                   : toAbsoluteUrl("/media/users/profileImage.png")
               } // Fallback if no image
               alt="Profile"
-              width={26}
-              height={26}
-              style={{
-                borderRadius: "50%", // Make the image circular
-                objectFit: "cover", // Ensure the image covers the entire area without distortion
-              }}
+              width={16}
+              height={16}
+              className="object-cover rounded-sm"
               onError={(e) => {
                 e.target.onerror = null; // Error loop rokne ke liye
                 e.target.src = toAbsoluteUrl("/media/users/profileImage.png"); // Agar image load na ho toh fallback image set karo
@@ -59,19 +49,7 @@ export function BigTable({ data }) {
       return {
         dataField: key,
         text: key.split("_").join(" "),
-        style: {
-          textAlign:
-            isDate || employee_code ? "center" : isAmount ? "right" : "left",
-          minWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
-          // maxWidth: `${key.length > 7 ? key.length - 7 : 7}0px`,
-        },
-        headerStyle: {
-          textAlign:
-            isDate || employee_code ? "center" : isAmount ? "right" : "left",
-          backgroundColor: "#0093dd",
-          color: "#fff",
-          fontSize: "14px",
-        },
+
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {
@@ -100,85 +78,66 @@ export function BigTable({ data }) {
     }
   });
 
-  return (
-    <Accordion
-      className="my-3"
-      defaultActiveKey={data?.accordian_open ? "0" : ""}
-    >
-      <Card className="dashboard_card">
-        <Accordion.Toggle
-          as={Button}
-          variant="link"
-          eventKey="0"
-          style={{
-            backgroundColor: "#fafafc",
-          }}
-          className="text-primary font-weight-bold text-decoration-none d-flex justify-content-between align-items-center"
-        >
-          <span
-            className=""
-            style={{
-              fontSize: "1rem",
-              fontWeight: "700",
-            }}
-          >
-            {data?.days
-              ? data?.dashlet_name?.replace("${days}", data?.days)
-              : data?.dashlet_name}
-          </span>
-          <span
-            style={{
-              borderRadius: "50%",
-              backgroundColor: "#0093dd",
-              color: "#fff",
-            }}
-          >
-            <KeyboardArrowDown style={{ fontSize: "25px" }} />
-          </span>
-        </Accordion.Toggle>
+  const getHeading = () => {
+    if (data?.isPeriodType) {
+      if (PeriodType[data?.PeriodType]) {
+        return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
+      } else {
+        return `${data.dashlet_name} In Next ${data?.days} Days`;
+      }
+    } else {
+      return data?.dashlet_name;
+    }
+  };
 
-        <Accordion.Collapse eventKey="0">
-          <div
-            style={{
-              width: "100%",
-              overflow: "auto",
-              height: "385px",
-              fontSize: "13px",
-              marginTop: "14px",
-            }}
+  return (
+    <div className="bg-white rounded-lg px-3 py-2 col-span-2">
+      <div className="flex justify-between">
+        <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
+        <lable
+          className={
+            data?.data.length > 0
+              ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`
+              : `text-gray-500 cursor-not-allowed font-medium text-xs`
+          }
+          onClick={() => setBigTableModalData(data)}
+        >
+          View All
+        </lable>
+      </div>
+      <div
+        className={
+          data?.data.length > 0
+            ? "max-h-64 overflow-auto"
+            : `max-h-6 overflow-auto`
+        }
+      >
+        {data?.data.length > 0 ? (
+          <BootstrapTable
+            wrapperClasses="table-responsive"
+            bordered={false}
+            classes="big-table table-head-custom table-vertical-center overflow-hidden table-hover"
+            bootstrap4
+            keyField="id"
+            data={data?.data?.length > 0 ? data?.data : []}
+            columns={columns}
+            pagination={
+              data?.data?.length > 5
+                ? paginationFactory({
+                    sizePerPage: 5,
+                    hideSizePerPage: true,
+                    showTotal: true,
+                  })
+                : undefined
+            }
           >
-            {data?.data.length > 0 ? (
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="big-table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                keyField="id"
-                data={data?.data?.length > 0 ? data?.data : []}
-                columns={columns}
-                pagination={
-                  data?.data?.length > 5
-                    ? paginationFactory({
-                        sizePerPage: 5,
-                        hideSizePerPage: true,
-                        showTotal: true,
-                      })
-                    : undefined
-                }
-              >
-                <PleaseWaitMessage entities={data?.data || []} />
-                <NoRecordsFoundMessage entities={data?.data || []} />
-              </BootstrapTable>
-            ) : (
-              <div
-                style={{ color: "gray", fontSize: "13px", textAlign: "center" }}
-              >
-                No data available
-              </div>
-            )}
-          </div>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
+            <PleaseWaitMessage entities={data?.data || []} />
+            <NoRecordsFoundMessage entities={data?.data || []} />
+          </BootstrapTable>
+        ) : (
+          <label className="text-center">No Record Available</label>
+        )}
+      </div>
+    </div>
   );
 }

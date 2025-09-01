@@ -17,10 +17,11 @@ import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePort
 export const FormCard = () => {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { listLoading, user } = useSelector(
+  const { listLoading, user, loan } = useSelector(
     (state) => ({
       listLoading: state?.loan_approval?.listLoading,
       user: state?.auth?.user,
+      loan: state?.auth?.userAccess["Payroll"],
     }),
     shallowEqual
   );
@@ -45,7 +46,7 @@ export const FormCard = () => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
-        <div className="lg:hidden block">
+        <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -53,14 +54,28 @@ export const FormCard = () => {
               {
                 name: "Request",
                 link: "/loan_request/read-all-loan-request",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/loan-workflow-status/read-all-loan-workflow-status",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Payslip",
                 link: "/payslip/read-payslip",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadPayslip" && el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}
@@ -69,7 +84,7 @@ export const FormCard = () => {
         <EmployeeProfile />
       </div>
       <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
@@ -77,14 +92,28 @@ export const FormCard = () => {
               {
                 name: "Request",
                 link: "/loan_request/read-all-loan-request",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanRequest" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Workflow Status",
                 link: "/loan-workflow-status/read-all-loan-workflow-status",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllLoanWorkflowStatus" &&
+                    el?.isResourceShow
+                ),
               },
               {
                 name: "Payslip",
                 link: "/payslip/read-payslip",
+                isShow: loan?.find(
+                  (el) =>
+                    el?.componentName === "ReadPayslip" && el?.isResourceShow
+                ),
               },
             ]}
             isDashboardIcon={true}

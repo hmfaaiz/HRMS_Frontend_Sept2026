@@ -18,6 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useBanksUIContext } from "../BanksUIContext";
 import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/last-trips-vehicles-table/column-formatter/CreatedColumnFormatter";
 import { format } from "date-fns";
+import { amountFormat } from "../../../../../utils/common";
 
 export function BanksTable() {
   //Users UI Context
@@ -36,17 +37,13 @@ export function BanksTable() {
     };
   }, [bankUIContext]);
 
-
-  const { currentState, userAccess } = useSelector(
-    (state) => {   return {
-      
+  const { currentState, userAccess } = useSelector((state) => {
+    return {
       currentState: state.exchange,
-      userAccess: state?.auth?.userAccess["Exchange"]
-    }},
-    shallowEqual
-  );
+      userAccess: state?.auth?.userAccess["Exchange"],
+    };
+  }, shallowEqual);
 
-  
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -55,10 +52,9 @@ export function BanksTable() {
 
   useEffect(() => {
     bankUIProps.setIds([]);
-   
+
     dispatch(actions.fetchUsers(bankUIProps.queryParams));
   }, [bankUIProps.queryParams, dispatch, totalCount]);
-
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateExchangeRate"
@@ -90,7 +86,7 @@ export function BanksTable() {
         minWidth: "160px",
       },
     },
-   
+
     {
       dataField: "Base_Currency",
       text: "Base Currency",
@@ -113,23 +109,23 @@ export function BanksTable() {
       },
     },
 
-    
-  
     {
       dataField: "exchange_rate",
       text: "Exchange Rate",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      style: {
-        minWidth: "10px",
-        textAlign: "center",
-      },
-      headerStyle: {
-        textAlign: "center", // Align header text to the left
+      // style: {
+      //   minWidth: "10px",
+      //   textAlign: "center",
+      // },
+      // headerStyle: {
+      //   textAlign: "center", // Align header text to the left
+      // },
+      formatter: (cell) => {
+        return cell ? amountFormat(cell) : "";
       },
     },
-
 
     {
       dataField: "effective_date",
@@ -145,13 +141,15 @@ export function BanksTable() {
       //   const date = new Date(cell);
       //   return date.toLocaleDateString("en-GB"); // This will format as dd-mm-yyyy
       // },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""},
+      formatter: (cell) => {
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
+      },
       headerStyle: {
         textAlign: "center", // Align header text to the left
       },
     },
-   
-       {
+
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,
@@ -183,7 +181,7 @@ export function BanksTable() {
     page: bankUIProps.queryParams.pageNumber,
   };
 
-    return (
+  return (
     <>
       <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {

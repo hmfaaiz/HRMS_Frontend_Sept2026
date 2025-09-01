@@ -5,22 +5,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DesignationUIProvider } from "./DesignationUIContext";
 import { DesignationEditDialog } from "./designation-edit-dialog/DesignationEditDialog";
-import { AcademicEditDialog } from "./designation-edit-dialog/AcademicEditDialog";
-import { ContactEditDialog } from "./designation-edit-dialog/ContactEditDialog";
+
 import { BankDeleteDialog } from "./bank-delete-dialog/BankDeleteDialog";
 import { DesignationActiveDialog } from "./bank-active-dialog/BankActiveDialog";
 import { ReligionCard } from "./religion-card/ReligionCard";
-import { fetchAllCountry } from "../../../../../_metronic/redux/dashboardActions";
+
 import { useSelector, shallowEqual } from "react-redux"
-import {
-  fetchUserStatusTypes,
-  fetchRoles,
-  fetchCenters,
-} from "../../_redux/designationActions";
-
-
-// dispatch(actions.fetchRoles());
-//     dispatch(actions.fetchCenters());
 
 export function ProfilePage({ history }) {
   const dispatch = useDispatch();
@@ -104,8 +94,15 @@ export function ProfilePage({ history }) {
   return (
     
     <DesignationUIProvider DesignationUIEvents={DesignationUIEvents}>
+      <Route
+  path="/profile/read-all-profile"
+  render={({ history }) => (
+    <ReligionCard onHide={() => history.push("/profile/read-all-profile")} />
+  )}
+/>
+      
 
-         <ReligionCard />
+         {/* <ReligionCard /> */}
          
        {/* <Route exact path="/contact/read-all-contact/new">
         {({ history, match }) => (
