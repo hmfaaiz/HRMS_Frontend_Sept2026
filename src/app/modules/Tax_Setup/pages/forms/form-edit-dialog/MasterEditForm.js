@@ -14,6 +14,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { formatDates } from "../../../../../utils/common";
 
 
 // Function to check if two dates are exactly 365 days apart
@@ -118,11 +119,21 @@ export function MasterEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
+          // const formattedValues = {
+          //   ...values,
+          //   startDate: formatDateToYMD(values.startDate),
+          //   endDate: formatDateToYMD(values.endDate),
+          // };
+
           const formattedValues = {
-            ...values,
-            startDate: formatDateToYMD(values.startDate),
-            endDate: formatDateToYMD(values.endDate),
-          };
+                            ...values,
+                            startDate: values.startDate
+                              ? formatDates(values.startDate, "dd-MMM-yyyy")
+                              : null,endDate: values.endDate
+                              ? formatDates(values.endDate, "dd-MMM-yyyy")
+                              : null,
+          
+                              }
 
           enableLoading();
           SaveTaxSetup(formattedValues);
