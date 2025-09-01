@@ -143,7 +143,13 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          applyFilter(values);
+            const formattedValues = {
+                      ...values,
+                      from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+                      to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+                    
+                    };
+          applyFilter(formattedValues);
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
