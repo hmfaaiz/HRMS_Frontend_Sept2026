@@ -14,6 +14,7 @@ import { initialFilter, requestFilter } from "../../FormUIHelper";
 import { fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardActions";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const dispatch = useDispatch();
@@ -103,7 +104,27 @@ export const FormFilter = ({ loading, queryParams }) => {
         //     }
       }
       onSubmit={(values) => {
-        applyFilter(values);
+         
+                 const payload = {
+          ...values,
+          leaveDate: {
+            from: values.leaveDate?.from
+              ? formatDates(values.leaveDate.from, "dd-MMM-yyyy")
+              : "", //should be null but in all places of portal "" are using that's why
+            to: values.leaveDate?.to
+              ? formatDates(values.leaveDate.to, "dd-MMM-yyyy")
+              : "",
+          },
+          requestDate: {
+            from: values.requestDate?.from
+              ? formatDates(values.requestDate.from, "dd-MMM-yyyy")
+              : "",
+            to: values.requestDate?.to
+              ? formatDates(values.requestDate.to, "dd-MMM-yyyy")
+              : "",
+          },
+        };
+        applyFilter(payload);
       }}
     >
       {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (

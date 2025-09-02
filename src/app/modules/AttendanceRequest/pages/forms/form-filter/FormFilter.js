@@ -12,6 +12,7 @@ import * as actions from "../../../_redux/formActions";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
 
 // Validation for date fields
 const formValidation = Yup.object().shape({
@@ -149,9 +150,17 @@ export function FormFilter() {
       const values = {
         ...initialFilter.filter,
         employeeId: formUIProps.employeeId?.value,
-        from: payrollData.startDate,
-        to: payrollData.endDate,
+        // from: payrollData.startDate,
+        // to: payrollData.endDate,
+         from: payrollData?.startDate
+              ? formatDates(payrollData.startDate, "dd-MMM-yyyy")
+              : "",
+            to: payrollData?.endDate
+              ? formatDates(payrollData.endDate, "dd-MMM-yyyy")
+              : "",
+          
       };
+      console.log("values111", values);
       applyFilter(values);
       dispatch(actions.fetchAttendanceSheetConsolidated(values));
       dispatch(
@@ -189,7 +198,17 @@ export function FormFilter() {
                       onChange={(date) => {
                         setFieldValue("from", date || "");
                         debouncedApplyFilter(
-                          { ...values, from: date },
+                          { ...values, 
+                            
+                            from:date
+              ? formatDates(date, "dd-MMM-yyyy")
+              : "", 
+                to:values.to
+              ? formatDates(values.to, "dd-MMM-yyyy")
+              : "", 
+            
+            
+            },
                           applyFilter
                         );
                       }}
@@ -207,7 +226,13 @@ export function FormFilter() {
                       onChange={(date) => {
                         setFieldValue("to", date || "");
                         debouncedApplyFilter(
-                          { ...values, to: date },
+                          { ...values,  to: date
+              ? formatDates(date, "dd-MMM-yyyy")
+              : "",
+            
+             from:values.from
+              ? formatDates(values.from, "dd-MMM-yyyy")
+              : "", },
                           applyFilter
                         );
                       }}
