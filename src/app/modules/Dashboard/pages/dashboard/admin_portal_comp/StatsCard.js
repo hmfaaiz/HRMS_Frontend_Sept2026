@@ -22,17 +22,25 @@ const StatsCard = ({
       </span>
       <p className="m-0 text-tprimary font-bold text-lg">{value || 0}</p>
       <p className="m-0 text-tprimary font-bold text-sm">{name}</p>
-      <div
-        className={
-          value > 0
-            ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`
-            : `text-gray-500 cursor-not-allowed font-medium text-xs`
-        }
-        // className="text-black cursor-pointer mt-6 font-medium underline text-xs hover:text-tprimary"
-        onClick={handleCardClick}
-      >
-        View All
-      </div>
+
+      {
+        value > 0 ?
+          <div
+            className={
+              `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`
+            }
+            onClick={handleCardClick}
+          >
+            View All
+          </div> :
+          <div
+            className={
+              `text-gray-500 cursor-not-allowed font-medium text-xs`
+            }
+          >
+            View All
+          </div>
+      }
     </div>
   );
 };

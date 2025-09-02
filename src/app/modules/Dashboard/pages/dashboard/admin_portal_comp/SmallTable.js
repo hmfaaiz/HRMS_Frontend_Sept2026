@@ -54,17 +54,22 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
           <label className="text-center">No Record Available</label>
         )}
       </div>
-      <lable
-        className={
-          data?.data.length > 0
-            ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary flex justify-end`
-            : `text-gray-500 cursor-not-allowed font-medium text-xs flex justify-end`
-        }
-        // className="text-black cursor-pointer text-right font-medium underline text-xs hover:text-tprimary flex justify-end"
-        onClick={() => setSmallTableModalData(data)}
-      >
-        Expand
-      </lable>
+      {
+        data?.data.length > 0 ?
+          <lable
+            className={`text-black cursor-pointer font-medium underline text-xs hover:text-tprimary flex justify-end`}
+            onClick={() => setSmallTableModalData(data)}
+          >
+            Expand
+          </lable> :
+          <lable
+            className={
+              `text-gray-500 cursor-not-allowed font-medium text-xs flex justify-end`
+            }
+          >
+            Expand
+          </lable>
+      }
     </div>
   );
 };

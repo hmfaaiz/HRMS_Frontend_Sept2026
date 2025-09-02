@@ -44,7 +44,7 @@ const getValidationSchema = (allLeaveTypes, leaveBalances) =>
         }
       ),
 
-    reason: Yup.string().required(VALIDATION_MESSAGES.required),
+    reason: Yup.string(),
   });
 
 export function MasterEditForm({
@@ -226,7 +226,7 @@ export function MasterEditForm({
                         label={
                           <span>
                             {" "}
-                            Reason<span style={{ color: "red" }}>*</span>
+                            Reason
                           </span>
                         }
                         value={values.reason}

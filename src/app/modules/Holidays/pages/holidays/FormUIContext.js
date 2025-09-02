@@ -27,15 +27,15 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
   const initUser = {
-    Id:"",
+    Id: "",
     subsidiaryId: "",
     name: "",
     religionId: null,
     from_date: "",
-    to_date:"",
-    number_of_days:"",
-    holiday_typeId:""
-  
+    to_date: "",
+    number_of_days: "",
+    holiday_typeId: ""
+
   };
 
 
@@ -52,6 +52,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
+    openSendEmailFormDialog: FormUIEvents.openSendEmailFormDialog
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

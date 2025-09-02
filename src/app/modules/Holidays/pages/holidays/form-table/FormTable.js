@@ -32,6 +32,7 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      openSendEmailFormDialog: formUIContext.openSendEmailFormDialog
     };
   }, [formUIContext]);
 
@@ -69,6 +70,11 @@ export function FormTable() {
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteHolidays"
   );
+
+    const isAccessForSendingEmail = userAccess?.find(
+    (item) => item.componentName === "SendHolidayEmail"
+  );
+
   // Table columns
   const columns = [
 
@@ -98,7 +104,7 @@ export function FormTable() {
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => { return cell ? format(new Date(cell), "dd-MMM-yyyy") : "" }
       // style: {
       //   minWidth: "10px",
       //   textAlign: "center",
@@ -118,7 +124,7 @@ export function FormTable() {
       style: {
         minWidth: "10px",
       },
-      formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
+      formatter: (cell) => { return cell ? format(new Date(cell), "dd-MMM-yyyy") : "" }
     },
 
     {
@@ -131,7 +137,9 @@ export function FormTable() {
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openSendEmailFormDialog: formUIProps.openSendEmailFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForSendingEmail: isAccessForSendingEmail ? isAccessForSendingEmail.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,

@@ -8,8 +8,7 @@ export function FormEditDialogHeader() {
   const { actionsLoading } = useSelector(
 
     (state) => ({
-      userForEdit: state.leave_application.userForEdit,
-      actionsLoading: state.users.actionsLoading,
+      actionsLoading: state.leave_request.actionsLoading,
     }),
     shallowEqual
   );

@@ -28,7 +28,7 @@ import {
 } from "../../../../../utils/constants";
 import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
-import { CirclePlus, Trash2 } from "lucide-react";
+import { CirclePlus, CloudCog, Trash2 } from "lucide-react";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -1767,13 +1767,13 @@ export function BankEditForm({
                       />
                       {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                     </div>
-
+                    {console.log('values' ,values?.payment_mode_Id , typeof values?.payment_mode_Id)}
                     <div>
                       <Field
                         name="emp_bank_accountTitle"
-                        disabled={checkReadOnlyStatus(values, [151])}
+                        disabled={values?.payment_mode_Id == 151 || values?.payment_mode_Id == 152}
                         value={
-                          !checkReadOnlyStatus(values, [151])
+                          !values?.payment_mode_Id == 151 || !values?.payment_mode_Id == 152
                             ? values.emp_bank_accountTitle
                             : ""
                         }

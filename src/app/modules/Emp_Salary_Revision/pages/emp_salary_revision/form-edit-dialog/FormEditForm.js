@@ -2262,9 +2262,9 @@ export function FormEditForm({
                   <div>
                     <Field
                       name="emp_bank_accountTitle"
-                      disabled={checkReadOnlyStatus(values, [151])}
+                      isDisabled={checkReadOnlyStatus(values, [151, 152])}
                       value={
-                        !checkReadOnlyStatus(values, [151])
+                        !checkReadOnlyStatus(values, [151, 152])
                           ? values.emp_bank_accountTitle
                           : ""
                       }

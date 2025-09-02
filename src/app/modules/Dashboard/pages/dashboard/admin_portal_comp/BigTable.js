@@ -94,16 +94,23 @@ export function BigTable({ data, setBigTableModalData }) {
     <div className="bg-white rounded-lg px-3 py-2 col-span-2">
       <div className="flex justify-between">
         <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
-        <lable
-          className={
-            data?.data.length > 0
-              ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`
-              : `text-gray-500 cursor-not-allowed font-medium text-xs`
-          }
-          onClick={() => setBigTableModalData(data)}
-        >
-          View All
-        </lable>
+
+        {
+          data?.data.length > 0 ?
+            <lable
+              className={`text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`}
+              onClick={() => setBigTableModalData(data)}
+            >
+              View All
+            </lable> :
+            <lable
+              className={
+                `text-gray-500 cursor-not-allowed font-medium text-xs`
+              }
+            >
+              View All
+            </lable>
+        }
       </div>
       <div
         className={
@@ -124,10 +131,10 @@ export function BigTable({ data, setBigTableModalData }) {
             pagination={
               data?.data?.length > 5
                 ? paginationFactory({
-                    sizePerPage: 5,
-                    hideSizePerPage: true,
-                    showTotal: true,
-                  })
+                  sizePerPage: 5,
+                  hideSizePerPage: true,
+                  showTotal: true,
+                })
                 : undefined
             }
           >

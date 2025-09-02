@@ -396,7 +396,7 @@ export function DesignationEditForm({
 
                     <div className="col-span-1">
                       <label>
-                        Code Prefix<span style={{ color: "red" }}>*</span>
+                        Code Prefix<span style={{ color: "red" }}>*</span>(code ends with 6 digits)
                       </label>
                       <Field
                         type="text"
@@ -641,7 +641,7 @@ export function DesignationEditForm({
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3">
                         <div className="col-span-1">
                           <label htmlFor="empPictureIsMandatory">
-                            Confirmation in Months{" "}
+                            Probation Period in months{" "}
                             <span style={{ color: "red" }}>*</span>
                           </label>
                           <Field
@@ -662,7 +662,7 @@ export function DesignationEditForm({
                         </div>
                         <div className="col-span-1">
                           <label htmlFor="">
-                            Contract Months{" "}
+                            Contract Period in months{" "}
                             <span style={{ color: "red" }}>*</span>
                           </label>
                           <Field

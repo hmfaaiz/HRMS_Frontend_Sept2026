@@ -6,9 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { FormUIProvider } from "./FormUIContext";
 import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
+import { FormSendEmailDialog } from "./form-send-email-dialog/FormSendEmailDialog";
 
 import { FormCard } from "./form-card/FormCard";
-import {} from "../../_redux/redux-Actions";
+import { } from "../../_redux/redux-Actions";
 
 
 
@@ -31,10 +32,13 @@ export function FormPage({ history }) {
     openReadFormDialog: (id, isUserRead) => {
       history.push(`/holidays/read-all-holidays/${id}/read`);
     },
+    openSendEmailFormDialog: (id, isUserRead) => {
+      history.push(`/holidays/read-all-holidays/${id}/send-email`);
+    },
   };
   return (
 
-    
+
     <FormUIProvider FormUIEvents={FormUIEvents}>
       <Route exact path="/holidays/read-all-holidays/new">
         {({ history, match }) => (
@@ -81,7 +85,18 @@ export function FormPage({ history }) {
           />
         )}
       </Route>
-    
+      <Route path="/holidays/read-all-holidays/:id/send-email">
+        {({ history, match }) => (
+          <FormSendEmailDialog
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() => {
+              history.push("/holidays/read-all-holidays");
+            }}
+          />
+        )}
+      </Route>
+
       <FormCard />
       <ToastContainer
         position="top-right"

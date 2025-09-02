@@ -157,4 +157,14 @@ export const formatTime = (value) => {
   return `${cleaned.slice(0, 2)}:${cleaned.slice(2)}`;
 };
 
+export const setDefaultSubsidiary = (value, allSubsidiaryList, defaultValue) => {
+  if (!Array.isArray(allSubsidiaryList)) return "";
+
+  return (
+    allSubsidiaryList.find((el) => el?.value === value) ||
+    allSubsidiaryList.find((el) => el?.value === defaultValue) ||
+    ""
+  );
+};
+
 
