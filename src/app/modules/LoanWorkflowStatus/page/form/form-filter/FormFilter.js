@@ -10,6 +10,7 @@ import * as actions from "../../../redux/formAction";
 import { initialFilter, requestFilter } from "../../FormUIHelper";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import { KeyboardArrowDown } from "@material-ui/icons";
+import { formatDates } from "../../../../../utils/common";
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const dispatch = useDispatch();
@@ -57,7 +58,19 @@ export const FormFilter = ({ loading, queryParams }) => {
       enableReinitialize={true}
       initialValues={{ ...queryParams?.filter, reportingLevel: currentLevel }}
       onSubmit={(values) => {
-        applyFilter(values);
+           const payload = {
+                  ...values,
+                 
+                  requestDate: {
+                    from: values.requestDate?.from
+                      ? formatDates(values.requestDate.from, "dd-MMM-yyyy")
+                      : "",
+                    to: values.requestDate?.to
+                      ? formatDates(values.requestDate.to, "dd-MMM-yyyy")
+                      : "",
+                  },
+                };
+        applyFilter(payload);
       }}
     >
       {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
