@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
 import {HolidaysSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
@@ -66,6 +67,21 @@ export const deleteHoliday = (id) => (dispatch) => {
       toast.error(error.response.data.message);
     });
 };
+
+export const sendHolidayEmail = (id) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .sendHolidayEmail({ Id: id })
+    .then((response) => {
+      dispatch(actions.HolidayEmailSend());
+      toast.success(SERVER_MESSAGES.emailSuccess);
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(SERVER_MESSAGES.emailFail);
+    });
+};
+
 
 
 export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (

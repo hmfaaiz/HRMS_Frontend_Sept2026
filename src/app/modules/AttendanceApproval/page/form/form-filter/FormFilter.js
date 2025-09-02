@@ -169,7 +169,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                             <Field
                               name="date.from"
                               component={DatePickerField}
-                              dateFormat="dd-MMM-yyyyy"
+                              dateFormat="dd-MMM-yyyy"
                               className="form-control"
                               label={<span>Date From</span>}
                               onChange={(date) => {

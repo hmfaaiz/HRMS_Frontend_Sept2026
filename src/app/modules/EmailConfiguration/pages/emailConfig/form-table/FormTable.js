@@ -81,6 +81,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         maxWidth: "100px",
+        minWidth: "100px",
       },
     },
     {
@@ -91,6 +92,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         maxWidth: "100px",
+        minWidth: "100px",
       },
     },
 
@@ -102,6 +104,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         maxWidth: "100px",
+        minWidth: "100px",
       },
     },
     {
@@ -112,6 +115,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         maxWidth: "40px",
+        minWidth: "40px",
       },
     },
     {
@@ -122,6 +126,7 @@ export function FormTable() {
       headerSortingClasses,
       style: {
         maxWidth: "40px",
+        minWidth: "40px",
       },
       formatter: (cell) => (cell ? "Yes" : "No"),
     },
@@ -132,7 +137,8 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        maxWidth: "300px",
+        maxWidth: "310px",
+        minWidth: "310px",
       },
       formatter: (cell, row) => {
         if (!cell) return "-";

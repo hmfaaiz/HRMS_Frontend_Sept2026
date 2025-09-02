@@ -1098,7 +1098,7 @@ export function DesignationEditForm({
     fetchAcademicData();
     fetchWorkExperienceData();
     fetchContactData();
-  }, []);
+  }, [id]);
 
   // For Add Employee Contact States
 

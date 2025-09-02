@@ -14,7 +14,7 @@ import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
 
-export function FormCard({ id, setid, readOnly }) {
+export function FormCard({ id, setid, readOnly, active, setActive }) {
   const FormUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -65,29 +65,31 @@ export function FormCard({ id, setid, readOnly }) {
           <FormTable formid={id} setid={setid} readOnly={readOnly} />
         </CardBody>
       </Card> */}
-      <TCard name={CurrentModuleName()}>
-        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-          <FormFilter />
-          <div className="flex items-center gap-2">
-            {accessUser && (
-              <>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={formUIProps.newFormButtonClick}
-                >
-           
-                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                  Add
-                </button>
-              </>
-            )}
-
-            {/* </CardHeaderToolbar> */}
-          </div>
-        </div>
-        <FormTable formid={id} setid={setid} readOnly={readOnly} />
+      <TCard isSecondChild={false} name={CurrentModuleName()}>
       </TCard>
+      <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2 mt-2 px-3 py-2 rounded-t-lg bg-white">
+        <FormFilter />
+        <div className="flex items-center gap-2">
+          {accessUser && (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  formUIProps.newFormButtonClick()
+                }}
+              >
+
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                Add
+              </button>
+            </>
+          )}
+
+          {/* </CardHeaderToolbar> */}
+        </div>
+      </div>
+      <FormTable formid={id} setid={setid} readOnly={readOnly} active={active} setActive={setActive} />
     </>
   );
 }

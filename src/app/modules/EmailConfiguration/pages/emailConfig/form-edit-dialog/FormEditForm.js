@@ -13,8 +13,8 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 const validationSchema = Yup.object().shape({
   subsidiaryId: Yup.number().nullable(),
-  host_name: Yup.string().required(VALIDATION_MESSAGES.required),
-  sender_email_address: Yup.string()
+  host_name: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
+  sender_email_address: Yup.string().nullable()
     .email(VALIDATION_MESSAGES.invalidEmail)
     .required(VALIDATION_MESSAGES.required),
   smtp_password: Yup.string().when("Id", {
@@ -22,8 +22,8 @@ const validationSchema = Yup.object().shape({
     then: Yup.string().required(VALIDATION_MESSAGES.required),
     otherwise: Yup.string(), // Edit mode - optional
   }),
-  port: Yup.number().required(VALIDATION_MESSAGES.required),
-  test_email: Yup.string()
+  port: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+  test_email: Yup.string().nullable()
     .email(VALIDATION_MESSAGES.invalidEmail)
     .required(VALIDATION_MESSAGES.required),
   offerLetterEmail1Id: Yup.number().nullable(),

@@ -32,3 +32,8 @@ export function deleteHoliday(body) {
 
   return axios.patch(`${USERS_URL}/holidays/delete-holidays`, body);
 }
+
+export function sendHolidayEmail(body) {
+
+  return axios.put(`${USERS_URL}/holidays/send-holiday-email`, body);
+}

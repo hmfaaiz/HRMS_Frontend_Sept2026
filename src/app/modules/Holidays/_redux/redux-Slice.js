@@ -31,6 +31,13 @@ export const HolidaysSlice = createSlice({
                 state.actionsLoading = false;
             }
         },
+        startCall: (state, action) => {
+            if (action.payload.callType === callTypes.list) {
+                state.listLoading = true;
+            } else {
+                state.actionsLoading = true;
+            }
+        },
 
         holidayFetched: (state, action) => {
         
@@ -75,6 +82,13 @@ export const HolidaysSlice = createSlice({
             state.entities = state.entities.filter(
                 (el) => el.Id !== action.payload.Id
             );
+        },
+                HolidayEmailSend: (state, action) => {
+
+            state.error = null;
+            state.actionsLoading = false;
+         
+          
         },
 
 

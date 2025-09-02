@@ -1,9 +1,6 @@
 import React from "react";
-import SVG from "react-inlinesvg";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
+import { CirclePower, Eye, MailPlus, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -18,11 +15,28 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
+    isAccessForSendingEmail,
+    openSendEmailFormDialog
   }
 ) {
   const isUserRead = false;
   return (
     <div className="space-x-2">
+      {isAccessForSendingEmail && row.isActive && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">
+              Send Email
+            </Tooltip>
+          }
+        >
+          <a
+            onClick={() => openSendEmailFormDialog(row.Id)}>
+            <MailPlus className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+
+        </OverlayTrigger>
+      )}
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
       >

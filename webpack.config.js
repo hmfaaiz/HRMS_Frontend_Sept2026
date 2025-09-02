@@ -39,6 +39,11 @@ const mainConfig = function () {
 				name: themeName,
 				logger: str => console.log(`>> ${str}`)
 			}),
+			// new ForkTsCheckerWebpackPlugin({
+			// 	typescript: {
+			// 		memoryLimit: 4096,
+			// 	},
+			// }),
 			// create css file
 			new MiniCssExtractPlugin({
 				filename: "[name].css",

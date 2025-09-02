@@ -33,8 +33,6 @@ export const EmployeePortal = () => {
     leaveApprovalCount,
     attendanceApprovalCount,
     loanList,
-    // contactInfo,
-    // skillsInfo,
     payrollData,
     reportingEmployee,
     attendanceSummary,

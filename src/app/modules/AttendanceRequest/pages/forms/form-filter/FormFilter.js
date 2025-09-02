@@ -16,10 +16,22 @@ import { formatDates } from "../../../../../utils/common";
 
 // Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date().required(VALIDATION_MESSAGES.required),
+  from: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
   to: Yup.date()
+    .nullable()
     .required(VALIDATION_MESSAGES.required)
-    .min(Yup.ref("from"), "Date To cannot be before Date From"),
+    .test("is-after-from", "To Date should be greater than From Date", function(
+      to
+    ) {
+      const { from } = this.parent;
+      if (from && to) {
+        return to >= from;
+      }
+      return true;
+    }),
 });
 
 // Prepare new Filter
@@ -89,14 +101,19 @@ export function FormFilter() {
     debounce((values, applyFilter) => applyFilter(values), DEBOUNCE_DELAY)
   );
 
-  const { employeeList, payrollData, attendanceSummary, user } = useSelector(
-    (state) => ({
-      employeeList: state.dashboard?.employeeList,
-      attendanceSummary: state?.attendance_request?.attendanceSummary,
-      payrollData: state?.attendance_request?.payrollData,
-      user: state?.auth?.user,
-    })
-  );
+  const {
+    employeeList,
+    payrollData,
+    attendanceSummary,
+    user,
+    listLoading,
+  } = useSelector((state) => ({
+    employeeList: state.dashboard?.employeeList,
+    attendanceSummary: state?.attendance_request?.attendanceSummary,
+    payrollData: state?.attendance_request?.payrollData,
+    user: state?.auth?.user,
+    listLoading: state?.attendance_request?.listLoading,
+  }));
 
   const formUIProps = useMemo(
     () => ({
@@ -152,15 +169,13 @@ export function FormFilter() {
         employeeId: formUIProps.employeeId?.value,
         // from: payrollData.startDate,
         // to: payrollData.endDate,
-         from: payrollData?.startDate
-              ? formatDates(payrollData.startDate, "dd-MMM-yyyy")
-              : "",
-            to: payrollData?.endDate
-              ? formatDates(payrollData.endDate, "dd-MMM-yyyy")
-              : "",
-          
+        from: payrollData?.startDate
+          ? formatDates(payrollData.startDate, "dd-MMM-yyyy")
+          : "",
+        to: payrollData?.endDate
+          ? formatDates(payrollData.endDate, "dd-MMM-yyyy")
+          : "",
       };
-      console.log("values111", values);
       applyFilter(values);
       dispatch(actions.fetchAttendanceSheetConsolidated(values));
       dispatch(
@@ -181,8 +196,22 @@ export function FormFilter() {
           to: payrollData ? payrollData?.endDate : "",
         }}
         validationSchema={formValidation}
+        onSubmit={(values) => {
+          debouncedApplyFilter(
+            {
+              ...values,
+
+              from: values?.from
+                ? formatDates(values?.from, "dd-MMM-yyyy")
+                : "",
+              to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : "",
+            },
+            applyFilter
+          );
+          // applyFilter(payload);
+        }}
       >
-        {({ values, handleBlur, setFieldValue }) => (
+        {({ values, handleBlur, setFieldValue, handleSubmit }) => (
           <Form>
             <div className="grid grid-cols-1 md:grid-cols-6">
               {/* Left Column - Date Filters */}
@@ -197,20 +226,17 @@ export function FormFilter() {
                       label={<span>From</span>}
                       onChange={(date) => {
                         setFieldValue("from", date || "");
-                        debouncedApplyFilter(
-                          { ...values, 
-                            
-                            from:date
-              ? formatDates(date, "dd-MMM-yyyy")
-              : "", 
-                to:values.to
-              ? formatDates(values.to, "dd-MMM-yyyy")
-              : "", 
-            
-            
-            },
-                          applyFilter
-                        );
+                        // debouncedApplyFilter(
+                        //   {
+                        //     ...values,
+
+                        //     from: date ? formatDates(date, "dd-MMM-yyyy") : "",
+                        //     to: values.to
+                        //       ? formatDates(values.to, "dd-MMM-yyyy")
+                        //       : "",
+                        //   },
+                        //   applyFilter
+                        // );
                       }}
                       autoComplete="off"
                     />
@@ -225,20 +251,37 @@ export function FormFilter() {
                       label={<span>To</span>}
                       onChange={(date) => {
                         setFieldValue("to", date || "");
-                        debouncedApplyFilter(
-                          { ...values,  to: date
-              ? formatDates(date, "dd-MMM-yyyy")
-              : "",
-            
-             from:values.from
-              ? formatDates(values.from, "dd-MMM-yyyy")
-              : "", },
-                          applyFilter
-                        );
+                        // debouncedApplyFilter(
+                        //   {
+                        //     ...values,
+                        //     to: date ? formatDates(date, "dd-MMM-yyyy") : "",
+
+                        //     from: values.from
+                        //       ? formatDates(values.from, "dd-MMM-yyyy")
+                        //       : "",
+                        //   },
+                        //   applyFilter
+                        // );
                       }}
                       autoComplete="off"
                     />
                   </div>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => handleSubmit()}
+                    disabled={
+                      listLoading
+                      // || levelList?.length < 2
+                    }
+                    className="btn btn-success w-fit mt-2"
+                  >
+                    Filter
+                    {listLoading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
                 </div>
               </div>
               {/* Right Column - Attendance Summary */}
