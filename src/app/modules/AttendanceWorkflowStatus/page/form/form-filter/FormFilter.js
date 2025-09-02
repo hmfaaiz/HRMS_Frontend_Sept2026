@@ -2,46 +2,81 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useFormUIContext } from "../../FormUIContext";
 import { isEqual } from "lodash";
 import { Field, Formik } from "formik";
-import { Accordion, Card, Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import {
-  DatePickerField,
-  Select,
-} from "../../../../../../_metronic/_partials/controls";
+import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as actions from "../../../redux/formAction";
 import { initialFilter, requestFilter } from "../../FormUIHelper";
-import { fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardActions";
-import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
-import { KeyboardArrowDown } from "@material-ui/icons";
 import { formatDates } from "../../../../../utils/common";
-
 import * as Yup from "yup";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 const validationSchema = Yup.object().shape({
   date: Yup.object().shape({
-    from: Yup.date().nullable(),
+    from: Yup.date()
+      .nullable()
+      .test("from-required-if-to", VALIDATION_MESSAGES.required, function(
+        from
+      ) {
+        const { to } = this.parent;
+        if (to && !from) return false;
+        return true;
+      }),
+
     to: Yup.date()
       .nullable()
-      .when("from", {
-        is: (from) => !!from, // if from is provided
-        then: (schema) => schema.required("End date is required"),
-        otherwise: (schema) => schema.nullable(),
-      }),
+      .test("to-required-if-from", VALIDATION_MESSAGES.required, function(to) {
+        const { from } = this.parent;
+        if (from && !to) return false;
+        return true;
+      })
+      .test(
+        "is-after-from",
+
+        "To Date should be greater than From Date",
+        function(to) {
+          const { from } = this.parent;
+          if (from && to) {
+            return to >= from;
+          }
+          return true;
+        }
+      ),
   }),
+
   requestDate: Yup.object().shape({
-    from: Yup.date().nullable(),
+    from: Yup.date()
+      .nullable()
+      .test("from-required-if-to", VALIDATION_MESSAGES.required, function(
+        from
+      ) {
+        const { to } = this.parent;
+        if (to && !from) return false;
+        return true;
+      }),
+
     to: Yup.date()
       .nullable()
-      .when("from", {
-        is: (from) => !!from,
-        then: (schema) => schema.required("End date is required"),
-        otherwise: (schema) => schema.nullable(),
-      }),
+      .test("to-required-if-from", VALIDATION_MESSAGES.required, function(to) {
+        const { from } = this.parent;
+        if (from && !to) return false;
+        return true;
+      })
+      .test(
+        "is-after-from",
+        "To Date should be greater than From Date",
+        function(to) {
+          const { from } = this.parent;
+          if (from && to) {
+            return to >= from;
+          }
+          return true;
+        }
+      ),
   }),
 });
-
 
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -132,7 +167,14 @@ export const FormFilter = ({ loading, queryParams }) => {
         applyFilter(payload);
       }}
     >
-      {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
+      {({
+        values,
+        handleSubmit,
+        handleBlur,
+        setFieldValue,
+        handleReset,
+        errors,
+      }) => (
         <>
           <Form className="form form-label-right">
             <fieldset>
@@ -182,7 +224,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                   {/* Status Field  */}
                   <SearchSelect
                     name="requestStatus"
-                    label={<span>Request Status</span>}
+                    label={<span>Status</span>}
                     onChange={({ value }) => {
                       setFieldValue("requestStatus", value);
                     }}
@@ -213,6 +255,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.date?.from && (
+                        <span className="invalid-feedback">
+                          {errors?.date?.from}
+                        </span>
+                      )}
                     </div>
 
                     <div className="col-span-1">
@@ -228,6 +275,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.date?.to && (
+                        <span className="invalid-feedback">
+                          {errors?.date?.to}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -249,6 +301,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.requestDate?.from && (
+                        <span className="invalid-feedback">
+                          {errors?.requestDate?.from}
+                        </span>
+                      )}
                     </div>
 
                     <div className="col-span-1">
@@ -264,13 +321,18 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.requestDate?.to && (
+                        <span className="invalid-feedback">
+                          {errors?.requestDate?.to}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </fieldset>
           </Form>
-          <Modal.Footer>
+          <div className="flex gap-2 justify-end mt-2">
             <button
               type="button"
               // disabled={levelList?.length < 2}
@@ -297,7 +359,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                 <span className="ml-3 mr-3 spinner spinner-white"></span>
               )}
             </button>
-          </Modal.Footer>
+          </div>
         </>
       )}
     </Formik>

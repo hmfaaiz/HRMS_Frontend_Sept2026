@@ -97,7 +97,7 @@ const EmployeeProfile = () => {
             <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
           </div>
         </div>
-        <AttendanceMarking />
+        {/* <AttendanceMarking /> */}
       </div>
 
       {/* Employee Details */}

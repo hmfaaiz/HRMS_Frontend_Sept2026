@@ -15,6 +15,72 @@ import { fetchAllLeaveType } from "../../../../../../_metronic/redux/dashboardAc
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import { formatDates } from "../../../../../utils/common";
+import * as Yup from "yup";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+const validationSchema = Yup.object().shape({
+  leaveDate: Yup.object().shape({
+    from: Yup.date()
+      .nullable()
+      .test("from-required-if-to", VALIDATION_MESSAGES.required, function(
+        from
+      ) {
+        const { to } = this.parent;
+        if (to && !from) return false;
+        return true;
+      }),
+
+    to: Yup.date()
+      .nullable()
+      .test("to-required-if-from", VALIDATION_MESSAGES.required, function(to) {
+        const { from } = this.parent;
+        if (from && !to) return false;
+        return true;
+      })
+      .test(
+        "is-after-from",
+
+        "To Date should be greater than From Date",
+        function(to) {
+          const { from } = this.parent;
+          if (from && to) {
+            return to >= from;
+          }
+          return true;
+        }
+      ),
+  }),
+
+  requestDate: Yup.object().shape({
+    from: Yup.date()
+      .nullable()
+      .test("from-required-if-to", VALIDATION_MESSAGES.required, function(
+        from
+      ) {
+        const { to } = this.parent;
+        if (to && !from) return false;
+        return true;
+      }),
+
+    to: Yup.date()
+      .nullable()
+      .test("to-required-if-from", VALIDATION_MESSAGES.required, function(to) {
+        const { from } = this.parent;
+        if (from && !to) return false;
+        return true;
+      })
+      .test(
+        "is-after-from",
+        "To Date should be greater than From Date",
+        function(to) {
+          const { from } = this.parent;
+          if (from && to) {
+            return to >= from;
+          }
+          return true;
+        }
+      ),
+  }),
+});
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const dispatch = useDispatch();
@@ -87,6 +153,7 @@ export const FormFilter = ({ loading, queryParams }) => {
   return (
     <Formik
       enableReinitialize={true}
+      validationSchema={validationSchema}
       initialValues={
         queryParams?.filter
         // payrollData
@@ -104,8 +171,7 @@ export const FormFilter = ({ loading, queryParams }) => {
         //     }
       }
       onSubmit={(values) => {
-         
-                 const payload = {
+        const payload = {
           ...values,
           leaveDate: {
             from: values.leaveDate?.from
@@ -127,93 +193,100 @@ export const FormFilter = ({ loading, queryParams }) => {
         applyFilter(payload);
       }}
     >
-      {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
+      {({
+        values,
+        handleSubmit,
+        handleBlur,
+        setFieldValue,
+        handleReset,
+        errors,
+      }) => (
         <>
           <Form className="form form-label-right">
             <fieldset>
-            <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
-            <div className="grid grid-cols-12 gap-4">
+              <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
+              <div className="grid grid-cols-12 gap-4">
                 {/* Reporting Level */}
-                  <div className="col-span-6 sm:col-span-3">
-                    <Field
-                      component={SearchSelect}
-                      onBlur={handleBlur}
-                      name="reportingLevel"
-                      label={<span>Reporting Level</span>}
-                      onChange={({ value }) => {
-                        setFieldValue("reportingLevel", value);
-                        setCurrentLevel(value);
-                      }}
-                      value={
-                        levelList?.find(
-                          (opt) => opt?.value === values?.reportingLevel
-                        ) || ""
-                      }
-                      autoComplete="off"
-                      options={levelList}
-                    />
-                  </div>
-                  {/* Request Raised For */}
-                  <div className="col-span-6 sm:col-span-3">
-                    <Field
-                      component={SearchSelect}
-                      onBlur={handleBlur}
-                      name="requestRaisedFor"
-                      label={<span>Request Raised By</span>}
-                      onChange={({ value }) => {
-                        setFieldValue("requestRaisedFor", value);
-                      }}
-                      value={
-                        employeeList?.find(
-                          (opt) => opt.value === values?.requestRaisedFor
-                        ) || ""
-                      }
-                      autoComplete="off"
-                      options={employeeList}
-                    />
-                  </div>
+                <div className="col-span-6 sm:col-span-3">
+                  <Field
+                    component={SearchSelect}
+                    onBlur={handleBlur}
+                    name="reportingLevel"
+                    label={<span>Reporting Level</span>}
+                    onChange={({ value }) => {
+                      setFieldValue("reportingLevel", value);
+                      setCurrentLevel(value);
+                    }}
+                    value={
+                      levelList?.find(
+                        (opt) => opt?.value === values?.reportingLevel
+                      ) || ""
+                    }
+                    autoComplete="off"
+                    options={levelList}
+                  />
+                </div>
+                {/* Request Raised For */}
+                <div className="col-span-6 sm:col-span-3">
+                  <Field
+                    component={SearchSelect}
+                    onBlur={handleBlur}
+                    name="requestRaisedFor"
+                    label={<span>Request Raised By</span>}
+                    onChange={({ value }) => {
+                      setFieldValue("requestRaisedFor", value);
+                    }}
+                    value={
+                      employeeList?.find(
+                        (opt) => opt.value === values?.requestRaisedFor
+                      ) || ""
+                    }
+                    autoComplete="off"
+                    options={employeeList}
+                  />
+                </div>
                 {/* Request Status */}
-                  <div className="col-span-6 sm:col-span-3">
-                    {/* Status Field  */}
-                    <SearchSelect
-                      name="requestStatus"
-                      label={<span>Request Status</span>}
-                      onChange={({ value }) => {
-                        setFieldValue("requestStatus", value);
-                      }}
-                      value={
-                        requestFilter?.find(
-                          (opt) => opt.value === values?.requestStatus
-                        ) || ""
-                      }
-                      autoComplete="off"
-                      options={requestFilter}
-                    />
-                  </div>
+                <div className="col-span-6 sm:col-span-3">
+                  {/* Status Field  */}
+                  <SearchSelect
+                    name="requestStatus"
+                    label={<span>Status</span>}
+                    onChange={({ value }) => {
+                      setFieldValue("requestStatus", value);
+                    }}
+                    value={
+                      requestFilter?.find(
+                        (opt) => opt.value === values?.requestStatus
+                      ) || ""
+                    }
+                    autoComplete="off"
+                    options={requestFilter}
+                  />
+                </div>
                 {/* Leave Type */}
-                  <div className="col-span-6 sm:col-span-3">
-                    <Field
-                      name="leaveTypes"
-                      component={Select}
-                      className={"form-control"}
-                      placeholder=""
-                      onBlur={handleBlur}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value == "Select"
-                            ? ""
-                            : Number(e.target.value);
-                        setFieldValue("leaveTypes", e.target.value);
-                      }}
-                      label={<span> Leave Type</span>}
-                      value={values.leaveTypes}
-                      autoComplete="off"
-                      children={CustomDropdown({
-                        data: updatedLeaveTypes,
-                        firstElement: { label: "All", value: "" },
-                      })}
-                    />
-                  </div>
+                <div className="col-span-6 sm:col-span-3">
+                  <Field
+                    name="leaveTypes"
+                    component={Select}
+                    className={"form-control"}
+                    placeholder=""
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      const value =
+                        e.target.value == "Select"
+                          ? ""
+                          : Number(e.target.value);
+                      setFieldValue("leaveTypes", e.target.value);
+                    }}
+                    label={<span> Leave Type</span>}
+                    value={values.leaveTypes}
+                    autoComplete="off"
+                    children={CustomDropdown({
+                      data: updatedLeaveTypes,
+                      firstElement: { label: "All", value: "" },
+                    })}
+                  />
+                </div>
                 {/* Leave Date Failing */}
                 <div className="col-span-12 sm:col-span-6">
                   <p className="text-sm mb-0 text-black font-semibold">
@@ -233,6 +306,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.leaveDate?.from && (
+                        <span className="invalid-feedback">
+                          {errors?.leaveDate?.from}
+                        </span>
+                      )}
                     </div>
 
                     <div className="col-span-1">
@@ -248,6 +326,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.leaveDate?.to && (
+                        <span className="invalid-feedback">
+                          {errors?.leaveDate?.to}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -270,6 +353,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.requestDate?.from && (
+                        <span className="invalid-feedback">
+                          {errors?.requestDate?.from}
+                        </span>
+                      )}
                     </div>
 
                     <div className="col-span-1">
@@ -285,6 +373,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                         }}
                         autoComplete="off"
                       />
+                      {errors?.requestDate?.to && (
+                        <span className="invalid-feedback">
+                          {errors?.requestDate?.to}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
