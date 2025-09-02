@@ -116,7 +116,19 @@ export function MasterEditForm({
             }
             setId("");
           };
-          submitForm(values, clearForm);
+          
+                           const payload = {
+                    ...values,
+                   
+                      from: values?.from
+                        ? formatDates(values.from, "dd-MMM-yyyy")
+                        : "", //should be null but in all places of portal "" are using that's why
+                       to: values?.to
+                        ? formatDates(values.to, "dd-MMM-yyyy")
+                        : "", //should be null but in all places of portal "" are using that's why
+                    
+                    }
+          submitForm(payload, clearForm);
         }}
       >
         {({
