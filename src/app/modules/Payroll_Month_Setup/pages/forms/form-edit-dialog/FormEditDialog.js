@@ -8,6 +8,7 @@ import * as actions from "../../../_redux/formActions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
+import { formatDates } from "../../../../../utils/common";
 
 export function FormEditDialog({ id, show, onHide, userForRead }) {
   const [action, setaction] = useState(false);
@@ -98,7 +99,16 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       // user.month_days= defDays
       const finalObject = { user }
-      await dispatch(actions.createPayrollMonth(user, disbaleLoading, onHide));
+       const formattedValues = {
+                                                      ...user,
+                                                      startDate: user.startDate
+                                                        ? formatDates(user.startDate, "dd-MMM-yyyy")
+                                                        : null,endDate: user.endDate
+                                                        ? formatDates(user.endDate, "dd-MMM-yyyy")
+                                                        : null,
+                                    
+                                                        }
+      await dispatch(actions.createPayrollMonth(formattedValues, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
 
 
@@ -119,9 +129,17 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         year: user.year,
         subsidiaryId: user.subsidiaryId
       };
+ const formattedValues = {
+                                                      ...payrollMonthSetupUpdatedFields,
+                                                      startDate: payrollMonthSetupUpdatedFields.startDate
+                                                        ? formatDates(payrollMonthSetupUpdatedFields.startDate, "dd-MMM-yyyy")
+                                                        : null,endDate: payrollMonthSetupUpdatedFields.endDate
+                                                        ? formatDates(payrollMonthSetupUpdatedFields.endDate, "dd-MMM-yyyy")
+                                                        : null,
+                                    
+                                                        }
 
-
-      await dispatch(actions.updatePayrollMonth(payrollMonthSetupUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.updatePayrollMonth(formattedValues, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };

@@ -13,7 +13,7 @@ import {
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 
 // percentage: Yup.string().required("Required*"),
 const holidaysEditSchema = Yup.object().shape({
@@ -95,7 +95,17 @@ export function FormEditForm({
       validationSchema={holidaysEditSchema}
       onSubmit={(values) => {
         enableLoading();
-        saveForm(values, diffInDate);
+        const payload = {
+                  ...values,
+                  from_date: values.from_date
+                    ? formatDates(values.from_date, "dd-MMM-yyyy")
+                    : null,to_date: values.to_date
+                    ? formatDates(values.to_date, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+        saveForm(payload, diffInDate);
       }}
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (

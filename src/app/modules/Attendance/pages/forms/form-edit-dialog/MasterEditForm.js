@@ -206,6 +206,7 @@ export function MasterEditForm({
                     : null,attDateOut: values.attDateOut
                     ? formatDates(values.attDateOut, "dd-MMM-yyyy")
                     : null,
+                   
 
                     }
 
@@ -372,7 +373,8 @@ export function MasterEditForm({
                         setFieldValue("attDateIn", date);
                         setfilters((prevState) => ({
                           ...prevState,
-                          attDateIn: date,
+                          // attDateIn: date,
+                          attDateIn: date ? formatDates(date, "dd-MMM-yyyy"): null,
                         }));
                       }}
                       label={

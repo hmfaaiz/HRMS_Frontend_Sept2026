@@ -116,7 +116,16 @@ export function FormFilter({
   };
 
   const runAllProcess = (values) => {
-    dispatch(runProcess(values));
+      const formattedValues = {
+    ...values,
+    from: values.from
+                    ? formatDates(values.from, "dd-MMM-yyyy")
+                    : null,to: values.to
+                    ? formatDates(values.to, "dd-MMM-yyyy")
+                    : null,
+  };
+
+    dispatch(runProcess(formattedValues));
   };
 
   useEffect(() => {

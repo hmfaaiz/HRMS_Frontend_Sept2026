@@ -122,7 +122,12 @@ export function BankEditForm({
                           setFieldValue("subsidiaryId", e.value || null);
                           setDefualtSubsidiaryList(e);
                         }}
-                        value={defSubsidiary || null}
+                        // value={defSubsidiary || null}
+                         value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          ) || null
+                        }
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}

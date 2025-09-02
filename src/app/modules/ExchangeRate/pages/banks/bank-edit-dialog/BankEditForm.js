@@ -25,6 +25,7 @@ import { format } from "date-fns";
 import { actions } from "../../../../Auth";
 import { getLastExchangeRateBySubsidiaryId } from "../../../_redux/bankActions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { formatDates } from "../../../../../utils/common";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -179,7 +180,15 @@ export function BankEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           enableLoading();
-          saveIncident(values);
+              const payload = {
+                  ...values,
+                  effective_date: values.effective_date
+                    ? formatDates(values.effective_date, "dd-MMM-yyyy")
+                    : null,
+
+                    }
+
+          saveIncident(payload);
         }}
       >
         {({

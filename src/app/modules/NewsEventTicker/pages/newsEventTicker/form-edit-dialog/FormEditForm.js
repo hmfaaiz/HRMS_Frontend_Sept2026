@@ -131,7 +131,7 @@ export function FormEditForm({
 
                     <div>
                                               <label>
-                                                ticker date<span style={{ color: "red" }}>*</span>
+                                                Ticker Date<span style={{ color: "red" }}>*</span>
                                               </label>
                                               <DatePicker
                                                 className="form-control"

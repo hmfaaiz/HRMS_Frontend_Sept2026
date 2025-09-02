@@ -104,7 +104,7 @@ export function PayrollRegisterPage() {
 
         <br />
         {/* <hr /> */}
-        <FormTable />
+      
       </TCard>
       <ToastContainer
         position="top-right"
