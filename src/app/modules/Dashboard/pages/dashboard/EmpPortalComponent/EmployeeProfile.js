@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import {  ChevronUp, StarIcon } from "lucide-react";
+import { ChevronUp, StarIcon } from "lucide-react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import useWindowSize from "../../../../../utils/useWindowSize";
+import { AttendanceMarking } from "./AttendanceMarking";
 
 const formatDate = (date, fmt) => (date ? format(new Date(date), fmt) : "N/A");
 
@@ -29,8 +30,8 @@ const renderStars = (ratingScale) => {
         rating >= i
           ? "text-yellow-500 fill-yellow-500"
           : rating >= i - 0.5
-          ? "text-yellow-400 fill-yellow-400"
-          : "text-gray-300"
+            ? "text-yellow-400 fill-yellow-400"
+            : "text-gray-300"
       }
     />
   ));
@@ -96,9 +97,7 @@ const EmployeeProfile = () => {
             <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
           </div>
         </div>
-        {/* <div className="mt-2 rounded-lg p-3 bg-tsecondary">
-
-        </div> */}
+        <AttendanceMarking />
       </div>
 
       {/* Employee Details */}
@@ -110,9 +109,8 @@ const EmployeeProfile = () => {
               {width < 1280 && (
                 <ChevronUp
                   onClick={() => setIsOpen((prev) => !prev)}
-                  className={`w-5 h-5 font-bold cursor-pointer ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
+                  className={`w-5 h-5 font-bold cursor-pointer ${isOpen ? "rotate-180" : ""
+                    }`}
                 />
               )}
             </div>
@@ -124,14 +122,14 @@ const EmployeeProfile = () => {
                   Office Information
                 </h6>
                 {renderInfoGrid(data, [
-                   // ["Company", data?.company?.name],
+                  // ["Company", data?.company?.name],
                   // ["Subsidiary", data?.subsidiary?.name],
                   [
                     "Reporting To",
                     data?.ReportTo
                       ? `${data?.ReportTo?.firstName || ""} ${data?.ReportTo
-                          ?.middleName || ""} ${data?.ReportTo?.lastName ||
-                          ""}`.trim()
+                        ?.middleName || ""} ${data?.ReportTo?.lastName ||
+                        ""}`.trim()
                       : null,
                   ],
                   ["Grade", data?.grade?.formName],

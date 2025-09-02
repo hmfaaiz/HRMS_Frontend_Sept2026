@@ -27,7 +27,7 @@ const StatsCard = ({
         value > 0 ?
           <div
             className={
-              `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`
+              `text-black cursor-pointer w-fit font-medium underline text-xs hover:text-tprimary`
             }
             onClick={handleCardClick}
           >
@@ -35,7 +35,7 @@ const StatsCard = ({
           </div> :
           <div
             className={
-              `text-gray-500 cursor-not-allowed font-medium text-xs`
+              `text-gray-500 cursor-not-allowed w-fit font-medium text-xs`
             }
           >
             View All
