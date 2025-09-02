@@ -16,6 +16,33 @@ import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { formatDates } from "../../../../../utils/common";
+
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  date: Yup.object().shape({
+    from: Yup.date().nullable(),
+    to: Yup.date()
+      .nullable()
+      .when("from", {
+        is: (from) => !!from, // if from is provided
+        then: (schema) => schema.required("End date is required"),
+        otherwise: (schema) => schema.nullable(),
+      }),
+  }),
+  requestDate: Yup.object().shape({
+    from: Yup.date().nullable(),
+    to: Yup.date()
+      .nullable()
+      .when("from", {
+        is: (from) => !!from,
+        then: (schema) => schema.required("End date is required"),
+        otherwise: (schema) => schema.nullable(),
+      }),
+  }),
+});
+
+
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const dispatch = useDispatch();
@@ -80,27 +107,27 @@ export const FormFilter = ({ loading, queryParams }) => {
     <Formik
       enableReinitialize={true}
       initialValues={queryParams?.filter}
+      validationSchema={validationSchema}
       onSubmit={(values) => {
-        
-         const payload = {
-  ...values,
-  date: {
-    from: values.date?.from
-      ? formatDates(values.date.from, "dd-MMM-yyyy")
-      : "",
-    to: values.date?.to
-      ? formatDates(values.date.to, "dd-MMM-yyyy")
-      : "",
-  },
-  requestDate: {
-    from: values.requestDate?.from
-      ? formatDates(values.requestDate.from, "dd-MMM-yyyy")
-      : "",
-    to: values.requestDate?.to
-      ? formatDates(values.requestDate.to, "dd-MMM-yyyy")
-      : "",
-  },
-};
+        const payload = {
+          ...values,
+          date: {
+            from: values.date?.from
+              ? formatDates(values.date.from, "dd-MMM-yyyy")
+              : "",
+            to: values.date?.to
+              ? formatDates(values.date.to, "dd-MMM-yyyy")
+              : "",
+          },
+          requestDate: {
+            from: values.requestDate?.from
+              ? formatDates(values.requestDate.from, "dd-MMM-yyyy")
+              : "",
+            to: values.requestDate?.to
+              ? formatDates(values.requestDate.to, "dd-MMM-yyyy")
+              : "",
+          },
+        };
 
         applyFilter(payload);
       }}
