@@ -15,6 +15,7 @@ import {
 } from "../../../../utils/constants";
 import * as Yup from "yup";
 import { TimeInput } from "../../../../../_metronic/_partials/controls/forms/TimeInput";
+import { SubsidiarySelect } from "../../../../../component/SubsidiarySelect";
 
 const validationSchema = Yup.object().shape({
   subsidiaryId: Yup.string()
@@ -231,7 +232,7 @@ const WorkflowEditForm = ({
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-12 gap-x-3 gap-y-1">
                   <div className="col-span-6 lg:col-span-4">
-                    <SearchSelect
+                    {/* <SearchSelect
                       isDisabled={isUserForRead}
                       name="subsidiaryId"
                       label={
@@ -252,6 +253,26 @@ const WorkflowEditForm = ({
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                       options={dashboard?.allSubsidiaryList}
+                    /> */}
+                    <SubsidiarySelect
+                      isDisabled={isUserForRead}
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          {" "}
+                          Subsidiary
+                          <span>*</span>
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("subsidiaryId", value);
+                      }}
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e?.value);
+                      }}
                     />
                   </div>
                   <div className="col-span-6 lg:col-span-4">

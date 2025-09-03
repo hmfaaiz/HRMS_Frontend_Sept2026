@@ -14,6 +14,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // percentage: Yup.string().required("Required*"),
 const holidaysEditSchema = Yup.object().shape({
@@ -96,14 +97,14 @@ export function FormEditForm({
       onSubmit={(values) => {
         enableLoading();
         const payload = {
-                  ...values,
-                  from_date: values.from_date
-                    ? formatDates(values.from_date, "dd-MMM-yyyy")
-                    : null,to_date: values.to_date
-                    ? formatDates(values.to_date, "dd-MMM-yyyy")
-                    : null,
-
-                    }
+          ...values,
+          from_date: values.from_date
+            ? formatDates(values.from_date, "dd-MMM-yyyy")
+            : null,
+          to_date: values.to_date
+            ? formatDates(values.to_date, "dd-MMM-yyyy")
+            : null,
+        };
 
         saveForm(payload, diffInDate);
       }}
@@ -121,7 +122,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -144,6 +145,24 @@ export function FormEditForm({
                         // }))}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
                       />
                     </div>
 
@@ -217,8 +236,6 @@ export function FormEditForm({
                       // disabled={userForEdit?.details[0]?.is_deducted }
                     />
                   </div>
-
-
 
                   <div className="col-span-1">
                     <label>

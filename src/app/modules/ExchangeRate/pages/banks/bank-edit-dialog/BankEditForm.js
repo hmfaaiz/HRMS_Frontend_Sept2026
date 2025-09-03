@@ -26,6 +26,7 @@ import { actions } from "../../../../Auth";
 import { getLastExchangeRateBySubsidiaryId } from "../../../_redux/bankActions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { formatDates } from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -180,13 +181,12 @@ export function BankEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           enableLoading();
-              const payload = {
-                  ...values,
-                  effective_date: values.effective_date
-                    ? formatDates(values.effective_date, "dd-MMM-yyyy")
-                    : null,
-
-                    }
+          const payload = {
+            ...values,
+            effective_date: values.effective_date
+              ? formatDates(values.effective_date, "dd-MMM-yyyy")
+              : null,
+          };
 
           saveIncident(payload);
         }}
@@ -237,7 +237,7 @@ export function BankEditForm({
                     } */}
 
                     <div>
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -283,6 +283,70 @@ export function BankEditForm({
                         // }))}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead || id}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === e.value
+                          );
+                          if (e.value) {
+                            fetchLastExchangeRateDate(
+                              e.value,
+                              values.base_currency_id,
+                              values.currency_to_convert_id
+                            );
+                          }
+
+                          // If a corresponding subsidiary is found, set the base_currency_id
+                          if (selectedSubsidiary) {
+                            setFieldValue(
+                              "base_currency_id",
+                              selectedSubsidiary.currencyId || null
+                            );
+                          } else {
+                            setFieldValue("base_currency_id", null); // Reset base_currency_id if no subsidiary is found
+                          }
+
+                          // Optionally, you can call additional functions like setDefaultCurrencyChildMenus
+                          setDefaultCurrencyChildMenus(e);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === e.value
+                          );
+                          if (e.value) {
+                            fetchLastExchangeRateDate(
+                              e.value,
+                              values.base_currency_id,
+                              values.currency_to_convert_id
+                            );
+                          }
+
+                          // If a corresponding subsidiary is found, set the base_currency_id
+                          if (selectedSubsidiary) {
+                            setFieldValue(
+                              "base_currency_id",
+                              selectedSubsidiary.currencyId || null
+                            );
+                          } else {
+                            setFieldValue("base_currency_id", null); // Reset base_currency_id if no subsidiary is found
+                          }
+
+                          // Optionally, you can call additional functions like setDefaultCurrencyChildMenus
+                          setDefaultCurrencyChildMenus(e);
+                        }}
                       />
                     </div>
 

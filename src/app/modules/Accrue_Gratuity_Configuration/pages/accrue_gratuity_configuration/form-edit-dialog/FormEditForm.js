@@ -11,6 +11,7 @@ import {
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // percentage: Yup.string().required("Required*"),
 const accrue_gratuity_configurationEditSchema = Yup.object().shape({
@@ -115,7 +116,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-12 gap-x-3 gap-y-1">
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
                     <div className="col-span-1">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -138,7 +139,27 @@ export function FormEditForm({
 
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
-                      />
+                      /> */}
+                       <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiarysss<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          check_Existed_Data(e.value);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                        check_Existed_Data(e.value);
+                        }}
+                        />
                     </div>
                   </div>
 

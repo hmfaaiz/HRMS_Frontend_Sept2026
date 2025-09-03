@@ -43,11 +43,11 @@ const WorkFlowFormEditDailog = ({ show, onHide, isUserForRead }) => {
     try {
       enableLoading();
       if (!id) {
-        await dispatch(createRecord(val, disbaleLoading, "WP"));
+        await dispatch(createRecord(val, disbaleLoading, "WP" , onHide));
       } else {
-        dispatch(updateRecord(val, disbaleLoading, "WP"));
+        dispatch(updateRecord(val, disbaleLoading, "WP" , onHide));
       }
-      onHide();
+      // onHide();
     } catch (error) {
       console.error(error);
     } finally {

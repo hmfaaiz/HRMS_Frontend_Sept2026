@@ -28,6 +28,7 @@ import SVG from "react-inlinesvg";
 import ReportButton from "../AttendanceReportButton";
 import { Download } from "lucide-react";
 import { formatDates } from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 //Validation for date fields
 const formValidation = Yup.object().shape({
   from: Yup.date()
@@ -116,14 +117,11 @@ export function FormFilter({
   };
 
   const runAllProcess = (values) => {
-      const formattedValues = {
-    ...values,
-    from: values.from
-                    ? formatDates(values.from, "dd-MMM-yyyy")
-                    : null,to: values.to
-                    ? formatDates(values.to, "dd-MMM-yyyy")
-                    : null,
-  };
+    const formattedValues = {
+      ...values,
+      from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+      to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+    };
 
     dispatch(runProcess(formattedValues));
   };
@@ -178,15 +176,11 @@ export function FormFilter({
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-            const payload = {
-                  ...values,
-                  from: values.from
-                    ? formatDates(values.from, "dd-MMM-yyyy")
-                    : null,to: values.to
-                    ? formatDates(values.to, "dd-MMM-yyyy")
-                    : null,
-
-                    }
+          const payload = {
+            ...values,
+            from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+            to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+          };
 
           applyFilter(payload);
         }}
@@ -200,8 +194,8 @@ export function FormFilter({
                   {/* Subsidiary Field Start */}
                   <div>
                     <Field
-                      name="subsidiaryId"
                       component={SearchSelect}
+                      name="subsidiaryId"
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value =
@@ -223,6 +217,35 @@ export function FormFilter({
                       }
                       autoComplete="off"
                       options={allSubsidiaryList}
+                    />
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      onBlur={handleBlur}
+                      onChange={(e) => {
+                        const value = Number(e?.value);
+                        setFieldValue("subsidiaryId", value);
+                        dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                        dispatch(fetchAllDept(value));
+                        setFieldValue("employeeId", "");
+                        setFieldValue("departmentId", "");
+                      }}
+                      label={
+                        <span>
+                          {" "}
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      // error={errors?.subsidiaryId}
+                      // touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        const value = Number(e?.value);
+                        setFieldValue("subsidiaryId", value);
+                        dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                        dispatch(fetchAllDept(value));
+                        setFieldValue("employeeId", "");
+                        setFieldValue("departmentId", "");
+                      }}
                     />
                   </div>
                   {/* Subsidiary Field End */}
@@ -481,7 +504,7 @@ export function FormFilter({
                   </div>
                 </div>
                 {(!values.from || !values.to) && (
-                  <span className="invalid-feeback">Dates are required</span>
+                  <div className="invalid-feedback">From and To Dates are required</div>
                 )}
               </fieldset>
             </Form>

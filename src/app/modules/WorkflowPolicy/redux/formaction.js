@@ -49,7 +49,7 @@ export const createRecord = (data, disableLoading, type, hide) => (
       }
     })
     .catch((error) => {
-      // disableLoading();
+      disableLoading();
       error.clientMessage = "Can't Create Workflow Record";
       toast.error(error?.response?.data?.message);
     });

@@ -18,6 +18,7 @@ import * as Yup from "yup";
 import CustomApprovalWorkflowTable from "../form-table/CustomApprovalTable";
 import * as action from "../../redux/formaction";
 import { fetchAllCity } from "../../../Dashboard/_redux/dashboardActions";
+import { SubsidiarySelect } from "../../../../../component/SubsidiarySelect";
 
 const validationSchema = Yup.object().shape({
   workflowTypeId: Yup.string()
@@ -151,7 +152,7 @@ const DesignationWorkflowEditForm = ({
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-1">
-                    <SearchSelect
+                    {/* <SearchSelect
                       isDisabled={isUserForRead}
                       name="subsidiaryId"
                       label={
@@ -172,6 +173,26 @@ const DesignationWorkflowEditForm = ({
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                       options={dashboard?.allSubsidiaryList}
+                    /> */}
+                    <SubsidiarySelect
+                      isDisabled={isUserForRead}
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          {" "}
+                          Subsidiary
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      onChange={({ value }) => {
+                        setFieldValue("subsidiaryId", value);
+                      }}
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e?.value);
+                      }}
                     />
                   </div>
                   {/* designation workflow set  */}

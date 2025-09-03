@@ -20,6 +20,7 @@ import {
 import { Radio } from "@material-ui/core";
 import { amountLimit, amountLimitDynamic } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -49,7 +50,6 @@ const formValidationSchema = Yup.object().shape({
     .min(0, "At least 1")
     .max(99, "At most 99"),
   // .required("Required*"),
-
 
   maximumAge: Yup.number()
     // .min(18, 'At least 18')
@@ -136,10 +136,9 @@ const formValidationSchema = Yup.object().shape({
     .matches(/^[A-Za-z]{1,6}$/, "Must be alphabetic and up to 6 characters")
     .required(VALIDATION_MESSAGES.required),
 
-
   localizationId: Yup.string()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 });
 
 const employeeCodeGenerationOptions = [
@@ -224,7 +223,6 @@ export function DesignationEditForm({
     { value: 2, label: "Saudi Arabia" },
   ];
 
-
   return (
     <>
       <Formik
@@ -257,7 +255,7 @@ export function DesignationEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-x-3 gap-y-1">
                     <div className="col-span-1">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -294,7 +292,7 @@ export function DesignationEditForm({
                           setDefualtCurrencyCodeList(e);
                         }}
                         // value={defSubsidiary || null}
-                         value={
+                        value={
                           dashboard?.allSubsidiaryList?.find(
                             (option) => option.value === values.subsidiaryId
                           ) || null
@@ -313,6 +311,70 @@ export function DesignationEditForm({
                             // isDisabled:true
                           })
                         )}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            {" "}
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead && true}
+                        onBlur={() => {
+                          // handleBlur({ target: { name: "countryId" } });
+                        }}
+                        onChange={(e) => {
+                          if (!id) {
+                            setFieldValue("minimumAge", initialMinAgeLimit);
+                          }
+
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                          const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === e.value
+                          );
+
+                          // If a corresponding subsidiary is found, set the base_currency_id
+                          if (selectedSubsidiary) {
+                            setFieldValue(
+                              "currencyId",
+                              selectedSubsidiary.currencyId || null
+                            );
+                          } else {
+                            setFieldValue("currencyId", null); // Reset base_currency_id if no subsidiary is found
+                          }
+
+                          // Optionally, you can call additional functions like setDefaultCurrencyChildMenus
+                          setDefualtCurrencyCodeList(e);
+                        }}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          if (!id) {
+                            setFieldValue("minimumAge", initialMinAgeLimit);
+                          }
+
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                          const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === e.value
+                          );
+
+                          // If a corresponding subsidiary is found, set the base_currency_id
+                          if (selectedSubsidiary) {
+                            setFieldValue(
+                              "currencyId",
+                              selectedSubsidiary.currencyId || null
+                            );
+                          } else {
+                            setFieldValue("currencyId", null); // Reset base_currency_id if no subsidiary is found
+                          }
+
+                          // Optionally, you can call additional functions like setDefaultCurrencyChildMenus
+                          setDefualtCurrencyCodeList(e);
+                        }}
                       />
                     </div>
 
@@ -396,7 +458,8 @@ export function DesignationEditForm({
 
                     <div className="col-span-1">
                       <label>
-                        Code Prefix<span style={{ color: "red" }}>*</span>(code ends with 6 digits)
+                        Code Prefix<span style={{ color: "red" }}>*</span>(code
+                        ends with 6 digits)
                       </label>
                       <Field
                         type="text"
@@ -521,10 +584,7 @@ export function DesignationEditForm({
                               name="minimumAge"
                               component={Input}
                               placeholder="Enter minimum age"
-                              value={
-                                values.minimumAge ||
-                                (id ? undefined : "")
-                              }
+                              value={values.minimumAge || (id ? undefined : "")}
                               // label="Minimum Age"
                               //  value="18"
                               //
@@ -711,46 +771,40 @@ export function DesignationEditForm({
                             )}
                         </div>
 
-
                         <div className="col-span-1">
-                      <Select
-                        label={
-                          <span>
-                            {" "}
-                            Localization<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        name="localizationId"
-                     
-                        value={values.localizationId}
-                        onChange={(e) => {
-                          setFieldValue("localizationId", e.target.value);
-                        }}
-                        error={errors.localizationId}
-                        touched={touched.localizationId}
-                        onBlur={handleBlur}
-                   
-                        autoComplete="off"
-                      >
-                    <option value="">Select </option>
-                      {localizationOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-
-
-                      ))}
-                      </Select>
-                      {errors.localizationId && touched.localizationId && (
-                       <ErrorMessage
-                       className="form-feedBack"
-                       name="localizationId"
-                       component="div"
-                     />
-                        
-              
-                      )}
-                    </div>
+                          <Select
+                            label={
+                              <span>
+                                {" "}
+                                Localization
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            name="localizationId"
+                            value={values.localizationId}
+                            onChange={(e) => {
+                              setFieldValue("localizationId", e.target.value);
+                            }}
+                            error={errors.localizationId}
+                            touched={touched.localizationId}
+                            onBlur={handleBlur}
+                            autoComplete="off"
+                          >
+                            <option value="">Select </option>
+                            {localizationOptions.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </Select>
+                          {errors.localizationId && touched.localizationId && (
+                            <ErrorMessage
+                              className="form-feedBack"
+                              name="localizationId"
+                              component="div"
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
