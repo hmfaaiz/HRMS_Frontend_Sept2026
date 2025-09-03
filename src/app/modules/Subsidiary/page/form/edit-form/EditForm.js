@@ -5,7 +5,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { Modal } from "react-bootstrap";
 import {
   Input,
-  TextArea,
+  TextArea,Select
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { amountLimitDynamic } from "../../../../../utils/common";
@@ -59,6 +59,13 @@ const formSchema = Yup.object().shape({
   TIN: Yup.string()
     .nullable()
     .matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
+
+      localizationId: Yup.string()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
+
+
+
 });
 
 export const EditForm = ({
@@ -108,6 +115,13 @@ export const EditForm = ({
       dispatch(fetchAllCity(data?.countryId));
     }
   }, [data?.countryId, dispatch]);
+
+    const localizationOptions = [
+    { value: 1, label: "Pakistan" },
+    { value: 2, label: "United Arab Emirates" },
+    { value: 2, label: "Saudi Arabia" },
+  ];
+
   return (
     <Formik
       enableReinitialize={true}
@@ -312,6 +326,46 @@ export const EditForm = ({
                       }}
                     />
                   </div>
+
+                       <div className="col-span-1">
+                      <Select
+                        label={
+                          <span>
+                            {" "}
+                            Localization<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        name="localizationId"
+                     
+                        value={values.localizationId}
+                        onChange={(e) => {
+                          setFieldValue("localizationId", e.target.value);
+                        }}
+                        error={errors.localizationId}
+                        touched={touched.localizationId}
+                        onBlur={handleBlur}
+                   
+                        autoComplete="off"
+                      >
+                    <option value="">Select </option>
+                      {localizationOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+
+
+                      ))}
+                      </Select>
+                      {errors.localizationId && touched.localizationId && (
+                       <ErrorMessage
+                       className="invalid-feedback"
+                       name="localizationId"
+                       component="div"
+                     />
+                        
+              
+                      )}
+                    </div>
                   <div className="col-span-2 md:col-span-3 grid  grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                     {
                       <div className="col-span-2 md:col-span-3">

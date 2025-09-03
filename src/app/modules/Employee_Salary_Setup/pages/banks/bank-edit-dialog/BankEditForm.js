@@ -243,6 +243,8 @@ export function BankEditForm({
   const [defGrossSalaryDB, setGrossSalaryDB] = useState(0);
   const [defBasicSalaryDB, setBasicSalaryDB] = useState(0);
   const [deferrors, setErrors] = useState({});
+  const [dateOfJoining, setDateOfJoining] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState();
   const [dropdownData, setdropdownData] = useState(
     DEFAULT_CALCULATION_TYPE_DROPDOWN
   );
@@ -433,7 +435,7 @@ export function BankEditForm({
       } else {
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
-      console.log("aaa333", response?.data?.data[0]);
+     
       setBasicSalaryFactor(
         response?.data?.data[0]?.basicSalaryFactor ||
           response?.data?.data[0]?.basicFactor ||
@@ -442,6 +444,9 @@ export function BankEditForm({
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || "");
       setBasicSalary(response?.data?.data[0]?.basicSalary || "");
+      setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
+      setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
+     
 
       if (response.data?.data?.[0]?.salaryMethod) {
         setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || "");
@@ -734,6 +739,8 @@ export function BankEditForm({
       setSalaryApproverPermission(isRoleSalaryApprover);
     }
   }, [user.subsidiaryId]);
+
+ console.log("dateOfJoining111",dateOfJoining)
 
   return (
     <>
@@ -1849,11 +1856,16 @@ export function BankEditForm({
                             }}
                             timeInputLabel="Time:"
                             dateFormat="dd-MMM-yyyy"
-                            showTimeInput
+                            // showTimeInput
                             name="gratuity_startDate"
                             autoComplete="off"
                             disabled={!values.gratuity_member || isUserForRead}
                             // value = {values.dateOfJoining}
+                             minDate={
+                                    dateOfJoining
+                                      ? new Date(dateOfJoining)
+                                      : null
+                                  }
                           />
                           <ErrorMessage
                             className="form-feedBack"
@@ -2029,10 +2041,16 @@ export function BankEditForm({
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
-                              showTimeInput
+                              // showTimeInput
                               name="eobi_reg_date"
                               autoComplete="off"
                               disabled={!values.eobi_member || isUserForRead}
+                            
+                               minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
                             />
                             <ErrorMessage
                               className="form-feedBack"
@@ -2117,12 +2135,18 @@ export function BankEditForm({
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
-                              showTimeInput
+                              // showTimeInput
                               name="social_security_reg_date"
                               autoComplete="off"
                               disabled={
                                 !values.social_security_member || isUserForRead
                               }
+                               minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
+                            
                               // value = {values.dateOfJoining}
                             />
                             <ErrorMessage

@@ -230,7 +230,7 @@ dateOfContractExpiry: Yup.date()
 
     passportNo: Yup.string()
       .nullable()
-      .max(15, "Passport number must be at most 15 characters"),
+      .max(15, "Passport No. must be at most 15 characters"),
     // on instruction of Mr. Mubin
     // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
     //.required('ID Card No is required'), // Make it required if necessary
@@ -249,7 +249,7 @@ dateOfContractExpiry: Yup.date()
       .nullable() // Allows null values
       .matches(
         /^0[0-9]*$/,
-        "Phone number must start with 0 and contain only digits"
+        "Phone No. must start with 0 and contain only digits"
       ) // Must start with 0 and contain only digits
       .max(15, "Employee code must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
@@ -258,7 +258,7 @@ dateOfContractExpiry: Yup.date()
       .nullable() // Allows null values
       .matches(
         /^0[0-9]*$/,
-        "Phone number must start with 0 and contain only digits"
+        "Phone No. must start with 0 and contain only digits"
       ) // Must start with 0 and contain only digits
       .max(15, "Employee code must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
@@ -267,7 +267,7 @@ dateOfContractExpiry: Yup.date()
       .nullable() // Allows null values
       .matches(
         /^0[0-9]*$/,
-        "Phone number must start with 0 and contain only digits"
+        "Phone No. must start with 0 and contain only digits"
       ) // Must start with 0 and contain only digits
       .max(15, "Employee code must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
@@ -3255,7 +3255,7 @@ Date of Retirement (Optional)
                         label={
                           <span>
                             {" "}
-                            Id Card No<span style={{ color: "red" }}>*</span>
+                            ID Card No.<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         autoComplete="off"
@@ -3884,8 +3884,8 @@ Date of Retirement (Optional)
                               name="emiratesNo"
                               maxLength="20"
                               component={Input}
-                              placeholder="Enter Emirates Id Number"
-                              label={<span> Emirates Id Number</span>}
+                              placeholder="Enter Emirates ID No."
+                              label={<span> Emirates Emirates ID No.</span>}
                               autoComplete="off"
                             />
                             {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}

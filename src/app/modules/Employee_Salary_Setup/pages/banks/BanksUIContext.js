@@ -66,6 +66,7 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
     overtime_working_day: 1,
     overtime_off_day: 1,
     overtime_holiday: 1,
+    dateOfJoining:""
   };
 
   const value = {

@@ -564,7 +564,7 @@ export function FormEditForm({
   };
   useEffect(() => {
     fetchData(setApplicantCode)
-  }, [])
+  }, [!formData.applicantCode])
 
   const filteredCities = (countryId) => {
     return dashboard?.allCity?.filter((city) => city.code === countryId) || [];
@@ -1680,11 +1680,11 @@ export function FormEditForm({
                           /\d/,
                         ]}
                         component={MaskInput}
-                        placeholder=" ID Card No."
+                        placeholder="ID Card No."
                         label={
                           <span>
                             {" "}
-                            Id Card No.<span style={{ color: "red" }}>*</span>
+                           ID Card No.<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         autoComplete="off"
