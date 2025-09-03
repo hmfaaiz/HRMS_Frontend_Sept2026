@@ -520,6 +520,7 @@ export function DesignationEditForm({
   const [isImageReq, setIsImageReq] = useState(false);
   const [imgAlreadySet, setImgAlreadySet] = useState(false);
   const [allEmpTypes, setAllEmpTypes] = useState([]);
+  const [maxProbationPolicyInMonth, setMaxProbationPolicyInMonth] = useState("");
   const scrollRef = useRef(null);
 
 
@@ -1266,6 +1267,8 @@ export function DesignationEditForm({
       const retirementDate = new Date(dateOfBirth);
 
       retirementDate.setFullYear(retirementDate.getFullYear() + retirementAge);
+      // Subtract 1 day (to get last day before birthday)
+       retirementDate.setDate(retirementDate.getDate() - 1);
 
       setDRetirmentDate(new Date(retirementDate));
       setFieldValue("dateOfRetirement", new Date(retirementDate));
@@ -1305,7 +1308,20 @@ export function DesignationEditForm({
     setConfirmationDueDate(new Date(confirmationDueDate));
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setHideContractExpDate(true);
+
+     const doubleProbationInMonth = probationPolicyInMonth * 2;
+    const confirmationDate = new Date(dateOfJoining);
+    confirmationDate.setFullYear(
+      confirmationDate.getFullYear() +
+        Math.floor(doubleProbationInMonth / 12)
+    ); // Add full years
+    confirmationDate.setMonth(
+      confirmationDate.getMonth() + (doubleProbationInMonth % 12)
+    ); 
+    console.log("confirmationDate111",confirmationDate)
+    setMaxProbationPolicyInMonth(new Date(confirmationDate))
   };
+
 
   const updateContractExpiryPolicy = (
     setFieldValue,
@@ -1350,6 +1366,8 @@ export function DesignationEditForm({
     setConfirmationDueDate(new Date(confirmationDueDate));
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setDisableConfDueDate(true);
+
+   
   };
 
 
@@ -3050,6 +3068,11 @@ passportExpiry: values.passportExpiry
                             values.dateOfJoining
                               ? new Date(values.dateOfJoining)
                               : null
+                          } 
+                           maxDate={
+                            maxProbationPolicyInMonth
+                              ? new Date(maxProbationPolicyInMonth)
+                              : null
                           }
                         />
                         <ErrorMessage
@@ -3126,6 +3149,7 @@ passportExpiry: values.passportExpiry
                         <DatePicker
                           className="form-control"
                           placeholder=" Date Of Retirement"
+                         disabled={true}
                           selected={RetirementSelected}
                           showYearDropdown
                           scrollableMonthYearDropdown
@@ -3136,8 +3160,9 @@ passportExpiry: values.passportExpiry
                           timeInputLabel="Time:"
                           dateFormat="dd-MMM-yyyy"
                           // showTimeInput
+                         minDate={values.dateOfJoining? new Date(values.dateOfJoining): null}
                           name="dateOfRetirement"
-                          disabled={isUserForRead || !values?.subsidiaryId}
+                          // disabled={isUserForRead || !values?.subsidiaryId}
                           autoComplete="off"
                         />
                         <ErrorMessage
