@@ -92,6 +92,7 @@ export function FormTable(user) {
   const [defEmailRecipents, setDefaultEmailRecipents] = useState([]); //  For Email Recipents
   const [defEOBIAllowances, setDefaultEOBIAllowances] = useState([]);
   const [defSESSIAllowances, setDefaultSESSIAllowances] = useState([]);
+  const [selectedSubsidiary, setSelectedSubsidiary] = useState(null);
   const [defBank, setDefaultBanks] = useState({});
   const [otherErrors, setotherErrors] = useState({});
   const dispatch = useDispatch();
@@ -100,7 +101,7 @@ export function FormTable(user) {
   useEffect(() => {
     FormUIProps.setIds([]);
     dispatch(actions.fetchUsers(FormUIProps.queryParams));
-  }, [FormUIProps.queryParams, dispatch, totalCount]);
+  }, [FormUIProps.queryParams, dispatch, totalCount , user?.active]);
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdatePayrollProcessPolicy"
@@ -136,15 +137,15 @@ export function FormTable(user) {
   }, [user.journalBankAccountId, dispatch]);
 
   useEffect(() => {
+    dispatch(fetchAllSubsidiaryData("allSubidiaryList")); // For All Subsisidaries
     if (!user.formid) {
-      dispatch(fetchAllSubsidiaryData("allSubidiaryList")); // For All Subsisidaries
       dispatch(fetchAllActiveEmployees()); // For Getting Salaried Employees
       dispatch(fetchAllFormsMenu(127, "allChildMenus")); // For Payroll Group
       dispatch(fetchAllFormsMenu(45, "allPayrollAccounts")); // For Basic Pay Accounts
       dispatch(fetchAllFormsMenu(45, "allPayrollPayableAccounts")); // For Payable Accounts
       dispatch(fetchRoles());
     }
-  }, [dispatch]);
+  }, [dispatch, user?.active]);
 
   useEffect(() => {
     const emailList =
@@ -687,6 +688,15 @@ export function FormTable(user) {
     );
   };
 
+  const existingRecordCheck = (subsidiaryId) => {
+    // debugger
+    const find = entities?.find((el) => el?.subsidiaryId === subsidiaryId);
+    if (find) {
+      dispatch(actions.fetchUser(find?.Id));
+    } else {
+      dispatch(actions.fetchUser(null));
+    }
+  };
   // useEffect(() => {
 
   //     // dispatch(fetchAllBanks(1));
@@ -770,6 +780,7 @@ export function FormTable(user) {
               handleChange,
               setFieldValue,
               setFieldTouched,
+              handleReset,
               formik,
             }) => (
               <>
@@ -782,7 +793,17 @@ export function FormTable(user) {
                       </h6>
                       <X
                         title="Close"
-                        onClick={() => user.setActive(false)}
+                        onClick={() => {
+                          handleReset();
+                          user.setActive(false);
+                          user.setid(0);
+                          setSelectedSubsidiary(null)
+                          // if (user.formid) {
+                          //   dispatch(actions.fetchUser(null));
+                          // } else {
+                          //   dispatch(actions.fetchUser(""));
+                          // }
+                        }}
                         className="w-4 h-4 text-black cursor-pointer"
                       />
                     </div>
@@ -822,7 +843,6 @@ export function FormTable(user) {
                           touched={touched.subsidiaryId}
                           options={dashboard.allSubidiaryList}
                         /> */}
-                        {console.log("dashboard.allSubidiaryList" , dashboard.allSubidiaryList)}
                         <SubsidiarySelect
                           name="subsidiaryId"
                           isDisabled={Boolean(user?.readOnly)}
@@ -831,11 +851,13 @@ export function FormTable(user) {
                               Subsidiary<span style={{ color: "red" }}>*</span>
                             </span>
                           }
+                          options={dashboard?.allSubidiaryList}
                           onBlur={() => {
                             // handleBlur({ target: { name: "countryId" } });
                           }}
                           onChange={(e) => {
                             setFieldValue("subsidiaryId", e.value || null);
+                            setSelectedSubsidiary(e);
                             setDefualtSubsidiaryList(e);
                             dispatch(
                               fetchAllLeaveTypeBySubsidiary(
@@ -846,13 +868,14 @@ export function FormTable(user) {
                             dispatch(fetchAllDeductionList(2, e.value, ""));
                             dispatch(fetchAllEarningList(1, e.value, ""));
                             //handlePaymenModeChanged(e)
+                            existingRecordCheck(e?.value);
                           }}
                           error={errors?.subsidiaryId}
                           touched={touched?.subsidiaryId}
-                          currentValue={values?.subsidiaryId}
+                          currentValue={selectedSubsidiary?.value}
                           initializeSubsidiary={(e) => {
-                            console.log("eeeewww" , e)
                             setFieldValue("subsidiaryId", e.value || null);
+                            setSelectedSubsidiary(e);
                             setDefualtSubsidiaryList(e);
                             dispatch(
                               fetchAllLeaveTypeBySubsidiary(
@@ -862,6 +885,7 @@ export function FormTable(user) {
                             );
                             dispatch(fetchAllDeductionList(2, e.value, ""));
                             dispatch(fetchAllEarningList(1, e.value, ""));
+                            existingRecordCheck(e?.value);
                           }}
                         />
                       </div>

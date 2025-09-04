@@ -13,10 +13,10 @@ import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashbo
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 // percentage: Yup.string().required("Required*"),
 const news_event_tickerEditSchema = Yup.object().shape({
-  subsidiaryId: Yup.number()
-  .nullable(),
+  subsidiaryId: Yup.number().nullable(),
   // .required(VALIDATION_MESSAGES.required),
 
   ticker_description: Yup.string()
@@ -81,7 +81,7 @@ export function FormEditForm({
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   <div>
-                    <SearchSelect
+                    {/* <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -92,23 +92,38 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
                       }}
-
-                        value={
-                      
+                      value={
                         values?.subsidiaryId == null
                           ? { value: null, label: "All" }
                           : dashboard?.allSubsidiaryList?.find(
                               (option) => option.value === values.subsidiaryId
                             ) || null
                       }
-                
                       options={[
-                        { value:null, label: "All" },
+                        { value: null, label: "All" },
                         ...(dashboard?.allSubsidiaryList ?? []),
                       ]}
-           
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
+                    /> */}
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isAllValue={true}
+                      isDisabled={isUserForRead || userForEdit}
+                      onChange={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                      }}
+                      error={errors?.subsidiaryId}
+                      touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                      }}
                     />
                   </div>
 
@@ -129,30 +144,29 @@ export function FormEditForm({
                     />
                   </div> */}
 
-                    <div>
-                                              <label>
-                                                Ticker Date<span style={{ color: "red" }}>*</span>
-                                              </label>
-                                              <DatePicker
-                                                className="form-control"
-                                                placeholder="ticker_date "
-                                                selected={
-                                                  values?.ticker_date
-                                                    ? new Date(values.ticker_date)
-                                                    : null
-                                                }
-                                                onChange={(date) => {
-                                                  let a= formatDates(date, "dd-MMM-yyyy");
-                                                  setFieldValue("ticker_date", a);
-                                                
-                                                }}
-                                                timeInputLabel="Time:"
-                                                dateFormat="dd-MMM-yyyy"
-                                                // showTimeInput
-                                                name="ticker_date"
-                                                autoComplete="off"
-                                              />
-                                            </div>
+                  <div>
+                    <label>
+                      Ticker Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <DatePicker
+                      className="form-control"
+                      placeholder="ticker_date "
+                      selected={
+                        values?.ticker_date
+                          ? new Date(values.ticker_date)
+                          : null
+                      }
+                      onChange={(date) => {
+                        let a = formatDates(date, "dd-MMM-yyyy");
+                        setFieldValue("ticker_date", a);
+                      }}
+                      timeInputLabel="Time:"
+                      dateFormat="dd-MMM-yyyy"
+                      // showTimeInput
+                      name="ticker_date"
+                      autoComplete="off"
+                    />
+                  </div>
 
                   <div>
                     <label>

@@ -423,7 +423,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
               </p>
             </div>
             <div className="grid grid-cols-12 gap-x-3 gap-y-1">
-              <div className="col-span-8 flex gap-4">
+              <div className="col-span-12 sm:col-span-8 flex gap-4">
                 {themeColor.map((el, ind) => (
                   <div title={el.color_name} key={ind}>
                     <button
@@ -470,7 +470,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
                 ) : null}
               </label>
             </div>
-            <div className="grid grid-cols-9 gap-x-3 gap-y-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-9 gap-x-3 gap-y-1">
               {profilePercentageConfigFields.map((fieldConfig) => (
                 <div key={fieldConfig.name}>
                   <Field name={fieldConfig.name}>
@@ -505,7 +505,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
             <h6 className="font-bold mb-0 text-primary my-2">
               Applicant Profile - Mandatory Fields
             </h6>
-            <div className="grid grid-cols-10 gap-x-3 gap-y-1">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10 gap-x-3 gap-y-1">
               {applicantProfileMandatoryField?.map((fieldConfig) => (
                 <div key={fieldConfig?.name}>
                   <Checkbox
@@ -529,7 +529,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, companyId }) => {
             <h6 className="font-bold mb-0 text-primary my-2">
               Job Detail - Visible Information
             </h6>
-            <div className="grid grid-cols-10 gap-x-3 gap-y-1">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10 gap-x-3 gap-y-1">
               {JobDetailVisibleInfoField?.map((fieldConfig) => (
                 <div key={fieldConfig?.name}>
                   <Checkbox

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, FieldArray } from "formik";
 import * as Yup from "yup";
@@ -113,6 +113,7 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
+  const [selectedSub , setSelectedSub] = useState(null)
   // getAllLoanType
   // Fetch necessary data if not already present
   useEffect(() => {
@@ -141,17 +142,17 @@ export function FormEditForm({
   const { entities, loan_type } = currentState;
 
   let existedId = 0;
-  const check_Existed_Data = (subsidiaryId) => {
-    entities.forEach((i) => {
-      if (i.subsidiaryId == subsidiaryId) {
-        existedId = i.Id;
+ const check_Existed_Data = (subsidiaryId) => {
+  const existedEntity = entities.find((i) => i.subsidiaryId === subsidiaryId);
 
-        dispatch(actions.fetchLoanManagConfig(existedId));
-      } else {
-        dispatch(actions.fetchLoanManagConfig(0));
-      }
-    });
-  };
+  if (existedEntity) {
+    dispatch(actions.fetchLoanManagConfig(existedEntity.Id));
+  } 
+  else {
+    dispatch(actions.fetchLoanManagConfig());
+  }
+};
+
 
   const deleteLoanManagConfigDetail = (Id, loan_typeId, subsidiaryId) => {
     // server request for deleting customer by id
@@ -227,6 +228,7 @@ export function FormEditForm({
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                     /> */}
+                    {console.log("eeeeewww", values?.subsidiaryId)}
                     <SubsidiarySelect
                       name="subsidiaryId"
                       label={
@@ -236,15 +238,21 @@ export function FormEditForm({
                       }
                       isDisabled={isUserForRead}
                       onChange={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        check_Existed_Data(e.value);
+                        if (e?.value) {
+                          setSelectedSub(e)
+                          setFieldValue("subsidiaryId", e?.value);
+                          check_Existed_Data(e?.value);
+                        }
                       }}
                       error={errors?.subsidiaryId}
                       touched={touched?.subsidiaryId}
-                      currentValue={values?.subsidiaryId}
+                      currentValue={selectedSub?.value}
                       initializeSubsidiary={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        check_Existed_Data(e.value);
+                        if (e?.value) {
+                          setFieldValue("subsidiaryId", e?.value);
+                          setSelectedSub(e)
+                          check_Existed_Data(e?.value);
+                        }
                       }}
                     />
                   </div>

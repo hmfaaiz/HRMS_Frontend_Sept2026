@@ -91,7 +91,7 @@ export function BigTable({ data, setBigTableModalData }) {
   };
 
   return (
-    <div className="bg-white rounded-lg px-3 py-2 col-span-2">
+    <div className="bg-white rounded-lg px-3 py-2">
       <div className="flex justify-between">
         <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
 
@@ -115,8 +115,8 @@ export function BigTable({ data, setBigTableModalData }) {
       <div
         className={
           data?.data.length > 0
-            ? "max-h-64 overflow-auto"
-            : `max-h-6 overflow-auto`
+            ? "max-h-64 overflow-auto scrollbar-fancy"
+            : `max-h-6 overflow-auto scrollbar-fancy`
         }
       >
         {data?.data.length > 0 ? (

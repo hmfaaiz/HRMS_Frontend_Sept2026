@@ -1,9 +1,11 @@
-
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import {
+  DatePickerField,
+  Input,
+} from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
@@ -17,21 +19,23 @@ import {
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getDateDiffInDays } from "../../../../../utils/common";
 import * as actions from "../../../_redux/redux-Actions";
-import { checkPayroll_EmployeesByIds, fetchPayrollProcess } from "../../../_redux/redux-Actions";
+import {
+  checkPayroll_EmployeesByIds,
+  fetchPayrollProcess,
+} from "../../../_redux/redux-Actions";
 import { payroll_processSlice, callTypes } from "../../../_redux/redux-Slice";
 import { toast } from "react-toastify";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 // const { actions } = payroll_processSlice;
 // percentage: Yup.string().required("Required*"),
 const payroll_processEditSchema = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
 
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   // to_amount: Yup.string().required("Required*"),
 
-  payroll_groupId: Yup.string()
-    .nullable(),
+  payroll_groupId: Yup.string().nullable(),
   // .required(VALIDATION_MESSAGES.required),
 
   payroll_monthId: Yup.string()
@@ -41,10 +45,6 @@ const payroll_processEditSchema = Yup.object().shape({
   payroll_accountId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
-
-
-
-
 });
 
 export function FormEditForm({
@@ -55,65 +55,88 @@ export function FormEditForm({
   isUserForRead,
   enableLoading,
   loading,
-  setIds, formUIProps, disbaleLoading
+  setIds,
+  formUIProps,
+  disbaleLoading,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [isAfterResult, setIsAfterResult] = useState(false)
-  const [isStopSalModalOpen, setIsStopSalModalOpen] = useState(false)
+  const [isAfterResult, setIsAfterResult] = useState(false);
+  const [isStopSalModalOpen, setIsStopSalModalOpen] = useState(false);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [selectedLoans, setSelectedLoans] = useState([]);
-  const [payrollConfigApproverPermission, setPayrollConfigApproverPermission] = useState(false);
+  const [
+    payrollConfigApproverPermission,
+    setPayrollConfigApproverPermission,
+  ] = useState(false);
 
-
-  const [isStopLoanModalOpen, setIsStopLoanModalOpen] = useState(false)
+  const [isStopLoanModalOpen, setIsStopLoanModalOpen] = useState(false);
   const [selectedLoanEmployees, setSelectedLoanEmployees] = useState([]);
   useEffect(() => {
     if (!user.Id) {
-
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(127, "allPayrolGroupList"));
-      dispatch(fetchPayrollConfigApproverPermission("allPayrollConfigApproverPermissionList"))
-
-
+      dispatch(
+        fetchPayrollConfigApproverPermission(
+          "allPayrollConfigApproverPermissionList"
+        )
+      );
     }
   }, [dispatch, user.Id]);
-
 
   const { currentState, userAccess, auth } = useSelector((state) => {
     return {
       currentState: state.payroll_process,
       userAccess: state?.auth?.userAccess["payroll_process"],
-      auth: state.auth.user
+      auth: state.auth.user,
     };
   }, shallowEqual);
 
-  const { userForEdit, checkPayroll_EmployeesExist, resultAfterPayrollProcess } = currentState;
+  const {
+    userForEdit,
+    checkPayroll_EmployeesExist,
+    resultAfterPayrollProcess,
+  } = currentState;
 
-
-  const payrollGroupDetails = async (subsidiaryId, payroll_groupId, payroll_monthId) => {
-
+  const payrollGroupDetails = async (
+    subsidiaryId,
+    payroll_groupId,
+    payroll_monthId
+  ) => {
     if (subsidiaryId && payroll_monthId) {
       // Dispatch action to fetch payroll group details
       let body = {
         subsidiaryId,
-        payroll_groupId, payroll_monthId
+        payroll_groupId,
+        payroll_monthId,
       };
       await dispatch(actions.fetchPayrollGroupDetails(body));
     }
   };
 
-
-
-  const createPayrollStop_Salary = async (subsidiaryId, payroll_groupId, payroll_monthId, selectedEmployees) => {
+  const createPayrollStop_Salary = async (
+    subsidiaryId,
+    payroll_groupId,
+    payroll_monthId,
+    selectedEmployees
+  ) => {
     if (subsidiaryId && payroll_monthId) {
       // Dispatch action to fetch payroll group details
       let body = {
         subsidiaryId,
-        payroll_groupId, payroll_monthId, selectedEmployees
+        payroll_groupId,
+        payroll_monthId,
+        selectedEmployees,
       };
-      await dispatch(actions.createPayrollStop_Salary(body, setSelectedEmployees, disbaleLoading, handleModalClose));
-      payrollGroupDetails(subsidiaryId, payroll_groupId, payroll_monthId)
+      await dispatch(
+        actions.createPayrollStop_Salary(
+          body,
+          setSelectedEmployees,
+          disbaleLoading,
+          handleModalClose
+        )
+      );
+      payrollGroupDetails(subsidiaryId, payroll_groupId, payroll_monthId);
     }
   };
 
@@ -145,66 +168,69 @@ export function FormEditForm({
 
   useEffect(() => {
     if (currentState?.payroll_group_details) {
-
     }
   }, [currentState?.payroll_group_details]);
 
   const getPayroll = (subsidiaryId) => {
-    const key = "allPayrollMonthYearList";  // The key parameter
+    const key = "allPayrollMonthYearList"; // The key parameter
 
-    dispatch(fetchAllPayrollMonthYearList({ subsidiaryId: subsidiaryId, employeeId: null }, key));
+    dispatch(
+      fetchAllPayrollMonthYearList(
+        { subsidiaryId: subsidiaryId, employeeId: null },
+        key
+      )
+    );
+  };
 
-  }
-
-  const checkPayroll_Employees = async (setFieldValue, subsidiaryId, payroll_groupId, payroll_monthId, revert = false, finalize = false) => {
-
-
+  const checkPayroll_Employees = async (
+    setFieldValue,
+    subsidiaryId,
+    payroll_groupId,
+    payroll_monthId,
+    revert = false,
+    finalize = false
+  ) => {
     if (subsidiaryId && payroll_monthId) {
       let data = {
-        SubsidiaryId: subsidiaryId, PayrollGroupId: payroll_groupId, MonthId: payroll_monthId, revert, finalize,
-      }
+        SubsidiaryId: subsidiaryId,
+        PayrollGroupId: payroll_groupId,
+        MonthId: payroll_monthId,
+        revert,
+        finalize,
+      };
 
       await dispatch(checkPayroll_EmployeesByIds({ data }));
       if (revert) {
         await dispatch(fetchPayrollProcess(formUIProps));
-
       }
 
-
       // setIds("");
-
     }
-
-  }
+  };
 
   const handleModalClose = () => {
-    setIsStopSalModalOpen(false)
-    setSelectedEmployees([])
+    setIsStopSalModalOpen(false);
+    setSelectedEmployees([]);
   };
   const handleModalYes = () => {
-    setIsStopSalModalOpen(true)
+    setIsStopSalModalOpen(true);
   };
-
-
 
   const handleLoanModalClose = () => {
-    setIsStopLoanModalOpen(false)
-    setSelectedLoanEmployees([])
+    setIsStopLoanModalOpen(false);
+    setSelectedLoanEmployees([]);
   };
   const handleLoanModalYes = () => {
-
-    setIsStopLoanModalOpen(true)
+    setIsStopLoanModalOpen(true);
   };
 
   useEffect(() => {
-
-    dispatch(fetchAllEmployeesWithNoPermissionData('allEmployeesWithNoPermissionList'));
-
+    dispatch(
+      fetchAllEmployeesWithNoPermissionData("allEmployeesWithNoPermissionList")
+    );
   }, [dispatch]);
 
-
   const handleCheckboxChange = (value) => {
-
     setSelectedEmployees((prev) => {
       if (prev.includes(value)) {
         // If the employee is already selected, remove it
@@ -216,15 +242,17 @@ export function FormEditForm({
     });
   };
 
-
-
   const handleLoanCheckboxChange = (data) => {
     setSelectedLoans((prev) => {
-      const exists = prev.some((item) => item.loan_request_detailId === data.loan_request_detailId);
+      const exists = prev.some(
+        (item) => item.loan_request_detailId === data.loan_request_detailId
+      );
 
       if (exists) {
         // Deselect the loan
-        return prev.filter((item) => item.loan_request_detailId !== data.loan_request_detailId);
+        return prev.filter(
+          (item) => item.loan_request_detailId !== data.loan_request_detailId
+        );
       } else {
         // Select the loan
         return [...prev, data];
@@ -239,26 +267,26 @@ export function FormEditForm({
       )
     );
     setSelectedLoans(
-      currentState?.payroll_group_details?.stop_loan_employees_list);
+      currentState?.payroll_group_details?.stop_loan_employees_list
+    );
   }, [currentState?.payroll_group_details]);
 
   const checkPermission = (subsidiaryId) => {
-
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
-      entity => entity.subsidiaryId === Number(subsidiaryId)
+      (entity) => entity.subsidiaryId === Number(subsidiaryId)
     );
-
 
     if (filteredPermission?.length > 0) {
       const permission = filteredPermission[0];
       const roleId = String(auth?.roleId).trim();
-      const payrollApproverIds = permission?.payrollApproverId?.map(id => String(id).trim());
+      const payrollApproverIds = permission?.payrollApproverId?.map((id) =>
+        String(id).trim()
+      );
 
       const isRolePayrollApprover = payrollApproverIds?.includes(roleId);
       setPayrollConfigApproverPermission(isRolePayrollApprover);
-
     }
-  }
+  };
 
   const accountNotify = () => {
     toast("Account needs to be selected!");
@@ -267,11 +295,9 @@ export function FormEditForm({
   return (
     <Formik
       enableReinitialize={true}
-
       initialValues={user}
       validationSchema={payroll_processEditSchema}
       onSubmit={(values, { resetForm }) => {
-
         enableLoading();
         const clearForm = () => {
           resetForm();
@@ -279,7 +305,15 @@ export function FormEditForm({
         saveForm(values, clearForm);
       }}
     >
-      {({ handleSubmit, errors, touched, values, handleReset, setFieldValue, handleChange }) => (
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        handleReset,
+        setFieldValue,
+        handleChange,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -290,67 +324,74 @@ export function FormEditForm({
 
             {isStopSalModalOpen && (
               <>
-                <Modal show={isStopSalModalOpen} onHide={handleModalClose} style={{ zIndex: '99999' }}>
+                <Modal
+                  show={isStopSalModalOpen}
+                  onHide={handleModalClose}
+                  style={{ zIndex: "99999" }}
+                >
                   <Modal.Header closeButton>
                     <Modal.Title>Stop Salary</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>   <Form className="form form-label-right">
-                    <fieldset disabled={isUserForRead}>
+                  <Modal.Body>
+                    {" "}
+                    <Form className="form form-label-right">
+                      <fieldset disabled={isUserForRead}>
+                        {/* allEmployeesWithNoPermissionList */}
 
+                        <label> Employee </label>
 
-                      {/* allEmployeesWithNoPermissionList */}
-
-
-
-
-
-
-                      <label> Employee </label>
-
-                      <div className="overflow-auto max-h-48 border-none">
-
-
-
-
-                        {currentState?.payroll_group_details?.employees_list?.map((option) => (
-                          <div key={option.Id} className="flex justify-start items-center border-none">
-                            <input className="mr-1"
-                              name="employeeId"
-                              type="checkbox"
-                              value={option.Id}
-                              checked={selectedEmployees.includes(option.Id)}
-
-                              onChange={() => handleCheckboxChange(option.Id)}
-                            />
-                            <label className="">   {option.fullName} </label>
-                          </div>
-                        ))}
-                        {/* {errors.employeeId && touched.employeeId && (
+                        <div className="overflow-auto max-h-48 border-none">
+                          {currentState?.payroll_group_details?.employees_list?.map(
+                            (option) => (
+                              <div
+                                key={option.Id}
+                                className="flex justify-start items-center border-none"
+                              >
+                                <input
+                                  className="mr-1"
+                                  name="employeeId"
+                                  type="checkbox"
+                                  value={option.Id}
+                                  checked={selectedEmployees.includes(
+                                    option.Id
+                                  )}
+                                  onChange={() =>
+                                    handleCheckboxChange(option.Id)
+                                  }
+                                />
+                                <label className=""> {option.fullName} </label>
+                              </div>
+                            )
+                          )}
+                          {/* {errors.employeeId && touched.employeeId && (
                                 <div className="invalid-text">{errors.employeeId}</div>
                               )} */}
-
-
-                      </div>
-
-
-
-
-
-
-
-                    </fieldset>
-                  </Form></Modal.Body>
+                        </div>
+                      </fieldset>
+                    </Form>
+                  </Modal.Body>
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={handleModalClose}>No</Button>
-                    {currentState?.payroll_group_details?.employees_list.length > 0 && (
-                      <Button variant="primary" onClick={() => createPayrollStop_Salary(values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, selectedEmployees)}>Yes</Button>
+                    <Button variant="secondary" onClick={handleModalClose}>
+                      No
+                    </Button>
+                    {currentState?.payroll_group_details?.employees_list
+                      .length > 0 && (
+                      <Button
+                        variant="primary"
+                        onClick={() =>
+                          createPayrollStop_Salary(
+                            values.subsidiaryId,
+                            values.payroll_groupId,
+                            values.payroll_monthId,
+                            selectedEmployees
+                          )
+                        }
+                      >
+                        Yes
+                      </Button>
                     )}
-
                   </Modal.Footer>
                 </Modal>
-
-
-
               </>
             )}
 
@@ -370,18 +411,16 @@ export function FormEditForm({
                       <fieldset disabled={isUserForRead}>
                         {/* allEmployeesWithNoPermissionList */}
 
-
-
                         <label>Employee</label>
                         <div className="overflow-auto max-h-48 border-none">
-
-
-
                           {currentState?.payroll_group_details?.for_loan_employees_list?.map(
                             (option) => (
-                              <div key={option.Id} className="flex justify-start items-center border-none">
-
-                                <input className="mr-1"
+                              <div
+                                key={option.Id}
+                                className="flex justify-start items-center border-none"
+                              >
+                                <input
+                                  className="mr-1"
                                   name="employeeId"
                                   type="checkbox"
                                   value={option.Id}
@@ -389,32 +428,30 @@ export function FormEditForm({
                                   //   option?.Id
                                   // )}
 
-                                  checked={selectedLoans.some((item) => item.loan_request_detailId === option?.Id)}
+                                  checked={selectedLoans.some(
+                                    (item) =>
+                                      item.loan_request_detailId === option?.Id
+                                  )}
                                   onChange={() =>
                                     handleLoanCheckboxChange({
                                       loan_request_detailId: option?.Id,
                                       employeeId: option?.employeeId,
-                                      loan_typeId: option?.Employee_loan_request?.LoanType?.Id,
+                                      loan_typeId:
+                                        option?.Employee_loan_request?.LoanType
+                                          ?.Id,
                                     })
                                   }
                                 />
                                 <label className="">
-                                  {`${option?.Employee_loan_request
-                                    ?.Employee?.fullName || ""} - ${option
-                                      ?.Employee_loan_request?.LoanType
-                                      ?.name ||
-                                    ""} (${option?.amount_received ||
-                                    ""})`}
-
+                                  {`${option?.Employee_loan_request?.Employee
+                                    ?.fullName || ""} - ${option
+                                    ?.Employee_loan_request?.LoanType?.name ||
+                                    ""} (${option?.amount_received || ""})`}
                                 </label>
                               </div>
                             )
                           )}
-
-
                         </div>
-
-
                       </fieldset>
                     </Form>
                   </Modal.Body>
@@ -422,7 +459,8 @@ export function FormEditForm({
                     <Button variant="secondary" onClick={handleLoanModalClose}>
                       No
                     </Button>
-                    {currentState?.payroll_group_details?.for_loan_employees_list.length > 0 && (
+                    {currentState?.payroll_group_details
+                      ?.for_loan_employees_list.length > 0 && (
                       <Button
                         variant="primary"
                         onClick={() =>
@@ -431,32 +469,28 @@ export function FormEditForm({
                             values.payroll_groupId,
                             values.payroll_monthId,
                             selectedLoans
-
                           )
                         }
                       >
                         Yes
                       </Button>
-                    )
-                    }
-
+                    )}
                   </Modal.Footer>
                 </Modal>
               </>
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-
-
                 <div className="col-12 col-md-12 mt-3 d-flex flex-column align-items-end ">
                   <div className="d-flex flex-column align-items-start ">
-                    {values?.subsidiaryId ? (() => {
-                      const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
-                        (option) => option.value === values.subsidiaryId
-                      );
-                      return (
-                        <>
-                          {/* <div>
+                    {values?.subsidiaryId
+                      ? (() => {
+                          const selectedSubsidiary = dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value === values.subsidiaryId
+                          );
+                          return (
+                            <>
+                              {/* <div>
                             <b>Active Fiscal Year -</b>{" "}
                             {selectedSubsidiary?.fiscalYearLabel}
                           </div>
@@ -464,19 +498,16 @@ export function FormEditForm({
                             <b>Active Payroll Month -</b>{" "}
                             {selectedSubsidiary?.payrollMonthLabel}
                           </div> */}
-                        </>
-                      );
-                    })() : null}
+                            </>
+                          );
+                        })()
+                      : null}
                   </div>
-
-
                 </div>
 
-
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
-
                   <div className="">
-                    <SearchSelect
+                    {/* <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -485,22 +516,26 @@ export function FormEditForm({
                       }
                       isDisabled={isUserForRead || isAfterResult}
                       onChange={(e) => {
-                        dispatch(actions.clearReduxData())
+                        dispatch(actions.clearReduxData());
                         setFieldValue("subsidiaryId", e.value || null);
                         // payrollGroupDetails(e.value, values.payroll_groupId, values.payroll_monthId)
                         setFieldValue("payroll_monthId", null);
-                        getPayroll(e.value)
-                        checkPayroll_Employees(setFieldValue, e.value, values.payroll_groupId, values.payroll_monthId)
-                        setIsAfterResult(false)
-                        checkPermission(e.value)
-                        dispatch(getAllPayrollAccount(e.value))
+                        getPayroll(e.value);
+                        checkPayroll_Employees(
+                          setFieldValue,
+                          e.value,
+                          values.payroll_groupId,
+                          values.payroll_monthId
+                        );
+                        setIsAfterResult(false);
+                        checkPermission(e.value);
+                        dispatch(getAllPayrollAccount(e.value));
                       }}
                       value={
                         dashboard?.allSubsidiaryList?.find(
                           (option) => option.value === values.subsidiaryId
                         ) || null
                       }
-
                       options={dashboard?.allSubsidiaryList}
                       // options={dashboard.allSubidiaryList.map(option => ({
                       //   label: `${option.label} (${option.value})`, // Adding the value to the label
@@ -508,9 +543,52 @@ export function FormEditForm({
                       // }))}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
+                    /> */}
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isUserForRead || isAfterResult}
+                      onChange={(e) => {
+                        dispatch(actions.clearReduxData());
+                        setFieldValue("subsidiaryId", e.value || null);
+                        // payrollGroupDetails(e.value, values.payroll_groupId, values.payroll_monthId)
+                        setFieldValue("payroll_monthId", null);
+                        getPayroll(e.value);
+                        checkPayroll_Employees(
+                          setFieldValue,
+                          e.value,
+                          values.payroll_groupId,
+                          values.payroll_monthId
+                        );
+                        setIsAfterResult(false);
+                        checkPermission(e.value);
+                        dispatch(getAllPayrollAccount(e.value));
+                      }}
+                      error={errors?.subsidiaryId}
+                      touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        dispatch(actions.clearReduxData());
+                        setFieldValue("subsidiaryId", e.value || null);
+                        // payrollGroupDetails(e.value, values.payroll_groupId, values.payroll_monthId)
+                        setFieldValue("payroll_monthId", null);
+                        getPayroll(e.value);
+                        checkPayroll_Employees(
+                          setFieldValue,
+                          e.value,
+                          values.payroll_groupId,
+                          values.payroll_monthId
+                        );
+                        setIsAfterResult(false);
+                        checkPermission(e.value);
+                        dispatch(getAllPayrollAccount(e.value));
+                      }}
                     />
                   </div>
-
 
                   <div className="">
                     <SearchSelect
@@ -520,40 +598,29 @@ export function FormEditForm({
                           Account<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-
                       isDisabled={isUserForRead || isAfterResult}
                       onChange={(e) => {
                         setFieldValue("payroll_accountId", e.value || null);
-
                       }}
                       value={
                         dashboard?.allPayrollAccountList?.find(
                           (option) =>
-                            Number(option.value) === Number(values.payroll_accountId)
+                            Number(option.value) ===
+                            Number(values.payroll_accountId)
                         ) ||
                         dashboard?.allPayrollAccountList?.find(
-                          (option) => option.isDefault === true && values.subsidiaryId
+                          (option) =>
+                            option.isDefault === true && values.subsidiaryId
                         ) ||
                         null
                       }
                       options={dashboard?.allPayrollAccountList || []}
-
                       error={errors.payroll_accountId}
                       touched={touched.payroll_accountId}
-
                     />
-
-
                   </div>
 
-
                   {/* Active payroll month */}
-
-
-
-
-
-
 
                   <div className="">
                     <SearchSelect
@@ -566,34 +633,37 @@ export function FormEditForm({
                       isDisabled={isUserForRead || isAfterResult}
                       onChange={(e) => {
                         setFieldValue("payroll_groupId", e.value || null);
-                        payrollGroupDetails(values.subsidiaryId, e.value, values.payroll_monthId)
-                        checkPayroll_Employees(setFieldValue, values.subsidiaryId, e.value, values.payroll_monthId)
-                        setIsAfterResult(false)
+                        payrollGroupDetails(
+                          values.subsidiaryId,
+                          e.value,
+                          values.payroll_monthId
+                        );
+                        checkPayroll_Employees(
+                          setFieldValue,
+                          values.subsidiaryId,
+                          e.value,
+                          values.payroll_monthId
+                        );
+                        setIsAfterResult(false);
                       }}
-
-
                       value={
-
                         values?.payroll_groupId == null
-                          ? { value: null, label: 'All' }
+                          ? { value: null, label: "All" }
                           : dashboard?.allPayrolGroupList?.find(
-                            (option) => option.value === values.payroll_groupId
-                          ) || null
+                              (option) =>
+                                option.value === values.payroll_groupId
+                            ) || null
                       }
-
                       // options={dashboard?.allPayrolGroupList}
 
                       options={[
-                        { value: null, label: 'All' }, // Adding "All" option with value empty string
+                        { value: null, label: "All" }, // Adding "All" option with value empty string
                         ...dashboard?.allPayrolGroupList, // Spread the rest of the menu options
                       ]}
-
-
                       error={errors.payroll_groupId}
                       touched={touched.payroll_groupId}
                     />
                   </div>
-
 
                   <div className="">
                     <SearchSelect
@@ -603,21 +673,30 @@ export function FormEditForm({
                           Payroll Month<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-
                       isDisabled={isUserForRead || isAfterResult}
                       onChange={(e) => {
                         setFieldValue("payroll_monthId", e.value || null);
-                        payrollGroupDetails(values.subsidiaryId, values.payroll_groupId, e.value)
-                        checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, e.value)
-                        setIsAfterResult(false)
+                        payrollGroupDetails(
+                          values.subsidiaryId,
+                          values.payroll_groupId,
+                          e.value
+                        );
+                        checkPayroll_Employees(
+                          setFieldValue,
+                          values.subsidiaryId,
+                          values.payroll_groupId,
+                          e.value
+                        );
+                        setIsAfterResult(false);
                         if (!values.payroll_accountId) {
-
                           const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
                             (option) => option.isDefault === true
                           );
 
-                          setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
-
+                          setFieldValue(
+                            "payroll_accountId",
+                            defaultPayrollAccount?.value || null
+                          );
                         }
                       }}
                       value={
@@ -625,23 +704,19 @@ export function FormEditForm({
                           (option) => option.value === values.payroll_monthId
                         ) || null
                       }
-
                       // options={dashboard?.allPayrollMonthYearList}
                       options={
                         dashboard?.allPayrollMonthYearList.filter(
                           (option) => option.isActive
                         ) || []
                       }
-
                       error={errors.payroll_monthId}
                       touched={touched.payroll_monthId}
                     />
                   </div>
                 </div>
 
-
                 <div className="form-group row">
-
                   {currentState?.payroll_group_details && (
                     <>
                       <button
@@ -671,7 +746,6 @@ export function FormEditForm({
                   )}
                 </div>
 
-
                 <div className="grid lg:grid-cols-2 gap-x-3 gap-y-1">
                   <div>
                     <h6 className="font-bold mb-0 text-primary my-2">
@@ -679,112 +753,102 @@ export function FormEditForm({
                     </h6>
 
                     <div className="grid grid-cols-1 gap-x-3 col-span-12">
-
                       <div className="">
                         <label>
                           Total Employee:
-                          <span style={{ fontWeight: 'bold' }}> {currentState?.payroll_group_details?.total_employees || 0}</span>
+                          <span style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {currentState?.payroll_group_details
+                              ?.total_employees || 0}
+                          </span>
                         </label>
-
-                      </div>
-
-                      <div className="">
-
-                        <label>
-                          Salary setup created & approved: <span style={{ fontWeight: 'bold' }}> {currentState?.payroll_group_details?.slary_setup_not_created || 0}</span>
-                        </label>
-
                       </div>
 
                       <div className="">
                         <label>
-                          Loan to be processed: <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.loan_to_be_processed || 0}</span>
+                          Salary setup created & approved:{" "}
+                          <span style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {currentState?.payroll_group_details
+                              ?.slary_setup_not_created || 0}
+                          </span>
                         </label>
-
                       </div>
-
 
                       <div className="">
                         <label>
-                          Stop Salary: <span style={{ fontWeight: 'bold' }}>{currentState?.payroll_group_details?.stop_salary_employees_list?.length || 0}</span>
+                          Loan to be processed:{" "}
+                          <span style={{ fontWeight: "bold" }}>
+                            {currentState?.payroll_group_details
+                              ?.loan_to_be_processed || 0}
+                          </span>
                         </label>
-
                       </div>
 
-
+                      <div className="">
+                        <label>
+                          Stop Salary:{" "}
+                          <span style={{ fontWeight: "bold" }}>
+                            {currentState?.payroll_group_details
+                              ?.stop_salary_employees_list?.length || 0}
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
 
                   <div>
-
-
-
-                    {resultAfterPayrollProcess ?
+                    {resultAfterPayrollProcess ? (
                       <>
-
                         <h6 className="font-bold mb-0 text-primary my-2 mt-3">
                           After Process - Result
                         </h6>
                         <div className="grid grid-cols-1 gap-x-3 col-span-12">
-
+                          <div className="">
+                            <label>
+                              Tax calculated:{" "}
+                              <span style={{ fontWeight: "bold" }}>
+                                {resultAfterPayrollProcess?.TaxCalculated || 0}
+                              </span>
+                            </label>
+                          </div>
 
                           <div className="">
                             <label>
-                              Tax calculated: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.TaxCalculated || 0}</span>
+                              Employee with zero salary:{" "}
+                              <span style={{ fontWeight: "bold" }}>
+                                {resultAfterPayrollProcess?.EmployeewithZeroSalary ||
+                                  0}
+                              </span>
                             </label>
-
-                          </div>
-
-
-
-
-                          <div className="">
-                            <label>
-                              Employee with zero salary: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.EmployeewithZeroSalary || 0}</span>
-                            </label>
-
                           </div>
                           <div className="">
                             <label>
-                              Employee with negative salary: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.EmployeewithNegativeSalary || 0}</span>
+                              Employee with negative salary:{" "}
+                              <span style={{ fontWeight: "bold" }}>
+                                {resultAfterPayrollProcess?.EmployeewithNegativeSalary ||
+                                  0}
+                              </span>
                             </label>
-
                           </div>
                           <div className="">
                             <label>
-                              Loan processed: <span style={{ fontWeight: 'bold' }}>{resultAfterPayrollProcess?.LoanProcess || 0}</span>
+                              Loan processed:{" "}
+                              <span style={{ fontWeight: "bold" }}>
+                                {resultAfterPayrollProcess?.LoanProcess || 0}
+                              </span>
                             </label>
-
                           </div>
-
                         </div>
-
                       </>
-                      : null
-
-
-                    }
+                    ) : null}
                   </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
                 {/* <hr /> */}
-
               </fieldset>
             </Form>
           </Modal.Body>
-
 
           <Modal.Footer>
             {/* Cancel / OK Button */}
@@ -796,16 +860,26 @@ export function FormEditForm({
               {payrollConfigApproverPermission && (
                 <>
                   <button
-
                     onClick={() => {
-                      checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, false, true);
+                      checkPayroll_Employees(
+                        setFieldValue,
+                        values.subsidiaryId,
+                        values.payroll_groupId,
+                        values.payroll_monthId,
+                        false,
+                        true
+                      );
                       setIds("");
                       handleReset();
-                      dispatch(actions.clearReduxData())
+                      dispatch(actions.clearReduxData());
                     }}
                     className="btn btn-green"
                     // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.finalize)}
-                    disabled={loading || (!checkPayroll_EmployeesExist?.finalize && !resultAfterPayrollProcess?.finalize)}
+                    disabled={
+                      loading ||
+                      (!checkPayroll_EmployeesExist?.finalize &&
+                        !resultAfterPayrollProcess?.finalize)
+                    }
                   >
                     Finalize
                     {loading && (
@@ -813,18 +887,21 @@ export function FormEditForm({
                     )}
                   </button>
 
-
-
                   <button
-
                     onClick={() => {
-                      checkPayroll_Employees(setFieldValue, values.subsidiaryId, values.payroll_groupId, values.payroll_monthId, true, false);
+                      checkPayroll_Employees(
+                        setFieldValue,
+                        values.subsidiaryId,
+                        values.payroll_groupId,
+                        values.payroll_monthId,
+                        true,
+                        false
+                      );
                       setIds("");
                       handleReset();
-                      dispatch(actions.clearReduxData())
+                      dispatch(actions.clearReduxData());
                     }}
                     className="btn btn-red"
-
                     // disabled={loading || (!resultAfterPayrollProcess && !checkPayroll_EmployeesExist?.revert)}
                     disabled={loading || !checkPayroll_EmployeesExist?.revert}
                   >
@@ -833,10 +910,8 @@ export function FormEditForm({
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
                     )}
                   </button>
-
                 </>
               )}
-
             </>
             {/* )} */}
 
@@ -846,11 +921,9 @@ export function FormEditForm({
                 onClick={() => {
                   setIds("");
                   handleReset();
-                  dispatch(actions.clearReduxData())
+                  dispatch(actions.clearReduxData());
 
-                  setIsAfterResult(false)
-
-
+                  setIsAfterResult(false);
                 }}
                 className="btn btn-light btn-elevate"
               >
@@ -861,10 +934,9 @@ export function FormEditForm({
                 type="button"
                 // onClick={onHide}
 
-
                 onClick={() => {
                   onHide();
-                  setIsAfterResult(false)
+                  setIsAfterResult(false);
                 }}
                 className="btn btn-primary btn-elevate"
               >
@@ -876,39 +948,40 @@ export function FormEditForm({
             {/* {(!isUserForRead || !currentState?.payroll_group_details?.slary_setup_not_created>0 )&&( */}
 
             {/* { currentState?.payroll_group_details?.slary_setup_not_created > 0  && ( */}
-            {<button
-              type="submit"
-              onClick={() => {
+            {
+              <button
+                type="submit"
+                onClick={() => {
+                  // if (!values.payroll_accountId) {
 
-                // if (!values.payroll_accountId) {
+                  //   const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
+                  //     (option) => option.isDefault === true
+                  //   );
 
-                //   const defaultPayrollAccount = dashboard?.allPayrollAccountList?.find(
-                //     (option) => option.isDefault === true
-                //   );
+                  //   setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
 
-                //   setFieldValue("payroll_accountId", defaultPayrollAccount?.value || null);
+                  // }
+                  handleSubmit();
 
-                // }
-                handleSubmit();
-
-                // dispatch(actions.clearReduxData())
-                setIsAfterResult(true)
-
-              }}
-              className="btn btn-primary btn-elevate"
-              disabled={loading || resultAfterPayrollProcess || !currentState?.payroll_group_details?.slary_setup_not_created > 0 || !checkPayroll_EmployeesExist?.execute}
-
-            >
-              Execute
-              {loading && (
-                <span className="ml-3 mr-3 spinner spinner-white"></span>
-              )}
-            </button>}
+                  // dispatch(actions.clearReduxData())
+                  setIsAfterResult(true);
+                }}
+                className="btn btn-primary btn-elevate"
+                disabled={
+                  loading ||
+                  resultAfterPayrollProcess ||
+                  !currentState?.payroll_group_details
+                    ?.slary_setup_not_created > 0 ||
+                  !checkPayroll_EmployeesExist?.execute
+                }
+              >
+                Execute
+                {loading && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>
+            }
             {/* )} */}
-
-
-
-
           </Modal.Footer>
         </>
       )}

@@ -196,7 +196,7 @@ export function RolesAccess({
           (dd, index) =>
             dd[0] !== "Settings" && ( // Check if dd[0] is not "Settings"
               <div
-                className="px-3 py-2 rounded-lg bg-white min-h-48 max-h-48 overflow-y-auto"
+                className="px-3 py-2 rounded-lg bg-white  overflow-y-auto"
                 key={index}
               >
                 <div className="space-y-3">
@@ -227,7 +227,7 @@ export function RolesAccess({
                           .join(" ")}
                     </h6>
                   </div>
-                  <div>
+                  <div className="overflow-auto min-h-44 max-h-44 border-none scrollbar-fancy">
                     {[
                       ...dd[1], // Create a shallow copy of dd[1]
                     ]
