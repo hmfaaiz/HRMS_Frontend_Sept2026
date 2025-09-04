@@ -244,6 +244,7 @@ export function BankEditForm({
   const [defBasicSalaryDB, setBasicSalaryDB] = useState(0);
   const [deferrors, setErrors] = useState({});
   const [dateOfJoining, setDateOfJoining] = useState();
+  const [localizationId, setLocalizationId] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
   const [dropdownData, setdropdownData] = useState(
     DEFAULT_CALCULATION_TYPE_DROPDOWN
@@ -446,6 +447,7 @@ export function BankEditForm({
       setBasicSalary(response?.data?.data[0]?.basicSalary || "");
       setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
       setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
+      setLocalizationId(response?.data?.data[0]?.localizationId || "");
      
 
       if (response.data?.data?.[0]?.salaryMethod) {
@@ -1989,7 +1991,8 @@ export function BankEditForm({
                         </div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                    {localizationId == 1 && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
                       <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
                         Deduction
                       </h6>
@@ -2185,6 +2188,11 @@ export function BankEditForm({
                         </div>
                       </div>
                     </div>
+                      
+                    )
+                    }
+
+                    
                   </div>
                 </fieldset>
               </Form>
