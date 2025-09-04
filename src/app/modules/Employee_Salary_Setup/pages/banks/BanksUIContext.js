@@ -17,6 +17,7 @@ export const ReceiptUIConsumer = BanksUIContext.Consumer;
 export function BanksUIProvider({ BanksUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds] = useState([]);
+   const [panelMode, setPanelMode] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -76,6 +77,8 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
     ids,
     setIds,
     initUser,
+     panelMode,
+    setPanelMode,
     newBankButtonClick: BanksUIEvents.newBankButtonClick,
     openEditBankDialog: BanksUIEvents.openEditBankDialog,
     openDeleteBankDialog: BanksUIEvents.openDeleteBankDialog,

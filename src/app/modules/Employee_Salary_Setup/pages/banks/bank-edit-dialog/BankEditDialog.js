@@ -35,6 +35,8 @@ export function BankEditDialog({ id, show, onHide, userForRead, status }) {
     return {
       initUser: banksUIContext.initUser,
       queryParams: banksUIContext.queryParams,
+       panelMode: banksUIContext.panelMode,
+      setPanelMode: banksUIContext.setPanelMode,
     };
   }, [banksUIContext]);
 
@@ -169,6 +171,8 @@ export function BankEditDialog({ id, show, onHide, userForRead, status }) {
           id={id}
           approveSalary={approveSalary}
           approveLoading={approveLoading}
+          panelMode={banksUIProps.panelMode}
+          setPanelMode={banksUIProps.setPanelMode}
         />
       </div>
       <ToastContainer

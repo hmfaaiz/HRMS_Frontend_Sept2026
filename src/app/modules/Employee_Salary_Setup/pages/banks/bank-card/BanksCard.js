@@ -21,6 +21,8 @@ export function BanksCard() {
     return {
       newBankButtonClick: banksUIContext.newBankButtonClick,
       openEditBankDialog: banksUIContext.openEditBankDialog,
+      panelMode: banksUIContext.panelMode,
+      setPanelMode: banksUIContext.setPanelMode,
     };
   }, [banksUIContext]);
 

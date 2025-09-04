@@ -32,6 +32,8 @@ export function BanksTable() {
       openDeleteBankDialog: bankUIContext.openDeleteBankDialog,
       openActiveBankDialog: bankUIContext.openActiveBankDialog,
       openReadBankDialog: bankUIContext.openReadBankDialog,
+      panelMode: bankUIContext.panelMode,
+      setPanelMode: bankUIContext.setPanelMode,
     };
   }, [bankUIContext]);
 

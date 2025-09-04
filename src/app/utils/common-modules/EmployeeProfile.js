@@ -209,7 +209,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
   return (
     <>
       {panelMode && (
-        <Accordion defaultActiveKey="0" className="p-2">
+        <Accordion defaultActiveKey="0" className=" ">
           <Card>
             <Accordion.Collapse eventKey="0">
 
