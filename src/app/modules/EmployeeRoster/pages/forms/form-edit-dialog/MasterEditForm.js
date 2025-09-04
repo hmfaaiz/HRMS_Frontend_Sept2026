@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo } from "react";
+import React, { useEffect, useLayoutEffect, useMemo } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -14,7 +14,7 @@ import {
   VALIDATION_MESSAGES,
   WEEK_DAY_STRING,
 } from "../../../../../utils/constants";
-import { formatDates } from "../../../../../utils/common";
+import { formatDates, setDefaultSubsidiary } from "../../../../../utils/common";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as actions from "../../../_redux/formActions";
 import {
@@ -22,7 +22,6 @@ import {
   fetchAllRosterPattern,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { initialFilter } from "../FormUIHelpers";
-import { Edit } from "@material-ui/icons";
 
 export function MasterEditForm({
   submitForm,
@@ -50,6 +49,7 @@ export function MasterEditForm({
     allEmployees,
     payrollData,
     allSubsidiaryList,
+    defaultSubsidiary
   } = useSelector(
     (state) => ({
       payrollData: state.employee_roster.payrollData,
@@ -57,9 +57,11 @@ export function MasterEditForm({
       allEmployees: state.dashboard.allEmployees,
       allSubsidiaryList: state.dashboard.allSubsidiaryList,
       allRosterPatternList: state.dashboard.allRosterPatternList,
+      defaultSubsidiary: state?.auth?.user?.EmployeeMapping?.subsidiaryId
     }),
     shallowEqual
   );
+
 
   const allSubsidiaryMap = useMemo(() => {
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
@@ -155,6 +157,17 @@ export function MasterEditForm({
     });
   };
 
+  useEffect(() => {
+    if (defaultSubsidiary) {
+      dispatch(actions.getPayrollMonth(defaultSubsidiary));
+      dispatch(fetchAllActiveEmployeesBySubsidiary(defaultSubsidiary));
+      setQueryParams({
+        ...initialFilter,
+        filter: { subsidiaryId: defaultSubsidiary },
+      })
+    }
+  }, [defaultSubsidiary])
+
   return (
     <>
       <Formik
@@ -163,15 +176,15 @@ export function MasterEditForm({
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
           enableLoading();
-                    const payload = {
-                  ...values,
-                  from: values.from
-                    ? formatDates(values.from, "dd-MMM-yyyy")
-                    : null,to: values.to
-                    ? formatDates(values.to, "dd-MMM-yyyy")
-                    : null,
+          const payload = {
+            ...values,
+            from: values.from
+              ? formatDates(values.from, "dd-MMM-yyyy")
+              : null, to: values.to
+                ? formatDates(values.to, "dd-MMM-yyyy")
+                : null,
 
-                    }
+          }
           submitForm(payload, resetForm);
         }}
       >
@@ -230,8 +243,9 @@ export function MasterEditForm({
                       isDisabled={isEdit}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
-                      value={
-                        allSubsidiaryMap?.get(values?.subsidiaryId || "") || ""
+                      value={setDefaultSubsidiary(values?.subsidiaryId, allSubsidiaryList, defaultSubsidiary)
+                        // allSubsidiaryList?.find((el) => el?.value === values?.subsidiaryId) || ""
+                        // allSubsidiaryMap?.get(values?.subsidiaryId || "") || ""
                       }
                       autoComplete="off"
                       options={allSubsidiaryList}
@@ -278,27 +292,27 @@ export function MasterEditForm({
                       autoComplete="off"
                     />
                   </div>
-                  <div>
+                  {/* <div className="text-xs text-black" >
                     {values?.subsidiaryId
                       ? (() => {
-                          const selectedSubsidiary = allSubsidiaryMap?.get(
-                            values?.subsidiaryId
-                          );
-                          return (
-                            <>
-                              <div>
-                                <b>Active Fiscal Year -</b>{" "}
-                                {selectedSubsidiary?.fiscalYearLabel}
-                              </div>
-                              <div>
-                                <b>Active Payroll Month -</b>{" "}
-                                {selectedSubsidiary?.payrollMonthLabel}
-                              </div>
-                            </>
-                          );
-                        })()
+                        const selectedSubsidiary = allSubsidiaryMap?.get(
+                          values?.subsidiaryId
+                        );
+                        return (
+                          <>
+                            <div>
+                              <b>Active Fiscal Year -</b>{" "}
+                              {selectedSubsidiary?.fiscalYearLabel}
+                            </div>
+                            <div>
+                              <b>Active Payroll Month -</b>{" "}
+                              {selectedSubsidiary?.payrollMonthLabel}
+                            </div>
+                          </>
+                        );
+                      })()
                       : null}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Date from Field Start */}

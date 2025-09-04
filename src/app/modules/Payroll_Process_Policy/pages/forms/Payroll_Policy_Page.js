@@ -12,33 +12,40 @@ import { FormCard } from "./form-card/FormCard";
 export function Payroll_Policy({ history }) {
   const [defRecordId, setDefaultRecordId] = useState(0);
   const [readOnly, setreadOnly] = useState(false)
+  const [active, setActive] = useState(false)
 
   const dispatch = useDispatch();
- 
+
   const FormUIEvents = {
     newFormButtonClick: () => {
       setreadOnly(false)
+      setActive(true)
       history.push("/payroll_process_policy/read-all-payroll-process-policy/new");
     },
     openEditFormDialog: (id) => {
       setDefaultRecordId(id);
       setreadOnly(false)
+      setActive(true)
       history.push(`/payroll_process_policy/read-all-payroll-process-policy/${id}/edit`);
     },
+
     openDeleteFormDialog: (id, status) => {
+      // setActive(true)
       history.push(`/payroll_process_policy/read-all-payroll-process-policy/${id}/${status}/delete`);
     },
     openActiveFormDialog: (id) => {
       setreadOnly(false)
+      // setActive(true)
       history.push(`/payroll_process_policy/read-all-payroll-process-policy/${id}/active`);
     },
     openReadFormDialog: (id, isUserRead) => {
+      setActive(true)
       setreadOnly(true)
       history.push(`/payroll_process_policy/read-all-payroll-process-policy/${id}/read`);
     },
   };
   return (
-    
+
     <FormUIProvider FormUIEvents={FormUIEvents}>
       <Route exact path="/payroll_process_policy/read-all-payroll-process-policy/new">
         {({ history, match }) => (
@@ -97,7 +104,7 @@ export function Payroll_Policy({ history }) {
           />
         )}
       </Route>
-      <FormCard id={defRecordId} setid = {setDefaultRecordId} readOnly={readOnly}/>
+      <FormCard id={defRecordId} setid={setDefaultRecordId} readOnly={readOnly} active={active} setActive={setActive} />
       <ToastContainer
         position="top-right"
         autoClose={5000}

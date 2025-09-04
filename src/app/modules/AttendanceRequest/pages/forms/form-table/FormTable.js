@@ -132,7 +132,7 @@ export function FormTable() {
         maxWidth: "70px",
       },
       formatter: (cell) => {
-        return format(new Date(cell), "dd-MMM-yyyy");
+        return cell ?  format(new Date(cell), "dd-MMM-yyyy") : '';
       },
     },
     {

@@ -11,6 +11,40 @@ import { initialFilter, requestFilter } from "../../FormUIHelper";
 import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { formatDates } from "../../../../../utils/common";
+import * as Yup from "yup";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+const validationSchema = Yup.object().shape({
+  requestDate: Yup.object().shape({
+    from: Yup.date()
+      .nullable()
+      .test("from-required-if-to", VALIDATION_MESSAGES.required, function(
+        from
+      ) {
+        const { to } = this.parent;
+        if (to && !from) return false;
+        return true;
+      }),
+
+    to: Yup.date()
+      .nullable()
+      .test("to-required-if-from", VALIDATION_MESSAGES.required, function(to) {
+        const { from } = this.parent;
+        if (from && !to) return false;
+        return true;
+      })
+      .test(
+        "is-after-from",
+        "To Date should be greater than From Date",
+        function(to) {
+          const { from } = this.parent;
+          if (from && to) {
+            return to >= from;
+          }
+          return true;
+        }
+      ),
+  }),
+});
 export const FormFilter = ({ loading, queryParams }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const dispatch = useDispatch();
@@ -56,24 +90,32 @@ export const FormFilter = ({ loading, queryParams }) => {
   return (
     <Formik
       enableReinitialize={true}
+      validationSchema={validationSchema}
       initialValues={{ ...queryParams?.filter, reportingLevel: currentLevel }}
       onSubmit={(values) => {
-           const payload = {
-                  ...values,
-                 
-                  requestDate: {
-                    from: values.requestDate?.from
-                      ? formatDates(values.requestDate.from, "dd-MMM-yyyy")
-                      : "",
-                    to: values.requestDate?.to
-                      ? formatDates(values.requestDate.to, "dd-MMM-yyyy")
-                      : "",
-                  },
-                };
+        const payload = {
+          ...values,
+
+          requestDate: {
+            from: values.requestDate?.from
+              ? formatDates(values.requestDate.from, "dd-MMM-yyyy")
+              : "",
+            to: values.requestDate?.to
+              ? formatDates(values.requestDate.to, "dd-MMM-yyyy")
+              : "",
+          },
+        };
         applyFilter(payload);
       }}
     >
-      {({ values, handleSubmit, handleBlur, setFieldValue, handleReset }) => (
+      {({
+        values,
+        handleSubmit,
+        handleBlur,
+        setFieldValue,
+        handleReset,
+        errors,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             <Form className="form form-label-right">
@@ -124,7 +166,7 @@ export const FormFilter = ({ loading, queryParams }) => {
                     {/* Status Field  */}
                     <SearchSelect
                       name="requestStatus"
-                      label={<span>Request Status</span>}
+                      label={<span>Status</span>}
                       onChange={({ value }) => {
                         setFieldValue("requestStatus", value);
                       }}
@@ -155,6 +197,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                           }}
                           autoComplete="off"
                         />
+                        {errors?.requestDate?.from && (
+                          <span className="invalid-feedback">
+                            {errors?.requestDate?.from}
+                          </span>
+                        )}
                       </div>
 
                       <div className="col-span-1">
@@ -170,6 +217,11 @@ export const FormFilter = ({ loading, queryParams }) => {
                           }}
                           autoComplete="off"
                         />
+                        {errors?.requestDate?.to && (
+                          <span className="invalid-feedback">
+                            {errors?.requestDate?.to}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>

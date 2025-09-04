@@ -1,5 +1,6 @@
 import React from "react";
 import { PeriodType } from "../EmpUIHelper";
+import { format } from "date-fns";
 
 const SingleCard = ({ data, setSmallTableModalData }) => {
   let theme = data?.theme_class;
@@ -46,7 +47,11 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
                 </div>
               </div>
               <div className={`text-sm font-semibold m-0 ${theme}`}>
-                <span>{person?.main_value}</span>
+                <span>
+                  {person?.main_value
+                    ? format(new Date(person?.main_value), "dd-MMM-yyyy")
+                    : ""}
+                </span>
               </div>
             </div>
           ))
@@ -54,17 +59,22 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
           <label className="text-center">No Record Available</label>
         )}
       </div>
-      <lable
-        className={
-          data?.data.length > 0
-            ? `text-black cursor-pointer font-medium underline text-xs hover:text-tprimary flex justify-end`
-            : `text-gray-500 cursor-not-allowed font-medium text-xs flex justify-end`
-        }
-        // className="text-black cursor-pointer text-right font-medium underline text-xs hover:text-tprimary flex justify-end"
-        onClick={() => setSmallTableModalData(data)}
-      >
-        Expand
-      </lable>
+      <div className="text-right w-full flex justify-end">
+        {data?.data.length > 0 ? (
+          <lable
+            className={`text-black cursor-pointer w-fit font-medium underline text-xs hover:text-tprimary flex justify-end`}
+            onClick={() => setSmallTableModalData(data)}
+          >
+            Expand
+          </lable>
+        ) : (
+          <lable
+            className={`text-gray-500 cursor-not-allowed w-fit font-medium text-xs flex justify-end`}
+          >
+            Expand
+          </lable>
+        )}
+      </div>
     </div>
   );
 };

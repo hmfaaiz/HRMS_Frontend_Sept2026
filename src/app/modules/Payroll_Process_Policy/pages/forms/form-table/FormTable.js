@@ -25,7 +25,7 @@ import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
-import { CirclePlus, Trash2 } from "lucide-react";
+import { CirclePlus, Trash2, X } from "lucide-react";
 
 export function FormTable(user) {
   //Users UI Context
@@ -654,7 +654,7 @@ export function FormTable(user) {
 
   return (
     <>
-      <div className="w-full overflow-x-auto" >
+      <div className="w-full overflow-x-auto rounded-b-lg bg-white px-3 pb-2" >
         <PaginationProvider pagination={paginationFactory(paginationOptions)}>
           {({ paginationProps, paginationTableProps }) => {
             return (
@@ -689,6 +689,7 @@ export function FormTable(user) {
           }}
         </PaginationProvider>
       </div>
+      {user?.active && <div className="rounded-b-lg bg-white px-3 py-2 mt-2">
       <Formik
         enableReinitialize={true}
         initialValues={currentState.userForEdit || initialValues}
@@ -728,10 +729,13 @@ export function FormTable(user) {
           <>  <Form className="form form-label-right">
             <fieldset disabled={user?.readOnly || false} >
 
-
+<div className="flex justify-between">
               <h6 className="font-bold mb-0 text-primary ">
-                Payroll Configuration
+                Payroll Configuration From
               </h6>
+              <X title="Close" onClick={()=> 
+ user.setActive(false)} className="w-4 h-4 text-black cursor-pointer"/>
+</div>
 
 
               <div className="grid grid-cols-1 lg:grid-cols-6 gap-x-3 ">
@@ -1805,7 +1809,8 @@ export function FormTable(user) {
                 {isAccessForRead && !user.readOnly && (
                   <button
                     type="submit"
-                    onClick={() => handleSubmit()}
+                    onClick={() => {
+                      handleSubmit()}}
                     disabled={Boolean(actionsLoading)}
                     className="btn btn-primary btn-elevate"
                   >
@@ -1823,6 +1828,7 @@ export function FormTable(user) {
 
 
       </Formik >
+      </div>}
     </>
   );
 }

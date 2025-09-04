@@ -10,7 +10,7 @@ export function FormDeleteDialog({ id, show, onHide }) {
   // Customers Redux state
   const dispatch = useDispatch();
   const { isLoading } = useSelector(
-    (state) => ({ isLoading: state.customers.actionsLoading }),
+    (state) => ({ isLoading: state.leave_request.actionsLoading }),
     shallowEqual
   );
 
