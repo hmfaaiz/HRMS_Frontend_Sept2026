@@ -107,16 +107,16 @@ export function FormTable() {
  
 
  
-    {
-      dataField: "CycleType.formName",
-      text: "cycle type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-    },
+    // {
+    //   dataField: "CycleType.formName",
+    //   text: "cycle type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "10px",
+    //   },
+    // },
  
        {
       dataField: "action",

@@ -339,7 +339,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                   <hr></hr>
 
                   <h6 className="font-bold mb-0 text-primary">
-                    Date
+                    Loan Request Report
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
@@ -379,7 +379,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
                     <div className="">
 
 
-                      <label>Date</label>
+                      <label>From</label>
                       <Field
                         className="form-control"
                         component={DatePickerField}
@@ -468,7 +468,7 @@ export function FormFilter({ loading, dispatch, loanReqLoading, LoanPositionLoad
 
 
                   <h6 className="font-bold mb-0 text-primary ">
-                    Payroll Month
+                    Loan Position Report
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mb-2">

@@ -288,7 +288,7 @@ export function MasterEditForm({
                     </div>
                     {/* Employee Field End */}
 
-                    <div className="mt-6">
+                    <div className="mt-6  flex">
                       {panelMode ? (
                         <button
                           type="button"
@@ -308,32 +308,22 @@ export function MasterEditForm({
                           View Details
                         </button>
                       )}
-                    </div>
+                      
+                      {values.attDate && (
+                        <label className="pl-3">
+                          {" "}
+                          Date {values.attDate}
+                        </label>
+                      )}
+                        
 
-                    {/* {payrollData &&
-                      payrollData.startDate &&
-                      payrollData.endDate && (
-                        <div className="col-12 col-md-6 mt-8">
-                          <div className="row  justify-content-end">
-                              <span className="mr-2">
-                                <b>Active Payroll Month:</b>{" "}
-                              </span>
-                              <span>
-                                <ActivePayrollMonthLabel
-                                  className="date"
-                                  month={payrollData.month}
-                                  year={payrollData.year}
-                                  startDate={payrollData.startDate}
-                                  endDate={payrollData.endDate}
-                                />
-                              </span>
-                          </div>
-                        </div>
-                      )} */}
+                 
+                    </div>
+                   
 
                     {/* Active payroll month */}
 
-                    <div className="mt-4 col-span-4 text-xs d-flex flex-column align-items-start">
+                    <div className="mt-4 col-span-4 text-xs d-flex flex-column align-items-end">
                       {activeFiscalYear
                         ? (() => {
                             return (
@@ -362,6 +352,15 @@ export function MasterEditForm({
                     />
                     {/* EmployeeProfile Ends */}
                   </div>
+
+
+                     
+                  
+                   
+                 
+                    
+                   
+                  
 
                   {/* Date In Field Start */}
                   <div>

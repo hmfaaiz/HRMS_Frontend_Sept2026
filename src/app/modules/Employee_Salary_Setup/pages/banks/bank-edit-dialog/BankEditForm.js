@@ -28,7 +28,9 @@ import {
 } from "../../../../../utils/constants";
 import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
-import { CirclePlus, CloudCog, Trash2 } from "lucide-react";
+import { CirclePlus, Eye, Trash2, XCircle, CloudCog } from "lucide-react";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -203,7 +205,7 @@ export function BankEditForm({
   loading,
   id,
   approveSalary,
-  approveLoading,
+  approveLoading,panelMode,setPanelMode,
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -243,6 +245,9 @@ export function BankEditForm({
   const [defGrossSalaryDB, setGrossSalaryDB] = useState(0);
   const [defBasicSalaryDB, setBasicSalaryDB] = useState(0);
   const [deferrors, setErrors] = useState({});
+  const [dateOfJoining, setDateOfJoining] = useState();
+  const [localizationId, setLocalizationId] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState();
   const [dropdownData, setdropdownData] = useState(
     DEFAULT_CALCULATION_TYPE_DROPDOWN
   );
@@ -433,7 +438,7 @@ export function BankEditForm({
       } else {
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
-      console.log("aaa333", response?.data?.data[0]);
+     
       setBasicSalaryFactor(
         response?.data?.data[0]?.basicSalaryFactor ||
           response?.data?.data[0]?.basicFactor ||
@@ -442,6 +447,10 @@ export function BankEditForm({
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || "");
       setBasicSalary(response?.data?.data[0]?.basicSalary || "");
+      setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
+      setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
+      setLocalizationId(response?.data?.data[0]?.localizationId || "");
+     
 
       if (response.data?.data?.[0]?.salaryMethod) {
         setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || "");
@@ -735,6 +744,8 @@ export function BankEditForm({
     }
   }, [user.subsidiaryId]);
 
+ console.log("dateOfJoining111",dateOfJoining)
+
   return (
     <>
       <Formik
@@ -793,8 +804,9 @@ export function BankEditForm({
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
-                    <div>
-                      <SearchSelect
+                    <div className="flex item-end gap-1 justify-end">
+                      <div className="w-full">
+                           <SearchSelect
                         name="employeeId"
                         label={
                           <span>
@@ -827,8 +839,34 @@ export function BankEditForm({
                         touched={touched.employeeId}
                         options={dashboard.allEmployeesSalaryDDL}
                       />
+
+                      </div>
+                   
+                        <div className="flex items-end justify-end">
+                    {panelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <Eye className="w-4 h-4 text-white" />
+                        View
+                      </button>
+                    )}
+                  </div>
                     </div>
-                    <div>
+
+                      
+                    <div className="">
                       <SearchSelect
                         name="currencyId"
                         label={
@@ -853,7 +891,7 @@ export function BankEditForm({
                       />
                     </div>
 
-                    <div>
+                    <div className="">
                       <AmountInput
                         field={{
                           name: "grossSalary",
@@ -887,7 +925,7 @@ export function BankEditForm({
                       />
                     </div>
 
-                    <div>
+                    <div className="">
                       <AmountInput
                         field={{
                           name: "basicSalary",
@@ -916,7 +954,7 @@ export function BankEditForm({
                         }}
                       />
                     </div>
-                    <div>
+                    <div className="">
                       <Field
                         name="basicSalaryFactor"
                         type="number"
@@ -952,6 +990,11 @@ export function BankEditForm({
                       value="Calculate"
                     ></input>
                   </div>
+                  <br/>
+                                                         <EmployeeProfile
+        employeeId={values.employeeId}
+        panelMode={panelMode}
+      />
                   <hr />
                   <div>
                     <div className="flex justify-between items-center">
@@ -970,6 +1013,8 @@ export function BankEditForm({
                         </button>
                       )}
                     </div>
+
+   
                     <div className="w-full overflow-x-auto">
                       <div className="react-bootstrap-table table-responsive">
                         <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
@@ -1849,11 +1894,16 @@ export function BankEditForm({
                             }}
                             timeInputLabel="Time:"
                             dateFormat="dd-MMM-yyyy"
-                            showTimeInput
+                            // showTimeInput
                             name="gratuity_startDate"
                             autoComplete="off"
                             disabled={!values.gratuity_member || isUserForRead}
                             // value = {values.dateOfJoining}
+                             minDate={
+                                    dateOfJoining
+                                      ? new Date(dateOfJoining)
+                                      : null
+                                  }
                           />
                           <ErrorMessage
                             className="form-feedBack"
@@ -1977,7 +2027,8 @@ export function BankEditForm({
                         </div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                    {localizationId == 1 && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
                       <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
                         Deduction
                       </h6>
@@ -2029,10 +2080,16 @@ export function BankEditForm({
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
-                              showTimeInput
+                              // showTimeInput
                               name="eobi_reg_date"
                               autoComplete="off"
                               disabled={!values.eobi_member || isUserForRead}
+                            
+                               minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
                             />
                             <ErrorMessage
                               className="form-feedBack"
@@ -2117,12 +2174,18 @@ export function BankEditForm({
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
-                              showTimeInput
+                              // showTimeInput
                               name="social_security_reg_date"
                               autoComplete="off"
                               disabled={
                                 !values.social_security_member || isUserForRead
                               }
+                               minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
+                            
                               // value = {values.dateOfJoining}
                             />
                             <ErrorMessage
@@ -2161,6 +2224,11 @@ export function BankEditForm({
                         </div>
                       </div>
                     </div>
+                      
+                    )
+                    }
+
+                    
                   </div>
                 </fieldset>
               </Form>

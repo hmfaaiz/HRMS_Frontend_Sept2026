@@ -650,6 +650,8 @@ export function FormTable(user) {
 
 
   // }, [dispatch]);
+
+
   return (
     <>
       <div className="w-full overflow-x-auto rounded-b-lg bg-white px-3 pb-2" >
@@ -1360,9 +1362,9 @@ export function FormTable(user) {
 
 
 
-
-
-
+                  {dashboard.allSubidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.localizationId == 1 && (<>
               <h6 className="font-bold mb-0 text-primary my-2">
                 EOBI Configuration
               </h6>
@@ -1480,7 +1482,11 @@ export function FormTable(user) {
 
               <hr></hr>
 
+             </>   )  }
 
+              {dashboard.allSubidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.localizationId == 1 && (<>
               <h6 className="font-bold mb-0 text-primary my-2">
                 Social Security Configuration
               </h6>
@@ -1594,7 +1600,7 @@ export function FormTable(user) {
               </div>
 
               <hr></hr>
-
+</>)  }
               <div>
                 
                 <div className="flex justify-between items-center">

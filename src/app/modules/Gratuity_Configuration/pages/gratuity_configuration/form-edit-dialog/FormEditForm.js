@@ -163,7 +163,7 @@ export function FormEditForm({
 
                   {dashboard?.allSubsidiaryList?.find(
   (option) => option.value === values.subsidiaryId
-)?.policyData?.localizationId === 2 && (
+)?.localizationId === 2 && (
 
                   <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
@@ -288,7 +288,7 @@ export function FormEditForm({
 
                   {dashboard?.allSubsidiaryList?.find(
   (option) => option.value === values.subsidiaryId
-)?.policyData?.localizationId === 2 && (
+)?.localizationId === 2 && (
 
                   <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">

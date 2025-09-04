@@ -119,7 +119,7 @@ const profileValidation = Yup.object()
 
     passportExpiry: Yup.date()
       .nullable()
-      .min(currentDate, "Passport expiry must be a future date")
+      // .min(currentDate, "Passport expiry must be a future date")
       .typeError("Passport expiry must be a valid date"),
 
     drivingLicenseExpiry: Yup.date()
@@ -230,7 +230,7 @@ dateOfContractExpiry: Yup.date()
 
     passportNo: Yup.string()
       .nullable()
-      .max(15, "Passport number must be at most 15 characters"),
+      .max(15, "Passport No. must be at most 15 characters"),
     // on instruction of Mr. Mubin
     // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
     //.required('ID Card No is required'), // Make it required if necessary
@@ -249,7 +249,7 @@ dateOfContractExpiry: Yup.date()
       .nullable() // Allows null values
       .matches(
         /^0[0-9]*$/,
-        "Phone number must start with 0 and contain only digits"
+        "Phone No. must start with 0 and contain only digits"
       ) // Must start with 0 and contain only digits
       .max(15, "Employee code must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
@@ -258,7 +258,7 @@ dateOfContractExpiry: Yup.date()
       .nullable() // Allows null values
       .matches(
         /^0[0-9]*$/,
-        "Phone number must start with 0 and contain only digits"
+        "Phone No. must start with 0 and contain only digits"
       ) // Must start with 0 and contain only digits
       .max(15, "Employee code must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
@@ -267,7 +267,7 @@ dateOfContractExpiry: Yup.date()
       .nullable() // Allows null values
       .matches(
         /^0[0-9]*$/,
-        "Phone number must start with 0 and contain only digits"
+        "Phone No. must start with 0 and contain only digits"
       ) // Must start with 0 and contain only digits
       .max(15, "Employee code must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
@@ -520,6 +520,7 @@ export function DesignationEditForm({
   const [isImageReq, setIsImageReq] = useState(false);
   const [imgAlreadySet, setImgAlreadySet] = useState(false);
   const [allEmpTypes, setAllEmpTypes] = useState([]);
+  const [maxProbationPolicyInMonth, setMaxProbationPolicyInMonth] = useState("");
   const scrollRef = useRef(null);
 
 
@@ -1218,7 +1219,7 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
-      setLocalizationId(response?.data?.data[0]?.localizationId);
+      // setLocalizationId(response?.data?.data[0]?.localizationId);
 
       // setDefaultProbationPolicyMonth(new Date(newDate));
 
@@ -1266,6 +1267,8 @@ export function DesignationEditForm({
       const retirementDate = new Date(dateOfBirth);
 
       retirementDate.setFullYear(retirementDate.getFullYear() + retirementAge);
+      // Subtract 1 day (to get last day before birthday)
+       retirementDate.setDate(retirementDate.getDate() - 1);
 
       setDRetirmentDate(new Date(retirementDate));
       setFieldValue("dateOfRetirement", new Date(retirementDate));
@@ -1305,7 +1308,20 @@ export function DesignationEditForm({
     setConfirmationDueDate(new Date(confirmationDueDate));
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setHideContractExpDate(true);
+
+     const doubleProbationInMonth = probationPolicyInMonth * 2;
+    const confirmationDate = new Date(dateOfJoining);
+    confirmationDate.setFullYear(
+      confirmationDate.getFullYear() +
+        Math.floor(doubleProbationInMonth / 12)
+    ); // Add full years
+    confirmationDate.setMonth(
+      confirmationDate.getMonth() + (doubleProbationInMonth % 12)
+    ); 
+   
+    setMaxProbationPolicyInMonth(new Date(confirmationDate))
   };
+
 
   const updateContractExpiryPolicy = (
     setFieldValue,
@@ -1350,6 +1366,8 @@ export function DesignationEditForm({
     setConfirmationDueDate(new Date(confirmationDueDate));
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setDisableConfDueDate(true);
+
+   
   };
 
 
@@ -1830,6 +1848,15 @@ export function DesignationEditForm({
     );
   };
 
+useEffect(() => {
+
+  if (defSubsidiary?.localizationId) {
+    setLocalizationId(defSubsidiary?.localizationId);
+  
+  }
+}, [defSubsidiary]);
+
+
 
   return (
     <>
@@ -1918,7 +1945,7 @@ passportExpiry: values.passportExpiry
                     skillsList,
                     incidentList,
                     imagePolicy,
-                    isImageReq,employeeStatusLabel
+                    isImageReq,employeeStatusLabel,localizationId
                   );
                 });
             } else {
@@ -1931,7 +1958,7 @@ passportExpiry: values.passportExpiry
                 skillsList,
                 incidentList,
                 imagePolicy,
-                isImageReq,employeeStatusLabel
+                isImageReq,employeeStatusLabel,localizationId
               );
             }
           }
@@ -1955,6 +1982,7 @@ passportExpiry: values.passportExpiry
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
+                {console.log("eeeee1111",errors)}
                 <h6 className="font-bold mb-0 text-primary mt-2">
                   Basic Information
                 </h6>
@@ -3050,6 +3078,11 @@ passportExpiry: values.passportExpiry
                             values.dateOfJoining
                               ? new Date(values.dateOfJoining)
                               : null
+                          } 
+                           maxDate={
+                            maxProbationPolicyInMonth
+                              ? new Date(maxProbationPolicyInMonth)
+                              : null
                           }
                         />
                         <ErrorMessage
@@ -3126,6 +3159,7 @@ passportExpiry: values.passportExpiry
                         <DatePicker
                           className="form-control"
                           placeholder=" Date Of Retirement"
+                         disabled={true}
                           selected={RetirementSelected}
                           showYearDropdown
                           scrollableMonthYearDropdown
@@ -3136,8 +3170,9 @@ passportExpiry: values.passportExpiry
                           timeInputLabel="Time:"
                           dateFormat="dd-MMM-yyyy"
                           // showTimeInput
+                         minDate={values.dateOfJoining? new Date(values.dateOfJoining): null}
                           name="dateOfRetirement"
-                          disabled={isUserForRead || !values?.subsidiaryId}
+                          // disabled={isUserForRead || !values?.subsidiaryId}
                           autoComplete="off"
                         />
                         <ErrorMessage
@@ -3230,7 +3265,7 @@ Date of Retirement (Optional)
                         label={
                           <span>
                             {" "}
-                            Id Card No<span style={{ color: "red" }}>*</span>
+                            ID Card No.<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         autoComplete="off"
@@ -3859,8 +3894,8 @@ Date of Retirement (Optional)
                               name="emiratesNo"
                               maxLength="20"
                               component={Input}
-                              placeholder="Enter Emirates Id Number"
-                              label={<span> Emirates Id Number</span>}
+                              placeholder="Enter Emirates ID No."
+                              label={<span> Emirates Emirates ID No.</span>}
                               autoComplete="off"
                             />
                             {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}

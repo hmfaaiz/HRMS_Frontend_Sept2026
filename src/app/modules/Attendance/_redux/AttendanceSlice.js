@@ -214,8 +214,11 @@ export const AttendanceSlice = createSlice({
             state.actionsLoading = false;
             state.error = null;
             if (entities) {
-                entities.attDateIn = new Date(entities.attDateIn);
-                entities.attDateOut = new Date(entities.attDateOut)
+                // entities.attDateIn = new Date(entities.attDateIn);
+                // entities.attDateOut = new Date(entities.attDateOut)
+                entities.attDateIn = entities.attDateIn ? new Date(entities.attDateIn) : null;
+                entities.attDateOut = entities.attDateOut ? new Date(entities.attDateOut) : null;
+
 
                 // entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
                 // entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')

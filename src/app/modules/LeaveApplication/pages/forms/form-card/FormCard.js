@@ -84,20 +84,21 @@ export function FormCard() {
   return (
     <>
       <TCard name={CurrentModuleName()}>
-        <div className="">
+      
           <EmployeeSelect
             setId={formUIProps.setId}
             setemployeeId={formUIProps.setemployeeId}
             setPanelMode={formUIProps.setPanelMode}
             panelMode={formUIProps.panelMode}
           />
-          <div className="flex items-center gap-2">
+          <br/>
+        
             <EmployeeProfile
               employeeId={formUIProps.employeeId}
               panelMode={formUIProps.panelMode}
             />
-          </div>
-        </div>
+         
+      
         {/* EmployeeProfile Ends */}
 
         {/* FormEditDialog Starts */}
