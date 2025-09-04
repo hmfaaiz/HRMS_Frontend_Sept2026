@@ -137,7 +137,6 @@ const formValidationSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
 
-
 });
 
 const employeeCodeGenerationOptions = [
