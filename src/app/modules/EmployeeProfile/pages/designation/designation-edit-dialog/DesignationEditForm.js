@@ -119,7 +119,7 @@ const profileValidation = Yup.object()
 
     passportExpiry: Yup.date()
       .nullable()
-      .min(currentDate, "Passport expiry must be a future date")
+      // .min(currentDate, "Passport expiry must be a future date")
       .typeError("Passport expiry must be a valid date"),
 
     drivingLicenseExpiry: Yup.date()
@@ -1945,7 +1945,7 @@ passportExpiry: values.passportExpiry
                     skillsList,
                     incidentList,
                     imagePolicy,
-                    isImageReq,employeeStatusLabel
+                    isImageReq,employeeStatusLabel,localizationId
                   );
                 });
             } else {
@@ -1958,7 +1958,7 @@ passportExpiry: values.passportExpiry
                 skillsList,
                 incidentList,
                 imagePolicy,
-                isImageReq,employeeStatusLabel
+                isImageReq,employeeStatusLabel,localizationId
               );
             }
           }
