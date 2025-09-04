@@ -1219,7 +1219,7 @@ export function DesignationEditForm({
 
       // Set max age limit, if zero or not present, set no limit (e.g., null)
       setMaxAgeLimin(maxAge > 0 ? maxAge : null);
-      setLocalizationId(response?.data?.data[0]?.localizationId);
+      // setLocalizationId(response?.data?.data[0]?.localizationId);
 
       // setDefaultProbationPolicyMonth(new Date(newDate));
 
@@ -1318,7 +1318,7 @@ export function DesignationEditForm({
     confirmationDate.setMonth(
       confirmationDate.getMonth() + (doubleProbationInMonth % 12)
     ); 
-    console.log("confirmationDate111",confirmationDate)
+   
     setMaxProbationPolicyInMonth(new Date(confirmationDate))
   };
 
@@ -1847,6 +1847,15 @@ export function DesignationEditForm({
       "Date of Confirmation, Date of Confirmation Due & Contract Expiry Date needs to be updated!"
     );
   };
+
+useEffect(() => {
+
+  if (defSubsidiary?.localizationId) {
+    setLocalizationId(defSubsidiary?.localizationId);
+  
+  }
+}, [defSubsidiary]);
+
 
 
   return (
