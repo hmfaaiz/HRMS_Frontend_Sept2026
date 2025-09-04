@@ -173,27 +173,33 @@ export function FormEditForm({
                   </div>
 
                   {dashboard?.allSubsidiaryList?.find(
-                    (option) => option.value === values.subsidiaryId
-                  )?.policyData?.localizationId === 2 && (
-                    <div className="col-span-6 lg:col-span-4">
-                      <SearchSelect
-                        name="contract_typeId"
-                        label={<span>Contract Type</span>}
-                        isDisabled={isUserForRead}
-                        onChange={(e) => {
-                          setFieldValue("contract_typeId", e.value || null);
-                        }}
-                        value={
-                          dashboard.allContractTypeList.find(
-                            (option) => option.value === values.contract_typeId
-                          ) || null
-                        }
-                        options={dashboard.allContractTypeList}
-                        error={errors.contract_typeId}
-                        touched={touched.contract_typeId}
-                      />
-                    </div>
-                  )}
+  (option) => option.value === values.subsidiaryId
+)?.localizationId === 2 && (
+
+                  <div className="col-span-6 lg:col-span-4">
+                    <SearchSelect
+                      name="contract_typeId"
+                      label={
+                        <span>
+                          Contract Type
+                        </span>
+                      }
+                      isDisabled={isUserForRead}
+                      onChange={(e) => {
+                        setFieldValue("contract_typeId", e.value || null);
+                      }}
+                      value={
+                        dashboard.allContractTypeList.find(
+                          (option) => option.value === values.contract_typeId
+                        ) || null
+                      }
+                      options={dashboard.allContractTypeList}
+                      error={errors.contract_typeId}
+                      touched={touched.contract_typeId}
+                    />
+                  </div>
+
+                    )}
                   <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
                       Gratuity Basis<span style={{ color: "red" }}>*</span>
@@ -286,36 +292,35 @@ export function FormEditForm({
                   </div>
 
                   {dashboard?.allSubsidiaryList?.find(
-                    (option) => option.value === values.subsidiaryId
-                  )?.policyData?.localizationId === 2 && (
-                    <div className="col-span-6 lg:col-span-4">
-                      <label htmlFor="basis_of_gratuityId">
-                        Gratuity Fraction
-                      </label>
-                      <Field
-                        name="gratuity_fraction"
-                        as="select"
-                        className="form-control"
-                        disabled={isUserForRead}
-                        onChange={(e) => {
-                          setFieldValue("gratuity_fraction", e.target.value); // Use the raw value
-                        }}
-                      >
-                        <option value="">Select </option>
-                        {gratuityFractionOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </Field>
-                      {errors.gratuity_fraction &&
-                        touched.gratuity_fraction && (
-                          <div className="text-danger">
-                            {errors.gratuity_fraction}
-                          </div>
-                        )}
-                    </div>
-                  )}
+  (option) => option.value === values.subsidiaryId
+)?.localizationId === 2 && (
+
+                  <div className="col-span-6 lg:col-span-4">
+                    <label htmlFor="basis_of_gratuityId">
+                      Gratuity Fraction
+                    </label>
+                    <Field
+                      name="gratuity_fraction"
+                      as="select"
+                      className="form-control"
+                      disabled={isUserForRead}
+                      onChange={(e) => {
+                        setFieldValue("gratuity_fraction", e.target.value); // Use the raw value
+                      }}
+                    >
+                      <option value="">Select </option>
+                      {gratuityFractionOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.gratuity_fraction && touched.gratuity_fraction && (
+                      <div className="text-danger">{errors.gratuity_fraction}</div>
+                    )}
+                  </div>
+)}
+
                 </div>
               </fieldset>
             </Form>

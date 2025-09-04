@@ -375,7 +375,9 @@ export function FormFilter({
 
                   <hr></hr>
 
-                  <h6 className="font-bold mb-0 text-primary">Date</h6>
+                  <h6 className="font-bold mb-0 text-primary">
+                    Loan Request Report
+                  </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     <div className="">
@@ -400,7 +402,9 @@ export function FormFilter({
                     </div>
 
                     <div className="">
-                      <label>Date</label>
+
+
+                      <label>From</label>
                       <Field
                         className="form-control"
                         component={DatePickerField}
@@ -477,7 +481,7 @@ export function FormFilter({
                   <hr></hr>
 
                   <h6 className="font-bold mb-0 text-primary ">
-                    Payroll Month
+                    Loan Position Report
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1 mb-2">

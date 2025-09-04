@@ -90,7 +90,7 @@ export function FormTable() {
   const columns = [
     {
       dataField: "revisedDate",
-      text: "Revised Date",
+      text: "Salary Revision Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

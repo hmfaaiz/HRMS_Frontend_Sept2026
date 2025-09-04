@@ -38,6 +38,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     EIN: null,
     TIN: null,
     Logo: "",
+    localizationId: null,
   };
 
   const value = {

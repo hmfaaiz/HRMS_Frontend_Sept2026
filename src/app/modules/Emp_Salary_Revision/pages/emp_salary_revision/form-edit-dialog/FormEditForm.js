@@ -867,7 +867,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-6 gap-x-3 gap-y-1">
                   <div>
                     <label>
-                      Revised Date <span style={{ color: "red" }}>*</span>
+                      Salary Revision Date <span style={{ color: "red" }}>*</span>
                     </label>
 
                     <DatePicker
@@ -3058,7 +3058,7 @@ export function FormEditForm({
                         values.revisedDate === null ||
                         values.revisedDate === undefined
                       ) {
-                        toast.error("Please select a revised date");
+                        toast.error("Please select a salary revision date");
                         return;
                       }
                     }}

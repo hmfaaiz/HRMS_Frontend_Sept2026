@@ -36,7 +36,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     Id: "",
         subsidiaryId: "",
         payroll_groupId:"",
-        cycle_typeId: "",
+        cycle_typeId: null,
  
         policies:"",
         accounts:""

@@ -83,12 +83,25 @@ export function DesignationEditDialog({
     skillsList,
     incidentList,
     imagePolicy,
-    isImageReq,employeeStatusLabel
+    isImageReq,employeeStatusLabel,localizationId
   ) => {
     delete user?.all_report_to;
     delete user?.all_deligationId;
 
-     if (!user?.dateOfConfirmation && user?.employeeTypeId == 148 &&  employeeStatusLabel == "Confirmed") {
+     if (localizationId==2 && user?.passportExpiry  &&  user?.passportExpiry < new Date()) {
+       disbaleLoading();
+      toast.error("Passport expiry must be a future date.", {
+        position: "top-right",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return
+     }
+      if (!user?.dateOfConfirmation && user?.employeeTypeId == 148 &&  employeeStatusLabel == "Confirmed") {
        disbaleLoading();
       toast.error("Date of confirmation is required.", {
         position: "top-right",

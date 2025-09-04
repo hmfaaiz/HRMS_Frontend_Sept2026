@@ -34,7 +34,7 @@ export function ActionsColumnFormatter(
               setIds(row.Id);
             }}
           >
-            <Eye className="w-4 h-4 text-black cursor-pointer" />
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}

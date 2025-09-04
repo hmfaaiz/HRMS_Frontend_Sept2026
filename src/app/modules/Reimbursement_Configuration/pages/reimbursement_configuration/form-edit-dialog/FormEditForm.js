@@ -21,7 +21,9 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 const ReimbursementSchema = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
   payroll_groupId: Yup.number().required(VALIDATION_MESSAGES.required),
-  cycle_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
+  cycle_typeId: Yup.number()
+   .nullable(),
+  // .required(VALIDATION_MESSAGES.required),
 
   policies: Yup.array().of(
     Yup.object().shape({
@@ -224,13 +226,16 @@ export function FormEditForm({
                   </div>
 
                   {/* Employee Loan Account Field */}
+                           {dashboard?.allSubsidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.localizationId === 2 && (
                   <div className="">
                     <SearchSelect
                       name="cycle_typeId"
                       label={
                         <span>
                           Cycle Type
-                          <span style={{ color: "red" }}>*</span>
+                          {/* <span style={{ color: "red" }}>*</span> */}
                         </span>
                       }
                       isDisabled={isUserForRead}
@@ -251,6 +256,7 @@ export function FormEditForm({
                       touched={touched.cycle_typeId}
                     />
                   </div>
+)}
                 </div>
               </fieldset>
 
@@ -559,13 +565,11 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-                              <td className="min-w-32">
-                                {" "}
-                                {!isUserForRead && <p> Action</p>}
-                              </td>
+                            
                               <td className="min-w-32">Reimbursement Type</td>
                               <td className="min-w-32">Expense Account</td>
                               <td className="min-w-32">Bank Account</td>
+                              <td className="min-w-32"> {!isUserForRead && <p> Action</p>}</td>
                             </tr>
 
                             <tbody>
