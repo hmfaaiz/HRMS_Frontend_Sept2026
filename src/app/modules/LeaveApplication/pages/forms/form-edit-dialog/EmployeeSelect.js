@@ -116,7 +116,7 @@ export function EmployeeSelect({
                       </button>
                     )}
                   </div>
-                  <div className="text-xs text-black">
+                  <div className="text-xs text-black justify-end">
                     {activeFiscalYear
                       ? (() => {
                           return (

@@ -163,26 +163,26 @@ const SECTIONS = [
   {
     heading: "Office Information",
     fields: [
-      { name: 'Company', value: 'companyName' },
-      { name: 'Subsidiary', value: 'subsidiaryName' },
-      { name: 'Department', value: 'departmentName' },
-      { name: 'Grade', value: 'gradeName' },
-      { name: 'Designation', value: 'designationName' },
-      { name: 'Employee Type', value: 'employeeTypeName' },
-      { name: 'Team', value: 'teamName' },
+      { name: 'Company:', value: 'companyName' },
+      { name: 'Subsidiary:', value: 'subsidiaryName' },
+      { name: 'Department:', value: 'departmentName' },
+      { name: 'Grade:', value: 'gradeName' },
+      { name: 'Designation:', value: 'designationName' },
+      { name: 'Employee Type:', value: 'employeeTypeName' },
+      { name: 'Team:', value: 'teamName' },
     ]
   },
   {
     heading: "Personal Information",
     fields: [
-      { name: 'Country', value: 'countryName' },
-      { name: 'City', value: 'cityName' },
-      { name: 'Location', value: 'locationName' },
-      { name: 'Region', value: 'regionName' },
-      { name: 'Marital Status', value: 'maritalStatus' },
-      { name: 'Gender', value: 'gender' },
-      { name: 'Date of Joining', value: 'dateOfJoining', isDate: true },
-      { name: 'Date of Confirmation', value: 'dateOfConfirmation', isDate: true },
+      { name: 'Country:', value: 'countryName' },
+      { name: 'City:', value: 'cityName' },
+      { name: 'Location:', value: 'locationName' },
+      { name: 'Region:', value: 'regionName' },
+      { name: 'Marital Status:', value: 'maritalStatus' },
+      { name: 'Gender:', value: 'gender' },
+      { name: 'Date of Joining:', value: 'dateOfJoining', isDate: true },
+      { name: 'Date of Confirmation:', value: 'dateOfConfirmation', isDate: true },
     ]
   },
 ];
@@ -221,7 +221,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                       <Col md={3}>
 
                         <h6 className="font-bold mb-0 text-primary my-2">
-                          Office Information
+                          Employee Information
                         </h6>
                         <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
                           {SECTIONS[0].fields.map((field, idx) => (
@@ -261,7 +261,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                       {/* Personal Info */}
                       <Col md={3} className=' lg:ml-36 '>
                         <h6 className="font-bold mb-0 text-primary my-2 ">
-                          Personal Information
+                          {/* Personal Information */}&nbsp;
                         </h6>
                         <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
                           {SECTIONS[1].fields.map((field, idx) => (
@@ -291,7 +291,7 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                       {/* Profile Image */}
                       <Col md={3} className="flex flex-col lg:ml-36  ">
                         <h6 className="font-bold mb-0 text-primary my-2 ">
-                          Employee Picture
+                          {/* Employee Picture */}&nbsp;
                         </h6>
                         {/* <img
                           name="profile_image"

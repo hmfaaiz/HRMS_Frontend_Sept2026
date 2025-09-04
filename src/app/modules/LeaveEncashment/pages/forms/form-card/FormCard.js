@@ -154,7 +154,7 @@ export function FormCard() {
     //     {/* Card Ends */}
     //   </Card>
     <TCard name={CurrentModuleName()}>
-      <div className="">
+    
         <EmployeeSelect
           setId={formUIProps.setId}
           setemployeeId={formUIProps.setemployeeId}
@@ -162,14 +162,14 @@ export function FormCard() {
           setPanelMode={formUIProps.setPanelMode}
           panelMode={formUIProps.panelMode}
         />
-        <div className="flex items-center gap-2">
+    <br/>
           {/* EmployeeProfile Starts */}
           <EmployeeProfile
             employeeId={formUIProps.employeeId}
             panelMode={formUIProps.panelMode}
           />
           {/* EmployeeProfile Ends */}
-        </div>
+     
         {/* FormEditDialog Starts */}
         <FormEditDialog
           id={formUIProps.id}
@@ -185,7 +185,7 @@ export function FormCard() {
         {/* LeaveBalanceTable Starts */}
         <LeaveBalanceTable />
         {/* LeaveBalanceTable Ends */}
-      </div>
+     
     </TCard>
     // </>
   );
