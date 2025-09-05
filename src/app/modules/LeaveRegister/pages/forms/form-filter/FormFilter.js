@@ -22,6 +22,7 @@ import {
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import { FileText } from "lucide-react";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -143,12 +144,11 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-            const formattedValues = {
-                      ...values,
-                      from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
-                      to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
-                    
-                    };
+          const formattedValues = {
+            ...values,
+            from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+            to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+          };
           applyFilter(formattedValues);
         }}
       >
@@ -160,7 +160,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="col-span-1">
-                      <Field
+                      {/* <Field
                         name="subsidiaryId"
                         component={SearchSelect}
                         onBlur={handleBlur}
@@ -186,6 +186,33 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             ? allSubsidiaryList
                             : []),
                         ]}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={<span> Subsidiary</span>}
+                        // isDisabled={isUserForRead && true}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.value == "Select" ? "" : Number(e.value);
+                          setFieldValue("subsidiaryId", value);
+                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                          dispatch(fetchAllDept(value));
+                          setFieldValue("employeeId", "");
+                          setFieldValue("departmentId", "");
+                        }}
+                        // error={errors?.subsidiaryId}
+                        // touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          const value =
+                            e.value == "Select" ? "" : Number(e.value);
+                          setFieldValue("subsidiaryId", value);
+                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                          dispatch(fetchAllDept(value));
+                          setFieldValue("employeeId", "");
+                          setFieldValue("departmentId", "");
+                        }}
                       />
                     </div>
                     {/* Subsidiary Field End */}

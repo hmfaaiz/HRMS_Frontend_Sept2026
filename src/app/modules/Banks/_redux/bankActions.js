@@ -158,7 +158,6 @@ export const fetchUser = (id) => (dispatch) => {
     .then((response) => {
       const entities = response.data?.data;
 
-      console.log("User fetched for search " + id)
       dispatch(actions.BankFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {

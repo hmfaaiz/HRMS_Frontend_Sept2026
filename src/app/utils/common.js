@@ -152,19 +152,31 @@ export const amountFormat = (val, isDecimal = false) => {
 };
 
 export const formatTime = (value) => {
-  const cleaned = value.replace(/\D/g, "").slice(0, 4); // keep digits only
+  if (!value) return "";
+ 
+  const cleaned = value.replace(/\D/g, "").slice(0, 4);
   if (cleaned.length <= 2) return cleaned;
+ 
   return `${cleaned.slice(0, 2)}:${cleaned.slice(2)}`;
 };
 
-export const setDefaultSubsidiary = (value, allSubsidiaryList, defaultValue) => {
-  if (!Array.isArray(allSubsidiaryList)) return "";
-
-  return (
-    allSubsidiaryList.find((el) => el?.value === value) ||
-    allSubsidiaryList.find((el) => el?.value === defaultValue) ||
-    ""
-  );
+export const setDefaultSubsidiary = (value, allSubsidiaryList, defaultValue, callback) => {
+  if (!Array.isArray(allSubsidiaryList)) return null;
+  let result;
+  
+  if (value) {
+    result = allSubsidiaryList.find((el) => el?.value === value) || null;
+  } else {
+    result = allSubsidiaryList.find((el) => el?.value === defaultValue) || null;
+  }
+  
+  // Use setTimeout to defer the callback execution until after rendering
+  if (typeof callback === 'function' && !value) {
+    setTimeout(() => {
+      callback(result);
+    }, 50);
+  }
+  
+  return result;
 };
-
 

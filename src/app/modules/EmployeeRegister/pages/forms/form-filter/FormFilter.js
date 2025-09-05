@@ -26,6 +26,7 @@ import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { FileText, Sheet } from "lucide-react";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 //Validation for date fields
 const formValidation = Yup.object()
   .shape({
@@ -52,7 +53,7 @@ const formValidation = Yup.object()
   .test(
     "all-fields-required",
     "All fields  must be selected together",
-    function (value) {
+    function(value) {
       const { salary_type, operator, amount } = value;
 
       // Check if any of the fields is selected but the others are not
@@ -227,12 +228,24 @@ export function FormFilter({
         onSubmit={(values) => {
           const formattedValues = {
             ...values,
-            dojFrom: values.dojFrom ? formatDates(values.dojFrom, "dd-MMM-yyyy") : null,
-            dojTo: values.dojTo ? formatDates(values.dojTo, "dd-MMM-yyyy") : null,
-            dobFrom: values.dobFrom ? formatDates(values.dobFrom, "dd-MMM-yyyy") : null,
-            dobTo: values.dobTo ? formatDates(values.dobTo, "dd-MMM-yyyy") : null,
-            docFrom: values.docFrom ? formatDates(values.docFrom, "dd-MMM-yyyy") : null,
-            docTo: values.docTo ? formatDates(values.docTo, "dd-MMM-yyyy") : null,
+            dojFrom: values.dojFrom
+              ? formatDates(values.dojFrom, "dd-MMM-yyyy")
+              : null,
+            dojTo: values.dojTo
+              ? formatDates(values.dojTo, "dd-MMM-yyyy")
+              : null,
+            dobFrom: values.dobFrom
+              ? formatDates(values.dobFrom, "dd-MMM-yyyy")
+              : null,
+            dobTo: values.dobTo
+              ? formatDates(values.dobTo, "dd-MMM-yyyy")
+              : null,
+            docFrom: values.docFrom
+              ? formatDates(values.docFrom, "dd-MMM-yyyy")
+              : null,
+            docTo: values.docTo
+              ? formatDates(values.docTo, "dd-MMM-yyyy")
+              : null,
           };
           applyFilter(formattedValues);
         }}
@@ -257,9 +270,7 @@ export function FormFilter({
                     <div className="grid gird-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-1">
                       {/* Subsidiary Field Start */}
                       <div className="col-span-1">
-
-
-                        <SearchSelect
+                        {/* <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -280,14 +291,47 @@ export function FormFilter({
                           value={
                             allSubsidiaryMap?.get(
                               values?.subsidiaryId ||
-                              (allSubsidiaryList &&
-                                allSubsidiaryList[0]?.value)
+                                (allSubsidiaryList &&
+                                  allSubsidiaryList[0]?.value)
                             ) || ""
                           }
                           autoComplete="off"
                           options={allSubsidiaryList}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
+                        /> */}
+                        <SubsidiarySelect
+                          name="subsidiaryId"
+                          label={
+                            <span>
+                              Subsidiary<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("subsidiaryId", value);
+                            dispatch(
+                              fetchAllActiveEmployeesBySubsidiary(value)
+                            );
+                            dispatch(fetchAllDept(value));
+                            setFieldValue("employeeId", "");
+                            setFieldValue("departmentId", "");
+                          }}
+                          error={errors.subsidiaryId}
+                          touched={touched.subsidiaryId}
+                          currentValue={values?.subsidiaryId}
+                          initializeSubsidiary={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("subsidiaryId", value);
+                            dispatch(
+                              fetchAllActiveEmployeesBySubsidiary(value)
+                            );
+                            dispatch(fetchAllDept(value));
+                            setFieldValue("employeeId", "");
+                            setFieldValue("departmentId", "");
+                          }}
                         />
                       </div>
                       {/* Subsidiary Field End */}

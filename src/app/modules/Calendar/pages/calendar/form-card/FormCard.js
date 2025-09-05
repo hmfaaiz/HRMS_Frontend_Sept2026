@@ -17,6 +17,7 @@ import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashbo
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -303,7 +304,7 @@ export function FormCard() {
 
                     <div className="grid-cols-3 md:grid-cols-6 grid gap-x-3 gap-y-1">
                       <div className="col-span-1">
-                        <SearchSelect
+                        {/* <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -322,6 +323,24 @@ export function FormCard() {
                           options={dashboard?.allSubsidiaryList}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
+                        /> */}
+                        <SubsidiarySelect
+                          name="subsidiaryId"
+                          label={
+                            <span>
+                              Subsidiary
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          onChange={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                          }}
+                          error={errors.subsidiaryId}
+                          touched={touched.subsidiaryId}
+                          currentValue={values?.subsidiaryId}
+                          initializeSubsidiary={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                          }}
                         />
                       </div>
 
@@ -437,7 +456,7 @@ export function FormCard() {
                   disabled={!values.from_date || !values.to_date}
                   className="btn btn-primary btn-elevate"
                 >
-                  Filter 
+                  Filter
                   {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}

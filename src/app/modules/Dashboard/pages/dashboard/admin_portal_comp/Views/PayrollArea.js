@@ -21,31 +21,10 @@ const PayrollArea = ({
   holidayList,
 }) => {
   return (
-    <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
+    <div className="grid grid-cols-4 lg:grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
-        {/* <div className="grid grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
-          <div>
-            <SearchSelect
-              name="subsidiaryId"
-              isDisabled={!allSubsidiaryList}
-              label={<span>Subsidiary</span>}
-              onChange={(e) =>
-                setSummaryFilter({
-                  ...setSummaryFilter,
-                  subsidiaryId: e.value,
-                })
-              }
-              value={
-                allSubsidiaryList?.find(
-                  (e) => e?.value === setSummaryFilter?.subsidiaryId
-                ) || ""
-              }
-              options={[
-                { value: "", label: "All" },
-                ...(Array.isArray(allSubsidiaryList) ? allSubsidiaryList : []),
-              ]}
-            />
-          </div>
+        {/*         <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
+          
           <div>
             <SearchSelect
               name="gradeId"
@@ -116,6 +95,7 @@ const PayrollArea = ({
               ]}
             />
           </div>
+          <div></div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               name={"Active Employees"}
@@ -182,7 +162,7 @@ const PayrollArea = ({
           </div>
         </div> */}
         {/* chart area  */}
-        <div className="grid grid-cols-4  gap-x-2 gap-y-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
               if (e?.dashlet_type === "chart" && e?.tab_key === "payroll") {
@@ -192,7 +172,7 @@ const PayrollArea = ({
             })}
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-4  gap-x-2 gap-y-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
               if (e?.tab_key === "payroll" && e?.dashlet_type === "big_table") {
@@ -208,7 +188,7 @@ const PayrollArea = ({
             })}
         </div>
       </div>
-      <div className="col-span-1 space-y-2">
+      <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
             if (e?.dashlet_type === "small_table" && e?.tab_key === "payroll") {

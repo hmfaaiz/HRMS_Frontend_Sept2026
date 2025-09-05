@@ -7,26 +7,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllFormsMenu,
-
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimitDynamic } from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // percentage: Yup.string().required("Required*"),
 const gratuity_configurationEditSchema = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
 
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   // to_amount: Yup.string().required("Required*"),
 
   // contract_typeId: Yup.number()
   //   .required(VALIDATION_MESSAGES.required),
 
-  basis_of_gratuityId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  basis_of_gratuityId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   // fixed_amount: Yup.string().required("Required*"),
 
@@ -34,7 +32,6 @@ const gratuity_configurationEditSchema = Yup.object().shape({
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .max(999, "Must be at most 999")
     .required(VALIDATION_MESSAGES.required),
-
 
   // gratuity_fraction: Yup.number()
   //   .required(VALIDATION_MESSAGES.required),
@@ -48,7 +45,6 @@ const gratuity_configurationEditSchema = Yup.object().shape({
   //   .max(60, "Must be at most 60")
   //   .required(VALIDATION_MESSAGES.required),
 
-
   min_year: Yup.number()
     .min(1, "Minimum Year at least 1")
     .max(99, "Maximum Year at most 99")
@@ -60,10 +56,14 @@ const gratuity_configurationEditSchema = Yup.object().shape({
     .max(99, "Maximum Year at most 99")
     .required(VALIDATION_MESSAGES.required)
     .typeError("Maximum Year must be a number")
-    .test('max_greater_than_min', 'Maximum Year must be greater than Minimum Year', function (value) {
-      const { min_year } = this.parent; // Access the value of min_year
-      return value > min_year; // Ensure max_year is greater than min_year
-    })
+    .test(
+      "max_greater_than_min",
+      "Maximum Year must be greater than Minimum Year",
+      function(value) {
+        const { min_year } = this.parent; // Access the value of min_year
+        return value > min_year; // Ensure max_year is greater than min_year
+      }
+    ),
 });
 
 export function FormEditForm({
@@ -82,8 +82,6 @@ export function FormEditForm({
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(184, "allContractTypeList"));
-
-
     }
   }, [dispatch, user.Id]);
 
@@ -92,14 +90,11 @@ export function FormEditForm({
     { value: 1, label: "Basic" },
   ];
 
-
-
   const gratuityFractionOptions = [
     { value: 0, label: "1/3" },
     { value: 1, label: "2/3" },
     { value: 2, label: "3/3" },
   ];
-
 
   return (
     <Formik
@@ -115,7 +110,6 @@ export function FormEditForm({
       initialValues={user}
       validationSchema={gratuity_configurationEditSchema}
       onSubmit={(values) => {
-
         enableLoading();
         saveForm(values);
       }}
@@ -133,7 +127,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-12 gap-x-3 gap-y-1">
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
                     <div className="col-span-1">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -149,7 +143,6 @@ export function FormEditForm({
                             (option) => option.value === values.subsidiaryId
                           ) || null
                         }
-
                         options={dashboard?.allSubsidiaryList}
                         // options={dashboard.allSubidiaryList.map(option => ({
                         //   label: `${option.label} (${option.value})`, // Adding the value to the label
@@ -157,6 +150,24 @@ export function FormEditForm({
                         // }))}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
                       />
                     </div>
                   </div>
@@ -192,8 +203,6 @@ export function FormEditForm({
                   <div className="col-span-6 lg:col-span-4">
                     <label htmlFor="basis_of_gratuityId">
                       Gratuity Basis<span style={{ color: "red" }}>*</span>
-
-
                     </label>
                     <Field
                       name="basis_of_gratuityId"
@@ -209,15 +218,14 @@ export function FormEditForm({
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
-
-
                       ))}
-
-
                     </Field>
-                    {errors.basis_of_gratuityId && touched.basis_of_gratuityId && (
-                      <div className="text-red-400 text-xs mt-1">{errors.basis_of_gratuityId}</div>
-                    )}
+                    {errors.basis_of_gratuityId &&
+                      touched.basis_of_gratuityId && (
+                        <div className="text-red-400 text-xs mt-1">
+                          {errors.basis_of_gratuityId}
+                        </div>
+                      )}
                   </div>
                   <div className="col-span-6 lg:col-span-4">
                     <label>
@@ -243,7 +251,6 @@ export function FormEditForm({
                     />
                   </div>
 
-
                   <div className="col-span-6 lg:col-span-4">
                     <label>
                       <span>
@@ -261,7 +268,6 @@ export function FormEditForm({
                           e.target.value = e.target.value.slice(0, 2); // Restrict to 2 digits
                         }
                       }}
-
                     />
                   </div>
 
@@ -282,7 +288,6 @@ export function FormEditForm({
                           e.target.value = e.target.value.slice(0, 2); // Restrict to 2 digits
                         }
                       }}
-
                     />
                   </div>
 

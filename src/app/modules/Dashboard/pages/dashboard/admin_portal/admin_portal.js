@@ -57,7 +57,6 @@ export const AdminPortal = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    dispatch(actions.fetchDashboardAlert());
     dispatch(actions.fetchAnnouncementData());
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
@@ -70,13 +69,24 @@ export const AdminPortal = () => {
 
   useEffect(() => {
     setIsLoading(true);
+    dispatch(
+      actions.fetchDashboardAlert({
+        subsidiaryId: summaryFilter?.subsidiaryId,
+        activeTab,
+      })
+    );
+    setIsLoading(false);
+  }, [summaryFilter?.subsidiaryId, activeTab]);
+
+  useEffect(() => {
+    setIsLoading(true);
     dispatch(actions.fetchSummary(summaryFilter));
     setIsLoading(false);
   }, [summaryFilter]);
 
   const handleTabChange = (e) => {
     setSummaryFilter({
-      subsidiaryId: user?.EmployeeMapping?.subsidiaryId || "",
+      ...summaryFilter,
       gradeId: "",
       departmentId: "",
       designationId: "",
@@ -97,12 +107,15 @@ export const AdminPortal = () => {
             announcement={announcement}
             handleChange={handleTabChange}
             activeTab={activeTab}
+            allSubsidiaryList={allSubsidiaryList}
+            summaryFilter={summaryFilter}
+            setSummaryFilter={setSummaryFilter}
           />
           {activeTab === "default" ? (
             <DefaultArea
               allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
               summaryFilter={summaryFilter}
+              allLocationChildMenus={allLocationChildMenus}
               allParentDept={allParentDept}
               setSummaryFilter={setSummaryFilter}
               allEmployeegradeList={allEmployeegradeList}

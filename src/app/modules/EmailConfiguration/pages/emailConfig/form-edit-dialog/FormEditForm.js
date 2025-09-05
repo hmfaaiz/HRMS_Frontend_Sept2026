@@ -10,11 +10,15 @@ import {
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 const validationSchema = Yup.object().shape({
   subsidiaryId: Yup.number().nullable(),
-  host_name: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
-  sender_email_address: Yup.string().nullable()
+  host_name: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+  sender_email_address: Yup.string()
+    .nullable()
     .email(VALIDATION_MESSAGES.invalidEmail)
     .required(VALIDATION_MESSAGES.required),
   smtp_password: Yup.string().when("Id", {
@@ -22,8 +26,11 @@ const validationSchema = Yup.object().shape({
     then: Yup.string().required(VALIDATION_MESSAGES.required),
     otherwise: Yup.string(), // Edit mode - optional
   }),
-  port: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-  test_email: Yup.string().nullable()
+  port: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+  test_email: Yup.string()
+    .nullable()
     .email(VALIDATION_MESSAGES.invalidEmail)
     .required(VALIDATION_MESSAGES.required),
   offerLetterEmail1Id: Yup.number().nullable(),
@@ -81,7 +88,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-1">
                   {/* subsidiary */}
                   <div>
-                    <SearchSelect
+                    {/* <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -105,6 +112,25 @@ export function FormEditForm({
                       ]}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
+                    /> */}
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isAllValue={true}
+                      isDisabled={isUserForRead || userForEdit}
+                      onChange={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                      }}
+                      error={errors?.subsidiaryId}
+                      touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                      }}
                     />
                   </div>
                   {/* host name  */}

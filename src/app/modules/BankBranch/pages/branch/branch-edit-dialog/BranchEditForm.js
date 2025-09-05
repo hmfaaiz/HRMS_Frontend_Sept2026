@@ -20,7 +20,11 @@ import {
   getLatestBookingNo,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { amountLimitDynamic } from "../../../../../utils/common";
+import {
+  amountLimitDynamic,
+  setDefaultSubsidiary,
+} from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -94,7 +98,7 @@ export function BranchEditForm({
   const [defCountry, setDefaultCountry] = useState({});
   const [defCity, setDefaultCity] = useState({});
   // Get User Details
-  const { auth } = useSelector((state) => state);
+  
   const [defBank, setDefaultBanks] = useState({});
   const [accOpeningDateSelected, setAccountOpeningDate] = useState(null);
 
@@ -189,7 +193,7 @@ export function BranchEditForm({
                     {!id ? (
                       <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
                         <div className="col-span-1">
-                          <SearchSelect
+                          {/* <SearchSelect
                             name="subsidiaryId"
                             label={
                               <span>
@@ -207,10 +211,37 @@ export function BranchEditForm({
                                 (option) =>
                                   option?.value === values?.subsidiaryId
                               ) || null
+                              // setDefaultSubsidiary(
+                              //                             values?.subsidiaryId,
+                              //                             dashboard.allSubsidiaryList,
+                              //                             defaultSubsidiary
+                              //                           )
                             }
                             options={dashboard?.allSubsidiaryList}
                             error={errors.subsidiaryId}
                             touched={touched.subsidiaryId}
+                          /> */}
+
+                          <SubsidiarySelect
+                            name="subsidiaryId"
+                            label={
+                              <span>
+                                Subsidiary
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            isDisabled={isUserForRead}
+                            onChange={(e) => {
+                              setFieldValue("subsidiaryId", e.value || null);
+                              setFieldValue("BankId", null);
+                            }}
+                            error={errors.subsidiaryId}
+                            touched={touched.subsidiaryId}
+                            currentValue={values?.subsidiaryId}
+                            initializeSubsidiary={(e) => {
+                              setFieldValue("subsidiaryId", e.value || null);
+                              setFieldValue("BankId", null);
+                            }}
                           />
                         </div>
                       </div>

@@ -85,7 +85,7 @@ const StatsCardModal = ({ onHide, show, data, heading }) => {
     >
       <div className="bg-white rounded-lg px-3 py-2 col-span-2">
         <h6 className="font-bold mb-0 text-primary">{heading}</h6>
-        <div className="max-h-[65vh] overflow-auto">
+        <div className="max-h-[65vh] overflow-auto scrollbar-fancy">
           {data?.length > 0 ? (
             <BootstrapTable
               wrapperClasses="table-responsive"

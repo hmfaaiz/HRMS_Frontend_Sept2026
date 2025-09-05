@@ -275,7 +275,7 @@ const ChartData = ({ data }) => {
           ))}
         </div>
       </div>
-      <div className="relative  max-h-[21rem] overflow-auto">
+      <div className="relative  max-h-[21rem] overflow-auto scrollbar-fancy mt-1">
         <div
           style={{
             width:

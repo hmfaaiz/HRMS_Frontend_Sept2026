@@ -35,7 +35,7 @@ export function AuthPage() {
       >
         {/* login div */}
 
-        <div className="grid md:grid-cols-6">
+        <div className="grid lg:grid-cols-6">
        
             {/* Left Login Input */}
             <div className="col-span-2 m-0 p-5  h-screen" >
@@ -60,9 +60,9 @@ export function AuthPage() {
             {/* Right  */}
 
 
-            <div className="col-span-4 p-5  opacity-97 hidden md:block h-screen" >
+            <div className="col-span-4 p-5  opacity-97 hidden lg:block h-screen" >
             
-              <div className="bg-white p-5 m-0 rounded-top h-[89vh]">
+              <div className="bg-white p-5 m-0 rounded-top h-[93%]">
    
 
                 <Carousel interval={3000}>
@@ -160,7 +160,7 @@ export function AuthPage() {
               </div>
 
 
-              <footer className="flex bg-tsecondary justify-between rounded-bottom h-15">
+              <footer className="flex bg-tsecondary justify-between rounded-bottom h-[7%]">
              
                   <div className=" flex gap-3 items-center pl-4 ">
                     {/* <Linkedin className="w-6 h-6 pl-2 text-black cursor-pointer"/> */}
