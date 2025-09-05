@@ -3,8 +3,8 @@ import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./exit_type_exit_reason/FormPage";
 
-export default function Roster_PatternManagement() {
-  console.log("Exit Type & Exit Reason Module11111");
+export default function Exit_Type_Exit_Reason_Management() {
+
  
   return (
     <Suspense fallback={<LayoutSplashScreen />}>

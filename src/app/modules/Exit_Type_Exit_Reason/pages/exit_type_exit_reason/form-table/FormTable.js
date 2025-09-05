@@ -58,7 +58,7 @@ export function FormTable() {
     formUIProps.setIds([]);
 
 
-    dispatch(actions.fetchAccrueGratuityConfigs(formUIProps.queryParams));
+    dispatch(actions.fetchExitTypeExitReason(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(

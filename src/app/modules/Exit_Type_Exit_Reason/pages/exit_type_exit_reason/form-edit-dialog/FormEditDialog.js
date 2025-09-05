@@ -60,9 +60,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchAccrueGratuityConfig(id));
+    dispatch(actions.fetchExitTypeExitReasonDataForEdit(id));
 
-    // dispatch(actions.fetchAccrueGratuityConfig(formUIProps .queryParams))
+    // dispatch(actions.fetchExitTypeExitReasonDataForEdit(formUIProps .queryParams))
   }, [id, dispatch,show]);
 
 
@@ -74,8 +74,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
  
     
       const finalObject = { data }
-      await dispatch(actions.createAccrueGratuityConfig(data, disbaleLoading, onHide));
-      await dispatch(actions.fetchAccrueGratuityConfigs(usersUIProps.queryParams));
+      await dispatch(actions.createExitTypeExitReason(data, disbaleLoading, onHide));
+      await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
       
 
     } else {
@@ -90,8 +90,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
       
 
-     await dispatch(actions.updateAccrueGratuityConfig(formUpdatedFields, disbaleLoading, onHide));
-     await dispatch(actions.fetchAccrueGratuityConfigs(usersUIProps.queryParams));
+     await dispatch(actions.updateExitTypeExitReason(formUpdatedFields, disbaleLoading, onHide));
+     await dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
     }
   };
 

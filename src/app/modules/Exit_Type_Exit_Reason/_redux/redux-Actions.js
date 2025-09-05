@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const { actions } = ExitTypeExitReasonSlice;
 
 
-export const fetchAccrueGratuityConfigs = (queryparm) => async (dispatch) => {
+export const fetchExitTypeExitReason = (queryparm) => async (dispatch) => {
   
   return requestFromServer.getAllAccrueGratuityConfig(queryparm)
    
@@ -22,7 +22,7 @@ export const fetchAccrueGratuityConfigs = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchAccrueGratuityConfig = (Id) => (dispatch) => {
+export const fetchExitTypeExitReasonDataForEdit = (Id) => (dispatch) => {
 
 
   if (!Id) {
@@ -43,9 +43,9 @@ export const fetchAccrueGratuityConfig = (Id) => (dispatch) => {
     });
 };
 
-export const deleteAccrueGratuityConfig = (id) => (dispatch) => {
+export const deleteExitTypeExitReason = (id) => (dispatch) => {
   return requestFromServer
-    .deleteAccrueGratuityConfig({ Id: id })
+    .deleteExitTypeExitReason({ Id: id })
     .then((response) => {
 
       dispatch(actions.AccrueGratuityConfigDeleted({ Id: id }));
@@ -66,12 +66,12 @@ export const deleteAccrueGratuityConfig = (id) => (dispatch) => {
 };
 
 
-export const createAccrueGratuityConfig = (accrueGratuityConfigForCreation, disbaleLoading, onHide) => (
+export const createExitTypeExitReason = (accrueGratuityConfigForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   return requestFromServer
-    .createAccrueGratuityConfig(accrueGratuityConfigForCreation)
+    .createExitTypeExitReason(accrueGratuityConfigForCreation)
     .then((res) => {
       
       const user = res.data?.data;
@@ -106,11 +106,11 @@ export const createAccrueGratuityConfig = (accrueGratuityConfigForCreation, disb
     });
 };
 
-export const updateAccrueGratuityConfig = (data, disbaleLoading, onHide) => (dispatch) => {
+export const updateExitTypeExitReason = (data, disbaleLoading, onHide) => (dispatch) => {
 
   return requestFromServer
 
-    .updateAccrueGratuityConfig(data)
+    .updateExitTypeExitReason(data)
     .then((response) => {
   
       const updatedAccrueGratuityConfig = response?.config?.data; // response.data?.data;

@@ -42,13 +42,13 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteAccrueGratuityConfig = () => {
+  const deleteExitTypeExitReason = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteAccrueGratuityConfig(id)).then(() => {
+    dispatch(actions.deleteExitTypeExitReason(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchAccrueGratuityConfigs(usersUIProps.queryParams));
+      dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
    
       disableLoading();
     });
@@ -84,7 +84,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteAccrueGratuityConfig}
+            onClick={deleteExitTypeExitReason}
             className="btn btn-danger btn-elevate"
           >
             Delete 

@@ -16,7 +16,7 @@ function PatternListForm({
 
 
 
-console.log("aaaaa1111",values)
+
   useEffect(() => {
     values.list.forEach((_, index) => {
       setFieldValue(`list[${index}].sno`, index + 1);

@@ -26,7 +26,7 @@ export function FormCard() {
 
 const { userAccess } = useSelector(
   (state) => {
-    console.log("aaaaa1111", state); // ✅ this will print whole redux state
+
     return {
       userAccess: state.auth.userAccess.exit_type_exit_reason,
     };
@@ -44,7 +44,7 @@ const { userAccess } = useSelector(
     };
   }, shallowEqual);
 
-  console.log("accessUser111", accessUser);
+
 
   return (
     
