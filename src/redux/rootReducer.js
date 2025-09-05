@@ -115,6 +115,7 @@ import { RecruitmentPortalConfigSlice } from "../app/modules/Recruitment_Portal_
 import { DashboardAlertConfigSlice } from "../app/modules/Dashboard_Alert_Config/_redux/redux-Slice";
 import { EmailConfigurationSlice } from "../app/modules/EmailConfiguration/_redux/redux-Slice";
 import { DesignationMappingSlice } from "../app/modules/DesignationMapping/_redux/redux-Slice";
+import { ExitTypeExitReasonSlice } from "../app/modules/Exit_Type_Exit_Reason/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -228,6 +229,7 @@ export const rootReducer = combineReducers({
   dashboard_alert_config: DashboardAlertConfigSlice.reducer,
   email_config: EmailConfigurationSlice.reducer,
   desig_map : DesignationMappingSlice.reducer,
+  exit_type_exit_reason: ExitTypeExitReasonSlice.reducer,
 });
 
 export function* rootSaga() {

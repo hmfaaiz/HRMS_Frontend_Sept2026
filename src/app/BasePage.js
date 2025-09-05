@@ -268,7 +268,10 @@ const EmailConfiguration = lazy(() =>
   import("./modules/EmailConfiguration/pages/index")
 );
 
-const DesignationMapping = lazy(()=> import("./modules/DesignationMapping/pages/index"))
+const DesignationMapping = lazy(()=> import("./modules/DesignationMapping/pages/index"));
+const ExitTypeExitReasonModule = lazy(() =>
+  import("./modules/Exit_Type_Exit_Reason/pages/index")
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -376,7 +379,8 @@ const ROUTES = {
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
   email_configuration : EmailConfiguration,
-  designation_mapping : DesignationMapping
+  designation_mapping : DesignationMapping,
+  exit_type_exit_reason : ExitTypeExitReasonModule,
 };
 
 export default function BasePage() {
