@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
@@ -8,6 +8,7 @@ import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardAc
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CirclePlus, Trash2 } from "lucide-react";
 import * as actions from "../../../_redux/redux-Actions";
+import { useFormUIContext } from "../FormUIContext";
 
 const validationSchema = Yup.object().shape({
   gradeId: Yup.number()
@@ -37,10 +38,11 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const [gradeId, setGradeId] = useState(null);
 
-  const { dashboard, allDesignations } = useSelector((state) => {
+  const { dashboard, allDesignations, currentState } = useSelector((state) => {
     return {
       dashboard: state?.dashboard,
       allDesignations: state?.desig_map?.allDesignations,
+      currentState: state.desig_map,
     };
   }, shallowEqual);
 
@@ -48,11 +50,12 @@ export function FormEditForm({
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
   }, [dispatch, user.Id]);
 
-  const { currentState } = useSelector((state) => {
+  const formUIContext = useFormUIContext();
+  const formUIProps = useMemo(() => {
     return {
-      currentState: state.desig_map,
+      queryParams: formUIContext.queryParams,
     };
-  }, shallowEqual);
+  }, [formUIContext]);
 
   const { userForEdit, entities } = currentState;
 
@@ -60,6 +63,7 @@ export function FormEditForm({
     if (user?.gradeId) {
       dispatch(actions.fetchDesignationsByGradeId(user?.gradeId));
     }
+    dispatch(actions.fetchDesigMappings(formUIProps.queryParams));
   }, [user]);
 
   useEffect(() => {
@@ -110,7 +114,14 @@ export function FormEditForm({
                           (option) => option.value === values.gradeId
                         ) || null
                       }
-                      options={dashboard?.allEmployeegradeList}
+                      options={dashboard?.allEmployeegradeList
+                        ?.filter(
+                          (el) =>
+                            !entities?.some((e) => e?.gradeId === el?.value)
+                        ) // exclude already used grades
+                        .map((el) => ({
+                          ...el,
+                        }))}
                       error={errors.gradeId}
                       touched={touched.gradeId}
                     />
