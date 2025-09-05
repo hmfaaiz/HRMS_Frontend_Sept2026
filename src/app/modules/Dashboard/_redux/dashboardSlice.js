@@ -81,6 +81,7 @@ const initialDashboardState = {
   summaryDetailData: null,
   allPayrollAccountList: [],
   announcement: [],
+  allExitTypeList:[],
 };
 
 export const callTypes = {
