@@ -152,8 +152,11 @@ export const amountFormat = (val, isDecimal = false) => {
 };
 
 export const formatTime = (value) => {
-  const cleaned = value.replace(/\D/g, "").slice(0, 4); // keep digits only
+  if (!value) return "";
+ 
+  const cleaned = value.replace(/\D/g, "").slice(0, 4);
   if (cleaned.length <= 2) return cleaned;
+ 
   return `${cleaned.slice(0, 2)}:${cleaned.slice(2)}`;
 };
 
