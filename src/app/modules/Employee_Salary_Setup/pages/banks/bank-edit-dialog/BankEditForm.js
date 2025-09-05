@@ -744,7 +744,7 @@ export function BankEditForm({
     }
   }, [user.subsidiaryId]);
 
- console.log("dateOfJoining111",dateOfJoining)
+
 
   return (
     <>
@@ -795,6 +795,7 @@ export function BankEditForm({
           formik,
         }) => (
           <>
+          {console.log("aaaa1111",errors)}
             <Modal.Body className="overlay overlay-block cursor-default">
               {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
