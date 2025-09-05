@@ -193,7 +193,7 @@ export function FormFilter({
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-x-3 gap-y-1">
                   {/* Subsidiary Field Start */}
                   <div>
-                    <Field
+                    {/* <Field
                       component={SearchSelect}
                       name="subsidiaryId"
                       onBlur={handleBlur}
@@ -217,7 +217,7 @@ export function FormFilter({
                       }
                       autoComplete="off"
                       options={allSubsidiaryList}
-                    />
+                    /> */}
                     <SubsidiarySelect
                       name="subsidiaryId"
                       onBlur={handleBlur}

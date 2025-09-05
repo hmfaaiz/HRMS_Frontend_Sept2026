@@ -268,6 +268,8 @@ const EmailConfiguration = lazy(() =>
   import("./modules/EmailConfiguration/pages/index")
 );
 
+const DesignationMapping = lazy(()=> import("./modules/DesignationMapping/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -374,6 +376,7 @@ const ROUTES = {
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
   email_configuration : EmailConfiguration,
+  designation_mapping : DesignationMapping
 };
 
 export default function BasePage() {
