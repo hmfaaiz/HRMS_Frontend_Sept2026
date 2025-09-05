@@ -75,6 +75,7 @@ const initialDashboardState = {
   allJobPreferenceList:[],
   allParentDept: [],
   allPayrollAccountList: [],
+  allExitTypeList: [],
   
 };
 
@@ -264,7 +265,6 @@ export const dashboardSlice = createSlice({
       state.allParentDept = action.payload;
     },
     AllPayrollAccountListFetch: (state, action) => {
-      console.log("action11",action)
       state.allPayrollAccountList = action.payload;
     },
 

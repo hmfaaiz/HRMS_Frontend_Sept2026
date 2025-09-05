@@ -80,6 +80,7 @@ export function BankEditDialog({ id, show, onHide, userForRead, status }) {
 
   const saveEarningDeductionTran = async (user, emp_ed_Obj) => {
     if (!id) {
+      delete user.dateOfJoining;
       const finalObject = { user };
       const response = await axios.post(
         `${USERS_URL}/employee_salary_earning/update-salary-earning-deduction-bulk`,
