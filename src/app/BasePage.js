@@ -272,6 +272,10 @@ const ExitTypeExitReasonModule = lazy(() =>
   import("./modules/Exit_Type_Exit_Reason/pages/index")
 );
 
+const SeparationModule = lazy(() =>
+  import("./modules/Separation/pages/index")
+);
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -379,6 +383,7 @@ const ROUTES = {
   configuration: DashboardAlertConfig,
   email_configuration : EmailConfiguration,
   exit_type_exit_reason : ExitTypeExitReasonModule,
+  separation : SeparationModule,
 };
 
 export default function BasePage() {
