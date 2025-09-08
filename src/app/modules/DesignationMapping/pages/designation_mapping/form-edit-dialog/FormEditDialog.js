@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
-export function FormEditDialog({ id, show, onHide, userForRead }) {
+export function FormEditDialog({ id, show, onHide, userForRead , isNew }) {
   const [loading, setLoading] = useState(false);
   const FormUIContext = useFormUIContext();
 
@@ -52,6 +52,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       <FormEditForm
         saveForm={saveForm}
         user={userForEdit || formUIProps.initUser}
+        isNew={isNew}
         onHide={onHide}
         isUserForRead={userForRead}
         actionsLoading={actionsLoading}
