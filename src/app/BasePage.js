@@ -273,6 +273,8 @@ const ExitTypeExitReasonModule = lazy(() =>
   import("./modules/Exit_Type_Exit_Reason/pages/index")
 );
 
+const LeaveWorkflowAdmin = lazy(()=> import("./modules/LeaveWorkflowAdmin/page/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -381,6 +383,7 @@ const ROUTES = {
   email_configuration : EmailConfiguration,
   designation_mapping : DesignationMapping,
   exit_type_exit_reason : ExitTypeExitReasonModule,
+  leave_workflow:LeaveWorkflowAdmin,
 };
 
 export default function BasePage() {
