@@ -29,6 +29,7 @@ export function FormPage({ history }) {
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
+            isNew={true}
             onHide={() => {
               history.push("/designation_mapping/read-all-designation-mapping");
             }}

@@ -34,6 +34,7 @@ export function FormEditForm({
   isUserForRead,
   enableLoading,
   loading,
+  isNew,
 }) {
   const dispatch = useDispatch();
   const [gradeId, setGradeId] = useState(null);
@@ -102,7 +103,7 @@ export function FormEditForm({
                           Grade<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || userForEdit}
+                      isDisabled={isUserForRead || !isNew}
                       onChange={(e) => {
                         if (e?.value) {
                           setFieldValue("gradeId", e.value || null);
