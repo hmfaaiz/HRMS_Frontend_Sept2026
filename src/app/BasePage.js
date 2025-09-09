@@ -268,12 +268,22 @@ const EmailConfiguration = lazy(() =>
   import("./modules/EmailConfiguration/pages/index")
 );
 
-const DesignationMapping = lazy(()=> import("./modules/DesignationMapping/pages/index"));
+const DesignationMapping = lazy(() =>
+  import("./modules/DesignationMapping/pages/index")
+);
 const ExitTypeExitReasonModule = lazy(() =>
   import("./modules/Exit_Type_Exit_Reason/pages/index")
 );
 
-const LeaveWorkflowAdmin = lazy(()=> import("./modules/LeaveWorkflowAdmin/page/index"))
+const LeaveWorkflowAdmin = lazy(() =>
+  import("./modules/LeaveWorkflowAdmin/page/index")
+);
+const AttendanceWorkflowAdmin = lazy(() =>
+  import("./modules/AttendanceWorkflowAdmin/page/index")
+);
+const LoanWorkflowAdmin = lazy(() =>
+  import("./modules/LoanWorkflowAdmin/page/index")
+);
 
 const ROUTES = {
   settings: SettingsPage,
@@ -380,10 +390,12 @@ const ROUTES = {
   news_event_ticker: NewsEventTickerModule,
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
-  email_configuration : EmailConfiguration,
-  designation_mapping : DesignationMapping,
-  exit_type_exit_reason : ExitTypeExitReasonModule,
-  leave_workflow:LeaveWorkflowAdmin,
+  email_configuration: EmailConfiguration,
+  designation_mapping: DesignationMapping,
+  exit_type_exit_reason: ExitTypeExitReasonModule,
+  leave_workflow: LeaveWorkflowAdmin,
+  attendance_workflow: AttendanceWorkflowAdmin,
+  loan_workflow: LoanWorkflowAdmin,
 };
 
 export default function BasePage() {

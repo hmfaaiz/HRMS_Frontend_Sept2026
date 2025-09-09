@@ -46,8 +46,8 @@ export function LeaveApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "90px",
-        maxWidth: "90px",
+        minWidth: "60px",
+        maxWidth: "60px",
       },
       formatter: (cell) => {
         let text = "";
@@ -74,8 +74,8 @@ export function LeaveApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "90px",
-        maxWidth: "90px",
+        minWidth: "60px",
+        maxWidth: "60px",
       },
       formatter: (cell) => {
         let text = "";
@@ -102,8 +102,8 @@ export function LeaveApprovalFormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "120px",
-        maxWidth: "120px",
+        minWidth: "70px",
+        maxWidth: "70px",
       },
     },
     {
@@ -120,28 +120,28 @@ export function LeaveApprovalFormTable() {
         return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
       },
     },
-    // {
-    //   dataField: "requestBelongToEmp.department.deptName",
-    //   text: "Department",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //     maxWidth: "160px",
-    //   },
-    // },
-    // {
-    //   dataField: "requestBelongToEmp.designation.formName",
-    //   text: "Designation",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //     maxWidth: "160px",
-    //   },
-    // },
+    {
+      dataField: "requestBelongToEmp.department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+    },
+    {
+      dataField: "requestBelongToEmp.designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+    },
     {
       dataField: "parentData.t_leave_type.name",
       text: "Leave Type",

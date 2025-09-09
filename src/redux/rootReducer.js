@@ -117,6 +117,8 @@ import { EmailConfigurationSlice } from "../app/modules/EmailConfiguration/_redu
 import { DesignationMappingSlice } from "../app/modules/DesignationMapping/_redux/redux-Slice";
 import { ExitTypeExitReasonSlice } from "../app/modules/Exit_Type_Exit_Reason/_redux/redux-Slice";
 import { LeaveWorkflowAdminSlice } from "../app/modules/LeaveWorkflowAdmin/redux/formSlice";
+import { AttendanceWorkflowAdminSlice } from "../app/modules/AttendanceWorkflowAdmin/redux/formSlice";
+import { LoanWorkflowAdminSlice } from "../app/modules/LoanWorkflowAdmin/redux/formSlice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -229,9 +231,11 @@ export const rootReducer = combineReducers({
   recruitment_portal_config: RecruitmentPortalConfigSlice.reducer,
   dashboard_alert_config: DashboardAlertConfigSlice.reducer,
   email_config: EmailConfigurationSlice.reducer,
-  desig_map : DesignationMappingSlice.reducer,
+  desig_map: DesignationMappingSlice.reducer,
   exit_type_exit_reason: ExitTypeExitReasonSlice.reducer,
   LeaveWorkflowAdmin: LeaveWorkflowAdminSlice.reducer,
+  attendance_workflow_admin: AttendanceWorkflowAdminSlice.reducer,
+  loan_workflow_admin: LoanWorkflowAdminSlice.reducer,
 });
 
 export function* rootSaga() {

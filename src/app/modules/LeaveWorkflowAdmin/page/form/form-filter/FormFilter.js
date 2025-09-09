@@ -448,7 +448,7 @@ export const FormFilter = ({ loading, queryParams }) => {
               }
               className="btn btn-success"
             >
-              Filter Record
+              Filter
               {loading && (
                 <span className="ml-3 mr-3 spinner spinner-white"></span>
               )}
