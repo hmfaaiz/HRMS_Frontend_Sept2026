@@ -88,6 +88,28 @@ export const deleteSeparation = (id) => (dispatch) => {
     });
 };
 
+export const separateById = (body,onHide) => (dispatch) => {
+
+  return requestFromServer
+    .separateById(body)
+    .then((response) => {
+onHide();
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(SERVER_MESSAGES?.updatedFail);
+    });
+};
+
 
 export const createApplicantProfile = (applicantProfileForCreation, disbaleLoading, onHide) => (
   dispatch

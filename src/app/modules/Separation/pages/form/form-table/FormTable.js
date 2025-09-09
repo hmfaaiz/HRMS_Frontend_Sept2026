@@ -137,10 +137,38 @@ console.log("entities11111",entities)
       style: {
         minWidth: "160px",
       },
+    }, {
+      dataField: "ExitType.formName",
+      text: "Exit Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    }, {
+      dataField: "ExitReason.exitReason",
+      text: "Exit Reason",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
     },
     {
-      dataField: "Employee.dateOfJoining",
-      text: "date Of Joining",
+      dataField: "resignationDate",
+      text: "Resignation Date",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
+    },   {
+      dataField: "lastWorkingDate",
+      text: "Last Working Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

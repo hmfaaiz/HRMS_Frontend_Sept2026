@@ -112,7 +112,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
         resignationDate: formData.resignationDate,                // DATE
         resignationAcceptanceDate: formData.resignationAcceptanceDate, // DATE
-        lLastWorkingDate: formData.lastWorkingDate,                // DATE
+        lastWorkingDate: formData.lastWorkingDate,                // DATE
 
         finalSettlementPolicy: formData.finalSettlementPolicy,
         noticePeriodDays: formData.noticePeriodDays,

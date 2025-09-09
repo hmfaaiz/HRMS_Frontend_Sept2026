@@ -62,8 +62,9 @@ export const getApplicantProfileEditSchema = (formData) => {
           "Last working day cannot be before resignation date"
         ),
 
-   resignationAcceptanceDate: Yup.date()
-        .required(VALIDATION_MESSAGES.required)
+      resignationAcceptanceDate: Yup.date()
+        // .required(VALIDATION_MESSAGES.required)
+        .nullable()
         .min(
           Yup.ref("resignationDate"),
           "Acceptance date day cannot be before resignation date"
@@ -84,9 +85,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
 
-      employeetatus: Yup.number()
 
-        .required(VALIDATION_MESSAGES.required),
 
       resignationAttachment: Yup.mixed()
         .required(VALIDATION_MESSAGES.required)
@@ -132,6 +131,7 @@ export function FormEditForm({
   const [file, setFile] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [dateOfJoining, setDateOfJoining] = useState("");
+  const [servicePeriod, setGetServicePeriod] = useState("");
 
 
   //drop down
@@ -148,8 +148,10 @@ export function FormEditForm({
         )
       );
     }
-    else{
-        dispatch(actions.fetchEmpBySeparationFlag({flag:null,employeeId:formData?.employeeId}));
+    else {
+      dispatch(fetchExitReasonData(formData?.exitTypeId));
+      dispatch(actions.fetchEmpBySeparationFlag({ flag: null, employeeId: formData?.employeeId }));
+
     }
   }, [dispatch, formData.Id]);
 
@@ -214,9 +216,28 @@ export function FormEditForm({
       years -= 1;
       months += 12;
     }
+    setGetServicePeriod(`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
 
     return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
   };
+
+
+  useEffect(() => {
+    if (formData.employeeId) {
+
+      const selectedEmp = activeEmployeeList?.find(
+        (emp) => emp.value === formData?.employeeId
+      );
+      console.log("selectedEmp1111", selectedEmp)
+      if (selectedEmp) {
+        setDepartmentId(selectedEmp?.departmentId)
+        setDateOfJoining(selectedEmp?.dateOfJoining);
+        console.log("hittin11111g", dateOfJoining, formData.lastWorkingDate)
+        getServicePeriod(dateOfJoining, formData.lastWorkingDate);
+      }
+    }
+
+  }, [activeEmployeeList]);
 
   return (
     <Formik
@@ -266,7 +287,7 @@ export function FormEditForm({
                         name="employeetatus"
                         onChange={(e) => {
                           setFieldValue("employeetatus", e?.value ?? null);
-                          dispatch(actions.fetchEmpBySeparationFlag({flag:e?.value,employeeId:null}));
+                          dispatch(actions.fetchEmpBySeparationFlag({ flag: e?.value, employeeId: null }));
                         }}
                         value={
                           allEmployeetatus?.find(
@@ -288,6 +309,7 @@ export function FormEditForm({
                       name="employeeId"
                       className={!values.employeeId ? 'form-control is-invalid' : 'form-control'}
                       placeholder=""
+                      isDisabled={formData.Id}
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
@@ -443,6 +465,14 @@ export function FormEditForm({
                         onChange={(date) => {
                           let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("resignationDate", selectedDate);
+                          if (date && values.lastWorkingDate) {
+                            const diffDays = Math.floor(
+                              (new Date(values.lastWorkingDate) - new Date(date)) /
+                              (1000 * 60 * 60 * 24)
+                            );
+                            setFieldValue("noticePeriodDays", diffDays);
+
+                          }
                         }}
                         dateFormat="dd-MMM-yyyy"
                         name="resignationDate"
@@ -471,6 +501,15 @@ export function FormEditForm({
                         onChange={(date) => {
                           let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("lastWorkingDate", selectedDate);
+                          if (values.resignationDate && date) {
+                            const diffDays = Math.floor(
+                              (new Date(date) - new Date(values.resignationDate)) /
+                              (1000 * 60 * 60 * 24)
+                            );
+                            setFieldValue("noticePeriodDays", diffDays);
+                            console.log("diff111", diffDays)
+
+                          }
                         }}
                         dateFormat="dd-MMM-yyyy"
                         name="lastWorkingDate"
@@ -489,13 +528,13 @@ export function FormEditForm({
                         placeholder="Auto total service period"
                         label={
                           <span>
-                            Total Service Period
+                            Total Service Period {servicePeriod}
                           </span>
                         }
-                        value={
+                        value={servicePeriod ||
                           dateOfJoining && values.lastWorkingDate
-                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                            : ""
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
                         }
                         autoComplete="off"
                         type="text"
@@ -613,7 +652,7 @@ export function FormEditForm({
                         className="form-control"
                         placeholder="Date of Resignation Acceptance"
                         component={DatePickerField}
-                        disabled={ !values.employeeId}
+                        disabled={!values.employeeId}
                         selected={
                           values?.resignationAcceptanceDate
                             ? new Date(values.resignationAcceptanceDate)
@@ -628,7 +667,7 @@ export function FormEditForm({
                         autoComplete="off"
                         maxDate={new Date()}
                         minDate={new Date(dateOfJoining)}
-                        
+
                       />
 
 
@@ -860,18 +899,39 @@ export function FormEditForm({
             )}
 
             {!isdataForRead && (
-              <button
-                type="submit"
-                onClick={() => {
-                  handleSubmit();
-                }}
-                className="btn btn-primary btn-elevate"
-              >
-                Save
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+
+              <>
+
+                <button
+                  type="submit"
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                  className="btn btn-primary btn-elevate"
+                >
+                  Save
+                  {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+
+
+                {formData.Id && !formData.separatedFlag && (
+                  <button
+                  
+                    onClick={() => {
+                      dispatch(actions.separateById({employeeId:formData.employeeId,Id:formData.Id},onHide()));
+                    }}
+                    className="btn btn-primary btn-elevate"
+                  >
+                    Separate
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
                 )}
-              </button>
+
+              </>
             )}
           </Modal.Footer>
         </>

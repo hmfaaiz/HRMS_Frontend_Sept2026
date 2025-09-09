@@ -31,13 +31,19 @@ export function getApplicantProfileById(id) {
 //Update
 export function updateApplicantProfile(body) {
    
-  return axios.put(`${USERS_URL}/applicant_profile/update-applicant-profile`, body);
+  return axios.put(`${USERS_URL}/separation/update-separation`, body);
 }
 
 //Delete
 export function deleteApplicantProfile(id) {
 
   return axios.delete(`${USERS_URL}/separation/delete-separation/${id}`);
+}
+
+// separated
+export function separateById(body) {
+
+  return axios.put(`${USERS_URL}/separation/separated-byId/`,body);
 }
 
 
