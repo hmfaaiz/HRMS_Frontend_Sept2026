@@ -44,6 +44,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   const deleteApplicantProfile = () => {
     // server request for deleting customer by id
+    console.log("delete11111")
     enableLoading();
     dispatch(actions.deleteApplicantProfile(id)).then(() => {
       onHide();

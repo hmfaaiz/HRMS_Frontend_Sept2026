@@ -39,7 +39,7 @@ const initUser = {
 
   resignationDate: "",                // DATE
   resignationAcceptanceDate: "",      // DATE
-  LastWorkingDate: "",                // DATE
+  lastWorkingDate: "",                // DATE
 
   finalSettlementPolicy: "",
   noticePeriodDays: "",
@@ -54,15 +54,9 @@ const initUser = {
   separatedFlag: false,
   reinstatedFlag: false,
   reinstatedRemarks: "",
+    employeetatus:""
 
-  subsidiaryId: "",
-  companyId: "",
-
-  isActive: true,
-  createdBy: "",
-  updatedBy: "",
-  createdAt: "",
-  updatedAt: "",
+ 
 };
 
 

@@ -12,19 +12,19 @@ import { Accordion, Button, Card } from "react-bootstrap";
 import { KeyboardArrowDown } from "@material-ui/icons";
 
 
-export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
+export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- const [activeKey, setActiveKey] = useState("0");
+  const [activeKey, setActiveKey] = useState("0");
 
   useEffect(() => {
-  
-      setActiveKey("0"); // jab new user aaye to accordion open kar do
-   
-  }, [id,status]);
+
+    setActiveKey("0"); // jab new user aaye to accordion open kar do
+
+  }, [id, status]);
 
   const usersUIProps = useMemo(() => {
     return {
@@ -49,21 +49,14 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
   const dispatch = useDispatch();
   const {
     actionsLoading,
-    user,
     dataForEdit,
-    roles,
-    centers,
-    userStatusTypes,
     isdataForRead,
   } = useSelector((state) => ({
 
 
     actionsLoading: state.users.actionsLoading,
-    user: state.users, // change for users to receipt
-    dataForEdit: state.applicant_profile.dataForEdit,
-    roles: state.users.roles,
-    userStatusTypes: state.users.userStatusTypes,
-    isdataForRead: state.applicant_profile.dataForRead,
+    dataForEdit: state.separation.dataForEdit,
+    isdataForRead: state.separation.dataForRead,
   }));
 
 
@@ -72,31 +65,33 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
   useEffect(() => {
     dispatch(actions.fetchApplicantProfileById(id));
 
-    // dispatch(actions.fetchApplicantProfile(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
-  const saveForm = async (formData, image) => {
+  const saveForm = async (formData) => {
+
+    delete formData.employeetatus
+  
 
 
 
     if (!formData.Id) {
-      if (formData?.file && typeof formData?.file === "object") {
+      if (formData?.resignationAttachment && typeof formData?.resignationAttachment === "object") {
         try {
-          const uploadRes = await actions.uploadFile(formData.file);
-          formData.file = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+          const uploadRes = await actions.uploadFile(formData.resignationAttachment);
+          formData.resignationAttachment = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
         } catch (err) {
           console.error("File upload failed:", err);
           // Optionally return here or set a default file value
         }
-      } else if (typeof formData?.file == "string") {
-        formData.file = formData.file;
+      } else if (typeof formData?.resignationAttachment == "string") {
+        formData.resignationAttachment = formData.resignationAttachment;
       }
-      formData.profile_image = image;
+   
 
 
-        dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
-        dispatch(actions.fetchApplicantProfile(formUIProps.queryParams));
+      dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
+      dispatch(actions.fetchApplicantProfile(formUIProps.queryParams));
 
 
 
@@ -107,70 +102,44 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
 
       const formUpdatedFields = {
         Id: formData.Id,
-        subsidiaryId: formData.subsidiaryId,
+        employeeId: formData.employeeId,
+        exitTypeId: formData.exitTypeId,
+        exitReasonId: formData.exitReasonId,
+        exitRemark: formData.exitRemark,
 
-        companyId: formData.companyId,
-        applicantCode: formData.applicantCode,
+        acceptedEmployeeId: formData.acceptedEmployeeId,
+        acceptanceRemarks: formData.acceptanceRemarks,
 
-        title: formData.title,
-        firstName: formData.firstName,
-        middleName: formData.middleName,
-        lastName: formData.lastName,
+        resignationDate: formData.resignationDate,                // DATE
+        resignationAcceptanceDate: formData.resignationAcceptanceDate, // DATE
+        lLastWorkingDate: formData.lastWorkingDate,                // DATE
 
-        dateOfBirth: formData.dateOfBirth,
-        laborCardNo: formData.laborCardNo,
-        passportNo: formData.passportNo,
-        nic_no: formData.nic_no,
+        finalSettlementPolicy: formData.finalSettlementPolicy,
+        noticePeriodDays: formData.noticePeriodDays,
+        noticePeriodtype: formData.noticePeriodtype,
 
-        maritalStatus: formData.maritalStatus,
-        nationality: formData.nationality,
-        gender: formData.gender,
-        relation_name: formData.relation_name,
-        religionId: formData.religionId,
+        hrRemarks: formData.hrRemarks,
+        blackList: formData.blackList,
+        blackListRemarks: formData.blackListRemarks,
+        resignationAttachment: formData.resignationAttachment,
 
-        countryId: formData.countryId,
-        cityId: formData.cityId,
-        additional_summary: formData.additional_summary,
-        phone_official: formData.phone_official,
-        phone_cell: formData.phone_cell,
-        email_personal: formData.email_personal,
-
-        applicantCanJoin: formData.applicantCanJoin,
-        lastDawnSalary: formData.lastDawnSalary,
-        lastDawnSalaryCurrencyId: formData.lastDawnSalaryCurrencyId,
-        lastDawnSalaryPayTypeId: formData.lastDawnSalaryPayTypeId,
-        expectedSalaryRangeFrom: formData.expectedSalaryRangeFrom,
-        expectedSalaryRangeTo: formData.expectedSalaryRangeTo,
-        expectedSalaryCurrencyId: formData.expectedSalaryCurrencyId,
-        expectedSalaryPayTypeId: formData.expectedSalaryPayTypeId,
-        otherInformation: formData.otherInformation,
-        currentDesignation: formData.currentDesignation,
-        details_applicant_vacancy: formData.details_applicant_vacancy,
-        details_applicant_work_experience: formData.details_applicant_work_experience,
-        details_applicant_academic_info: formData?.details_applicant_academic_info,
-        details_applicant_skills: formData?.details_applicant_skills,
-
-        email: formData.email,
-        applicantStatusId: formData.applicantStatusId,
-        applicantStatusReason: formData.applicantStatusReason,
-        file: typeof formData.file === "string" ? formData.file : "", // fallback
-
-        password: formData.password && formData.password.trim() !== "" ? formData.password : "",
-        profile_image: image,
-
-
+        resignedFlag: formData.resignedFlag,
+        separatedFlag: formData.separatedFlag,
+        reinstatedFlag: formData.reinstatedFlag,
+        reinstatedRemarks: formData.reinstatedRemarks,
       };
 
-      if (formData?.file && typeof formData?.file === "object") {
+
+      if (formData?.resignationAttachment && typeof formData?.resignationAttachment === "object") {
         try {
-          const uploadRes = await actions.uploadFile(formData.file);
-          formUpdatedFields.file = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+          const uploadRes = await actions.uploadFile(formData.resignationAttachment);
+          formUpdatedFields.resignationAttachment = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
         } catch (err) {
           console.error("File upload failed:", err);
           // Optionally return here or set a default file value
         }
-      } else if (typeof formData?.file == "string") {
-        formUpdatedFields.file = formData.file;
+      } else if (typeof formData?.resignationAttachment == "string") {
+        formUpdatedFields.resignationAttachment = formData.resignationAttachment;
       }
 
       // ✅ Now call the update API after file is correctly set
@@ -183,15 +152,12 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
   return (
 
 
-  <div className="mt-3 bg-white">
+    <div className="mt-3 bg-white">
       <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
         formData={dataForEdit || formUIProps.initUser}
         onHide={onHide}
-        roles={roles}
-        centers={centers}
-        userStatusTypes={userStatusTypes}
         isdataForRead={dataForRead}
         enableLoading={enableLoading}
         loading={loading}
@@ -209,7 +175,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
         draggable
         pauseOnHover
       />
-      </div>
-  // </Modal> */}
+    </div>
+    // </Modal> */}
   );
 }

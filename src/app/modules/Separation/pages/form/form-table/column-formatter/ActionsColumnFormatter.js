@@ -28,42 +28,9 @@ export function ActionsColumnFormatter(
 
   return (
     <div className="space-x-2">
-      {isAccessForConvert && row.isToConvertToEmployee && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id="emp-convert-tooltip">Convert to Employee</Tooltip>
-          }
-        >
-          <a className="" onClick={() => openConvertFormDialog(row.Id)}>
-            {/* <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl(
-                  "/media/svg/icons/Communication/vacancyPost.svg"
-                )}
-              />
-            </span> */}
-            <Send className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-      )}
+ 
 
-      {isAccessForOfferLetter && row.isToShowOfferLetter && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id="emp-letter-tooltip">Download Offer Letter</Tooltip>
-          }
-        >
-          <a
-            disabled={pdfGenerateLoading}
-            className=""
-            onClick={() => {
-              dispatch(Generatejob_offer_letter(row.Id));
-            }}
-          >
-            <Download className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-      )}
+
 
       {/* View */}
       {isAccessForView && (
@@ -75,7 +42,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Edit */}
-      {isAccessForEdit && !row?.jobPostingStatus && row.isToUpdateDelete && (
+      {isAccessForEdit && (
         <OverlayTrigger
           overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
         >
@@ -86,7 +53,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Delete or Activate */}
-      {isAccessForDelete && !row?.jobPostingStatus && row.isToUpdateDelete && (
+      {isAccessForDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="delete-tooltip">
@@ -106,23 +73,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {/* Reopening */}
-      {isAccessForEdit && row?.jobPostingStatus == 3 && (
-        <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Reopen</Tooltip>}
-        >
-          <a
-            className="btn btn-icon posting-button"
-            onClick={() => openEditFormDialog(row.Id)}
-          >
-            <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl("/media/svg/icons/Communication/Write.svg")}
-              />
-            </span>
-          </a>
-        </OverlayTrigger>
-      )}
+  
     </div>
   );
 }

@@ -32,7 +32,7 @@ export const fetchApplicantProfileById = (id) => (dispatch) => {
   }
 
   return requestFromServer
-    .getApplicantProfileById({ Id: id })
+    .getApplicantProfileById( id)
     .then((response) => {
       const entities = response.data?.data;
 
@@ -45,7 +45,27 @@ export const fetchApplicantProfileById = (id) => (dispatch) => {
     });
 };
 
-export const deleteApplicantProfile = (id) => (dispatch) => {
+export const fetchEmpBySeparationFlag= (body) => (dispatch) => {
+
+  if (!body.flag && !body.employeeId) {
+    return dispatch(actions.EmployeeFetchedList({ employeeList: [] }));
+  }
+
+  return requestFromServer
+    .getsEmpBySeparationFlag(body)
+    .then((response) => {
+      const entities = response.data?.data;
+
+
+      dispatch(actions.EmployeeFetchedList(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find employee";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+export const deleteSeparation = (id) => (dispatch) => {
 
   return requestFromServer
     .deleteApplicantProfile(id)

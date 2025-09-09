@@ -5,7 +5,7 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 //Create user
 export function createApplicantProfile(body) {
 
-  return axios.post(`${USERS_URL}/applicant_profile/create-applicant-profile`, body);
+  return axios.post(`${USERS_URL}/separation/create-separation`, body);
   
 }
 
@@ -13,12 +13,19 @@ export function createApplicantProfile(body) {
 // Read
 export function getAllApplicantProfile(body) {
 
-  return axios.post(`${USERS_URL}/applicant_profile/read-all-applicant-profile`, body);
+  return axios.post(`${USERS_URL}/separation/read-all-separation`, body);
+}
+
+
+// employee by status
+export function getsEmpBySeparationFlag(body) {
+
+  return axios.post(`${USERS_URL}/separation/read-emp-separation-byflag`, body);
 }
 
 export function getApplicantProfileById(id) {
 
-  return axios.post(`${USERS_URL}/applicant_profile/read-applicant-profile`, id);
+  return axios.get(`${USERS_URL}/separation/read-separation/${id}`);
 }
 
 //Update
@@ -28,32 +35,13 @@ export function updateApplicantProfile(body) {
 }
 
 //Delete
-export function deleteApplicantProfile(body) {
+export function deleteApplicantProfile(id) {
 
-  return axios.delete(`${USERS_URL}/applicant_profile/delete-applicant-profile/${body}`);
+  return axios.delete(`${USERS_URL}/separation/delete-separation/${id}`);
 }
 
-//delete Applicant cancancy
-export function deleteApplicantVacancyDetailById(body) {
-  return axios.delete(`${USERS_URL}/applicant_profile/delete-profile-applicant-vacancy/${body}`);
-}
 
 export function uploadFile(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
-}
-
-
-export function convertApplicantToEmployee(body) {
-   
-  return axios.put(`${USERS_URL}/applicant_profile/convert-applicant-employee`, body);
-}
-
-export function generatejob_offer_letter(body) {
-
-  const config = {
-    responseType:  'arraybuffer', 
-  };
-
-  return axios.post(`${USERS_URL}/applicant_profile/generate-offer-letter`, body,config);
 }
 

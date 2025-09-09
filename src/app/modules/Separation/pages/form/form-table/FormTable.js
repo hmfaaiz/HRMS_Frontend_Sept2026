@@ -38,14 +38,14 @@ export function FormTable() {
   }, [formUIContext]);
 
 
-  const { currentState, userAccess, pdfGenerateLoading } = useSelector(
+  const { currentState, userAccess } = useSelector(
     (state) => {
       return {
 
 
-        currentState: state.applicant_profile,
-        pdfGenerateLoading: state.applicant_profile.pdfGenerateLoading,
-        userAccess: state?.auth?.userAccess["applicant_profile"],
+        currentState: state.separation,
+        
+        userAccess: state?.auth?.userAccess["separation"],
       }
     },
     shallowEqual
@@ -67,136 +67,89 @@ export function FormTable() {
 
 
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadApplicantProfile"
+    (item) => item.componentName === "ReadSeparation"
   );
 
   const isAccessForEdit = userAccess?.find((item) => {
-    return item.componentName === "UpdateApplicantProfile";
+    return item.componentName === "UpdateSeparation";
   });
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteApplicantProfile"
-  );
-
-  const isAccessForConvert = userAccess?.find(
-    (item) => item.componentName === "ConvertApplicantEmployee"
+    (item) => item.componentName === "DeleteSeparation"
   );
 
 
 
 
 
+console.log("entities11111",entities)
   const columns = [
 
 
-
-    {
-      dataField: "applicantCode",
-      text: "Applicant Code",
+  {
+      dataField: "Employee.employeeCode",
+      text: "Employee Code",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "50px",
+        minWidth: "160px",
       },
     },
     {
-      dataField: "FullName",
+      dataField: "Employee.fullName",
       text: "Name",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "150px",
+        minWidth: "160px",
       },
     },
+
     {
-      dataField: "additional_summary",
-      text: "Address",
+      dataField: "Employee.department.deptName",
+      text: "Department",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "160px",
       },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
-      }
     },
 
-
-
     {
-      dataField: "email_personal",
-      text: "Personal Email",
+      dataField: "Employee.designation.formName",
+      text: "Designation",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "160px",
       },
     },
-
+ 
     {
-      dataField: "phone_cell",
-      text: "Cell No.",
+      dataField: "Employee.employeeType.formName",
+      text: "employee Type",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "160px",
       },
     },
-
     {
-      dataField: "file",
-      text: "File",
+      dataField: "Employee.dateOfJoining",
+      text: "date Of Joining",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "160px",
       },
-      // formatter: (cell, row) => (
-
-      //   <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-      //     <span>{getFileName(cell)}</span>
-      //   </a>
-      // )
-      formatter: (cell) => {
-        if (!cell) return "";
-
-        return (
-          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-            View CV
-          </a>
-        );
-      }
-
-
+      // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },
 
-
-    {
-      dataField: "Job Completion",
-      text: "Job Completion",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        dispatch,
-        pdfGenerateLoading,
-
-        openConvertFormDialog: formUIProps.openConvertFormDialog,
-        isAccessForConvert: isAccessForConvert ? isAccessForConvert.isAccess : false,
-        isAccessForOfferLetter: true,
-      },
-
-      classes: "text-end pr-0",
-      headerClasses: "text-end pr-3",
-      style: {
-        minWidth: "100px",
-      },
-    },
     {
       dataField: "action",
       text: "Actions",
