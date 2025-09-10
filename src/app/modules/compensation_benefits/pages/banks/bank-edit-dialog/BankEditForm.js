@@ -18,6 +18,7 @@ import { DROPDOWN, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { KeyboardArrowDown } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2 } from "lucide-react";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -413,7 +414,7 @@ export function BankEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div>
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -439,6 +440,40 @@ export function BankEditForm({
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            {" "}
+                            Subsidiary
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={(isUserForRead || Boolean(id)) && true}
+                        onBlur={() => {
+                          // handleBlur({ target: { name: "countryId" } });
+                        }}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                          dispatch(fetchAllEarningList(1, e.value, "", true)); // For Earning
+                          dispatch(fetchAllDeductionList(2, e.value));
+                          setDefaultEarningList([]);
+                          getSalaryMethod(e.value, setFieldValue);
+                          //handlePaymenModeChanged(e)
+                        }}
+                        error={errors.subsidiaryId}
+                        touched={touched.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                          dispatch(fetchAllEarningList(1, e.value, "", true)); // For Earning
+                          dispatch(fetchAllDeductionList(2, e.value));
+                          setDefaultEarningList([]);
+                          getSalaryMethod(e.value, setFieldValue);
+                        }}
                       />
                       {/* <ErrorMessage className="form-feedBack" name="subsidiaryId" component="div" /> */}
                     </div>
@@ -804,7 +839,7 @@ export function BankEditForm({
                                         type="button"
                                         onClick={deleteRow}
                                       >
-                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                       </button>
                                     </td>
                                   </tr>

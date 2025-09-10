@@ -36,6 +36,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2, Upload, User } from "lucide-react";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export const getApplicantProfileEditSchema = (formData) => {
@@ -135,7 +136,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "is-greater",
           'Expected salary range "To" must be greater than "From"',
-          function (value) {
+          function(value) {
             const { expectedSalaryRangeFrom } = this.parent;
             return value > expectedSalaryRangeFrom;
           }
@@ -232,7 +233,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "unique-skill",
           "Duplicate skill names are not allowed.",
-          function (skills) {
+          function(skills) {
             if (!Array.isArray(skills)) return true; // ✅ safely skip if not an array
 
             const skillNames = skills.map((s) => s.skill?.trim().toLowerCase());
@@ -274,7 +275,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "no-overlapping-dates",
           "Work experience dates must not overlap.",
-          function (entries) {
+          function(entries) {
             if (!entries || entries.length <= 1) return true;
 
             // Filter out invalid dates
@@ -341,7 +342,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "no-overlapping-academic-dates",
           "Academic date ranges must not overlap.",
-          function (entries) {
+          function(entries) {
             if (!entries || entries.length <= 1) return true;
 
             // Filter out entries without valid dates
@@ -377,8 +378,7 @@ export const getApplicantProfileEditSchema = (formData) => {
               .nullable()
               .required(VALIDATION_MESSAGES.required),
             // applicationStatusId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
-            statusDate: Yup.date()
-              .nullable(),
+            statusDate: Yup.date().nullable(),
             // .required(VALIDATION_MESSAGES.required),
             appointmentTypeId: Yup.number()
               .nullable()
@@ -388,7 +388,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "unique-jobVacancyId",
           "Each Job Vacancy must be unique.",
-          function (vacancies) {
+          function(vacancies) {
             if (!vacancies) return true;
 
             const jobVacancyIds = vacancies.map((v) => v.jobVacancyId);
@@ -409,9 +409,10 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "only-one-activeCV",
           "Only one Active Vacancy can be selected.",
-          function (vacancies) {
+          function(vacancies) {
             if (!vacancies) return true;
-            const activeCount = vacancies.filter((v) => v.activeCV === true).length;
+            const activeCount = vacancies.filter((v) => v.activeCV === true)
+              .length;
             if (activeCount > 1) {
               return this.createError({
                 path: `details_applicant_vacancy`,
@@ -426,7 +427,7 @@ export const getApplicantProfileEditSchema = (formData) => {
     .test(
       "check-marital-status",
       "Invalid marital status for selected title",
-      function (value) {
+      function(value) {
         // if (title === 'Mrs.' && maritalStatus === '261') {
         const { title, maritalStatus, gender } = value;
 
@@ -498,13 +499,12 @@ export function FormEditForm({
   onHide,
   isdataForRead,
   enableLoading,
-  loading, disbaleLoading,
+  loading,
+  disbaleLoading,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [profile_image, setImage] = useState(
-    formData?.profile_image
-  );
+  const [profile_image, setImage] = useState(formData?.profile_image);
   const inputFile = useRef(null);
   const [file, setFile] = useState("");
   const [applicantCode, setApplicantCode] = useState("");
@@ -537,8 +537,6 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-
-
   const { currentState, userAccess, currentUser } = useSelector((state) => {
     return {
       currentState: state.applicant_profile,
@@ -549,9 +547,7 @@ export function FormEditForm({
 
   const { dataForEdit } = currentState;
   const fetchData = async (setApplicantCode) => {
-
     if (!formData.Id) {
-
       dispatch(
         getLatestTableId(
           "r_applicant_profile",
@@ -589,11 +585,10 @@ export function FormEditForm({
     { value: "10", label: "10" },
   ];
 
-
   const getSkillNamesFromIds = (skillIds) => {
     if (!Array.isArray(skillIds)) {
-      if (typeof skillIds === 'string') {
-        skillIds = skillIds.split(',').map((s) => s.trim());
+      if (typeof skillIds === "string") {
+        skillIds = skillIds.split(",").map((s) => s.trim());
       } else {
         return [];
       }
@@ -608,7 +603,6 @@ export function FormEditForm({
       .filter(Boolean)
       .map((skill) => skill.label);
   };
-
 
   const printSkills = async (formData, vacancyArray, forDelete = null) => {
     const collected = [];
@@ -641,17 +635,15 @@ export function FormEditForm({
       }
     });
 
-
-
     // ✅ Set for UI dropdown or tracking
     setAllSkillNames(uniqueBySkill.map((s) => s.skillName));
 
     // ✅ Remove existing skills related to the deleted jobVacancyId
     let cleanedFormData = { ...formData };
     if (forDelete) {
-      cleanedFormData.details_applicant_skills = (formData.details_applicant_skills || []).filter(
-        (skill) => skill.jobVacancyId !== forDelete
-      );
+      cleanedFormData.details_applicant_skills = (
+        formData.details_applicant_skills || []
+      ).filter((skill) => skill.jobVacancyId !== forDelete);
     }
 
     // ✅ Add new skills
@@ -673,10 +665,8 @@ export function FormEditForm({
   useEffect(() => {
     if (formData.Id && formData?.profile_image) {
       setImage(formData.profile_image);
-    }
-    else {
+    } else {
       setImage(toAbsoluteUrl("/media/users/profileImage.png")); // new case
-
     }
   }, [formData.Id, formData?.profile_image]);
 
@@ -691,16 +681,13 @@ export function FormEditForm({
       });
     }
     disbaleLoading();
-
   };
-
-
-
-
 
   const updateApplicantSkills = (formData, skillWithJobList) => {
     const existingSkills = formData.details_applicant_skills || [];
-    const existingSkillNames = existingSkills.map((s) => s.skill?.toLowerCase());
+    const existingSkillNames = existingSkills.map((s) =>
+      s.skill?.toLowerCase()
+    );
 
     const newSkills = skillWithJobList
       .filter(
@@ -711,8 +698,8 @@ export function FormEditForm({
       .map((item) => ({
         Id: null,
         applicantId: formData.Id,
-        skill: item.skillName || '',
-        description: '',
+        skill: item.skillName || "",
+        description: "",
         ratingScale: null,
         startDate: null,
         endDate: null,
@@ -729,11 +716,15 @@ export function FormEditForm({
     };
   };
 
-
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={{ ...formData, applicantCode: formData.applicantCode ? formData?.applicantCode : applicantCode }}
+      initialValues={{
+        ...formData,
+        applicantCode: formData.applicantCode
+          ? formData?.applicantCode
+          : applicantCode,
+      }}
       validationSchema={getApplicantProfileEditSchema(formData)}
       onSubmit={async (values) => {
         enableLoading();
@@ -758,9 +749,11 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleChange,
-        setFieldTouched
+        setFieldTouched,
       }) => (
-        <> {console.log("eeeee1111", errors)}
+        <>
+          {" "}
+          {console.log("eeeee1111", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -773,7 +766,6 @@ export function FormEditForm({
                 <div className="grid lg:grid-cols-10 gap-x-3 gap-y-1">
                   <div className=" col-span-8">
                     <div className="grid lg:grid-cols-4 gap-x-3 gap-y-1">
-
                       <div className="">
                         <label>
                           <span>
@@ -789,12 +781,12 @@ export function FormEditForm({
                           type="text"
                           minLength={6}
                           maxLength={6}
-                        // error={ errors.applicantCode}
+                          // error={ errors.applicantCode}
                         />
                       </div>
 
                       <div className="">
-                        <SearchSelect
+                        {/* <SearchSelect
                           name="subsidiaryId"
                           isDisabled={isdataForRead}
                           label={
@@ -814,14 +806,30 @@ export function FormEditForm({
                           options={dashboard?.allSubsidiaryList}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
+                        /> */}
+                        <SubsidiarySelect
+                          name="subsidiaryId"
+                          isDisabled={isdataForRead}
+                          label={
+                            <span>
+                              Subsidiary
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          onChange={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                          }}
+                          error={errors?.subsidiaryId}
+                          touched={touched?.subsidiaryId}
+                          currentValue={values?.subsidiaryId}
+                          initializeSubsidiary={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                          }}
                         />
                       </div>
-
                     </div>
 
                     <div className="grid lg:grid-cols-4 gap-x-3 mt-1">
-
-
                       <div className="">
                         <Select
                           label={
@@ -886,11 +894,7 @@ export function FormEditForm({
                         />
                       </div>
                     </div>
-
-
-
                   </div>
-
 
                   {/* Image */}
 
@@ -966,14 +970,10 @@ export function FormEditForm({
                         }}
                       />
 
-
-
-
                       <label
                         htmlFor="myImage"
                         className="btn bg-tsecondary border border-black text-black mt-1"
                       >
-
                         Upload Square Image{" "}
                         <Upload className="w-3 h-3 text-black" />
                       </label>
@@ -996,7 +996,6 @@ export function FormEditForm({
                       />
                     </div>
                   </div>
-
 
                   {/* <div className=" gap-1 col-span-2 p-5 items-center justify-center bg-red-600 pt-0">
 
@@ -1062,28 +1061,17 @@ export function FormEditForm({
 
 
                   </div> */}
-
-
-
-
                 </div>
-
 
                 {/* Name  */}
 
-
-
-
                 <hr></hr>
-
 
                 {/* Details Job Vacancy */}
 
                 <FieldArray name="details_applicant_vacancy">
                   {({ push, remove }) => (
                     <>
-
-
                       <div className="flex justify-between items-center">
                         <h6 className="font-bold mb-0 text-primary">
                           Applicant Vacancy{"  "}
@@ -1110,8 +1098,6 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-
-
                               <th className="">Job Vacancy</th>
                               <th className="">Application Date</th>
                               <th className="">Application Status</th>
@@ -1128,18 +1114,20 @@ export function FormEditForm({
                                 values?.details_applicant_vacancy?.map(
                                   (detail, index) => (
                                     <tr key={index}>
-
                                       {/* job vacancy selection */}
                                       <td>
                                         <SearchSelect
                                           name={`details_applicant_vacancy[${index}].jobVacancyId`}
                                           className="form-control"
-                                          style={{ width: "200px", zIndex: 9999 }}
+                                          style={{
+                                            width: "200px",
+                                            zIndex: 9999,
+                                          }}
                                           isDisabled={
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                              index
+                                                index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1147,7 +1135,8 @@ export function FormEditForm({
                                             dashboard?.allJobVacancyList?.find(
                                               (x) =>
                                                 x.value ===
-                                                values.details_applicant_vacancy[
+                                                values
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ]?.jobVacancyId
                                             ) || null
@@ -1158,8 +1147,6 @@ export function FormEditForm({
                                           //     e?.value
                                           //   );
                                           //   const result = await printSkills(formData, values.details_applicant_vacancy);
-
-
 
                                           //   // ✅ Make sure result exists before setting
                                           //   if (result?.details_applicant_skills) {
@@ -1176,18 +1163,31 @@ export function FormEditForm({
                                             );
 
                                             // Step 2: Manually construct updated array
-                                            const updatedVacancyArray = values.details_applicant_vacancy.map((item, i) =>
-                                              i === index ? { ...item, jobVacancyId: e?.value } : item
+                                            const updatedVacancyArray = values.details_applicant_vacancy.map(
+                                              (item, i) =>
+                                                i === index
+                                                  ? {
+                                                      ...item,
+                                                      jobVacancyId: e?.value,
+                                                    }
+                                                  : item
                                             );
 
                                             // Step 3: Call with updated array
-                                            const result = await printSkills(formData, updatedVacancyArray);
+                                            const result = await printSkills(
+                                              formData,
+                                              updatedVacancyArray
+                                            );
 
-                                            if (result?.details_applicant_skills) {
-                                              setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                            if (
+                                              result?.details_applicant_skills
+                                            ) {
+                                              setFieldValue(
+                                                "details_applicant_skills",
+                                                result.details_applicant_skills
+                                              );
                                             }
                                           }}
-
                                           options={
                                             dashboard?.allJobVacancyList
                                               ?.filter(
@@ -1195,7 +1195,7 @@ export function FormEditForm({
                                                   x?.jobPostingStatus === 1 && // ✅ Only include items where jobPostingStatus === 1
                                                   (!values?.subsidiaryId ||
                                                     x?.subsidiaryId ===
-                                                    values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
+                                                      values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
                                               )
                                               .map((x) => ({
                                                 label: x.label,
@@ -1212,13 +1212,16 @@ export function FormEditForm({
                                           placeholder="Select--"
                                         />
 
-                                        {errors.details_applicant_vacancy?.[index]
-                                          ?.jobVacancyId &&
-                                          touched.details_applicant_vacancy?.[index]
-                                            ?.jobVacancyId && (
+                                        {errors.details_applicant_vacancy?.[
+                                          index
+                                        ]?.jobVacancyId &&
+                                          touched.details_applicant_vacancy?.[
+                                            index
+                                          ]?.jobVacancyId && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_vacancy[
+                                                errors
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ]?.jobVacancyId
                                               }
@@ -1236,10 +1239,10 @@ export function FormEditForm({
                                               index
                                             ]?.applicationDate
                                               ? new Date(
-                                                values.details_applicant_vacancy[
-                                                  index
-                                                ].applicationDate
-                                              )
+                                                  values.details_applicant_vacancy[
+                                                    index
+                                                  ].applicationDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -1258,7 +1261,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                              index
+                                                index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1266,13 +1269,16 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_vacancy?.[index]
-                                          ?.applicationDate &&
-                                          touched.details_applicant_vacancy?.[index]
-                                            ?.applicationDate && (
+                                        {errors.details_applicant_vacancy?.[
+                                          index
+                                        ]?.applicationDate &&
+                                          touched.details_applicant_vacancy?.[
+                                            index
+                                          ]?.applicationDate && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_vacancy[
+                                                errors
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ].applicationDate
                                               }
@@ -1291,7 +1297,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                              index
+                                                index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1299,7 +1305,8 @@ export function FormEditForm({
                                             dashboard?.allApplicationStatusList?.find(
                                               (x) =>
                                                 x.value ===
-                                                values.details_applicant_vacancy[
+                                                values
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ]?.applicationStatusId
                                             ) || null
@@ -1328,13 +1335,16 @@ export function FormEditForm({
                                           placeholder="Select Status"
                                         />
 
-                                        {errors.details_applicant_vacancy?.[index]
-                                          ?.applicationStatusId &&
-                                          touched.details_applicant_vacancy?.[index]
-                                            ?.applicationStatusId && (
+                                        {errors.details_applicant_vacancy?.[
+                                          index
+                                        ]?.applicationStatusId &&
+                                          touched.details_applicant_vacancy?.[
+                                            index
+                                          ]?.applicationStatusId && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_vacancy[
+                                                errors
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ].applicationStatusId
                                               }
@@ -1345,7 +1355,6 @@ export function FormEditForm({
                                       <td>
                                         <DatePicker
                                           className="form-control"
-
                                           // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
@@ -1353,10 +1362,10 @@ export function FormEditForm({
                                               index
                                             ]?.statusDate
                                               ? new Date(
-                                                values.details_applicant_vacancy[
-                                                  index
-                                                ].statusDate
-                                              )
+                                                  values.details_applicant_vacancy[
+                                                    index
+                                                  ].statusDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -1377,13 +1386,16 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_vacancy?.[index]
-                                          ?.statusDate &&
-                                          touched.details_applicant_vacancy?.[index]
-                                            ?.statusDate && (
+                                        {errors.details_applicant_vacancy?.[
+                                          index
+                                        ]?.statusDate &&
+                                          touched.details_applicant_vacancy?.[
+                                            index
+                                          ]?.statusDate && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_vacancy[
+                                                errors
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ].statusDate
                                               }
@@ -1401,7 +1413,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                              index
+                                                index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1409,7 +1421,8 @@ export function FormEditForm({
                                             dashboard?.allAppointmentTypeList?.find(
                                               (x) =>
                                                 x.value ===
-                                                values.details_applicant_vacancy[
+                                                values
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ]?.appointmentTypeId
                                             ) || null
@@ -1421,20 +1434,24 @@ export function FormEditForm({
                                             );
                                           }}
                                           options={
-                                            dashboard?.allAppointmentTypeList || []
+                                            dashboard?.allAppointmentTypeList ||
+                                            []
                                           }
                                           getOptionLabel={(x) => x.label} // optional: customize label rendering
                                           getOptionValue={(x) => x.value} // optional: customize value extraction
                                           placeholder="Select Status"
                                         />
 
-                                        {errors.details_applicant_vacancy?.[index]
-                                          ?.appointmentTypeId &&
-                                          touched.details_applicant_vacancy?.[index]
-                                            ?.appointmentTypeId && (
+                                        {errors.details_applicant_vacancy?.[
+                                          index
+                                        ]?.appointmentTypeId &&
+                                          touched.details_applicant_vacancy?.[
+                                            index
+                                          ]?.appointmentTypeId && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_vacancy[
+                                                errors
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ].appointmentTypeId
                                               }
@@ -1450,7 +1467,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                              index
+                                                index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1473,13 +1490,16 @@ export function FormEditForm({
                                             }
                                           }}
                                         />
-                                        {errors.details_applicant_vacancy?.[index]
-                                          ?.activeCV &&
-                                          touched.details_applicant_vacancy?.[index]
-                                            ?.activeCV && (
+                                        {errors.details_applicant_vacancy?.[
+                                          index
+                                        ]?.activeCV &&
+                                          touched.details_applicant_vacancy?.[
+                                            index
+                                          ]?.activeCV && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_vacancy[
+                                                errors
+                                                  .details_applicant_vacancy[
                                                   index
                                                 ].activeCV
                                               }
@@ -1493,27 +1513,37 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                              index
+                                                index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
                                           className="border-none bg-transparent "
                                           type="button"
-
-
                                           onClick={async () => {
-                                            deleteApplicantVacancyDetail(detail.Id);
-                                            const updatedVacancies = values.details_applicant_vacancy.filter((_, i) => i !== index); // ❗️ manually filter
+                                            deleteApplicantVacancyDetail(
+                                              detail.Id
+                                            );
+                                            const updatedVacancies = values.details_applicant_vacancy.filter(
+                                              (_, i) => i !== index
+                                            ); // ❗️ manually filter
 
                                             remove(index); // update Formik
 
-                                            const result = await printSkills(formData, updatedVacancies, detail.Id); // ❗️ directly pass updated
+                                            const result = await printSkills(
+                                              formData,
+                                              updatedVacancies,
+                                              detail.Id
+                                            ); // ❗️ directly pass updated
 
-                                            if (result?.details_applicant_skills) {
-                                              setFieldValue("details_applicant_skills", result.details_applicant_skills);
+                                            if (
+                                              result?.details_applicant_skills
+                                            ) {
+                                              setFieldValue(
+                                                "details_applicant_skills",
+                                                result.details_applicant_skills
+                                              );
                                             }
                                           }}
-
                                         >
                                           <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                         </button>
@@ -1523,12 +1553,9 @@ export function FormEditForm({
                                 )}
                             </tbody>
                           </table>
-
-
                         </div>
                       </div>
                     </>
-
                   )}
                 </FieldArray>
                 {typeof errors.details_applicant_vacancy === "string" && (
@@ -1540,8 +1567,6 @@ export function FormEditForm({
                 <hr></hr>
 
                 {/* Applicant Status Information */}
-
-
 
                 <h6 className="font-bold mb-0 text-primary my-2">
                   Applicant Status Information
@@ -1585,10 +1610,7 @@ export function FormEditForm({
                           }
                         );
 
-                        setFieldValue(
-                          "details_applicant_vacancy",
-                          updatedList
-                        );
+                        setFieldValue("details_applicant_vacancy", updatedList);
                       }}
                       options={dashboard?.allApplicationStatusList || []}
                       getOptionLabel={(x) => x.label} // optional: customize label rendering
@@ -1596,12 +1618,11 @@ export function FormEditForm({
                       placeholder="Select Status"
                     />
 
-                    {errors.applicantStatusId &&
-                      touched.applicantStatusId && (
-                        <div className="invalid-feedback">
-                          {errors.applicantStatusId}
-                        </div>
-                      )}
+                    {errors.applicantStatusId && touched.applicantStatusId && (
+                      <div className="invalid-feedback">
+                        {errors.applicantStatusId}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1611,26 +1632,21 @@ export function FormEditForm({
                     component={TextArea}
                     placeholder="Enter applicant status reason"
                     label={<span>Applicant Status Reason</span>}
-                    className="form-control "  // Force full height
+                    className="form-control " // Force full height
                     autoComplete="off"
                   />
                 </div>
 
-
-
                 <hr></hr>
                 {/* Personal Information */}
 
-
-                <div >
-
+                <div>
                   <h6 className="font-bold mb-0 text-primary my-2">
                     Personal Information
                   </h6>
                   <div className="grid lg:grid-cols-4 gap-x-3 ">
                     <div className="">
                       <label>
-
                         Date of Birth <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field
@@ -1715,21 +1731,16 @@ export function FormEditForm({
                         name="nationality"
                         label={
                           <span>
-
                             Nationality<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isdataForRead}
                         onChange={(e) => {
-                          setFieldValue(
-                            "nationality",
-                            e.value || null
-                          );
+                          setFieldValue("nationality", e.value || null);
                         }}
                         value={
                           dashboard.allNationalities?.find(
-                            (option) =>
-                              option.value === values.nationality
+                            (option) => option.value === values.nationality
                           ) || null
                         }
                         error={errors.nationality}
@@ -1816,10 +1827,6 @@ export function FormEditForm({
                       />
                     </div>
 
-
-
-
-
                     <div className="">
                       <label>
                         <span>
@@ -1839,10 +1846,7 @@ export function FormEditForm({
                 {/* Current Address*/}
                 <hr></hr>
 
-                <div
-
-                >
-
+                <div>
                   <h6 className="font-bold mb-0 text-primary">
                     Current Address
                   </h6>
@@ -1887,7 +1891,6 @@ export function FormEditForm({
                       />
                     </div>
 
-
                     <div className="">
                       <Field
                         name="phone_official"
@@ -1929,31 +1932,24 @@ export function FormEditForm({
                       name="additional_summary"
                       component={TextArea}
                       placeholder="Enter Address"
-                      className="form-control"  // Force full height
+                      className="form-control" // Force full height
                       label={
                         <span>
-
                           Address<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       autoComplete="off"
                     />
-
                   </div>
-
                 </div>
 
                 {/* Applicant General Information*/}
                 <hr></hr>
 
-                <div
-
-                >
-
+                <div>
                   <h6 className="font-bold mb-0 text-primary my-2">
                     Applicant General Information
                   </h6>
-
 
                   <div className="grid lg:grid-cols-5 gap-x-3 ">
                     <div className="">
@@ -2017,7 +2013,6 @@ export function FormEditForm({
                           </span>
                         }
                       />
-
                     </div>
 
                     <div className="">
@@ -2047,7 +2042,6 @@ export function FormEditForm({
                         options={dashboard.allCurrencyCodeList}
                       />
                     </div>
-
 
                     <div className="">
                       <SearchSelect
@@ -2079,9 +2073,6 @@ export function FormEditForm({
                   </div>
 
                   <div className="grid lg:grid-cols-5 gap-x-3 gap-y-1 mt-1">
-
-
-
                     <div className="">
                       <AmountInput
                         field={{
@@ -2103,7 +2094,6 @@ export function FormEditForm({
                           </span>
                         }
                       />
-
                     </div>
 
                     <div className="">
@@ -2122,7 +2112,6 @@ export function FormEditForm({
                         placeholder="Enter expected salary range(to)"
                         label={
                           <span className="">
-
                             Expected Salary Range (To)
                             <span style={{ color: "red" }}>*</span>
                           </span>
@@ -2186,23 +2175,19 @@ export function FormEditForm({
                         options={salaryPayTypeIdOptions}
                       />
                     </div>
-
-
-
                   </div>
 
-                  <div className="mt-1" >
+                  <div className="mt-1">
                     <Field
                       name="otherInformation"
                       component={TextArea}
                       placeholder="Enter other information"
                       label={<span> Other Information</span>}
-                      className="form-control "  // Force full height
+                      className="form-control " // Force full height
                       autoComplete="off"
                     />
                   </div>
                 </div>
-
 
                 {/* <div className="col-12 col-md-12 mt-3 d-flex flex-column ">
                   <label
@@ -2245,7 +2230,6 @@ export function FormEditForm({
                   </div>
                 </div> */}
 
-
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
                   <div className="col-span-1">
                     {/* <label
@@ -2257,7 +2241,6 @@ export function FormEditForm({
                     </label> */}
 
                     {/* Hidden input */}
-
 
                     {/* Styled label as upload box */}
                     {/* <label
@@ -2288,13 +2271,10 @@ export function FormEditForm({
                         const file = event.currentTarget.files[0];
                         setFieldValue("file", file);
                       }}
-
-
                     />
                     {errors.file && touched.file && (
                       <div className="invalid-feedback">{errors.file}</div>
                     )}
-
 
                     {/* </label> */}
 
@@ -2312,15 +2292,9 @@ export function FormEditForm({
                       </div>
                     )}
                   </div>
-
-
                 </div>
 
-
-
                 <hr></hr>
-
-
 
                 <h6 className="font-bold mb-0 text-primary my-2">
                   User Credentials
@@ -2343,9 +2317,7 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       New Password
-                      {!formData.Id && (
-                        <span style={{ color: "red" }}>*</span>
-                      )}
+                      {!formData.Id && <span style={{ color: "red" }}>*</span>}
                     </label>
                     <Field
                       name="password"
@@ -2357,7 +2329,6 @@ export function FormEditForm({
                     />
                   </div>
                 </div>
-
               </fieldset>
 
               {/* Details Work Experience */}
@@ -2395,8 +2366,6 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-
-
                               <td className="min-w-32">Company</td>
                               <td className="min-w-32"> Position Held</td>
                               <td className="min-w-32">Country</td>
@@ -2408,12 +2377,11 @@ export function FormEditForm({
 
                             <tbody>
                               {values?.details_applicant_work_experience &&
-                                values?.details_applicant_work_experience?.length >
-                                0 &&
+                                values?.details_applicant_work_experience
+                                  ?.length > 0 &&
                                 values?.details_applicant_work_experience?.map(
                                   (detail, index) => (
                                     <tr key={index}>
-
                                       {/* job vacancy selection */}
                                       <td>
                                         <Field
@@ -2424,10 +2392,12 @@ export function FormEditForm({
                                           autoComplete="off"
                                         />
 
-                                        {errors.details_applicant_work_experience?.[
+                                        {errors
+                                          .details_applicant_work_experience?.[
                                           index
                                         ]?.companyName &&
-                                          touched.details_applicant_work_experience?.[
+                                          touched
+                                            .details_applicant_work_experience?.[
                                             index
                                           ]?.companyName && (
                                             <div className="text-danger">
@@ -2450,10 +2420,12 @@ export function FormEditForm({
                                           autoComplete="off"
                                         />
 
-                                        {errors.details_applicant_work_experience?.[
+                                        {errors
+                                          .details_applicant_work_experience?.[
                                           index
                                         ]?.positionHeld &&
-                                          touched.details_applicant_work_experience?.[
+                                          touched
+                                            .details_applicant_work_experience?.[
                                             index
                                           ]?.positionHeld && (
                                             <div className="text-danger">
@@ -2473,7 +2445,8 @@ export function FormEditForm({
                                           name={`details_applicant_work_experience[${index}].countryId`}
                                           isDisabled={isdataForRead}
                                           onChange={(e) => {
-                                            const selectedCountryId = e.value || null;
+                                            const selectedCountryId =
+                                              e.value || null;
                                             setFieldValue(
                                               `details_applicant_work_experience[${index}].countryId`,
                                               selectedCountryId
@@ -2498,10 +2471,12 @@ export function FormEditForm({
                                           getOptionValue={(x) => x.value} // optional: customize value extraction
                                           placeholder="Select Status"
                                         />
-                                        {errors.details_applicant_work_experience?.[
+                                        {errors
+                                          .details_applicant_work_experience?.[
                                           index
                                         ]?.countryId &&
-                                          touched.details_applicant_work_experience?.[
+                                          touched
+                                            .details_applicant_work_experience?.[
                                             index
                                           ]?.countryId && (
                                             <div className="text-danger">
@@ -2521,7 +2496,8 @@ export function FormEditForm({
                                           name={`details_applicant_work_experience[${index}].cityId`}
                                           isDisabled={
                                             isdataForRead ||
-                                            !values.details_applicant_work_experience[
+                                            !values
+                                              .details_applicant_work_experience[
                                               index
                                             ]?.countryId
                                           }
@@ -2547,16 +2523,19 @@ export function FormEditForm({
                                             ) || null
                                           }
                                           options={filteredCities(
-                                            values.details_applicant_work_experience[
+                                            values
+                                              .details_applicant_work_experience[
                                               index
                                             ]?.countryId
                                           )}
                                         />
 
-                                        {errors.details_applicant_work_experience?.[
+                                        {errors
+                                          .details_applicant_work_experience?.[
                                           index
                                         ]?.cityId &&
-                                          touched.details_applicant_work_experience?.[
+                                          touched
+                                            .details_applicant_work_experience?.[
                                             index
                                           ]?.cityId && (
                                             <div className="text-danger">
@@ -2582,10 +2561,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                values.details_applicant_work_experience[
-                                                  index
-                                                ].startDate
-                                              )
+                                                  values.details_applicant_work_experience[
+                                                    index
+                                                  ].startDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -2611,10 +2590,12 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_work_experience?.[
+                                        {errors
+                                          .details_applicant_work_experience?.[
                                           index
                                         ]?.startDate &&
-                                          touched.details_applicant_work_experience?.[
+                                          touched
+                                            .details_applicant_work_experience?.[
                                             index
                                           ]?.startDate && (
                                             <div className="text-danger">
@@ -2640,10 +2621,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                values.details_applicant_work_experience[
-                                                  index
-                                                ].endDate
-                                              )
+                                                  values.details_applicant_work_experience[
+                                                    index
+                                                  ].endDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -2669,10 +2650,12 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_work_experience?.[
+                                        {errors
+                                          .details_applicant_work_experience?.[
                                           index
                                         ]?.endDate &&
-                                          touched.details_applicant_work_experience?.[
+                                          touched
+                                            .details_applicant_work_experience?.[
                                             index
                                           ]?.endDate && (
                                             <div className="text-danger">
@@ -2687,9 +2670,9 @@ export function FormEditForm({
                                       </td>
 
                                       <td className="text-right">
-                                        <button className="bg-transparent border-none"
+                                        <button
+                                          className="bg-transparent border-none"
                                           disabled={isdataForRead}
-
                                           type="button"
                                           onClick={() => {
                                             remove(index);
@@ -2703,16 +2686,12 @@ export function FormEditForm({
                                 )}
                             </tbody>
                           </table>
-
-
                         </div>
                       </div>
                     </div>
                   )}
                 </FieldArray>
               </div>
-
-
 
               {typeof errors.details_applicant_work_experience === "string" && (
                 <div className="text-danger">
@@ -2756,8 +2735,6 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-
-
                               <td className="min-w-32">Institution</td>
                               <td className="min-w-32">Degree</td>
                               <td className="min-w-32">Country</td>
@@ -2770,11 +2747,11 @@ export function FormEditForm({
 
                             <tbody>
                               {values?.details_applicant_academic_info &&
-                                values?.details_applicant_academic_info?.length > 0 &&
+                                values?.details_applicant_academic_info
+                                  ?.length > 0 &&
                                 values?.details_applicant_academic_info?.map(
                                   (detail, index) => (
                                     <tr key={index}>
-
                                       {/* job vacancy selection */}
 
                                       {/* institution */}
@@ -2801,16 +2778,20 @@ export function FormEditForm({
                                               e?.value
                                             );
                                           }}
-                                          options={dashboard.allInstitution || []}
+                                          options={
+                                            dashboard.allInstitution || []
+                                          }
                                           getOptionLabel={(x) => x.label} // optional: customize label rendering
                                           getOptionValue={(x) => x.value} // optional: customize value extraction
                                           placeholder="Select Status"
                                         />
 
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.institutionId &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.institutionId && (
                                             <div className="text-danger">
@@ -2848,16 +2829,20 @@ export function FormEditForm({
                                               e?.value
                                             );
                                           }}
-                                          options={dashboard?.allDegreeTitle || []}
+                                          options={
+                                            dashboard?.allDegreeTitle || []
+                                          }
                                           getOptionLabel={(x) => x.label} // optional: customize label rendering
                                           getOptionValue={(x) => x.value} // optional: customize value extraction
                                           placeholder="Select Status"
                                         />
 
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.degreeId &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.degreeId && (
                                             <div className="text-danger">
@@ -2878,7 +2863,8 @@ export function FormEditForm({
                                           name={`details_applicant_academic_info[${index}].countryId`}
                                           isDisabled={isdataForRead}
                                           onChange={(e) => {
-                                            const selectedCountryId = e.value || null;
+                                            const selectedCountryId =
+                                              e.value || null;
                                             setFieldValue(
                                               `details_applicant_academic_info[${index}].countryId`,
                                               selectedCountryId
@@ -2903,10 +2889,12 @@ export function FormEditForm({
                                           getOptionValue={(x) => x.value} // optional: customize value extraction
                                           placeholder="Select Status"
                                         />
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.countryId &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.countryId && (
                                             <div className="text-danger">
@@ -2926,7 +2914,8 @@ export function FormEditForm({
                                           name={`details_applicant_academic_info[${index}].cityId`}
                                           isDisabled={
                                             isdataForRead ||
-                                            !values.details_applicant_academic_info[
+                                            !values
+                                              .details_applicant_academic_info[
                                               index
                                             ]?.countryId
                                           }
@@ -2938,7 +2927,8 @@ export function FormEditForm({
                                           }}
                                           value={
                                             filteredCities(
-                                              values.details_applicant_academic_info[
+                                              values
+                                                .details_applicant_academic_info[
                                                 index
                                               ]?.countryId
                                             ).find(
@@ -2951,16 +2941,19 @@ export function FormEditForm({
                                             ) || null
                                           }
                                           options={filteredCities(
-                                            values.details_applicant_academic_info[
+                                            values
+                                              .details_applicant_academic_info[
                                               index
                                             ]?.countryId
                                           )}
                                         />
 
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.cityId &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.cityId && (
                                             <div className="text-danger">
@@ -2986,10 +2979,12 @@ export function FormEditForm({
                                           type="number"
                                         />
 
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.gpa &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.gpa && (
                                             <div className="text-danger">
@@ -3010,14 +3005,15 @@ export function FormEditForm({
                                           // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
-                                            values?.details_applicant_academic_info?.[
+                                            values
+                                              ?.details_applicant_academic_info?.[
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                values.details_applicant_academic_info[
-                                                  index
-                                                ].startDate
-                                              )
+                                                  values.details_applicant_academic_info[
+                                                    index
+                                                  ].startDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3043,10 +3039,12 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.startDate &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.startDate && (
                                             <div className="text-danger">
@@ -3067,14 +3065,15 @@ export function FormEditForm({
                                           // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
-                                            values?.details_applicant_academic_info?.[
+                                            values
+                                              ?.details_applicant_academic_info?.[
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                values.details_applicant_academic_info[
-                                                  index
-                                                ].endDate
-                                              )
+                                                  values.details_applicant_academic_info[
+                                                    index
+                                                  ].endDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3101,10 +3100,12 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_academic_info?.[
+                                        {errors
+                                          .details_applicant_academic_info?.[
                                           index
                                         ]?.endDate &&
-                                          touched.details_applicant_academic_info?.[
+                                          touched
+                                            .details_applicant_academic_info?.[
                                             index
                                           ]?.endDate && (
                                             <div className="text-danger">
@@ -3119,9 +3120,9 @@ export function FormEditForm({
                                       </td>
 
                                       <td className="text-right">
-                                        <button className="bg-transparent border-none"
+                                        <button
+                                          className="bg-transparent border-none"
                                           disabled={isdataForRead}
-
                                           type="button"
                                           onClick={() => {
                                             remove(index);
@@ -3136,8 +3137,6 @@ export function FormEditForm({
                                 )}
                             </tbody>
                           </table>
-
-
                         </div>
                       </div>
                     </div>
@@ -3154,7 +3153,6 @@ export function FormEditForm({
               <hr></hr>
               {/* Details Skills  */}
               <div className="w-full overflow-x-auto">
-
                 <FieldArray name="details_applicant_skills">
                   {({ push, remove }) => (
                     <div>
@@ -3173,12 +3171,9 @@ export function FormEditForm({
                                 startDate: "",
                                 endDate: "",
                                 jobVacancyId: "",
-                              })
+                              });
                               //  printSkills(values.details_applicant_vacancy)
-
                             }}
-
-
                             className="btn btn-primary btn-sm"
                           >
                             <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
@@ -3190,8 +3185,6 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-
-
                               <td className="min-w-32"> Skill</td>
                               <td className="min-w-32">Description</td>
 
@@ -3207,27 +3200,33 @@ export function FormEditForm({
                                 values?.details_applicant_skills?.map(
                                   (detail, index) => (
                                     <tr key={index}>
-
-
                                       {/* skill */}
 
                                       <td>
                                         <Field
                                           name={`details_applicant_skills[${index}].skill`}
                                           component={Input}
-                                          disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
+                                          disabled={
+                                            isdataForRead ||
+                                            !!values.details_applicant_skills?.[
+                                              index
+                                            ]?.jobVacancyId
+                                          }
                                           placeholder="Enter skill"
                                           autoComplete="off"
                                         />
 
-                                        {errors.details_applicant_skills?.[index]
-                                          ?.skill &&
-                                          touched.details_applicant_skills?.[index]
-                                            ?.skill && (
+                                        {errors.details_applicant_skills?.[
+                                          index
+                                        ]?.skill &&
+                                          touched.details_applicant_skills?.[
+                                            index
+                                          ]?.skill && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_skills[index]
-                                                  ?.skill
+                                                errors.details_applicant_skills[
+                                                  index
+                                                ]?.skill
                                               }
                                             </div>
                                           )}
@@ -3243,19 +3242,30 @@ export function FormEditForm({
                                           placeholder="Enter description"
                                           autoComplete="off"
                                           onChange={(e) => {
-                                            setFieldValue(`details_applicant_skills[${index}].jobVacancyId`, values.details_applicant_skills?.[index]?.jobVacancyId)
-                                            setFieldValue(`details_applicant_skills[${index}].description`, e.target.value)
+                                            setFieldValue(
+                                              `details_applicant_skills[${index}].jobVacancyId`,
+                                              values.details_applicant_skills?.[
+                                                index
+                                              ]?.jobVacancyId
+                                            );
+                                            setFieldValue(
+                                              `details_applicant_skills[${index}].description`,
+                                              e.target.value
+                                            );
                                           }}
                                         />
 
-                                        {errors.details_applicant_skills?.[index]
-                                          ?.description &&
-                                          touched.details_applicant_skills?.[index]
-                                            ?.description && (
+                                        {errors.details_applicant_skills?.[
+                                          index
+                                        ]?.description &&
+                                          touched.details_applicant_skills?.[
+                                            index
+                                          ]?.description && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_skills[index]
-                                                  ?.description
+                                                errors.details_applicant_skills[
+                                                  index
+                                                ]?.description
                                               }
                                             </div>
                                           )}
@@ -3272,8 +3282,9 @@ export function FormEditForm({
                                             ratingOptions?.find(
                                               (x) =>
                                                 x.value ==
-                                                values.details_applicant_skills[index]
-                                                  ?.ratingScale
+                                                values.details_applicant_skills[
+                                                  index
+                                                ]?.ratingScale
                                             ) || null
                                           }
                                           onChange={(e) => {
@@ -3288,14 +3299,17 @@ export function FormEditForm({
                                           placeholder="Select Status"
                                         />
 
-                                        {errors.details_applicant_skills?.[index]
-                                          ?.ratingScale &&
-                                          touched.details_applicant_skills?.[index]
-                                            ?.ratingScale && (
+                                        {errors.details_applicant_skills?.[
+                                          index
+                                        ]?.ratingScale &&
+                                          touched.details_applicant_skills?.[
+                                            index
+                                          ]?.ratingScale && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_skills[index]
-                                                  .ratingScale
+                                                errors.details_applicant_skills[
+                                                  index
+                                                ].ratingScale
                                               }
                                             </div>
                                           )}
@@ -3308,13 +3322,14 @@ export function FormEditForm({
                                           // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
-                                            values?.details_applicant_skills?.[index]
-                                              ?.startDate
+                                            values?.details_applicant_skills?.[
+                                              index
+                                            ]?.startDate
                                               ? new Date(
-                                                values.details_applicant_skills[
-                                                  index
-                                                ].startDate
-                                              )
+                                                  values.details_applicant_skills[
+                                                    index
+                                                  ].startDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3340,14 +3355,17 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_skills?.[index]
-                                          ?.startDate &&
-                                          touched.details_applicant_skills?.[index]
-                                            ?.startDate && (
+                                        {errors.details_applicant_skills?.[
+                                          index
+                                        ]?.startDate &&
+                                          touched.details_applicant_skills?.[
+                                            index
+                                          ]?.startDate && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_skills[index]
-                                                  .startDate
+                                                errors.details_applicant_skills[
+                                                  index
+                                                ].startDate
                                               }
                                             </div>
                                           )}
@@ -3360,13 +3378,14 @@ export function FormEditForm({
                                           // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
-                                            values?.details_applicant_skills?.[index]
-                                              ?.endDate
+                                            values?.details_applicant_skills?.[
+                                              index
+                                            ]?.endDate
                                               ? new Date(
-                                                values.details_applicant_skills[
-                                                  index
-                                                ].endDate
-                                              )
+                                                  values.details_applicant_skills[
+                                                    index
+                                                  ].endDate
+                                                )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3392,24 +3411,31 @@ export function FormEditForm({
                                           showPopperArrow={false}
                                         />
 
-                                        {errors.details_applicant_skills?.[index]
-                                          ?.endDate &&
-                                          touched.details_applicant_skills?.[index]
-                                            ?.endDate && (
+                                        {errors.details_applicant_skills?.[
+                                          index
+                                        ]?.endDate &&
+                                          touched.details_applicant_skills?.[
+                                            index
+                                          ]?.endDate && (
                                             <div className="text-danger">
                                               {
-                                                errors.details_applicant_skills[index]
-                                                  .endDate
+                                                errors.details_applicant_skills[
+                                                  index
+                                                ].endDate
                                               }
                                             </div>
                                           )}
                                       </td>
 
                                       <td className="text-right">
-                                        <button className="bg-transparent border-none"
-
-                                          disabled={isdataForRead || !!values.details_applicant_skills?.[index]?.jobVacancyId}
-
+                                        <button
+                                          className="bg-transparent border-none"
+                                          disabled={
+                                            isdataForRead ||
+                                            !!values.details_applicant_skills?.[
+                                              index
+                                            ]?.jobVacancyId
+                                          }
                                           type="button"
                                           onClick={() => {
                                             remove(index);
@@ -3424,8 +3450,6 @@ export function FormEditForm({
                                 )}
                             </tbody>
                           </table>
-
-
                         </div>
                       </div>
                     </div>
@@ -3436,7 +3460,6 @@ export function FormEditForm({
                   <div className="text-danger">
                     {errors.details_applicant_skills}
                   </div>
-
                 )}
               </div>
             </Form>

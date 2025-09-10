@@ -22,6 +22,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useMemo } from "react";
 import { TimeInput } from "../../../../../../_metronic/_partials/controls/forms/TimeInput";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 //Validation for Form
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -337,7 +338,7 @@ export function MasterEditForm({
                   <div className="space-y-1">
                     <div className="grid grid-cols-4 gap-x-3 gap-y-1">
                       <div>
-                        <SearchSelect
+                        {/* <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -358,10 +359,36 @@ export function MasterEditForm({
                           value={defSubsidiary || null}
                           options={dashboard?.allSubsidiaryList}
                         />
+
                         <ErrorMessage
                           className="form-feedBack"
                           name="subsidiaryId"
                           component="div"
+                        /> */}
+                        <SubsidiarySelect
+                          name="subsidiaryId"
+                          label={
+                            <span>
+                              {" "}
+                              Subsidiary<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={isUserForRead && true}
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                            setDefualtSubsidiaryList(e);
+                            //handlePaymenModeChanged(e)
+                          }}
+                          error={errors?.subsidiaryId}
+                          // touched={touched?.subsidiaryId}
+                          currentValue={values?.subsidiaryId}
+                          initializeSubsidiary={(e) => {
+                            setFieldValue("subsidiaryId", e.value || null);
+                            setDefualtSubsidiaryList(e);
+                          }}
                         />
                       </div>
 

@@ -16,13 +16,13 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
     }
   };
   return (
-    <div className="bg-white rounded-lg px-3 py-2">
+    <div className="bg-white w-full rounded-lg px-3 py-2">
       <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
       <div
         className={
           data?.data.length > 0
-            ? "space-y-3 my-2 max-h-[19rem] overflow-auto px-1"
-            : `space-y-0 my-2 max-h-6 overflow-auto`
+            ? "space-y-3 my-2 max-h-[19rem] overflow-auto scrollbar-fancy px-1"
+            : `space-y-0 my-2 max-h-6 scrollbar-fancy`
         }
       >
         {data?.data.length > 0 ? (

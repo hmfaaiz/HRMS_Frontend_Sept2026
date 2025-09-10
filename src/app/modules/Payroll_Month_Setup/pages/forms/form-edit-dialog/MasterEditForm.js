@@ -1,15 +1,18 @@
-
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  DatePickerField,
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
-
   fetchAllSubCenter,
   fetchAllSubsidiaryData,
   getLatestBookingNo,
@@ -18,45 +21,41 @@ import {
 import DatePicker from "react-datepicker";
 import axios from "axios";
 import { USERS_URL } from "../../../_redux/formCrud";
-import { getDateDiffInDays } from "../../../../../utils/common"; import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-;
+import { getDateDiffInDays } from "../../../../../utils/common";
+import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 // Validation schema
-const formValidation = Yup.object().shape(
-  {
-    subsidiaryId: Yup.mixed()
-      .nullable().
-      required(VALIDATION_MESSAGES.required),
+const formValidation = Yup.object().shape({
+  subsidiaryId: Yup.mixed()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
-    month: Yup.number()
-      .nullable().
-      required(VALIDATION_MESSAGES.required),
+  month: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
-    month_days: Yup.number()
-      .nullable().
-      required(VALIDATION_MESSAGES.required),
+  month_days: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
-    year: Yup.number()
-      .nullable().
-      required(VALIDATION_MESSAGES.required),
+  year: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
-    shortFormat: Yup.number()
-      .nullable().
-      required(VALIDATION_MESSAGES.required),
+  shortFormat: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
-    startDate: Yup.date()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required)
-      .max(Yup.ref('endDate'), 'Start date cannot be later than end date'), // Use Yup.ref to reference endDate
+  startDate: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required)
+    .max(Yup.ref("endDate"), "Start date cannot be later than end date"), // Use Yup.ref to reference endDate
 
-    endDate: Yup.date()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required)
-      .min(Yup.ref('startDate'), 'End date cannot be earlier than start date'), // Use Yup.ref to reference startDate
-
-  },
-
-);
-
+  endDate: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required)
+    .min(Yup.ref("startDate"), "End date cannot be earlier than start date"), // Use Yup.ref to reference startDate
+});
 
 export function MasterEditForm({
   SavePayrollMonthSetup,
@@ -67,7 +66,6 @@ export function MasterEditForm({
   enableLoading,
   loading,
 }) {
-
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
 
@@ -76,77 +74,70 @@ export function MasterEditForm({
   const [defstartDate, setDefaultStartDate] = useState(null);
   const [defendDate, setDefaultEndDate] = useState(null);
   const [responseData, setResponseData] = useState(null);
-  const [flag, setFlag] = useState(false)
+  const [flag, setFlag] = useState(false);
   useEffect(() => {
-
     if (!user.Id) {
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"))
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     }
   }, [dispatch]);
 
-
-
   const getActivePreviousPayrollMonth = async (subsidiaryId, setFieldValue) => {
     try {
-      const response = await axios.post(`${USERS_URL}/payroll_month/get-payroll-month-previous-date`, { subsidiaryId: subsidiaryId });
+      const response = await axios.post(
+        `${USERS_URL}/payroll_month/get-payroll-month-previous-date`,
+        { subsidiaryId: subsidiaryId }
+      );
 
       if (response?.data?.data) {
-        setResponseData(response?.data?.data)
-        setFlag(true)
+        setResponseData(response?.data?.data);
+        setFlag(true);
 
-        const month = response?.data?.data?.month && response?.data?.data?.month === 12 ? 1 : response?.data?.data?.month + 1;
-        const year = response?.data?.data?.year && response?.data?.data?.month === 12 ? response?.data?.data?.year + 1 : response?.data?.data?.year;
+        const month =
+          response?.data?.data?.month && response?.data?.data?.month === 12
+            ? 1
+            : response?.data?.data?.month + 1;
+        const year =
+          response?.data?.data?.year && response?.data?.data?.month === 12
+            ? response?.data?.data?.year + 1
+            : response?.data?.data?.year;
 
-        setFieldValue(
-          "month", month
-
-        );
-        setFieldValue(
-          "year", year
-
-        );
+        setFieldValue("month", month);
+        setFieldValue("year", year);
 
         // const formattedMonth = month && month < 10 ? `0${month}` : `${month}`;
         // const formattedYear = year && year.toString().slice(-2); // Extract last 2 digits of the year
 
         // const shortFormat = `${formattedMonth}${formattedYear}`;
-        setShortDormat(month, year, setFieldValue)
-
+        setShortDormat(month, year, setFieldValue);
 
         // setFieldValue("shortFormat", shortformat);
 
-
         const nextStartDate = new Date(response?.data?.data?.endDate);
 
-        let date = new Date(nextStartDate.setDate(nextStartDate.getDate() + 1))
+        let date = new Date(nextStartDate.setDate(nextStartDate.getDate() + 1));
         // setDefaultStartDate(date);
-        setFieldValue("startDate", date)
-        setEndDate(year, month, date, setFieldValue)
-
+        setFieldValue("startDate", date);
+        setEndDate(year, month, date, setFieldValue);
       }
     } catch (error) {
-      setFlag(false)
+      setFlag(false);
 
-      setFieldValue("month", "-1")
-      setFieldValue("year", "")
-      setFieldValue("shortFormat", "")
-      setFieldValue("startDate", "")
-      setFieldValue("endDate", "")
-      setFieldValue("month_days", "")
+      setFieldValue("month", "-1");
+      setFieldValue("year", "");
+      setFieldValue("shortFormat", "");
+      setFieldValue("startDate", "");
+      setFieldValue("endDate", "");
+      setFieldValue("month_days", "");
     }
-
-  }
+  };
 
   const getTotalDaysInMonth = (year, month) => {
-
     const lastDayOfMonth = new Date(year, month, 0);
     return lastDayOfMonth.getDate();
-  }
+  };
 
   const setEndDate = (year, month, date, setFieldValue) => {
-
     const totalDays = getTotalDaysInMonth(year, month); // 1 is February (months are 0-indexed)
-
 
     setDefaultStartDate(date);
 
@@ -157,10 +148,7 @@ export function MasterEditForm({
     setDefaultEndDate(endDate);
 
     setFieldValue("month_days", totalDays);
-
-
-  }
-
+  };
 
   // const setEndDate = (date, setFieldValue) => {
 
@@ -177,28 +165,16 @@ export function MasterEditForm({
 
   // }
 
-
-
-
-
-
   const setShortDormat = (month, year, setFieldValue) => {
-
     if (month && year) {
       const formattedMonth = month && month < 10 ? `0${month}` : `${month}`;
       const formattedYear = year && year.toString().slice(-2); // Extract last 2 digits of the year
 
       const shortFormat = `${formattedMonth}${formattedYear}`;
 
-
       setFieldValue("shortFormat", shortFormat);
     }
-
-  }
-
-
-
-
+  };
 
   const monthOptions = [
     // { value: "-1", label: "Select" },
@@ -221,13 +197,10 @@ export function MasterEditForm({
       <Formik
         enableReinitialize={true}
         initialValues={user}
-
         validationSchema={formValidation}
         onSubmit={(values) => {
-
           // enableLoading();
           SavePayrollMonthSetup(values);
-
         }}
       >
         {({
@@ -240,9 +213,7 @@ export function MasterEditForm({
           setFieldValue,
           formik,
         }) => (
-
           <>
-
             <Modal.Body className="overlay overlay-block cursor-default">
               {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
@@ -253,9 +224,7 @@ export function MasterEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
                     <div className="col-span-1">
-
-
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -266,8 +235,6 @@ export function MasterEditForm({
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
                           getActivePreviousPayrollMonth(e.value, setFieldValue);
-
-
                         }}
                         value={
                           dashboard?.allSubsidiaryList?.find(
@@ -277,11 +244,29 @@ export function MasterEditForm({
                         options={dashboard?.allSubsidiaryList}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          getActivePreviousPayrollMonth(e.value, setFieldValue);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          getActivePreviousPayrollMonth(e.value, setFieldValue);
+                        }}
                       />
                     </div>
-
                   </div>
-
 
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12 mt-2">
                     <div className="col-span-6 lg:col-span-1">
@@ -293,16 +278,18 @@ export function MasterEditForm({
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
-
                         isDisabled={isUserForRead || flag}
                         onChange={(e) => {
                           setFieldValue("month", e.value || null);
-                          setShortDormat(e.value, values.year, setFieldValue)
+                          setShortDormat(e.value, values.year, setFieldValue);
                           if (values.year && values.month && values.startDate) {
-
-                            setEndDate(values.year, e.value, values.startDate, setFieldValue)
+                            setEndDate(
+                              values.year,
+                              e.value,
+                              values.startDate,
+                              setFieldValue
+                            );
                           }
-
                         }}
                         value={
                           monthOptions?.find(
@@ -324,15 +311,14 @@ export function MasterEditForm({
                         name="year"
                         component={Input}
                         placeholder="Enter year"
-
                         disabled={isUserForRead || flag || !values.month}
                         type="number"
-                        min="1000"  // Minimum 4-digit year (e.g., 1000)
-                        max="9999"  // Maximum 4-digit year (e.g., 9999)
-                        maxLength="4"  // Limit to 4 digits
+                        min="1000" // Minimum 4-digit year (e.g., 1000)
+                        max="9999" // Maximum 4-digit year (e.g., 9999)
+                        maxLength="4" // Limit to 4 digits
                         // onChange={(e) => {
                         //   setFieldValue("year", e.value || null);
-                        //   setShortDormat(values.month, values.year, setFieldValue) 
+                        //   setShortDormat(values.month, values.year, setFieldValue)
                         // }}
 
                         onChange={(e) => {
@@ -342,71 +328,56 @@ export function MasterEditForm({
                           // Ensure the value is numeric and only 4 digits
                           if (/^\d{0,4}$/.test(value)) {
                             setFieldValue("year", value); // Update the form field
-                            setShortDormat(values.month, value, setFieldValue)
+                            setShortDormat(values.month, value, setFieldValue);
                           }
                         }}
-
-                        onInput={(e) => e.target.value = e.target.value.slice(0, 4)} // Ensure user can't type more than 4 digits
-
-
-
+                        onInput={(e) =>
+                          (e.target.value = e.target.value.slice(0, 4))
+                        } // Ensure user can't type more than 4 digits
                       />
                     </div>
 
-
-
                     <div className="col-span-6 lg:col-span-1">
-
-
                       <Field
                         name="shortFormat"
                         disabled={true}
                         component={Input}
                         onChange={(e) => {
-
                           setFieldValue("shortFormat", e.target.value); // Update the form field value
                         }}
                         placeholder="Short Format 0125"
                         label="Short Format"
-
-                        min="1000"  // Minimum 4-digit year (e.g., 1000)
-                        max="9999"  // Maximum 4-digit year (e.g., 9999)
-                        maxLength="4"  // Limit to 4 digits
-                        onInput={(e) => e.target.value = e.target.value.slice(0, 4)}
+                        min="1000" // Minimum 4-digit year (e.g., 1000)
+                        max="9999" // Maximum 4-digit year (e.g., 9999)
+                        maxLength="4" // Limit to 4 digits
+                        onInput={(e) =>
+                          (e.target.value = e.target.value.slice(0, 4))
+                        }
                       />
-
                     </div>
-
                   </div>
-
-
-
-
-
-
 
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12 mt-2">
                     <div className="col-span-6 lg:col-span-1 ">
-
-                  
                       <Field
                         className="form-control"
                         component={DatePickerField}
                         placeholder="Enter Start Date"
                         selected={defstartDate}
-                          label={
+                        label={
                           <span>
-                           
-                           Start Date<span style={{ color: "red" }}>*</span>
+                            Start Date<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         onChange={(date) => {
                           setFieldValue("startDate", date);
-                          setEndDate(values.year, values.month, date, setFieldValue)
-                 
-
+                          setEndDate(
+                            values.year,
+                            values.month,
+                            date,
+                            setFieldValue
+                          );
                         }}
-
                         timeInputLabel="Time:"
                         dateFormat="dd-MMM-yyyy"
                         showTimeInput
@@ -419,24 +390,20 @@ export function MasterEditForm({
                     </div>
 
                     <div className="col-span-6 lg:col-span-1">
-                     
                       <Field
                         className="form-control"
                         component={DatePickerField}
                         placeholder="Enter End Date"
                         selected={defendDate}
-                         label={
+                        label={
                           <span>
-                        
-                           End Date<span style={{ color: "red" }}>*</span>
+                            End Date<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         onChange={(date) => {
                           setFieldValue("endDate", date);
                           setDefaultEndDate(date);
                         }}
-
-
                         timeInputLabel="Time:"
                         dateFormat="dd-MMM-yyyy"
                         showTimeInput
@@ -448,7 +415,6 @@ export function MasterEditForm({
                       {/* <ErrorMessage className="form-feedBack" name="endDate" component="div" /> */}
                     </div>
 
-
                     <div className="col-span-6 lg:col-span-1">
                       <Field
                         name="month_days"
@@ -457,16 +423,9 @@ export function MasterEditForm({
                         placeholder=""
                         label="Days"
                         autoComplete="off"
-
-
                       />
                     </div>
                   </div>
-
-
-
-
-
                 </fieldset>
               </Form>
             </Modal.Body>

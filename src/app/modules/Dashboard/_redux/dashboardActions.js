@@ -328,9 +328,9 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
 
 //// dashbaord related service
 
-export const fetchDashboardAlert = () => async (dispatch) => {
+export const fetchDashboardAlert = (body) => async (dispatch) => {
   return await requestFromServer
-    .getDashboardAlert()
+    .getDashboardAlert(body)
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllDashboardAlertsFetch(entities));

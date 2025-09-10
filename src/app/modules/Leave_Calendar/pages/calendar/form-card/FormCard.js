@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -144,7 +145,7 @@ export function FormCard() {
                         <div className="grid grid-cols-5 gap-x-3 gap-y-1">
                           {/* Subsidiary Selector */}
                           <div>
-                            <SearchSelect
+                            {/* <SearchSelect
                               name="subsidiaryId"
                               label={
                                 <label>
@@ -162,6 +163,20 @@ export function FormCard() {
                               options={dashboard?.allSubsidiaryList}
                               error={errors.subsidiaryId}
                               touched={touched.subsidiaryId}
+                            /> */}
+                            <SubsidiarySelect
+                              name="subsidiaryId"
+                              label={
+                                <label>
+                                  Subsidiary
+                                  <span style={{ color: "red" }}>*</span>
+                                </label>
+                              }
+                              onChange={handleSubsidiaryChange}
+                              error={errors?.subsidiaryId}
+                              touched={touched?.subsidiaryId}
+                              currentValue={values?.subsidiaryId}
+                              initializeSubsidiary={handleSubsidiaryChange}
                             />
                           </div>
 
@@ -172,9 +187,7 @@ export function FormCard() {
                               onBlur={handleBlur}
                               onChange={(e) => {
                                 const value =
-                                  e.value == "Select"
-                                    ? ""
-                                    : Number(e.value);
+                                  e.value == "Select" ? "" : Number(e.value);
                                 setFieldValue("departmentId", value);
                                 setFieldValue("employeeId", null);
                               }}

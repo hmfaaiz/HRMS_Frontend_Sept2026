@@ -22,6 +22,7 @@ import {
   fetchAllRosterPattern,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { initialFilter } from "../FormUIHelpers";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 export function MasterEditForm({
   submitForm,
@@ -49,7 +50,7 @@ export function MasterEditForm({
     allEmployees,
     payrollData,
     allSubsidiaryList,
-    defaultSubsidiary
+    // defaultSubsidiary,
   } = useSelector(
     (state) => ({
       payrollData: state.employee_roster.payrollData,
@@ -57,11 +58,10 @@ export function MasterEditForm({
       allEmployees: state.dashboard.allEmployees,
       allSubsidiaryList: state.dashboard.allSubsidiaryList,
       allRosterPatternList: state.dashboard.allRosterPatternList,
-      defaultSubsidiary: state?.auth?.user?.EmployeeMapping?.subsidiaryId
+      // defaultSubsidiary: state?.auth?.user?.EmployeeMapping?.subsidiaryId,
     }),
     shallowEqual
   );
-
 
   const allSubsidiaryMap = useMemo(() => {
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
@@ -157,16 +157,16 @@ export function MasterEditForm({
     });
   };
 
-  useEffect(() => {
-    if (defaultSubsidiary) {
-      dispatch(actions.getPayrollMonth(defaultSubsidiary));
-      dispatch(fetchAllActiveEmployeesBySubsidiary(defaultSubsidiary));
-      setQueryParams({
-        ...initialFilter,
-        filter: { subsidiaryId: defaultSubsidiary },
-      })
-    }
-  }, [defaultSubsidiary])
+  // useEffect(() => {
+  //   if (defaultSubsidiary) {
+  //     dispatch(actions.getPayrollMonth(defaultSubsidiary));
+  //     dispatch(fetchAllActiveEmployeesBySubsidiary(defaultSubsidiary));
+  //     setQueryParams({
+  //       ...initialFilter,
+  //       filter: { subsidiaryId: defaultSubsidiary },
+  //     });
+  //   }
+  // }, [defaultSubsidiary]);
 
   return (
     <>
@@ -178,13 +178,9 @@ export function MasterEditForm({
           enableLoading();
           const payload = {
             ...values,
-            from: values.from
-              ? formatDates(values.from, "dd-MMM-yyyy")
-              : null, to: values.to
-                ? formatDates(values.to, "dd-MMM-yyyy")
-                : null,
-
-          }
+            from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+            to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+          };
           submitForm(payload, resetForm);
         }}
       >
@@ -211,9 +207,9 @@ export function MasterEditForm({
 
                   {/* Subsidiary Field Start */}
                   <div>
-                    <Field
-                      name="subsidiaryId"
+                    {/* <Field
                       component={SearchSelect}
+                      name="subsidiaryId"
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value =
@@ -243,12 +239,69 @@ export function MasterEditForm({
                       isDisabled={isEdit}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
-                      value={setDefaultSubsidiary(values?.subsidiaryId, allSubsidiaryList, defaultSubsidiary)
+                      value={
+                        setDefaultSubsidiary(
+                          values?.subsidiaryId,
+                          allSubsidiaryList,
+                          defaultSubsidiary
+                        )
                         // allSubsidiaryList?.find((el) => el?.value === values?.subsidiaryId) || ""
                         // allSubsidiaryMap?.get(values?.subsidiaryId || "") || ""
                       }
                       autoComplete="off"
                       options={allSubsidiaryList}
+                    /> */}
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      onBlur={handleBlur}
+                      onChange={(e) => {
+                        const value =
+                          e.value == "Select" ? "" : Number(e.value);
+                        setFieldValue("subsidiaryId", value);
+                        dispatch(actions.getPayrollMonth(value));
+                        dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                        setFieldValue("list", []);
+                        setQueryParams({
+                          ...initialFilter,
+                          filter: { subsidiaryId: value },
+                        });
+                        clearFields(
+                          ["shiftId", "offDay_1", "offDay_2"],
+                          setFieldValue
+                        );
+                        setFieldValue("isEnable_roster_via_shift", false);
+                        clearFields(["patternId"], setFieldValue);
+                        setFieldValue("isEnable_roster_via_pattern", false);
+                      }}
+                      label={
+                        <span>
+                          {" "}
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isEdit}
+                      error={errors.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        const value =
+                          e.value == "Select" ? "" : Number(e.value);
+                        setFieldValue("subsidiaryId", value);
+                        dispatch(actions.getPayrollMonth(value));
+                        dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                        setFieldValue("list", []);
+                        setQueryParams({
+                          ...initialFilter,
+                          filter: { subsidiaryId: value },
+                        });
+                        clearFields(
+                          ["shiftId", "offDay_1", "offDay_2"],
+                          setFieldValue
+                        );
+                        setFieldValue("isEnable_roster_via_shift", false);
+                        clearFields(["patternId"], setFieldValue);
+                        setFieldValue("isEnable_roster_via_pattern", false);
+                      }}
                     />
                   </div>
 

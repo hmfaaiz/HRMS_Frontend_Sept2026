@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { formatDates } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -405,7 +406,7 @@ export function FormCard() {
                     <div className="grid-cols-3 md:grid-cols-5 grid gap-x-3 gap-y-1">
                       {/* Subsidiary Selector */}
                       <div>
-                        <SearchSelect
+                        {/* <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -422,6 +423,20 @@ export function FormCard() {
                           options={dashboard?.allSubsidiaryList}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
+                        /> */}
+                        <SubsidiarySelect
+                          name="subsidiaryId"
+                          label={
+                            <span>
+                              Subsidiary
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          onChange={handleSubsidiaryChange}
+                          error={errors.subsidiaryId}
+                          touched={touched.subsidiaryId}
+                          currentValue={values?.subsidiaryId}
+                          initializeSubsidiary={handleSubsidiaryChange}
                         />
                       </div>
 
@@ -581,7 +596,7 @@ export function FormCard() {
                     disabled={!values.from_date || !values.to_date}
                     className="btn btn-primary"
                   >
-                    Filter 
+                    Filter
                   </button>
                 </Modal.Footer>
               </>

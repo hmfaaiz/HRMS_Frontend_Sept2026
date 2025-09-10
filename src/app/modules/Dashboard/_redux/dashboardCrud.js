@@ -131,8 +131,8 @@ export function getPayrollMonth(body) {
 
 //// dashbaord related service
 
-export function getDashboardAlert() {
-  return axios.get(`${USERS_URL}/dashboard/dashboard-alert` );
+export function getDashboardAlert(body) {
+  return axios.post(`${USERS_URL}/dashboard/dashboard-alert`,body);
 }
 
 export function getSummary(filter) {

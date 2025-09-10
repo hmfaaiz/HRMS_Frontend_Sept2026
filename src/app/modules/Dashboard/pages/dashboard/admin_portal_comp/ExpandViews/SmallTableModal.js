@@ -16,7 +16,7 @@ const SmallTableModal = ({ onHide, show, data }) => {
             ? data?.dashlet_name?.replace("${days}", data?.days)
             : data?.dashlet_name}
         </h6>
-        <div className="space-y-3 my-2 max-h-[65vh] overflow-auto">
+        <div className="space-y-3 my-2 max-h-[65vh] overflow-auto scrollbar-fancy">
           {data?.data.length > 0 ? (
             data?.data.map((person) => (
               <div

@@ -268,12 +268,23 @@ const EmailConfiguration = lazy(() =>
   import("./modules/EmailConfiguration/pages/index")
 );
 
+const DesignationMapping = lazy(() =>
+  import("./modules/DesignationMapping/pages/index")
+);
 const ExitTypeExitReasonModule = lazy(() =>
   import("./modules/Exit_Type_Exit_Reason/pages/index")
 );
 
 const SeparationModule = lazy(() =>
-  import("./modules/Separation/pages/index")
+  import("./modules/Separation/pages/index"));
+const LeaveWorkflowAdmin = lazy(() =>
+  import("./modules/LeaveWorkflowAdmin/page/index")
+);
+const AttendanceWorkflowAdmin = lazy(() =>
+  import("./modules/AttendanceWorkflowAdmin/page/index")
+);
+const LoanWorkflowAdmin = lazy(() =>
+  import("./modules/LoanWorkflowAdmin/page/index")
 );
 
 const ROUTES = {
@@ -384,6 +395,12 @@ const ROUTES = {
   email_configuration : EmailConfiguration,
   exit_type_exit_reason : ExitTypeExitReasonModule,
   separation : SeparationModule,
+  email_configuration: EmailConfiguration,
+  designation_mapping: DesignationMapping,
+  exit_type_exit_reason: ExitTypeExitReasonModule,
+  leave_workflow: LeaveWorkflowAdmin,
+  attendance_workflow: AttendanceWorkflowAdmin,
+  loan_workflow: LoanWorkflowAdmin,
 };
 
 export default function BasePage() {

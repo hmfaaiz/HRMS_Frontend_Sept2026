@@ -16,7 +16,11 @@ import {
   getLatestBookingNo,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import { amountLimitDynamic } from "../../../../../utils/common";
+import {
+  amountLimitDynamic,
+  setDefaultSubsidiary,
+} from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -51,7 +55,6 @@ export function BankEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
   // Get User Details
-  const { auth } = useSelector((state) => state);
   const [defSubsidiary = null, setDefualtSubsidiaryList] = useState(null);
 
   useEffect(() => {
@@ -80,7 +83,6 @@ export function BankEditForm({
         initialValues={user}
         validationSchema={bankEditSchema}
         onSubmit={(values) => {
-          console.log("bank values", values);
           enableLoading();
           saveBank(values);
         }}
@@ -106,7 +108,7 @@ export function BankEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="col-span-1">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -123,14 +125,48 @@ export function BankEditForm({
                           setDefualtSubsidiaryList(e);
                         }}
                         // value={defSubsidiary || null}
-                         value={
-                          dashboard?.allSubsidiaryList?.find(
-                            (option) => option.value === values.subsidiaryId
-                          ) || null
+                        value={
+                          // dashboard?.allSubsidiaryList?.find(
+                          //   (option) => option.value === values.subsidiaryId
+                          // ) || null
+                          setDefaultSubsidiary(
+                            values?.subsidiaryId,
+                            dashboard.allSubsidiaryList,
+                            defaultSubsidiary,
+                            (result) => {
+                              if (result) {
+                                setFieldValue(
+                                  "subsidiaryId",
+                                  result?.value || null
+                                );
+                                setDefualtSubsidiaryList(result);
+                              }
+                            }
+                          )
                         }
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead && true}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                        }}
                       />
                     </div>
                     <div className="col-span-1 sm:col-span-2">

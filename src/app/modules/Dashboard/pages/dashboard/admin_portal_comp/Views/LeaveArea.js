@@ -22,32 +22,11 @@ const LeaveArea = ({
   holidayList,
 }) => {
   return (
-    <div className="grid grid-cols-5 gap-x-2 gap-y-2 mt-2">
+    <div className="grid grid-cols-4 lg:grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
-        <div className="grid grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
+        <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
           {/* dropdown area  */}
-          <div>
-            <SearchSelect
-              name="subsidiaryId"
-              isDisabled={!allSubsidiaryList}
-              label={<span>Subsidiary</span>}
-              onChange={(e) =>
-                setSummaryFilter({
-                  ...summaryFilter,
-                  subsidiaryId: e.value,
-                })
-              }
-              value={
-                allSubsidiaryList?.find(
-                  (e) => e?.value === summaryFilter?.subsidiaryId
-                ) || ""
-              }
-              options={[
-                { value: "", label: "All" },
-                ...(Array.isArray(allSubsidiaryList) ? allSubsidiaryList : []),
-              ]}
-            />
-          </div>
+         
           <div>
             <SearchSelect
               name="gradeId"
@@ -124,6 +103,7 @@ const LeaveArea = ({
               ]}
             />
           </div>
+          <div></div>
           {/* stats card area  */}
           {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
@@ -187,7 +167,7 @@ const LeaveArea = ({
           </div> */}
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-4  gap-x-2 gap-y-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
               if (e?.dashlet_type === "chart" && e?.tab_key === "leave") {
@@ -197,7 +177,7 @@ const LeaveArea = ({
             })}
         </div>
         {/* chart area  */}
-        <div className="grid grid-cols-4  gap-x-2 gap-y-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
               if (e?.tab_key === "leave" && e?.dashlet_type === "big_table") {
@@ -213,7 +193,7 @@ const LeaveArea = ({
             })}
         </div>
       </div>
-      <div className="col-span-1 space-y-2">
+      <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
             if (e?.dashlet_type === "small_table" && e?.tab_key === "leave") {

@@ -17,6 +17,7 @@ import {
   fetchAllLeaveTypeBySubsidiary,
   getActiveFiscalYear,
 } from "../../../../../../_metronic/redux/dashboardActions";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 /*
 //Validations for Form
@@ -278,7 +279,7 @@ export function MasterEditForm({
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="col-span-1">
-                      <Field
+                      {/* <Field
                         name="subsidiaryId"
                         component={Select}
                         disabled={isEdit}
@@ -291,9 +292,7 @@ export function MasterEditForm({
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
-                            e.target.value == "Select"
-                              ? ""
-                              : e.target.value;
+                            e.target.value == "Select" ? "" : e.target.value;
                           dispatch(
                             getActiveFiscalYear("activeFiscalYear", value)
                           );
@@ -302,10 +301,10 @@ export function MasterEditForm({
                               "allLeaveTypes",
                               value
                             )
-                          ); //When subsidiary is updated then fetch leave types dropdown data according to the subsidiary selected
+                          );
                           setFieldValue("subsidiaryId", value);
                           const filter = {
-                            subsidiaryId: value /* gradeId: values.gradeId, employeeTypeId: values.employeeTypeId*/,
+                            subsidiaryId: value,
                           };
                           getOldData(filter);
                         }}
@@ -321,13 +320,61 @@ export function MasterEditForm({
                           data: allSubsidiaryList,
                           firstElement: { label: "Select", value: null },
                         })}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            {" "}
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isEdit}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value = e?.value;
+                          dispatch(
+                            getActiveFiscalYear("activeFiscalYear", value)
+                          );
+                          dispatch(
+                            fetchAllLeaveTypeBySubsidiary(
+                              "allLeaveTypes",
+                              value
+                            )
+                          ); //When subsidiary is updated then fetch leave types dropdown data according to the subsidiary selected
+                          setFieldValue("subsidiaryId", value);
+                          const filter = {
+                            subsidiaryId: value /* gradeId: values.gradeId, employeeTypeId: values.employeeTypeId*/,
+                          };
+                          getOldData(filter);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          const value = e?.value;
+                          dispatch(
+                            getActiveFiscalYear("activeFiscalYear", value)
+                          );
+                          dispatch(
+                            fetchAllLeaveTypeBySubsidiary(
+                              "allLeaveTypes",
+                              value
+                            )
+                          ); //When subsidiary is updated then fetch leave types dropdown data according to the subsidiary selected
+                          setFieldValue("subsidiaryId", value);
+                          const filter = {
+                            subsidiaryId: value /* gradeId: values.gradeId, employeeTypeId: values.employeeTypeId*/,
+                          };
+                          getOldData(filter);
+                        }}
                       />
-                      {errors.subsidiaryId && touched.subsidiaryId && (
+                      {/* {errors.subsidiaryId && touched.subsidiaryId && (
                         <CustomErrorLabel
                           touched={true}
                           error={errors.subsidiaryId}
                         />
-                      )}
+                      )} */}
                     </div>
                     {/* Subsidiary Field End */}
 
@@ -502,7 +549,7 @@ export function MasterEditForm({
                   {Boolean(values.Id) && Boolean(activeFiscalYear?.label) && (
                     <>
                       <hr />
-                      <div className="space-y-1" >
+                      <div className="space-y-1">
                         <h6 className="font-bold mb-0 text-primary">
                           Leave Allocation
                         </h6>

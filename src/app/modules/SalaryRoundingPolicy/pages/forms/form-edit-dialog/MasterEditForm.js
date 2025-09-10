@@ -10,6 +10,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 //Validation for Form
 const formValidation = Yup.object().shape({
@@ -19,23 +20,22 @@ const formValidation = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required)
     .matches(/^\d+(\.\d{1,2})?$/, VALIDATION_MESSAGES.validNumber) // Allows decimals up to 2 digits
     .test(
-      'is-valid-range',
-      'Amount must be between 0.1 and 999999',
+      "is-valid-range",
+      "Amount must be between 0.1 and 999999",
       (value) => {
         const num = parseFloat(value);
         return !isNaN(num) && num >= 0.1 && num <= 999999;
       }
     )
     .test(
-      'max-digits',
-      'Amount must not exceed 6 digits in total (before + after decimal)',
+      "max-digits",
+      "Amount must not exceed 6 digits in total (before + after decimal)",
       (value) => {
-        const clean = value?.replace('.', '') || '';
+        const clean = value?.replace(".", "") || "";
         return clean.length <= 6;
       }
-    )
-  ,
-  subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required)
+    ),
+  subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
 });
 
 export function MasterEditForm({
@@ -57,13 +57,14 @@ export function MasterEditForm({
     }
   }, [dispatch, user.Id]);
   const dropdown = (data) => {
-
     return [{ Id: "", formName: "--Select Mode--" }, ...data].map((el) => {
-      return (<>
-        <option value={el.Id}>{el.formName}</option>
-      </>)
-    })
-  }
+      return (
+        <>
+          <option value={el.Id}>{el.formName}</option>
+        </>
+      );
+    });
+  };
 
   return (
     <>
@@ -73,7 +74,7 @@ export function MasterEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           enableLoading();
-          submitForm(values)
+          submitForm(values);
         }}
       >
         {({
@@ -82,7 +83,8 @@ export function MasterEditForm({
           values,
           handleBlur,
           handleChange,
-          setFieldValue, touched,
+          setFieldValue,
+          touched,
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
@@ -95,7 +97,7 @@ export function MasterEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
                     <div className="col-span-1">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -114,20 +116,40 @@ export function MasterEditForm({
                         options={dashboard?.allSubsidiaryList}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e?.value || "");
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e?.value || "");
+                        }}
                       />
-                      
                     </div>
 
-
-                     <div className="col-span-1">
+                    <div className="col-span-1">
                       <Field
                         name="paymentMode"
                         component={Select}
-                        className={errors.paymentMode && !values.paymentMode ? 'form-control is-invalid' : 'form-control'}
+                        className={
+                          errors.paymentMode && !values.paymentMode
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
                         placeholder=""
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          setFieldValue('paymentMode', e.target.value)
+                          setFieldValue("paymentMode", e.target.value);
                         }}
                         label={
                           <span>
@@ -139,13 +161,15 @@ export function MasterEditForm({
                         autoComplete="off"
                         children={dropdown(dropdownData)}
                       />
-                      {
-                        errors.paymentMode && !values.paymentMode && <CustomErrorLabel touched={true} error={errors.paymentMode} />
-                      }
+                      {errors.paymentMode && !values.paymentMode && (
+                        <CustomErrorLabel
+                          touched={true}
+                          error={errors.paymentMode}
+                        />
+                      )}
                     </div>
 
-
-                       <div className="col-span-1">
+                    <div className="col-span-1">
                       <Field
                         name="amount"
                         component={AmountInput}
@@ -156,16 +180,14 @@ export function MasterEditForm({
                           <span>
                             {" "}
                             {/* Rounding Up to<span style={{ color: "red" }}>*</span> */}
-                            Round To Nearest<span style={{ color: "red" }}>*</span>
+                            Round To Nearest
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         value={values.amount}
                         autoComplete="off"
                       />
-
                     </div>
-
-
                   </div>
                 </fieldset>
               </Form>

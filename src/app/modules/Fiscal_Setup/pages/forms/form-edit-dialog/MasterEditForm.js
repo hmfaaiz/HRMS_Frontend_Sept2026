@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { DatePickerField, Input, Select, TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  DatePickerField,
+  Input,
+  Select,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
- 
   fetchAllSubCenter,
   fetchAllSubsidiaryData,
   getLatestBookingNo,
@@ -15,6 +19,7 @@ import {
 import DatePicker from "react-datepicker";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { formatDates } from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // Function to check if two dates are exactly 365 days apart
 // const validateDateDifference = (startDate, endDate) => {
@@ -31,25 +36,25 @@ import { formatDates } from "../../../../../utils/common";
 //   return dayDiff === 365 || dayDiff === 366;
 // };
 // Validation schema
-const formValidation = Yup.object().shape(
-  {
-    startDate: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-    endDate: Yup.date().nullable()
-      .required(VALIDATION_MESSAGES.required),
-      // .test(
-      //   'date-difference',
-      //   'End date must be exactly 365 or 366 days after start date',
-      //   function (endDate) {
-      //     const { startDate } = this.parent;
-      //     return validateDateDifference(startDate, endDate);
-      //   }
-      // ),
-      subsidiaryId: Yup.number()
-      .nullable().required(VALIDATION_MESSAGES.required)
-      
-  },
-
-);
+const formValidation = Yup.object().shape({
+  startDate: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+  endDate: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+  // .test(
+  //   'date-difference',
+  //   'End date must be exactly 365 or 366 days after start date',
+  //   function (endDate) {
+  //     const { startDate } = this.parent;
+  //     return validateDateDifference(startDate, endDate);
+  //   }
+  // ),
+  subsidiaryId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+});
 export function MasterEditForm({
   SaveTaxSetup,
   user,
@@ -73,11 +78,9 @@ export function MasterEditForm({
 
   //===== Date Of Joining
 
-
   useEffect(() => {
-
     if (!user.Id) {
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"))
+      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     }
   }, [dispatch]);
 
@@ -93,24 +96,22 @@ export function MasterEditForm({
 
   useEffect(() => {
     if (user.endDate) {
-     setDefaultEndDate(new Date(user.endDate));
+      setDefaultEndDate(new Date(user.endDate));
     }
   }, [user.endDate]);
 
-  
   useEffect(() => {
-
-    const subsidiaryId = defSubsidiary?.value ? defSubsidiary.value : user.subsidiaryId;
+    const subsidiaryId = defSubsidiary?.value
+      ? defSubsidiary.value
+      : user.subsidiaryId;
 
     setDefualtSubsidiaryList(
       dashboard.allSubsidiaryList &&
-      dashboard.allSubsidiaryList.filter((item) => {
-        return item.value === subsidiaryId;
-      })
+        dashboard.allSubsidiaryList.filter((item) => {
+          return item.value === subsidiaryId;
+        })
     );
-
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
-
 
   return (
     <>
@@ -119,17 +120,16 @@ export function MasterEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-     
           enableLoading();
-            const formattedValues = {
-                                      ...values,
-                                      startDate: values.startDate
-                                        ? formatDates(values.startDate, "dd-MMM-yyyy")
-                                        : null,endDate: values.endDate
-                                        ? formatDates(values.endDate, "dd-MMM-yyyy")
-                                        : null,
-                    
-                                        }
+          const formattedValues = {
+            ...values,
+            startDate: values.startDate
+              ? formatDates(values.startDate, "dd-MMM-yyyy")
+              : null,
+            endDate: values.endDate
+              ? formatDates(values.endDate, "dd-MMM-yyyy")
+              : null,
+          };
           SaveTaxSetup(formattedValues);
         }}
       >
@@ -152,11 +152,16 @@ export function MasterEditForm({
               )}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                   <div className="grid grid-cols-12 gap-x-3 gap-y-1">
+                  <div className="grid grid-cols-12 gap-x-3 gap-y-1">
                     <div className="col-span-6 lg:col-span-4">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
-                        label={<span> Subsidiary<span style={{ color: 'red' }}>*</span></span>}
+                        label={
+                          <span>
+                            {" "}
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
                         isDisabled={isUserForRead && true}
                         onBlur={() => {
                           // handleBlur({ target: { name: "countryId" } });
@@ -164,23 +169,45 @@ export function MasterEditForm({
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
                           setDefualtSubsidiaryList(e);
-
                         }}
-
-                        value={(defSubsidiary || null)}
+                        value={defSubsidiary || null}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            {" "}
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead && true}
+                        onBlur={() => {
+                          // handleBlur({ target: { name: "countryId" } });
+                        }}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                          setDefualtSubsidiaryList(e);
+                        }}
                       />
                     </div>
-             
-                  <div className="col-span-6 lg:col-span-4">
+
+                    <div className="col-span-6 lg:col-span-4">
                       {/* <span> Start Date<span style={{ color: 'red' }}>*</span></span> */}
                       <Field
                         className="form-control"
                         component={DatePickerField}
                         placeholder="Enter Start Date"
-                           label={
+                        label={
                           <span>
                             {" "}
                             Start Date<span style={{ color: "red" }}>*</span>
@@ -191,16 +218,15 @@ export function MasterEditForm({
                           setFieldValue("startDate", date);
                           setDefaultStartDate(date);
 
-                                   // Add 365 days (considering leap years automatically)
-                                   const endDate = new Date(date);
-                                   endDate.setFullYear(endDate.getFullYear() + 1); // Add one year (365 or 366 days will be calculated automatically)
-         
-                                   // Set the calculated end date
-                                   endDate.setDate(endDate.getDate() - 1);
-                                   setFieldValue("endDate", endDate);
-                                   setDefaultEndDate(endDate);
+                          // Add 365 days (considering leap years automatically)
+                          const endDate = new Date(date);
+                          endDate.setFullYear(endDate.getFullYear() + 1); // Add one year (365 or 366 days will be calculated automatically)
+
+                          // Set the calculated end date
+                          endDate.setDate(endDate.getDate() - 1);
+                          setFieldValue("endDate", endDate);
+                          setDefaultEndDate(endDate);
                         }}
-                      
                         // timeInputLabel="Time:"
                         dateFormat="dd-MMM-yyyy"
                         showTimeInput
@@ -208,16 +234,20 @@ export function MasterEditForm({
                         disabled={isUserForRead}
                         autoComplete="off"
                       />
-                    <ErrorMessage className="form-feedBack" name="startDate" component="div" />
+                      <ErrorMessage
+                        className="form-feedBack"
+                        name="startDate"
+                        component="div"
+                      />
                     </div>
 
-                  <div className="col-span-6 lg:col-span-4">
+                    <div className="col-span-6 lg:col-span-4">
                       <Field
                         className="form-control"
                         component={DatePickerField}
                         placeholder="Enter End Date"
                         selected={defendDate}
-                          label={
+                        label={
                           <span>
                             {" "}
                             End Date<span style={{ color: "red" }}>*</span>
@@ -227,22 +257,21 @@ export function MasterEditForm({
                           setFieldValue("endDate", date);
                           setDefaultEndDate(date);
                         }}
-
                         // timeInputLabel="Time:"
                         dateFormat="dd-MMM-yyyy"
                         showTimeInput
                         name="endDate"
                         disabled={true}
                         autoComplete="off"
-                      // value = {values.dateOfJoining}
+                        // value = {values.dateOfJoining}
                       />
-                     <ErrorMessage className="form-feedBack" name="endDate" component="div" />
+                      <ErrorMessage
+                        className="form-feedBack"
+                        name="endDate"
+                        component="div"
+                      />
                     </div>
                   </div>
-
-
-
-           
                 </fieldset>
               </Form>
             </Modal.Body>

@@ -14,6 +14,7 @@ import {
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
 import { amountLimitDynamic } from "../../../../../utils/common";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 const roster_patternEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -103,7 +104,7 @@ export function FormEditForm({
               <fieldset disabled={isdataForRead}>
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   <div>
-                    <SearchSelect
+                    {/* <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -123,6 +124,26 @@ export function FormEditForm({
                       options={dashboard?.allSubsidiaryList}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
+                    /> */}
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isdataForRead}
+                      onChange={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                        setFieldValue("list", []);
+                      }}
+                      error={errors?.subsidiaryId}
+                      touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                        setFieldValue("list", []);
+                      }}
                     />
                   </div>
 

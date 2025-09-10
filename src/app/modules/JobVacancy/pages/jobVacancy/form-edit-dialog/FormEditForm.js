@@ -25,6 +25,7 @@ import {
 } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 const jobVacancyEditSchema = Yup.object().shape({
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -91,9 +92,9 @@ const jobVacancyEditSchema = Yup.object().shape({
     .when("jobPeriodEnd", (jobPeriodEnd, schema) =>
       jobPeriodEnd
         ? schema.max(
-          Yup.ref("jobPeriodEnd"),
-          "Job Posting To date must be before Job Period End"
-        )
+            Yup.ref("jobPeriodEnd"),
+            "Job Posting To date must be before Job Period End"
+          )
         : schema
     ),
 
@@ -102,7 +103,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .test(
       "not-same-as-designation",
       "Designation and Reporting Designation cannot be the same",
-      function (value) {
+      function(value) {
         const { designationId } = this.parent;
         return value !== designationId;
       }
@@ -140,7 +141,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .test(
       "within-job-period",
       "Desired Date of Appointment must be within the Job Period range",
-      function (value) {
+      function(value) {
         const { jobPeriodStart, jobPeriodEnd } = this.parent;
 
         if (!value) return true; // Already handled by .required()
@@ -181,12 +182,12 @@ const jobVacancyEditSchema = Yup.object().shape({
   preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
   // preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredJobSkillsId: Yup.string()
-  .nullable()
+    .nullable()
     .required(VALIDATION_MESSAGES.required)
     .test(
       "no-duplicate-skills",
       "Preferred and optional skills must not have overlapping values.",
-      function (value) {
+      function(value) {
         const { optionalJobSkillsId } = this.parent;
 
         if (!value || !optionalJobSkillsId) return true;
@@ -201,8 +202,7 @@ const jobVacancyEditSchema = Yup.object().shape({
       }
     ),
 
-  optionalJobSkillsId: Yup.string()
-  .nullable(),
+  optionalJobSkillsId: Yup.string().nullable(),
   preferredJobIndustryId: Yup.number().required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
@@ -366,9 +366,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 {/* Job */}
-              {
-                console.log("errors111",errors)
-              }
+                {console.log("errors111", errors)}
                 <div>
                   {/* <h6>Job</h6> */}
                   <div className="grid md:grid-cols-6 gap-x-3">
@@ -492,7 +490,7 @@ export function FormEditForm({
                     </div>
 
                     <div className="">
-                      <SearchSelect
+                      {/* <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -511,6 +509,24 @@ export function FormEditForm({
                         options={dashboard?.allSubsidiaryList}
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
+                      /> */}
+                      <SubsidiarySelect
+                        name="subsidiaryId"
+                        label={
+                          <span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isdataForRead}
+                        onChange={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
+                        error={errors?.subsidiaryId}
+                        touched={touched?.subsidiaryId}
+                        currentValue={values?.subsidiaryId}
+                        initializeSubsidiary={(e) => {
+                          setFieldValue("subsidiaryId", e.value || null);
+                        }}
                       />
                     </div>
 
@@ -559,16 +575,12 @@ export function FormEditForm({
                             </label>
                           </div>
                         ))}
-                        
                       </div>
                       {errors.cityId && touched.cityId && (
-                          <div className="invalid-feedback">{errors.cityId}</div>
-                        )}
+                        <div className="invalid-feedback">{errors.cityId}</div>
+                      )}
                     </div>
                   </div>
-
-
-
 
                   <div className="grid lg:grid-cols-2 gap-x-3 mt-1 ">
                     <div className="">
@@ -653,15 +665,11 @@ export function FormEditForm({
                       </div>
                     </div>
 
-
-
                     <div>
                       <div>
-
                         <h6 className="font-bold mb-0 text-primary my-2">
                           Job Posting
                         </h6>
-
                       </div>
 
                       <div className="grid md:grid-cols-3 gap-x-3">
@@ -762,23 +770,16 @@ export function FormEditForm({
                                 </label>
                               </div>
                             ))}
-                            
                           </div>
                           {errors.locationId && touched.locationId && (
-                              <div className="invalid-feedback">
-                                {errors.locationId}
-                              </div>
-                            )}
+                            <div className="invalid-feedback">
+                              {errors.locationId}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-
-
-
-
-
-
                 </div>
 
                 {/* Position Detail */}
@@ -843,14 +844,18 @@ export function FormEditForm({
 
                 <div className="grid md:grid-cols-2 gap-x-3">
                   <div>
-                    <div> <h6 className="font-bold mb-0 text-primary my-2">
-                      Job Vacany Detail
-                    </h6></div>
+                    <div>
+                      {" "}
+                      <h6 className="font-bold mb-0 text-primary my-2">
+                        Job Vacany Detail
+                      </h6>
+                    </div>
                     <div className="grid md:grid-cols-3 gap-x-3">
                       <div className="">
                         <label>
                           <span>
-                            No.of Positions<span style={{ color: "red" }}>*</span>
+                            No.of Positions
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         </label>
                         <Field
@@ -866,7 +871,8 @@ export function FormEditForm({
                           name="hiringReasonId"
                           label={
                             <span>
-                              Hiring Reason<span style={{ color: "red" }}>*</span>
+                              Hiring Reason
+                              <span style={{ color: "red" }}>*</span>
                             </span>
                           }
                           isDisabled={isdataForRead}
@@ -899,7 +905,8 @@ export function FormEditForm({
                           }}
                           value={
                             dashboard?.alljobPreferenceList?.find(
-                              (option) => option.value === values.jobPreferenceId
+                              (option) =>
+                                option.value === values.jobPreferenceId
                             ) || null
                           }
                           options={dashboard?.alljobPreferenceList}
@@ -907,19 +914,18 @@ export function FormEditForm({
                           touched={touched.jobPreferenceId}
                         />
                       </div>
-
                     </div>
-
                   </div>
 
                   <div>
-                    <div> <h6 className="font-bold mb-0 text-primary my-2">
-                      Job Period
-                    </h6></div>
+                    <div>
+                      {" "}
+                      <h6 className="font-bold mb-0 text-primary my-2">
+                        Job Period
+                      </h6>
+                    </div>
 
                     <div className="grid md:grid-cols-3 gap-x-3">
-
-
                       <div className="">
                         <label> From</label>
                         <Field
@@ -1017,7 +1023,7 @@ export function FormEditForm({
                               ? new Date(values.jobPostingDateFrom)
                               : new Date()
                           }
-                        //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
+                          //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
                         />
 
                         {/* {touched.desireDateOfApp && errors.desireDateOfApp && (
@@ -1026,17 +1032,9 @@ export function FormEditForm({
                           </div>
                         )} */}
                       </div>
-
                     </div>
-
                   </div>
-
-
-
                 </div>
-
-
-
 
                 <div className="grid md:grid-cols-6 gap-x-3 mt-1">
                   <div className="">
@@ -1105,8 +1103,6 @@ export function FormEditForm({
                 {/* Position Preferences */}
 
                 <div className="grid md:grid-cols-6 gap-x-3">
-
-
                   <div className="grid col-span-4">
                     <h6 className="font-bold mb-0 text-primary my-2">
                       Position Preferences
@@ -1139,9 +1135,9 @@ export function FormEditForm({
                               </label>
                             </div>
                           ))}
-                       
                         </div>
-                           {errors.preferredShiftId && touched.preferredShiftId && (
+                        {errors.preferredShiftId &&
+                          touched.preferredShiftId && (
                             <div className="invalid-feedback">
                               {errors.preferredShiftId}
                             </div>
@@ -1175,14 +1171,13 @@ export function FormEditForm({
                               {option?.label}
                             </div>
                           ))}
-                          
                         </div>
                         {errors.preferredGenderId &&
-                            touched.preferredGenderId && (
-                              <div className="invalid-feedback">
-                                {errors.preferredGenderId}
-                              </div>
-                            )}
+                          touched.preferredGenderId && (
+                            <div className="invalid-feedback">
+                              {errors.preferredGenderId}
+                            </div>
+                          )}
                       </div>
 
                       <div className="">
@@ -1207,16 +1202,13 @@ export function FormEditForm({
                               {option?.label}
                             </label>
                           ))}
-                         
                         </div>
-                         {errors.preferredJobSkillsId &&
-                            touched.preferredJobSkillsId && (
-                              <div className="invalid-feedback">
-                                {errors.preferredJobSkillsId}
-                              </div>
-                            )}
-
-                       
+                        {errors.preferredJobSkillsId &&
+                          touched.preferredJobSkillsId && (
+                            <div className="invalid-feedback">
+                              {errors.preferredJobSkillsId}
+                            </div>
+                          )}
                       </div>
 
                       <div className="mt-1">
@@ -1251,18 +1243,12 @@ export function FormEditForm({
                           </div>
                         </div>
                       </div>
-
                     </div>
                   </div>
 
-
                   <div className="grid col-span-2 ">
                     <div>
-
-
-                      <h6 className="font-bold mb-0 text-primary my-2">
-                        Age
-                      </h6>
+                      <h6 className="font-bold mb-0 text-primary my-2">Age</h6>
 
                       <div className="grid md:grid-cols-2 gap-x-3">
                         <div className="">
@@ -1275,7 +1261,10 @@ export function FormEditForm({
                             placeholder="Enter age (from)"
                             type="number"
                             onInput={(e) => {
-                              e.target.value = amountLimitDynamic(e.target.value, 2);
+                              e.target.value = amountLimitDynamic(
+                                e.target.value,
+                                2
+                              );
                             }}
                           />
                         </div>
@@ -1290,24 +1279,17 @@ export function FormEditForm({
                             placeholder="Enter age (to)"
                             type="number"
                             onInput={(e) => {
-                              e.target.value = amountLimitDynamic(e.target.value, 2);
+                              e.target.value = amountLimitDynamic(
+                                e.target.value,
+                                2
+                              );
                             }}
                           />
                         </div>
                       </div>
-
                     </div>
-
                   </div>
-
-
-
-
                 </div>
-
-
-
-
 
                 <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                   <div className="">
@@ -1477,7 +1459,7 @@ export function FormEditForm({
                       disabled={isdataForRead}
                       label={
                         <span>
-                         To
+                          To
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -1485,9 +1467,8 @@ export function FormEditForm({
                   </div>
                 </div>
 
-
                 <hr></hr>
-                     <h6 className="font-bold mb-0 text-primary my-2">
+                <h6 className="font-bold mb-0 text-primary my-2">
                   Compensation & Benefits
                 </h6>
 

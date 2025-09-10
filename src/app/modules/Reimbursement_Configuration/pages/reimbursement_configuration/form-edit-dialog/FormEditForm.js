@@ -15,6 +15,7 @@ import { amountLimit } from "../../../../../utils/common";
 import { toast } from "react-toastify";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2 } from "lucide-react";
+import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // Define the validation schema for the main form and the policies
 const ReimbursementSchema = Yup.object().shape({
@@ -134,7 +135,14 @@ export function FormEditForm({
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue, setFieldTouched }) => (
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        setFieldTouched,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -147,7 +155,7 @@ export function FormEditForm({
                 <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
                   {/* Subsidiary Field */}
                   <div className="">
-                    <SearchSelect
+                    {/* <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -167,6 +175,25 @@ export function FormEditForm({
                       options={dashboard?.allSubsidiaryList}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
+                    /> */}
+                    <SubsidiarySelect
+                      name="subsidiaryId"
+                      label={
+                        <span>
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isUserForRead}
+                      onChange={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                        // check_Existed_Data(e.value);
+                      }}
+                      error={errors?.subsidiaryId}
+                      touched={touched?.subsidiaryId}
+                      currentValue={values?.subsidiaryId}
+                      initializeSubsidiary={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                      }}
                     />
                   </div>
 
@@ -234,9 +261,6 @@ export function FormEditForm({
               </fieldset>
 
               <div className="w-full overflow-x-auto mt-2">
-
-
-
                 <FieldArray name="policies">
                   {({ push, remove }) => (
                     <div>
@@ -245,7 +269,8 @@ export function FormEditForm({
                           Reimbursement Policies{"  "}
                         </h6>
                         {!isUserForRead && (
-                          <button c
+                          <button
+                            c
                             type="button"
                             onClick={() =>
                               push({
@@ -257,7 +282,8 @@ export function FormEditForm({
                             }
                             className="btn btn-primary btn-sm mt-1"
                           >
-                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "} Add
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
                           </button>
                         )}
                       </div>
@@ -265,12 +291,14 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-
                               <td className="min-w-32">Reimbursement Type</td>
                               <td className="min-w-32">Max Amount Allowed</td>
                               <td className="min-w-32">Attachment Required</td>
                               <td className="min-w-32">Salary Grade</td>
-                              <td className="min-w-32"> {!isUserForRead && <p> Action</p>}</td>
+                              <td className="min-w-32">
+                                {" "}
+                                {!isUserForRead && <p> Action</p>}
+                              </td>
                             </tr>
 
                             <tbody>
@@ -278,15 +306,14 @@ export function FormEditForm({
                                 values.policies.length > 0 &&
                                 values.policies.map((detail, index) => (
                                   <tr key={index}>
-
-
                                     <td>
                                       <Field
                                         name={`policies[${index}].reimbursement_typeId`}
                                         as="select"
                                         className="form-control"
                                         disabled={
-                                          isUserForRead || values.policies[index]?.Id
+                                          isUserForRead ||
+                                          values.policies[index]?.Id
                                         }
                                       >
                                         <option value="">Select...</option>{" "}
@@ -330,7 +357,8 @@ export function FormEditForm({
                                       <AmountInput
                                         field={{
                                           name: `policies[${index}].max_amount`,
-                                          value: values?.policies[index].max_amount,
+                                          value:
+                                            values?.policies[index].max_amount,
                                         }}
                                         form={{
                                           touched,
@@ -355,7 +383,8 @@ export function FormEditForm({
                                   }}
                                 /> */}
                                       {errors.policies?.[index]?.max_amount &&
-                                        touched.policies?.[index]?.max_amount && (
+                                        touched.policies?.[index]
+                                          ?.max_amount && (
                                           <div className="text-danger">
                                             {errors.policies[index].max_amount}
                                           </div>
@@ -409,38 +438,40 @@ export function FormEditForm({
                                     </td>
 
                                     <td>
-                                      <div
-
-                                      >
+                                      <div>
                                         <div className="overflow-auto max-h-16 border-none">
                                           {dashboard.allEmployeeGradeList
-                                            .filter((option) => option.value !== null) // Filter out the unwanted option
+                                            .filter(
+                                              (option) => option.value !== null
+                                            ) // Filter out the unwanted option
                                             .map((option, i) => (
-
-                                              <div
-                                                key={i}
-
-                                              >
+                                              <div key={i}>
                                                 <label className="flex items-center space-x-1">
-
                                                   <input
-
                                                     disabled={isUserForRead}
                                                     type="checkbox"
                                                     checked={values.policies[
                                                       index
-                                                    ].grades.includes(option.value)}
+                                                    ].grades.includes(
+                                                      option.value
+                                                    )}
                                                     onChange={(e) => {
-                                                      const checked = e.target.checked;
+                                                      const checked =
+                                                        e.target.checked;
                                                       const currentGrades =
-                                                        values.policies[index].grades ||
-                                                        [];
+                                                        values.policies[index]
+                                                          .grades || [];
 
                                                       const newGrades = checked
-                                                        ? [...currentGrades, option.value]
+                                                        ? [
+                                                            ...currentGrades,
+                                                            option.value,
+                                                          ]
                                                         : currentGrades.filter(
-                                                          (id) => id !== option.value
-                                                        );
+                                                            (id) =>
+                                                              id !==
+                                                              option.value
+                                                          );
 
                                                       setFieldValue(
                                                         `policies[${index}].grades`,
@@ -465,7 +496,8 @@ export function FormEditForm({
 
                                     <td className="text-right">
                                       {!isUserForRead && (
-                                        <button className="bg-transparent border-none"
+                                        <button
+                                          className="bg-transparent border-none"
                                           type="button"
                                           // onClick={() => remove(index)}
                                           onClick={() => {
@@ -488,7 +520,6 @@ export function FormEditForm({
                                               remove(index);
                                             }
                                           }}
-
                                         >
                                           <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                         </button>
@@ -499,16 +530,11 @@ export function FormEditForm({
                             </tbody>
                           </table>
                         </div>
-
-
                       </div>
                     </div>
                   )}
-
                 </FieldArray>
-
               </div>
-
 
               <div className="w-full overflow-x-auto">
                 <FieldArray name="accounts">
@@ -551,8 +577,6 @@ export function FormEditForm({
                                 values.accounts.length > 0 &&
                                 values.accounts.map((detail, index) => (
                                   <tr key={index}>
-
-
                                     <td>
                                       <Field
                                         name={`accounts[${index}].reimbursement_typeId`}
@@ -612,7 +636,8 @@ export function FormEditForm({
                                               disabled={
                                                 values.accounts.find(
                                                   (el) =>
-                                                    el.expense_accountId == x.value
+                                                    el.expense_accountId ==
+                                                    x.value
                                                 )
                                                   ? true
                                                   : false
@@ -625,11 +650,15 @@ export function FormEditForm({
                                           );
                                         })}
                                       </Field>
-                                      {errors.accounts?.[index]?.expense_accountId &&
+                                      {errors.accounts?.[index]
+                                        ?.expense_accountId &&
                                         touched.accounts?.[index]
                                           ?.expense_accountId && (
                                           <div className="text-danger">
-                                            {errors.accounts[index].expense_accountId}
+                                            {
+                                              errors.accounts[index]
+                                                .expense_accountId
+                                            }
                                           </div>
                                         )}
                                     </td>
@@ -648,7 +677,8 @@ export function FormEditForm({
                                             <option
                                               disabled={
                                                 values.accounts.find(
-                                                  (el) => el.bank_accountId == x.value
+                                                  (el) =>
+                                                    el.bank_accountId == x.value
                                                 )
                                                   ? true
                                                   : false
@@ -661,20 +691,25 @@ export function FormEditForm({
                                           );
                                         })}
                                       </Field>
-                                      {errors.accounts?.[index]?.bank_accountId &&
-                                        touched.accounts?.[index]?.bank_accountId && (
+                                      {errors.accounts?.[index]
+                                        ?.bank_accountId &&
+                                        touched.accounts?.[index]
+                                          ?.bank_accountId && (
                                           <div className="text-danger">
-                                            {errors.accounts[index].bank_accountId}
+                                            {
+                                              errors.accounts[index]
+                                                .bank_accountId
+                                            }
                                           </div>
                                         )}
                                     </td>
 
                                     <td className="text-right">
                                       {!isUserForRead && (
-                                        <button className="bg-transparent border-none"
+                                        <button
+                                          className="bg-transparent border-none"
                                           type="button"
                                           onClick={() => remove(index)}
-                                          
                                         >
                                           <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                         </button>
@@ -684,14 +719,11 @@ export function FormEditForm({
                                 ))}
                             </tbody>
                           </table>
-
-
                         </div>
                       </div>
                     </div>
                   )}
                 </FieldArray>
-
               </div>
             </Form>
           </Modal.Body>
