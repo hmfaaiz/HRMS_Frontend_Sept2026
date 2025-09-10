@@ -3,7 +3,7 @@ import axios from "axios";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create user
-export function createApplicantProfile(body) {
+export function createSeparation(body) {
 
   return axios.post(`${USERS_URL}/separation/create-separation`, body);
   
@@ -11,7 +11,7 @@ export function createApplicantProfile(body) {
 
 
 // Read
-export function getAllApplicantProfile(body) {
+export function getAllSeparation(body) {
 
   return axios.post(`${USERS_URL}/separation/read-all-separation`, body);
 }
@@ -23,19 +23,19 @@ export function getsEmpBySeparationFlag(body) {
   return axios.post(`${USERS_URL}/separation/read-emp-separation-byflag`, body);
 }
 
-export function getApplicantProfileById(id) {
+export function getSeparationById(id) {
 
   return axios.get(`${USERS_URL}/separation/read-separation/${id}`);
 }
 
 //Update
-export function updateApplicantProfile(body) {
+export function updateSeparation(body) {
    
   return axios.put(`${USERS_URL}/separation/update-separation`, body);
 }
 
 //Delete
-export function deleteApplicantProfile(id) {
+export function deleteSeparation(id) {
 
   return axios.delete(`${USERS_URL}/separation/delete-separation/${id}`);
 }

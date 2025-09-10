@@ -50,7 +50,7 @@ export const SeparationSlice = createSlice({
       state.pdfGenerateLoading = false;
     },
 
-    applicantProfileFetched: (state, action) => {
+    separationFetched: (state, action) => {
       console.log("data11111",action.payload.data.data.rows)
       const entities = action.payload.data?.data.rows;
 
@@ -63,7 +63,7 @@ export const SeparationSlice = createSlice({
     },
 
     //get User By ID
-    ApplicantProfileFetchedForEdit: (state, action) => {
+    SeparationFetchedForEdit: (state, action) => {
       state.actionsLoading = false;
       state.dataForEdit = action.payload.dataForEdit;
       state.error = null;
@@ -79,7 +79,7 @@ export const SeparationSlice = createSlice({
       state.error = null;
     },
 
-    ApplicantProfileDeleted: (state, action) => {
+    SeparationDeleted: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
 
@@ -93,14 +93,14 @@ export const SeparationSlice = createSlice({
       state.actionsLoading = false;
     },
 
-    // applicantProfileCreated: (state, action) => {
+    // separationCreated: (state, action) => {
 
     //     state.actionsLoading = false;
     //     state.error = null;
     //     state.entities.unshift(action.payload);
     // },
 
-    applicantProfileCreated: (state, action) => {
+    separationCreated: (state, action) => {
       state.actionsLoading = false;
       state.error = null;
 
@@ -121,7 +121,7 @@ export const SeparationSlice = createSlice({
       state.entities.unshift(action.payload);
     },
 
-    applicantProfileUpdated: (state, action) => {
+    separationUpdated: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
       // state.entities.push(action.payload)
@@ -130,7 +130,7 @@ export const SeparationSlice = createSlice({
         //const payload = { ...action.payload };
         let payload = JSON.stringify(action.payload);
         let payloadObj = JSON.parse(payload);
-        let finalObj = JSON.parse(payloadObj.updatedApplicantProfile);
+        let finalObj = JSON.parse(payloadObj.updatedSeparation);
         if (entity.Id === finalObj.Id) {
           return finalObj;
         }

@@ -36,6 +36,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
+      setemployeeId: FormUIContext.setemployeeId,
+      setPanelMode: FormUIContext.setPanelMode,
+      panelMode: FormUIContext.panelMode,
     };
   }, [FormUIContext]);
 
@@ -63,7 +66,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchApplicantProfileById(id));
+    dispatch(actions.fetchSeparationById(id));
 
   }, [id, dispatch]);
 
@@ -71,7 +74,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
   const saveForm = async (formData) => {
 
     delete formData.employeetatus
-  
+
 
 
 
@@ -87,11 +90,11 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       } else if (typeof formData?.resignationAttachment == "string") {
         formData.resignationAttachment = formData.resignationAttachment;
       }
-   
 
 
-      dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
-      dispatch(actions.fetchApplicantProfile(formUIProps.queryParams));
+
+      dispatch(actions.createSeparation(formData, disbaleLoading, onHide));
+      dispatch(actions.fetchSeparation(formUIProps.queryParams));
 
 
 
@@ -143,9 +146,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       }
 
       // ✅ Now call the update API after file is correctly set
-      await dispatch(actions.updateApplicantProfile(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.updateSeparation(formUpdatedFields, disbaleLoading, onHide));
 
-      await dispatch(actions.fetchApplicantProfile(usersUIProps.queryParams));
+      await dispatch(actions.fetchSeparation(usersUIProps.queryParams));
     }
   };
 
@@ -162,6 +165,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
         enableLoading={enableLoading}
         loading={loading}
         disbaleLoading={disbaleLoading}
+        setemployeeId={formUIProps.setemployeeId}
+        setPanelMode={formUIProps.setPanelMode}
+        panelMode={formUIProps.panelMode}
 
       />
       <ToastContainer

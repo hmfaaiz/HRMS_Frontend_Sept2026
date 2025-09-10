@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 const { actions } = SeparationSlice;
 
 
-export const fetchApplicantProfile = (queryparm) => async (dispatch) => {
+export const fetchSeparation = (queryparm) => async (dispatch) => {
 
 
 
-  return requestFromServer.getAllApplicantProfile(queryparm)
+  return requestFromServer.getAllSeparation(queryparm)
 
     .then((response) => {
 
 
-      dispatch(actions.applicantProfileFetched(response));
+      dispatch(actions.separationFetched(response));
     })
     .catch((error) => {
 
@@ -24,20 +24,20 @@ export const fetchApplicantProfile = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchApplicantProfileById = (id) => (dispatch) => {
+export const fetchSeparationById = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.ApplicantProfileFetchedForEdit({ dataForEdit: undefined }));
+    return dispatch(actions.SeparationFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getApplicantProfileById( id)
+    .getSeparationById( id)
     .then((response) => {
       const entities = response.data?.data;
 
 
-      dispatch(actions.ApplicantProfileFetchedForEdit({ dataForEdit: entities }));
+      dispatch(actions.SeparationFetchedForEdit({ dataForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -68,10 +68,10 @@ export const fetchEmpBySeparationFlag= (body) => (dispatch) => {
 export const deleteSeparation = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteApplicantProfile(id)
+    .deleteSeparation(id)
     .then((response) => {
 
-      dispatch(actions.ApplicantProfileDeleted( id));
+      dispatch(actions.SeparationDeleted( id));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -111,19 +111,19 @@ onHide();
 };
 
 
-export const createApplicantProfile = (applicantProfileForCreation, disbaleLoading, onHide) => (
+export const createSeparation = (separationForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
 
   return requestFromServer
-    .createApplicantProfile(applicantProfileForCreation)
+    .createSeparation(separationForCreation)
     .then((res) => {
 
       const user = res.data?.data;
 
 
-      dispatch(actions.applicantProfileCreated(user));
+      dispatch(actions.separationCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
@@ -152,14 +152,14 @@ export const createApplicantProfile = (applicantProfileForCreation, disbaleLoadi
     });
 };
 
-export const updateApplicantProfile = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateSeparation = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateApplicantProfile(user)
+    .updateSeparation(user)
     .then((response) => {
 
-      const updatedApplicantProfile = response?.config?.data; // response.data?.data;
+      const updatedSeparation = response?.config?.data; // response.data?.data;
 
-      dispatch(actions.applicantProfileUpdated({ updatedApplicantProfile }));
+      dispatch(actions.separationUpdated({ updatedSeparation }));
 
       disbaleLoading();
       onHide();
@@ -218,95 +218,3 @@ export const uploadFile = async (file) => {
 };
 
 
-export const deleteApplicantVacancyDetail = (data) => (dispatch) => {
-  return requestFromServer
-    .deleteApplicantVacancyDetailById(data)
-    .then((response) => {
-
-
-      toast.success(SERVER_MESSAGES.deletedSuccess, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    })
-    .catch((error) => {
-      dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES.deletedFail);
-    });
-};
-
-export const convertApplicantProfile = (id) => (dispatch) => {
-  return requestFromServer
-    .convertApplicantToEmployee({ Id: id })
-    .then((response) => {
-      toast.success(SERVER_MESSAGES.updatedSuccess, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-
-    })
-    .catch((error) => {
-
-      //error.clientMessage = "Can't update User"
-      dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(error?.response?.data?.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
-};
-
-export const Generatejob_offer_letter = (body) => async (dispatch) => {
-  dispatch(actions.startCall({ callType: callTypes.pdfGenerate }));
-  return requestFromServer.generatejob_offer_letter({applicantId:body})
-    .then((res) => {
-      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-
-      const link = document.createElement('a');
-      link.href = pdfUrl;
-      link.setAttribute('download', 'job_offer_letter.pdf');
-      document.body.appendChild(link);
-      link.click();
-      dispatch(actions.pdfFetched({}));
-      document.body.removeChild(link);
-      dispatch(actions.stopCall());
-    })
-    .catch((error) => {
-      const status = error?.response?.status;
-      const contentType = error?.response?.headers?.['content-type'];
-
-      if (contentType?.includes('application/json') && error?.response?.data instanceof ArrayBuffer) {
-        try {
-          const text = new TextDecoder('utf-8').decode(error.response.data);
-          const parsed = JSON.parse(text);
-          error.response.data = parsed; // Replace data with JSON object
-        } catch (e) {
-          console.error('Failed to parse JSON error:', e);
-        }
-      }
-
-      if (status === 404) {
-        toast.error(error?.response?.data?.message || "Not found");
-      } else if (status === 500) {
-        toast.error(SERVER_MESSAGES.pdfFail);
-      }
-      dispatch(actions.stopCall());
-    });
-};

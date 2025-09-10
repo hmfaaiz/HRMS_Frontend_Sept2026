@@ -10,16 +10,16 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   const { dataForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      dataForEdit: state.applicant_profile.dataForEdit,
+      dataForEdit: state.separation.dataForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Applicant Profile";
+    let _title = id ? "" : "Add Separation";
     if (id) {
-      _title = `Edit Applicant Profile`;
+      _title = `Edit Separation`;
     } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }
@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
       {actionsLoading && <ModalProgressBar />}
       {/* <Modal.Header >
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isdataForRead ? title : "View Applicant Profile"}
+          {!isdataForRead ? title : "View Separation"}
         </Modal.Title>
       </Modal.Header> */}
     </>
