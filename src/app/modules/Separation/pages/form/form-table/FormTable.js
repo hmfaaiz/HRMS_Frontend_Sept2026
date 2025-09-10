@@ -81,7 +81,6 @@ export function FormTable() {
 
 
 
-console.log("entities11111",entities)
   const columns = [
 
 
@@ -92,7 +91,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
     },
     {
@@ -113,7 +112,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
     },
 
@@ -124,7 +123,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
     },
  
@@ -135,7 +134,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
     }, {
       dataField: "ExitType.formName",
@@ -144,7 +143,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
     }, {
       dataField: "ExitReason.exitReason",
@@ -163,7 +162,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
       // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },   {
@@ -173,7 +172,7 @@ console.log("entities11111",entities)
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "50px",
       },
       // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },

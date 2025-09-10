@@ -25,7 +25,7 @@ export function ActionsColumnFormatter(
   }
 ) {
   const isUserRead = false;
-  console.log("row1111",row.Id)
+
 
   return (
     <div className="space-x-2">
