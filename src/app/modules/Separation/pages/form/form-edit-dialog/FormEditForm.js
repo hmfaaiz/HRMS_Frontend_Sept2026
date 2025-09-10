@@ -697,7 +697,7 @@ separateMode(false)
                         placeholder="Auto total service period"
                         label={
                           <span>
-                            Total Service Period {servicePeriod}
+                            Total Service Period
                           </span>
                         }
                         value={servicePeriod ||
