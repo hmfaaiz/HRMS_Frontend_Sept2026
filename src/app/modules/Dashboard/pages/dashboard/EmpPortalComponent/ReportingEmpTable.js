@@ -6,42 +6,12 @@ import {
   sortCaret,
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
+import { formatTime } from "../../../../../utils/common";
 
 export function ReportingEmpTable({ empAuthorityList }) {
   //Users UI Context
 
   const columns = [
-    // {
-    //   dataField: "profile_image",
-    //   text: "Profile Image",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "100px",
-    //   },
-    //   formatter: (cell) => {
-    //     return (
-    //       <img
-    //         name="profile_image"
-    //         src={
-    //           cell ? `${cell}` : toAbsoluteUrl("/media/users/profileImage.png")
-    //         } // Fallback if no image
-    //         alt="Profile"
-    //         width={70}
-    //         height={70}
-    //         style={{
-    //           borderRadius: "50%", // Make the image circular
-    //           objectFit: "cover", // Ensure the image covers the entire area without distortion
-    //         }}
-    //         onError={(e) => {
-    //           e.target.onerror = null; // Error loop rokne ke liye
-    //           e.target.src = toAbsoluteUrl("/media/users/profileImage.png"); // Agar image load na ho toh fallback image set karo
-    //         }}
-    //       />
-    //     );
-    //   },
-    // },
     {
       dataField: "employeeCode",
       text: "Code",
@@ -59,31 +29,11 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "130px",
+        minWidth: "80px",
       },
       formatter: (cell, row) => {
         return `${row?.firstName || ""} ${row?.middleName ||
           ""} ${row?.lastName || ""}`;
-      },
-    },
-    // {
-    //   dataField: "department.deptName",
-    //   text: "Department",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
-    {
-      dataField: "grade.formName",
-      text: "Grade",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "120px",
       },
     },
     {
@@ -93,23 +43,57 @@ export function ReportingEmpTable({ empAuthorityList }) {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "150px",
       },
     },
-    // {
-    //   dataField: "employeeType.formName",
-    //   text: "Employee Type",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   style: {
-    //     minWidth: "160px",
-    //   },
-    // },
+    {
+      dataField: "t_attendances",
+      text: "Check In",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "60px",
+        maxWidth: "60px",
+      },
+      formatter: (cell) => {
+        return cell?.length > 0 ? formatTime(cell[0].timeIn) : "-";
+      },
+    },
+    {
+      dataField: "t_attendances",
+      text: "Check Out",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "60px",
+        maxWidth: "60px",
+      },
+      formatter: (cell) => {
+        return cell?.length > 0 ? formatTime(cell[0].timeOut) : "-";
+      },
+    },
+    {
+      dataField: "t_attendances",
+      text: "Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "90px",
+        maxWidth: "90px",
+      },
+      formatter: (cell) => {
+        return cell?.length > 0
+          ? cell[0]?.timeIn && cell[0]?.timeOut && cell[0]?.status
+          : "-";
+      },
+    },
   ];
 
   return (
-    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-max sm:max-h-56 overflow-y-auto">
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-max sm:max-h-56 overflow-auto">
       <h6 className="font-bold mb-0 text-primary my-2">
         Team Members ({empAuthorityList?.length || 0})
       </h6>

@@ -61,11 +61,19 @@ export const AdminPortal = () => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    dispatch(fetchAllParentDept());
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     dispatch(actions.fetchHolidayDetail());
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (user?.EmployeeMapping?.subsidiaryId) {
+      setSummaryFilter({
+        ...summaryFilter,
+        subsidiaryId: user?.EmployeeMapping?.subsidiaryId,
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -75,6 +83,7 @@ export const AdminPortal = () => {
         activeTab,
       })
     );
+    dispatch(fetchAllParentDept(summaryFilter?.subsidiaryId));
     setIsLoading(false);
   }, [summaryFilter?.subsidiaryId, activeTab]);
 

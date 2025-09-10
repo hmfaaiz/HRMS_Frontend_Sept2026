@@ -148,6 +148,7 @@ const AdminHead = ({
                     setSummaryFilter({
                       ...summaryFilter,
                       subsidiaryId: e.value,
+                      departmentId: "",
                     })
                   }
                   value={
