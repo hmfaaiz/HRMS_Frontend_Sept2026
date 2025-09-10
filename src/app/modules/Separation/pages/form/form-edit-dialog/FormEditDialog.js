@@ -36,6 +36,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
+      setemployeeId: FormUIContext.setemployeeId,
+      setPanelMode: FormUIContext.setPanelMode,
+      panelMode: FormUIContext.panelMode,
     };
   }, [FormUIContext]);
 
@@ -71,7 +74,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
   const saveForm = async (formData) => {
 
     delete formData.employeetatus
-  
+
 
 
 
@@ -87,7 +90,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       } else if (typeof formData?.resignationAttachment == "string") {
         formData.resignationAttachment = formData.resignationAttachment;
       }
-   
+
 
 
       dispatch(actions.createSeparation(formData, disbaleLoading, onHide));
@@ -162,6 +165,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
         enableLoading={enableLoading}
         loading={loading}
         disbaleLoading={disbaleLoading}
+        setemployeeId={formUIProps.setemployeeId}
+        setPanelMode={formUIProps.setPanelMode}
+        panelMode={formUIProps.panelMode}
 
       />
       <ToastContainer

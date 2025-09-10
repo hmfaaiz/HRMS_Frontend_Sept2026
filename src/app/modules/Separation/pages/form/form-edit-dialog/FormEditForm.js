@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
@@ -35,6 +35,8 @@ import { subYears } from "date-fns";
 
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { fetchExitReasonData } from "../../../../Dashboard/_redux/dashboardActions";
+import { Eye, XCircle } from "lucide-react";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 
 
 export const getSeparationEditSchema = (formData) => {
@@ -122,7 +124,7 @@ export function FormEditForm({
   onHide,
   isdataForRead,
   enableLoading,
-  loading, disbaleLoading,
+  loading, disbaleLoading, setemployeeId, setPanelMode, panelMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -132,6 +134,15 @@ export function FormEditForm({
   const [departmentId, setDepartmentId] = useState("");
   const [dateOfJoining, setDateOfJoining] = useState("");
   const [servicePeriod, setGetServicePeriod] = useState("");
+  const [policyMode, setPolicyMode] = useState("");
+  const [separateMode, setSeparateMode] = useState("");
+
+
+
+  const handlePolicyModalClose = () => {
+    setPolicyMode(false);
+separateMode(false)
+  };
 
 
   //drop down
@@ -195,6 +206,7 @@ export function FormEditForm({
 
 
   const getServicePeriod = (start, end) => {
+    console.log("hitting222322",start,end)
     if (!start || !end) return "";
 
     const startDate = new Date(start);
@@ -234,6 +246,7 @@ export function FormEditForm({
         setDateOfJoining(selectedEmp?.dateOfJoining);
         console.log("hittin11111g", dateOfJoining, formData.lastWorkingDate)
         getServicePeriod(dateOfJoining, formData.lastWorkingDate);
+        
       }
     }
 
@@ -260,6 +273,126 @@ export function FormEditForm({
         setFieldTouched
       }) => (
         <>
+
+
+          {policyMode && (
+            <>
+              <Modal
+                show={policyMode}
+                onHide={!policyMode}
+                style={{ zIndex: "99999" }}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Final Settlement Policy</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="space-y-6">
+                    {/* Policy #01 */}
+                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
+                      <h3 className="text-lg font-semibold text-primary mb-2">
+                        Policy # 01 [Process Salary in One Phase]
+                      </h3>
+                      <p className="text-gray-700 text-sm">
+                        Process Salary from Starting Date of Current Payroll Month till Last Working Date in FINAL SETTLEMENT
+                      </p>
+                    </div>
+
+                    {/* Policy #02 */}
+                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
+                      <h3 className="text-lg font-semibold text-primary mb-2">
+                        Policy # 02 [Process Salary in Two Phases]
+                      </h3>
+                      <p className="text-gray-700 text-sm">
+                        During notice period only last month salary will be paid via FINAL SETTLEMENT remaining via 'Normal Payroll Process'
+                      </p>
+                    </div>
+
+                    {/* Policy #03 */}
+                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
+                      <h3 className="text-lg font-semibold text-primary mb-2">
+                        Policy # 03 [Process Salary in Two Phases]
+                      </h3>
+                      <p className="text-gray-700 text-sm">
+                        From 'Starting Date of Current Payroll Month' till 'Resignation Date' as Normal Salary.
+                        Remaining Working days in FINAL SETTLEMENT
+                      </p>
+                    </div>
+
+                    {/* Policy #04 */}
+                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
+                      <h3 className="text-lg font-semibold text-primary mb-2">
+                        Policy # 04 [Separated Employees]
+                      </h3>
+                      <p className="text-gray-700 text-sm">
+                        These records are generated for Regular Payroll Process.
+                      </p>
+                    </div>
+                  </div>
+                </Modal.Body>
+
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handlePolicyModalClose}>
+                    Cancel
+                  </Button>
+
+
+                </Modal.Footer>
+              </Modal>
+            </>
+          )} 
+          
+          
+           {separateMode && (
+            <>
+              <Modal
+                show={separateMode}
+                onHide={!separateMode}
+                style={{ zIndex: "99999" }}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div className="space-y-6">
+
+                      <span>Are you sure want to separate this record?</span>
+                  
+                  
+                  </div>
+                </Modal.Body>
+
+               <Modal.Footer>
+                       <div>
+                         <button
+                           type="button"
+                           onClick={handlePolicyModalClose}
+                           className="btn btn-light btn-elevate"
+                         >
+                           Cancel
+                         </button>
+                         <> </>
+                         <button
+                           type="button"
+                         onClick={() =>
+    dispatch(actions.separateById(
+      { employeeId: formData.employeeId, Id: formData.Id },
+      onHide
+    ))
+  }
+                           className="btn btn-primary btn-elevate"
+                         >
+                           Yes
+                           {loading && (
+                             <span className="ml-3 mr-3 spinner spinner-white"></span>
+                           )}
+                         </button>
+                       </div>
+                     </Modal.Footer>
+              </Modal>
+            </>
+          )}
+
+
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -272,7 +405,7 @@ export function FormEditForm({
 
 
 
-                <div className="grid lg:grid-cols-6 gap-x-3 mt-1">
+                <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
 
                   {!formData.Id && (
                     <div className="">
@@ -314,6 +447,7 @@ export function FormEditForm({
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
                         setFieldValue("employeeId", value);
+                      
 
                         const selectedEmp = activeEmployeeList?.find(
                           (emp) => emp.value === value
@@ -346,9 +480,43 @@ export function FormEditForm({
                     />
                   </div>
 
+
+                  <div className="mt-6">
+
+
+
+                    {panelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+
+
+                        <Eye className="w-4 h-4 text-white" />
+                        View Details
+                      </button>
+                    )}
+
+
+
+
+                  </div>
                 </div>
 
-
+                <EmployeeProfile
+                  employeeId={values?.employeeId || formData?.employeeId}
+                  panelMode={panelMode}
+                />
 
 
 
@@ -501,6 +669,7 @@ export function FormEditForm({
                         onChange={(date) => {
                           let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("lastWorkingDate", selectedDate);
+                          getServicePeriod(dateOfJoining,selectedDate)
                           if (values.resignationDate && date) {
                             const diffDays = Math.floor(
                               (new Date(date) - new Date(values.resignationDate)) /
@@ -514,7 +683,7 @@ export function FormEditForm({
                         dateFormat="dd-MMM-yyyy"
                         name="lastWorkingDate"
                         autoComplete="off"
-                        maxDate={new Date()}
+                        // maxDate={new Date()}
                         minDate={new Date(dateOfJoining)}
                       />
 
@@ -568,6 +737,38 @@ export function FormEditForm({
                         options={allfinalSettlementPolicy}
                       />
                     </div>
+
+                    <div className="mt-6">
+
+
+
+                      {policyMode ? (
+                        <button
+                          type="button"
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() => setPolicyMode(!policyMode)}
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() => setPolicyMode(!policyMode)}
+                        >
+
+
+                          <Eye className="w-4 h-4 text-white" />
+                          View Details
+                        </button>
+                      )}
+
+
+
+
+                    </div>
+
 
 
                   </div>
@@ -904,6 +1105,7 @@ export function FormEditForm({
 
                 <button
                   type="submit"
+                   disabled={formData.separatedFlag}
                   onClick={() => {
                     handleSubmit();
                   }}
@@ -918,9 +1120,10 @@ export function FormEditForm({
 
                 {formData.Id && !formData.separatedFlag && (
                   <button
-                  
+
                     onClick={() => {
-                      dispatch(actions.separateById({employeeId:formData.employeeId,Id:formData.Id},onHide()));
+                      
+                      setSeparateMode(true)
                     }}
                     className="btn btn-primary btn-elevate"
                   >
