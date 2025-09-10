@@ -141,7 +141,7 @@ export function FormEditForm({
 
   const handlePolicyModalClose = () => {
     setPolicyMode(false);
-separateMode(false)
+setSeparateMode(false)
   };
 
 
@@ -206,7 +206,7 @@ separateMode(false)
 
 
   const getServicePeriod = (start, end) => {
-    console.log("hitting222322",start,end)
+   
     if (!start || !end) return "";
 
     const startDate = new Date(start);
@@ -240,11 +240,11 @@ separateMode(false)
       const selectedEmp = activeEmployeeList?.find(
         (emp) => emp.value === formData?.employeeId
       );
-      console.log("selectedEmp1111", selectedEmp)
+
       if (selectedEmp) {
         setDepartmentId(selectedEmp?.departmentId)
         setDateOfJoining(selectedEmp?.dateOfJoining);
-        console.log("hittin11111g", dateOfJoining, formData.lastWorkingDate)
+     
         getServicePeriod(dateOfJoining, formData.lastWorkingDate);
         
       }
@@ -676,7 +676,7 @@ separateMode(false)
                               (1000 * 60 * 60 * 24)
                             );
                             setFieldValue("noticePeriodDays", diffDays);
-                            console.log("diff111", diffDays)
+                          
 
                           }
                         }}
@@ -697,7 +697,7 @@ separateMode(false)
                         placeholder="Auto total service period"
                         label={
                           <span>
-                            Total Service Period {servicePeriod}
+                            Total Service Period
                           </span>
                         }
                         value={servicePeriod ||

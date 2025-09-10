@@ -44,7 +44,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   const deleteSeparation = () => {
     // server request for deleting customer by id
-    console.log("delete11111")
+
     enableLoading();
     dispatch(actions.deleteSeparation(id)).then(() => {
       onHide();

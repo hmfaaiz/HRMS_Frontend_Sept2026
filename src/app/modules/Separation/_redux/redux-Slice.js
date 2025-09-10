@@ -51,7 +51,7 @@ export const SeparationSlice = createSlice({
     },
 
     separationFetched: (state, action) => {
-      console.log("data11111",action.payload.data.data.rows)
+     
       const entities = action.payload.data?.data.rows;
 
       const totalResult = action.payload.data?.data.totalResults;
@@ -68,7 +68,7 @@ export const SeparationSlice = createSlice({
       state.dataForEdit = action.payload.dataForEdit;
       state.error = null;
 
-      console.log("dataforedit1111",state.dataForEdit)
+    
     },
 
 
