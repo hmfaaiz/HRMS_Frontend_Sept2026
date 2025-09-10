@@ -151,3 +151,7 @@ export function getRecruitmentSummary(filter) {
 export function getAnnouncment(filter) {
   return axios.get(`${USERS_URL}/dashboard/announcement` );
 }
+export function getExitReason(id) {
+  console.log("read-all-exit-reason111111",id)
+  return axios.get(`${USERS_URL}/settings/read-all-exit-reason/${id}`);
+}

@@ -163,26 +163,49 @@ const SECTIONS = [
   {
     heading: "Office Information",
     fields: [
-      { name: 'Company:', value: 'companyName' },
-      { name: 'Subsidiary:', value: 'subsidiaryName' },
-      { name: 'Department:', value: 'departmentName' },
-      { name: 'Grade:', value: 'gradeName' },
+
+      { name: 'Employee Code:', value: 'employeeCode' },
       { name: 'Designation:', value: 'designationName' },
-      { name: 'Employee Type:', value: 'employeeTypeName' },
-      { name: 'Team:', value: 'teamName' },
+      { name: 'Grade:', value: 'gradeName' },
+      { name: 'Department:', value: 'departmentName' },
+      // Payroll group
+      // Reporting to
+      { name: 'Date of Joining:', value: 'dateOfJoining', isDate: true },
+      // Default shift
+      { name: 'Default Shift:', value: 'defaultShiftName' },
+      { name: 'Employee Type', value: 'employeeTypeName' },
+
+      // { name: 'Company:', value: 'companyName' },
+      // { name: 'Subsidiary:', value: 'subsidiaryName' },
+      // { name: 'Team:', value: 'teamName' },
     ]
   },
   {
     heading: "Personal Information",
     fields: [
-      { name: 'Country:', value: 'countryName' },
-      { name: 'City:', value: 'cityName' },
-      { name: 'Location:', value: 'locationName' },
-      { name: 'Region:', value: 'regionName' },
-      { name: 'Marital Status:', value: 'maritalStatus' },
+      { name: 'Date of Birth:', value: 'dateOfBirth', isDate: true },
       { name: 'Gender:', value: 'gender' },
-      { name: 'Date of Joining:', value: 'dateOfJoining', isDate: true },
+      { name: 'Marital Status:', value: 'maritalStatus' },
+      { name: 'Location:', value: 'locationName' },
+      { name: 'Cell:', value: 'phone_cell' },
+      { name: 'Id Card No.:', value: 'nic_no' },
+      //  Cell no.
+      // Id card no.
+
       { name: 'Date of Confirmation:', value: 'dateOfConfirmation', isDate: true },
+      { name: 'Date of Contract Expiry', value: 'dateOfContractExpiry', isDate: true },
+      //  contract expiray
+
+
+
+
+      // { name: 'Country:', value: 'countryName' },
+      // { name: 'City:', value: 'cityName' },
+      // { name: 'Region:', value: 'regionName' },
+
+
+
+
     ]
   },
 ];
