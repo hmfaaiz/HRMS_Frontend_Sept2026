@@ -37,7 +37,7 @@ import FileUpload from "../../../../../../_metronic/_partials/controls/forms/Fil
 import { fetchExitReasonData } from "../../../../Dashboard/_redux/dashboardActions";
 
 
-export const getApplicantProfileEditSchema = (formData) => {
+export const getSeparationEditSchema = (formData) => {
   return Yup.object()
     .shape({
 
@@ -243,7 +243,7 @@ export function FormEditForm({
     <Formik
       enableReinitialize={true}
       initialValues={{ ...formData, }}
-      validationSchema={getApplicantProfileEditSchema(formData)}
+      validationSchema={getSeparationEditSchema(formData)}
       onSubmit={async (values) => {
         enableLoading();
         saveForm(values);

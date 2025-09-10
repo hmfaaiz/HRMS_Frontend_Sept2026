@@ -52,9 +52,6 @@ export function FormPage() {
     (item) => item.componentName === "DeleteSeparation"
   );
 
-  const isAccessForConvert = userAccess?.find(
-    (item) => item.componentName === "ConvertApplicantEmployee"
-  );
 
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateSeparation"

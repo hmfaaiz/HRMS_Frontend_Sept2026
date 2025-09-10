@@ -42,13 +42,13 @@ export function FormDynamicDialogModal({ id, show, onHide, onConfirm, title, mes
     // looking for loading/dispatch
     useEffect(() => { }, [isLoading, dispatch]);
 
-    const dynamicApplicantProfilePostStatus = () => {
+    const dynamicSeparationStatus = () => {
         // server request for deleting customer by id
         enableLoading();
         dispatch(actions[actionName](id)).then(() => {
             onHide();
             // refresh list after deletion
-            dispatch(actions.fetchApplicantProfile(usersUIProps.queryParams));
+            dispatch(actions.fetchSeparation(usersUIProps.queryParams));
 
             disableLoading();
         });
@@ -83,7 +83,7 @@ export function FormDynamicDialogModal({ id, show, onHide, onConfirm, title, mes
                     </button>
                     <button
                         type="button"
-                        onClick={dynamicApplicantProfilePostStatus}
+                        onClick={dynamicSeparationStatus}
                         className="btn btn-primary btn-elevate"
                     >
                         {confirmButtonText}

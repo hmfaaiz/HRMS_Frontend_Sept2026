@@ -63,7 +63,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchApplicantProfileById(id));
+    dispatch(actions.fetchSeparationById(id));
 
   }, [id, dispatch]);
 
@@ -90,8 +90,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
    
 
 
-      dispatch(actions.createApplicantProfile(formData, disbaleLoading, onHide));
-      dispatch(actions.fetchApplicantProfile(formUIProps.queryParams));
+      dispatch(actions.createSeparation(formData, disbaleLoading, onHide));
+      dispatch(actions.fetchSeparation(formUIProps.queryParams));
 
 
 
@@ -143,9 +143,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       }
 
       // ✅ Now call the update API after file is correctly set
-      await dispatch(actions.updateApplicantProfile(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.updateSeparation(formUpdatedFields, disbaleLoading, onHide));
 
-      await dispatch(actions.fetchApplicantProfile(usersUIProps.queryParams));
+      await dispatch(actions.fetchSeparation(usersUIProps.queryParams));
     }
   };
 
