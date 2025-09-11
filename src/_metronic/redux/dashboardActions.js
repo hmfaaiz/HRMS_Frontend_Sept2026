@@ -700,3 +700,20 @@ dispatch(actions.AllPayrollAccountListFetch(entities));
       toast.error("Something went wrong");
     });
 };
+
+
+export const fetchAllDesignationByGradeId = (
+  id,
+  key,
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllDesignationByGradeId(id)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      console.log("entitiesentities" , entities , key)
+      dispatch(actions.AllChildMenusFetch({ entities, key }));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};

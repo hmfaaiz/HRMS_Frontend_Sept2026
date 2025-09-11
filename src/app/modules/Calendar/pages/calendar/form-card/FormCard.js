@@ -27,7 +27,7 @@ const formValidation = Yup.object().shape({
   to_date: Yup.date()
     .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required)
-    .min(Yup.ref("from_date"), "Date to date cannot be before Date from date"),
+    .min(Yup.ref("from_date"), "'To Date' should not be less than 'From Date'."),
 });
 
 export function FormCard() {

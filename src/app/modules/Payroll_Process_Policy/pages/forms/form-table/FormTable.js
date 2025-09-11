@@ -780,7 +780,7 @@ export function FormTable(user) {
                     value={allEarningsMap?.get(values?.basicSalaryId || '') || ''}
                     error={errors.basicSalaryId}
                     touched={touched.basicSalaryId}
-                    options={dashboard.allEarnings}
+                    options={dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")}
                     isDisabled={Boolean(user?.readOnly)}
                   />
                 </div>
@@ -797,7 +797,7 @@ export function FormTable(user) {
                     value={allEarningsMap?.get(values?.salaryRoundingId || '') || ''}
                     error={errors.salaryRoundingId}
                     touched={touched.salaryRoundingId}
-                    options={dashboard.allEarnings}
+                    options={dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")}
                     isDisabled={Boolean(user?.readOnly)}
                   />
                 </div>
@@ -1109,9 +1109,9 @@ export function FormTable(user) {
                     }}
                     value={values.payrollTax_DeductionTypeId}
                     name="payrollTax_DeductionTypeId">
-                    <option value="-1"> --Select--</option>
+                    <option value="-1"> Select</option>
                     {
-                      dashboard.allDeductions?.map((x) => {
+                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
                         return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
                       })}
                   </select>
@@ -1126,9 +1126,9 @@ export function FormTable(user) {
                     }}
                     value={values.arrearTaxDeductionId}
                     name="arrearTaxDeductionId">
-                    <option value="-1"> --Select--</option>
+                    <option value="-1"> Select</option>
                     {
-                      dashboard.allDeductions?.map((x) => {
+                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
                         return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
                       })}
                   </select>
@@ -1209,7 +1209,7 @@ export function FormTable(user) {
                       {/* Add 'N/A' option */}
                       <option value="N/A">N/A</option>
 
-                      {/* Filter out '--Select--' and render other options for leave types */}
+                      {/* Filter out 'Select' and render other options for leave types */}
                       {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
                         <option key={x.value} value={x.value}>
                           {x.label}
@@ -1236,9 +1236,9 @@ export function FormTable(user) {
                       disabled={!Boolean(values.isEnableAttandanceIntegration)}
                       value={values.lateDeductionId}
                       name="lateDeductionId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
-                        dashboard.allDeductions?.map((x) => {
+                        dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
                           return <option value={x.value}> {x.label} </option>
                         })}
                     </select>
@@ -1280,9 +1280,9 @@ export function FormTable(user) {
                       value={values.overTimeEarningId}
                       disabled={!Boolean(values.isEnableAttandanceIntegration)}
                       name="overTimeEarningId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
-                        dashboard.allEarnings?.map((x) => {
+                        dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")?.map((x) => {
                           return <option value={x.value}> {x.label} </option>
                         })}
                     </select>
@@ -1297,9 +1297,9 @@ export function FormTable(user) {
                       disabled={!Boolean(values.isEnableAttandanceIntegration)}
                       value={values.leaveEnchashment_EarningId}
                       name="leaveEnchashment_EarningId">
-                      <option value="-1"> --Select--</option>
+                      <option value="-1"> Select</option>
                       {
-                        dashboard.allEarnings?.map((x) => {
+                        dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")?.map((x) => {
                           return <option value={x.value}> {x.label} </option>
                         })}
                     </select>
@@ -1396,9 +1396,9 @@ export function FormTable(user) {
                     }}
                     value={values.eobi_deductionId}
                     name="eobi_deductionId">
-                    <option value="-1"> --Select--</option>
+                    <option value="-1"> Select</option>
                     {
-                      dashboard.allDeductions?.map((x) => {
+                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
                         return <option value={x.value}> {x.label} </option>
                       })}
                   </select>
@@ -1520,9 +1520,9 @@ export function FormTable(user) {
                     value={values.sessi_deductionId}
                     disabled={!Boolean(values.isEnableSESSI)}
                     name="sessi_deductionId">
-                    <option value="-1"> --Select--</option>
+                    <option value="-1"> Select</option>
                     {
-                      dashboard.allDeductions?.map((x) => {
+                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
                         return <option value={x.value}> {x.label} </option>
                       })}
                   </select>

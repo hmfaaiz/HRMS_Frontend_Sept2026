@@ -29,7 +29,7 @@ const formValidation = Yup.object().shape({
   from: Yup.date().optional(),
   to: Yup.date()
     .optional()
-    .min(Yup.ref("from"), "Date to date cannot be before Date from date"),
+    .min(Yup.ref("from"), "'To Date' should not be less than 'From Date'."),
 });
 
 //Prepare new Filter

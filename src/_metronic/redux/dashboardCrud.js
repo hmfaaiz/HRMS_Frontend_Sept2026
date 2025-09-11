@@ -289,3 +289,9 @@ export const getAllPayrollAccount = async (Id) => {
     Id: Id,
   });
 };
+
+export const getAllDesignationByGradeId = async (Id) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-designation-by-gradeId`, {
+    Id: Id,
+  });
+};
