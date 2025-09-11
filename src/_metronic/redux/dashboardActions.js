@@ -717,3 +717,4 @@ export const fetchAllDesignationByGradeId = (
       toast.error("Something went wrong");
     });
 };
+

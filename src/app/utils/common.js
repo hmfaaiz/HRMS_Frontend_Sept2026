@@ -80,7 +80,7 @@ export const getFileName = (fileName) => {
  */
 export const formatDates = (date, dateFormat = null) => {
   if (date) {
-    return format(new Date(date), dateFormat || "dd/MMM/yyyy");
+    return format(new Date(date), dateFormat || "dd-MMM-yyyy");
   } else {
     return null;
   }

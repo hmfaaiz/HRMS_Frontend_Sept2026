@@ -82,6 +82,7 @@ const initialDashboardState = {
   allPayrollAccountList: [],
   announcement: [],
   allExitTypeList:[],
+  allExitReasonList:[],
 };
 
 export const callTypes = {
@@ -331,6 +332,10 @@ export const dashboardSlice = createSlice({
     },
     AnnouncementFetch: (state, action) => {
       state.announcement = action.payload;
+    },
+
+    AllExitReasonListFetch: (state, action) => {
+      state.allExitReasonList = action.payload;
     },
   },
 });

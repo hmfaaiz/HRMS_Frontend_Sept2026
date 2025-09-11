@@ -275,6 +275,8 @@ const ExitTypeExitReasonModule = lazy(() =>
   import("./modules/Exit_Type_Exit_Reason/pages/index")
 );
 
+const SeparationModule = lazy(() =>
+  import("./modules/Separation/pages/index"));
 const LeaveWorkflowAdmin = lazy(() =>
   import("./modules/LeaveWorkflowAdmin/page/index")
 );
@@ -390,6 +392,9 @@ const ROUTES = {
   news_event_ticker: NewsEventTickerModule,
   career: RecruitmentConfiguration,
   configuration: DashboardAlertConfig,
+  email_configuration : EmailConfiguration,
+  exit_type_exit_reason : ExitTypeExitReasonModule,
+  separation : SeparationModule,
   email_configuration: EmailConfiguration,
   designation_mapping: DesignationMapping,
   exit_type_exit_reason: ExitTypeExitReasonModule,

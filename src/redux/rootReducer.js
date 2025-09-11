@@ -116,6 +116,7 @@ import { DashboardAlertConfigSlice } from "../app/modules/Dashboard_Alert_Config
 import { EmailConfigurationSlice } from "../app/modules/EmailConfiguration/_redux/redux-Slice";
 import { DesignationMappingSlice } from "../app/modules/DesignationMapping/_redux/redux-Slice";
 import { ExitTypeExitReasonSlice } from "../app/modules/Exit_Type_Exit_Reason/_redux/redux-Slice";
+import { SeparationSlice } from "../app/modules/Separation/_redux/redux-Slice";
 import { LeaveWorkflowAdminSlice } from "../app/modules/LeaveWorkflowAdmin/redux/formSlice";
 import { AttendanceWorkflowAdminSlice } from "../app/modules/AttendanceWorkflowAdmin/redux/formSlice";
 import { LoanWorkflowAdminSlice } from "../app/modules/LoanWorkflowAdmin/redux/formSlice";
@@ -233,6 +234,7 @@ export const rootReducer = combineReducers({
   email_config: EmailConfigurationSlice.reducer,
   desig_map: DesignationMappingSlice.reducer,
   exit_type_exit_reason: ExitTypeExitReasonSlice.reducer,
+  separation: SeparationSlice.reducer,
   LeaveWorkflowAdmin: LeaveWorkflowAdminSlice.reducer,
   attendance_workflow_admin: AttendanceWorkflowAdminSlice.reducer,
   loan_workflow_admin: LoanWorkflowAdminSlice.reducer,

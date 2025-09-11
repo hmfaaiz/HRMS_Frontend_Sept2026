@@ -391,3 +391,16 @@ export const fetchAnnouncementData = () => async (dispatch) => {
       dispatch(actions.AnnouncementFetch([]));
     });
 };
+
+
+export const fetchExitReasonData = (Id) => async (dispatch) => {
+  return await requestFromServer
+    .getExitReason(Id)
+    .then((response) => {
+      const data = response.data?.data;
+      dispatch(actions.AllExitReasonListFetch(data));
+    })
+    .catch((error) => {
+      dispatch(actions.AllExitReasonListFetch([]));
+    });
+};
