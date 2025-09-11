@@ -1044,7 +1044,8 @@ export function BankEditForm({
       />
                   <hr />
 
-                  {currentSalaryMethod && (
+                  {currentSalaryMethod && (<>
+                 
 <div>
                     <div className="flex justify-between items-center">
                       <h6 className="font-bold mb-0 text-primary">
@@ -1252,10 +1253,11 @@ export function BankEditForm({
                       </div>
                     </div>
                   </div>
+                    <hr /> </>
                   )}
                   
                   {/* For Earning WIth Payroll Include ByDefault No  */}
-                  <hr />
+                
                   <div>
                     <div className="flex justify-between items-center">
                       <h6 className="font-bold mb-0 text-primary">
