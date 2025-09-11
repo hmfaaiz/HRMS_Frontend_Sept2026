@@ -172,11 +172,11 @@ const formValidation = Yup.object().shape({
     otherwise: Yup.number().notRequired(),
   }),
 
-  emp_bank_accountTitle: Yup.string().when("payment_mode_Id", {
-    is: (value) => value === 152, // if select value is 151
-    then: Yup.string().required(VALIDATION_MESSAGES.required),
-    otherwise: Yup.string().notRequired(),
-  }),
+  // emp_bank_accountTitle: Yup.string().when("payment_mode_Id", {
+  //   is: (value) => value === 152, // if select value is 151
+  //   then: Yup.string().required(VALIDATION_MESSAGES.required),
+  //   otherwise: Yup.string().notRequired(),
+  // }),
 
   // company_from_accNo: Yup.number()
   //   .when('payment_mode_Id', {
@@ -541,27 +541,70 @@ export function BankEditForm({
     ]);
   };
 
+  // const addRow = (element) => {
+
+  //   if (element.target.id == "Other") {
+  //     setDefaultMapEarningDeductionList([
+  //       ...defMapEarningDeductionList,
+  //       { transactionType: "Earning", isPartOfGrossSalary: 0 },
+  //     ]);
+  //   } else {
+  //     setDefaultMapEarningDeductionList([
+  //       ...defMapEarningDeductionList,
+  //       { transactionType: element.target.id, isPartOfGrossSalary: 1 },
+  //     ]);
+  //   }
+  // };
+
+
   const addRow = (element) => {
-    if (element.target.id == "Other") {
-      setDefaultMapEarningDeductionList([
-        ...defMapEarningDeductionList,
-        { transactionType: "Earning", isPartOfGrossSalary: 0 },
-      ]);
-    } else {
-      setDefaultMapEarningDeductionList([
-        ...defMapEarningDeductionList,
-        { transactionType: element.target.id, isPartOfGrossSalary: 1 },
-      ]);
-    }
-  };
 
-  const deleteRow = (element) => {
-    const data = defMapEarningDeductionList;
-    data.splice(element.target.id, 1);
 
-    setDefaultMapEarningDeductionList([...data]);
-  };
+  if (element.target.id === "Other") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Earning", isPartOfGrossSalary: 0 }, // 👈 clear value
+    ]);
+  } else if (element.target.id === "Gross") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Earning", isPartOfGrossSalary: 1 }, // 👈 clear value
+    ]);
+  } else if (element.target.id === "Deduction") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Deduction", isPartOfGrossSalary: 0 }, // 👈 clear value
+    ]);
+  }
+};
 
+  // const deleteRow = (element) => {
+
+  //   const data = defMapEarningDeductionList;
+  //   data.splice(element.target.id, 1);
+
+  //   setDefaultMapEarningDeductionList([...data]);
+  // };
+
+
+  // Delete functionality problem (11-9-2025)
+  const deleteRow = (index, type) => {
+ 
+  setDefaultMapEarningDeductionList((list) =>
+    list.filter((item, idx) => {
+      if (type === "Gross") {
+        return !(idx === index && item.transactionType === "Earning" && item.isPartOfGrossSalary);
+      }
+      if (type === "Other") {
+        return !(idx === index && item.transactionType === "Earning" && !item.isPartOfGrossSalary);
+      }
+      if (type === "Deduction") {
+        return !(idx === index && item.transactionType === "Deduction");
+      }
+      return true;
+    })
+  );
+};
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
@@ -753,10 +796,12 @@ export function BankEditForm({
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
+       
           const validationErrors = validate();
 
           if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
+      
           } else {
             enableLoading();
             saveEarningDeductionTran(
@@ -984,6 +1029,7 @@ export function BankEditForm({
                     <input
                       type="button"
                       class="btn btn-primary btn-elevate"
+                      disabled={!values.grossSalary && !values.basicSalary}
                       onClick={(e) =>
                         calculateEmployeeSalaryPolicy(e, setFieldValue, values)
                       }
@@ -997,7 +1043,9 @@ export function BankEditForm({
         panelMode={panelMode}
       />
                   <hr />
-                  <div>
+
+                  {currentSalaryMethod && (
+<div>
                     <div className="flex justify-between items-center">
                       <h6 className="font-bold mb-0 text-primary">
                         Earnings{"  "}
@@ -1204,6 +1252,8 @@ export function BankEditForm({
                       </div>
                     </div>
                   </div>
+                  )}
+                  
                   {/* For Earning WIth Payroll Include ByDefault No  */}
                   <hr />
                   <div>
@@ -1402,7 +1452,8 @@ export function BankEditForm({
                                     <td
                                       className="text-right"
                                       id={rightindex}
-                                      onClick={deleteRow}
+                                      // onClick={deleteRow}
+                                       onClick={() => deleteRow(rightindex, "Other")}
                                     >
                                       {" "}
                                       <Trash2 className="w-4 h-4 text-black cursor-pointer" />
@@ -1598,7 +1649,8 @@ export function BankEditForm({
                                     <td
                                       className="text-right"
                                       id={rightindex}
-                                      onClick={deleteRow}
+                                      // onClick={deleteRow}
+                                       onClick={() => deleteRow(rightindex, "Deduction")}
                                     >
                                       {" "}
                                       <Trash2 className="w-4 h-4 text-black cursor-pointer" />
@@ -1813,8 +1865,8 @@ export function BankEditForm({
                       />
                       {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                     </div>
-                    {console.log('values' ,values?.payment_mode_Id , typeof values?.payment_mode_Id)}
-                    <div>
+                 
+                    {/* <div>
                       <Field
                         name="emp_bank_accountTitle"
                         disabled={values?.payment_mode_Id == 151 || values?.payment_mode_Id == 152}
@@ -1835,7 +1887,7 @@ export function BankEditForm({
                         label={<span> Bank Account Title</span>}
                         autoComplete="off"
                       />
-                    </div>
+                    </div> */}
                   </div>
                   <hr />
                   <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-3 gap-y-1">
@@ -2271,7 +2323,8 @@ export function BankEditForm({
               {!isUserForRead && (
                 <button
                   type="submit"
-                  onClick={() => handleSubmit()}
+                  onClick={(e) =>    {calculateEmployeeSalaryPolicy(e, setFieldValue, values) ;
+                    handleSubmit()}}
                   className="btn btn-primary btn-elevate"
                 >
                   Save
