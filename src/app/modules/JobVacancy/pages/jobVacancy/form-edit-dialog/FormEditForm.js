@@ -16,6 +16,7 @@ import {
   fetchAllSubsidiaryData,
   getLatestTableId,
   fetchAllParentDept,
+  fetchAllDesignationByGradeId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import {
@@ -251,7 +252,7 @@ export function FormEditForm({
   useEffect(() => {
     if (!formData.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllFormsMenu(158, "allDesignations"));
+      // dispatch(fetchAllFormsMenu(158, "allDesignations"));
       dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
       dispatch(fetchAllCountry());
       dispatch(fetchAllCity());
@@ -320,6 +321,12 @@ export function FormEditForm({
   useEffect(() => {
     fetchData(setJobCode);
   }, []);
+
+  useEffect(()=>{
+   if(cleanedFormData?.gradeId){
+      dispatch(fetchAllDesignationByGradeId(cleanedFormData?.gradeId , "allDesignationByGrade"))
+   }
+  },[cleanedFormData?.gradeId])
 
   return (
     <Formik
@@ -430,23 +437,50 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-6 gap-x-3 gap-y-1">
                     <div className="">
                       <SearchSelect
+                        name="gradeId"
+                        label={
+                          <span>
+                            Grade<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isdataForRead}
+                        onChange={(e) => {
+                          if(e?.value){
+                            setFieldValue("gradeId", e.value || null);
+                            setFieldValue("designationId" , null)
+                            setFieldValue("jobTitle" , "")
+                            dispatch(fetchAllDesignationByGradeId(e?.value , "allDesignationByGrade"))
+                          }
+                        }}
+                        value={
+                          dashboard?.allEmployeegradeList?.find(
+                            (option) => option.value === values.gradeId
+                          ) || null
+                        }
+                        options={dashboard?.allEmployeegradeList}
+                        error={errors.gradeId}
+                        touched={touched.gradeId}
+                      />
+                    </div>
+                    <div className="">
+                      <SearchSelect
                         name="designationId"
                         label={
                           <span>
                             Designation<span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        isDisabled={isdataForRead}
+                        isDisabled={isdataForRead || !values?.gradeId}
                         onChange={(e) => {
                           setFieldValue("designationId", e.value || null);
                           setFieldValue("jobTitle", e.label || ""); // Set job title based on designation
                         }}
                         value={
-                          dashboard?.allDesignations?.find(
+                          dashboard?.allDesignationByGrade?.find(
                             (option) => option.value === values.designationId
                           ) || null
                         }
-                        options={dashboard?.allDesignations}
+                        options={dashboard?.allDesignationByGrade}
                         error={errors.designationId}
                         touched={touched.designationId}
                       />
@@ -466,28 +500,6 @@ export function FormEditForm({
                       />
                     </div>
 
-                    <div className="">
-                      <SearchSelect
-                        name="gradeId"
-                        label={
-                          <span>
-                            Grade<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead}
-                        onChange={(e) => {
-                          setFieldValue("gradeId", e.value || null);
-                        }}
-                        value={
-                          dashboard?.allEmployeegradeList?.find(
-                            (option) => option.value === values.gradeId
-                          ) || null
-                        }
-                        options={dashboard?.allEmployeegradeList}
-                        error={errors.gradeId}
-                        touched={touched.gradeId}
-                      />
-                    </div>
 
                     <div className="">
                       {/* <SearchSelect

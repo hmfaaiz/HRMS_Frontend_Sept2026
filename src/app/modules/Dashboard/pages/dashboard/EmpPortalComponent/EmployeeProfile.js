@@ -118,9 +118,9 @@ const EmployeeProfile = () => {
             {/* Office Information */}
             {isOpen && (
               <>
-                <h6 className="font-bold mb-0 text-primary my-2 mt-4">
+                {/* <h6 className="font-bold mb-0 text-primary my-2 mt-4">
                   Office Information
-                </h6>
+                </h6> */}
                 {renderInfoGrid(data, [
                   // ["Company", data?.company?.name],
                   // ["Subsidiary", data?.subsidiary?.name],
@@ -141,9 +141,9 @@ const EmployeeProfile = () => {
                 ])}
 
                 {/* Personal Information */}
-                <h6 className="font-bold mb-0 text-primary my-2 mt-6">
+                {/* <h6 className="font-bold mb-0 text-primary my-2 mt-6">
                   Personal Information
-                </h6>
+                </h6> */}
                 {renderInfoGrid(data, [
                   // ["Country", data?.country?.name],
                   // ["City", data?.city?.name],

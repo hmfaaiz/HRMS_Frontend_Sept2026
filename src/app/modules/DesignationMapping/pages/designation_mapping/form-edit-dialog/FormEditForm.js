@@ -49,7 +49,7 @@ export function FormEditForm({
 
   useEffect(() => {
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
-  }, [dispatch, user.Id]);
+  }, [dispatch, user]);
 
   const formUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
@@ -112,7 +112,7 @@ export function FormEditForm({
                       }}
                       value={
                         dashboard?.allEmployeegradeList?.find(
-                          (option) => option.value === values.gradeId
+                          (option) => option.value === values?.gradeId
                         ) || null
                       }
                       options={dashboard?.allEmployeegradeList
@@ -140,7 +140,7 @@ export function FormEditForm({
                           type="button"
                           className="btn btn-primary"
                           id="Other"
-                          disabled={!values.gradeId}
+                          disabled={!values?.gradeId}
                           onClick={() =>
                             push({
                               designationId: null,
@@ -170,7 +170,15 @@ export function FormEditForm({
                                       <td>
                                         <SearchSelect
                                           name={`designationList.[${rightindex}].designationId`}
-                                          isDisabled={isUserForRead}
+                                          isDisabled={
+                                            isUserForRead || isNew
+                                              ? values.designationList?.[
+                                                  rightindex
+                                                ]?.isDelete
+                                              : !values.designationList?.[
+                                                  rightindex
+                                                ]?.isDelete
+                                          }
                                           onChange={(e) => {
                                             setFieldValue(
                                               `designationList.[${rightindex}].designationId`,
@@ -212,16 +220,19 @@ export function FormEditForm({
                                       </td>
 
                                       <td className="text-right">
-                                        {!isUserForRead && (
-                                          <span
-                                            id={rightindex}
-                                            onClick={() => {
-                                              remove(rightindex);
-                                            }}
-                                          >
-                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                          </span>
-                                        )}
+                                        {!isUserForRead &&
+                                          (values.designationList?.[rightindex]
+                                            ?.isDelete ||
+                                            isNew) && (
+                                            <span
+                                              id={rightindex}
+                                              onClick={() => {
+                                                remove(rightindex);
+                                              }}
+                                            >
+                                              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                            </span>
+                                          )}
                                       </td>
                                     </tr>
                                   </>

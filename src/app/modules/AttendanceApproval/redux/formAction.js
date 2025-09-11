@@ -13,6 +13,7 @@ export const fetchAttendanceApprovalApplication = (
     return requestFromServer
       .getAllAttendanceApproval({ ...queryparm, employeeId })
       .then((response) => {
+        console.log("responsessss", response);
         dispatch(actions.LeaveApprovalApplicationFetched(response));
       })
       .catch((error) => {

@@ -34,15 +34,15 @@ const formValidation = Yup.object()
     dojFrom: Yup.date().optional(),
     dojTo: Yup.date()
       .optional()
-      .min(Yup.ref("dojFrom"), "Date to date cannot be before Date from date"),
+      .min(Yup.ref("dojFrom"), "'To Date' should not be less than 'From Date'."),
     docFrom: Yup.date().optional(),
     docTo: Yup.date()
       .optional()
-      .min(Yup.ref("docFrom"), "Date to date cannot be before Date from date"),
+      .min(Yup.ref("docFrom"), "'To Date' should not be less than 'From Date'."),
     dobFrom: Yup.date().optional(),
     dobTo: Yup.date()
       .optional()
-      .min(Yup.ref("dobFrom"), "Date to date cannot be before Date from date"),
+      .min(Yup.ref("dobFrom"), "'To Date' should not be less than 'From Date'."),
 
     alary_type: Yup.string().optional(),
     operator: Yup.string().optional(),

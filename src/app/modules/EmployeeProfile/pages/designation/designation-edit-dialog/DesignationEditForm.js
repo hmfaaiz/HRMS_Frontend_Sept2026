@@ -24,6 +24,7 @@ import {
   fetchAllEmployeeShifts,
   getLatestTableId,
   fetchAllEmployeesWithNoPermissionData,
+  fetchAllDesignationByGradeId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import axios from "axios";
@@ -606,7 +607,7 @@ export function DesignationEditForm({
       dispatch(fetchAllCountry());
       dispatch(fetchAllCity());
       dispatch(fetchAllActiveEmployees());
-      dispatch(fetchAllFormsMenu(158, "allDesignations")); // For All Designations
+      // dispatch(fetchAllFormsMenu(158, "allDesignations")); // For All Designations
       //   dispatch(fetchAllFormsMenu(133, "allSubidiaryList")); // For All Subsisidaries
       dispatch(fetchAllFormsMenu(275, "allEmployeeStatus"));
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
@@ -772,8 +773,8 @@ export function DesignationEditForm({
       ? defEmpDesingaton.value
       : user.designationId;
     setDefualtEmpDesignation(
-      dashboard.allDesignations &&
-        dashboard.allDesignations.filter((item) => {
+      dashboard.allDesignationByGrade &&
+        dashboard.allDesignationByGrade.filter((item) => {
           return item.value === designationId;
         })
     );
@@ -853,6 +854,11 @@ export function DesignationEditForm({
     );
   }, [user?.gradeId, dashboard.gradeId]);
 
+  useEffect(()=>{
+    if(user?.gradeId){
+      dispatch(fetchAllDesignationByGradeId(user?.gradeId , "allDesignationByGrade"))
+    }
+  },[user?.gradeId])
   // This method is used for when edit record and get selected dept where id save in DB
   useEffect(() => {
     const deptId = defDept?.value ? defDept.value : user.departmentId;
@@ -2325,6 +2331,9 @@ passportExpiry: values.passportExpiry
                         onChange={(e) => {
                           setFieldValue("gradeId", e.value || null);
                           setDefualtEmployeeGrade(e);
+                          setFieldValue("designationId",  null);
+                          setDefualtEmpDesignation(null);
+                          dispatch(fetchAllDesignationByGradeId(e?.value , "allDesignationByGrade"))
                           // dispatch(fetchAllFormsMenu(e.value));
                         }}
                         value={defEmployeeGrade || null}
@@ -2354,7 +2363,7 @@ passportExpiry: values.passportExpiry
                         value={defEmpDesingaton || null}
                         error={errors.designationId}
                         touched={touched.designationId}
-                        options={dashboard.allDesignations}
+                        options={dashboard.allDesignationByGrade}
                       />
                     </div>
                     <div>
