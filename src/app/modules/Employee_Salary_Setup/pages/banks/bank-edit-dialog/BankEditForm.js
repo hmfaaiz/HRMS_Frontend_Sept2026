@@ -563,17 +563,17 @@ export function BankEditForm({
   if (element.target.id === "Other") {
     setDefaultMapEarningDeductionList([
       ...defMapEarningDeductionList,
-      { transactionType: "Earning", isPartOfGrossSalary: 0 }, // 👈 clear value
+      { transactionType: "Earning", isPartOfGrossSalary: 0 },
     ]);
   } else if (element.target.id === "Gross") {
     setDefaultMapEarningDeductionList([
       ...defMapEarningDeductionList,
-      { transactionType: "Earning", isPartOfGrossSalary: 1 }, // 👈 clear value
+      { transactionType: "Earning", isPartOfGrossSalary: 1 },
     ]);
   } else if (element.target.id === "Deduction") {
     setDefaultMapEarningDeductionList([
       ...defMapEarningDeductionList,
-      { transactionType: "Deduction", isPartOfGrossSalary: 0 }, // 👈 clear value
+      { transactionType: "Deduction", isPartOfGrossSalary: 0 },
     ]);
   }
 };

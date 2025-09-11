@@ -222,18 +222,51 @@ export function BankEditForm({
 
   //=========== END
 
-  const addRow = (element) => {
-    setDefaultEarningList([
-      ...defEarningList,
-      { transactionType: element.target.id, isPartOfGrossSalary: 1 },
-    ]);
-  };
+  // const addRow = (element) => {
+  //   setDefaultEarningList([
+  //     ...defEarningList,
+  //     { transactionType: element.target.id, isPartOfGrossSalary: 1 },
+  //   ]);
+  // };
 
-  const deleteRow = (element) => {
-    const data = defEarningList;
-    data.splice(element.target.id, 1);
-    setDefaultEarningList([...data]);
-  };
+  // 11-9-2025
+
+  const addRow = (element) => {
+  const type = element.target.id;
+
+  // sirf Earning ya Deduction allow karo
+  if (type !== "Earning" && type !== "Deduction") {
+    console.warn("Invalid transactionType, row not added:", type);
+    return;
+  }
+
+  setDefaultEarningList((prev) => [
+    ...prev,
+    {
+      transactionType: type,
+      isPartOfGrossSalary: 1,
+      earning_deduction_id: "",
+      calculation_type: "",
+      amount: 0,
+      factorValue: 0,
+    },
+  ]);
+};
+
+
+  // wrong deletion
+  // const deleteRow = (element) => {
+  //   const data = defEarningList;
+  //   data.splice(element.target.id, 1);
+  //   setDefaultEarningList([...data]);
+  // };
+
+
+
+  const deleteRow = (rowIndex) => {
+  setDefaultEarningList((prev) => prev.filter((_, idx) => idx !== rowIndex));
+};
+
 
   // Fetch record from database by ID
 
@@ -257,9 +290,10 @@ export function BankEditForm({
     ]);
   };
 
+
+
   const validate = () => {
     const newErrors = {};
-
     defEarningList.forEach((objValidate, index) => {
       if (!objValidate.earning_deduction_id) {
         newErrors[`earning_deduction_id-${index}`] =
@@ -350,6 +384,7 @@ export function BankEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           const validationErrors = validate();
+           {console.log("aaaaaaa22222",validationErrors)}
           if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
           } else {
@@ -410,11 +445,12 @@ export function BankEditForm({
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
+              {console.log("aaaaaaa1111",errors)}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <div>
-                      {/* <SearchSelect
+                      <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -440,8 +476,8 @@ export function BankEditForm({
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                         options={dashboard.allSubsidiaryList}
-                      /> */}
-                      <SubsidiarySelect
+                      />
+                      {/* <SubsidiarySelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -474,7 +510,7 @@ export function BankEditForm({
                           setDefaultEarningList([]);
                           getSalaryMethod(e.value, setFieldValue);
                         }}
-                      />
+                      /> */}
                       {/* <ErrorMessage className="form-feedBack" name="subsidiaryId" component="div" /> */}
                     </div>
 
@@ -837,7 +873,7 @@ export function BankEditForm({
                                       <button
                                         className="border-none bg-transparent"
                                         type="button"
-                                        onClick={deleteRow}
+                                        onClick={() => deleteRow(rightindex)}
                                       >
                                         <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                       </button>
@@ -1040,7 +1076,7 @@ export function BankEditForm({
                                       <button
                                         className="border-none bg-transparent"
                                         type="button"
-                                        onClick={deleteRow}
+                                        onClick={() => deleteRow(rightindex)}
                                       >
                                         <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                       </button>
@@ -1388,6 +1424,10 @@ export function BankEditForm({
                       </div> */}
                       </div>
                     </div>
+
+                                     {dashboard?.allSubsidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.localizationId === 1 && (
                     <div className="col-span-1 text-black mt-1">
                       <label>Deduction</label>
                       <div
@@ -1424,6 +1464,7 @@ export function BankEditForm({
                         </div>
                       </div>
                     </div>
+)}
                   </div>
                   {/* </div> */}
                   {/* <br></br> */}
