@@ -2323,7 +2323,8 @@ export function BankEditForm({
               {!isUserForRead && (
                 <button
                   type="submit"
-                  onClick={(e) =>    {calculateEmployeeSalaryPolicy(e, setFieldValue, values) ;
+                  onClick={(e) =>    {
+                    // calculateEmployeeSalaryPolicy(e, setFieldValue, values) ;
                     handleSubmit()}}
                   className="btn btn-primary btn-elevate"
                 >
