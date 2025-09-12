@@ -718,3 +718,19 @@ export const fetchAllDesignationByGradeId = (
     });
 };
 
+export const fetchAllAccountsByType = (
+  id,
+  accountType,
+  key,
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllChartOfAccounts(id, accountType)
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllChildMenusFetch({ entities, key }));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
+

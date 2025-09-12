@@ -16,9 +16,10 @@ import {
   fetchAllActiveEmployees,
   getLatestTableId,
   fetchAllSubsidiaryData,
+  fetchAllAccountsByType,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -72,13 +73,15 @@ export function BankEditForm({
   const [defFormCode = null, setDefaultFormCode] = useState(null);
   useEffect(() => {
     if (!user.Id) {
-      dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
+      // dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
+      dispatch(fetchAllAccountsByType(45,accountType.Expenses , "allAccountList"));
     }
   }, [dispatch]);
 
   useEffect(() => {
     if (!user.Id) {
-      dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
+      // dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
+         dispatch(fetchAllAccountsByType(45,accountType.Expenses , "allAccountList"));
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       // dispatch(getLatestTableId("t_employee_earning", "Id", " 1 = 1 ", setValue));
     }

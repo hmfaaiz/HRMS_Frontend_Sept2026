@@ -17,12 +17,12 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Input, Pagination, Select } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
-import { fetchAllActiveEmployees, fetchAllActiveEmployeesSalaryForDDL, fetchAllBankBranch, fetchAllBanks, fetchAllDeductionList, fetchAllEarningList, fetchAllFormsMenu, fetchAllLeaveTypeBySubsidiary, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllAccountsByType, fetchAllActiveEmployees, fetchAllActiveEmployeesSalaryForDDL, fetchAllBankBranch, fetchAllBanks, fetchAllDeductionList, fetchAllEarningList, fetchAllFormsMenu, fetchAllLeaveTypeBySubsidiary, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-bootstrap";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as Yup from "yup";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2, X } from "lucide-react";
@@ -125,8 +125,9 @@ export function FormTable(user) {
       dispatch(fetchAllSubsidiaryData("allSubidiaryList")) // For All Subsisidaries
       dispatch(fetchAllActiveEmployees()); // For Getting Salaried Employees
       dispatch(fetchAllFormsMenu(127, "allChildMenus")); // For Payroll Group
-      dispatch(fetchAllFormsMenu(45, "allPayrollAccounts")); // For Basic Pay Accounts
-      dispatch(fetchAllFormsMenu(45, "allPayrollPayableAccounts")); // For Payable Accounts
+      dispatch(fetchAllAccountsByType(45,accountType.Assets , "allJournalBankAccounts")); // For Basic Pay Accounts
+      dispatch(fetchAllAccountsByType(45, accountType.Liabilities , "allPayrollPayableAccounts")); // For Payable Accounts
+      dispatch(fetchAllAccountsByType(45, accountType.Assets , "allDefaultLoanAccounts")); // For Payable Accounts
       dispatch(fetchRoles());
     }
   }, [dispatch]);
@@ -1044,13 +1045,13 @@ export function FormTable(user) {
                       setDefaultPaybleAccount(e);
                     }}
                     value={
-                      dashboard.allPayrollPayableAccounts.find(
+                      dashboard.allDefaultLoanAccounts.find(
                         (option) => option.value === values.default_loan_accountId
                       ) || null
                     }
                     error={errors.default_loan_accountId}
                     touched={touched.default_loan_accountId}
-                    options={dashboard.allPayrollPayableAccounts}
+                    options={dashboard.allDefaultLoanAccounts}
                   />
                 </div>
               </div>
@@ -1645,7 +1646,7 @@ export function FormTable(user) {
                               <option value="-1">Select</option>
 
                               {
-                                dashboard.allPayrollAccounts?.map((x) => {
+                                dashboard.allJournalBankAccounts?.map((x) => {
                                   return <option value={x.value}> {x.label} </option>
                                 })}
                             </select>
