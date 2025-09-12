@@ -26,7 +26,7 @@ function LeaveTypePolicyTable({
           <>
             <div className="flex justify-between items-center">
               <h6 className="font-bold mb-0 text-primary">
-                Employee Custom Approval List{"  "}
+                Leave Entitlement Detail{"  "}
               </h6>
               {values.subsidiaryId && (
                 /* values.gradeId && values.employeeTypeId &&*/ <button

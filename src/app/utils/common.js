@@ -151,6 +151,16 @@ export const amountFormat = (val, isDecimal = false) => {
   });
 };
 
+export const amountFormatWithoutRounding = (val) => {
+  if (val == null || isNaN(val)) return "0";
+  
+  const parts = val.toString().split(".");
+  const integerPart = Number(parts[0]).toLocaleString("en-US");
+  return parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+};
+
+
+
 export const formatTime = (value) => {
   if (!value) return "";
  

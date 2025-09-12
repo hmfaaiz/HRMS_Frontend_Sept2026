@@ -643,7 +643,7 @@ export function FormFilter({
                   {payrollPayableAccountApproverPermission && (
                     <div>
                       <h6 className="font-bold mb-0 text-primary my-2">
-                        JV Report (Excel)
+                        Payroll Expense Report
                       </h6>
                       <div className="grid md:grid-cols-5 gap-x-3 mb-2">
                         {/* <div className="col-span-1 flex justify-start ">
@@ -781,7 +781,7 @@ export function FormFilter({
                             type="button"
                             className="btn btn-primary btn-elevate mt-3 h-9 mr-1"
                           >
-                            Generate JV Report (Payables)
+                            Payroll Expense Report
                             {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                             {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
@@ -805,7 +805,7 @@ export function FormFilter({
                             type="button"
                             className="btn btn-primary btn-elevate mt-3 h-9"
                           >
-                            Generate JV Report (Bank Transfer)
+                            Payroll Disbursement Report
                             {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                             {/* <SVG
                                   src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
