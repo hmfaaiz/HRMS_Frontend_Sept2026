@@ -51,7 +51,7 @@ function CustomApprovalWorkflowTable({
           <>
             <div className="flex justify-between items-center">
               <h6 className="font-bold mb-0 text-primary">
-                Employee Custom Approval List{"  "}
+                Approval Authority Level{"  "}
               </h6>
               {!isEdit && (
                 <button
@@ -82,8 +82,8 @@ function CustomApprovalWorkflowTable({
                   <thead>
                     <tr className="custom-table-header">
                       <td>WF Level</td>
+                      <td>Approver Type</td>
                       <td>Approver</td>
-                      <td>Designation</td>
                       <td>Location</td>
                       <td className="text-right">Action</td>
                     </tr>

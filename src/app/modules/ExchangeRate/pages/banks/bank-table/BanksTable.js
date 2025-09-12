@@ -18,7 +18,7 @@ import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useBanksUIContext } from "../BanksUIContext";
 import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/last-trips-vehicles-table/column-formatter/CreatedColumnFormatter";
 import { format } from "date-fns";
-import { amountFormat } from "../../../../../utils/common";
+import { amountFormatWithoutRounding } from "../../../../../utils/common";
 
 export function BanksTable() {
   //Users UI Context
@@ -123,7 +123,7 @@ export function BanksTable() {
       //   textAlign: "center", // Align header text to the left
       // },
       formatter: (cell) => {
-        return cell ? amountFormat(cell) : "";
+        return cell ? amountFormatWithoutRounding(cell) : "";
       },
     },
 
