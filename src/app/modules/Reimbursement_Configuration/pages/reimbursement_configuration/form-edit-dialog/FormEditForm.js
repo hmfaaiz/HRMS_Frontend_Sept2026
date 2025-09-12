@@ -7,10 +7,11 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
+  fetchAllAccountsByType,
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { amountLimit } from "../../../../../utils/common";
 import { toast } from "react-toastify";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
@@ -73,7 +74,9 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(205, "allCycleTypeList"));
       dispatch(fetchAllFormsMenu(202, "allReimbursementTypeList"));
       dispatch(fetchAllFormsMenu(143, "allEmployeeGradeList"));
-      dispatch(fetchAllFormsMenu(45, "allAccountList"));
+      // dispatch(fetchAllFormsMenu(45, "allAccountList"));
+      dispatch(fetchAllAccountsByType(45,accountType.Expenses, "allExpenseAccountList"));
+      dispatch(fetchAllAccountsByType(45,accountType.Assets ,"allAssetsAccountList"));
 
       // reimbursement_typeId
     }
@@ -630,7 +633,7 @@ export function FormEditForm({
                                       >
                                         <option value="">Select...</option>{" "}
                                         {/* Default "Select..." option */}
-                                        {dashboard.allAccountList?.map((x) => {
+                                        {dashboard.allExpenseAccountList?.map((x) => {
                                           return (
                                             <option
                                               disabled={
@@ -672,7 +675,7 @@ export function FormEditForm({
                                       >
                                         <option value="">Select...</option>{" "}
                                         {/* Default "Select..." option */}
-                                        {dashboard.allAccountList?.map((x) => {
+                                        {dashboard.allAssetsAccountList?.map((x) => {
                                           return (
                                             <option
                                               disabled={

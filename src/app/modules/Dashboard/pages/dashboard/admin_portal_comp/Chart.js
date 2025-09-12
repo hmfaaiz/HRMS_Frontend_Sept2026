@@ -282,7 +282,9 @@ const ChartData = ({ data }) => {
               chartType === "pie" || chartType === "doughnut"
                 ? "180px"
                 : "250px",
-            height: "180px",
+            height: chartType === "pie" || chartType === "doughnut" ? "180px" : "180px",
+            display :  chartType !== "pie" || chartType !== "doughnut" ? "flex" : "",
+            alignItems :  chartType !== "pie" || chartType !== "doughnut" ? "end" : "",
             position: "relative",
           }}
           className="my-2  mx-auto"

@@ -16,7 +16,7 @@ import * as uiHelpers from "../FormDetailsUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormDetailsUIContext";
-import { Row, Col, Form } from "react-bootstrap";
+import { Row, Col, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import {
   Card,
   CardBody,
@@ -36,17 +36,32 @@ import { DatetimeColumnFormatter } from "../../../../Dashboard/pages/dashboard/l
 import { Link } from "@material-ui/core";
 import axios from "axios";
 import { setData } from "../../../../../../_metronic/redux/tripLogTable/tripLogTableSlice";
-import { ChevronRight } from "lucide-react";
+import {
+  ChevronRight,
+  CirclePlus,
+  FileSpreadsheet,
+  FileText,
+  Sheet,
+} from "lucide-react";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 export function FormTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
 
-  const { currentState, userAccess } = useSelector((state) => {
+  const {
+    currentState,
+    userAccess,
+    pdfLoading,
+    excelLoading,
+    csvLoading,
+  } = useSelector((state) => {
     return {
       currentState: state.formDetails,
       userAccess: state?.auth?.userAccess["FormDetails"],
+      pdfLoading: state?.formDetails?.pdfLoading,
+      excelLoading: state?.formDetails?.excelLoading,
+      csvLoading: state?.formDetails?.csvLoading,
     };
   }, shallowEqual);
   const formUIProps = useMemo(() => {
@@ -57,6 +72,7 @@ export function FormTable() {
       setQueryParams: formUIContext.setQueryParams,
       openEditFormDialog: formUIContext.openEditFormDialog,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      newFormButtonClick: formUIContext.newFormButtonClick,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
       queryParams: formUIContext.queryParams,
@@ -91,6 +107,10 @@ export function FormTable() {
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteChildForms"
   );
+
+  const accessUser = userAccess.find(
+    (item) => item.componentName === "CreateChildForms"
+  );
   // Table columns
   const columns = [
     // {
@@ -110,7 +130,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "60px",
       },
     },
     {
@@ -120,7 +140,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "120px",
       },
     },
 
@@ -152,7 +172,7 @@ export function FormTable() {
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
       style: {
-        minWidth: "170px",
+        minWidth: "10px",
       },
     },
   ];
@@ -204,37 +224,131 @@ export function FormTable() {
     }
   }, [newdata]);
 
+  const handleAddClick = async (parentId) => {
+    setLoading(true);
+    try {
+      let updatedQueryParams = {
+        ...formUIProps.queryParams,
+
+        parentId,
+      };
+
+      // Set the updated queryParams
+      formUIProps.setQueryParams(updatedQueryParams);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const print = async (value, currentId) => {
+    let updatedQueryParams = {
+      ...formUIProps.queryParams,
+      csv: false,
+      excel: false,
+      pdf: false,
+      [value]: true,
+      parentId: currentId,
+    };
+
+    // Set the updated queryParams
+    formUIProps.setQueryParams(updatedQueryParams);
+
+    await dispatch(actions.customfetchFormDetail(updatedQueryParams));
+
+    updatedQueryParams = {
+      ...formUIProps.queryParams,
+      csv: false,
+      excel: false,
+      pdf: false,
+      [value]: false,
+    };
+
+    formUIProps.setQueryParams(updatedQueryParams);
+  };
+
+  const isAnyLoading = pdfLoading || csvLoading || excelLoading;
   return (
+    // <>
+    //   {["1"]?.map((dd, index) => (
+    //     <div className="grid grid-cols-3 sm:grid-cols-4  md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 my-4 gap-1 text-sm">
+    //       {newdata
+    //         ?.filter((obj) => obj.isActive == true)
+    //         .map((obj, rightindex) => (
+    //           <div
+    //             className={`col-span-1 ${
+    //               heading === obj.formName
+    //                 ? " text-tprimary font-bold underline"
+    //                 : "text-black font-semibold"
+    //             }`}
+    //             key={rightindex}
+    //           >
+    //             <div
+    //               className="cursor-pointer hover:text-tprimary"
+    //               id={obj.Id}
+    //               onClick={() => {
+    //                 handleClick(obj.Id, obj.formName);
+    //               }}
+    //             >
+    //               <ChevronRight className="inline-block w-3 h-3" />
+    //               {obj.formName}
+    //             </div>
+    //           </div>
+    //         ))}
+    //     </div>
+    //   ))}
+    //   <hr />
+    //   {heading && <h6 className="font-bold mb-0 text-primary">{heading} </h6>}
+    //   <ToastContainer
+    //     position="top-right"
+    //     autoClose={5000}
+    //     hideProgressBar={false}
+    //     newestOnTop={false}
+    //     closeOnClick
+    //     rtl={false}
+    //     pauseOnFocusLoss
+    //     draggable
+    //     pauseOnHover
+    //   />
+    //   <div className="w-full overflow-x-auto">
+    //     <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+    //       {({ paginationProps, paginationTableProps }) => {
+    //         return (
+    //           // <Pagination
+    //           //   isLoading={listLoading}
+    //           //   paginationProps={paginationProps}
+    //           // >
+    //           <BootstrapTable
+    //             wrapperClasses="table-responsive"
+    //             bordered={false}
+    //             classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+    //             bootstrap4
+    //             remote
+    //             keyField="Id"
+    //             data={customList === null ? [] : customList}
+    //             columns={columns}
+    //             defaultSorted={uiHelpers.defaultSorted}
+    //             onTableChange={getHandlerTableChange(
+    //               formUIProps.setQueryParams
+    //             )}
+    //             // selectRow={getSelectRow({
+    //             //   entities,
+
+    //             // })}
+    //             {...paginationTableProps}
+    //           >
+    //             <PleaseWaitMessage entities={customList} />
+    //             <NoRecordsFoundMessage entities={customList} />
+    //           </BootstrapTable>
+    //           // </Pagination>
+    //         );
+    //       }}
+    //     </PaginationProvider>
+    //   </div>
+    // </>
+
     <>
-      {["1"]?.map((dd, index) => (
-        <div className="grid grid-cols-3 sm:grid-cols-4  md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-9 my-4 gap-1 text-sm">
-          {newdata
-            ?.filter((obj) => obj.isActive == true)
-            .map((obj, rightindex) => (
-              <div
-                className={`col-span-1 ${
-                  heading === obj.formName
-                    ? " text-tprimary font-bold underline"
-                    : "text-black font-semibold"
-                }`}
-                key={rightindex}
-              >
-                <div
-                  className="cursor-pointer hover:text-tprimary"
-                  id={obj.Id}
-                  onClick={() => {
-                    handleClick(obj.Id, obj.formName);
-                  }}
-                >
-                  <ChevronRight className="inline-block w-3 h-3" />
-                  {obj.formName}
-                </div>
-              </div>
-            ))}
-        </div>
-      ))}
-      <hr />
-      {heading && <h6 className="font-bold mb-0 text-primary">{heading} </h6>}
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -246,40 +360,139 @@ export function FormTable() {
         draggable
         pauseOnHover
       />
-      <div className="w-full overflow-x-auto">
-        <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-          {({ paginationProps, paginationTableProps }) => {
-            return (
-              // <Pagination
-              //   isLoading={listLoading}
-              //   paginationProps={paginationProps}
-              // >
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={customList === null ? [] : customList}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-3 gap-y-2 mt-2">
+        {newdata
+          ?.filter((el) => el?.isActive)
+          ?.map((e, i) => (
+            <div key={i} className="px-3 py-2 rounded-lg bg-white">
+              <div className="flex justify-between items-center">
+                <h6 className="font-bold text-primary capitalize">
+                  {e?.formName}{" "}
+                </h6>
+                <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    {accessUser && (
+                      <>
+                        <button
+                          type="button"
+                          className="btn btn-primary mr-2"
+                          onClick={() => {
+                            handleAddClick(e?.Id);
+                            formUIProps.newFormButtonClick();
+                          }}
+                        >
+                          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                          Add
+                        </button>
+                      </>
+                    )}
+                    <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip id="products-edit-tooltip">
+                            Export PDF
+                          </Tooltip>
+                        }
+                      >
+                        <button
+                          type="button"
+                          className={`border-none bg-transparent ${
+                            isAnyLoading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                          disabled={isAnyLoading}
+                          onClick={() => print("pdf", e?.Id)}
+                        >
+                          <FileText className="w-4 h-4 text-black" />
+                        </button>
+                      </OverlayTrigger>
 
-                // })}
-                {...paginationTableProps}
-              >
-                <PleaseWaitMessage entities={customList} />
-                <NoRecordsFoundMessage entities={customList} />
-              </BootstrapTable>
-              // </Pagination>
-            );
-          }}
-        </PaginationProvider>
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip id="products-edit-tooltip">
+                            Export CSV
+                          </Tooltip>
+                        }
+                      >
+                        <button
+                          type="button"
+                          className={`border-none bg-transparent ${
+                            isAnyLoading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                          disabled={isAnyLoading}
+                          onClick={() => print("csv", e?.Id)}
+                        >
+                          <FileSpreadsheet className="w-4 h-4 text-black" />
+                        </button>
+                      </OverlayTrigger>
+
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip id="products-edit-tooltip">
+                            Export Excel
+                          </Tooltip>
+                        }
+                      >
+                        <button
+                          type="button"
+                          className={`border-none bg-transparent ${
+                            isAnyLoading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                          disabled={isAnyLoading}
+                          onClick={() => print("excel", e?.Id)}
+                        >
+                          <Sheet className="w-4 h-4 text-black" />
+                        </button>
+                      </OverlayTrigger>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full min-h-64 max-h-64 overflow-auto scrollbar-fancy">
+                <PaginationProvider
+                  pagination={paginationFactory(paginationOptions)}
+                >
+                  {({ paginationProps, paginationTableProps }) => {
+                    return (
+                      <BootstrapTable
+                        wrapperClasses="table-responsive"
+                        bordered={false}
+                        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+                        bootstrap4
+                        remote
+                        keyField="Id"
+                        data={
+                          customList?.filter(
+                            (val) => val?.parentFormID === e?.Id
+                          ) === null
+                            ? []
+                            : customList?.filter(
+                                (val) => val?.parentFormID === e?.Id
+                              )
+                        }
+                        columns={columns}
+                        defaultSorted={uiHelpers.defaultSorted}
+                        onTableChange={getHandlerTableChange(
+                          formUIProps.setQueryParams
+                        )}
+                        {...paginationTableProps}
+                      >
+                        <PleaseWaitMessage
+                          entities={customList?.filter(
+                            (val) => val?.parentFormID === e?.Id
+                          )}
+                        />
+                        <NoRecordsFoundMessage
+                          entities={customList?.filter(
+                            (val) => val?.parentFormID === e?.Id
+                          )}
+                        />
+                      </BootstrapTable>
+                    );
+                  }}
+                </PaginationProvider>
+              </div>
+            </div>
+          ))}
       </div>
     </>
   );

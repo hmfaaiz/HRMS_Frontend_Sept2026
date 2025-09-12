@@ -16,9 +16,11 @@ import {
   fetchAllActiveEmployees,
   getLatestTableId,
   fetchAllSubsidiaryData,
+  fetchAllAccountsByType,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import { amountLimit } from "../../../../../utils/common";
+import { accountType } from "../../../../../utils/constants";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -72,7 +74,8 @@ export function BankEditForm({
   //=========== END
   useEffect(() => {
     if (!user.Id) {
-      dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
+      // dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Grade Codes
+      dispatch(fetchAllAccountsByType(45,accountType.Assets , "allAccountList"));
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     }
   }, [dispatch]);

@@ -40,9 +40,9 @@ export function FormCard() {
     shallowEqual
   );
 
-  const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateChildForms"
-  );
+  // const accessUser = userAccess.find(
+  //   (item) => item.componentName === "CreateChildForms"
+  // );
 
   const currentId = currentState?.currentId;
 
@@ -117,7 +117,7 @@ export function FormCard() {
             </button>
             {/* )} */}
           </div>
-          <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
+          {/* <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
             <div className="flex items-center gap-2">
               {accessUser && currentId && (
                 <>
@@ -126,9 +126,8 @@ export function FormCard() {
                     className="btn btn-primary mr-2"
                     onClick={FormUIProps.newFormButtonClick}
                   >
-    
-               <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                    Add 
+                    <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                    Add
                   </button>
 
                   <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
@@ -145,11 +144,8 @@ export function FormCard() {
                           print("pdf");
                         }}
                       >
-                        {/* Print PDF */}
                         <FileText className="w-4 h-4 text-black cursor-pointer" />
-                        {/* {pdfLoading && (
-            <span className="ml-3 mr-3 spinner spinner-white"></span>
-          )} */}
+                
                       </button>
                     </OverlayTrigger>
 
@@ -166,13 +162,9 @@ export function FormCard() {
                           print("csv");
                         }}
                       >
-                        {/* Print CSV
-                         */}
 
                         <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
-                        {/* {csvLoading && (
-            <span className="ml-3 mr-3 spinner spinner-white"></span>
-          )} */}
+                
                       </button>
                     </OverlayTrigger>
                     <OverlayTrigger
@@ -190,23 +182,19 @@ export function FormCard() {
                           print("excel");
                         }}
                       >
-                        {/* Print Excel
-                         */}
 
                         <Sheet className="w-4 h-4 text-black cursor-pointer" />
-                        {/* {excelLoading && (
-            <span className="ml-3 mr-3 spinner spinner-white"></span>
-          )} */}
+                
                       </button>
                     </OverlayTrigger>
                   </div>
                 </>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
-        <FormTable />
       </TCard>
+      <FormTable />
     </>
   );
 }

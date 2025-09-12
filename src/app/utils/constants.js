@@ -431,3 +431,11 @@ export const DROPDOWN = {
   "Basic to Gross": BASIC_TO_GROSS_CALCULATION_TYPE_DROPDOWN,
   "Gross to Basic": GROSS_TO_BASIC_CALCULATION_TYPE_DROPDOWN,
 }
+
+export const accountType = {
+   Assets : 1,
+   Liabilities : 2,
+   Equity : 3,
+   Revenue : 4,
+   Expenses: 5,
+};
