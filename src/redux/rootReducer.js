@@ -120,6 +120,7 @@ import { SeparationSlice } from "../app/modules/Separation/_redux/redux-Slice";
 import { LeaveWorkflowAdminSlice } from "../app/modules/LeaveWorkflowAdmin/redux/formSlice";
 import { AttendanceWorkflowAdminSlice } from "../app/modules/AttendanceWorkflowAdmin/redux/formSlice";
 import { LoanWorkflowAdminSlice } from "../app/modules/LoanWorkflowAdmin/redux/formSlice";
+import { ChartOfAccountSlice } from "../app/modules/ChartOfAccounts/_redux/formdetailsSlice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -238,6 +239,7 @@ export const rootReducer = combineReducers({
   LeaveWorkflowAdmin: LeaveWorkflowAdminSlice.reducer,
   attendance_workflow_admin: AttendanceWorkflowAdminSlice.reducer,
   loan_workflow_admin: LoanWorkflowAdminSlice.reducer,
+  chart_of_accounts : ChartOfAccountSlice.reducer,
 });
 
 export function* rootSaga() {

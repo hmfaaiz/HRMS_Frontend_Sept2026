@@ -144,7 +144,7 @@ export function FormEditForm({
                         name="subsidiaryId"
                         label={
                           <span>
-                            Subsidiarysss<span style={{ color: "red" }}>*</span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead}
