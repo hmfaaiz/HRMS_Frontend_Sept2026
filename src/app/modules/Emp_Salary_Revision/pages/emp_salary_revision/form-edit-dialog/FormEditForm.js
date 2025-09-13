@@ -40,7 +40,7 @@ import {
   clearPreviousSalaryRevisionFetched,
   fetchCurrentEmpSalary,
 } from "../../../_redux/redux-Actions";
-import { Trash2 } from "lucide-react";
+import { CirclePlus, Trash2 } from "lucide-react";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -267,6 +267,9 @@ export function FormEditForm({
   const [defBasicSalaryDB, setBasicSalaryDB] = useState(0);
   const [deferrors, setErrors] = useState({});
   const [user, setUser] = useState({});
+   const [dateOfJoining, setDateOfJoining] = useState();
+    const [localizationId, setLocalizationId] = useState();
+    const [dateOfBirth, setDateOfBirth] = useState();
   // const [revisedDate, setRevisedDate] = useState(null);
 
   useEffect(() => {
@@ -327,6 +330,7 @@ export function FormEditForm({
   }, [user?.emp_bankId, dashboard.emp_bankId]);
 
   useEffect(() => {
+    console.log("hitt111")
     const emp_bank_branchId = defEmpBankBranch?.value
       ? defEmpBankBranch.value
       : user.emp_bank_branchId;
@@ -336,7 +340,8 @@ export function FormEditForm({
           return item.value === emp_bank_branchId;
         })
     );
-  }, [user?.emp_bank_branchId, dashboard.emp_bank_branchId]);
+    console.log("defEmpBankBranch111",defEmpBankBranch)
+  }, [user?.emp_bankId]);
 
   useEffect(() => {
     const company_bankId = defCompanyBank?.value
@@ -449,6 +454,14 @@ export function FormEditForm({
     return false;
   };
 
+    useEffect(() => {
+      if (!user.Id) {
+      
+        dispatch(fetchAllBanks());
+       
+      }
+    }, [dispatch]);
+
   const fetchEmployeeSalaryEarningList = async (
     employeeId,
     basicSalary,
@@ -478,7 +491,9 @@ export function FormEditForm({
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || "");
       setBasicSalary(response?.data?.data[0]?.basicSalary || "");
-
+      setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
+      setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
+ setLocalizationId(response?.data?.data[0]?.localizationId || "");
       if (response.data?.data?.[0]?.salaryMethod) {
         setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || "");
         setdropdownData(
@@ -586,28 +601,101 @@ export function FormEditForm({
 
   // }
 
+  // const addRow = (element) => {
+  //   const baseObj = {
+  //     earning_deduction_id: "",
+  //     calculation_type: "",
+  //     factorValue: 0,
+  //     amount: 0,
+  //     updatedAmount: 0,
+  //     transactionType:
+  //       element?.target?.id === "Other" ? "Earning" : element.target.id,
+  //     isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
+  //   };
+
+  //   setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
+  // };
+
+
+// const addRow = (element) => {
+//   const { id } = element.target;
+
+//   let baseObj = {
+//     Id: null, // mark as new record
+//     employeeId: user?.employeeId, 
+//     employee: null, 
+//     currency: "PKR", 
+//     earning_deduction_id: null,
+//     calculation_type: "",
+//     factorValue: 0,
+//     amount: 0,
+//     updatedAmount: 0,
+//     transactionType: "Earning", 
+//     isPartOfGrossSalary: 1,
+//   };
+
+//   if (id === "Earning") {
+//     baseObj.transactionType = "Earning";
+//     baseObj.isPartOfGrossSalary = 1;
+//   } else if (id === "OtherEarning") {
+//     baseObj.transactionType = "Earning";
+//     baseObj.isPartOfGrossSalary = 0;
+//   } else if (id === "Deduction") {
+//     baseObj.transactionType = "Deduction";
+//     baseObj.isPartOfGrossSalary = 0;
+//   }
+
+//   setDefaultMapEarningDeductionList((prev) => [...prev, baseObj]);
+// };
+
+
   const addRow = (element) => {
-    const baseObj = {
-      earning_deduction_id: "",
-      calculation_type: "",
-      factorValue: 0,
-      amount: 0,
-      updatedAmount: 0,
-      transactionType:
-        element?.target?.id === "Other" ? "Earning" : element.target.id,
-      isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
-    };
 
-    setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
-  };
+console.log("element11111",defMapEarningDeductionList)
+  if (element.target.id === "Other") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { employeeId: user?.employeeId, transactionType: "Earning", isPartOfGrossSalary: 0 },
+    ]);
+  } else if (element.target.id === "Gross") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Earning", isPartOfGrossSalary: 1 },
+    ]);
+  } else if (element.target.id === "Deduction") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Deduction", isPartOfGrossSalary: 0 },
+    ]);
+  }
+};
 
-  const deleteRow = (element) => {
-    const data = defMapEarningDeductionList;
-    data.splice(element.target.id, 1);
 
-    setDefaultMapEarningDeductionList([...data]);
-  };
+  // const deleteRow = (element) => {
+  //   const data = defMapEarningDeductionList;
+  //   data.splice(element.target.id, 1);
 
+  //   setDefaultMapEarningDeductionList([...data]);
+  // };
+
+
+    const deleteRow = (index, type) => {
+ 
+  setDefaultMapEarningDeductionList((list) =>
+    list.filter((item, idx) => {
+      if (type === "Gross") {
+        return !(idx === index && item.transactionType === "Earning" && item.isPartOfGrossSalary);
+      }
+      if (type === "Other") {
+        return !(idx === index && item.transactionType === "Earning" && !item.isPartOfGrossSalary);
+      }
+      if (type === "Deduction") {
+        return !(idx === index && item.transactionType === "Deduction");
+      }
+      return true;
+    })
+  );
+};
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
@@ -641,7 +729,7 @@ export function FormEditForm({
           ...defMapEarningDeductionList.map((x) => {
             if (x.calculation_type == "% Of Gross") {
               x.updatedAmount = (grossSalaryInput * x.factorValue) / 100;
-              console.log("updated111", x.factorValue, x.updatedAmount);
+             
             }
             return x;
           }),
@@ -654,7 +742,7 @@ export function FormEditForm({
         ...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == "% Of Basic") {
             x.updatedAmount = (basicSalaryNumber * x.factorValue) / 100;
-            console.log("updated222", x.updatedAmount);
+           
             if (x.isPartOfGrossSalary) {
               basicSalaryNumber += x.updatedAmount;
             }
@@ -764,9 +852,12 @@ export function FormEditForm({
     });
   };
 
-  const fetchBranch = (bankId) => {
-    dispatch(fetchAllBankBranch(bankId));
+useEffect(()=>{
+  if (user?.emp_bankId) {
+    dispatch(fetchAllBankBranch(user.emp_bankId));
   };
+  
+},[user.emp_bankId])  
 
   useEffect(() => {
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
@@ -802,7 +893,7 @@ export function FormEditForm({
     ];
   }, [dashboard?.allEmpTypeDynamicChildMenus, dashboard?.allEmpTypeChildMenus]);
 
-  console.log("aaaa111", isAccessForCreate);
+  
 
   return (
     <>
@@ -1208,7 +1299,7 @@ export function FormEditForm({
                     <h6 className="font-bold mb-0 text-primary">
                       Earnings{"  "}
                     </h6>
-                    {/* {!Boolean(currentSalaryMethod) && (
+                    {!Boolean(currentSalaryMethod) && (
                         <button
                           type="button"
                           className="btn btn-primary"
@@ -1218,7 +1309,7 @@ export function FormEditForm({
                           <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                           Add
                         </button>
-                      )} */}
+                      )}
                   </div>
                   <div className="w-full overflow-x-auto">
                     <div className="react-bootstrap-table table-responsive">
@@ -1229,7 +1320,7 @@ export function FormEditForm({
                           <td>Earning</td>
                           <td>Calculation Type</td>
                           <td>Factor</td>
-                          <td>Current</td>
+                          <td>Amount</td>
                           <td>Updated Amount</td>
                         </tr>
                         {defMapEarningDeductionList?.map(
@@ -1499,17 +1590,17 @@ export function FormEditForm({
                     <h6 className="font-bold mb-0 text-primary">
                       Other Earnings
                     </h6>
-                    {/* {!Boolean(currentSalaryMethod) && (
+                    {/* {!Boolean(currentSalaryMethod) && ( */}
                       <button
                         type="button"
                         className="btn btn-primary"
-                        id="Earning"
+                        id="Other"
                         onClick={addRow}
                       >
                         <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                         Add
                       </button>
-                    )} */}
+                    {/* )} */}
                   </div>
                   <div className="w-full overflow-x-auto">
                     <div className="react-bootstrap-table table-responsive">
@@ -1518,7 +1609,7 @@ export function FormEditForm({
                           {/* <td>Employee</td> */}
                           <td>Earning</td>
                           <td>Calculation Type</td>
-                          <td>Factor</td>
+                          <td>Factor1</td>
                           <td>Amount</td>
                           <td>Updated Amount</td>
                           <td className="text-right">Action</td>
@@ -1639,7 +1730,17 @@ export function FormEditForm({
                                         name: `factorValue-${rightindex}`,
                                         value: obj.factorValue,
                                         onBlur: () => {},
-                                        onChange: (field, value) => {
+                                     
+                                      }}
+                                      
+                                      form={{
+                                        touched: {},
+                                        errors: {},
+                                        setFieldValue: () => {},
+                                        setFieldTouched: () => {},
+                                      }}
+                                            onChange={ (value) => {
+                                          console.log("valuie11111")
                                           setDefaultMapEarningDeductionList(
                                             (list) =>
                                               list.map((item, idx) =>
@@ -1650,20 +1751,8 @@ export function FormEditForm({
                                                     }
                                                   : item
                                               )
-                                          );
-                                          setErrors((prev) => ({
-                                            ...prev,
-                                            [`factorValue-${rightindex}`]: "",
-                                          }));
-                                        },
-                                      }}
-                                      form={{
-                                        touched: {},
-                                        errors: {},
-                                        setFieldValue: () => {},
-                                        setFieldTouched: () => {},
-                                      }}
-                                      label={null}
+                                          )}}
+                                      // label={null}
                                       disabled={
                                         obj.calculation_type === "Fixed Amount"
                                       }
@@ -1702,10 +1791,11 @@ export function FormEditForm({
                                         setFieldTouched: () => {},
                                       }}
                                       label={null}
-                                      disabled={
-                                        obj.calculation_type == "% Of Gross" ||
-                                        obj.calculation_type == "% Of Basic"
-                                      }
+                                      // disabled={
+                                      //   obj.calculation_type == "% Of Gross" ||
+                                      //   obj.calculation_type == "% Of Basic"
+                                      // }
+                                      disabled={true}
                                       value={obj.amount}
                                     />
                                     {deferrors[`amount-${rightindex}`] && (
@@ -1762,7 +1852,11 @@ export function FormEditForm({
                                       </div>
                                     )}
                                   </td>
-                                  <td id={rightindex} onClick={deleteRow}>
+                                  <td id={rightindex}
+                                  
+                                  // onClick={deleteRow}
+                                  onClick={() => deleteRow(rightindex, "Other")}
+                                  >
                                     {" "}
                                     <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                   </td>
@@ -1774,15 +1868,15 @@ export function FormEditForm({
                     </div>
                   </div>
                   {
-                    <>
-                      {/* <div className="from-group row">
-                        <div className="col-12 col-md-4 mt-3">
-                          <input type='button' id="Other" class="btn btn-primary" onClick={addRow} value='+Add'></input>
-                        </div>
+                    // <>
+                    //   <div className="from-group row">
+                    //     <div className="col-12 col-md-4 mt-3">
+                    //       <input type='button' id="Other" class="btn btn-primary" onClick={addRow} value='+Add'></input>
+                    //     </div>
 
 
-                      </div> */}
-                    </>
+                    //   </div>
+                    // </>
                   }
                 </div>
                 <hr />
@@ -1791,17 +1885,17 @@ export function FormEditForm({
                     <h6 className="font-bold mb-0 text-primary">
                       Deductions{"  "}
                     </h6>
-                    {/* {!Boolean(currentSalaryMethod) && (
+                    {/* {!Boolean(currentSalaryMethod) && ( */}
                         <button
                           type="button"
                           className="btn btn-primary"
-                          id="Earning"
+                          id="Deduction"
                           onClick={addRow}
                         >
                           <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                           Add
                         </button>
-                      )} */}
+                      {/* )} */}
                   </div>
                   <div className="w-full overflow-x-auto">
                     <div className="react-bootstrap-table table-responsive">
@@ -1979,10 +2073,11 @@ export function FormEditForm({
                                         setFieldTouched: () => {},
                                       }}
                                       label={null}
-                                      disabled={
-                                        obj.calculation_type == "% Of Gross" ||
-                                        obj.calculation_type == "% Of Basic"
-                                      }
+                                      // disabled={
+                                      //   obj.calculation_type == "% Of Gross" ||
+                                      //   obj.calculation_type == "% Of Basic"
+                                      // }
+                                      disabled={true}
                                       value={obj.amount}
                                     />
 
@@ -2007,7 +2102,7 @@ export function FormEditForm({
                                           (list) =>
                                             list.map((item, idx) =>
                                               idx === rightindex
-                                                ? { ...item, amount: Number(e) }
+                                                ? { ...item, updatedAmount: Number(e) }
                                                 : item
                                             )
                                         );
@@ -2041,7 +2136,7 @@ export function FormEditForm({
                                   <td
                                     className="text-right"
                                     id={rightindex}
-                                    onClick={deleteRow}
+                                     onClick={() => deleteRow(rightindex, "Deduction")}
                                   >
                                     {" "}
                                     <Trash2 className="w-4 h-4 text-black cursor-pointer" />
@@ -2206,7 +2301,8 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("emp_bankId", e.value);
                         setDefaultBanks(e);
-                        dispatch(fetchAllBanks(e.value));
+                        // dispatch(fetchAllBanks(e.value));
+                          dispatch(fetchAllBankBranch(e.value));
                         fetchBranch(e.value);
                       }}
                       value={
@@ -2259,7 +2355,8 @@ export function FormEditForm({
 
                     {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                   </div>
-                  <div>
+                  {/* Hidden by Mubin bhai  12-9-2025*/}
+                  {/* <div>
                     <Field
                       name="emp_bank_accountTitle"
                       isDisabled={checkReadOnlyStatus(values, [151, 152])}
@@ -2277,7 +2374,7 @@ export function FormEditForm({
                       label={<span> Bank Account Title</span>}
                       autoComplete="off"
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 <hr />
@@ -2643,6 +2740,7 @@ export function FormEditForm({
                   </Accordion.Collapse>
                 </Card>
               </Accordion> */}
+             
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-3 gap-y-1">
                 <h6 className="m-0 text-black font-bold text-base col-span-1 xl:col-span-2 sm:text-lg py-1">
                   Entitlements
@@ -2702,6 +2800,11 @@ export function FormEditForm({
                         autoComplete="off"
                         disabled={!values.gratuity_member || dataForRead}
                         // value = {values.dateOfJoining}
+                          minDate={
+                                    dateOfJoining
+                                      ? new Date(dateOfJoining)
+                                      : null
+                                  }
                       />
                       <ErrorMessage
                         className="form-feedBack"
@@ -2822,6 +2925,7 @@ export function FormEditForm({
                     </div>
                   </div>
                 </div>
+                  {localizationId == 1 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
                   <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
                     Deduction
@@ -2878,6 +2982,11 @@ export function FormEditForm({
                           name="eobi_reg_date"
                           autoComplete="off"
                           disabled={!values.eobi_member || dataForRead}
+                              minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -2968,6 +3077,12 @@ export function FormEditForm({
                             !values.social_security_member || dataForRead
                           }
                           // value = {values.dateOfJoining}
+                           minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
+                            
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -3005,6 +3120,7 @@ export function FormEditForm({
                     </div>
                   </div>
                 </div>
+                  )}
               </div>
 
               <div className="form-group row justify-content-end p-5">

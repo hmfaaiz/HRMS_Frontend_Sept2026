@@ -14,7 +14,7 @@ export const fetchEmpForSalaryRevision = () => async (dispatch) => {
 
     .then((response) => {
 
-
+console.log("response111",response)
       dispatch(actions.empForSalaryRevisionFetched(response));
     })
     .catch((error) => {
