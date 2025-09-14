@@ -82,7 +82,7 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
   }, [userForEdit?.employeeId, formUIProps.queryParams, dispatch,]);
 
   const saveForm = async (data, defMapEarningDeductionList) => {
-    console.log("idsss", formUIProps.ids)
+
     if (data.revisedDate === null || data.revisedDate === undefined) {
       toast.error("Please select a salary revision date");
       return;

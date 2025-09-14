@@ -41,7 +41,7 @@ import {
   fetchCurrentEmpSalary,
   fetchPreviousEmpSalaryComp,
 } from "../../../_redux/redux-Actions";
-import { CirclePlus, Trash2 } from "lucide-react";
+import { CirclePlus, Eye, Trash2 } from "lucide-react";
 import {CustomModal} from "../../../../../utils/common-modules/CustomModal";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
@@ -233,7 +233,7 @@ export function FormEditForm({
   setemployeeId,
   revisedDate,
   isAccessForCreate,
-  setRevisedDate,
+  setRevisedDate,dataForEdit
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -333,7 +333,7 @@ export function FormEditForm({
   }, [user?.emp_bankId, dashboard.emp_bankId]);
 
   useEffect(() => {
-    console.log("hitt111")
+  
     const emp_bank_branchId = defEmpBankBranch?.value
       ? defEmpBankBranch.value
       : user.emp_bank_branchId;
@@ -343,7 +343,7 @@ export function FormEditForm({
           return item.value === emp_bank_branchId;
         })
     );
-    console.log("defEmpBankBranch111",defEmpBankBranch)
+
   }, [user?.emp_bankId]);
 
   useEffect(() => {
@@ -656,7 +656,7 @@ export function FormEditForm({
 
   const addRow = (element) => {
 
-console.log("element11111",defMapEarningDeductionList)
+
   if (element.target.id === "Other") {
     setDefaultMapEarningDeductionList([
       ...defMapEarningDeductionList,
@@ -902,10 +902,12 @@ useEffect(()=>{
 
 
     const {
+ dataForSalaryComparison,
       previousSalaryComparison,
    
     } = useSelector((state) => ({
   
+      dataForSalaryComparison: state.emp_salary_revision.dataForSalaryComparison,
       previousSalaryComparison: state.emp_salary_revision.previousSalaryComparison,
 
     }));
@@ -916,7 +918,7 @@ useEffect(()=>{
     setComparisonModal(false);
 
   };
-console.log("previousSalaryComparison1111",previousSalaryComparison)
+
 const comparisonFields = [
   { key: "gradeId", updatedKey: "updatedGradeId", label: "Grade" },
     { key: "designationId", updatedKey: "updatedDesignationId", label: "Designation" },
@@ -981,7 +983,7 @@ const comparisonFields = [
   // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
   // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
 ];
-
+console.log("dataForSalaryComparison1111",dataForSalaryComparison)
 
   return (
     <>
@@ -1097,28 +1099,35 @@ const comparisonFields = [
     {/* -------- Top section: Salary fields comparison -------- */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       {comparisonFields.map((field, index) => {
-        const previousValue = previousSalaryComparison?.[field.key];
-        const updatedValue = previousSalaryComparison?.[field.updatedKey];
+        let previousValue = previousSalaryComparison?.[field.key];
+        let updatedValue = previousSalaryComparison?.[field.updatedKey];
+
+        // Map IDs to formName for readable display
+        if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
+        if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
+
+        if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
+        if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
+
+        if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
+        if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
+
+        if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
+        if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
 
         return (
           <div
             key={index}
             className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
           >
-            <h3 className="text-lg font-semibold text-primary mb-2">
-              {field.label}
-            </h3>
+            <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
             <p className="text-gray-700 text-sm">
               <span className="font-medium">Previous:</span>{" "}
-              {previousValue !== null && previousValue !== undefined
-                ? String(previousValue)
-                : "—"}
+              {previousValue ?? "—"}
             </p>
             <p className="text-gray-700 text-sm">
               <span className="font-medium">Updated:</span>{" "}
-              {updatedValue !== null && updatedValue !== undefined
-                ? String(updatedValue)
-                : "—"}
+              {updatedValue ?? "—"}
             </p>
           </div>
         );
@@ -1136,7 +1145,8 @@ const comparisonFields = [
               <th className="border px-3 py-2 text-left">Earning Name</th>
               <th className="border px-3 py-2 text-left">Calculation Type</th>
               <th className="border px-3 py-2 text-left">Factor Value</th>
-              <th className="border px-3 py-2 text-left">Amount</th>
+              <th className="border px-3 py-2 text-left">Previous Amount</th>
+              <th className="border px-3 py-2 text-left">Updated Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -1148,6 +1158,7 @@ const comparisonFields = [
                 <td className="border px-3 py-2">{item?.calculation_type}</td>
                 <td className="border px-3 py-2">{item?.factorValue}</td>
                 <td className="border px-3 py-2">{item?.amount}</td>
+                <td className="border px-3 py-2">{item?.updatedAmount}</td>
               </tr>
             ))}
           </tbody>
@@ -1163,7 +1174,8 @@ const comparisonFields = [
               <th className="border px-3 py-2 text-left">Name</th>
               <th className="border px-3 py-2 text-left">Calculation Type</th>
               <th className="border px-3 py-2 text-left">Factor Value</th>
-              <th className="border px-3 py-2 text-left">Amount</th>
+              <th className="border px-3 py-2 text-left">Previous Amount</th>
+              <th className="border px-3 py-2 text-left">Updated Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -1175,6 +1187,7 @@ const comparisonFields = [
                 <td className="border px-3 py-2">{item.calculation_type}</td>
                 <td className="border px-3 py-2">{item.factorValue}</td>
                 <td className="border px-3 py-2">{item.amount}</td>
+                <td className="border px-3 py-2">{item.updatedAmount}</td>
               </tr>
             ))}
           </tbody>
@@ -1190,7 +1203,8 @@ const comparisonFields = [
               <th className="border px-3 py-2 text-left">Deduction Name</th>
               <th className="border px-3 py-2 text-left">Calculation Type</th>
               <th className="border px-3 py-2 text-left">Factor Value</th>
-              <th className="border px-3 py-2 text-left">Amount</th>
+              <th className="border px-3 py-2 text-left">Previous Amount</th>
+              <th className="border px-3 py-2 text-left">Updated Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -1198,20 +1212,15 @@ const comparisonFields = [
               (item) => item.transactionType === "Deduction"
             ).map((item, i) => (
               <tr key={i}>
-<td className="border px-3 py-2">
-  {(dashboard?.allDeductions || [])
-    .filter((x) => x.value === item.earning_deduction_id) // sirf match wala record
-    .map((x) => (
-      <span key={x.value}>
-        {x.label}
-      </span>
-    ))}
-</td>
-
-
+                <td className="border px-3 py-2">
+                  {(dashboard?.allDeductions || [])
+                    .filter((x) => x.value === item.earning_deduction_id)
+                    .map((x) => <span key={x.value}>{x.label}</span>)}
+                </td>
                 <td className="border px-3 py-2">{item.calculation_type}</td>
                 <td className="border px-3 py-2">{item.factorValue}</td>
                 <td className="border px-3 py-2">{item.amount}</td>
+                <td className="border px-3 py-2">{item.updatedAmount}</td>
               </tr>
             ))}
           </tbody>
@@ -1560,13 +1569,14 @@ const comparisonFields = [
                         value="Calculate"
                       ></input>
                     </div>
-
+                    {dataForSalaryComparison && (  <div className="mt-5 items-end">
+                       <Eye className="w-4 h-4 text-white" />
                       <button
                     type="button"
                  
                    
                     onClick={(e) => {
-                     dispatch(fetchPreviousEmpSalaryComp(user.Id))
+                     dispatch(fetchPreviousEmpSalaryComp(user?.Id))
                      setComparisonModal(true)
                      
                     }}
@@ -1577,6 +1587,8 @@ const comparisonFields = [
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
                     )}
                   </button>
+                  </div>)}
+
                   </div>
                 }
                 {/* For Earning WIth Payroll Include ByDefault Yes  */}
@@ -2027,7 +2039,7 @@ const comparisonFields = [
                                         setFieldTouched: () => {},
                                       }}
                                             onChange={ (value) => {
-                                          console.log("valuie11111")
+                                   
                                           setDefaultMapEarningDeductionList(
                                             (list) =>
                                               list.map((item, idx) =>

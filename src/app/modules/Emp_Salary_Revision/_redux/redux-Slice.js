@@ -21,6 +21,8 @@ const initialEmpSalaryRevisionState = {
     previousSalaryRev: null,
     dataForEdit: false,
     previousSalaryComparison:null,
+    dataForSalaryComparison:false,
+
 };
 
 
@@ -64,15 +66,7 @@ export const EmpSalaryRevisionSlice = createSlice({
         },
 
 
-        // previousSalaryRevisionFetched: (state, action) => {
-        //     const { rows = [], totalResults = 0, page = 1, totalPages = 1 } = action.payload;
-
-        //     state.entities = rows;              // ✅ array for display
-        //     state.totalCount = totalResults;    // if needed for pagination
-        //     state.page = page;
-        //     state.totalPages = totalPages;
-        // }, 
-
+ 
         previousSalaryRevisionFetched: (state, action) => {
             const entities = action.payload.data?.data.rows;
 
@@ -92,6 +86,16 @@ export const EmpSalaryRevisionSlice = createSlice({
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
+         
+        },
+
+      EmpLastCompSalaryRevisionForView: (state, action) => {
+
+
+            state.actionsLoading = false;
+            state.dataForSalaryComparison =action.payload.flag;
+            state.error = null;
+         
         },
 
 

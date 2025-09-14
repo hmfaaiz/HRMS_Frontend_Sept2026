@@ -14,7 +14,7 @@ export const fetchEmpForSalaryRevision = () => async (dispatch) => {
 
     .then((response) => {
 
-console.log("response111",response)
+
       dispatch(actions.empForSalaryRevisionFetched(response));
     })
     .catch((error) => {
@@ -124,6 +124,8 @@ export const fetchPreviousEmpSalaryById = (Id) => (dispatch) => {
 
   if (!Id) {
     return dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: undefined }));
+ 
+
   }
 
   return requestFromServer
@@ -133,6 +135,7 @@ export const fetchPreviousEmpSalaryById = (Id) => (dispatch) => {
 
 
       dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.EmpLastCompSalaryRevisionForView({ flag: true }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find record";
@@ -196,7 +199,7 @@ export const fetchPreviousEmpSalaryComp = (Id) => async (dispatch) => {
 
     .then((response) => {
 
-console.log("response111",response)
+
       dispatch(actions.previousSalaryComparisonFetched(response));
     })
     .catch((error) => {

@@ -38,7 +38,7 @@ export function EmployeeSelect({
     }),
     shallowEqual
   );
-console.log("allEmployees1111",allEmployees)
+
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
   const { dataForRead, dataForEdit } = currentState;
