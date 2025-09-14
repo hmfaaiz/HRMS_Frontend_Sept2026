@@ -68,6 +68,7 @@ export const EmpSalaryRevisionSlice = createSlice({
 
  
         previousSalaryRevisionFetched: (state, action) => {
+           
             const entities = action.payload.data?.data.rows;
 
             const totalResult = action.payload.data?.data.totalResults;
@@ -86,6 +87,7 @@ export const EmpSalaryRevisionSlice = createSlice({
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
+            state.dataForSalaryComparison=false;
          
         },
 
@@ -116,16 +118,17 @@ export const EmpSalaryRevisionSlice = createSlice({
 
 
         clearPreviousSalaryRevisionFetched: (state) => {
-            const entities = [];
+            // const entities = [];
 
-            const totalResult = 0;
+            // const totalResult = 0;
             state.dataForEdit = false
             state.dataForRead = false
             state.userForEdit = null
             state.listLoading = false;
             state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
+            // state.entities = entities;
+            // state.totalCount = totalResult;
+         
         },
 
 

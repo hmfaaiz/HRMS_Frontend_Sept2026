@@ -18,7 +18,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   const formUIContext = useFormUIContext();
   const formUIProps = useMemo(() => {
- 
+
     return {
       ids: formUIContext.ids,
       setIds: formUIContext.setIds,
@@ -43,6 +43,15 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
     shallowEqual
   );
 
+  const {
+    userForEdit,
+
+  } = useSelector((state) => ({
+
+    userForEdit: state.emp_salary_revision.userForEdit,
+
+  }));
+
   const enableLoading = () => {
     setLoading(true);
   };
@@ -51,16 +60,10 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
     setLoading(false);
   };
 
-  // if !id we should close modal
-  useEffect(() => {
-    if (!id) {
-      onHide();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
 
-  // looking for loading/dispatch
-  useEffect(() => {}, [isLoading, dispatch]);
+
+
+
 
   const deleteEmpSalaryRevision = () => {
     // server request for deleting customer by id
@@ -68,13 +71,24 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
     dispatch(actions.deleteEmpSalaryRevById(id)).then(() => {
       onHide();
       // refresh list after deletion
-  
-      dispatch(actions.fetchEmpForSalaryRevision(formUIProps));
-   
+
+
+      // dispatch(actions.fetchCurrentEmpSalary(0));
+
+
       disableLoading();
-    });
-  };
+    }); 
+    
+    if (formUIProps?.employeeId) {
  
+      dispatch(actions.fetchAllPrevSalaryRevByEmpId({
+        ...formUIProps.queryParams,
+        employeeId: formUIProps?.employeeId
+      }));
+
+    }
+  };
+
   return (
     <Modal
       show={show}

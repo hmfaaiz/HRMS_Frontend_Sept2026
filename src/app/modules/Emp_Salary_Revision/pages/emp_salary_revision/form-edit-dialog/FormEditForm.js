@@ -829,10 +829,10 @@ export function FormEditForm({
 
       // Check if amount is required
       if (
-        !objValidate.amount &&
+        !objValidate.amount && !objValidate.updatedAmount &&
         objValidate.calculation_type == "Fixed Amount"
       ) {
-        newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
+        newErrors[`updatedAmount-${index}`] = VALIDATION_MESSAGES.required;
       }
     });
 
@@ -1001,6 +1001,11 @@ const comparisonFields = [
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
+          const validationErrors = validate();
+          if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+      
+          } else {
           const earningDeductionList = defMapEarningDeductionList.map(
             (item) => ({
               ...item,
@@ -1028,6 +1033,7 @@ const comparisonFields = [
             },
             earningDeductionList
           );
+        }
         }}
       >
         {({
@@ -1364,7 +1370,7 @@ const comparisonFields = [
                 </Modal>
 
 
-                <FormTable />
+             
 
                 {user?.employeeId && (
                   <div className="w-full overflow-x-auto">
@@ -3470,7 +3476,7 @@ const comparisonFields = [
                   <button
                     type="button"
                     onClick={() => {
-                      setemployeeId(null);
+                      // setemployeeId(null);
                       dispatch(clearPreviousSalaryRevisionFetched());
                       dispatch(fetchCurrentEmpSalary(null));
                       setIds("");
@@ -3488,7 +3494,7 @@ const comparisonFields = [
                     type="button"
                     // onClick={onHide}
                     onClick={() => {
-                      setemployeeId(null);
+                      // setemployeeId(null);
                       dispatch(clearPreviousSalaryRevisionFetched());
                       dispatch(fetchCurrentEmpSalary(null));
                       setIds("");

@@ -63,6 +63,7 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
 
       dispatch(actions.EmpSalaryRevisionCreated(user));
       dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: undefined }));
+ 
       
       disbaleLoading();
       fetchCurrentEmpSalary(data?.employeeId)

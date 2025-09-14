@@ -55,3 +55,8 @@ export function fetchPreviousEmpSalaryComp(Id) {
 return axios.get(`${USERS_URL}/emp_salary_revision/read-previous-salary-revision-byId/${Id}`,);
 }
 
+// for modal data 
+export function fetchEmployeeSalaryEarningListFromProcedure(body) {
+
+return axios.post(`${USERS_URL}/emp_salary_revision/read-salary-policy-byfilters`,body);
+}
