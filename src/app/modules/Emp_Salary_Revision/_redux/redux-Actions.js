@@ -62,6 +62,9 @@ export const createEmpSalaryRev = (data, disbaleLoading, onHide) => (
 
 
       dispatch(actions.EmpSalaryRevisionCreated(user));
+      dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: undefined }));
+ 
+      
       disbaleLoading();
       fetchCurrentEmpSalary(data?.employeeId)
       toast.success(SERVER_MESSAGES.updatedSuccess, {
@@ -124,6 +127,8 @@ export const fetchPreviousEmpSalaryById = (Id) => (dispatch) => {
 
   if (!Id) {
     return dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: undefined }));
+ 
+
   }
 
   return requestFromServer
@@ -133,6 +138,7 @@ export const fetchPreviousEmpSalaryById = (Id) => (dispatch) => {
 
 
       dispatch(actions.EmpSalaryRevisionFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.EmpLastCompSalaryRevisionForView({ flag: true }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find record";
@@ -184,4 +190,24 @@ export const updateUserAccess = (mode) => (dispatch) => {
 export const clearPreviousSalaryRevisionFetched = () => (dispatch) => {
       dispatch(actions.clearPreviousSalaryRevisionFetched());
 
+};
+
+
+// comparison
+export const fetchPreviousEmpSalaryComp = (Id) => async (dispatch) => {
+
+  // delete params?.openDeleteFormDialog
+
+  return requestFromServer.fetchPreviousEmpSalaryComp(Id)
+
+    .then((response) => {
+
+
+      dispatch(actions.previousSalaryComparisonFetched(response));
+    })
+    .catch((error) => {
+
+      error.clientMessage = "Can't find ";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
 };

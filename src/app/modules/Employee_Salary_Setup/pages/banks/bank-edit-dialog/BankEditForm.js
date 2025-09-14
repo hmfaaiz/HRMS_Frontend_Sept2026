@@ -292,7 +292,12 @@ export function BankEditForm({
         })
     );
   }, [user?.emp_bankId, dashboard.emp_bankId]);
-
+useEffect(()=>{
+  if (user?.emp_bankId) {
+    dispatch(fetchAllBankBranch(user.emp_bankId));
+  };
+  
+},[user.emp_bankId])  
   useEffect(() => {
     const emp_bank_branchId = defEmpBankBranch?.value
       ? defEmpBankBranch.value
@@ -303,7 +308,7 @@ export function BankEditForm({
           return item.value === emp_bank_branchId;
         })
     );
-  }, [user?.emp_bank_branchId, dashboard.emp_bank_branchId]);
+  },[user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
 
   useEffect(() => {
     const company_bankId = defCompanyBank?.value

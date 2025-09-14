@@ -19,7 +19,9 @@ const initialEmpSalaryRevisionState = {
     loan_type: null,
     empForSalRev: null,
     previousSalaryRev: null,
-    dataForEdit: false
+    dataForEdit: false,
+    previousSalaryComparison:null,
+    dataForSalaryComparison:false,
 
 };
 
@@ -55,18 +57,18 @@ export const EmpSalaryRevisionSlice = createSlice({
 
 
         },
+  previousSalaryComparisonFetched: (state, action) => {
 
 
-        // previousSalaryRevisionFetched: (state, action) => {
-        //     const { rows = [], totalResults = 0, page = 1, totalPages = 1 } = action.payload;
+            state.previousSalaryComparison = action.payload.data?.data ;
 
-        //     state.entities = rows;              // ✅ array for display
-        //     state.totalCount = totalResults;    // if needed for pagination
-        //     state.page = page;
-        //     state.totalPages = totalPages;
-        // }, 
 
+        },
+
+
+ 
         previousSalaryRevisionFetched: (state, action) => {
+           
             const entities = action.payload.data?.data.rows;
 
             const totalResult = action.payload.data?.data.totalResults;
@@ -81,10 +83,21 @@ export const EmpSalaryRevisionSlice = createSlice({
         //get User By ID
         EmpSalaryRevisionFetchedForEdit: (state, action) => {
 
-
+            state.userForEdit = null;
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
+            state.dataForSalaryComparison=false;
+         
+        },
+
+      EmpLastCompSalaryRevisionForView: (state, action) => {
+
+
+            state.actionsLoading = false;
+            state.dataForSalaryComparison =action.payload.flag;
+            state.error = null;
+         
         },
 
 
@@ -105,16 +118,17 @@ export const EmpSalaryRevisionSlice = createSlice({
 
 
         clearPreviousSalaryRevisionFetched: (state) => {
-            const entities = [];
+            // const entities = [];
 
-            const totalResult = 0;
+            // const totalResult = 0;
             state.dataForEdit = false
             state.dataForRead = false
             state.userForEdit = null
             state.listLoading = false;
             state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
+            // state.entities = entities;
+            // state.totalCount = totalResult;
+         
         },
 
 

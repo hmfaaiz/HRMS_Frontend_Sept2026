@@ -36,9 +36,12 @@ export function FormCard() {
 
   useEffect(() => {}, [FormUIProps]);
 
-  const { userAccess } = useSelector(
+  const { userAccess,userForEdit,dataForEdit,dataForRead } = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.emp_salary_revision,
+      userForEdit: state.emp_salary_revision.userForEdit,
+    dataForEdit: state.emp_salary_revision.dataForEdit,
+    dataForRead: state.emp_salary_revision.dataForRead,
     }),
     shallowEqual
   );
@@ -106,13 +109,17 @@ export function FormCard() {
         employeeId={FormUIProps.employeeId}
         panelMode={FormUIProps.panelMode}
       />
-      <FormEditDialog
-        id={FormUIProps.id}
-        employeeId={FormUIProps.employeeId}
-        setemployeeId={FormUIProps.setemployeeId}
-        revisedDate={FormUIProps.revisedDate}
-        setRevisedDate={FormUIProps.setRevisedDate}
-      />
+         <FormTable />
+{userForEdit && (
+  <FormEditDialog
+    id={FormUIProps.id}
+    employeeId={FormUIProps.employeeId}
+    setemployeeId={FormUIProps.setemployeeId}
+    revisedDate={FormUIProps.revisedDate}
+    setRevisedDate={FormUIProps.setRevisedDate}
+  />
+)}
+    
     </TCard>
     // </>
   );
