@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .scrollbar-fancy {
-  @apply scrollbar-thin scrollbar-thumb-tprimary scrollbar-track-tlight;
+  @apply scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-tlight;
 }
 
 .rmdp-input {

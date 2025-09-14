@@ -22,10 +22,11 @@ import {
   getUploadUrl,
 } from "../../../../../utils/common";
 import {
+  fetchAllAccountsByType,
   fetchAllFormsMenu,
   fetchPayrollConfigApproverPermission,
 } from "../../../../../../_metronic/redux/dashboardActions";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import {
   updateApprovedStatus,
   fetchEmployeeLoanRequest,
@@ -75,7 +76,7 @@ export function FormEditForm({
   useEffect(() => {
     if (!user.Id) {
       dispatch(actions.getAllLoanType());
-      dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
+      dispatch(fetchAllAccountsByType(45, accountType.Assets ,"allAccountList"));
       dispatch(
         fetchPayrollConfigApproverPermission(
           "allPayrollConfigApproverPermissionList"

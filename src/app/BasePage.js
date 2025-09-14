@@ -287,6 +287,9 @@ const LoanWorkflowAdmin = lazy(() =>
   import("./modules/LoanWorkflowAdmin/page/index")
 );
 
+const ChartOfAccounts = lazy(()=>
+ import("./modules/ChartOfAccounts/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -401,6 +404,7 @@ const ROUTES = {
   leave_workflow: LeaveWorkflowAdmin,
   attendance_workflow: AttendanceWorkflowAdmin,
   loan_workflow: LoanWorkflowAdmin,
+  chart_account : ChartOfAccounts,
 };
 
 export default function BasePage() {

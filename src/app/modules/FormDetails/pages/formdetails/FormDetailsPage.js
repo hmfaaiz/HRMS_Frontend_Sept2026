@@ -26,16 +26,16 @@ export function FormDetailsPage({ history }) {
   const FormUIEvents = {
     newFormButtonClick: () => {
       dispatch(fetchAllCountry());
-      dispatch(fetchRoles());
+      // dispatch(fetchRoles());
   
-      dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
+      // dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
       history.push("/formdetails/read-all-parent-forms/new");
     },
     openEditFormDialog: (id) => {
       dispatch(fetchAllCountry());
-      dispatch(fetchRoles());
+      // dispatch(fetchRoles());
  
-      dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
+      // dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
       history.push(`/formdetails/read-all-parent-forms/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {

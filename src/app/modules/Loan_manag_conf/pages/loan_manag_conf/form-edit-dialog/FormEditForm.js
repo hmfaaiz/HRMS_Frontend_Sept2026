@@ -7,11 +7,12 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
+  fetchAllAccountsByType,
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { amountLimit } from "../../../../../utils/common";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Trash2 } from "lucide-react";
@@ -120,7 +121,8 @@ export function FormEditForm({
     if (!user.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       // dispatch(fetchAllFormsMenu(45, "allAccountList")); // For All Accounts
-      dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
+      // dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
+      dispatch(fetchAllAccountsByType(45, accountType.Assets ,"allAccountList"));
       dispatch(actions.getAllLoanType()); // For All Loan Types
     }
   }, [dispatch, user.Id]);

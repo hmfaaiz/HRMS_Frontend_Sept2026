@@ -7,10 +7,11 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
+  fetchAllAccountsByType,
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
-import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // percentage: Yup.string().required("Required*"),
@@ -51,7 +52,10 @@ export function FormEditForm({
     if (!user.Id) {
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList",null,false)); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
+      // dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
+      dispatch(fetchAllAccountsByType(45, accountType.Expenses ,"allExpenseAccountList"));
+      dispatch(fetchAllAccountsByType(45, accountType.Liabilities ,"allLiabilityAccountList"));
+      dispatch(fetchAllAccountsByType(45, accountType.Assets ,"allAssetsAccountList"));
 
     }
   }, [dispatch, user.Id]);
@@ -144,7 +148,7 @@ export function FormEditForm({
                         name="subsidiaryId"
                         label={
                           <span>
-                            Subsidiarysss<span style={{ color: "red" }}>*</span>
+                            Subsidiary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead}
@@ -176,12 +180,12 @@ export function FormEditForm({
                         setFieldValue("graduity_expense_accountId", e.value || null);
                       }}
                       value={
-                        dashboard?.allAccountList?.find(
+                        dashboard?.allExpenseAccountList?.find(
                           (option) => option.value === values.graduity_expense_accountId
                         ) || null
                       }
                       // options={dashboard.allAccountList}
-                      options={dashboard.allAccountList.map((option) => ({
+                      options={dashboard?.allExpenseAccountList?.map((option) => ({
                         label: `${option.mergeLabel}`, // Adding the value to the label
                         value: option.value,
                       }))}
@@ -203,12 +207,12 @@ export function FormEditForm({
                         setFieldValue("graduity_payable_accountId", e.value || null);
                       }}
                       value={
-                        dashboard?.allAccountList?.find(
+                        dashboard?.allLiabilityAccountList?.find(
                           (option) => option.value === values.graduity_payable_accountId
                         ) || null
                       }
-                      // options={dashboard.allAccountList}
-                      options={dashboard.allAccountList.map((option) => ({
+                      // options={dashboard.allLiabilityAccountList}
+                      options={dashboard?.allLiabilityAccountList?.map((option) => ({
                         label: `${option.mergeLabel}`, // Adding the value to the label
                         value: option.value,
                       }))}
@@ -230,12 +234,12 @@ export function FormEditForm({
                         setFieldValue("bank_cash_accountId", e.value || null);
                       }}
                       value={
-                        dashboard?.allAccountList?.find(
+                        dashboard?.allAssetsAccountList?.find(
                           (option) => option.value === values.bank_cash_accountId
                         ) || null
                       }
                       // options={dashboard.allAccountList}
-                      options={dashboard.allAccountList.map((option) => ({
+                      options={dashboard?.allAssetsAccountList?.map((option) => ({
                         label: `${option.mergeLabel}`, // Adding the value to the label
                         value: option.value,
                       }))}

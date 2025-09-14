@@ -295,3 +295,10 @@ export const getAllDesignationByGradeId = async (Id) => {
     Id: Id,
   });
 };
+
+export const getAllChartOfAccounts = async (Id, accountType=null) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-chart-of-accounts`, {
+    Id: Id,
+    accountType: accountType,
+  });
+};
