@@ -39,8 +39,10 @@ import { useFormUIContext } from "../FormUIContext";
 import {
   clearPreviousSalaryRevisionFetched,
   fetchCurrentEmpSalary,
+  fetchPreviousEmpSalaryComp,
 } from "../../../_redux/redux-Actions";
 import { CirclePlus, Trash2 } from "lucide-react";
+import {CustomModal} from "../../../../../utils/common-modules/CustomModal";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -283,6 +285,7 @@ export function FormEditForm({
     DEFAULT_CALCULATION_TYPE_DROPDOWN
   );
   const [currentSalaryMethod, setcurrentSalaryMethod] = useState("");
+  const [comparisonModal, setComparisonModal] = useState("");
   const [salaryApproverPermission, setSalaryApproverPermission] = useState(
     false
   );
@@ -443,6 +446,8 @@ export function FormEditForm({
     const newValue = e.value;
     fetchEmployeeSalaryEarningList(e.value, 0, setFieldValue);
   };
+
+
 
   const checkReadOnlyStatus = (values, readOnlyValues = []) => {
     if (
@@ -893,7 +898,90 @@ useEffect(()=>{
     ];
   }, [dashboard?.allEmpTypeDynamicChildMenus, dashboard?.allEmpTypeChildMenus]);
 
+ 
+
+
+    const {
+      previousSalaryComparison,
+   
+    } = useSelector((state) => ({
   
+      previousSalaryComparison: state.emp_salary_revision.previousSalaryComparison,
+
+    }));
+ 
+
+    
+  const handlePolicyModalClose = () => {
+    setComparisonModal(false);
+
+  };
+console.log("previousSalaryComparison1111",previousSalaryComparison)
+const comparisonFields = [
+  { key: "gradeId", updatedKey: "updatedGradeId", label: "Grade" },
+    { key: "designationId", updatedKey: "updatedDesignationId", label: "Designation" },
+      { key: "employeeTypeId", updatedKey: "updatedEmployeeTypeId", label: "Employee Type" },
+      { key: "employeeStatusId", updatedKey: "updatedEmployeeStatusId", label: "Employee Status" },
+
+  { key: "grossSalary", updatedKey: "updatedGrossSalary", label: "Gross Salary" },
+   { key: "basicSalary", updatedKey: "updatedBasicSalary", label: "Basic Salary" },
+     { key: "basicFactor", updatedKey: "updatedBasicFactor", label: "Basic Factor" },
+
+
+
+
+  { key: "grossPackage", updatedKey: "updatedGrossPackage", label: "Gross Package" },
+  
+
+
+  { key: "payment_mode_Id", updatedKey: "updatedPayment_mode_Id", label: "Payment Mode" },
+    { key: "emp_bankId", updatedKey: "updatedEmp_bankId", label: "Employee Bank" },
+  { key: "emp_bank_branchId", updatedKey: "updatedEmp_bank_branchId", label: "Employee Bank Branch" },
+  { key: "emp_bank_accNo", updatedKey: "updatedEmp_bank_accNo", label: "Employee Bank Account No" },
+  // { key: "emp_bank_accountTitle", updatedKey: "updatedEmp_bank_accountTitle", label: "Employee Bank Account Title" },
+
+
+    { key: "gratuity_member", updatedKey: "updatedGratuity_member", label: "Gratuity Member" },
+  { key: "gratuity_startDate", updatedKey: "updatedGratuity_startDate", label: "Gratuity Start Date" },
+
+
+    { key: "overtime_allowance", updatedKey: "updatedOvertime_allowance", label: "Overtime Allowance" },
+  { key: "overtime_working_day", updatedKey: "updatedOvertime_working_day", label: "Overtime Working Day" },
+  { key: "overtime_off_day", updatedKey: "updatedOvertime_off_day", label: "Overtime Off Day" },
+  { key: "overtime_holiday", updatedKey: "updatedOvertime_holiday", label: "Overtime Holiday" },
+
+
+
+    { key: "eobi_accNo", updatedKey: "updatedEobi_accNo", label: "EOBI Account" },
+  { key: "eobi_member", updatedKey: "updatedEobi_member", label: "EOBI Member" },
+  { key: "eobi_reg_date", updatedKey: "updatedEobi_reg_date", label: "EOBI Registration Date" },
+
+
+
+
+  { key: "social_security_accNo", updatedKey: "updatedSocial_security_accNo", label: "Social Security Account" },
+  { key: "social_security_member", updatedKey: "updatedSocial_security_member", label: "Social Security Member" },
+  { key: "social_security_reg_date", updatedKey: "updatedSocial_security_reg_date", label: "Social Security Registration Date" },
+
+
+  
+
+
+
+
+
+  // { key: "pf_accNo", updatedKey: "updatedPf_accNo", label: "Provident Fund Account" },
+  // { key: "pf_member", updatedKey: "updatedPf_member", label: "Provident Fund Member" },
+  // { key: "pf_reg_date", updatedKey: "updatedPf_reg_date", label: "Provident Fund Registration Date" },
+
+  // { key: "pension_accNo", updatedKey: "updatedPension_accNo", label: "Pension Account" },
+  // { key: "pension_member", updatedKey: "updatedPension_member", label: "Pension Member" },
+  // { key: "pension_reg_date", updatedKey: "updatedPension_reg_date", label: "Pension Registration Date" },
+  // { key: "profit_member", updatedKey: "updatedProfit_member", label: "Profit Member" },
+  // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
+  // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
+];
+
 
   return (
     <>
@@ -955,6 +1043,185 @@ useEffect(()=>{
 
             <Form className="form form-label-right">
               <fieldset disabled={dataForRead}>
+
+               {/* {comparisonModal && (
+  <CustomModal
+    show={comparisonModal}
+    onClose={handlePolicyModalClose}
+    title="Salary Comparison"
+    className="max-w-7xl"
+  >
+   
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {comparisonFields.map((field, index) => {
+        const previousValue = previousSalaryComparison?.[field.key];
+        const updatedValue = previousSalaryComparison?.[field.updatedKey];
+
+        // agar dono same hain ya dono null/empty hain to skip karna ho to uncomment karo
+        // if (previousValue == updatedValue || (!previousValue && !updatedValue)) return null;
+
+        return (
+          <div
+            key={index}
+            className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
+          >
+            <h3 className="text-lg font-semibold text-primary mb-2">
+              {field.label}
+            </h3>
+            <p className="text-gray-700 text-sm">
+              <span className="font-medium">Previous:</span>{" "}
+              {previousValue !== null && previousValue !== undefined
+                ? String(previousValue)
+                : "—"}
+            </p>
+            <p className="text-gray-700 text-sm">
+              <span className="font-medium">Updated:</span>{" "}
+              {updatedValue !== null && updatedValue !== undefined
+                ? String(updatedValue)
+                : "—"}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  </CustomModal>
+)} */}
+
+{comparisonModal && (
+  <CustomModal
+    show={comparisonModal}
+    onClose={handlePolicyModalClose}
+    title="Salary Comparison"
+    className="max-w-7xl"
+  >
+    {/* -------- Top section: Salary fields comparison -------- */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {comparisonFields.map((field, index) => {
+        const previousValue = previousSalaryComparison?.[field.key];
+        const updatedValue = previousSalaryComparison?.[field.updatedKey];
+
+        return (
+          <div
+            key={index}
+            className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
+          >
+            <h3 className="text-lg font-semibold text-primary mb-2">
+              {field.label}
+            </h3>
+            <p className="text-gray-700 text-sm">
+              <span className="font-medium">Previous:</span>{" "}
+              {previousValue !== null && previousValue !== undefined
+                ? String(previousValue)
+                : "—"}
+            </p>
+            <p className="text-gray-700 text-sm">
+              <span className="font-medium">Updated:</span>{" "}
+              {updatedValue !== null && updatedValue !== undefined
+                ? String(updatedValue)
+                : "—"}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+
+    {/* -------- Bottom section: Table for array data -------- */}
+    <div className="space-y-8">
+      {/* Earnings Table */}
+      <div>
+        <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
+        <table className="w-full border border-gray-200 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-3 py-2 text-left">Earning Name</th>
+              <th className="border px-3 py-2 text-left">Calculation Type</th>
+              <th className="border px-3 py-2 text-left">Factor Value</th>
+              <th className="border px-3 py-2 text-left">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+              (item) => item.transactionType === "Earning"
+            ).map((item, i) => (
+              <tr key={i}>
+                <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
+                <td className="border px-3 py-2">{item?.calculation_type}</td>
+                <td className="border px-3 py-2">{item?.factorValue}</td>
+                <td className="border px-3 py-2">{item?.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Other Earnings Table */}
+      <div>
+        <h3 className="text-lg font-semibold text-primary mb-4">Other Earnings</h3>
+        <table className="w-full border border-gray-200 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-3 py-2 text-left">Name</th>
+              <th className="border px-3 py-2 text-left">Calculation Type</th>
+              <th className="border px-3 py-2 text-left">Factor Value</th>
+              <th className="border px-3 py-2 text-left">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+              (item) => item.transactionType === "OtherEarning"
+            ).map((item, i) => (
+              <tr key={i}>
+                <td className="border px-3 py-2">{item.earning_deduction_name}</td>
+                <td className="border px-3 py-2">{item.calculation_type}</td>
+                <td className="border px-3 py-2">{item.factorValue}</td>
+                <td className="border px-3 py-2">{item.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Deductions Table */}
+      <div>
+        <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
+        <table className="w-full border border-gray-200 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-3 py-2 text-left">Deduction Name</th>
+              <th className="border px-3 py-2 text-left">Calculation Type</th>
+              <th className="border px-3 py-2 text-left">Factor Value</th>
+              <th className="border px-3 py-2 text-left">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+              (item) => item.transactionType === "Deduction"
+            ).map((item, i) => (
+              <tr key={i}>
+<td className="border px-3 py-2">
+  {(dashboard?.allDeductions || [])
+    .filter((x) => x.value === item.earning_deduction_id) // sirf match wala record
+    .map((x) => (
+      <span key={x.value}>
+        {x.label}
+      </span>
+    ))}
+</td>
+
+
+                <td className="border px-3 py-2">{item.calculation_type}</td>
+                <td className="border px-3 py-2">{item.factorValue}</td>
+                <td className="border px-3 py-2">{item.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </CustomModal>
+)}
+
+                          
                 <div className="grid grid-cols-6 gap-x-3 gap-y-1">
                   <div>
                     <label>
@@ -990,6 +1257,9 @@ useEffect(()=>{
                     )}
                   </div>
                 </div>
+
+
+
 
                 {/* {confirmationModal && (  */}
 
@@ -1290,6 +1560,23 @@ useEffect(()=>{
                         value="Calculate"
                       ></input>
                     </div>
+
+                      <button
+                    type="button"
+                 
+                   
+                    onClick={(e) => {
+                     dispatch(fetchPreviousEmpSalaryComp(user.Id))
+                     setComparisonModal(true)
+                     
+                    }}
+                    className="btn btn-primary btn-elevate m-1"
+                  >
+                    Last Salary
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
                   </div>
                 }
                 {/* For Earning WIth Payroll Include ByDefault Yes  */}

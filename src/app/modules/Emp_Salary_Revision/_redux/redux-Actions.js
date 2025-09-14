@@ -185,3 +185,23 @@ export const clearPreviousSalaryRevisionFetched = () => (dispatch) => {
       dispatch(actions.clearPreviousSalaryRevisionFetched());
 
 };
+
+
+// comparison
+export const fetchPreviousEmpSalaryComp = (Id) => async (dispatch) => {
+
+  // delete params?.openDeleteFormDialog
+
+  return requestFromServer.fetchPreviousEmpSalaryComp(Id)
+
+    .then((response) => {
+
+console.log("response111",response)
+      dispatch(actions.previousSalaryComparisonFetched(response));
+    })
+    .catch((error) => {
+
+      error.clientMessage = "Can't find ";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};

@@ -19,8 +19,8 @@ const initialEmpSalaryRevisionState = {
     loan_type: null,
     empForSalRev: null,
     previousSalaryRev: null,
-    dataForEdit: false
-
+    dataForEdit: false,
+    previousSalaryComparison:null,
 };
 
 
@@ -52,6 +52,13 @@ export const EmpSalaryRevisionSlice = createSlice({
 
 
             state.empForSalRev = action.payload.data?.data || [];
+
+
+        },
+  previousSalaryComparisonFetched: (state, action) => {
+
+
+            state.previousSalaryComparison = action.payload.data?.data ;
 
 
         },
