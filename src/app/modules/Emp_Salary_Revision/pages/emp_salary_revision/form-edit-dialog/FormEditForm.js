@@ -1618,8 +1618,8 @@ const comparisonFields = [
                         value="Calculate"
                       ></input>
                     </div>
-                    {dataForSalaryComparison && (  <div className="mt-5 items-end">
-                       <Eye className="w-4 h-4 text-white" />
+                    {dataForSalaryComparison && (  <div className="mt-5 flex justify-end">
+                    
                       <button
                     type="button"
                  
@@ -1631,7 +1631,7 @@ const comparisonFields = [
                     }}
                     className="btn btn-primary btn-elevate m-1"
                   >
-                    Last Salary
+                     <Eye className="w-4 h-4 text-white" />  Last Salary
                     {loading && (
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
                     )}
