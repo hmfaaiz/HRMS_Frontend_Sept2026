@@ -82,7 +82,7 @@ export const EmpSalaryRevisionSlice = createSlice({
         //get User By ID
         EmpSalaryRevisionFetchedForEdit: (state, action) => {
 
-
+            state.userForEdit = null;
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;

@@ -148,7 +148,7 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
         loading={loading}
         setIds={formUIProps.setIds}
         isEdit={id ? true : false}
-
+        dataForEdit={dataForEdit}
   
         disbaleLoading={disbaleLoading}
         formUIProps={formUIProps}

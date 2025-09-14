@@ -276,6 +276,7 @@ export function FormEditForm({
 
   useEffect(() => {
     if (data) {
+
       setUser(data);
       // setRevisedDate()
     }
@@ -290,6 +291,7 @@ export function FormEditForm({
     false
   );
   const [confirmationModal, setConfirmationModal] = useState(false);
+  const [dataSaveonfirmationModal, setDataSaveConfirmationModal] = useState(false);
 
   const formUIContext = useFormUIContext();
 
@@ -332,19 +334,7 @@ export function FormEditForm({
     );
   }, [user?.emp_bankId, dashboard.emp_bankId]);
 
-  useEffect(() => {
-  
-    const emp_bank_branchId = defEmpBankBranch?.value
-      ? defEmpBankBranch.value
-      : user.emp_bank_branchId;
-    setDefaultEmpBankBranch(
-      dashboard.allBankBranch &&
-        dashboard.allBankBranch.filter((item) => {
-          return item.value === emp_bank_branchId;
-        })
-    );
 
-  }, [user?.emp_bankId]);
 
   useEffect(() => {
     const company_bankId = defCompanyBank?.value
@@ -414,7 +404,7 @@ export function FormEditForm({
       null,
       formUIProps.ids
     );
-  }, [user?.employeeId, dashboard.employeeId, formUIProps, formUIProps.ids]);
+  }, [user?.employeeId, dashboard.employeeId, formUIProps, formUIProps.ids,dataForEdit,dataForRead,data]);
 
   useEffect(() => {
     const payment_mode_Id = defPaymentModeList?.value
@@ -466,6 +456,8 @@ export function FormEditForm({
        
       }
     }, [dispatch]);
+
+ 
 
   const fetchEmployeeSalaryEarningList = async (
     employeeId,
@@ -859,11 +851,25 @@ export function FormEditForm({
 
 useEffect(()=>{
   if (user?.emp_bankId) {
+
     dispatch(fetchAllBankBranch(user.emp_bankId));
   };
   
 },[user.emp_bankId])  
 
+  useEffect(() => {
+
+    const emp_bank_branchId = defEmpBankBranch?.value
+      ? defEmpBankBranch.value
+      : user.emp_bank_branchId;
+    setDefaultEmpBankBranch(
+      dashboard.allBankBranch &&
+        dashboard.allBankBranch.filter((item) => {
+          return item.value === emp_bank_branchId;
+        })
+    );
+
+  }, [user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
   useEffect(() => {
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
       (entity) => entity.subsidiaryId === Number(user.subsidiaryId)
@@ -983,7 +989,7 @@ const comparisonFields = [
   // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
   // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
 ];
-console.log("dataForSalaryComparison1111",dataForSalaryComparison)
+
 
   return (
     <>
@@ -1046,48 +1052,7 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
             <Form className="form form-label-right">
               <fieldset disabled={dataForRead}>
 
-               {/* {comparisonModal && (
-  <CustomModal
-    show={comparisonModal}
-    onClose={handlePolicyModalClose}
-    title="Salary Comparison"
-    className="max-w-7xl"
-  >
    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {comparisonFields.map((field, index) => {
-        const previousValue = previousSalaryComparison?.[field.key];
-        const updatedValue = previousSalaryComparison?.[field.updatedKey];
-
-        // agar dono same hain ya dono null/empty hain to skip karna ho to uncomment karo
-        // if (previousValue == updatedValue || (!previousValue && !updatedValue)) return null;
-
-        return (
-          <div
-            key={index}
-            className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
-          >
-            <h3 className="text-lg font-semibold text-primary mb-2">
-              {field.label}
-            </h3>
-            <p className="text-gray-700 text-sm">
-              <span className="font-medium">Previous:</span>{" "}
-              {previousValue !== null && previousValue !== undefined
-                ? String(previousValue)
-                : "—"}
-            </p>
-            <p className="text-gray-700 text-sm">
-              <span className="font-medium">Updated:</span>{" "}
-              {updatedValue !== null && updatedValue !== undefined
-                ? String(updatedValue)
-                : "—"}
-            </p>
-          </div>
-        );
-      })}
-    </div>
-  </CustomModal>
-)} */}
 
 {comparisonModal && (
   <CustomModal
@@ -1115,22 +1080,45 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
         if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
         if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
 
-        return (
-          <div
-            key={index}
-            className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
-          >
-            <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
-            <p className="text-gray-700 text-sm">
-              <span className="font-medium">Previous:</span>{" "}
-              {previousValue ?? "—"}
-            </p>
-            <p className="text-gray-700 text-sm">
-              <span className="font-medium">Updated:</span>{" "}
-              {updatedValue ?? "—"}
-            </p>
-          </div>
-        );
+
+
+        // bank
+          if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
+        if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
+     
+     
+        if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
+        if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
+     
+        if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
+        if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
+
+
+       return (
+  <div
+    key={index}
+    className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
+  >
+    <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
+    <p className="text-gray-700 text-sm">
+      <span className="font-medium">Previous:</span>{" "}
+      {previousValue === true
+        ? "Yes"
+        : previousValue === false
+        ? "No"
+        : previousValue ?? "—"}
+    </p>
+    <p className="text-gray-700 text-sm">
+      <span className="font-medium">Updated:</span>{" "}
+      {updatedValue === true
+        ? "Yes"
+        : updatedValue === false
+        ? "No"
+        : updatedValue ?? "—"}
+    </p>
+  </div>
+);
+
       })}
     </div>
 
@@ -1140,7 +1128,7 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
       <div>
         <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
         <table className="w-full border border-gray-200 text-sm">
-          <thead className="bg-gray-100">
+          <thead className="border-gray-200 shadow-sm bg-white">
             <tr>
               <th className="border px-3 py-2 text-left">Earning Name</th>
               <th className="border px-3 py-2 text-left">Calculation Type</th>
@@ -1166,7 +1154,7 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
       </div>
 
       {/* Other Earnings Table */}
-      <div>
+      {/* <div>
         <h3 className="text-lg font-semibold text-primary mb-4">Other Earnings</h3>
         <table className="w-full border border-gray-200 text-sm">
           <thead className="bg-gray-100">
@@ -1192,13 +1180,13 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       {/* Deductions Table */}
       <div>
         <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
         <table className="w-full border border-gray-200 text-sm">
-          <thead className="bg-gray-100">
+            <thead className="border-gray-200 shadow-sm bg-white">
             <tr>
               <th className="border px-3 py-2 text-left">Deduction Name</th>
               <th className="border px-3 py-2 text-left">Calculation Type</th>
@@ -1321,6 +1309,60 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
                   </Modal.Footer>
                 </Modal>
                 {/* )} */}
+
+
+ <Modal
+                  show={dataSaveonfirmationModal}
+                  onHide={dataSaveonfirmationModal}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  {/*begin::Loading*/}
+                  {/* {isLoading && <ModalProgressBar />} */}
+                  {/*end::Loading*/}
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                      Confirmation
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <span>Are you sure want to save salary?</span>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setDataSaveConfirmationModal(false)}
+                        className="btn btn-light btn-elevate"
+                      >
+                        Cancel
+                      </button>
+                      <> </>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                      calculateEmployeeSalaryPolicy(e, setFieldValue, values);
+                      handleSubmit();
+                      setDataSaveConfirmationModal(false)
+
+                      if (
+                        values.revisedDate === null ||
+                        values.revisedDate === undefined
+                      ) {
+                        toast.error("Please select a salary revision date");
+                        return;
+                      }
+                    }}
+                        className="btn btn-primary btn-elevate"
+                      >
+                        Save
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    </div>
+                  </Modal.Footer>
+                </Modal>
+
 
                 <FormTable />
 
@@ -1492,10 +1534,11 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
                         autoComplete="off"
                         disabled={!values.revisedDate}
                         // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
-                        value={values.grossSalary || defGrossSalaryDB || ""}
+                        // value={values.grossSalary || defGrossSalaryDB || ""}
                         onChange={(e) => {
                           setGrossSalaryDB(e);
                           setFieldValue("grossSalary", e);
+                       
                         }}
                       />
                     </div>
@@ -2623,7 +2666,7 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
                       onChange={(e) => {
                         setFieldValue("emp_bank_branchId", e.value);
                         setDefaultEmpBankBranch(e);
-                        dispatch(fetchAllBankBranch(e.value));
+                        // dispatch(fetchAllBankBranch(e.value));
                       }}
                       value={
                         !checkReadOnlyStatus(values, [151, 152])
@@ -3467,7 +3510,8 @@ console.log("dataForSalaryComparison1111",dataForSalaryComparison)
                     // || defMapEarningDeductionList.some(obj => !obj.updatedAmount || obj.updatedAmount == 0)
                     onClick={(e) => {
                       calculateEmployeeSalaryPolicy(e, setFieldValue, values);
-                      handleSubmit();
+                      // handleSubmit();
+                      setDataSaveConfirmationModal(true)
 
                       if (
                         values.revisedDate === null ||
