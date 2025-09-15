@@ -13,7 +13,7 @@ import { FormApproval } from "../form-approval/FormApproval";
 
 export const FormCard = () => {
   const dispatch = useDispatch();
-  const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState('0');
   const FormUIContext = useFormUIContext();
   const { listLoading } = useSelector(
     (state) => ({

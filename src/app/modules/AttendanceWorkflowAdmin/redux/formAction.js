@@ -14,7 +14,10 @@ export const fetchAttendanceApprovalApplication = (queryparm) => async (
       queryparm
     );
     // Normalize so reducer always gets the same structure
-    const data = response?.data?.data;
+    let data = response?.data?.data;
+    data = [
+      ...new Map(data.map((item) => [item.parentRecordId, item])).values(),
+    ];
     dispatch(actions.LeaveApprovalApplicationFetched(data));
   } catch (error) {
     error.clientMessage = "Can't find Leave Data";

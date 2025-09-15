@@ -22,10 +22,6 @@ export const initialFilter = {
 
 export const requestFilter = [
   {
-    label: "All",
-    value: "",
-  },
-  {
     label: "Pending",
     value: "P",
   },

@@ -1,4 +1,4 @@
-import React, {  useMemo } from "react";
+import React, { useMemo } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import { shallowEqual, useSelector } from "react-redux";
 import * as actions from "../../../redux/formAction";
@@ -191,8 +191,12 @@ export function ApprovalFormTable() {
         minWidth: "190px",
         maxWidth: "190px",
       },
-      formatter: (cell) => {
-        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+      formatter: (cell, row) => {
+        return `${
+          row?.authorityStatus  === "P"
+            ? `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`
+            : ""
+        }`;
       },
     },
     {

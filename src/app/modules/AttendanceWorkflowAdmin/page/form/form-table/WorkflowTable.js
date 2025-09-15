@@ -241,12 +241,12 @@ export function WorkflowTable({ onHide, show }) {
                         )}
                       </div>
                     </div>
-                    <div className="grid grid-cols-2">
+                    {/* <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Reason</div>
                       <div className="col-span-1">
                         {formUIProps?.currentData?.parentData?.comments}
                       </div>
-                    </div>
+                    </div> */}
                     <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Late Arrival</div>
                       <div className="col-span-1">
@@ -311,12 +311,12 @@ export function WorkflowTable({ onHide, show }) {
                         )}
                       </div>
                     </div>
-                    <div className="grid grid-cols-2">
+                    {/* <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Reason</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.requestData?.comments}
+                        {formUIProps?.currentData?.parentData?.comments}
                       </div>
-                    </div>
+                    </div> */}
                     <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Late Arrival</div>
                       <div className="col-span-1">
