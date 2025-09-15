@@ -19,13 +19,12 @@ import {
   fetchAllCountry,
 } from "../../../../Dashboard/_redux/dashboardActions";
 import Axios from "axios";
-import { toast } from "react-toastify";
 
 const USERS_URL = process.env.REACT_APP_API_URL;
-const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
+const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
 const formSchema = Yup.object().shape({
-  name: Yup.string()
-    .matches(/^[A-Za-z\s.-]+$/, "Name must only contain letters.")
+   name: Yup.string()
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
   subsidiaryCode: Yup.string().required(VALIDATION_MESSAGES.required),
   companyId: Yup.string()
@@ -35,14 +34,14 @@ const formSchema = Yup.object().shape({
     .nullable()
     .test(
       "phone-validation",
-      "Number should be like 03049018107",
+      "Invalid Number",
       (value) => !value || phoneRegExp.test(value)
     ),
   fax: Yup.string()
     .nullable()
     .test(
       "phone-validation",
-      "Number should be like 03049018107",
+      "Invalid Number",
       (value) => !value || phoneRegExp.test(value)
     ),
   email: Yup.string()

@@ -33,14 +33,14 @@ const formSchema = Yup.object().shape({
     .nullable()
     .test(
       "phone-validation",
-      "Number should be like 03049018107",
+      "Invalid Number",
       (value) => !value || phoneRegExp.test(value)
     ),
   fax: Yup.string()
     .nullable()
     .test(
       "phone-validation",
-      "Number should be like 03049018107",
+      "Invalid Number",
       (value) => !value || phoneRegExp.test(value)
     ),
   email: Yup.string()
