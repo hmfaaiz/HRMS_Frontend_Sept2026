@@ -18,6 +18,7 @@ import {
   fetchAllCompanyBanks,
   fetchAllBankBranch,
   fetchPayrollConfigApproverPermission,
+  fetchAllDesignationByGradeId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import axios from "axios";
@@ -39,8 +40,10 @@ import { useFormUIContext } from "../FormUIContext";
 import {
   clearPreviousSalaryRevisionFetched,
   fetchCurrentEmpSalary,
+  fetchPreviousEmpSalaryComp,
 } from "../../../_redux/redux-Actions";
-import { Trash2 } from "lucide-react";
+import { CirclePlus, Eye, Trash2 } from "lucide-react";
+import {CustomModal} from "../../../../../utils/common-modules/CustomModal";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 const formValidation = Yup.object().shape({
@@ -52,16 +55,16 @@ const formValidation = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   Employee: Yup.object().shape({
-    gradeId: Yup.string()
+    gradeId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-    designationId: Yup.string()
+    designationId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-    employeeTypeId: Yup.string()
+    employeeTypeId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-    employeeStatusId: Yup.string()
+    employeeStatusId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
   }),
@@ -231,7 +234,7 @@ export function FormEditForm({
   setemployeeId,
   revisedDate,
   isAccessForCreate,
-  setRevisedDate,
+  setRevisedDate,dataForEdit
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -267,10 +270,14 @@ export function FormEditForm({
   const [defBasicSalaryDB, setBasicSalaryDB] = useState(0);
   const [deferrors, setErrors] = useState({});
   const [user, setUser] = useState({});
+   const [dateOfJoining, setDateOfJoining] = useState();
+    const [localizationId, setLocalizationId] = useState();
+    const [dateOfBirth, setDateOfBirth] = useState();
   // const [revisedDate, setRevisedDate] = useState(null);
 
   useEffect(() => {
     if (data) {
+
       setUser(data);
       // setRevisedDate()
     }
@@ -280,10 +287,12 @@ export function FormEditForm({
     DEFAULT_CALCULATION_TYPE_DROPDOWN
   );
   const [currentSalaryMethod, setcurrentSalaryMethod] = useState("");
+  const [comparisonModal, setComparisonModal] = useState("");
   const [salaryApproverPermission, setSalaryApproverPermission] = useState(
     false
   );
   const [confirmationModal, setConfirmationModal] = useState(false);
+  const [dataSaveonfirmationModal, setDataSaveConfirmationModal] = useState(false);
 
   const formUIContext = useFormUIContext();
 
@@ -326,17 +335,7 @@ export function FormEditForm({
     );
   }, [user?.emp_bankId, dashboard.emp_bankId]);
 
-  useEffect(() => {
-    const emp_bank_branchId = defEmpBankBranch?.value
-      ? defEmpBankBranch.value
-      : user.emp_bank_branchId;
-    setDefaultEmpBankBranch(
-      dashboard.allBankBranch &&
-        dashboard.allBankBranch.filter((item) => {
-          return item.value === emp_bank_branchId;
-        })
-    );
-  }, [user?.emp_bank_branchId, dashboard.emp_bank_branchId]);
+
 
   useEffect(() => {
     const company_bankId = defCompanyBank?.value
@@ -406,7 +405,7 @@ export function FormEditForm({
       null,
       formUIProps.ids
     );
-  }, [user?.employeeId, dashboard.employeeId, formUIProps, formUIProps.ids]);
+  }, [user?.employeeId, dashboard.employeeId, formUIProps, formUIProps.ids,dataForEdit,dataForRead,data]);
 
   useEffect(() => {
     const payment_mode_Id = defPaymentModeList?.value
@@ -439,6 +438,8 @@ export function FormEditForm({
     fetchEmployeeSalaryEarningList(e.value, 0, setFieldValue);
   };
 
+
+
   const checkReadOnlyStatus = (values, readOnlyValues = []) => {
     if (
       !values.payment_mode_Id ||
@@ -448,6 +449,16 @@ export function FormEditForm({
     }
     return false;
   };
+
+    useEffect(() => {
+      if (!user.Id) {
+      
+        dispatch(fetchAllBanks());
+       
+      }
+    }, [dispatch]);
+
+ 
 
   const fetchEmployeeSalaryEarningList = async (
     employeeId,
@@ -478,7 +489,9 @@ export function FormEditForm({
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || "");
       setBasicSalary(response?.data?.data[0]?.basicSalary || "");
-
+      setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
+      setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
+ setLocalizationId(response?.data?.data[0]?.localizationId || "");
       if (response.data?.data?.[0]?.salaryMethod) {
         setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || "");
         setdropdownData(
@@ -586,29 +599,103 @@ export function FormEditForm({
 
   // }
 
+  // const addRow = (element) => {
+  //   const baseObj = {
+  //     earning_deduction_id: "",
+  //     calculation_type: "",
+  //     factorValue: 0,
+  //     amount: 0,
+  //     updatedAmount: 0,
+  //     transactionType:
+  //       element?.target?.id === "Other" ? "Earning" : element.target.id,
+  //     isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
+  //   };
+
+  //   setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
+  // };
+
+
+// const addRow = (element) => {
+//   const { id } = element.target;
+
+//   let baseObj = {
+//     Id: null, // mark as new record
+//     employeeId: user?.employeeId, 
+//     employee: null, 
+//     currency: "PKR", 
+//     earning_deduction_id: null,
+//     calculation_type: "",
+//     factorValue: 0,
+//     amount: 0,
+//     updatedAmount: 0,
+//     transactionType: "Earning", 
+//     isPartOfGrossSalary: 1,
+//   };
+
+//   if (id === "Earning") {
+//     baseObj.transactionType = "Earning";
+//     baseObj.isPartOfGrossSalary = 1;
+//   } else if (id === "OtherEarning") {
+//     baseObj.transactionType = "Earning";
+//     baseObj.isPartOfGrossSalary = 0;
+//   } else if (id === "Deduction") {
+//     baseObj.transactionType = "Deduction";
+//     baseObj.isPartOfGrossSalary = 0;
+//   }
+
+//   setDefaultMapEarningDeductionList((prev) => [...prev, baseObj]);
+// };
+
+
   const addRow = (element) => {
-    const baseObj = {
-      earning_deduction_id: "",
-      calculation_type: "",
-      factorValue: 0,
-      amount: 0,
-      updatedAmount: 0,
-      transactionType:
-        element?.target?.id === "Other" ? "Earning" : element.target.id,
-      isPartOfGrossSalary: element?.target?.id === "Other" ? 0 : 1,
-    };
 
-    setDefaultMapEarningDeductionList([...defMapEarningDeductionList, baseObj]);
-  };
 
-  const deleteRow = (element) => {
-    const data = defMapEarningDeductionList;
-    data.splice(element.target.id, 1);
+  if (element.target.id === "Other") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { employeeId: user?.employeeId, transactionType: "Earning", isPartOfGrossSalary: 0 },
+    ]);
+  } else if (element.target.id === "Gross") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Earning", isPartOfGrossSalary: 1 },
+    ]);
+  } else if (element.target.id === "Deduction") {
+    setDefaultMapEarningDeductionList([
+      ...defMapEarningDeductionList,
+      { transactionType: "Deduction", isPartOfGrossSalary: 0 },
+    ]);
+  }
+};
 
-    setDefaultMapEarningDeductionList([...data]);
-  };
 
+  // const deleteRow = (element) => {
+  //   const data = defMapEarningDeductionList;
+  //   data.splice(element.target.id, 1);
+
+  //   setDefaultMapEarningDeductionList([...data]);
+  // };
+
+
+    const deleteRow = (index, type) => {
+ 
+  setDefaultMapEarningDeductionList((list) =>
+    list.filter((item, idx) => {
+      if (type === "Gross") {
+        return !(idx === index && item.transactionType === "Earning" && item.isPartOfGrossSalary);
+      }
+      if (type === "Other") {
+        return !(idx === index && item.transactionType === "Earning" && !item.isPartOfGrossSalary);
+      }
+      if (type === "Deduction") {
+        return !(idx === index && item.transactionType === "Deduction");
+      }
+      return true;
+    })
+  );
+};
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
+   
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
     let grossSalaryInput = values.grossSalary;
@@ -641,7 +728,7 @@ export function FormEditForm({
           ...defMapEarningDeductionList.map((x) => {
             if (x.calculation_type == "% Of Gross") {
               x.updatedAmount = (grossSalaryInput * x.factorValue) / 100;
-              console.log("updated111", x.factorValue, x.updatedAmount);
+             
             }
             return x;
           }),
@@ -654,7 +741,7 @@ export function FormEditForm({
         ...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == "% Of Basic") {
             x.updatedAmount = (basicSalaryNumber * x.factorValue) / 100;
-            console.log("updated222", x.updatedAmount);
+           
             if (x.isPartOfGrossSalary) {
               basicSalaryNumber += x.updatedAmount;
             }
@@ -744,10 +831,10 @@ export function FormEditForm({
 
       // Check if amount is required
       if (
-        !objValidate.amount &&
+        !objValidate.amount && !objValidate.updatedAmount &&
         objValidate.calculation_type == "Fixed Amount"
       ) {
-        newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
+        newErrors[`updatedAmount-${index}`] = VALIDATION_MESSAGES.required;
       }
     });
 
@@ -764,10 +851,27 @@ export function FormEditForm({
     });
   };
 
-  const fetchBranch = (bankId) => {
-    dispatch(fetchAllBankBranch(bankId));
-  };
+useEffect(()=>{
+  if (user?.emp_bankId) {
 
+    dispatch(fetchAllBankBranch(user.emp_bankId));
+  };
+  
+},[user.emp_bankId])  
+
+  useEffect(() => {
+
+    const emp_bank_branchId = defEmpBankBranch?.value
+      ? defEmpBankBranch.value
+      : user.emp_bank_branchId;
+    setDefaultEmpBankBranch(
+      dashboard.allBankBranch &&
+        dashboard.allBankBranch.filter((item) => {
+          return item.value === emp_bank_branchId;
+        })
+    );
+
+  }, [user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
   useEffect(() => {
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
       (entity) => entity.subsidiaryId === Number(user.subsidiaryId)
@@ -802,18 +906,117 @@ export function FormEditForm({
     ];
   }, [dashboard?.allEmpTypeDynamicChildMenus, dashboard?.allEmpTypeChildMenus]);
 
-  console.log("aaaa111", isAccessForCreate);
+ 
 
+
+    const {
+ dataForSalaryComparison,
+      previousSalaryComparison,
+   
+    } = useSelector((state) => ({
+  
+      dataForSalaryComparison: state.emp_salary_revision.dataForSalaryComparison,
+      previousSalaryComparison: state.emp_salary_revision.previousSalaryComparison,
+
+    }));
+ 
+
+    
+  const handlePolicyModalClose = () => {
+    setComparisonModal(false);
+
+  };
+
+const comparisonFields = [
+  { key: "gradeId", updatedKey: "updatedGradeId", label: "Grade" },
+    { key: "designationId", updatedKey: "updatedDesignationId", label: "Designation" },
+      { key: "employeeTypeId", updatedKey: "updatedEmployeeTypeId", label: "Employee Type" },
+      { key: "employeeStatusId", updatedKey: "updatedEmployeeStatusId", label: "Employee Status" },
+
+  { key: "grossSalary", updatedKey: "updatedGrossSalary", label: "Gross Salary" },
+   { key: "basicSalary", updatedKey: "updatedBasicSalary", label: "Basic Salary" },
+     { key: "basicFactor", updatedKey: "updatedBasicFactor", label: "Basic Factor" },
+
+
+
+
+  { key: "grossPackage", updatedKey: "updatedGrossPackage", label: "Gross Package" },
+  
+
+
+  { key: "payment_mode_Id", updatedKey: "updatedPayment_mode_Id", label: "Payment Mode" },
+    { key: "emp_bankId", updatedKey: "updatedEmp_bankId", label: "Employee Bank" },
+  { key: "emp_bank_branchId", updatedKey: "updatedEmp_bank_branchId", label: "Employee Bank Branch" },
+  { key: "emp_bank_accNo", updatedKey: "updatedEmp_bank_accNo", label: "Employee Bank Account No" },
+  // { key: "emp_bank_accountTitle", updatedKey: "updatedEmp_bank_accountTitle", label: "Employee Bank Account Title" },
+
+
+    { key: "gratuity_member", updatedKey: "updatedGratuity_member", label: "Gratuity Member" },
+  { key: "gratuity_startDate", updatedKey: "updatedGratuity_startDate", label: "Gratuity Start Date" },
+
+
+    { key: "overtime_allowance", updatedKey: "updatedOvertime_allowance", label: "Overtime Allowance" },
+  { key: "overtime_working_day", updatedKey: "updatedOvertime_working_day", label: "Overtime Working Day" },
+  { key: "overtime_off_day", updatedKey: "updatedOvertime_off_day", label: "Overtime Off Day" },
+  { key: "overtime_holiday", updatedKey: "updatedOvertime_holiday", label: "Overtime Holiday" },
+
+
+
+    { key: "eobi_accNo", updatedKey: "updatedEobi_accNo", label: "EOBI Account" },
+  { key: "eobi_member", updatedKey: "updatedEobi_member", label: "EOBI Member" },
+  { key: "eobi_reg_date", updatedKey: "updatedEobi_reg_date", label: "EOBI Registration Date" },
+
+
+
+
+  { key: "social_security_accNo", updatedKey: "updatedSocial_security_accNo", label: "Social Security Account" },
+  { key: "social_security_member", updatedKey: "updatedSocial_security_member", label: "Social Security Member" },
+  { key: "social_security_reg_date", updatedKey: "updatedSocial_security_reg_date", label: "Social Security Registration Date" },
+
+
+  
+
+
+
+
+
+  // { key: "pf_accNo", updatedKey: "updatedPf_accNo", label: "Provident Fund Account" },
+  // { key: "pf_member", updatedKey: "updatedPf_member", label: "Provident Fund Member" },
+  // { key: "pf_reg_date", updatedKey: "updatedPf_reg_date", label: "Provident Fund Registration Date" },
+
+  // { key: "pension_accNo", updatedKey: "updatedPension_accNo", label: "Pension Account" },
+  // { key: "pension_member", updatedKey: "updatedPension_member", label: "Pension Member" },
+  // { key: "pension_reg_date", updatedKey: "updatedPension_reg_date", label: "Pension Registration Date" },
+  // { key: "profit_member", updatedKey: "updatedProfit_member", label: "Profit Member" },
+  // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
+  // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
+];
+  // useEffect(()=>{
+  //  if(user?.gradeId){
+  //     dispatch(fetchAllDesignationByGradeId(user?.gradeId , "allDesignationByGrade"))
+  //  }
+  // },[user?.gradeId])
+console.log("user11111",user)
   return (
     <>
       <Formik
         enableReinitialize={true}
         initialValues={{
-          ...user,
+          ...user,Employee: {
+      gradeId: user?.Employee?.gradeId || "",
+      designationId: user?.Employee?.designationId || "",
+      employeeTypeId: user?.Employee?.employeeTypeId || "",
+      employeeStatusId: user?.Employee?.employeeStatusId || "",
+    },
           // revisedDate: revisedDate || null, // fallback
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
+          const validationErrors = validate();
+          if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+      
+          } else {
           const earningDeductionList = defMapEarningDeductionList.map(
             (item) => ({
               ...item,
@@ -841,6 +1044,7 @@ export function FormEditForm({
             },
             earningDeductionList
           );
+        }
         }}
       >
         {({
@@ -861,9 +1065,177 @@ export function FormEditForm({
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
               )} */}
-
+{console.log("errr111",errors)}
             <Form className="form form-label-right">
               <fieldset disabled={dataForRead}>
+
+   
+
+{comparisonModal && (
+  <CustomModal
+    show={comparisonModal}
+    onClose={handlePolicyModalClose}
+    title="Salary Comparison"
+    className="max-w-7xl"
+  >
+    {/* -------- Top section: Salary fields comparison -------- */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {comparisonFields.map((field, index) => {
+        let previousValue = previousSalaryComparison?.[field.key];
+        let updatedValue = previousSalaryComparison?.[field.updatedKey];
+
+        // Map IDs to formName for readable display
+        if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
+        if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
+
+        if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
+        if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
+
+        if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
+        if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
+
+        if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
+        if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
+
+
+
+        // bank
+          if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
+        if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
+     
+     
+        if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
+        if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
+     
+        if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
+        if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
+
+
+       return (
+  <div
+    key={index}
+    className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
+  >
+    <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
+    <p className="text-gray-700 text-sm">
+      <span className="font-medium">Previous:</span>{" "}
+      {previousValue === true
+        ? "Yes"
+        : previousValue === false
+        ? "No"
+        : previousValue ?? "—"}
+    </p>
+    <p className="text-gray-700 text-sm">
+      <span className="font-medium">Updated:</span>{" "}
+      {updatedValue === true
+        ? "Yes"
+        : updatedValue === false
+        ? "No"
+        : updatedValue ?? "—"}
+    </p>
+  </div>
+);
+
+      })}
+    </div>
+
+    {/* -------- Bottom section: Table for array data -------- */}
+    <div className="space-y-8">
+      {/* Earnings Table */}
+      <div>
+        <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
+        <table className="w-full border border-gray-200 text-sm">
+          <thead className="border-gray-200 shadow-sm bg-white">
+            <tr>
+              <th className="border px-3 py-2 text-left">Earning Name</th>
+              <th className="border px-3 py-2 text-left">Calculation Type</th>
+              <th className="border px-3 py-2 text-left">Factor Value</th>
+              <th className="border px-3 py-2 text-left">Previous Amount</th>
+              <th className="border px-3 py-2 text-left">Updated Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+              (item) => item.transactionType === "Earning"
+            ).map((item, i) => (
+              <tr key={i}>
+                <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
+                <td className="border px-3 py-2">{item?.calculation_type}</td>
+                <td className="border px-3 py-2">{item?.factorValue}</td>
+                <td className="border px-3 py-2">{item?.amount}</td>
+                <td className="border px-3 py-2">{item?.updatedAmount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Other Earnings Table */}
+      {/* <div>
+        <h3 className="text-lg font-semibold text-primary mb-4">Other Earnings</h3>
+        <table className="w-full border border-gray-200 text-sm">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-3 py-2 text-left">Name</th>
+              <th className="border px-3 py-2 text-left">Calculation Type</th>
+              <th className="border px-3 py-2 text-left">Factor Value</th>
+              <th className="border px-3 py-2 text-left">Previous Amount</th>
+              <th className="border px-3 py-2 text-left">Updated Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+              (item) => item.transactionType === "OtherEarning"
+            ).map((item, i) => (
+              <tr key={i}>
+                <td className="border px-3 py-2">{item.earning_deduction_name}</td>
+                <td className="border px-3 py-2">{item.calculation_type}</td>
+                <td className="border px-3 py-2">{item.factorValue}</td>
+                <td className="border px-3 py-2">{item.amount}</td>
+                <td className="border px-3 py-2">{item.updatedAmount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div> */}
+
+      {/* Deductions Table */}
+      <div>
+        <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
+        <table className="w-full border border-gray-200 text-sm">
+            <thead className="border-gray-200 shadow-sm bg-white">
+            <tr>
+              <th className="border px-3 py-2 text-left">Deduction Name</th>
+              <th className="border px-3 py-2 text-left">Calculation Type</th>
+              <th className="border px-3 py-2 text-left">Factor Value</th>
+              <th className="border px-3 py-2 text-left">Previous Amount</th>
+              <th className="border px-3 py-2 text-left">Updated Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+              (item) => item.transactionType === "Deduction"
+            ).map((item, i) => (
+              <tr key={i}>
+                <td className="border px-3 py-2">
+                  {(dashboard?.allDeductions || [])
+                    .filter((x) => x.value === item.earning_deduction_id)
+                    .map((x) => <span key={x.value}>{x.label}</span>)}
+                </td>
+                <td className="border px-3 py-2">{item.calculation_type}</td>
+                <td className="border px-3 py-2">{item.factorValue}</td>
+                <td className="border px-3 py-2">{item.amount}</td>
+                <td className="border px-3 py-2">{item.updatedAmount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </CustomModal>
+)}
+
+                          
                 <div className="grid grid-cols-6 gap-x-3 gap-y-1">
                   <div>
                     <label>
@@ -899,6 +1271,9 @@ export function FormEditForm({
                     )}
                   </div>
                 </div>
+
+
+
 
                 {/* {confirmationModal && (  */}
 
@@ -952,7 +1327,61 @@ export function FormEditForm({
                 </Modal>
                 {/* )} */}
 
-                <FormTable />
+
+ <Modal
+                  show={dataSaveonfirmationModal}
+                  onHide={dataSaveonfirmationModal}
+                  aria-labelledby="example-modal-sizes-title-lg"
+                >
+                  {/*begin::Loading*/}
+                  {/* {isLoading && <ModalProgressBar />} */}
+                  {/*end::Loading*/}
+                  <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                      Confirmation
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <span>Are you sure want to save salary?</span>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setDataSaveConfirmationModal(false)}
+                        className="btn btn-light btn-elevate"
+                      >
+                        Cancel
+                      </button>
+                      <> </>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                      calculateEmployeeSalaryPolicy(e, setFieldValue, values);
+                      handleSubmit();
+                      setDataSaveConfirmationModal(false)
+
+                      if (
+                        values.revisedDate === null ||
+                        values.revisedDate === undefined
+                      ) {
+                        toast.error("Please select a salary revision date");
+                        return;
+                      }
+                    }}
+                        className="btn btn-primary btn-elevate"
+                      >
+                        Save
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    </div>
+                  </Modal.Footer>
+                </Modal>
+
+
+             
 
                 {user?.employeeId && (
                   <div className="w-full overflow-x-auto">
@@ -972,6 +1401,11 @@ export function FormEditForm({
                             setFieldValue("Employee.gradeId", e.value || null);
                             // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, e.value, values.Employee.employeeTypeId);
                             setConfirmationModal(true);
+                             dispatch(fetchAllDesignationByGradeId( e.value  , "allDesignationByGrade"))
+                              setFieldValue(
+                              "Employee.designationId",
+                              null
+                            );
                           }}
                           value={
                             dashboard?.allEmployeegradeList?.find(
@@ -981,7 +1415,7 @@ export function FormEditForm({
                           }
                           // options={dashboard?.allEmployeegradeList}
                           options={[
-                            { label: "Select", value: "" },
+                            // { label: "Select", value: "" },
                             ...(Array.isArray(dashboard?.allEmployeegradeList)
                               ? dashboard?.allEmployeegradeList
                               : []),
@@ -994,7 +1428,7 @@ export function FormEditForm({
                       {/* Designation */}
                       <div>
                         <SearchSelect
-                          name="designationId"
+                          name="Employee.designationId"
                           label={
                             <span>
                               Designation
@@ -1007,22 +1441,33 @@ export function FormEditForm({
                               e.value || null
                             );
                           }}
-                          value={
-                            dashboard?.allDesignations?.find(
-                              (option) =>
-                                option.value === values?.Employee?.designationId
-                            ) || null
-                          }
+                          // value={
+                          //   dashboard?.allDesignations?.find(
+                          //     (option) =>
+                          //       option.value === values?.Employee?.designationId
+                          //   ) || null
+                          // }
+                             value={
+                          dashboard?.allDesignationByGrade?.find(
+                            (option) => option.value ===  values?.Employee?.designationId
+                          ) || null
+                        }
                           // options={dashboard?.allDesignations}
                           options={[
-                            { label: "Select", value: "" },
-                            ...(Array.isArray(dashboard?.allDesignations)
-                              ? dashboard?.allDesignations
+                    
+                            ...(Array.isArray(dashboard?.allDesignationByGrade)
+                              ? dashboard?.allDesignationByGrade
                               : []),
                           ]}
-                          error={errors?.Employee?.designationId}
+                          // error={errors?.Employee?.designationId}
+                          //  error={errors?.Employee?.designationId}
                           touched={touched?.Employee?.designationId}
                         />
+                         {errors?.Employee?.designationId && (
+    <span className="invalid-feedback">
+      {errors.Employee.designationId}
+    </span>
+  )}
                       </div>
 
                       {/* Grade */}
@@ -1120,12 +1565,13 @@ export function FormEditForm({
                         }
                         placeholder="Enter Gross Salary"
                         autoComplete="off"
-                        disabled={!values.revisedDate}
-                        // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
-                        value={values.grossSalary || defGrossSalaryDB || ""}
+                        // disabled={!values.revisedDate}
+                        disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross' || !values.revisedDate}
+                        // value={values.grossSalary || defGrossSalaryDB || ""}
                         onChange={(e) => {
                           setGrossSalaryDB(e);
                           setFieldValue("grossSalary", e);
+                       
                         }}
                       />
                     </div>
@@ -1199,16 +1645,37 @@ export function FormEditForm({
                         value="Calculate"
                       ></input>
                     </div>
+                    {dataForSalaryComparison && (  <div className="mt-5 flex justify-end">
+                    
+                      <button
+                    type="button"
+                 
+                   
+                    onClick={(e) => {
+                     dispatch(fetchPreviousEmpSalaryComp(user?.Id))
+                     setComparisonModal(true)
+                     
+                    }}
+                    className="btn btn-primary btn-elevate m-1"
+                  >
+                     <Eye className="w-4 h-4 text-white" /> View Last Salary
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+                  </div>)}
+
                   </div>
                 }
                 {/* For Earning WIth Payroll Include ByDefault Yes  */}
                 <hr />
+                 {currentSalaryMethod && (<>
                 <div>
                   <div className="flex justify-between items-center">
                     <h6 className="font-bold mb-0 text-primary">
                       Earnings{"  "}
                     </h6>
-                    {/* {!Boolean(currentSalaryMethod) && (
+                    {!Boolean(currentSalaryMethod) && (
                         <button
                           type="button"
                           className="btn btn-primary"
@@ -1218,7 +1685,7 @@ export function FormEditForm({
                           <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                           Add
                         </button>
-                      )} */}
+                      )}
                   </div>
                   <div className="w-full overflow-x-auto">
                     <div className="react-bootstrap-table table-responsive">
@@ -1229,7 +1696,7 @@ export function FormEditForm({
                           <td>Earning</td>
                           <td>Calculation Type</td>
                           <td>Factor</td>
-                          <td>Current</td>
+                          <td>Amount</td>
                           <td>Updated Amount</td>
                         </tr>
                         {defMapEarningDeductionList?.map(
@@ -1491,7 +1958,8 @@ export function FormEditForm({
 
                     </div>
                     </>} */}
-                </div>
+                </div> </>)}
+               
                 {/* For Earning WIth Payroll Include ByDefault No  */}
                 <hr />
                 <div>
@@ -1499,17 +1967,17 @@ export function FormEditForm({
                     <h6 className="font-bold mb-0 text-primary">
                       Other Earnings
                     </h6>
-                    {/* {!Boolean(currentSalaryMethod) && (
+                    {/* {!Boolean(currentSalaryMethod) && ( */}
                       <button
                         type="button"
                         className="btn btn-primary"
-                        id="Earning"
+                        id="Other"
                         onClick={addRow}
                       >
                         <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                         Add
                       </button>
-                    )} */}
+                    {/* )} */}
                   </div>
                   <div className="w-full overflow-x-auto">
                     <div className="react-bootstrap-table table-responsive">
@@ -1639,7 +2107,17 @@ export function FormEditForm({
                                         name: `factorValue-${rightindex}`,
                                         value: obj.factorValue,
                                         onBlur: () => {},
-                                        onChange: (field, value) => {
+                                     
+                                      }}
+                                      
+                                      form={{
+                                        touched: {},
+                                        errors: {},
+                                        setFieldValue: () => {},
+                                        setFieldTouched: () => {},
+                                      }}
+                                            onChange={ (value) => {
+                                   
                                           setDefaultMapEarningDeductionList(
                                             (list) =>
                                               list.map((item, idx) =>
@@ -1650,20 +2128,8 @@ export function FormEditForm({
                                                     }
                                                   : item
                                               )
-                                          );
-                                          setErrors((prev) => ({
-                                            ...prev,
-                                            [`factorValue-${rightindex}`]: "",
-                                          }));
-                                        },
-                                      }}
-                                      form={{
-                                        touched: {},
-                                        errors: {},
-                                        setFieldValue: () => {},
-                                        setFieldTouched: () => {},
-                                      }}
-                                      label={null}
+                                          )}}
+                                      // label={null}
                                       disabled={
                                         obj.calculation_type === "Fixed Amount"
                                       }
@@ -1702,10 +2168,11 @@ export function FormEditForm({
                                         setFieldTouched: () => {},
                                       }}
                                       label={null}
-                                      disabled={
-                                        obj.calculation_type == "% Of Gross" ||
-                                        obj.calculation_type == "% Of Basic"
-                                      }
+                                      // disabled={
+                                      //   obj.calculation_type == "% Of Gross" ||
+                                      //   obj.calculation_type == "% Of Basic"
+                                      // }
+                                      disabled={true}
                                       value={obj.amount}
                                     />
                                     {deferrors[`amount-${rightindex}`] && (
@@ -1762,7 +2229,11 @@ export function FormEditForm({
                                       </div>
                                     )}
                                   </td>
-                                  <td id={rightindex} onClick={deleteRow}>
+                                  <td id={rightindex}
+                                  
+                                  // onClick={deleteRow}
+                                  onClick={() => deleteRow(rightindex, "Other")}
+                                  >
                                     {" "}
                                     <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                   </td>
@@ -1774,15 +2245,15 @@ export function FormEditForm({
                     </div>
                   </div>
                   {
-                    <>
-                      {/* <div className="from-group row">
-                        <div className="col-12 col-md-4 mt-3">
-                          <input type='button' id="Other" class="btn btn-primary" onClick={addRow} value='+Add'></input>
-                        </div>
+                    // <>
+                    //   <div className="from-group row">
+                    //     <div className="col-12 col-md-4 mt-3">
+                    //       <input type='button' id="Other" class="btn btn-primary" onClick={addRow} value='+Add'></input>
+                    //     </div>
 
 
-                      </div> */}
-                    </>
+                    //   </div>
+                    // </>
                   }
                 </div>
                 <hr />
@@ -1791,17 +2262,17 @@ export function FormEditForm({
                     <h6 className="font-bold mb-0 text-primary">
                       Deductions{"  "}
                     </h6>
-                    {/* {!Boolean(currentSalaryMethod) && (
+                    {/* {!Boolean(currentSalaryMethod) && ( */}
                         <button
                           type="button"
                           className="btn btn-primary"
-                          id="Earning"
+                          id="Deduction"
                           onClick={addRow}
                         >
                           <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                           Add
                         </button>
-                      )} */}
+                      {/* )} */}
                   </div>
                   <div className="w-full overflow-x-auto">
                     <div className="react-bootstrap-table table-responsive">
@@ -1979,10 +2450,11 @@ export function FormEditForm({
                                         setFieldTouched: () => {},
                                       }}
                                       label={null}
-                                      disabled={
-                                        obj.calculation_type == "% Of Gross" ||
-                                        obj.calculation_type == "% Of Basic"
-                                      }
+                                      // disabled={
+                                      //   obj.calculation_type == "% Of Gross" ||
+                                      //   obj.calculation_type == "% Of Basic"
+                                      // }
+                                      disabled={true}
                                       value={obj.amount}
                                     />
 
@@ -2007,7 +2479,7 @@ export function FormEditForm({
                                           (list) =>
                                             list.map((item, idx) =>
                                               idx === rightindex
-                                                ? { ...item, amount: Number(e) }
+                                                ? { ...item, updatedAmount: Number(e) }
                                                 : item
                                             )
                                         );
@@ -2041,7 +2513,7 @@ export function FormEditForm({
                                   <td
                                     className="text-right"
                                     id={rightindex}
-                                    onClick={deleteRow}
+                                     onClick={() => deleteRow(rightindex, "Deduction")}
                                   >
                                     {" "}
                                     <Trash2 className="w-4 h-4 text-black cursor-pointer" />
@@ -2206,8 +2678,9 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("emp_bankId", e.value);
                         setDefaultBanks(e);
-                        dispatch(fetchAllBanks(e.value));
-                        fetchBranch(e.value);
+                        // dispatch(fetchAllBanks(e.value));
+                          dispatch(fetchAllBankBranch(e.value));
+                        // fetchBranch(e.value);
                       }}
                       value={
                         !checkReadOnlyStatus(values, [151, 152]) ? defBank : ""
@@ -2228,7 +2701,7 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("emp_bank_branchId", e.value);
                         setDefaultEmpBankBranch(e);
-                        dispatch(fetchAllBankBranch(e.value));
+                        // dispatch(fetchAllBankBranch(e.value));
                       }}
                       value={
                         !checkReadOnlyStatus(values, [151, 152])
@@ -2259,7 +2732,8 @@ export function FormEditForm({
 
                     {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                   </div>
-                  <div>
+                  {/* Hidden by Mubin bhai  12-9-2025*/}
+                  {/* <div>
                     <Field
                       name="emp_bank_accountTitle"
                       isDisabled={checkReadOnlyStatus(values, [151, 152])}
@@ -2277,7 +2751,7 @@ export function FormEditForm({
                       label={<span> Bank Account Title</span>}
                       autoComplete="off"
                     />
-                  </div>
+                  </div> */}
                 </div>
 
                 <hr />
@@ -2643,6 +3117,7 @@ export function FormEditForm({
                   </Accordion.Collapse>
                 </Card>
               </Accordion> */}
+             
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-3 gap-y-1">
                 <h6 className="m-0 text-black font-bold text-base col-span-1 xl:col-span-2 sm:text-lg py-1">
                   Entitlements
@@ -2702,6 +3177,11 @@ export function FormEditForm({
                         autoComplete="off"
                         disabled={!values.gratuity_member || dataForRead}
                         // value = {values.dateOfJoining}
+                          minDate={
+                                    dateOfJoining
+                                      ? new Date(dateOfJoining)
+                                      : null
+                                  }
                       />
                       <ErrorMessage
                         className="form-feedBack"
@@ -2822,6 +3302,7 @@ export function FormEditForm({
                     </div>
                   </div>
                 </div>
+                  {localizationId == 1 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
                   <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
                     Deduction
@@ -2878,6 +3359,11 @@ export function FormEditForm({
                           name="eobi_reg_date"
                           autoComplete="off"
                           disabled={!values.eobi_member || dataForRead}
+                              minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -2968,6 +3454,12 @@ export function FormEditForm({
                             !values.social_security_member || dataForRead
                           }
                           // value = {values.dateOfJoining}
+                           minDate={
+                                    dateOfBirth
+                                      ? new Date(dateOfBirth)
+                                      : null
+                                  }
+                            
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -3005,6 +3497,7 @@ export function FormEditForm({
                     </div>
                   </div>
                 </div>
+                  )}
               </div>
 
               <div className="form-group row justify-content-end p-5">
@@ -3012,7 +3505,7 @@ export function FormEditForm({
                   <button
                     type="button"
                     onClick={() => {
-                      setemployeeId(null);
+                      // setemployeeId(null);
                       dispatch(clearPreviousSalaryRevisionFetched());
                       dispatch(fetchCurrentEmpSalary(null));
                       setIds("");
@@ -3030,7 +3523,7 @@ export function FormEditForm({
                     type="button"
                     // onClick={onHide}
                     onClick={() => {
-                      setemployeeId(null);
+                      // setemployeeId(null);
                       dispatch(clearPreviousSalaryRevisionFetched());
                       dispatch(fetchCurrentEmpSalary(null));
                       setIds("");
@@ -3048,17 +3541,26 @@ export function FormEditForm({
                 {!dataForRead && isAccessForCreate && (
                   <button
                     type="button"
-                    disabled={!values.grossSalary || values.grossSalary == 0}
+                    disabled={(!values.grossSalary && !values.grossSalary ) || !dashboard?.allDesignationByGrade}
                     // || defMapEarningDeductionList.some(obj => !obj.updatedAmount || obj.updatedAmount == 0)
                     onClick={(e) => {
                       calculateEmployeeSalaryPolicy(e, setFieldValue, values);
-                      handleSubmit();
+                      // handleSubmit();
+                      setDataSaveConfirmationModal(true)
 
                       if (
                         values.revisedDate === null ||
                         values.revisedDate === undefined
                       ) {
                         toast.error("Please select a salary revision date");
+                        return;
+                      } 
+                      
+                      if (
+                        values.Employee.designationId === null ||
+                        values.Employee.designationId === undefined
+                      ) {
+                        toast.error("Please select a designation");
                         return;
                       }
                     }}

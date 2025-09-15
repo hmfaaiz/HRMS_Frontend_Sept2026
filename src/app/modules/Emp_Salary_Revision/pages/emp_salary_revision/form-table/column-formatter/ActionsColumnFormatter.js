@@ -3,7 +3,7 @@ import SVG from "react-inlinesvg";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { updateUserAccess } from "../../../../_redux/redux-Actions";
+import { fetchPreviousEmpSalaryById, updateUserAccess } from "../../../../_redux/redux-Actions";
 import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
@@ -29,7 +29,7 @@ export function ActionsColumnFormatter(
 
   // const dispatch = useDispatch();
 
-  // console.log("aaa111a1111",activeFiscalYear)
+
   return (
     <div className="space-x-2">
       {" "}
@@ -41,6 +41,7 @@ export function ActionsColumnFormatter(
             onClick={() => {
               setIds(row.Id);
               dispatch(updateUserAccess("read"));
+              dispatch(fetchPreviousEmpSalaryById(row.Id));
             }}
           >
             <Eye className="w-4 h-4 text-black cursor-pointer" />
@@ -54,7 +55,8 @@ export function ActionsColumnFormatter(
           <a
             onClick={() => {
               setIds(row.Id);
-              //  dispatch(updateUserAccess("edit"))
+               dispatch(updateUserAccess("edit"))
+               dispatch(fetchPreviousEmpSalaryById(row.Id));
             }}
           >
             <Pencil className="w-4 h-4 text-black cursor-pointer" />

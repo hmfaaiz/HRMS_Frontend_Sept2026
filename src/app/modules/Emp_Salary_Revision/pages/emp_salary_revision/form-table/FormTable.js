@@ -51,7 +51,7 @@ export function FormTable() {
 
   //totalCount = 10
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
-  console.log("activeFiscalYear2222", activeFiscalYear?.payrollMonth);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
