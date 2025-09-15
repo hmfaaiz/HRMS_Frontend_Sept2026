@@ -32,6 +32,7 @@ function PatternListForm({
 
               {/* {!isdataForRead && values?.list.length < 31 && ( */}
                 <button
+                disabled={!values.exitTypeId}
                   type="button"
                   className="btn btn-primary btn-elevate"
                   onClick={() =>

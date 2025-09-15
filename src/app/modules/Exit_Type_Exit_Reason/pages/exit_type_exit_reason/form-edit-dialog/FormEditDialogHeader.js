@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Exit Type Exit Reason";
+    let _title = id ? "" : "Add Exit Type / Reason Mapping";
     if (id) {
-      _title = `Edit Exit Type Exit Reason`;
+      _title = `Edit Exit Type / Reason Mapping`;
     } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }
