@@ -31,16 +31,16 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 const formValidation = Yup.object()
   .shape({
     subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
-    dojFrom: Yup.date().optional(),
-    dojTo: Yup.date()
+    dojFrom: Yup.date().nullable().optional(),
+    dojTo: Yup.date().nullable()
       .optional()
       .min(Yup.ref("dojFrom"), "'To Date' should not be less than 'From Date'."),
-    docFrom: Yup.date().optional(),
-    docTo: Yup.date()
+    docFrom: Yup.date().nullable().optional(),
+    docTo: Yup.date().nullable()
       .optional()
       .min(Yup.ref("docFrom"), "'To Date' should not be less than 'From Date'."),
-    dobFrom: Yup.date().optional(),
-    dobTo: Yup.date()
+    dobFrom: Yup.date().nullable().optional(),
+    dobTo: Yup.date().nullable()
       .optional()
       .min(Yup.ref("dobFrom"), "'To Date' should not be less than 'From Date'."),
 

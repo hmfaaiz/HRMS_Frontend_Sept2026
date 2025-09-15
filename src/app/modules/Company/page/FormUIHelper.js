@@ -79,6 +79,11 @@ export const moduleList = [
     key : "payrollModule",
     value: false,
   },
+  {
+    label: "Recruitment Module",
+    key : "recruitmentModule",
+    value: false,
+  },
 ];
 
 export const initialFilter = {

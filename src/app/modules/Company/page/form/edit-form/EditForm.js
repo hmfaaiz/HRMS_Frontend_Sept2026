@@ -20,13 +20,13 @@ import Axios from "axios";
 import { toast } from "react-toastify";
 
 const USERS_URL = process.env.REACT_APP_API_URL;
-const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
+const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
 const formSchema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^[A-Za-z\s.-]+$/, "Name must only contain letters.")
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
   companyLegalName: Yup.string()
-    .matches(/^[A-Za-z\s.-]+$/, "Legal Name must only contain letters.")
+.nullable()
     .required(VALIDATION_MESSAGES.required),
   companyCode: Yup.string().required(VALIDATION_MESSAGES.required),
   phone: Yup.string()
@@ -428,7 +428,7 @@ export const EditForm = ({
 
                   <div className="text-black mt-1">
                     <label>
-                      Subsidiary
+                      Module Access allowed
                       <span style={{ color: "red" }}>*</span>
                     </label>
                     <div className="overflow-auto min-h-16 overflow-y-auto">

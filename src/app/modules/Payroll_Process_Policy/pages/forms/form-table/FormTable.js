@@ -405,6 +405,10 @@ export function FormTable(user) {
           then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
+        journalCashAccountId : Yup.string()
+        .notRequired(),
+                journalChequeAccountId : Yup.string()
+        .notRequired(),
     },
 
   );
@@ -470,6 +474,11 @@ export function FormTable(user) {
     sessi_basis: "",
     sessi_employeer_value_in_percent: "",
     sessi_employee_value_in_percent: "",
+
+    journalChequeAccountId : "",
+    journalCashAccountId : "",
+
+    
 
     //-- Other
   };
@@ -560,7 +569,10 @@ export function FormTable(user) {
 
         salaryApproverId: user.salaryApproverId,
         loanApproverId: user.loanApproverId,
-        payrollApproverId: user.payrollApproverId
+        payrollApproverId: user.payrollApproverId,
+
+        journalChequeAccountId : user?.journalChequeAccountId,
+        journalCashAccountId : user?.journalCashAccountId
 
       };
 
@@ -927,7 +939,7 @@ export function FormTable(user) {
                     Email Preferences
                   </h6>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
-                    <div className="">
+                    {/* <div className="">
                       <SearchSelect
                         name="sender_emailId"
                         label={<span>Email Sender</span>}
@@ -945,9 +957,9 @@ export function FormTable(user) {
                         touched={touched.sender_emailId}
                         options={dashboard.allEmployees}
                       />
-                    </div>
+                    </div> */}
                     <div className="md:ml-20">
-                      <label>Email Recipents</label>
+                      <label>Email Recipients</label>
 
 
 
@@ -1603,7 +1615,47 @@ export function FormTable(user) {
               <hr></hr>
 </>)  }
               <div>
-                
+                <div className="my-1">
+                  <h6 className="font-bold mb-0 text-primary">
+                    Journal Cash & Cheque Information{"  "}
+                  </h6>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3">
+                    <div>
+                  <label> Cash Account </label>
+                          <select className="form-control"
+
+                    onChange={(e) => {
+                      setFieldValue('journalCashAccountId', e.target.value)
+                    }}
+                    value={values.journalCashAccountId}
+                    name="journalCashAccountId">
+                    <option value="-1"> Select</option>
+                    {
+                      dashboard?.allJournalBankAccounts?.map((x) => {
+                        return <option value={x.value}> {x.label} </option>
+                      })}
+                  </select>
+                  {errors.journalCashAccountId && touched.journalCashAccountId && <ErrorMessage className="form-feedBack" name="journalCashAccountId" component="div" />}
+                    </div>
+               <div>
+                      <label> Cheque Account </label>
+                          <select className="form-control"
+
+                    onChange={(e) => {
+                      setFieldValue('journalChequeAccountId', e.target.value)
+                    }}
+                    value={values.journalChequeAccountId}
+                    name="journalChequeAccountId">
+                    <option value="-1"> Select</option>
+                    {
+                      dashboard?.allJournalBankAccounts?.map((x) => {
+                        return <option value={x.value}> {x.label} </option>
+                      })}
+                  </select>
+                  {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="form-feedBack" name="journalChequeAccountId" component="div" />}
+                    </div>
+                  </div>
+                  </div>                
                 <div className="flex justify-between items-center">
                   <h6 className="font-bold mb-0 text-primary">
                     Journal Accounts & Bank Information{"  "}
@@ -1624,7 +1676,7 @@ export function FormTable(user) {
                       <tr className="custom-table-header">
                         {/* <td>Employee</td> */}
 
-                        <td className="col-32">Journal Bank Acc#</td>
+                        <td className="col-32">Journal Bank Account</td>
                         <td className="col-32">Bank Code Employer</td>
                         <td className="col-32">Bank Account No</td>
                         <td className="col-31">Default</td>
