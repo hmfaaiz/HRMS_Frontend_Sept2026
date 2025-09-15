@@ -17,7 +17,7 @@ import { CircleMinus, CirclePlus } from "lucide-react";
 
 export function LeaveRegisterPage() {
   const dispatch = useDispatch();
-    const [activeKey, setActiveKey] = useState(null);
+    const [activeKey, setActiveKey] = useState("0");
   const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.leave_register.listLoading,

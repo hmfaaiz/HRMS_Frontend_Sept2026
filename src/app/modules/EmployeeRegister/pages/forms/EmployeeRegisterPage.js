@@ -18,7 +18,7 @@ import TCard from "../../../../utils/common-modules/TCard";
 
 export function EmployeeRegisterPage() {
   const dispatch = useDispatch();
-  const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState("0");
   const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.employee_register.listLoading,

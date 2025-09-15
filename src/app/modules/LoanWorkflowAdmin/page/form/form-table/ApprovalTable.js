@@ -194,8 +194,12 @@ export function ApprovalFormTable() {
         minWidth: "140px",
         maxWidth: "140px",
       },
-      formatter: (cell) => {
-        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+      formatter: (cell, row) => {
+        return `${
+          row?.authorityStatus === "P"
+            ? `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`
+            : ""
+        }`;
       },
     },
     {

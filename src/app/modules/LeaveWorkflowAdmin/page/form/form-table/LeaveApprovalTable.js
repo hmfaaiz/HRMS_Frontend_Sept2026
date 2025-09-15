@@ -202,8 +202,12 @@ export function LeaveApprovalFormTable() {
         minWidth: "190px",
         maxWidth: "190px",
       },
-      formatter: (cell) => {
-        return `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`;
+      formatter: (cell, row) => {
+        return `${
+          row?.authorityStatus === "P"
+            ? `${cell?.firstName} ${cell?.middleName} ${cell?.lastName}`
+            : ""
+        }`;
       },
     },
     {

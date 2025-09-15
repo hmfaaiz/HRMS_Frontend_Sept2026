@@ -256,10 +256,10 @@ export function LeaveWorkflowTable({ onHide, show }) {
                     <div className="grid grid-cols-4">
                       <div className="font-medium col-span-1">To</div>
                       <div className="col-span-3">
-                        {formUIProps?.leaveData?.parentData?.from
+                        {formUIProps?.leaveData?.parentData?.to
                           ? format(
                               new Date(
-                                formUIProps?.leaveData?.parentData?.from
+                                formUIProps?.leaveData?.parentData?.to
                               ),
                               "dd-MMM-yyyy"
                             )

@@ -314,7 +314,7 @@ export function WorkflowTable({ onHide, show }) {
                     <div className="grid grid-cols-2">
                       <div className="font-medium col-span-1">Reason</div>
                       <div className="col-span-1">
-                        {formUIProps?.currentData?.requestData?.comments}
+                        {formUIProps?.currentData?.parentData?.comments}
                       </div>
                     </div>
                     <div className="grid grid-cols-2">

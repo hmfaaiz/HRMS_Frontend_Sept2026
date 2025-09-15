@@ -12,7 +12,7 @@ import { CircleMinus, CirclePlus } from "lucide-react";
 
 export const FormCard = () => {
   const FormUIContext = useFormUIContext();
-  const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState('0');
   const { listLoading } = useSelector(
     (state) => ({
       listLoading: state?.loan_workflow_admin?.listLoading,
