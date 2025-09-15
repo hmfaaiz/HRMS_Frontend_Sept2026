@@ -756,6 +756,28 @@ useEffect(()=>{
       ) {
         newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
       }
+
+            // Check if amount is required
+      if (
+        !objValidate.amount
+        // objValidate.calculation_type == "Fixed Amount"
+      ) {
+        newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
+      }
+
+
+
+           // Fixed Amount case
+    // if (
+    //   objValidate.calculation_type ==(objValidate.calculation_type == "% Of Gross" ||
+    //       objValidate.calculation_type == "% Of Basic")
+    //   (!objValidate.amount && Number(objValidate.factorValue) > 0)
+    // ) {
+    //   newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
+    // }
+
+
+
     });
 
     return newErrors;

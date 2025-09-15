@@ -18,6 +18,7 @@ import {
   fetchAllCompanyBanks,
   fetchAllBankBranch,
   fetchPayrollConfigApproverPermission,
+  fetchAllDesignationByGradeId,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import axios from "axios";
@@ -54,16 +55,16 @@ const formValidation = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   Employee: Yup.object().shape({
-    gradeId: Yup.string()
+    gradeId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-    designationId: Yup.string()
+    designationId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-    employeeTypeId: Yup.string()
+    employeeTypeId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-    employeeStatusId: Yup.string()
+    employeeStatusId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
   }),
@@ -694,6 +695,7 @@ export function FormEditForm({
   );
 };
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
+   
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
     let grossSalaryInput = values.grossSalary;
@@ -989,14 +991,23 @@ const comparisonFields = [
   // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
   // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
 ];
-
-
+  // useEffect(()=>{
+  //  if(user?.gradeId){
+  //     dispatch(fetchAllDesignationByGradeId(user?.gradeId , "allDesignationByGrade"))
+  //  }
+  // },[user?.gradeId])
+console.log("user11111",user)
   return (
     <>
       <Formik
         enableReinitialize={true}
         initialValues={{
-          ...user,
+          ...user,Employee: {
+      gradeId: user?.Employee?.gradeId || "",
+      designationId: user?.Employee?.designationId || "",
+      employeeTypeId: user?.Employee?.employeeTypeId || "",
+      employeeStatusId: user?.Employee?.employeeStatusId || "",
+    },
           // revisedDate: revisedDate || null, // fallback
         }}
         validationSchema={formValidation}
@@ -1054,7 +1065,7 @@ const comparisonFields = [
                   <div className="spinner spinner-lg spinner-success" />
                 </div>
               )} */}
-
+{console.log("errr111",errors)}
             <Form className="form form-label-right">
               <fieldset disabled={dataForRead}>
 
@@ -1390,6 +1401,11 @@ const comparisonFields = [
                             setFieldValue("Employee.gradeId", e.value || null);
                             // fetchEmployeeSalaryEarningList(user.employeeId, 0, setFieldValue, e.value, values.Employee.employeeTypeId);
                             setConfirmationModal(true);
+                             dispatch(fetchAllDesignationByGradeId( e.value  , "allDesignationByGrade"))
+                              setFieldValue(
+                              "Employee.designationId",
+                              null
+                            );
                           }}
                           value={
                             dashboard?.allEmployeegradeList?.find(
@@ -1399,7 +1415,7 @@ const comparisonFields = [
                           }
                           // options={dashboard?.allEmployeegradeList}
                           options={[
-                            { label: "Select", value: "" },
+                            // { label: "Select", value: "" },
                             ...(Array.isArray(dashboard?.allEmployeegradeList)
                               ? dashboard?.allEmployeegradeList
                               : []),
@@ -1412,10 +1428,10 @@ const comparisonFields = [
                       {/* Designation */}
                       <div>
                         <SearchSelect
-                          name="designationId"
+                          name="Employee.designationId"
                           label={
                             <span>
-                              Designation
+                              Designation {dashboard?.allDesignationByGrade?.length}
                               <span style={{ color: "red" }}>*</span>
                             </span>
                           }
@@ -1425,22 +1441,33 @@ const comparisonFields = [
                               e.value || null
                             );
                           }}
-                          value={
-                            dashboard?.allDesignations?.find(
-                              (option) =>
-                                option.value === values?.Employee?.designationId
-                            ) || null
-                          }
+                          // value={
+                          //   dashboard?.allDesignations?.find(
+                          //     (option) =>
+                          //       option.value === values?.Employee?.designationId
+                          //   ) || null
+                          // }
+                             value={
+                          dashboard?.allDesignationByGrade?.find(
+                            (option) => option.value ===  values?.Employee?.designationId
+                          ) || null
+                        }
                           // options={dashboard?.allDesignations}
                           options={[
-                            { label: "Select", value: "" },
-                            ...(Array.isArray(dashboard?.allDesignations)
-                              ? dashboard?.allDesignations
+                    
+                            ...(Array.isArray(dashboard?.allDesignationByGrade)
+                              ? dashboard?.allDesignationByGrade
                               : []),
                           ]}
-                          error={errors?.Employee?.designationId}
+                          // error={errors?.Employee?.designationId}
+                          //  error={errors?.Employee?.designationId}
                           touched={touched?.Employee?.designationId}
                         />
+                         {errors?.Employee?.designationId && (
+    <span className="invalid-feedback">
+      {errors.Employee.designationId}
+    </span>
+  )}
                       </div>
 
                       {/* Grade */}
@@ -1538,8 +1565,8 @@ const comparisonFields = [
                         }
                         placeholder="Enter Gross Salary"
                         autoComplete="off"
-                        disabled={!values.revisedDate}
-                        // disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross'}
+                        // disabled={!values.revisedDate}
+                        disabled={!currentSalaryMethod || currentSalaryMethod == 'Basic to Gross' || !values.revisedDate}
                         // value={values.grossSalary || defGrossSalaryDB || ""}
                         onChange={(e) => {
                           setGrossSalaryDB(e);
@@ -1631,7 +1658,7 @@ const comparisonFields = [
                     }}
                     className="btn btn-primary btn-elevate m-1"
                   >
-                     <Eye className="w-4 h-4 text-white" />  Last Salary
+                     <Eye className="w-4 h-4 text-white" /> View Last Salary
                     {loading && (
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
                     )}
@@ -1642,6 +1669,7 @@ const comparisonFields = [
                 }
                 {/* For Earning WIth Payroll Include ByDefault Yes  */}
                 <hr />
+                 {currentSalaryMethod && (<>
                 <div>
                   <div className="flex justify-between items-center">
                     <h6 className="font-bold mb-0 text-primary">
@@ -1930,7 +1958,8 @@ const comparisonFields = [
 
                     </div>
                     </>} */}
-                </div>
+                </div> </>)}
+               
                 {/* For Earning WIth Payroll Include ByDefault No  */}
                 <hr />
                 <div>
@@ -1957,7 +1986,7 @@ const comparisonFields = [
                           {/* <td>Employee</td> */}
                           <td>Earning</td>
                           <td>Calculation Type</td>
-                          <td>Factor1</td>
+                          <td>Factor</td>
                           <td>Amount</td>
                           <td>Updated Amount</td>
                           <td className="text-right">Action</td>
@@ -2651,7 +2680,7 @@ const comparisonFields = [
                         setDefaultBanks(e);
                         // dispatch(fetchAllBanks(e.value));
                           dispatch(fetchAllBankBranch(e.value));
-                        fetchBranch(e.value);
+                        // fetchBranch(e.value);
                       }}
                       value={
                         !checkReadOnlyStatus(values, [151, 152]) ? defBank : ""
@@ -3512,7 +3541,7 @@ const comparisonFields = [
                 {!dataForRead && isAccessForCreate && (
                   <button
                     type="button"
-                    disabled={!values.grossSalary || values.grossSalary == 0}
+                    disabled={(!values.grossSalary && !values.grossSalary ) || !dashboard?.allDesignationByGrade}
                     // || defMapEarningDeductionList.some(obj => !obj.updatedAmount || obj.updatedAmount == 0)
                     onClick={(e) => {
                       calculateEmployeeSalaryPolicy(e, setFieldValue, values);
@@ -3524,6 +3553,14 @@ const comparisonFields = [
                         values.revisedDate === undefined
                       ) {
                         toast.error("Please select a salary revision date");
+                        return;
+                      } 
+                      
+                      if (
+                        values.Employee.designationId === null ||
+                        values.Employee.designationId === undefined
+                      ) {
+                        toast.error("Please select a designation");
                         return;
                       }
                     }}
