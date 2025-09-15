@@ -991,12 +991,12 @@ const comparisonFields = [
   // { key: "regularity_allowance", updatedKey: "updatedRegularity_allowance", label: "Regularity Allowance" },
   // { key: "punctuality_allowance", updatedKey: "updatedPunctuality_allowance", label: "Punctuality Allowance" },
 ];
-  // useEffect(()=>{
-  //  if(user?.gradeId){
-  //     dispatch(fetchAllDesignationByGradeId(user?.gradeId , "allDesignationByGrade"))
-  //  }
-  // },[user?.gradeId])
-console.log("user11111",user)
+  useEffect(()=>{
+   if(user?.Employee?.gradeId){
+      dispatch(fetchAllDesignationByGradeId(user?.Employee?.gradeId , "allDesignationByGrade"))
+   }
+  },[user?.Employee?.gradeId])
+
   return (
     <>
       <Formik

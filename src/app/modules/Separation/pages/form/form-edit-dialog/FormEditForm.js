@@ -89,26 +89,26 @@ export const getSeparationEditSchema = (formData) => {
 
 
 
-      resignationAttachment: Yup.mixed()
-        .required(VALIDATION_MESSAGES.required)
-        .test("fileSize", "File size must be less than 1 MB", (value) => {
-          // Skip validation if it's an existing file (string)
-          if (typeof value === "string") return true;
-          return value && value.size <= 3 * 1024 * 1024; // 3 MB
-        })
-        .test("fileType", "Unsupported file format", (value) => {
-          if (typeof value === "string") return true;
-          return (
-            value &&
-            [
-              "application/pdf",
-              "application/msword",
-              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "image/jpeg",
-              "image/png",
-            ].includes(value.type)
-          );
-        }),
+      // resignationAttachment: Yup.mixed()
+      //   // .required(VALIDATION_MESSAGES.required)
+      //   .test("fileSize", "File size must be less than 1 MB", (value) => {
+      //     // Skip validation if it's an existing file (string)
+      //     if (typeof value === "string") return true;
+      //     return value && value.size <= 3 * 1024 * 1024; // 3 MB
+      //   })
+      //   .test("fileType", "Unsupported file format", (value) => {
+      //     if (typeof value === "string") return true;
+      //     return (
+      //       value &&
+      //       [
+      //         "application/pdf",
+      //         "application/msword",
+      //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      //         "image/jpeg",
+      //         "image/png",
+      //       ].includes(value.type)
+      //     );
+      //   }),
 
 
 
@@ -141,7 +141,7 @@ export function FormEditForm({
 
   const handlePolicyModalClose = () => {
     setPolicyMode(false);
-setSeparateMode(false)
+    setSeparateMode(false)
   };
 
 
@@ -158,6 +158,8 @@ setSeparateMode(false)
           "allEmployeesWithNoPermissionList"
         )
       );
+      // Always run for active employee
+      dispatch(actions.fetchEmpBySeparationFlag({ flag: 1, employeeId: formData?.employeeId }));
     }
     else {
       dispatch(fetchExitReasonData(formData?.exitTypeId));
@@ -205,8 +207,35 @@ setSeparateMode(false)
   ];
 
 
+  // const getServicePeriod = (start, end) => {
+
+  //   if (!start || !end) return "";
+
+  //   const startDate = new Date(start);
+  //   const endDate = new Date(end);
+
+  //   let years = endDate.getFullYear() - startDate.getFullYear();
+  //   let months = endDate.getMonth() - startDate.getMonth();
+  //   let days = endDate.getDate() - startDate.getDate();
+
+
+  //   if (days < 0) {
+  //     months -= 1;
+  //     const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+  //     days += prevMonth.getDate();
+  //   }
+
+
+  //   if (months < 0) {
+  //     years -= 1;
+  //     months += 12;
+  //   }
+  //   setGetServicePeriod(`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
+
+  //   return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
+  // };
+
   const getServicePeriod = (start, end) => {
-   
     if (!start || !end) return "";
 
     const startDate = new Date(start);
@@ -216,23 +245,38 @@ setSeparateMode(false)
     let months = endDate.getMonth() - startDate.getMonth();
     let days = endDate.getDate() - startDate.getDate();
 
-
     if (days < 0) {
       months -= 1;
-      const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
-      days += prevMonth.getDate();
+      const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+      days += prevMonthDays;
     }
-
 
     if (months < 0) {
       years -= 1;
       months += 12;
     }
-    setGetServicePeriod(`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
+
+    //  Inclusive calculation
+    days += 1;
+
+   
+    const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+    if (days > maxDaysInMonth) {
+      days -= maxDaysInMonth;
+      months += 1;
+
+      if (months >= 12) {
+        months -= 12;
+        years += 1;
+      }
+    }
 
     return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
   };
 
+ 
+
+ 
 
   useEffect(() => {
     if (formData.employeeId) {
@@ -244,9 +288,9 @@ setSeparateMode(false)
       if (selectedEmp) {
         setDepartmentId(selectedEmp?.departmentId)
         setDateOfJoining(selectedEmp?.dateOfJoining);
-     
+
         getServicePeriod(dateOfJoining, formData.lastWorkingDate);
-        
+
       }
     }
 
@@ -255,7 +299,7 @@ setSeparateMode(false)
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={{ ...formData, }}
+      initialValues={{ ...formData, employeetatus: 1 }}
       validationSchema={getSeparationEditSchema(formData)}
       onSubmit={async (values) => {
         enableLoading();
@@ -339,10 +383,10 @@ setSeparateMode(false)
                 </Modal.Footer>
               </Modal>
             </>
-          )} 
-          
-          
-           {separateMode && (
+          )}
+
+
+          {separateMode && (
             <>
               <Modal
                 show={separateMode}
@@ -355,39 +399,39 @@ setSeparateMode(false)
                 <Modal.Body>
                   <div className="space-y-6">
 
-                      <span>Are you sure want to separate this record?</span>
-                  
-                  
+                    <span>Are you sure want to separate this record?</span>
+
+
                   </div>
                 </Modal.Body>
 
-               <Modal.Footer>
-                       <div>
-                         <button
-                           type="button"
-                           onClick={handlePolicyModalClose}
-                           className="btn btn-light btn-elevate"
-                         >
-                           Cancel
-                         </button>
-                         <> </>
-                         <button
-                           type="button"
-                         onClick={() =>
-    dispatch(actions.separateById(
-      { employeeId: formData.employeeId, Id: formData.Id },
-      onHide
-    ))
-  }
-                           className="btn btn-primary btn-elevate"
-                         >
-                           Yes
-                           {loading && (
-                             <span className="ml-3 mr-3 spinner spinner-white"></span>
-                           )}
-                         </button>
-                       </div>
-                     </Modal.Footer>
+                <Modal.Footer>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={handlePolicyModalClose}
+                      className="btn btn-light btn-elevate"
+                    >
+                      Cancel
+                    </button>
+                    <> </>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        dispatch(actions.separateById(
+                          { employeeId: formData.employeeId, Id: formData.Id },
+                          onHide
+                        ))
+                      }
+                      className="btn btn-primary btn-elevate"
+                    >
+                      Yes
+                      {loading && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+                  </div>
+                </Modal.Footer>
               </Modal>
             </>
           )}
@@ -416,7 +460,7 @@ setSeparateMode(false)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        isDisabled={isdataForRead}
+                        isDisabled={true}
                         name="employeetatus"
                         onChange={(e) => {
                           setFieldValue("employeetatus", e?.value ?? null);
@@ -447,7 +491,7 @@ setSeparateMode(false)
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
                         setFieldValue("employeeId", value);
-                      
+
 
                         const selectedEmp = activeEmployeeList?.find(
                           (emp) => emp.value === value
@@ -634,10 +678,18 @@ setSeparateMode(false)
                           let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("resignationDate", selectedDate);
                           if (date && values.lastWorkingDate) {
+                            // const diffDays = Math.floor(
+                            //   (new Date(values.lastWorkingDate) - new Date(date)) /
+                            //   (1000 * 60 * 60 * 24)
+                            // );
+
+
+
                             const diffDays = Math.floor(
                               (new Date(values.lastWorkingDate) - new Date(date)) /
                               (1000 * 60 * 60 * 24)
-                            );
+                            ) + 1; // inclusive of last day
+
                             setFieldValue("noticePeriodDays", diffDays);
 
                           }
@@ -669,14 +721,20 @@ setSeparateMode(false)
                         onChange={(date) => {
                           let selectedDate = formatDates(date, "yyyy-MM-dd");
                           setFieldValue("lastWorkingDate", selectedDate);
-                          getServicePeriod(dateOfJoining,selectedDate)
+                          getServicePeriod(dateOfJoining, selectedDate)
                           if (values.resignationDate && date) {
+                            // const diffDays = Math.floor(
+                            //   (new Date(date) - new Date(values.resignationDate)) /
+                            //   (1000 * 60 * 60 * 24)
+                            // );
+
+
                             const diffDays = Math.floor(
                               (new Date(date) - new Date(values.resignationDate)) /
                               (1000 * 60 * 60 * 24)
-                            );
+                            ) + 1; // inclusive
                             setFieldValue("noticePeriodDays", diffDays);
-                          
+
 
                           }
                         }}
@@ -916,7 +974,7 @@ setSeparateMode(false)
                             ? Math.floor(
                               (new Date(values.lastWorkingDate) - new Date(values.resignationDate)) /
                               (1000 * 60 * 60 * 24)
-                            )
+                            ) + 1
                             : ""
                         }
 
@@ -989,7 +1047,7 @@ setSeparateMode(false)
                     <FileUpload
                       label={
                         <>
-                          Resignation Letter Attachment<span style={{ color: "red" }}>*</span>
+                          Resignation Letter Attachment
                         </>
                       }
                       id="file"
@@ -1105,7 +1163,7 @@ setSeparateMode(false)
 
                 <button
                   type="submit"
-                   disabled={formData.separatedFlag}
+                  disabled={formData.separatedFlag}
                   onClick={() => {
                     handleSubmit();
                   }}
@@ -1122,7 +1180,7 @@ setSeparateMode(false)
                   <button
 
                     onClick={() => {
-                      
+
                       setSeparateMode(true)
                     }}
                     className="btn btn-primary btn-elevate"
