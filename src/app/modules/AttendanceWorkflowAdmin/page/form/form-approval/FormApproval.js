@@ -11,11 +11,9 @@ import { initialFilter } from "../../FormUIHelper";
 import { toast } from "react-toastify";
 
 const formValidation = Yup.object().shape({
-  authorityRemarks: Yup.string().when("request_status", {
-    is: (val) => val === "R",
-    then: Yup.string().required(VALIDATION_MESSAGES.required),
-    otherwise: Yup.string(),
-  }),
+  authorityRemarks: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required), // Always required
 });
 
 export const FormApproval = () => {
@@ -52,17 +50,9 @@ export const FormApproval = () => {
       }
     );
   };
-
-  const handleRejectClick = (setFieldValue, handleSubmit, values) => {
+  const handleRejectClick = (setFieldValue, handleSubmit) => {
     setFieldValue("request_status", "R");
-
-    // Check if remarks are empty when rejecting
-    if (!values.authorityRemarks || values.authorityRemarks.trim() === "") {
-      toast.error("Remarks are required when rejecting a request");
-      return;
-    }
-
-    handleSubmit();
+    handleSubmit(); // Yup will validate remarks
   };
   const intVal = {
     authorityRemarks: "",
@@ -75,15 +65,8 @@ export const FormApproval = () => {
         initialValues={intVal}
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
-          let submitValues = { ...values, Ids: formUIProps.Ids };
-          if (
-            submitValues.request_status === "A" &&
-            !submitValues.authorityRemarks
-          ) {
-            submitValues.authorityRemarks = "Approved";
-          }
-          handleRequestSubmit(submitValues, resetForm);
-          // resetForm({ values: intVal });
+        let submitValues = { ...values, Ids: formUIProps.Ids };
+        handleRequestSubmit(submitValues, resetForm);
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (

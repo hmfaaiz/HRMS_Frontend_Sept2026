@@ -11,7 +11,11 @@ export const fetchLeaveApprovalApplication = (queryparm) => async (
   return requestFromServer
     .getAllLeaveApproval({ ...queryparm })
     .then((response) => {
-      dispatch(actions.LeaveApprovalApplicationFetched(response));
+      let data = response?.data?.data;
+      data = [
+        ...new Map(data.map((item) => [item.parentRecordId, item])).values(),
+      ];
+      dispatch(actions.LeaveApprovalApplicationFetched(data));
     })
     .catch((error) => {
       error.clientMessage = "Can't find Leave Data";

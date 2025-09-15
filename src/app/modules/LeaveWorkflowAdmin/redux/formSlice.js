@@ -35,7 +35,7 @@ export const LeaveWorkflowAdminSlice = createSlice({
       }
     },
     LeaveApprovalApplicationFetched: (state, action) => {
-      const entities = action.payload.data?.data || [];
+      const entities = action.payload || [];
       const totalResult = action.payload.data?.data?.totalResults || 0;
       state.listLoading = false;
       state.error = null;

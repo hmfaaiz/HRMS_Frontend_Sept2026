@@ -9,7 +9,11 @@ export const fetchLoanApprovalApplication = (queryparm) => async (dispatch) => {
   return requestFromServer
     .getAllLoanApproval(queryparm)
     .then((response) => {
-      dispatch(actions.LoanApprovalApplicationFetched(response));
+      let data = response?.data?.data;
+      data = [
+        ...new Map(data?.map((item) => [item?.parentRecordId, item]))?.values(),
+      ];
+      dispatch(actions.LoanApprovalApplicationFetched(data));
     })
     .catch((error) => {
       error.clientMessage = "Can't find Loan Data";
