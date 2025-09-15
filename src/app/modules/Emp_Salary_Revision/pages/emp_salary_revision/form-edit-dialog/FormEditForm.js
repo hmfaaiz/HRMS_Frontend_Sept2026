@@ -1431,7 +1431,7 @@ console.log("user11111",user)
                           name="Employee.designationId"
                           label={
                             <span>
-                              Designation {dashboard?.allDesignationByGrade?.length}
+                              Designation
                               <span style={{ color: "red" }}>*</span>
                             </span>
                           }
