@@ -564,6 +564,7 @@ export function FormEditForm({
                         type="button"
                         className="btn btn-primary d-flex align-items-center gap-2"
                         onClick={() => setPanelMode(!panelMode)}
+                        disabled={!values?.employeeId}
                       >
 
 
