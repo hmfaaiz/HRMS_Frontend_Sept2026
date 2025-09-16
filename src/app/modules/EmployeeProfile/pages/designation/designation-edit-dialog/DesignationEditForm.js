@@ -10,7 +10,7 @@ import {
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { KeyboardArrowDown } from "@material-ui/icons";
+import { FlashOnRounded, KeyboardArrowDown } from "@material-ui/icons";
 
 import {
   fetchAllCountry,
@@ -1861,6 +1861,54 @@ useEffect(() => {
   
   }
 }, [defSubsidiary]);
+
+const getServicePeriod = (start, end, rightindex,handler,field,year=false,month=false) => {
+  if (!start || !end) return;
+
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  // Years, months, days difference
+  let years = endDate.getFullYear() - startDate.getFullYear();
+  let months = endDate.getMonth() - startDate.getMonth();
+  let days = endDate.getDate() - startDate.getDate();
+
+  if (days < 0) {
+    months -= 1;
+    const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+    days += prevMonthDays;
+  }
+
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+
+  let totalMonths = years * 12 + months;
+
+
+  const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+  const fraction = days > 0 ? days / maxDaysInMonth : 0;
+
+  totalMonths += fraction;
+ if(year){
+  const lengthInYears = parseFloat((totalMonths / 12).toFixed(2));
+
+  // Call your field update
+  handler(rightindex, field, lengthInYears);
+ }else{
+  const lengthInMonths = Math.round(totalMonths * 10) / 10;
+  //  const lengthInMonths = parseFloat(totalMonths.toFixed(2));
+
+  // Call your field update
+  handler(rightindex, field, lengthInMonths);
+ }
+
+
+};
+
+
 
 
 
@@ -4320,6 +4368,10 @@ Date of Retirement (Optional)
                                       rightindex,
                                       ""
                                     );
+
+                                    getServicePeriod( el,obj.endDate, rightindex,handleFieldChangedExperience,"lengthInYear",true);
+
+
                                     setErrors((prev) => ({
                                       ...prev,
                                       [`startDate_W-${rightindex}`]: "",
@@ -4362,6 +4414,7 @@ Date of Retirement (Optional)
                                       rightindex,
                                       ""
                                     );
+                                       getServicePeriod( obj.startDate,el, rightindex,handleFieldChangedExperience,"lengthInYear",true);
                                     setErrors((prev) => ({
                                       ...prev,
                                       [`endDate_W-${rightindex}`]: "",
@@ -4393,6 +4446,7 @@ Date of Retirement (Optional)
                                 <input
                                   className="form-control"
                                   type="number"
+                                  disabled={obj.startDate || obj.endDate}
                                   onChange={(e) => {
                                     handleFieldChangedExperience(
                                       rightindex,
@@ -4658,13 +4712,17 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>
+                                  onChange={(el) =>{
+
+                                  
+                                    getServicePeriod( el,obj.endDate, rightindex,handleFieldChangedAcademic,"lengthInYear",true)
                                     handleDatePickerAcademic(
                                       el,
                                       "startDate",
                                       rightindex,
                                       ""
                                     )
+                                  }
                                   }
                                   id={"startDate_A-" + rightindex}
                                   timeInputLabel="Time:"
@@ -4696,14 +4754,16 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>
+                                  onChange={(el) =>{
+                                      getServicePeriod( obj.startDate,el, rightindex,handleFieldChangedAcademic,"lengthInYear",true)
+                              
                                     handleDatePickerAcademic(
                                       el,
                                       "endDate",
                                       rightindex,
                                       ""
                                     )
-                                  }
+                                  }    }
                                   id={"endDate_A-" + rightindex}
                                   timeInputLabel="Time:"
                                   dateFormat="dd-MMM-yyyy"
@@ -4729,6 +4789,7 @@ Date of Retirement (Optional)
                                 <input
                                   className="form-control"
                                   type="number"
+                                  disabled={obj.startDate || obj.endDate}
                                   onChange={(e) => {
                                     handleFieldChangedAcademic(
                                       rightindex,
@@ -4912,13 +4973,15 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>
+                                  onChange={(el) =>{
+                                      getServicePeriod( el,obj.endDate, rightindex,handleFieldChangedSkills,"lengthInMonths",false,true)
+                                 
                                     handleDatePickerSkills(
                                       el,
                                       "startDate",
                                       rightindex,
                                       ""
-                                    )
+                                    ) }
                                   }
                                   id={"startDate-" + rightindex}
                                   timeInputLabel="Time:"
@@ -4950,14 +5013,16 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>
+                                  onChange={(el) =>{
+                                       getServicePeriod( obj.startDate,el, rightindex,handleFieldChangedSkills,"lengthInMonths",false,true)
+                                 
                                     handleDatePickerSkills(
                                       el,
                                       "endDate",
                                       rightindex,
                                       ""
                                     )
-                                  }
+                                  } }
                                   id={"endDate-" + rightindex}
                                   timeInputLabel="Time:"
                                   dateFormat="dd-MMM-yyyy"
@@ -4982,6 +5047,7 @@ Date of Retirement (Optional)
                                 <input
                                   className="form-control"
                                   type="number"
+                                  disabled={obj.startDate || obj.endDate}
                                   onChange={(e) => {
                                     handleFieldChangedSkills(
                                       rightindex,
