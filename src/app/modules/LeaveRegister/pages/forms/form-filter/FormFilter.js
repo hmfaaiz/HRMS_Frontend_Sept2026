@@ -35,7 +35,17 @@ const formValidation = Yup.object().shape({
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams };
-  newQueryParams.filter = { ...values };
+   const formattedValues = {
+            ...values,
+            from: values.from
+              ? formatDates(values.from, "dd-MMM-yyyy")
+              : null,
+            to: values.to
+              ? formatDates(values.to, "dd-MMM-yyyy")
+              : null,
+          
+          };
+  newQueryParams.filter = { ...formattedValues };
   return newQueryParams;
 };
 
