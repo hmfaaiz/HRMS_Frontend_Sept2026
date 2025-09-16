@@ -82,6 +82,18 @@ export function FormTable() {
       },
 
     },
+{
+      dataField: "reasonCount",
+      text: "No. of Reason",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+
+    },
+
 
     // {
     //   dataField: "",
