@@ -87,6 +87,12 @@ export const getSeparationEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
 
+      blackListRemarks: Yup.string().when("blackList", {
+        is: true,
+        then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+
 
 
       // resignationAttachment: Yup.mixed()
@@ -259,7 +265,7 @@ export function FormEditForm({
     //  Inclusive calculation
     days += 1;
 
-   
+
     const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
     if (days > maxDaysInMonth) {
       days -= maxDaysInMonth;
@@ -274,9 +280,9 @@ export function FormEditForm({
     return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
   };
 
- 
 
- 
+
+
 
   useEffect(() => {
     if (formData.employeeId) {
@@ -398,8 +404,18 @@ export function FormEditForm({
                 </Modal.Header>
                 <Modal.Body>
                   <div className="space-y-6">
-
+                    {/* {values.lastWorkingDate > new Date() && (
+                      <span>Last Working Date should not be greater than Current Date</span>
+                    ):(
                     <span>Are you sure want to separate this record?</span>
+                    ) } */}
+
+                    {new Date(values.lastWorkingDate) > new Date() ? (
+                      <span>Last Working Date should not be greater than Current Date</span>
+                    ) : (
+                      <span>Are you sure you want to separate this record?</span>
+                    )}
+
 
 
                   </div>
@@ -414,22 +430,27 @@ export function FormEditForm({
                     >
                       Cancel
                     </button>
-                    <> </>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        dispatch(actions.separateById(
-                          { employeeId: formData.employeeId, Id: formData.Id },
-                          onHide
-                        ))
-                      }
-                      className="btn btn-primary btn-elevate"
-                    >
-                      Yes
-                      {loading && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
-                    </button>
+
+                    {values.lastWorkingDate && new Date(values.lastWorkingDate) > new Date() ? (
+                      null
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          dispatch(actions.separateById(
+                            { employeeId: formData.employeeId, Id: formData.Id },
+                            onHide
+                          ))
+                        }
+                        className="btn btn-primary btn-elevate"
+                      >
+                        Yes
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
+
                   </div>
                 </Modal.Footer>
               </Modal>
@@ -653,7 +674,7 @@ export function FormEditForm({
                 >
 
                   <h6 className="font-bold mb-0 text-primary">
-                    Resignation & Notice Period Info
+                    Resignation & Notice Period Information
                   </h6>
 
 
@@ -1071,18 +1092,40 @@ export function FormEditForm({
                     {/* </label> */}
 
                     {/* Show existing file if any */}
-                    {formData.resignationAttachment && formData.resignationAttachment === formData.resignationAttachment && (
+                    {/* {formData?.resignationAttachment || values?.resignationAttachment && (
                       <div className="mt-2">
                         <strong>Existing File: </strong>
                         <a
-                          href={getUploadUrl(formData.resignationAttachment)}
+                          href={getUploadUrl(formData?.resignationAttachment ||  values?.resignationAttachment)}
                           target="_blank"
                           className="text-blue-600 underline"
                         >
-                          {getFileName(formData.resignationAttachment)}
+                          {getFileName(formData?.resignationAttachment ||  values?.resignationAttachment)}
+                        </a>
+                      </div>
+                    )} */}
+
+
+                    {(formData?.resignationAttachment || values?.resignationAttachment) && (
+                      <div className="mt-2">
+                        <strong>Existing File: </strong>
+                        <a
+                          href={
+                            typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
+                              ? getUploadUrl(values?.resignationAttachment || formData?.resignationAttachment)
+                              : URL.createObjectURL(values?.resignationAttachment || formData?.resignationAttachment)
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline"
+                        >
+                          {typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
+                            ? getFileName(values?.resignationAttachment || formData?.resignationAttachment)
+                            : (values?.resignationAttachment)?.name || formData?.resignationAttachment}
                         </a>
                       </div>
                     )}
+
                   </div>
 
                   <div className="">
@@ -1114,7 +1157,7 @@ export function FormEditForm({
                       label={
                         <span>
 
-                          Remarks
+                          Blacklisted Remarks
                         </span>
                       }
                       autoComplete="off"
