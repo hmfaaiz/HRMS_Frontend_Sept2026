@@ -24,12 +24,11 @@ import { FormActiveDialog } from "./formdetails-active-dialog/FormDetailsActiveD
 export function FormDetailsPage({ history }) {
   const dispatch = useDispatch();
   const FormUIEvents = {
-    newFormButtonClick: () => {
+    newFormButtonClick: (id) => {
       dispatch(fetchAllCountry());
       // dispatch(fetchRoles());
-  
       // dispatch(fetchUserStatusTypes({ filter: { normal: true } }));
-      history.push("/formdetails/read-all-parent-forms/new");
+      history.push(`/formdetails/read-all-parent-forms/${id}/new`);
     },
     openEditFormDialog: (id) => {
       dispatch(fetchAllCountry());
@@ -56,10 +55,11 @@ export function FormDetailsPage({ history }) {
   return (
     
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <Route exact path="/formdetails/read-all-parent-forms/new">
+      <Route exact path="/formdetails/read-all-parent-forms/:parentId/new">
         {({ history, match }) => (
           <FormEditDialog
             show={match != null}
+            parentId={match && match.params.parentId}
             onHide={() => {
               history.push("/formdetails/read-all-parent-forms");
             }}

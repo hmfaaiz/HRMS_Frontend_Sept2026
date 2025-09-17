@@ -62,7 +62,9 @@ export const LeaveApplicationDetailTable = ({
       {detailLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          Leave Application Detail
+          <h6 className="font-bold mb-0 text-primary">
+            Leave Application Detail
+          </h6>
         </Modal.Title>
       </Modal.Header>
 
@@ -82,124 +84,136 @@ export const LeaveApplicationDetailTable = ({
               {!detailLoading && (
                 <FieldArray name="leaveApplicationDetail">
                   {() => (
-                    <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <thead>
-                        <tr
-                          style={{ backgroundColor: "#4d5f7a", color: "#fff" }}
-                        >
-                          <th>Date</th>
-                          <th>Leave Type</th>
-                          <th>Day</th>
-                          <th>Cancel</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {values.leaveApplicationDetail?.map((row, index) => (
-                          <tr key={index}>
-                            <td>
-                              {row?.date
-                                ? format(new Date(row.date), "dd/MMM/yyyy")
-                                : ""}
-                            </td>
-                            <td>
-                              {row?.t_leave_application?.t_leave_type?.name ||
-                                ""}
-                            </td>
-                            <td>
-                              <Field
-                                name={`leaveApplicationDetail[${index}].day`}
-                              >
-                                {({ field, form }) => (
-                                  <>
-                                    <input
-                                      {...field}
-                                      type="number"
-                                      min="0"
-                                      max="1"
-                                      step="0.5"
-                                      disabled={
-                                        form.values.leaveApplicationDetail?.[
-                                          index
-                                        ]?.isCancel ||
-                                        form.values.leaveApplicationDetail?.[
-                                          index
-                                        ]?.isOldCancel
-                                      }
-                                      className={
-                                        errors.leaveApplicationDetail?.[index]
-                                          ?.day &&
-                                        touched.leaveApplicationDetail?.[index]
-                                          ?.day
-                                          ? "form-control is-invalid"
-                                          : "form-control"
-                                      }
-                                      onChange={(e) => {
-                                        const value = parseFloat(
-                                          e.target.value
-                                        );
-                                        form.setFieldValue(
-                                          `leaveApplicationDetail[${index}].day`,
-                                          isNaN(value) ? "" : value
-                                        );
-                                      }}
-                                    />
-                                    {errors.leaveApplicationDetail?.[index]
-                                      ?.day &&
-                                      touched.leaveApplicationDetail?.[index]
-                                        ?.day && (
-                                        <CustomErrorLabel
-                                          touched={true}
-                                          error={
-                                            errors.leaveApplicationDetail?.[
+                    <div className="w-full overflow-auto max-h-[80vh] scrollbar-fancy">
+                      <div className="react-bootstrap-table table-responsive">
+                        <table  className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                          <thead>
+                             <tr className="custom-table-header">
+                              <td>Date</td>
+                              <td>Leave Type</td>
+                              <td>Day</td>
+                              <td>Cancel</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {values.leaveApplicationDetail?.map(
+                              (row, index) => (
+                                <tr key={index}>
+                                  <td>
+                                    {row?.date
+                                      ? format(
+                                          new Date(row.date),
+                                          "dd-MMM-yyyy"
+                                        )
+                                      : ""}
+                                  </td>
+                                  <td>
+                                    {row?.t_leave_application?.t_leave_type
+                                      ?.name || ""}
+                                  </td>
+                                  <td>
+                                    <Field
+                                      name={`leaveApplicationDetail[${index}].day`}
+                                    >
+                                      {({ field, form }) => (
+                                        <>
+                                          <input
+                                            {...field}
+                                            type="number"
+                                            min="0"
+                                            max="1"
+                                            step="0.5"
+                                            disabled={
+                                              form.values
+                                                .leaveApplicationDetail?.[index]
+                                                ?.isCancel ||
+                                              form.values
+                                                .leaveApplicationDetail?.[index]
+                                                ?.isOldCancel
+                                            }
+                                            className={
+                                              errors.leaveApplicationDetail?.[
+                                                index
+                                              ]?.day &&
+                                              touched.leaveApplicationDetail?.[
+                                                index
+                                              ]?.day
+                                                ? "form-control is-invalid"
+                                                : "form-control"
+                                            }
+                                            onChange={(e) => {
+                                              const value = parseFloat(
+                                                e.target.value
+                                              );
+                                              form.setFieldValue(
+                                                `leaveApplicationDetail[${index}].day`,
+                                                isNaN(value) ? "" : value
+                                              );
+                                            }}
+                                          />
+                                          {errors.leaveApplicationDetail?.[
+                                            index
+                                          ]?.day &&
+                                            touched.leaveApplicationDetail?.[
                                               index
-                                            ]?.day
+                                            ]?.day && (
+                                              <CustomErrorLabel
+                                                touched={true}
+                                                error={
+                                                  errors
+                                                    .leaveApplicationDetail?.[
+                                                    index
+                                                  ]?.day
+                                                }
+                                              />
+                                            )}
+                                        </>
+                                      )}
+                                    </Field>
+                                  </td>
+                                  <td className="text-center">
+                                    <Field
+                                      name={`leaveApplicationDetail[${index}].isCancel`}
+                                    >
+                                      {({ field, form }) => (
+                                        <input
+                                          type="checkbox"
+                                          {...field}
+                                          checked={field.value || false}
+                                          disabled={
+                                            form.values
+                                              .leaveApplicationDetail?.[index]
+                                              ?.isOldCancel
                                           }
+                                          onChange={(e) => {
+                                            if (e.target.checked) {
+                                              form.setFieldValue(
+                                                `leaveApplicationDetail[${index}].day`,
+                                                0
+                                              );
+                                            } else {
+                                              form.setFieldValue(
+                                                `leaveApplicationDetail[${index}].day`,
+                                                1
+                                              );
+                                            }
+                                            form.setFieldValue(
+                                              `leaveApplicationDetail[${index}].isCancel`,
+                                              e.target.checked
+                                            );
+                                          }}
+                                          // className="form-check-input"
                                         />
                                       )}
-                                  </>
-                                )}
-                              </Field>
-                            </td>
-                            <td className="text-center">
-                              <Field
-                                name={`leaveApplicationDetail[${index}].isCancel`}
-                              >
-                                {({ field, form }) => (
-                                  <input
-                                    type="checkbox"
-                                    {...field}
-                                    checked={field.value || false}
-                                    disabled={
-                                      form.values.leaveApplicationDetail?.[
-                                        index
-                                      ]?.isOldCancel
-                                    }
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        form.setFieldValue(
-                                          `leaveApplicationDetail[${index}].day`,
-                                          0
-                                        );
-                                      } else {
-                                        form.setFieldValue(
-                                          `leaveApplicationDetail[${index}].day`,
-                                          1
-                                        );
-                                      }
-                                      form.setFieldValue(
-                                        `leaveApplicationDetail[${index}].isCancel`,
-                                        e.target.checked
-                                      );
-                                    }}
-                                    className="form-check-input"
-                                  />
-                                )}
-                              </Field>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                                    </Field>
+                                  </td>
+                                </tr>
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   )}
                 </FieldArray>
               )}
@@ -212,7 +226,7 @@ export const LeaveApplicationDetailTable = ({
                   onHide();
                 }}
                 // disabled={detailUpdateLoading}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-light"
               >
                 Cancel
               </button>

@@ -11,30 +11,31 @@ import {
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
-import { accountType, VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import {
+  accountType,
+  VALIDATION_MESSAGES,
+} from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 // percentage: Yup.string().required("Required*"),
 const accrue_gratuity_configurationEditSchema = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
 
-  subsidiaryId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   // to_amount: Yup.string().required("Required*"),
 
-  graduity_expense_accountId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  graduity_expense_accountId: Yup.number().required(
+    VALIDATION_MESSAGES.required
+  ),
 
-  graduity_payable_accountId: Yup.number()
-    .required(VALIDATION_MESSAGES.required),
+  graduity_payable_accountId: Yup.number().required(
+    VALIDATION_MESSAGES.required
+  ),
 
   // fixed_amount: Yup.string().required("Required*"),
 
-  bank_cash_accountId: Yup.number()
-
-    .required(VALIDATION_MESSAGES.required),
-
+  bank_cash_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
 });
 
 export function FormEditForm({
@@ -53,16 +54,27 @@ export function FormEditForm({
       // dispatch(fetchAllFormsMenu(133, "allSubidiaryList",null,false)); // For All Subsidiaries
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       // dispatch(fetchAllFormsMenu(45, "allAccountList", null, true));
-      dispatch(fetchAllAccountsByType(45, accountType.Expenses ,"allExpenseAccountList"));
-      dispatch(fetchAllAccountsByType(45, accountType.Liabilities ,"allLiabilityAccountList"));
-      dispatch(fetchAllAccountsByType(45, accountType.Assets ,"allAssetsAccountList"));
-
+      dispatch(
+        fetchAllAccountsByType(
+          45,
+          accountType.Expenses,
+          "allExpenseAccountList"
+        )
+      );
+      dispatch(
+        fetchAllAccountsByType(
+          45,
+          accountType.Liabilities,
+          "allLiabilityAccountList"
+        )
+      );
+      dispatch(
+        fetchAllAccountsByType(45, accountType.Assets, "allAssetsAccountList")
+      );
     }
   }, [dispatch, user.Id]);
 
-
   const { currentState, userAccess } = useSelector((state) => {
-
     return {
       currentState: state.accrue_gratuity_configuration,
       userAccess: state?.auth?.userAccess["accrue_gratuity_configuration"],
@@ -72,21 +84,24 @@ export function FormEditForm({
   const { entities } = currentState;
 
   let existedId = 0;
-  const check_Existed_Data = (subsidiaryId) => {
+  const check_Existed_Data = (subsidiaryId, setValues, handleReset) => {
+    const existedEntity = entities.find((i) => i.subsidiaryId == subsidiaryId);
 
-    entities.forEach((i) => {
-      if (i.subsidiaryId == subsidiaryId) {
-        existedId = i.Id;
-
-        dispatch(actions.fetchAccrueGratuityConfig(existedId));
-      } else {
-        dispatch(actions.fetchAccrueGratuityConfig(0));
-      }
-    });
+    if (existedEntity) {
+      // If found, fetch that config
+      dispatch(actions.fetchAccrueGratuityConfig(existedEntity.Id));
+    } else {
+      // If not found, reset all fields, then set subsidiaryId
+      handleReset();
+      setValues({
+        Id: "",
+        subsidiaryId: subsidiaryId,
+        graduity_expense_accountId: "",
+        graduity_payable_accountId: "",
+        bank_cash_accountId: "",
+      });
+    }
   };
-
-
-
 
   return (
     <Formik
@@ -102,12 +117,19 @@ export function FormEditForm({
       initialValues={user}
       validationSchema={accrue_gratuity_configurationEditSchema}
       onSubmit={(values) => {
-
         enableLoading();
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        setValues,
+        handleReset,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -144,7 +166,7 @@ export function FormEditForm({
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                       /> */}
-                       <SubsidiarySelect
+                      <SubsidiarySelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -154,16 +176,16 @@ export function FormEditForm({
                         isDisabled={isUserForRead}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-                          check_Existed_Data(e.value);
+                          check_Existed_Data(e.value, setValues, handleReset);
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
                         currentValue={values?.subsidiaryId}
                         initializeSubsidiary={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        check_Existed_Data(e.value);
+                          setFieldValue("subsidiaryId", e.value || null);
+                          check_Existed_Data(e.value, setValues, handleReset);
                         }}
-                        />
+                      />
                     </div>
                   </div>
 
@@ -172,61 +194,74 @@ export function FormEditForm({
                       name="graduity_expense_accountId"
                       label={
                         <span>
-                          Gratuity Expense Account<span style={{ color: "red" }}>*</span>
+                          Gratuity Expense Account
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
                       onChange={(e) => {
-                        setFieldValue("graduity_expense_accountId", e.value || null);
+                        setFieldValue(
+                          "graduity_expense_accountId",
+                          e.value || null
+                        );
                       }}
                       value={
                         dashboard?.allExpenseAccountList?.find(
-                          (option) => option.value === values.graduity_expense_accountId
+                          (option) =>
+                            option.value === values.graduity_expense_accountId
                         ) || null
                       }
                       // options={dashboard.allAccountList}
-                      options={dashboard?.allExpenseAccountList?.map((option) => ({
-                        label: `${option.mergeLabel}`, // Adding the value to the label
-                        value: option.value,
-                      }))}
-
+                      options={dashboard?.allExpenseAccountList?.map(
+                        (option) => ({
+                          label: `${option.mergeLabel}`, // Adding the value to the label
+                          value: option.value,
+                        })
+                      )}
                       error={errors.graduity_expense_accountId}
                       touched={touched.graduity_expense_accountId}
                     />
                   </div>
-               <div className="col-span-6 lg:col-span-4">
+                  <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="graduity_payable_accountId"
                       label={
                         <span>
-                          Gratuity Payable Account<span style={{ color: "red" }}>*</span>
+                          Gratuity Payable Account
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
                       onChange={(e) => {
-                        setFieldValue("graduity_payable_accountId", e.value || null);
+                        setFieldValue(
+                          "graduity_payable_accountId",
+                          e.value || null
+                        );
                       }}
                       value={
                         dashboard?.allLiabilityAccountList?.find(
-                          (option) => option.value === values.graduity_payable_accountId
+                          (option) =>
+                            option.value === values.graduity_payable_accountId
                         ) || null
                       }
                       // options={dashboard.allLiabilityAccountList}
-                      options={dashboard?.allLiabilityAccountList?.map((option) => ({
-                        label: `${option.mergeLabel}`, // Adding the value to the label
-                        value: option.value,
-                      }))}
-
+                      options={dashboard?.allLiabilityAccountList?.map(
+                        (option) => ({
+                          label: `${option.mergeLabel}`, // Adding the value to the label
+                          value: option.value,
+                        })
+                      )}
                       error={errors.graduity_payable_accountId}
                       touched={touched.graduity_payable_accountId}
                     />
                   </div>
-                <div className="col-span-6 lg:col-span-4">
+                  <div className="col-span-6 lg:col-span-4">
                     <SearchSelect
                       name="bank_cash_accountId"
                       label={
                         <span>
-                          Bank/Cash Account<span style={{ color: "red" }}>*</span>
+                          Bank/Cash Account
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
@@ -235,23 +270,21 @@ export function FormEditForm({
                       }}
                       value={
                         dashboard?.allAssetsAccountList?.find(
-                          (option) => option.value === values.bank_cash_accountId
+                          (option) =>
+                            option.value === values.bank_cash_accountId
                         ) || null
                       }
                       // options={dashboard.allAccountList}
-                      options={dashboard?.allAssetsAccountList?.map((option) => ({
-                        label: `${option.mergeLabel}`, // Adding the value to the label
-                        value: option.value,
-                      }))}
-
+                      options={dashboard?.allAssetsAccountList?.map(
+                        (option) => ({
+                          label: `${option.mergeLabel}`, // Adding the value to the label
+                          value: option.value,
+                        })
+                      )}
                       error={errors.bank_cash_accountId}
                       touched={touched.bank_cash_accountId}
                     />
                   </div>
-
-
-
-
                 </div>
               </fieldset>
             </Form>

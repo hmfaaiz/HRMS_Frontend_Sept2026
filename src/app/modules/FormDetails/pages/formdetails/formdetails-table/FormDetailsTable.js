@@ -378,7 +378,7 @@ export function FormTable() {
                           className="btn btn-primary mr-2"
                           onClick={() => {
                             handleAddClick(e?.Id);
-                            formUIProps.newFormButtonClick();
+                            formUIProps.newFormButtonClick(e?.Id);
                           }}
                         >
                           <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}

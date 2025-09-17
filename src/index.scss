@@ -481,3 +481,13 @@ label {
   flex-direction: row-reverse;
   justify-content: space-between;
 }
+
+.shortlabel {
+  display: inline-block;
+  max-width: 25ch;       /* ~25 characters width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  cursor: pointer;          /* shows user can hover */
+}

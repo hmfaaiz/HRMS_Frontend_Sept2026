@@ -128,6 +128,20 @@ export const fetchDesignationRecord = (workflowTypeId) => async (dispatch) => {
     });
 };
 
+export const fetchWorkflowTypeRecord = (id) => async (dispatch) => {
+  return requestFromServer
+    .getWorkflowTypeList(id)
+    .then((response) => {
+      const entities =
+        response?.data?.data.length > 0 ? response?.data?.data : [];
+      dispatch(actions.RecordWorkflowTYpeListListFetch(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Designation List";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
 export const fetchRoles = () => (dispatch) => {
   return requestFromServer
     .getAllRoles()

@@ -70,7 +70,22 @@ export function MasterEditForm({
           ),
         to: Yup.date()
           .required(VALIDATION_MESSAGES.required)
-          .min(Yup.ref("from"), "To date cannot be before From date"),
+          .min(Yup.ref("from"), "To date cannot be before From date")
+          .test(
+            "balance-check",
+            "Leave days exceed available balance",
+            function(to) {
+              const { from, leaveType } = this.parent;
+              if (!from || !to || !leaveType) return true; // skip if missing values
+
+              const diffDays = getDateDiffInDays(from, to);
+              const balance =
+                leaveBalances?.find((el) => el?.leaveType === leaveType)
+                  ?.remainingCount || 0;
+
+              return diffDays <= balance; // ✅ enforce balance
+            }
+          ),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
         days: Yup.number().when(["from", "to"], {
           is: (from, to) => from && to && getDateDiffInDays(from, to) == 1,
@@ -86,7 +101,22 @@ export function MasterEditForm({
         from: Yup.date().required(VALIDATION_MESSAGES.required),
         to: Yup.date()
           .required(VALIDATION_MESSAGES.required)
-          .min(Yup.ref("from"), "To date cannot be before From date"),
+          .min(Yup.ref("from"), "To date cannot be before From date")
+          .test(
+            "balance-check",
+            "Leave days exceed available balance",
+            function(to) {
+              const { from, leaveType } = this.parent;
+              if (!from || !to || !leaveType) return true; // skip if missing values
+
+              const diffDays = getDateDiffInDays(from, to);
+              const balance =
+                leaveBalances?.find((el) => el?.leaveType === leaveType)
+                  ?.remainingCount || 0;
+
+              return diffDays <= balance; // ✅ enforce balance
+            }
+          ),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
         days: Yup.number().when(["from", "to"], {
           is: (from, to) => from && to && getDateDiffInDays(from, to) == 1,
@@ -98,7 +128,7 @@ export function MasterEditForm({
         remarks: Yup.string().required(VALIDATION_MESSAGES.required),
       });
     }
-  }, [payrollData]);
+  }, [payrollData, leaveBalances]);
 
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
@@ -120,16 +150,11 @@ export function MasterEditForm({
             }
           };
 
-           const payload = {
-                  ...values,
-                  to: values.to
-                    ? formatDates(values.to, "dd-MMM-yyyy")
-                    : null,from: values.from
-                    ? formatDates(values.from, "dd-MMM-yyyy")
-                    : null,
-
-                    }
-
+          const payload = {
+            ...values,
+            to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+            from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+          };
 
           submitForm(payload, clearForm);
         }}
@@ -293,7 +318,7 @@ export function MasterEditForm({
                   {/* Second Row Start */}
                   <div>
                     <Field
-                      name="days"
+                      name="balance"
                       component={Input}
                       className={"form-control"} //throw validation error if the difference in days is 1 day
                       disabled={true}
