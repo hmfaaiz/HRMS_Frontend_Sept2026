@@ -31,19 +31,20 @@ function PatternListForm({
               <h6 className="font-bold mb-0 text-primary">Exit Reason List</h6>
 
               {/* {!isdataForRead && values?.list.length < 31 && ( */}
-                <button
-                  type="button"
-                  className="btn btn-primary btn-elevate"
-                  onClick={() =>
-                    push({
-                      exitReason: "",
-                      sno: "",
-                    })
-                  }
-                >
-                  <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                  Add
-                </button>
+              <button
+                disabled={!values.exitTypeId}
+                type="button"
+                className="btn btn-primary btn-elevate"
+                onClick={() =>
+                  push({
+                    exitReason: "",
+                    sno: "",
+                  })
+                }
+              >
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                Add
+              </button>
               {/* )} */}
             </div>
             <div className="w-full overflow-x-auto">
@@ -83,7 +84,7 @@ function PatternListForm({
 
                         <td>
                           <Field
-                           
+
                             name={`list[${index}].exitReason`}
                             className={
                               errors.list?.[index]?.exitReason && touched.list?.[index]?.exitReason
@@ -98,7 +99,7 @@ function PatternListForm({
                             value={row?.exitReason || ""}
                           >
                             {/* Default option */}
-                          
+
                           </Field>
 
                           {/* Error message */}
@@ -110,18 +111,21 @@ function PatternListForm({
                         </td>
 
                         {/* Delete Button Starts */}
-                        <td className="text-right">
-                          <button
-                            disabled={isdataForRead}
-                            className="border-none bg-transparent"
-                            type="button"
-                            onClick={() => {
-                              remove(index);
-                            }}
-                          >
-                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                          </button>
-                        </td>
+                      {!values?.list[index]?.isPresent && (
+                          <td className="text-right">
+                            <button
+                              disabled={isdataForRead}
+                              className="border-none bg-transparent"
+                              type="button"
+                              onClick={() => {
+                                remove(index);
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                            </button>
+                          </td>
+                        )}
+
                       </tr>
                     ))}
                   </tbody>

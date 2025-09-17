@@ -74,7 +74,28 @@ const formValidation = Yup.object()
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams };
-  newQueryParams.filter = { ...values };
+      const formattedValues = {
+            ...values,
+            dojFrom: values.dojFrom
+              ? formatDates(values.dojFrom, "dd-MMM-yyyy")
+              : null,
+            dojTo: values.dojTo
+              ? formatDates(values.dojTo, "dd-MMM-yyyy")
+              : null,
+            dobFrom: values.dobFrom
+              ? formatDates(values.dobFrom, "dd-MMM-yyyy")
+              : null,
+            dobTo: values.dobTo
+              ? formatDates(values.dobTo, "dd-MMM-yyyy")
+              : null,
+            docFrom: values.docFrom
+              ? formatDates(values.docFrom, "dd-MMM-yyyy")
+              : null,
+            docTo: values.docTo
+              ? formatDates(values.docTo, "dd-MMM-yyyy")
+              : null,
+          };
+  newQueryParams.filter = { ...formattedValues };
   return newQueryParams;
 };
 

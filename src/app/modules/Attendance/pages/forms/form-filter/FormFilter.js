@@ -416,22 +416,22 @@ export function FormFilter({
                         { label: "Select", value: "" },
                         ...(Array.isArray(allEmployees)
                           ? allEmployees.filter((emp) => {
-                              const attendanceMatch =
-                                values?.attendanceType === undefined ||
+                            const attendanceMatch =
+                              values?.attendanceType === undefined ||
                                 values?.attendanceType === ""
-                                  ? true
-                                  : emp.attendanceType ===
-                                    Number(values.attendanceType);
+                                ? true
+                                : emp.attendanceType ===
+                                Number(values.attendanceType);
 
-                              const departmentMatch =
-                                values?.departmentId === undefined ||
+                            const departmentMatch =
+                              values?.departmentId === undefined ||
                                 values?.departmentId === ""
-                                  ? true
-                                  : emp.departmentId ===
-                                    Number(values.departmentId);
+                                ? true
+                                : emp.departmentId ===
+                                Number(values.departmentId);
 
-                              return attendanceMatch && departmentMatch;
-                            })
+                            return attendanceMatch && departmentMatch;
+                          })
                           : []),
                       ]}
                     />
@@ -484,22 +484,22 @@ export function FormFilter({
                   <div className="d-flex flex-column align-items-start text-xs mt-3">
                     {values?.subsidiaryId
                       ? (() => {
-                          const selectedSubsidiary = allSubsidiaryMap?.get(
-                            values?.subsidiaryId
-                          );
-                          return (
-                            <>
-                              <div>
-                                <b>Active Fiscal Year -</b>{" "}
-                                {selectedSubsidiary?.fiscalYearLabel}
-                              </div>
-                              <div>
-                                <b>Active Payroll Month -</b>{" "}
-                                {selectedSubsidiary?.payrollMonthLabel}
-                              </div>
-                            </>
-                          );
-                        })()
+                        const selectedSubsidiary = allSubsidiaryMap?.get(
+                          values?.subsidiaryId
+                        );
+                        return (
+                          <>
+                            <div>
+                              <b>Active Fiscal Year -</b>{" "}
+                              {selectedSubsidiary?.fiscalYearLabel}
+                            </div>
+                            <div>
+                              <b>Active Payroll Month -</b>{" "}
+                              {selectedSubsidiary?.payrollMonthLabel}
+                            </div>
+                          </>
+                        );
+                      })()
                       : null}
                   </div>
                 </div>
@@ -516,7 +516,12 @@ export function FormFilter({
 
                 onClick={() => {
                   // setFieldValue("group_by_emp",true)
-                  generateReport(values, true);
+                  const formattedValues = {
+                    ...values,
+                    from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+                    to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+                  };
+                  generateReport(formattedValues, true);
                 }}
                 disabled={
                   loading ||
@@ -546,7 +551,12 @@ export function FormFilter({
 
                 onClick={() => {
                   // setFieldValue("group_by_emp",false)
-                  generateReport(values, false);
+                  const formattedValues = {
+                    ...values,
+                    from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+                    to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+                  };
+                  generateReport(formattedValues, false);
                 }}
                 disabled={
                   loading ||

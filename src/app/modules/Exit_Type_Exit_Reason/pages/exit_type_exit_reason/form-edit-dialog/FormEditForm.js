@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
-import {  useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllFormsMenu,
@@ -24,7 +23,7 @@ const roster_patternEditSchema = Yup.object().shape({
   list: Yup.array().of(
     Yup.object().shape({
       exitReason: Yup.string().trim()
-       .max(30, "Maximum 30 characters allowed")
+       .max(50, "Maximum 50 characters allowed")
        .required(VALIDATION_MESSAGES.required),
       sno: Yup.number().required(VALIDATION_MESSAGES.required),
     })
@@ -50,8 +49,22 @@ export function FormEditForm({
 
   }, [dispatch, data.Id]);
 
+  const { currentState } = useSelector(
+    (state) => {
+      return {
+        currentState: state.exit_type_exit_reason,
+    
+      }
+    },
+    shallowEqual
+  );
 
 
+  const { entities} = currentState;
+
+const filteredOptions = dashboard?.allExitTypeList?.filter(opt =>
+  !entities?.some(ent => ent.Id === opt.value)
+);
 
   return (
     <Formik
@@ -96,7 +109,9 @@ export function FormEditForm({
                           (option) => option?.value == values?.exitTypeId
                         ) || null
                       }
-                      options={dashboard?.allExitTypeList}
+                      // options={dashboard?.allExitTypeList}
+                      options={filteredOptions}
+                   
                       error={errors.exitTypeId}
                       touched={touched.exitTypeId}
                     />
