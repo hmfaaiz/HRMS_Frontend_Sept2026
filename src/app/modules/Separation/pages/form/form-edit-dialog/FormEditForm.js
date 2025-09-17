@@ -424,7 +424,7 @@ export function FormEditForm({
                     ) } */}
 
                     {new Date(values.lastWorkingDate) > new Date() ? (
-                      <span>Last Working Date should not be greater than Current Date</span>
+                      <span>Unable to Separate Employee earlier than his Last Working Date</span>
                     ) : (
                       <span>Are you sure you want to separate this record?</span>
                     )}
@@ -449,11 +449,13 @@ export function FormEditForm({
                     ) : (
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={() =>{
                           dispatch(actions.separateById(
                             { employeeId: formData.employeeId, Id: formData.Id },
                             onHide
                           ))
+                           dispatch(actions.fetchSeparation(formUIProps.queryParams));
+                        }
                         }
                         className="btn btn-primary btn-elevate"
                       >
@@ -1166,6 +1168,7 @@ export function FormEditForm({
                     <Field
                       name="blackListRemarks"
                       component={TextArea}
+                      disabled={!values.blackList}
                       placeholder="Enter remarks"
                       className="form-control"  // Force full height
                       label={

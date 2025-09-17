@@ -15,7 +15,7 @@ export function ActionsColumnFormatter(
     openDeleteFormDialog,
     openActiveFormDialog,
     openReadUserDialog,
-    isAccessForEdit,
+    isAccessForRead,
     isAccessForDelete,
     openReadFormDialog,
     setIds,
@@ -25,9 +25,9 @@ export function ActionsColumnFormatter(
   const isUserRead = false;
   return (
     <div className="space-x-2">
-      {isAccessForEdit && row.isActive && (
+      {isAccessForRead && row.isActive && (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
         >
           <a
             onClick={() => {
@@ -35,7 +35,7 @@ export function ActionsColumnFormatter(
               setIds(row.Id);
             }}
           >
-            <Pencil className="w-4 h-4 text-black cursor-pointer" />
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}

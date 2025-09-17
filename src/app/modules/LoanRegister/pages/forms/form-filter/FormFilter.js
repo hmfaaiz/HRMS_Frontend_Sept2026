@@ -374,108 +374,129 @@ export function FormFilter({
                     </div> */}
 
                   <hr></hr>
-
-                  <h6 className="font-bold mb-0 text-primary">
-                    Loan Request Report
-                  </h6>
-
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     <div className="">
-                      <Field
-                        name="isLoanContinuing"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("isLoanContinuing", e.value);
-                        }}
-                        label={<span> Loan Status</span>}
-                        value={
-                          loan_status?.find(
-                            (option) => option.value === values.isLoanContinuing
-                          ) || null
-                        }
-                        autoComplete="off"
-                        options={loan_status}
-                      />
-                    </div>
-
-                    <div className="">
-
-
-                      <label>From</label>
-                      <Field
-                        className="form-control"
-                        component={DatePickerField}
-                        placeholder="From Date "
-                        selected={values?.from ? new Date(values.from) : null}
-                        maxDate={endDate}
-                        onChange={(date) => {
-                          let formattedFromDate = formatDates(
-                            date,
-                            "yyyy-MM-dd"
-                          );
-                          let formattedToDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("from", formattedFromDate);
-                          setFieldValue("to", formattedToDate); // Sync from_date and to_date
-                        }}
-                        timeInputLabel="Time:"
-                        dateFormat="dd-MMM-yyyy"
-                        // showTimeInput
-                        name="from"
-                        autoComplete="off"
-                      />
-                    </div>
-
-                    {/* Date To Selector */}
-                    <div className="">
-                      <label>To</label>
-                      <Field
-                        className="form-control"
-                        component={DatePickerField}
-                        placeholder="To Date "
-                        selected={values?.to ? new Date(values.to) : null}
-                        minDate={values.from ? new Date(values.from) : ""}
-                        maxDate={endDate}
-                        onChange={(date) => {
-                          let formattedToDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("to", formattedToDate);
-                        }}
-                        timeInputLabel="Time:"
-                        dateFormat="dd-MMM-yyyy"
-                        // showTimeInput
-                        name="to"
-                        autoComplete="off"
-                      />
-                    </div>
-
-                    <div className="col-start-4 col-end-5 flex justify-end ">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          getPdf(values);
-                        }}
-                        disabled={
-                          LoanPositionLoading ||
-                          loanReqLoading ||
-                          !values?.subsidiaryId ||
-                          !isValid
-                        }
-                        className="btn btn-primary btn-elevate h-9 mt-4"
-                      >
+                      <h6 className="font-bold mb-0 text-primary">
                         Loan Request Report
-                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                        {/* <SVG
+                      </h6>
+
+
+                      <div className="">
+                        <Field
+                          name="isLoanContinuing"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "--Select--" ? "" : Number(e.value);
+                            setFieldValue("isLoanContinuing", e.value);
+                          }}
+                          label={<span> Loan Status</span>}
+                          value={
+                            loan_status?.find(
+                              (option) => option.value === values.isLoanContinuing
+                            ) || null
+                          }
+                          autoComplete="off"
+                          options={loan_status}
+                        />
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+
+                  <div className="mt-2">
+                    <div>
+
+
+                      <h6 className="font-bold mb-0 text-primary">
+                        Date
+                      </h6>
+
+                      <div className="grid md:grid-cols-4 gap-x-3">
+                        <div className="">
+
+
+                          <label>From</label>
+                          <Field
+                            className="form-control"
+                            component={DatePickerField}
+                            placeholder="From Date "
+                            selected={values?.from ? new Date(values.from) : null}
+                            maxDate={endDate}
+                            onChange={(date) => {
+                              let formattedFromDate = formatDates(
+                                date,
+                                "yyyy-MM-dd"
+                              );
+                              let formattedToDate = formatDates(date, "yyyy-MM-dd");
+                              setFieldValue("from", formattedFromDate);
+                              setFieldValue("to", formattedToDate); // Sync from_date and to_date
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd-MMM-yyyy"
+                            // showTimeInput
+                            name="from"
+                            autoComplete="off"
+                          />
+                        </div>
+
+                        {/* Date To Selector */}
+                        <div className="">
+                          <label>To</label>
+                          <Field
+                            className="form-control"
+                            component={DatePickerField}
+                            placeholder="To Date "
+                            selected={values?.to ? new Date(values.to) : null}
+                            minDate={values.from ? new Date(values.from) : ""}
+                            maxDate={endDate}
+                            onChange={(date) => {
+                              let formattedToDate = formatDates(date, "yyyy-MM-dd");
+                              setFieldValue("to", formattedToDate);
+                            }}
+                            timeInputLabel="Time:"
+                            dateFormat="dd-MMM-yyyy"
+                            // showTimeInput
+                            name="to"
+                            autoComplete="off"
+                          />
+                        </div>
+
+                        <div className="col-start-4 col-end-5 flex justify-end ">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              getPdf(values);
+                            }}
+                            disabled={
+                              LoanPositionLoading ||
+                              loanReqLoading ||
+                              !values?.subsidiaryId ||
+                              !isValid
+                            }
+                            className="btn btn-primary btn-elevate h-9 mt-4"
+                          >
+                            Loan Request Report
+                            {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
+                            {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                           /> */}
-                        <Download className="w-4 h-4 ml-2   cursor-pointer" />
-                        {/* </span> */}
-                        {loanReqLoading && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
+                            <Download className="w-4 h-4 ml-2   cursor-pointer" />
+                            {/* </span> */}
+                            {loanReqLoading && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
+                          </button>
+                        </div>
+
+                      </div>
+
                     </div>
+
                   </div>
 
                   <hr></hr>
