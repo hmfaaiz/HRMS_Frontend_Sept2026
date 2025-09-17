@@ -84,7 +84,7 @@ useEffect(() => {
 
     if (allCancelled) return; // 
 
-    // ✅ Use non-cancelled days only
+    // Use non-cancelled days only
     const validDates = details
       .filter(d => !d.isCancel)
       .map(d => new Date(d.date))
@@ -92,7 +92,7 @@ useEffect(() => {
 
     if (validDates.length === 0) return;
 
-    // ✅ Group consecutive dates together
+    //Group consecutive dates together
     let group = [validDates[0]];
 
     for (let i = 1; i < validDates.length; i++) {
@@ -109,6 +109,7 @@ useEffect(() => {
           end: moment(group[group.length - 1]).endOf('day').toDate(),
           allDay: true,
           description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to}`,
+           request_status: `${leave?.request_status}`,
         });
         group = [validDates[i]];
       }
@@ -122,6 +123,7 @@ useEffect(() => {
         end: moment(group[group.length - 1]).endOf('day').toDate(),
         allDay: true,
         description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to}`,
+        request_status: `${leave?.request_status}`,
       });
     }
   });
@@ -154,7 +156,7 @@ useEffect(() => {
         <Calendar
           localizer={localizer}
           events={events}
-          views={['month', 'week', 'day']} // ✅ Agenda ko remove kiya yahan
+          views={['month', 'week', 'day']} 
           defaultView="month"
           // date={defaultCalendarDate}
           date={currentDate}                    // Controlled date
@@ -176,53 +178,39 @@ useEffect(() => {
           min={selectedRange?.from}
           max={selectedRange?.to}
 
-          // Optionally, you can customize navigation behavior to stay within range
+  //       eventPropGetter={(event) => {
+  //   let backgroundColor; // default for Approved (A)
+  //   if (event.request_status == "A") {
+  //     backgroundColor = "blue"; // Pending
+  //   }
+
+  // }}
+
+  eventPropGetter={(event) => {
+  let backgroundColor = "#0093DD"; // default
+
+  if (event.request_status === "P") {
+    backgroundColor ="hsl(62, 78%, 41%)"; // Approved -> Yellow
+  }
+
+  return {
+    style: {
+      backgroundColor,
+      color: "white",
+      borderRadius: "6px",
+      padding: "2px",
+    },
+  };
+}}
+
+          
           components={{
             event: ({ event }) => (
               <div className="custom-tooltip" >
                 {event.title}
               </div>
             ),
-            // toolbar: (props) => (
-            //   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-            //     <div style={{ display: 'flex', alignItems: 'center' }}>
-
-            //       <button
-            //         disabled={isPreviousDisabled(props.date)}  // Disable if at the start date
-            //         onClick={() => {
-            //           if (!isPreviousDisabled(props.date)) {
-            //             props.onNavigate('PREV');  // Navigate to the previous date
-            //           }
-            //         }}
-
-
-            //          className="calendar-btn"
-            //       >
-            //         {"<"}
-            //       </button>
-            //       {/* Next Button */}
-            //       <button
-            //         disabled={isNextDisabled(props.date)}  // Disable if at the end date
-            //         onClick={() => {
-            //           if (!isNextDisabled(props.date)) {
-            //             props.onNavigate('NEXT');  // Navigate to the next date
-            //           }
-            //         }}
-            //        className="calendar-btn"
-            //       >
-            //         {">"}
-            //       </button>
-            //     </div>
-
-            //     {/* Month/Week/Day/Agenda View Selector */}
-
-
-            //     {/* Display the current month/year */}
-            //     <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-            //       {moment(props.date).format('MMMM YYYY')}
-            //     </div>
-            //   </div>
-            // ),
+           
 
           }}
 

@@ -585,7 +585,11 @@ export function FormEditForm({
                                         name={`accounts[${index}].reimbursement_typeId`}
                                         as="select"
                                         className="form-control"
-                                        disabled={isUserForRead}
+                                        // disabled={isUserForRead}
+                                         disabled={
+                                          isUserForRead ||
+                                          values.accounts[index]?.Id
+                                        }
                                       >
                                         <option value="">Select...</option>{" "}
                                         {/* Default "Select..." option */}

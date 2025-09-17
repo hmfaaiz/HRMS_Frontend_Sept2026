@@ -201,15 +201,15 @@ export function FormEditForm({
           }
         };
 
-          const payload = {
-                        ...values,
-                        date: values.date
-                          ? formatDates(values.date, "dd-MMM-yyyy")
-                          : null,
-                          
-        
-                    }
-        
+        const payload = {
+          ...values,
+          date: values.date
+            ? formatDates(values.date, "dd-MMM-yyyy")
+            : null,
+
+
+        }
+
         saveForm(payload, finalAmountLimit, isFileReq, clearForm);
       }}
     >
@@ -297,9 +297,24 @@ export function FormEditForm({
                       // label="Date"
                       type="date"
                       maxDate={new Date()}
+                      // minDate={
+                      //   data.dateOfJoining ? new Date(data.dateOfJoining) : null
+                      // }
                       minDate={
-                        data.dateOfJoining ? new Date(data.dateOfJoining) : null
+                        (() => {
+                          const payrollStart = activeFiscalYear?.payrollMonth?.startDate
+                            ? new Date(activeFiscalYear.payrollMonth.startDate)
+                            : null;
+
+                          const joiningDate = data?.dateOfJoining ? new Date(data.dateOfJoining) : null;
+
+                          if (payrollStart && joiningDate) {
+                            return payrollStart > joiningDate ? payrollStart : joiningDate;
+                          }
+                          return payrollStart || joiningDate || null;
+                        })()
                       }
+
                       // disabled={!isActiveMonth}
                       // disabled={isEdit && !(dashboard?.allPayrollMonthYearList.some(
                       //   (option) => option?.value == values?.pay_in_payroll_forId && option?.isActive === true))}
@@ -570,19 +585,19 @@ export function FormEditForm({
                         }}
                       >
                         {user.file ? user.file : "Upload"} */}
-                        <FileUpload
-                          label={"Attachment"}
-                          id="file"
-                          name="file"
-                          type="file"
-                          accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                          ref={inputFile}
-                          className="hidden"
-                          onChange={(event) => {
-                            const file = event.currentTarget.files[0];
-                            setFieldValue("file", file);
-                          }}
-                        />
+                      <FileUpload
+                        label={"Attachment"}
+                        id="file"
+                        name="file"
+                        type="file"
+                        accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                        ref={inputFile}
+                        className="hidden"
+                        onChange={(event) => {
+                          const file = event.currentTarget.files[0];
+                          setFieldValue("file", file);
+                        }}
+                      />
                       {/* </label> */}
 
                       {/* Show existing file if any */}

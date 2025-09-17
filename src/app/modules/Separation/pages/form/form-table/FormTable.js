@@ -156,7 +156,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "resignationDate",
+      dataField: "resignationDateFormatted",
       text: "Resignation Date",
       sort: false,
       sortCaret: sortCaret,
@@ -166,7 +166,7 @@ export function FormTable() {
       },
       // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
     },   {
-      dataField: "lastWorkingDate",
+      dataField: "lastWorkingDateFormatted",
       text: "Last Working Date",
       sort: false,
       sortCaret: sortCaret,
