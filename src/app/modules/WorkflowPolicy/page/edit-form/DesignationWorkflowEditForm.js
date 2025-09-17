@@ -105,9 +105,10 @@ const DesignationWorkflowEditForm = ({
 }) => {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
+  const { workflow_policy } = useSelector((state) => state);
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-    dispatch(fetchAllFormsMenu(380, "allEmployeeRequestTypeList"));
+    // dispatch(fetchAllFormsMenu(380, "allEmployeeRequestTypeList"));
     dispatch(fetchAllActiveEmployees());
     dispatch(action.fetchRoles());
     dispatch(fetchAllCity());
@@ -186,19 +187,21 @@ const DesignationWorkflowEditForm = ({
                       }
                       onChange={({ value }) => {
                         setFieldValue("subsidiaryId", value);
+                        dispatch(action.fetchWorkflowTypeRecord(value));
                       }}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                       currentValue={values?.subsidiaryId}
                       initializeSubsidiary={(e) => {
                         setFieldValue("subsidiaryId", e?.value);
+                        dispatch(action.fetchWorkflowTypeRecord(e?.value));
                       }}
                     />
                   </div>
                   {/* designation workflow set  */}
                   <div className="col-span-1">
                     <SearchSelect
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || !values?.subsidiaryId}
                       name="workflowTypeId"
                       label={
                         <span>
@@ -210,13 +213,13 @@ const DesignationWorkflowEditForm = ({
                         setFieldValue("workflowTypeId", value);
                       }}
                       value={
-                        dashboard?.allEmployeeRequestTypeList?.find(
-                          (e) => e.value === values?.workflowTypeId
+                        workflow_policy?.workflowTypeList?.find(
+                          (e) => e?.value === values?.workflowTypeId
                         ) || null
                       }
                       error={errors.workflowTypeId}
                       touched={touched.workflowTypeId}
-                      options={dashboard.allEmployeeRequestTypeList}
+                      options={workflow_policy?.workflowTypeList}
                     />
                   </div>
                   <div className="col-span-1">

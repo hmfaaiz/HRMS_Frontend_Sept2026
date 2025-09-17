@@ -19,6 +19,20 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
+const SandwichType = [
+  {
+    value : 0,
+    label : "No Sandwich "
+  },
+  {
+    value : 1,
+    label : "Mark All Days as Sandwich"
+  },
+  {
+    value : 2,
+    label : "Mark One day as Sandwich"
+  },
+]
 /*
 //Validations for Form
 const formValidation = Yup.object().shape({
@@ -119,13 +133,13 @@ export function MasterEditForm({
       // minExp: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(99, VALIDATION_MESSAGES.maxTwoDigits).optional(),
       // maritalStatus: Yup.number().nullable(),
       weekend: Yup.array().when("isSandwich", {
-        is: true, // Condition to check
-        then: Yup.array()
-          .required(VALIDATION_MESSAGES.required)
-          .min(1, VALIDATION_MESSAGES.min), // Minimum 1 item
-        otherwise: Yup.array().notRequired(), // Not required if isSandwich is false
-      }),
-      isSandwich: Yup.boolean().optional(),
+      is: (val) => val === 1 || val === 2, // check if value is 1 or 2
+     then: Yup.array()
+    .required(VALIDATION_MESSAGES.required)
+    .min(1, VALIDATION_MESSAGES.min),   // Minimum 1 item
+     otherwise: Yup.array().notRequired(), // Not required for other values
+    }),
+      isSandwich: Yup.number().optional(),
       leavetypePolicies: Yup.array().of(
         Yup.object().shape({
           leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -254,6 +268,7 @@ export function MasterEditForm({
         validationSchema={formValidation}
         onSubmit={(values) => {
           enableLoading();
+          console.log("valuesvalues" , values)
           submitForm(values);
         }}
       >
@@ -276,7 +291,7 @@ export function MasterEditForm({
               {/* Form Starts */}
               <Form className="form form-label-right">
                 <fieldset disabled={isUserForRead}>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="col-span-1">
                       {/* <Field
@@ -436,10 +451,64 @@ export function MasterEditForm({
                       }
                     </div> */}
                     {/* Employee Type Field End */}
-
-                    {/* Weekends Field Start */}
+                    {/* Sandwich Field Start */}
                     <div className="col-span-1">
+                      {/* <div className="flex items-center gap-2">
+                        <Field
+                          name="isSandwich"
+                          component={Checkbox}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            setFieldValue("isSandwich", e.target.checked);
+                          }}
+                          isSelected={values.isSandwich}
+                        />
+                        <label>Sandwich</label>
+                      </div> */}
                       <Field
+                        name="isSandwich"
+                        component={Select}
+                        disabled={isUserForRead}
+                        className={
+                          errors.isSandwich && touched.isSandwich
+                            ? "form-control is-invalid"
+                            : "form-control"
+                        }
+                        placeholder=""
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.target.value == "Select" ? "" : e.target.value;
+                          setFieldValue("isSandwich", value);
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Sandwich Type<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={values.isSandwich}
+                        autoComplete="off"
+                        children={CustomDropdown({
+                          data: SandwichType,
+                        })}
+                      />
+
+                    </div>
+                    {/* Weekends Field Start */}
+                    {/* {console.log("WEEK_DAYSWEEK_DAYS" , WEEK_DAYS)} */}
+                    <div className="col-span-3">
+                      <label>
+                          <span>
+                            {" "}
+                            Weekends
+                            {Boolean(values.isSandwich) && (
+                              <span style={{ color: "red" }}>*</span>
+                            )}
+                          </span>
+                      </label>
+                    <div className="grid-cols-4 grid lg:grid-cols-7 gap-x-3">
+                      {/* <Field
                         name="weekend"
                         component={Select}
                         className={
@@ -478,25 +547,27 @@ export function MasterEditForm({
                           touched={true}
                           error={errors.weekend}
                         />
-                      )}
+                      )} */}
+
+                      {WEEK_DAYS?.map((el,ind)=>{
+                        return (
+                          <Checkbox 
+                          children={el?.label} 
+                          isSelected={values?.weekend?.find((e)=> e === el?.value)} 
+                          onChange={()=>{
+                          let prevVal = values?.weekend || [];
+                          let result = prevVal.includes(el?.value)
+                            ? prevVal.filter((v) => v !== el?.value)
+                            : [...prevVal, el?.value];
+                           setFieldValue("weekend", result);
+                          }} />
+                        )
+                      })}
+                    </div>
                     </div>
                     {/* Weekends Field End */}
 
-                    {/* Sandwich Field Start */}
-                    <div className="col-span-1">
-                      <div className="flex items-center gap-2">
-                        <Field
-                          name="isSandwich"
-                          component={Checkbox}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            setFieldValue("isSandwich", e.target.checked);
-                          }}
-                          isSelected={values.isSandwich}
-                        />
-                        <label>Sandwich</label>
-                      </div>
-                    </div>
+
                     {/* Sandwich Field End */}
                   </div>
 

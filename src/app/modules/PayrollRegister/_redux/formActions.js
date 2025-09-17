@@ -203,7 +203,7 @@ export const generateRegisterJVExcel = (filter, document, labels = {}) => async 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'payroll_register_jv.xlsx');
+      link.setAttribute('download', 'Payroll Expense Report.xlsx');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.registerGDExcelFetched({}));
@@ -237,7 +237,7 @@ export const generateRegisterJVCreditExcel = (filter, document, labels = {}) => 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'payroll_register_jv.xlsx');
+      link.setAttribute('download', 'Payroll Disbursement Report.xlsx');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.registerGDExcelFetched({}));

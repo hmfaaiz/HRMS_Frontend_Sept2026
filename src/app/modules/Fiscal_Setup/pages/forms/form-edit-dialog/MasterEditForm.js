@@ -234,11 +234,11 @@ export function MasterEditForm({
                         disabled={isUserForRead}
                         autoComplete="off"
                       />
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         className="form-feedBack"
                         name="startDate"
                         component="div"
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-span-6 lg:col-span-4">
@@ -265,11 +265,11 @@ export function MasterEditForm({
                         autoComplete="off"
                         // value = {values.dateOfJoining}
                       />
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         className="form-feedBack"
                         name="endDate"
                         component="div"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </fieldset>

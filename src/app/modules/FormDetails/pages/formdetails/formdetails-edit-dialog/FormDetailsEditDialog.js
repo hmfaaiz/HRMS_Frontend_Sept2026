@@ -12,7 +12,7 @@ import axios from "axios";
 import { setData } from "../../../../../../_metronic/redux/tripLogTable/tripLogTableSlice";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
-export function FormEditDialog({ id, show, onHide, userForRead }) {
+export function FormEditDialog({ id, show, onHide, userForRead  , parentId }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -85,11 +85,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       
   
       
-      user.parentFormID = formDetails.currentId
+      user.parentFormID = parentId
       const finalObject = { user }
      await dispatch(actions.createform(user, disbaleLoading, onHide));
-    
-     await dispatch(actions.customfetchFormDetail(formDetails.currentId));
+     await dispatch(actions.customfetchFormDetail(parentId));
     } else {
       // const getUserStatus = userStatusTypes.find((item) => {
       //   return item.value === +user.status;
@@ -128,6 +127,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       <FormEditForm
         saveReligion={saveReligion}
         user={userForEdit || FormUIProps.initUser}
+        parentId={parentId}
         onHide={onHide}
         roles={roles}
         centers={centers}
