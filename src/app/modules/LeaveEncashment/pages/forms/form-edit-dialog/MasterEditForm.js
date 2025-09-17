@@ -177,9 +177,9 @@ export function MasterEditForm({
                     </div>
 
                     <div className="col-span-1">
-                      {!readOnly && (
+                      {/* {!readOnly && ( */}
                         <label className="form-label">Balance</label>
-                      )}
+                      {/* )} */}
                       <input
                         type="number"
                         className="form-control"

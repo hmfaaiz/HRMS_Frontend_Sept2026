@@ -103,7 +103,7 @@ export function EmployeeSelect({
 
                   {/* Employee Id Dropdown Starts */}
                   <div className="col-span-1">
-                    <Field
+                    {/* <Field
                       name="yearId"
                       component={Select}
                       className={
@@ -134,6 +134,38 @@ export function EmployeeSelect({
                         data: allFiscalYears,
                         firstElement: { label: "Select", value: "" },
                       })}
+                    /> */}
+                    <Field
+                      name="yearId"
+                      component={SearchSelect}
+                      className={
+                        values.employeeId && !values.yearId
+                          ? "form-control is-invalid"
+                          : "form-control"
+                      }
+                      placeholder=""
+                      onBlur={handleBlur}
+                      onChange={(e) => {
+                        console.log("ee" , e)
+                        const value = e?.value;
+                        setFieldValue("yearId", value);
+                        setyearId(value); //Set Employee Id in context for server
+                        setId(""); //Clear Edit values on Employee Change
+                      }}
+                      label={
+                        <span>
+                          {" "}
+                          Year<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                   value={
+                      allFiscalYears?.find(fy => fy?.value === values?.yearId) || null
+                     }
+                      autoComplete="off"
+                      options={allFiscalYears?.map((fy) => ({
+                         ...fy,
+                       isDisabled: fy.isActive === false, // 👈 mark inactive years disabled
+                    }))}
                     />
                     {/* {
                       values.employeeId && !values.yearId && <CustomErrorLabel touched={true} error={VALIDATION_MESSAGES.required || ""} />

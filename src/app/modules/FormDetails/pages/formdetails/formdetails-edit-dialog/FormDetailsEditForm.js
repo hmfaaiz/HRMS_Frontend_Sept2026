@@ -44,6 +44,7 @@ export function FormEditForm({
   values,
   enableLoading,
   loading,
+  parentId
 }) {
 
 
@@ -72,13 +73,13 @@ export function FormEditForm({
 
   useEffect(() => {
 
-    if (formDetails.currentId) {
+    if (parentId) {
 
       setddlParentForm(
         dashboard.allParentMenus &&
         dashboard.allParentMenus.filter((item) => {
 
-          return item.value === formDetails.currentId;
+          return item.value === parentId;
         })
       );
 
@@ -91,9 +92,9 @@ export function FormEditForm({
 
   const fetchData = async (setValue) => {
   
-    if(formDetails.currentId!==45){
+    if(parentId!==45 && parentId){
    
-      dispatch(getLatestTableId("t_form_menu", "formCode", "parentFormID =" + formDetails.currentId + " AND companyId="+auth?.user?.companyId, setValue));
+      dispatch(getLatestTableId("t_form_menu", "formCode", "parentFormID =" + parentId + " AND companyId="+auth?.user?.companyId, setValue));
     }
   
   
@@ -166,7 +167,7 @@ export function FormEditForm({
                     {<div className="col-span-1">
                       <Field
                         name="formCode"
-                        disabled={formDetails.currentId!==45}
+                        disabled={parentId !== 45}
                         component={Input}
                         maxLength={6}
                         placeholder="Enter Form Code"

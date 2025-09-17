@@ -559,7 +559,8 @@ export function MasterEditForm({
 
                     <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                       <div>
-                        <label>
+                        <label title="Mark Employee as Absent if Working Hours are less than
+                          selected hours" className="shortlabel">
                           Mark Employee as Absent if Working Hours are less than
                           selected hours
                         </label>
@@ -574,7 +575,8 @@ export function MasterEditForm({
                       </div>
 
                       <div>
-                        <label>
+                        <label title="Mark Employee as Half Day if Working Hours are less
+                          than selected hours" className="shortlabel">
                           Mark Employee as Half Day if Working Hours are less
                           than selected hours
                         </label>

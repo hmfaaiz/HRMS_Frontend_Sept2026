@@ -16,25 +16,27 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     openReadFormDialog,
     isAccessForSendingEmail,
-    openSendEmailFormDialog
+    openSendEmailFormDialog,
   }
 ) {
   const isUserRead = false;
+
+  const recordIsEditable = () => {
+    if (new Date(row?.from_date) >= new Date(row?.activePayrollMonth?.startDate)) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <div className="space-x-2">
-      {isAccessForSendingEmail && row.isActive && (
+      {isAccessForSendingEmail && row.isActive && recordIsEditable() && (
         <OverlayTrigger
-          overlay={
-            <Tooltip id="products-edit-tooltip">
-              Send Email
-            </Tooltip>
-          }
+          overlay={<Tooltip id="products-edit-tooltip">Send Email</Tooltip>}
         >
-          <a
-            onClick={() => openSendEmailFormDialog(row.Id)}>
+          <a onClick={() => openSendEmailFormDialog(row.Id)}>
             <MailPlus className="w-4 h-4 text-black cursor-pointer" />
           </a>
-
         </OverlayTrigger>
       )}
       <OverlayTrigger
@@ -48,7 +50,7 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
-      {isAccessForEdit && row.isActive && (
+      {isAccessForEdit && row.isActive && recordIsEditable() && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -58,7 +60,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete && (
+      {isAccessForDelete && recordIsEditable() && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">

@@ -58,6 +58,16 @@ export function LeaveEncashmentTable() {
         minWidth: "160px",
       },
     },
+      {
+      dataField: "fiscalYear",
+      text: "Fiscal Year",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+    },
     {
       dataField: "days",
       text: "Leave Days",
@@ -78,6 +88,7 @@ export function LeaveEncashmentTable() {
         minWidth: "160px",
       },
     },
+      
     {
       dataField: "action",
       text: "Actions",
