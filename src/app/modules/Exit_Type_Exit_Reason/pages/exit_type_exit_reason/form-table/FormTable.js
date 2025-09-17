@@ -140,14 +140,52 @@ export function FormTable() {
   };
 
   return (
-    <div className="w-full overflow-x-auto">
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
-        {({ paginationProps, paginationTableProps }) => {
-          return (
-            <Pagination
+    // <div className="w-full overflow-x-auto">
+    //   <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+    //     {({ paginationProps, paginationTableProps }) => {
+    //       return (
+    //         <Pagination
+    //           isLoading={listLoading}
+    //           paginationProps={paginationProps}
+    //         >
+    //           <BootstrapTable
+    //             wrapperClasses="table-responsive"
+    //             bordered={false}
+    //             classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+    //             bootstrap4
+    //             remote
+    //             keyField="Id"
+    //             data={entities === null ? [] : entities}
+    //             columns={columns}
+    //             defaultSorted={uiHelpers.defaultSorted}
+    //             onTableChange={getHandlerTableChange(
+    //               formUIProps.setQueryParams
+    //             )}
+    //             // selectRow={getSelectRow({
+    //             //   entities,
+
+    //             // })}
+    //             {...paginationTableProps}
+    //           >
+    //             <PleaseWaitMessage entities={entities} />
+    //             <NoRecordsFoundMessage entities={entities} />
+    //           </BootstrapTable>
+    //         </Pagination>
+    //       );
+    //     }}
+    //   </PaginationProvider>
+    // </div>
+
+
+
+     <div className="w-full overflow-x-auto">
+   
+        {/* {({ paginationProps, paginationTableProps }) => {
+          return ( */}
+            {/* <Pagination
               isLoading={listLoading}
-              paginationProps={paginationProps}
-            >
+              // paginationProps={paginationProps}
+            > */}
               <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
@@ -165,15 +203,15 @@ export function FormTable() {
                 //   entities,
 
                 // })}
-                {...paginationTableProps}
+                // {...paginationTableProps}
               >
                 <PleaseWaitMessage entities={entities} />
                 <NoRecordsFoundMessage entities={entities} />
               </BootstrapTable>
-            </Pagination>
-          );
-        }}
-      </PaginationProvider>
+            {/* </Pagination> */}
+          {/* ); */}
+        {/* }} */}
+    
     </div>
   );
 }

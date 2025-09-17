@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
+import { useFormUIContext } from "../FormUIContext";
 import * as Yup from "yup";
 import {
   DatePickerField,
@@ -302,6 +303,18 @@ export function FormEditForm({
 
   }, [activeEmployeeList]);
 
+  const FormUIContext = useFormUIContext();
+  
+    const formUIProps = useMemo(() => {
+      return {
+        initUser: FormUIContext.initUser,
+        queryParams: FormUIContext.queryParams,
+        setemployeeId: FormUIContext.setemployeeId,
+        setPanelMode: FormUIContext.setPanelMode,
+        panelMode: FormUIContext.panelMode,
+      };
+    }, [FormUIContext]);
+
   return (
     <Formik
       enableReinitialize={true}
@@ -472,7 +485,7 @@ export function FormEditForm({
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
 
-                  {!formData.Id && (
+                  {/* {!formData.Id && (
                     <div className="">
                       <SearchSelect
                         label={
@@ -500,7 +513,7 @@ export function FormEditForm({
                       />
                     </div>
                   )}
-
+ */}
 
                   <div className="">
                     <SearchSelect
@@ -959,7 +972,7 @@ export function FormEditForm({
                         name="acceptanceRemarks"
                         component={TextArea}
                         placeholder="Enter remarks"
-                        label={<span>Remarks</span>}
+                        label={<span>Remarks for Resignation Approval</span>}
                         className="form-control "  // Force full height
                         autoComplete="off"
                       />
@@ -1158,7 +1171,7 @@ export function FormEditForm({
                       label={
                         <span>
 
-                          Blacklisted Remarks
+                         Reason for marking Blacklist
                         </span>
                       }
                       autoComplete="off"

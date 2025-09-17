@@ -6,6 +6,7 @@ import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/_helpers";
 import { FileSpreadsheet, FileText, Sheet } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { formatDates } from "../../../../utils/common";
 
 const ReportButton = (values) => {
   const filterValues = values?.values || {};
@@ -18,6 +19,12 @@ const ReportButton = (values) => {
       setQueryParams: formUIContext.setQueryParams,
     };
   }, [formUIContext]);
+
+    const formattedFilterValues = {
+    ...filterValues,
+    from: filterValues.from ? formatDates(filterValues.from, "dd-MMM-yyyy") : null,
+    to: filterValues.to ? formatDates(filterValues.to, "dd-MMM-yyyy") : null,
+  };
 
   const {
     pdf2Loading,
@@ -47,8 +54,9 @@ const ReportButton = (values) => {
       ...FormUIProps.queryParams,
       filter: {
         ...FormUIProps.queryParams.filter,
-        ...filterValues, // ✅ set actual form fields inside filter
-      }, // ✅ Push filter values into context
+        // ...filterValues, 
+        ...formattedFilterValues
+      },
       csv: false,
       excel: false,
       pdf2: false,
@@ -63,7 +71,7 @@ const ReportButton = (values) => {
       ...FormUIProps.queryParams,
       filter: {
         ...FormUIProps.queryParams.filter,
-        ...filterValues, // ✅ set actual form fields inside filter
+        ...filterValues, 
       },
       csv: false,
       excel: false,
