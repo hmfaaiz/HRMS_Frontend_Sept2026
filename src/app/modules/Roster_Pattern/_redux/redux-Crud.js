@@ -32,3 +32,8 @@ export function deleteAccrueGratuityConfig(body) {
 
   return axios.patch(`${USERS_URL}/roster_pattern/delete-roster-pattern`, body);
 }
+
+export function getAutoCodeGenerate(body) {
+
+  return axios.post(`${USERS_URL}/roster_pattern/autocode-generate`, body);
+}

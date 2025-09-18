@@ -22,6 +22,23 @@ export const fetchAccrueGratuityConfigs = (queryparm) => async (dispatch) => {
     });
 };
 
+
+
+export const fetchAutoCodeGenerate = (subsidiaryId) => async (dispatch) => {
+  
+  return requestFromServer.getAutoCodeGenerate({subsidiaryId})
+   
+    .then((response) => {
+    
+   
+      return response;
+    })
+    .catch((error) => {
+      
+      error.clientMessage = "Can't find";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};
 export const fetchAccrueGratuityConfig = (id) => (dispatch) => {
 
 

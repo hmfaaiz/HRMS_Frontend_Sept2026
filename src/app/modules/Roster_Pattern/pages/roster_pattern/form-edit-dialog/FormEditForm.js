@@ -56,6 +56,7 @@ export function FormEditForm({
     };
   }, shallowEqual);
   const [patternCode, setpatternCode] = useState("");
+  const [defaultSubsidiaryId, setDefaultSubsidiaryId] = useState("");
   useEffect(() => {
     if (!data.Id) {
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
@@ -63,28 +64,29 @@ export function FormEditForm({
     }
   }, [dispatch, data.Id]);
 
-  const fetchData = async (setpatternCode) => {
-    if (!data.Id) {
-      dispatch(
-        getLatestTableId(
-          "t_roster_pattern",
-          "patternCode",
-          "companyId =" + currentUser.companyId,
-          setpatternCode
-        )
-      );
+  const fetchData = async (setFieldValue, subsidiaryId) => { 
+    if (subsidiaryId) {
+      try {
+        const response = await dispatch(
+          actions.fetchAutoCodeGenerate(subsidiaryId)
+        );
+        if (response?.data?.data) {
+          setFieldValue("patternCode",response.data.data);
+        }
+      } catch (error) {
+        console.error("Error in fetchData:", error);
+      }
     }
   };
-  useEffect(() => {
-    fetchData(setpatternCode);
-  }, []);
+
+
 
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
         ...data,
-        patternCode: data.patternCode ? data?.patternCode : patternCode,
+        // patternCode: data.patternCode ? data?.patternCode : patternCode,
       }}
       validationSchema={roster_patternEditSchema}
       onSubmit={(values) => {
@@ -104,47 +106,29 @@ export function FormEditForm({
               <fieldset disabled={isdataForRead}>
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                   <div>
-                    {/* <SearchSelect
+                    <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
                           Subsidiary<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isdataForRead}
+                      isDisabled={isdataForRead || data.Id}
                       onChange={(e) => {
                         setFieldValue("subsidiaryId", e.value || null);
+                        fetchData(setFieldValue, e.value)
                         setFieldValue("list", []);
                       }}
                       value={
                         dashboard?.allSubsidiaryList?.find(
-                          (option) => option?.value === values?.subsidiaryId
+                          (option) => option?.value == values?.subsidiaryId
                         ) || null
                       }
                       options={dashboard?.allSubsidiaryList}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
-                    /> */}
-                    <SubsidiarySelect
-                      name="subsidiaryId"
-                      label={
-                        <span>
-                          Subsidiary<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isdataForRead}
-                      onChange={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        setFieldValue("list", []);
-                      }}
-                      error={errors?.subsidiaryId}
-                      touched={touched?.subsidiaryId}
-                      currentValue={values?.subsidiaryId}
-                      initializeSubsidiary={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        setFieldValue("list", []);
-                      }}
                     />
+                    
                   </div>
 
                   <div>
@@ -159,9 +143,9 @@ export function FormEditForm({
                       placeholder="Enter Pattern Code"
                       disabled={true}
                       type="text"
-                      onInput={(e) => {
-                        e.target.value = amountLimitDynamic(e.target.value, 30); // Limit to 30 digits
-                      }}
+                    // onInput={(e) => {
+                    //   e.target.value = amountLimitDynamic(e.target.value, 30); // Limit to 30 digits
+                    // }}
                     />
                   </div>
 
