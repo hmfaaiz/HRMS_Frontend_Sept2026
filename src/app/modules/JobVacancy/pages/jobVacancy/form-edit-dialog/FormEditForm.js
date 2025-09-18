@@ -968,11 +968,11 @@ export function FormEditForm({
                           }
                         />
 
-                        {touched.jobPeriodStart && errors.jobPeriodStart && (
+                        {/* {touched.jobPeriodStart && errors.jobPeriodStart && (
                           <div className="invalid-feedback d-block">
                             {errors.jobPeriodStart}
                           </div>
-                        )}
+                        )} */}
                       </div>
 
                       <div className="">
@@ -1000,11 +1000,11 @@ export function FormEditForm({
                           }
                         />
 
-                        {touched.jobPeriodEnd && errors.jobPeriodEnd && (
+                        {/* {touched.jobPeriodEnd && errors.jobPeriodEnd && (
                           <div className="invalid-feedback d-block">
                             {errors.jobPeriodEnd}
                           </div>
-                        )}
+                        )} */}
                       </div>
 
                       <div className="">

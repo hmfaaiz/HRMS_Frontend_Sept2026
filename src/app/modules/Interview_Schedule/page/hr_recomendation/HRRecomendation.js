@@ -153,7 +153,7 @@ export default function HRRecomendation() {
                       errors,
                       touched,
                       values,
-                      setFieldValue,
+                      setFieldValue,setFieldTouched,
                     }) => (
                       <>
                         <Modal.Body className="overlay overlay-block cursor-default">
@@ -213,7 +213,7 @@ export default function HRRecomendation() {
                                     touched={touched.locationId}
                                   />
                                 </div>
-                                <div className="">
+                                {/* <div className="">
                                   <label>
                                     <span>
                                       Monthly Salary{" "}
@@ -233,7 +233,29 @@ export default function HRRecomendation() {
 
                                     // }}
                                   />
-                                </div>
+                                </div> */}
+                                     <div className="">
+                                                    <AmountInput
+                                                      field={{
+                                                        name: `monthlySalary`,
+                                                        value: values?.monthlySalary,
+                                                      }}
+                                                      form={{
+                                                        touched,
+                                                        errors,
+                                                        setFieldValue,
+                                                        setFieldTouched,
+                                                      }}
+                                                 
+                                                      placeholder="Enter salary"
+                                                      label={
+                                                        <span>
+                                                           Monthly Salary
+                                                          <span style={{ color: "red" }}>*</span>
+                                                        </span>
+                                                      }
+                                                    />
+                                                  </div>
                                 <div className="">
                                   <SearchSelect
                                     name="appointmentTypeId"

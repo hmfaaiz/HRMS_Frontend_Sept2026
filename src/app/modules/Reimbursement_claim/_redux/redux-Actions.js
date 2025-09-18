@@ -64,8 +64,10 @@ export const deleteReimbursementClaim= (id) => (dispatch) => {
       });
     })
     .catch((error) => {
+ 
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES.deletedFail);
+      toast.error(error?.response?.data?.message || // backend message
+    error?.message  || SERVER_MESSAGES.deletedFail);
     });
 };
 
