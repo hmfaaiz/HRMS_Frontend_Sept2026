@@ -10,7 +10,7 @@ import {
   DatePickerField,
   Select,
 } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
+import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import {
@@ -31,12 +31,9 @@ import { formatDates } from "../../../../../utils/common";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date()
-    .nullable()
-    .optional(),
-  to: Yup.date()
-    .nullable()
-    .optional()
+  from: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+  to: Yup.date().nullable()
+    .required(VALIDATION_MESSAGES.required)
     .min(Yup.ref("from"), "'To Date' should not be less than 'From Date'."),
 });
 
@@ -168,11 +165,11 @@ export function FormFilter({
         initialValues={{
           ...initialFilter.filter,
           attendanceType: 1,
-          subsidiaryId:
-            initialFilter.filter?.subsidiaryId ||
-            (allSubsidiaryList && allSubsidiaryList.length > 0
-              ? allSubsidiaryList[0].value
-              : ""), // Set default subsidiaryId if it's not provided
+          // subsidiaryId:
+          //   initialFilter.filter?.subsidiaryId ||
+          //   (allSubsidiaryList && allSubsidiaryList.length > 0
+          //     ? allSubsidiaryList[0].value
+          //     : ""), // Set default subsidiaryId if it's not provided
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -224,6 +221,10 @@ export function FormFilter({
                       onChange={(e) => {
                         const value = Number(e?.value);
                         setFieldValue("subsidiaryId", value);
+                        if(e?.payrollMonth){
+                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                        }
                         dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                         dispatch(fetchAllDept(value));
                         setFieldValue("employeeId", "");
@@ -241,6 +242,10 @@ export function FormFilter({
                       initializeSubsidiary={(e) => {
                         const value = Number(e?.value);
                         setFieldValue("subsidiaryId", value);
+                         if(e?.payrollMonth){
+                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                          }
                         dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                         dispatch(fetchAllDept(value));
                         setFieldValue("employeeId", "");

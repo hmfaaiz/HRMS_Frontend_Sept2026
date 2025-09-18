@@ -151,11 +151,11 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
-          subsidiaryId:
-            initialFilter.filter?.subsidiaryId ||
-            (allSubsidiaryList && allSubsidiaryList.length > 0
-              ? allSubsidiaryList[0].value
-              : ""), // Set default subsidiaryId if it's not provided
+          // subsidiaryId:
+          //   initialFilter.filter?.subsidiaryId ||
+          //   (allSubsidiaryList && allSubsidiaryList.length > 0
+          //     ? allSubsidiaryList[0].value
+          //     : ""), // Set default subsidiaryId if it's not provided
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -227,6 +227,11 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
+                          if(e?.payrollMonth){
+                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
+                        }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           dispatch(fetchAllDept(value));
                           dispatch(
@@ -246,6 +251,11 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
+                          if(e?.payrollMonth){
+                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
+                        }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           dispatch(fetchAllDept(value));
                           dispatch(
@@ -477,7 +487,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                   disabled={
                     reimbursementLoading ||
                     !values?.subsidiaryId ||
-                    !isValid ||
+                    // !isValid ||
                     (!values.monthId && (!values.to || !values.from))
                   }
                   className="btn btn-primary btn-elevate"

@@ -467,27 +467,27 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-                              <td className="max-lg:min-w-96">Loan Type</td>
-                              <td className="max-lg:min-w-96">Max. Amount</td>
-                              <td className="max-lg:min-w-96">Basis</td>
-                              <td className="max-lg:min-w-96">Salary Count</td>
-                              <td className="max-lg:min-w-96">
+                              <td title="Loan Type" className="cursor-pointer max-lg:min-w-96">Loan Type</td>
+                              <td title="Maximum Loan Amount Limit" className="cursor-pointer max-lg:min-w-96">Max. Amount</td>
+                              <td title="Basis for Amount Limit" className="cursor-pointer max-lg:min-w-96">Basis</td>
+                              <td title="No of Salary Count" className="cursor-pointer max-lg:min-w-96">Salary Count</td>
+                              <td title="Maximum No of Installments Allowed" className="cursor-pointer max-lg:min-w-96">
                                 Max. No. of Installments
                               </td>
-                              <td className="max-lg:min-w-96">
+                              <td title="No of Months in which Loan Installment can be started" className="cursor-pointer max-lg:min-w-96">
                                 Installment Start Date
                               </td>
 
-                              <td className="max-lg:min-w-96">
+                              <td title="Allow user to take Multiple Loans at a time" className="cursor-pointer max-lg:min-w-96">
                                 Multiple Loans
                               </td>
-                              <td className="max-lg:min-w-96">
+                              <td title="No of month required to take new loan once previous loan is completed" className="cursor-pointer max-lg:min-w-96">
                                 Months Required for New Loan
                               </td>
-                              <td className="max-lg:min-w-96">
+                              <td title="No of service required for loan eligibilty" className="cursor-pointer max-lg:min-w-96">
                                 Eligibility for New Loan
                               </td>
-                              <td className="max-lg:min-w-96">Action</td>
+                              <td title="Action" className="cursor-pointer max-lg:min-w-96">Action</td>
                             </tr>
 
                             <tbody>
