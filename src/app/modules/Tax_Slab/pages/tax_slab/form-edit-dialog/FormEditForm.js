@@ -34,12 +34,13 @@ const tax_slabEditSchema = Yup.object().shape({
   //   .required(VALIDATION_MESSAGES.required),
 
   percentage: Yup.number()
+    .required(VALIDATION_MESSAGES.required)
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .max(100, VALIDATION_MESSAGES.maxHundredValue)
     .test("max-decimals", VALIDATION_MESSAGES.minZeroValue, (value) =>
       /^\d{1,4}(\.\d{1,2})?$/.test(value?.toString())
     )
-    .required(VALIDATION_MESSAGES.required),
+,
 
   // fixed_amount: Yup.string().required("Required*"),
 

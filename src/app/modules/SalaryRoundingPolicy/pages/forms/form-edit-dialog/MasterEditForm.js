@@ -18,13 +18,13 @@ const formValidation = Yup.object().shape({
   // amount: Yup.string().required(VALIDATION_MESSAGES.required).matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
   amount: Yup.string()
     .required(VALIDATION_MESSAGES.required)
-    .matches(/^\d+(\.\d{1,2})?$/, VALIDATION_MESSAGES.validNumber) // Allows decimals up to 2 digits
+    .matches(/^\d+(\.\d{1,3})?$/, VALIDATION_MESSAGES.validNumber) // Allows decimals up to 2 digits
     .test(
       "is-valid-range",
-      "Amount must be between 0.1 and 999999",
+      "Enter Rounding Amount between 0.001 to 9999",
       (value) => {
         const num = parseFloat(value);
-        return !isNaN(num) && num >= 0.1 && num <= 999999;
+        return !isNaN(num) && num >= 0.001 && num <= 9999;
       }
     )
     .test(
@@ -81,9 +81,9 @@ export function MasterEditForm({
           handleSubmit,
           errors,
           values,
-          handleBlur,
           handleChange,
           setFieldValue,
+          handleBlur,
           touched,
         }) => (
           <>
@@ -138,18 +138,11 @@ export function MasterEditForm({
                     </div>
 
                     <div className="col-span-1">
-                      <Field
+                      <SearchSelect
                         name="paymentMode"
-                        component={Select}
-                        className={
-                          errors.paymentMode && !values.paymentMode
-                            ? "form-control is-invalid"
-                            : "form-control"
-                        }
-                        placeholder=""
-                        onBlur={handleBlur}
+                       isDisabled={isUserForRead}
                         onChange={(e) => {
-                          setFieldValue("paymentMode", e.target.value);
+                          setFieldValue("paymentMode", e.value || null);
                         }}
                         label={
                           <span>
@@ -157,16 +150,13 @@ export function MasterEditForm({
                             Payment Mode<span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        value={values.paymentMode}
-                        autoComplete="off"
-                        children={dropdown(dropdownData)}
+                        onBlur={handleBlur}   
+                        value={dropdownData?.map((ell)=> ({value : ell?.Id , label : ell.formName}))?.find((el)=> el?.value ===  values.paymentMode) || null}
+                        options={dropdownData?.map((ell)=> ({value : ell?.Id , label : ell.formName}))}
+                        error={errors.paymentMode}
+                        touched={touched.paymentMode}
+                        // children={dropdown(dropdownData)}
                       />
-                      {errors.paymentMode && !values.paymentMode && (
-                        <CustomErrorLabel
-                          touched={true}
-                          error={errors.paymentMode}
-                        />
-                      )}
                     </div>
 
                     <div className="col-span-1">

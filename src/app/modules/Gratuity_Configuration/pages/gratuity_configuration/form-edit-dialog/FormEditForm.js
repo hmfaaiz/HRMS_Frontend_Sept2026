@@ -46,14 +46,14 @@ const gratuity_configurationEditSchema = Yup.object().shape({
   //   .required(VALIDATION_MESSAGES.required),
 
   min_year: Yup.number()
-    .min(1, "Minimum Year at least 1")
-    .max(99, "Maximum Year at most 99")
+    .min(0.01, "Minimum Year at least 0.01")
+    .max(99.99, "Maximum Year at most 99")
     .required(VALIDATION_MESSAGES.required)
     .typeError("Minimum Year must be a number"),
 
   max_year: Yup.number()
-    .min(0, VALIDATION_MESSAGES.minZeroValue)
-    .max(99, "Maximum Year at most 99")
+    .min(0.01, VALIDATION_MESSAGES.minZeroValue)
+    .max(99.99, "Maximum Year at most 99.99")
     .required(VALIDATION_MESSAGES.required)
     .typeError("Maximum Year must be a number")
     .test(
@@ -264,9 +264,9 @@ export function FormEditForm({
                       // label="Minimum Year"
                       type="number"
                       onInput={(e) => {
-                        if (e.target.value.length > 2) {
-                          e.target.value = e.target.value.slice(0, 2); // Restrict to 2 digits
-                        }
+                        // if (e.target.value.length > 2) {
+                        //   e.target.value = e.target.value.slice(0, 2); // Restrict to 2 digits
+                        // }
                       }}
                     />
                   </div>
@@ -284,9 +284,9 @@ export function FormEditForm({
                       // label="Maximum Year"
                       type="number"
                       onInput={(e) => {
-                        if (e.target.value.length > 2) {
-                          e.target.value = e.target.value.slice(0, 2); // Restrict to 2 digits
-                        }
+                        // if (e.target.value.length > 2) {
+                        //   e.target.value = e.target.value.slice(0, 2); // Restrict to 2 digits
+                        // }
                       }}
                     />
                   </div>

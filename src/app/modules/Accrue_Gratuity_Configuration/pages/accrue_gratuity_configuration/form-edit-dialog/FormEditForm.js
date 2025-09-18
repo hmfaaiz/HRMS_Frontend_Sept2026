@@ -91,15 +91,16 @@ export function FormEditForm({
       // If found, fetch that config
       dispatch(actions.fetchAccrueGratuityConfig(existedEntity.Id));
     } else {
+      dispatch(actions.fetchAccrueGratuityConfig(existedEntity.Id));
       // If not found, reset all fields, then set subsidiaryId
-      handleReset();
-      setValues({
-        Id: "",
-        subsidiaryId: subsidiaryId,
-        graduity_expense_accountId: "",
-        graduity_payable_accountId: "",
-        bank_cash_accountId: "",
-      });
+      // handleReset();
+      // setValues({
+      //   Id: "",
+      //   subsidiaryId: subsidiaryId,
+      //   graduity_expense_accountId: "",
+      //   graduity_payable_accountId: "",
+      //   bank_cash_accountId: "",
+      // });
     }
   };
 
@@ -142,7 +143,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-12 gap-x-3 gap-y-1">
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 col-span-12">
                     <div className="col-span-1">
-                      {/* <SearchSelect
+                      <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -165,8 +166,8 @@ export function FormEditForm({
 
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
-                      /> */}
-                      <SubsidiarySelect
+                      />
+                      {/* <SubsidiarySelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -185,7 +186,7 @@ export function FormEditForm({
                           setFieldValue("subsidiaryId", e.value || null);
                           check_Existed_Data(e.value, setValues, handleReset);
                         }}
-                      />
+                      /> */}
                     </div>
                   </div>
 
