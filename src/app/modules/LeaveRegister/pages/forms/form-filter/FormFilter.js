@@ -10,7 +10,7 @@ import {
   DatePickerField,
   Select,
 } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE } from "../../../../../utils/constants";
+import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
@@ -26,9 +26,9 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date().optional(),
-  to: Yup.date()
-    .optional()
+  from: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
+  to: Yup.date().nullable()
+    .required(VALIDATION_MESSAGES.required)
     .min(Yup.ref("from"), "'To Date' should not be less than 'From Date'."),
 });
 
@@ -146,11 +146,11 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
-          subsidiaryId:
-            initialFilter.filter?.subsidiaryId ||
-            (allSubsidiaryList && allSubsidiaryList.length > 0
-              ? allSubsidiaryList[0].value
-              : ""), // Set default subsidiaryId if it's not provided
+          // subsidiaryId:
+          //   initialFilter.filter?.subsidiaryId ||
+          //   (allSubsidiaryList && allSubsidiaryList.length > 0
+          //     ? allSubsidiaryList[0].value
+          //     : ""), // Set default subsidiaryId if it's not provided
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -210,6 +210,10 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           dispatch(fetchAllDept(value));
                           setFieldValue("employeeId", "");
                           setFieldValue("departmentId", "");
+                           if(e?.payrollMonth){
+                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                          }
                         }}
                         // error={errors?.subsidiaryId}
                         // touched={touched?.subsidiaryId}
@@ -218,10 +222,12 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           const value =
                             e.value == "Select" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
+                          setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                          setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                          setFieldValue("departmentId", "");
+                          setFieldValue("employeeId", "");
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                           dispatch(fetchAllDept(value));
-                          setFieldValue("employeeId", "");
-                          setFieldValue("departmentId", "");
                         }}
                       />
                     </div>
@@ -491,16 +497,20 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                 >
                   <button
                     onClick={() => {
-                      getPdf(values);
+                      if(!pdfLoading){
+                        getPdf(values);
+                      }
                     }}
                     disabled={pdfLoading}
-                    className="border-none bg-transparent"
+                    className={`border-none bg-transparent ${
+                    pdfLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   >
                     <FileText className="w-4 h-4 text-black cursor-pointer" />
 
-                    {pdfLoading && (
+                    {/* {pdfLoading && (
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )}
+                    )} */}
                   </button>
                 </OverlayTrigger>
               </div>

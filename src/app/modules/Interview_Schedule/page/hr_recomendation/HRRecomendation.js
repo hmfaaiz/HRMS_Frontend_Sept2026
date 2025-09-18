@@ -221,12 +221,17 @@ export default function HRRecomendation() {
                                     </span>
                                   </label>
                                   <Field
-                                    name="monthlySalary"
-                                    value={values.monthlySalary}
                                     component={AmountInput}
-                                    placeholder="Monthly Salary"
-                                    type="number"
-                                    amountFormat={true}
+                                    name="monthlySalary"
+                                    // // value={values.monthlySalary}
+                                    // placeholder="Monthly Salary"
+                                    // type="number"
+                                    // amountFormat={true}
+                                    as="input"
+                                    className="form-control"
+                                    //  onChange={(e)=>{
+
+                                    // }}
                                   />
                                 </div> */}
                                      <div className="">

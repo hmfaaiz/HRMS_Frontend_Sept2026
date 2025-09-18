@@ -16,7 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
-import { amountFormat } from "../../../../../utils/common";
+import { amountFormat, amountFormatWithoutRounding } from "../../../../../utils/common";
 
 export function FormTable() {
   //Users UI Context
@@ -90,7 +90,7 @@ export function FormTable() {
         minWidth: "160px",
       },
       formatter: (cell) => {
-        return cell ? amountFormat(cell) : "";
+        return cell ? amountFormatWithoutRounding(cell) : "";
       },
     },
     {
