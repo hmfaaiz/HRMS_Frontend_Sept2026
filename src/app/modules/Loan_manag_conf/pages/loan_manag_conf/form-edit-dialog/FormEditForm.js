@@ -205,7 +205,7 @@ export function FormEditForm({
                   {/* Subsidiary Field */}
 
                   <div className="">
-                    {/* <SearchSelect
+                    <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -229,9 +229,8 @@ export function FormEditForm({
                       // }))}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
-                    /> */}
-                    {console.log("eeeeewww", values?.subsidiaryId)}
-                    <SubsidiarySelect
+                    />
+                    {/* <SubsidiarySelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -256,7 +255,7 @@ export function FormEditForm({
                           check_Existed_Data(e?.value);
                         }
                       }}
-                    />
+                    /> */}
                   </div>
 
                   {/* Account Field */}
