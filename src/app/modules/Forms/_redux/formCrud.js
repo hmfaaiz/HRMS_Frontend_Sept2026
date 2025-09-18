@@ -64,3 +64,8 @@ export function sms_athentication(body) {
     body
   );
 }
+
+
+export function createGeneralSetupConfig(body) {
+  return axios.post(`${USERS_URL}/form/create-general-setup-config`, body);
+}

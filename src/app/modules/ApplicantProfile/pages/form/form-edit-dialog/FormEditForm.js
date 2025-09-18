@@ -91,19 +91,18 @@ export const getApplicantProfileEditSchema = (formData) => {
 
       phone_official: Yup.string()
         .nullable() // Allows null values
-        .matches(
-          /^0[0-9]*$/,
-          "Phone number must start with 0 and contain only digits"
-        ) // Must start with 0 and contain only digits
+       
+        .matches(/^[0-9]*$/, "Must contain only digits")
+         .max(15, "Must be at most 15 characters long")
         .notRequired(), // Make it optional if you want
 
       phone_cell: Yup.string()
         .nullable() // Allows null values
-        .matches(
-          /^0[0-9]*$/,
-          "Cell number must start with 0 and contain only digits"
-        ) // Must start with 0 and contain only digits
+        
+        .matches(/^[0-9]*$/, "Must contain only digits")
+         .max(15, "Must be at most 15 characters long")
         .notRequired(), // Make it optional if you want
+        
 
       email_personal: Yup.string()
         .nullable() // Allows null values

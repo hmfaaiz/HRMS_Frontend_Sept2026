@@ -248,29 +248,32 @@ dateOfContractExpiry: Yup.date()
 
     phone_cell: Yup.string()
       .nullable() // Allows null values
-      .matches(
-        /^0[0-9]*$/,
-        "Phone No. must start with 0 and contain only digits"
-      ) // Must start with 0 and contain only digits
-      .max(15, "Employee code must be at most 15 characters long")
+      // .matches(
+      //   /^0[0-9]*$/,
+      //   "Phone No. must start with 0 and contain only digits"
+      // ) // Must start with 0 and contain only digits
+      .matches(/^[0-9]*$/, "Must contain only digits")
+      .max(15, "Must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
 
     phone_home: Yup.string()
       .nullable() // Allows null values
-      .matches(
-        /^0[0-9]*$/,
-        "Phone No. must start with 0 and contain only digits"
-      ) // Must start with 0 and contain only digits
-      .max(15, "Employee code must be at most 15 characters long")
+      // .matches(
+      //   /^0[0-9]*$/,
+      //   "Phone No. must start with 0 and contain only digits"
+      // ) // Must start with 0 and contain only digits
+      .matches(/^[0-9]*$/, "Must contain only digits")
+      .max(15, "Must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
 
     phone_official: Yup.string()
       .nullable() // Allows null values
-      .matches(
-        /^0[0-9]*$/,
-        "Phone No. must start with 0 and contain only digits"
-      ) // Must start with 0 and contain only digits
-      .max(15, "Employee code must be at most 15 characters long")
+      // .matches(
+      //   /^0[0-9]*$/,
+      //   "Phone No. must start with 0 and contain only digits"
+      // ) // Must start with 0 and contain only digits
+      .matches(/^[0-9]*$/, "Must contain only digits")
+      .max(15, "Must be at most 15 characters long")
       .notRequired(), // Make it optional if you want
 
     dateOfBirth: Yup.date()
