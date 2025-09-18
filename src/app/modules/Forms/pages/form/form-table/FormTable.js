@@ -120,7 +120,7 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter: (cell) => (cell === 1 ? "Employee" : "Recuritment"),
+      formatter: (cell) => (cell == 1 ? "Employee" : "Recuritment"),
     },
     // {
     //   dataField: "MenuName",

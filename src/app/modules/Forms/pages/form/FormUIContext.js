@@ -33,7 +33,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const initUser = {
     formName: "",
     formCode:"",
-    parentFormID:"",
+    parentFormID:null,
     isActive:true,
     moduleType:1
     // createdBy: "",

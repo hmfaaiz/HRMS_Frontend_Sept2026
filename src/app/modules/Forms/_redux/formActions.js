@@ -1,3 +1,4 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./formCrud";
 import { formSlice, callTypes } from "./formsSlice";
 import { toast } from "react-toastify";
@@ -208,5 +209,46 @@ export const fetchDonationReport = (body) => async (dispatch) => {
     })
     .catch((error) => {
       toast("error", "Data not found");
+    });
+};
+
+
+export const createGeneralSetupConfig = (formForCreation, disbaleLoading, onHide) => (
+  dispatch
+) => {
+
+  return requestFromServer
+    .createGeneralSetupConfig(formForCreation)
+    .then((res) => {
+      dispatch(actions.startCall({ callType: callTypes.action }));
+      const user = res.data?.data;
+  
+
+      dispatch(actions.formCreated(user));
+      disbaleLoading();
+      toast.success(SERVER_MESSAGES.insertedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      onHide();
+    })
+    .catch((error) => {
+     
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      disbaleLoading();
+      toast.error(SERVER_MESSAGES.insertedFail,{
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
 };

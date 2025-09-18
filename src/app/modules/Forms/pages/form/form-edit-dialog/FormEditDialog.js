@@ -89,7 +89,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       //   ...rest,
       // };
       const finalObject = { user }
-     await dispatch(actions.createform(user, disbaleLoading, onHide));
+     await dispatch(actions.createGeneralSetupConfig(user, disbaleLoading, onHide));
       await dispatch(actions.fetchUsers(FormUIProps.queryParams));
       
 

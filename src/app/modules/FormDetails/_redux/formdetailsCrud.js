@@ -35,11 +35,11 @@ export function getAllChildFormById(id) {
   return axios.post(`${USERS_URL}/formdetails/read-all-child-forms`, {id}, config);
 }
 
-
+//for child detail
 export function getFormById(body) {
  
   //return axios.post(`${USERS_URL}/formdetails/read-all-parent-forms`, body.Id);
-  return axios.post(`${USERS_URL}/form/read-form`, body);
+  return axios.post(`${USERS_URL}/formdetails/read-form`, body);
 }
 
 //Update
