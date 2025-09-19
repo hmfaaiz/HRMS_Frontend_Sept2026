@@ -41,88 +41,144 @@ export function FormTable() {
   };
 
 
-  // useEffect(() => {
 
-  //   const calendarEvents = leaveCalendar?.map((leave) => ({
-  //     title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
-  //     start: moment(leave?.from).toDate(),
-  //     end: moment(leave?.to).endOf('day').toDate(),
-  //     allDay: true,
-  //     description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to} `,
-  //   })
+// useEffect(() => {
+//   const calendarEvents = [];
 
+//   (leaveCalendar || []).forEach((leave) => {
+//     const details = leave?.t_leave_application_details || [];
+//     const isSandwich = leave?.isSandwich;
 
-  // ) || [];
+//     if (details.length === 0) return;
 
-  //   setEvents(calendarEvents);
-  //   setSelectedRange({ from: new Date(dateRange.formattedFromDate),  // Example from date
-  //   to: new Date(dateRange.formattedToDate)}) 
+//     const allCancelled = details.every(d => d.isCancel === true);
+//     const allNotCancelled = details.every(d => d.isCancel === false);
 
+//     if (allCancelled) return; // 
 
+//     // Use non-cancelled days only
+//     const validDates = details
+//       .filter(d => !d.isCancel)
+//       .map(d => new Date(d.date))
+//       .sort((a, b) => a - b);
 
+//     if (validDates.length === 0) return;
 
-  //   const earliestDate = getEarliestDate(leaveCalendar);
-  //   setDefaultCalendarDate(earliestDate); 
-  //   setCurrentDate(earliestDate)
-  // }, [leaveCalendar, dispatch]);
+//     //Group consecutive dates together
+//     let group = [validDates[0]];
 
+//     for (let i = 1; i < validDates.length; i++) {
+//       const prevDate = moment(validDates[i - 1]);
+//       const currentDate = moment(validDates[i]);
 
+//       if (currentDate.diff(prevDate, 'days') === 1) {
+//         group.push(validDates[i]);
+//       } else {
+//         // Create event for the current group
+//         calendarEvents.push({
+//           title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+//           start: moment(group[0]).toDate(),
+//           end: moment(group[group.length - 1]).endOf('day').toDate(),
+//           allDay: true,
+//           description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to}`,
+//            request_status: `${leave?.request_status}`,
+//         });
+//         group = [validDates[i]];
+//       }
+//     }
 
+//     // Add the last group as event
+//     if (group.length) {
+//       calendarEvents.push({
+//         title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+//         start: moment(group[0]).toDate(),
+//         end: moment(group[group.length - 1]).endOf('day').toDate(),
+//         allDay: true,
+//         description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to}`,
+//         request_status: `${leave?.request_status}`,
+//       });
+//     }
+//   });
 
+//   setEvents(calendarEvents);
 
+//   setSelectedRange({
+//     from: new Date(dateRange.formattedFromDate),
+//     to: new Date(dateRange.formattedToDate),
+//   });
+
+//   const earliestDate = getEarliestDate(leaveCalendar);
+//   setDefaultCalendarDate(earliestDate);
+//   setCurrentDate(earliestDate);
+// }, [leaveCalendar, dispatch]);
+
+ 
 useEffect(() => {
   const calendarEvents = [];
 
   (leaveCalendar || []).forEach((leave) => {
     const details = leave?.t_leave_application_details || [];
-    const isSandwich = leave?.isSandwich;
 
-    if (details.length === 0) return;
+    if (details.length === 0) {
+      // Direct event using from–to (e.g. Pending status)
+      calendarEvents.push({
+        title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+        start: moment(leave.from, "DD-MMM-YYYY").toDate(),
+        end: moment(leave.to, "DD-MMM-YYYY").endOf("day").toDate(),
+        allDay: true,
+        description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} 
+${leave?.t_leave_type?.name || 'Leave'} 
+${leave?.from} - ${leave?.to}`,
+        request_status: `${leave?.request_status}`,
+      });
+      return; // skip rest of loop
+    }
 
-    const allCancelled = details.every(d => d.isCancel === true);
-    const allNotCancelled = details.every(d => d.isCancel === false);
-
-    if (allCancelled) return; // 
+    // Ignore fully cancelled leaves
+    const allCancelled = details.every((d) => d.isCancel === true);
+    if (allCancelled) return;
 
     // Use non-cancelled days only
     const validDates = details
-      .filter(d => !d.isCancel)
-      .map(d => new Date(d.date))
+      .filter((d) => !d.isCancel)
+      .map((d) => new Date(d.date))
       .sort((a, b) => a - b);
 
     if (validDates.length === 0) return;
 
-    //Group consecutive dates together
+    // Group consecutive dates
     let group = [validDates[0]];
-
     for (let i = 1; i < validDates.length; i++) {
       const prevDate = moment(validDates[i - 1]);
       const currentDate = moment(validDates[i]);
 
-      if (currentDate.diff(prevDate, 'days') === 1) {
+      if (currentDate.diff(prevDate, "days") === 1) {
         group.push(validDates[i]);
       } else {
-        // Create event for the current group
         calendarEvents.push({
-          title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+          title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || "Leave"})`,
           start: moment(group[0]).toDate(),
-          end: moment(group[group.length - 1]).endOf('day').toDate(),
+          end: moment(group[group.length - 1]).endOf("day").toDate(),
           allDay: true,
-          description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to}`,
-           request_status: `${leave?.request_status}`,
+          description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} 
+${leave?.t_leave_type?.name || "Leave"} 
+${leave?.from} - ${leave?.to}`,
+          request_status: `${leave?.request_status}`,
         });
         group = [validDates[i]];
       }
     }
 
-    // Add the last group as event
+    // Add last group
     if (group.length) {
       calendarEvents.push({
-        title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || 'Leave'})`,
+        title: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} (${leave?.t_leave_type?.name || "Leave"})`,
         start: moment(group[0]).toDate(),
-        end: moment(group[group.length - 1]).endOf('day').toDate(),
+        end: moment(group[group.length - 1]).endOf("day").toDate(),
         allDay: true,
-        description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} \n${leave?.t_leave_type?.name || 'Leave'} \n${leave?.from} - ${leave?.to}`,
+        description: `${leave?.t_employee_profile?.employeeCode} - ${leave?.t_employee_profile?.fullName} 
+${leave?.t_leave_type?.name || "Leave"} 
+${leave?.from} - ${leave?.to}`,
         request_status: `${leave?.request_status}`,
       });
     }
@@ -140,7 +196,9 @@ useEffect(() => {
   setCurrentDate(earliestDate);
 }, [leaveCalendar, dispatch]);
 
-  const isPreviousDisabled = (date) => {
+
+
+const isPreviousDisabled = (date) => {
     return date <= selectedRange?.from;
   };
 
@@ -189,7 +247,7 @@ useEffect(() => {
   eventPropGetter={(event) => {
   let backgroundColor = "#0093DD"; // default
 
-  if (event.request_status === "P") {
+  if (event.request_status == "P") {
     backgroundColor ="hsl(62, 78%, 41%)"; // Approved -> Yellow
   }
 
