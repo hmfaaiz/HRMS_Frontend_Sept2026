@@ -29,6 +29,8 @@ export function FormCard() {
       id: FormUIContext.ids,
       panelMode: FormUIContext.panelMode,
       setPanelMode: FormUIContext.setPanelMode,
+      readMode: FormUIContext.readMode,
+      setReadMode: FormUIContext.setReadMode,
     };
   }, [FormUIContext]);
 

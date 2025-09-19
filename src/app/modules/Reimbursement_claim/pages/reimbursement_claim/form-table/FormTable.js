@@ -37,6 +37,8 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      readMode: formUIContext.readMode,
+      setReadMode: formUIContext.setReadMode,
     };
   }, [formUIContext]);
 
@@ -59,9 +61,9 @@ export function FormTable() {
     dispatch(actions.fetchReimbursementClaim(formUIProps));
   }, [formUIProps.queryParams, dispatch, totalCount, formUIProps.employeeId]);
 
-  // const isAccessForEdit = userAccess?.find(
-  //   (item) => item.componentName === "UpdateReimbursementClaim"
-  // );
+  const isAccessForEdit = userAccess?.find(
+    (item) => item.componentName === "UpdateReimbursementClaim"
+  );
 
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteReimbursementClaim"
@@ -184,9 +186,11 @@ export function FormTable() {
         setIsFileReq: formUIProps.setIsFileReq,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        setReadMode: formUIContext.setReadMode,
         // openActiveFormDialog: formUIProps.openActiveFormDialog,
         // openReadFormDialog: formUIProps.openReadFormDialog,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
+        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,

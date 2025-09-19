@@ -19,23 +19,40 @@ export function ActionsColumnFormatter(
     isAccessForDelete,
     openReadFormDialog,
     setIds,
-    setIsFileReq,
+    setIsFileReq,isAccessForEdit,setReadMode,
   }
 ) {
   const isUserRead = false;
   return (
     <div className="space-x-2">
-      {isAccessForRead && row.isActive && (
+      {isAccessForRead  && (
         <OverlayTrigger
           overlay={<Tooltip id="products-view-tooltip">View</Tooltip>}
         >
           <a
             onClick={() => {
               setIsFileReq(false);
+              setReadMode(true);
               setIds(row.Id);
             }}
           >
             <Eye className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+
+            {isAccessForEdit  && !row.approved_status && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+        >
+          <a
+            onClick={() => {
+              setIsFileReq(false);
+                  setReadMode(false);
+              setIds(row.Id);
+            }}
+          >
+            <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
