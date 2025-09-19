@@ -694,6 +694,7 @@ export function FormEditForm({
                 type="button"
                 className="btn btn-green"
                 // disabled={user?.approved_status  == 1}
+                disabled={isUserForRead}
                 onClick={() => UpdateApprovedStatus(user.Id, 1)}
               >
                 Approve

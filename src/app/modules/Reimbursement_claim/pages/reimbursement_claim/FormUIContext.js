@@ -15,6 +15,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [employeeId, setemployeeId] = useState('');
   const [ids, setIds] = useState("");
   const [isFileReq,setIsFileReq]=useState(false)
+  const [readMode,setReadMode]=useState(false)
   const [panelMode, setPanelMode] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
@@ -59,7 +60,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setemployeeId,
     employeeId,
     panelMode,
-    setPanelMode,
+    setPanelMode,setReadMode,readMode,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,

@@ -31,7 +31,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       employeeId: FormUIContext.employeeId,
       queryParams: FormUIContext.queryParams,
       isFileReq:FormUIContext.isFileReq,
-      setIsFileReq:FormUIContext.setIsFileReq
+      setIsFileReq:FormUIContext.setIsFileReq,
+      readMode:FormUIContext.readMode,
+      setReadMode:FormUIContext.setReadMode
     };
   }, [FormUIContext]);
 
@@ -174,7 +176,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         onHide={onHide}
         roles={roles}
         userStatusTypes={userStatusTypes}
-        isUserForRead={userForRead}
+        isUserForRead={formUIProps.readMode}
         enableLoading={enableLoading}
         loading={loading}
         setIds={formUIProps.setIds}
