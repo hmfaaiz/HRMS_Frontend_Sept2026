@@ -1,51 +1,109 @@
 import { format } from "date-fns";
 import React, { useState, useEffect } from "react";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import * as action from "../../../_redux/dashboardActions";
+import { formatDates } from "../../../../../utils/common";
+import { toast } from "react-toastify";
 
 export const AttendanceMarking = () => {
-    const [date, setDate] = useState(new Date());
-    const [isPresent, setIsPresent] = useState(false); // toggle state
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState(new Date());
+  const { currentAtt } = useSelector(
+    (state) => ({
+      currentAtt: state?.dashboard?.currentAtt,
+    }),
+    shallowEqual
+  );
 
-    useEffect(() => {
-        const timer = setInterval(() => setDate(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, []);
+  useEffect(() => {
+    const timer = setInterval(() => setDate(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-    const handleToggle = () => {
-        setIsPresent((prev) => !prev);
-    };
+  useEffect(() => {
+    dispatch(action.getAttendance(setLoading));
+  }, []);
 
-    return (
-        <div className="mt-2 rounded-lg p-3 bg-tsecondary flex gap-2">
-            <h6 className="font-bold mb-0 text-primary">Attendance</h6>
+  const handleToggle = () => {
+    setLoading(true);
 
-            <div className="inline-flex me-5 cursor-pointer" onClick={handleToggle}>
-                {/* Hidden input just for accessibility */}
-                <input type="checkbox" className="sr-only" checked={isPresent} readOnly />
+    if (!navigator.geolocation) {
+      toast.error("Location is not supported on this device.");
+      setLoading(false);
+      return;
+    }
 
-                <div
-                    className={`relative w-11 h-6 rounded-full transition-colors
-            ${isPresent ? "bg-tprimary" : "bg-tlight"}
-          `}
-                >
-                    <div
-                        className={`absolute top-0.5 left-[2px] h-5 w-5 rounded-full bg-white border border-gray-300 transition-transform
-              ${isPresent ? "translate-x-full" : "translate-x-0"}
-            `}
-                    ></div>
-                </div>
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const now = new Date();
+        const body = {
+          AttDate: formatDates(now),
+          AttDateTesting: now,
+          Time: now,
+          Status: currentAtt?.Status == "01" ? "02" : "01",
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        };
 
-                <div className="ms-3">
-                    <div className="text-sm text-black block">
-                        {isPresent ? "Check Out" : "Check In"}
-                    </div>
-                    <div className="text-black text-sm block">
-                        {format(date, "EEEE do MMMM yyyy")}
-                    </div>
-                    <div className="text-black text-lg font-semibold block">
-                        {format(date, "hh:mm:ss a")}
-                    </div>
-                </div>
-            </div>
-        </div>
+        dispatch(action?.createAttendance(body, setLoading));
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          toast.error(
+            "Location is not enabled. Please enable location services."
+          );
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          toast.error("Location information is unavailable.");
+        } else if (error.code === error.TIMEOUT) {
+          toast.error("Location request timed out.");
+        } else {
+          toast.error("An unknown error occurred while getting location.");
+        }
+        setLoading(false);
+      }
     );
+  };
+
+  return (
+    <div className="mt-2 rounded-lg p-3 bg-tsecondary flex gap-2 relative">
+      <h6 className="font-bold mb-0 text-primary">Attendance</h6>
+
+      <div className="inline-flex me-5 relative">
+        {/* Toggle */}
+        <div className="checkbox-wrapper-3">
+          <input
+            type="checkbox"
+            id="cbx-3"
+            disabled={loading}
+            checked={currentAtt?.Status == "01"}
+            onChange={handleToggle}
+          />
+          <label htmlFor="cbx-3" className="toggle">
+            <span></span>
+          </label>
+        </div>
+
+        {/* Info section */}
+        <div className="ms-3">
+          <div className="text-sm text-black block">
+            {currentAtt?.Status == "01" ? "Check Out" : "Check In"}
+          </div>
+          <div className="text-black text-sm block">
+            {format(date, "EEEE do MMMM yyyy")}
+          </div>
+          <div className="text-black text-lg font-semibold block">
+            {format(date, "hh:mm:ss a")}
+          </div>
+        </div>
+
+        {/* Inline loader over toggle */}
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-tsecondary/90 rounded-lg">
+            <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };

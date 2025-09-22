@@ -38,7 +38,7 @@ export const accountType = [
     value: 3,
   },
   {
-    label: "Revenue",
+    label: "Income",
     value: 4,
   },
   {

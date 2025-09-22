@@ -83,6 +83,7 @@ const initialDashboardState = {
   announcement: [],
   allExitTypeList:[],
   allExitReasonList:[],
+  currentAtt : null,
 };
 
 export const callTypes = {
@@ -336,6 +337,9 @@ export const dashboardSlice = createSlice({
 
     AllExitReasonListFetch: (state, action) => {
       state.allExitReasonList = action.payload;
+    },
+    CurrentAttFetch: (state, action) => {
+      state.currentAtt = action.payload;
     },
   },
 });
