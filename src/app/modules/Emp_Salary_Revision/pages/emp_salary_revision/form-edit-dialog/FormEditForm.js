@@ -421,7 +421,7 @@ export function FormEditForm({
           return item.value === payment_mode_Id;
         })
     );
-  }, [user?.payment_mode_Id, dashboard.payment_mode_Id]);
+  }, [user?.payment_mode_Id,]);
 
   //======================= compensation
 
@@ -863,19 +863,19 @@ useEffect(()=>{
   
 },[user.emp_bankId])  
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const emp_bank_branchId = defEmpBankBranch?.value
-      ? defEmpBankBranch.value
-      : user.emp_bank_branchId;
-    setDefaultEmpBankBranch(
-      dashboard.allBankBranch &&
-        dashboard.allBankBranch.filter((item) => {
-          return item.value === emp_bank_branchId;
-        })
-    );
+  //   const emp_bank_branchId = defEmpBankBranch?.value
+  //     ? defEmpBankBranch.value
+  //     : user.emp_bank_branchId;
+  //   setDefaultEmpBankBranch(
+  //     dashboard.allBankBranch &&
+  //       dashboard.allBankBranch.filter((item) => {
+  //         return item.value === emp_bank_branchId;
+  //       })
+  //   );
 
-  }, [user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
+  // }, [user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
   useEffect(() => {
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
       (entity) => entity.subsidiaryId === Number(user.subsidiaryId)
@@ -2665,7 +2665,13 @@ const comparisonFields = [
                         setFieldValue("payment_mode_Id", e.value || null);
                         setDefualtPaymentModeCodeList(e);
                       }}
-                      value={defPaymentModeList || null}
+                      // value={defPaymentModeList || null}
+                    
+                      value={
+                        dashboard.allPaymentModeList?.find(
+                          (option) => option.value === values.payment_mode_Id
+                        ) || null
+                      }
                       error={errors.payment_mode_Id}
                       touched={touched.payment_mode_Id}
                       options={dashboard.allPaymentModeList}
@@ -2681,13 +2687,19 @@ const comparisonFields = [
                       }}
                       onChange={(e) => {
                         setFieldValue("emp_bankId", e.value);
+                        setFieldValue("emp_bank_branchId", null);
+                        setDefaultEmpBankBranch(null);
                         setDefaultBanks(e);
-                        // dispatch(fetchAllBanks(e.value));
+                    
                           dispatch(fetchAllBankBranch(e.value));
-                        // fetchBranch(e.value);
+                        
                       }}
                       value={
-                        !checkReadOnlyStatus(values, [151, 152]) ? defBank : ""
+                        !checkReadOnlyStatus(values, [151, 152]) ?  
+                        dashboard.allBanks?.find(
+                          (option) => option.value === values.emp_bankId
+                        ) || null
+                       : ""
                       }
                       error={errors.emp_bankId}
                       touched={touched.emp_bankId}
@@ -2705,11 +2717,13 @@ const comparisonFields = [
                       onChange={(e) => {
                         setFieldValue("emp_bank_branchId", e.value);
                         setDefaultEmpBankBranch(e);
-                        // dispatch(fetchAllBankBranch(e.value));
+                     
                       }}
                       value={
                         !checkReadOnlyStatus(values, [151, 152])
-                          ? defEmpBankBranch
+                          ? dashboard.allBankBranch?.find(
+                          (option) => option.value === values.emp_bank_branchId
+                        ) || null
                           : ""
                       }
                       error={errors.emp_bank_branchId}
