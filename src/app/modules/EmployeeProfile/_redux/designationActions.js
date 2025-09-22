@@ -114,6 +114,7 @@ export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
 ) => {
 
 
+
   return requestFromServer
     .createEmpProfile(BodyObj)
     .then((res) => {
@@ -123,6 +124,8 @@ export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
 
       dispatch(actions.emp_profileCreated(user));
       disbaleLoading();
+      onHide();
+      
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -134,6 +137,7 @@ export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
       });
       console.loog("run1111")
       onHide();
+    
     })
     .catch((error) => {
       error.clientMessage = "Can't create user";
@@ -142,6 +146,7 @@ export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
     
       if (error.response?.data?.blackList) {
         const updatedBody = { ...BodyObj, by_pass_blacklist_check: true };
+      
         toast.warning(
           ({ closeToast }) => (
             <div>
@@ -149,7 +154,7 @@ export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
               <br />
               <button
                 onClick={() => {
-                  dispatch(createEmpProfile(updatedBody));
+                  dispatch(createEmpProfile(updatedBody, disbaleLoading, onHide));
                   closeToast();
 
                 }}
