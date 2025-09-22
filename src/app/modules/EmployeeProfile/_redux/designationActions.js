@@ -11,14 +11,14 @@ export const fetchUsers = (queryparm) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.list }));
 
   return requestFromServer.getAllEmpProfile(queryparm)
-    
+
     .then((response) => {
-  
-     
+
+
       dispatch(actions.profileFetched(response));
     })
     .catch((error) => {
-  
+
       error.clientMessage = "Can't find record";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
@@ -29,14 +29,14 @@ export const fetchContactInfo = (queryparm) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.list }));
 
   return requestFromServer.getAllContactInfo(queryparm)
-    
+
     .then((response) => {
- 
+
 
       dispatch(actions.profileFetched(response));
     })
     .catch((error) => {
-    
+
       error.clientMessage = "Can't find religion record";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
@@ -54,7 +54,7 @@ export const fetchUser = (id) => (dispatch) => {
     .getEmpProfileById({ Id: id })
     .then((response) => {
       const entities = response.data?.data;
-    
+
       dispatch(actions.emp_profileFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -68,7 +68,7 @@ export const deleteEmpProfile = (id) => (dispatch) => {
   return requestFromServer
     .deleteEmpProfile({ Id: id })
     .then((response) => {
-  
+
       dispatch(actions.emp_profileDeleted({ Id: id }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
@@ -91,7 +91,7 @@ export const activeUser = (id) => (dispatch) => {
   return requestFromServer
     .deleteEmpProfile({ Id: id })
     .then((response) => {
-   
+
       dispatch(actions.emp_profileDeleted({ id: id }));
       toast.success("Successfully Activated", {
         position: "top-right",
@@ -112,17 +112,20 @@ export const activeUser = (id) => (dispatch) => {
 export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
   dispatch
 ) => {
- 
+
+
 
   return requestFromServer
     .createEmpProfile(BodyObj)
     .then((res) => {
       dispatch(actions.startCall({ callType: callTypes.action }));
       const user = res.data?.data;
-  
+
 
       dispatch(actions.emp_profileCreated(user));
       disbaleLoading();
+      onHide();
+      
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -132,31 +135,69 @@ export const createEmpProfile = (BodyObj, disbaleLoading, onHide) => (
         draggable: true,
         progress: undefined,
       });
+      console.loog("run1111")
       onHide();
+    
     })
     .catch((error) => {
       error.clientMessage = "Can't create user";
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
-      toast.error(error?.response?.data?.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    
+      if (error.response?.data?.blackList) {
+        const updatedBody = { ...BodyObj, by_pass_blacklist_check: true };
+      
+        toast.warning(
+          ({ closeToast }) => (
+            <div>
+              {error.response?.data?.message}
+              <br />
+              <button
+                onClick={() => {
+                  dispatch(createEmpProfile(updatedBody, disbaleLoading, onHide));
+                  closeToast();
+
+                }}
+                style={{
+                  marginTop: "10px",
+                  padding: "6px 12px",
+                  backgroundColor: "#f0ad4e",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer"
+                }}
+              >
+                Yes
+              </button>
+            </div>
+          ),
+          { autoClose: false, closeOnClick: true }
+        );
+        return;
+      }
+      else {
+        toast.error(error?.response?.data?.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+
     });
 };
 
-export const updateEmpProfile = (user,contactList,workExperienceList,academicList,skillsList,incidentList, disbaleLoading, onHide) => (dispatch) => {
+export const updateEmpProfile = (user, contactList, workExperienceList, academicList, skillsList, incidentList, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateEmpProfile({...user,contactList,workExperienceList,academicList,skillsList,incidentList})
+    .updateEmpProfile({ ...user, contactList, workExperienceList, academicList, skillsList, incidentList })
     .then((response) => {
-   
+
       const updatedProfile = response?.config?.data; // response.data?.data;
-  
+
       dispatch(actions.emp_profileUpdated({ updatedProfile }));
       dispatch(actions.startCall({ callType: callTypes.action }));
       disbaleLoading();
@@ -170,7 +211,7 @@ export const updateEmpProfile = (user,contactList,workExperienceList,academicLis
         draggable: true,
         progress: undefined,
       });
-      
+
 
     })
     .catch((error) => {
@@ -197,7 +238,7 @@ export const fetchRoles = () => (dispatch) => {
     .getAllRoles()
     .then((response) => {
       const entities = response.data?.data;
- 
+
       dispatch(actions.RolesFetched(entities));
     })
     .catch((error) => {
@@ -219,5 +260,5 @@ export const fetchUserStatusTypes = (body) => (dispatch) => {
 
 export const clearForm = () => (dispatch) => {
 
-    return dispatch(actions.emp_profileFetchedForEdit({ userForEdit: undefined }));
+  return dispatch(actions.emp_profileFetchedForEdit({ userForEdit: undefined }));
 };

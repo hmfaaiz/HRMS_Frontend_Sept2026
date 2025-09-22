@@ -193,13 +193,17 @@ const formValidation = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required)
     .min(1, VALIDATION_MESSAGES.required),
 
-  emp_bankId: Yup.number().when("payment_mode_Id", {
+  emp_bankId: Yup.number()
+  .nullable()
+  .when("payment_mode_Id", {
     is: 153, // if select value is 153
     then: Yup.number().required(VALIDATION_MESSAGES.required),
     otherwise: Yup.number().notRequired(),
   }),
 
-  emp_bank_branchId: Yup.number().when("payment_mode_Id", {
+  emp_bank_branchId: Yup.number()
+  .nullable()
+  .when("payment_mode_Id", {
     is: 153, // if select value is 153
     then: Yup.number().required(VALIDATION_MESSAGES.required),
     otherwise: Yup.number().notRequired(),

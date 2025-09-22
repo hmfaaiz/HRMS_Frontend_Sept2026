@@ -94,6 +94,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     relation_name:"",
     hod:0,
     dateOfRetirementOptional:"",
+    by_pass_blacklist_check:"",
   };
 
  
