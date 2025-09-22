@@ -134,7 +134,7 @@ export const EmployeePortal = () => {
                 name="Dashboard"
               />
             </div>
-            <EmployeeProfile />
+            <EmployeeProfile isAttMarkShow={true} />
           </div>
           {/* Main Content: Dashboard, PendingRequestSelf, ReportingEmpTable, My Details, AttendanceSummary, LeaveApplicationTable, EmployeeLoanDetail */}
           <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
