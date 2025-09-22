@@ -253,7 +253,8 @@ export function MasterEditForm({
   };
 
   const allocateLeaves = (subsidiaryId, leavetypePolicies) => {
-    dispatch(actions.allocateLeaves({ subsidiaryId, list: leavetypePolicies }));
+    dispatch(actions.allocateLeaves({ subsidiaryId, list: leavetypePolicies } , onHide));
+
   };
 
   useEffect(() => {
@@ -631,6 +632,7 @@ export function MasterEditForm({
                         <div>
                           <button
                             type="button"
+                            disabled={!values?.allowAllocation}
                             onClick={() =>
                               allocateLeaves(
                                 values.subsidiaryId,
