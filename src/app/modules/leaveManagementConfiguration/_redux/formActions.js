@@ -247,7 +247,7 @@ export const deleteLeaveTypeDeductionPolicyRecord = (id, remove, index) => (disp
  * @param {Function} onHide 
  * @returns 
  */
-export const allocateLeaves = (data, disableLoading, onHide) => (dispatch) => {
+export const allocateLeaves = (data, onHide) => (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.allocation }));
   return requestFromServer.createAllocateLeavesSetup(data)
     .then((res) => {

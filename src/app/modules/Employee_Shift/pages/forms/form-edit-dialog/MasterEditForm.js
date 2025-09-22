@@ -716,7 +716,7 @@ export function MasterEditForm({
                           label="IsInclude Intershift Gap"
                         />
                         <label>
-                          &nbsp;<span>Is Include InterShift Gap</span>
+                          &nbsp;<span>Enable Inter Shift Gap</span>
                         </label>
                       </div>
                       <div>
@@ -727,7 +727,7 @@ export function MasterEditForm({
                           // maxLength={4}
                           disabled
                           onBlur={handleBlur}
-                          label={<span> InterShift Gap Time</span>}
+                          label={<span> Inter Shift Gap Time</span>}
                           onHide={false}
                           value={defInterShiftGapTime || values.interShiftGap}
                           autoComplete="off"

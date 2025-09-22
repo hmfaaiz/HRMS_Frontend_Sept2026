@@ -171,13 +171,14 @@ export function FormEditForm({
                                         <SearchSelect
                                           name={`designationList.[${rightindex}].designationId`}
                                           isDisabled={
-                                            isUserForRead || isNew
-                                              ? values.designationList?.[
-                                                  rightindex
-                                                ]?.isDelete
-                                              : !values.designationList?.[
-                                                  rightindex
-                                                ]?.isDelete
+                                            isUserForRead 
+                                            // || isNew
+                                            //   ? values.designationList?.[
+                                            //       rightindex
+                                            //     ]?.isDelete
+                                            //   : !values.designationList?.[
+                                            //       rightindex
+                                            //     ]?.isDelete
                                           }
                                           onChange={(e) => {
                                             setFieldValue(
@@ -221,9 +222,12 @@ export function FormEditForm({
 
                                       <td className="text-right">
                                         {!isUserForRead &&
-                                          (values.designationList?.[rightindex]
-                                            ?.isDelete ||
-                                            isNew) && (
+                                          // (values.designationList?.[rightindex]
+                                          //   ?.isDelete 
+                                          //    || isNew
+                                          // )
+                                          //  &&
+                                            (
                                             <span
                                               id={rightindex}
                                               onClick={() => {
