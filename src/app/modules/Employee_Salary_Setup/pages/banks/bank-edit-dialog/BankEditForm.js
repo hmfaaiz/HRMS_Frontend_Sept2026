@@ -302,17 +302,17 @@ useEffect(()=>{
   };
   
 },[user.emp_bankId])  
-  useEffect(() => {
-    const emp_bank_branchId = defEmpBankBranch?.value
-      ? defEmpBankBranch.value
-      : user.emp_bank_branchId;
-    setDefaultEmpBankBranch(
-      dashboard.allBankBranch &&
-        dashboard.allBankBranch.filter((item) => {
-          return item.value === emp_bank_branchId;
-        })
-    );
-  },[user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
+  // useEffect(() => {
+  //   const emp_bank_branchId = defEmpBankBranch?.value
+  //     ? defEmpBankBranch.value
+  //     : user.emp_bank_branchId;
+  //   setDefaultEmpBankBranch(
+  //     dashboard.allBankBranch &&
+  //       dashboard.allBankBranch.filter((item) => {
+  //         return item.value === emp_bank_branchId;
+  //       })
+  //   );
+  // },[user?.emp_bankId,dashboard.allBankBranch,user?.emp_bank_branchId]);
 
   useEffect(() => {
     const company_bankId = defCompanyBank?.value
@@ -1838,8 +1838,11 @@ useEffect(()=>{
                         }}
                         onChange={(e) => {
                           setFieldValue("emp_bankId", e.value);
+                          setFieldValue("emp_bank_branchId", null);
+                          setDefaultEmpBankBranch(null);
+                          console.log("defEmpBankBranch1111",defEmpBankBranch)
                           setDefaultBanks(e);
-                          dispatch(fetchAllBanks(e.value));
+                          // dispatch(fetchAllBanks(e.value));
                           fetchBranch(e.value);
                         }}
                         value={
@@ -1864,11 +1867,14 @@ useEffect(()=>{
                         onChange={(e) => {
                           setFieldValue("emp_bank_branchId", e.value);
                           setDefaultEmpBankBranch(e);
-                          dispatch(fetchAllBankBranch(e.value));
+                          // dispatch(fetchAllBankBranch(e.value));
                         }}
                         value={
                           !checkReadOnlyStatus(values, [151, 152])
-                            ? defEmpBankBranch
+                            ?dashboard.allBankBranch?.find(
+                          (option) => option.value === values.emp_bank_branchId
+                        ) || null
+                    
                             : ""
                         }
                         error={errors.emp_bank_branchId}
