@@ -436,6 +436,6 @@ export const accountType = {
    Assets : 1,
    Liabilities : 2,
    Equity : 3,
-   Revenue : 4,
+   Income : 4,
    Expenses: 5,
 };
