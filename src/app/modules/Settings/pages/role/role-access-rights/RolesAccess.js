@@ -191,8 +191,14 @@ export function RolesAccess({
         </Card>
       ))} */}
       <TCard isSecondChild={false} name={"Role Access page"}></TCard>
+      {/* for hrms  */}
+      <div className="px-3 py-2 rounded-lg bg-white mt-2">
+        <h6 className="m-0 text-tprimary font-bold text-base sm:text-lg py-1">
+          HRMS Roles Access
+        </h6>
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-2 mt-2">
-        {newdata?.map(
+        {/* {newdata?.map(
           (dd, index) =>
             dd[0] !== "Settings" && ( // Check if dd[0] is not "Settings"
               <div
@@ -201,12 +207,6 @@ export function RolesAccess({
               >
                 <div className="space-y-3">
                   <div>
-                    {/* <Form.Text className="col-form-label fw-bold fs-6">
-              {dd[0]
-                .split('_')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ')}
-            </Form.Text> */}
 
                     <h6 className="font-bold mb-0 text-primary my-2">
                       {customMappings[
@@ -237,6 +237,7 @@ export function RolesAccess({
                         if (b.sortOrder == null) return -1;
                         return a.sortOrder - b.sortOrder; // Standard sorting logic for non-null values
                       })
+                      .filter((ee) => ee?.portalType !== 2)
                       .map((right, rightindex) => (
                         <div className="text-black flex items-center gap-1">
                           <input
@@ -249,14 +250,145 @@ export function RolesAccess({
                             onChange={onCheckboxChange}
                           />
                           <label>{right.name}</label>
-                          {/* <Form.Text className={FormClasses.LABEL_NON_REQUIRED}>{right.rightName}</Form.Text> */}
                         </div>
                       ))}
                   </div>
                 </div>
               </div>
             )
-        )}
+        )} */}
+        {newdata?.map((dd, index) => {
+          if (dd[0] === "Settings") return null;
+
+          // filter + sort once
+          const filteredRights = [...dd[1]]
+            .sort((a, b) => {
+              if (a.sortOrder == null) return 1;
+              if (b.sortOrder == null) return -1;
+              return a.sortOrder - b.sortOrder;
+            })
+            .filter((ee) => ee?.portalType !== 2);
+
+          // if no rights, don't render box
+          if (filteredRights.length === 0) return null;
+
+          return (
+            <div
+              className="px-3 py-2 rounded-lg bg-white overflow-y-auto"
+              key={index}
+            >
+              <div className="space-y-3">
+                <div>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    {customMappings[
+                      dd[0]
+                        .split("_")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")
+                    ] ||
+                      dd[0]
+                        .split("_")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
+                  </h6>
+                </div>
+
+                <div className="overflow-auto min-h-44 max-h-44 border-none scrollbar-fancy">
+                  {filteredRights.map((right, rightindex) => (
+                    <div
+                      key={rightindex}
+                      className="text-black flex items-center gap-1"
+                    >
+                      <input
+                        type="checkbox"
+                        id={right.resourceId}
+                        name={right.roleId}
+                        label={right.name}
+                        defaultChecked={right.isAccess}
+                        onChange={onCheckboxChange}
+                      />
+                      <label>{right.name}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {/* for portal  */}
+      <div className="px-3 py-2 rounded-lg bg-white mt-2">
+        <h6 className="m-0 text-tprimary font-bold text-base sm:text-lg py-1">
+          Portal Roles Access
+        </h6>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-2 mt-2">
+        {newdata?.map((dd, index) => {
+          if (dd[0] === "Settings") return null;
+
+          // filter + sort once
+          const filteredRights = [...dd[1]]
+            .sort((a, b) => {
+              if (a.sortOrder == null) return 1;
+              if (b.sortOrder == null) return -1;
+              return a.sortOrder - b.sortOrder;
+            })
+            .filter((ee) => ee?.portalType == 2);
+
+          // if no rights, don't render box
+          if (filteredRights.length === 0) return null;
+
+          return (
+            <div
+              className="px-3 py-2 rounded-lg bg-white overflow-y-auto"
+              key={index}
+            >
+              <div className="space-y-3">
+                <div>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    {customMappings[
+                      dd[0]
+                        .split("_")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")
+                    ] ||
+                      dd[0]
+                        .split("_")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")}
+                  </h6>
+                </div>
+
+                <div className="overflow-auto min-h-44 max-h-44 border-none scrollbar-fancy">
+                  {filteredRights.map((right, rightindex) => (
+                    <div
+                      key={rightindex}
+                      className="text-black flex items-center gap-1"
+                    >
+                      <input
+                        type="checkbox"
+                        id={right.resourceId}
+                        name={right.roleId}
+                        label={right.name}
+                        defaultChecked={right.isAccess}
+                        onChange={onCheckboxChange}
+                      />
+                      <label>{right.name}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
       <ToastContainer
         position="top-right"
