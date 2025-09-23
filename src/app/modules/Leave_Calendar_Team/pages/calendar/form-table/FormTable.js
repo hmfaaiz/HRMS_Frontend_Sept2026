@@ -185,6 +185,21 @@ export function FormTable() {
             //   </div>
             // ),
           }}
+          dayPropGetter={(date) => {
+                      const day = moment(date).day(); // 0 = Sunday, 6 = Saturday
+                      const isToday = moment(date).isSame(new Date(), "day");
+          
+                      if (isToday) {
+                        return {
+                          style: {
+                            backgroundColor: "#ffffff",
+                            border: "2px solid #0093dd",
+                          },
+                        };
+                      }
+          
+                      return {};
+          }}
         />
       )}
     </div>

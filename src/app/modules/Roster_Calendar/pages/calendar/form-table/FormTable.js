@@ -156,6 +156,19 @@ const [currentDate, setCurrentDate] = useState(null);
           // ),
 
         }}
+        dayPropGetter={(date) => {
+                                        const isToday = moment(date).isSame(new Date(), "day");
+                            
+                                        if (isToday) {
+                                          return {
+                                            style: {
+                                              backgroundColor: "#ffffff",
+                                              border: "2px solid #0093dd",
+                                            },
+                                          };
+                                        }
+                                        return {};
+        }}
         eventPropGetter={(event) => {
           if (!event.shift) {
             return {
