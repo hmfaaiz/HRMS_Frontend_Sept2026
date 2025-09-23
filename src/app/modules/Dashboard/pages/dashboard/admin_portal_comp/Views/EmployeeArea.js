@@ -118,7 +118,7 @@ const EmployeeArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Active Employees"}
+              name={"Total Active Employees"}
               value={summaryData?.activeEmployee || 0}
               keyName={"activeEmployee"}
               icon={<UserCheck className="w-5 h-5 text-white" />}
@@ -126,7 +126,7 @@ const EmployeeArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Inactive Employees"}
+              name={"Inactive Employees in current Fiscal Year"}
               value={summaryData?.inActiveEmployee || 0}
               keyName={"inActiveEmployee"}
               icon={<UserX className="w-5 h-5 text-white" />}

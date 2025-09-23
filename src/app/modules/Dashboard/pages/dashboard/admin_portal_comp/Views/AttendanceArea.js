@@ -157,7 +157,7 @@ const AttendanceArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Employees On Leave"}
+              name={"Today Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
               keyName={"employeeOnLeave"}
               icon={<HouseWifi className="w-5 h-5 text-white" />}
