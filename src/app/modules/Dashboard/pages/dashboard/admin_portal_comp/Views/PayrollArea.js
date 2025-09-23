@@ -98,14 +98,14 @@ const PayrollArea = ({
           <div></div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Active Employees"}
+              name={"Total Active Employees"}
               value={summaryData?.activeEmployee || 0}
               setSummaryModalHeading={setSummaryModalHeading}
               keyName={"activeEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Inactive Employees"}
+              name={"Inactive Employees in current Fiscal Year"}
               value={summaryData?.inActiveEmployee || 0}
               setSummaryModalHeading={setSummaryModalHeading}
               keyName={"inActiveEmployee"}
@@ -121,7 +121,7 @@ const PayrollArea = ({
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Employees On Leave"}
+              name={"Today Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
               setSummaryModalHeading={setSummaryModalHeading}
               keyName={"employeeOnLeave"}

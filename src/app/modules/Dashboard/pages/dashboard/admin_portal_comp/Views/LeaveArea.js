@@ -107,13 +107,13 @@ const LeaveArea = ({
           {/* stats card area  */}
           {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Active Employees"}
+              name={"Total Active Employees"}
               value={summaryData?.activeEmployee || 0}
               keyName={"activeEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Inactive Employees"}
+              name={"Inactive Employees in current Fiscal Year"}
               value={summaryData?.inActiveEmployee || 0}
               keyName={"inActiveEmployee"}
               icon={<User className="w-5 h-5 text-white" />}
@@ -131,7 +131,7 @@ const LeaveArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Employees On Leave"}
+              name={"Today Employees On Leave"}
               value={summaryData?.employeeOnLeave || 0}
               keyName={"employeeOnLeave"}
               icon={<HouseWifi className="w-5 h-5 text-white" />}
