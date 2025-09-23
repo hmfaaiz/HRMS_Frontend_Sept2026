@@ -232,7 +232,7 @@ export function ProfilePage({ history }) {
 
 
    
-      {/* <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -242,7 +242,7 @@ export function ProfilePage({ history }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      /> */}
+      />
     </DesignationUIProvider>
   );
 }
