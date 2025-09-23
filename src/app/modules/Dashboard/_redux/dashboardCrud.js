@@ -155,3 +155,11 @@ export function getExitReason(id) {
   console.log("read-all-exit-reason111111",id)
   return axios.get(`${USERS_URL}/settings/read-all-exit-reason/${id}`);
 }
+
+export async function getAttendance() {
+  return axios.get(`${USERS_URL}/emp_portal/read-attendance`);
+}
+
+export async function createAttendance(body) {
+  return axios.post(`${USERS_URL}/emp_portal/create-attendance` , body);
+}

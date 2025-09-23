@@ -30,26 +30,29 @@ const renderStars = (ratingScale) => {
         rating >= i
           ? "text-yellow-500 fill-yellow-500"
           : rating >= i - 0.5
-            ? "text-yellow-400 fill-yellow-400"
-            : "text-gray-300"
+          ? "text-yellow-400 fill-yellow-400"
+          : "text-gray-300"
       }
     />
   ));
 };
 
-const EmployeeProfile = () => {
+const EmployeeProfile = ({ isAttMarkShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { width } = useWindowSize();
   const dispatch = useDispatch();
-  const { user, data, contactInfo, skillsInfo } = useSelector(
+  const { user, data, contactInfo, skillsInfo , leave } = useSelector(
     (state) => ({
       user: state?.auth?.user,
       data: state?.dashboard?.profileInfo,
       contactInfo: state?.dashboard?.contactInfo,
       skillsInfo: state?.dashboard?.skillsInfo,
+      leave: state?.auth?.userAccess["Leave Request"],
     }),
     shallowEqual
   );
+
+  console.log("leave" , leave)
 
   useEffect(() => {
     if (user?.employeeIdMapping) {
@@ -97,7 +100,11 @@ const EmployeeProfile = () => {
             <p className="text-sm m-0">{data?.designation?.formName || ""}</p>
           </div>
         </div>
-        {/* <AttendanceMarking /> */}
+        {isAttMarkShow &&
+          leave?.find(
+            (el) =>
+              el?.componentName === "CreateLeaveRequest" && el?.isAccess
+          ) && <AttendanceMarking />}
       </div>
 
       {/* Employee Details */}
@@ -109,8 +116,9 @@ const EmployeeProfile = () => {
               {width < 1280 && (
                 <ChevronUp
                   onClick={() => setIsOpen((prev) => !prev)}
-                  className={`w-5 h-5 font-bold cursor-pointer ${isOpen ? "rotate-180" : ""
-                    }`}
+                  className={`w-5 h-5 font-bold cursor-pointer ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
                 />
               )}
             </div>
@@ -128,8 +136,8 @@ const EmployeeProfile = () => {
                     "Reporting To",
                     data?.ReportTo
                       ? `${data?.ReportTo?.firstName || ""} ${data?.ReportTo
-                        ?.middleName || ""} ${data?.ReportTo?.lastName ||
-                        ""}`.trim()
+                          ?.middleName || ""} ${data?.ReportTo?.lastName ||
+                          ""}`.trim()
                       : null,
                   ],
                   ["Grade", data?.grade?.formName],

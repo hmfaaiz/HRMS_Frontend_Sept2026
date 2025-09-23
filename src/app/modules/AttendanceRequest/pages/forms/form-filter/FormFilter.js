@@ -223,6 +223,7 @@ export function FormFilter() {
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       className="form-control"
+                      disabled={listLoading}
                       label={<span>From</span>}
                       onChange={(date) => {
                         setFieldValue("from", date || "");
@@ -249,6 +250,7 @@ export function FormFilter() {
                       className="form-control"
                       dateFormat="dd-MMM-yyyy"
                       label={<span>To</span>}
+                      disabled={listLoading}
                       onChange={(date) => {
                         setFieldValue("to", date || "");
                         // debouncedApplyFilter(

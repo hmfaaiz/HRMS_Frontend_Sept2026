@@ -3,6 +3,7 @@ import * as requestFromServer from "./dashboardCrud";
 import { dashboardSlice } from "./dashboardSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SERVER_MESSAGES } from "../../../utils/constants";
 
 const { actions } = dashboardSlice;
 
@@ -392,7 +393,6 @@ export const fetchAnnouncementData = () => async (dispatch) => {
     });
 };
 
-
 export const fetchExitReasonData = (Id) => async (dispatch) => {
   return await requestFromServer
     .getExitReason(Id)
@@ -402,5 +402,50 @@ export const fetchExitReasonData = (Id) => async (dispatch) => {
     })
     .catch((error) => {
       dispatch(actions.AllExitReasonListFetch([]));
+    });
+};
+
+export const getAttendance = (setLoading) => (dispatch) => {
+  return requestFromServer
+    .getAttendance()
+    .then((res) => {
+      dispatch(actions.CurrentAttFetch(res?.data?.data));
+      setLoading(false);
+    })
+    .catch((error) => {
+      setLoading(false);
+    });
+};
+
+export const createAttendance = (body, setLoading) => (dispatch) => {
+  return requestFromServer
+    .createAttendance(body)
+    .then((res) => {
+      dispatch(actions.CurrentAttFetch(res?.data?.data));
+      toast.success("Attendance Mark Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setLoading(false);
+    })
+    .catch((error) => {
+      toast.error(
+        error?.response?.data?.message || SERVER_MESSAGES.insertedFail,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+      setLoading(false);
     });
 };
