@@ -124,6 +124,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         password: user.password,
         email: user.email,
         supervisedbyId: user.supervisedbyId,
+        authType : user?.authType
 
 
 

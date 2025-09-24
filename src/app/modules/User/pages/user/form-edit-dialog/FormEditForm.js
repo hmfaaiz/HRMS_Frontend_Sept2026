@@ -31,6 +31,9 @@ const userEditSchema = Yup.object().shape({
   roleId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
+  authType: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
   allowUserCreation: Yup.boolean()
     .nullable()
@@ -112,6 +115,10 @@ export function FormEditForm({
     { value: false, label: "Inactive" },
     { value: true, label: "Active" },
   ];
+  const authTypeOption = [
+    { value: 1, label: "One Way Authentication" },
+    { value: 2, label: "Two Factor Authentication" },
+  ];
 
   return (
     <Formik
@@ -170,27 +177,27 @@ export function FormEditForm({
                     </div>
                   )}
 
-                  <div>
+                    <div>
                     <label>
-                      User Status<span style={{ color: "red" }}>*</span>
+                      Auth Type<span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
-                      name="deactiveflag"
+                      name="authType"
                       as="select"
                       className="form-control"
-                      disabled={isUserForRead}
+                      disabled={isUserForRead || true}
                     >
                       <option value="">Select</option>
-                      {activeOptions.map((option) => (
+                      {authTypeOption.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
                       ))}
                     </Field>
-                    {errors.deactiveflag && touched.deactiveflag && (
-                      <div className="text-danger">{errors.deactiveflag}</div>
+                    {errors.authType && touched.authType && (
+                      <span className="invalid-feedback">{errors.authType}</span>
                     )}
-                  </div>
+                    </div>
 
                   <div>
                     <SearchSelect
@@ -369,8 +376,8 @@ export function FormEditForm({
                       touched={touched.employeeIdMapping}
                     />
                   </div>
-
-                  <div>
+                  <div className="grid grid-cols-2 gap-x-3">
+                    <div>
                     <label>
                       Allow User Creation
                       <span style={{ color: "red" }}>*</span>
@@ -390,10 +397,32 @@ export function FormEditForm({
                       ))}
                     </Field>
                     {errors.allowUserCreation && touched.allowUserCreation && (
-                      <div className="text-danger">
+                      <span className="invalid-feedback">
                         {errors.allowUserCreation}
-                      </div>
+                      </span>
                     )}
+                    </div>
+                    <div>
+                    <label>
+                      User Status<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Field
+                      name="deactiveflag"
+                      as="select"
+                      className="form-control"
+                      disabled={isUserForRead}
+                    >
+                      <option value="">Select</option>
+                      {activeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.deactiveflag && touched.deactiveflag && (
+                      <span className="invalid-feedback">{errors.deactiveflag}</span>
+                    )}
+                    </div>
                   </div>
                 </div>
               </fieldset>

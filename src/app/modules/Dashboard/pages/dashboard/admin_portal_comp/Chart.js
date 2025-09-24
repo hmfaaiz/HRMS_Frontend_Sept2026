@@ -7,6 +7,7 @@ import {
   Legend,
   PointElement,
   LineElement,
+  Filler
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState } from "react";
@@ -15,7 +16,7 @@ import { PeriodType } from "../EmpUIHelper";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(ChartDataLabels);
-ChartJS.register(PointElement, LineElement);
+ChartJS.register(PointElement, LineElement , Filler);
 
 // Optimized, non-repeating color palette
 const colorPalette = [
@@ -30,88 +31,112 @@ const colorPalette = [
   "#5cb85c",
 ];
 
-// const options = {
-//   plugins: {
-//     legend: { display: false },
-//     tooltip: {
-//       enabled: true,
-//       callbacks: {
-//         label: function(context) {
-//           let value = context.parsed;
-//           // For vertical Bar/Line, use y; for horizontal Bar, use x
-//           if (typeof value === "object" && value !== null) {
-//             const isHorizontal = context.chart.options.indexAxis === "y";
-//             value = isHorizontal ? value.x : value.y;
+
+// const getOptions = (chartType, chartId) => {
+//   const showGrid =
+//     chartType === "bar" ||
+//     chartType === "line" ||
+//     chartType === "horizontalBar";
+
+//   return {
+//     plugins: {
+//       legend: { display: false },
+//       tooltip: {
+//         enabled: false, // disable default
+//         external: function(context) {
+//           const uniqueId = `chartjs-tooltip-${chartId}`;
+//           let tooltipEl = document.getElementById(uniqueId);
+
+//           if (!tooltipEl) {
+//             tooltipEl = document.createElement("div");
+//             tooltipEl.id = uniqueId;
+//             tooltipEl.style.position = "absolute";
+//             tooltipEl.style.background = "#E6F8FF";
+//             tooltipEl.style.color = "#0093DD";
+//             tooltipEl.style.fontSize = "10.4px";
+//             tooltipEl.style.fontWeight = "500";
+//             tooltipEl.style.padding = "4px 8px";
+//             tooltipEl.style.borderRadius = "6px";
+//             tooltipEl.style.pointerEvents = "none";
+//             tooltipEl.style.whiteSpace = "nowrap";
+//             tooltipEl.style.transition = "all .1s ease";
+//             tooltipEl.style.zIndex = "9999"; // high z-index
+//             document.body.appendChild(tooltipEl); // <--- append to body instead of chart container
 //           }
-//           const dataArr = context.dataset.data.map((v) => {
-//             if (typeof v === "object" && v !== null) {
-//               return typeof v.x === "number" ? v.x : v.y;
+
+//           const tooltipModel = context.tooltip;
+
+//           if (tooltipModel.opacity === 0) {
+//             tooltipEl.style.opacity = 0;
+//             return;
+//           }
+
+//           if (tooltipModel.dataPoints?.length) {
+//             const dp = tooltipModel.dataPoints[0];
+//             let value = dp.raw;
+//             if (typeof value === "object" && value !== null) {
+//               const isHorizontal = context.chart.options.indexAxis === "y";
+//               value = isHorizontal ? value.x : value.y;
 //             }
-//             return v;
-//           });
-//           const total = dataArr.reduce((a, b) => a + b, 0);
-//           const percent = total ? ((value / total) * 100).toFixed(1) : 0;
-//           return `${context.label}: ${value} (${percent}%)`;
+
+//             const dataArr = dp.dataset.data.map((v) =>
+//               typeof v === "object" && v !== null
+//                 ? typeof v.x === "number"
+//                   ? v.x
+//                   : v.y
+//                 : v
+//             );
+//             const total = dataArr.reduce((a, b) => a + b, 0);
+//             const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+
+//             tooltipEl.innerHTML = `${dp.label}: ${value} (${percent}%)`;
+//           }
+
+//           // --- position relative to the page, not container ---
+//           const canvasRect = context.chart.canvas.getBoundingClientRect();
+//           const { caretX, caretY } = tooltipModel;
+
+//           tooltipEl.style.opacity = 1;
+//           tooltipEl.style.left =
+//             canvasRect.left + window.scrollX + caretX + "px";
+//           tooltipEl.style.top = canvasRect.top + window.scrollY + caretY + "px";
 //         },
 //       },
-//     },
-//     datalabels: {
-//       display: false, // <--- This disables datalabels even if plugin is registered
-//     },
-
-//     // datalabels: {
-//     //   color: "#fff",
-//     //   font: { weight: "bold", size: 10 },
-//     //   formatter: (value, context) => {
-//     //     // For Pie/Doughnut, value is a number; for Bar/Line, it's an object
-//     //     let val = value;
-//     //     if (typeof val === "object" && val !== null) {
-//     //       const isHorizontal = context.chart.options.indexAxis === "y";
-//     //       val = isHorizontal ? val.x : val.y;
-//     //     }
-//     //     const dataArr = context.chart.data.datasets[0].data.map((v) => {
-//     //       if (typeof v === "object" && v !== null) {
-//     //         return typeof v.x === "number" ? v.x : v.y;
-//     //       }
-//     //       return v;
-//     //     });
-//     //     const total = dataArr.reduce((a, b) => a + b, 0);
-//     //     const percent = total ? ((val / total) * 100).toFixed(1) : 0;
-//     //     return percent > 2 ? percent + "%" : "";
-//     //   },
-//     // },
-//   },
-//   scales: {
-//     x: {
-//       ticks: {
-//         display: false, // Hide x-axis labels
+//       datalabels: {
+//         display: false,
 //       },
-//       // grid: {
-//       //   drawTicks: false, // Optional: hide tick marks
-//       // },
 //     },
-//     y: {
-//       ticks: {
-//         display: false, // Hide y-axis labels
+//     scales: {
+//       x: {
+//         ticks: { display: showGrid },
+//         grid: { display: showGrid, drawBorder: false },
 //       },
-//       // grid: {
-//       //   drawTicks: false, // Optional: hide tick marks
-//       // },
+//       y: {
+//         ticks: { display: showGrid },
+//         grid: { display: showGrid, drawBorder: false },
+//       },
 //     },
-//   },
+//   };
 // };
-
 const getOptions = (chartType, chartId) => {
   const showGrid =
     chartType === "bar" ||
     chartType === "line" ||
     chartType === "horizontalBar";
 
+  // Function to truncate labels to 10 characters
+  const truncateLabel = (label) => {
+    if (typeof label === "string" && label.length > 10) {
+      return label.substring(0, 10) + "...";
+    }
+    return label;
+  };
+
   return {
     plugins: {
       legend: { display: false },
       tooltip: {
-        enabled: false, // disable default
+        enabled: false,
         external: function(context) {
           const uniqueId = `chartjs-tooltip-${chartId}`;
           let tooltipEl = document.getElementById(uniqueId);
@@ -129,8 +154,8 @@ const getOptions = (chartType, chartId) => {
             tooltipEl.style.pointerEvents = "none";
             tooltipEl.style.whiteSpace = "nowrap";
             tooltipEl.style.transition = "all .1s ease";
-            tooltipEl.style.zIndex = "9999"; // high z-index
-            document.body.appendChild(tooltipEl); // <--- append to body instead of chart container
+            tooltipEl.style.zIndex = "9999";
+            document.body.appendChild(tooltipEl);
           }
 
           const tooltipModel = context.tooltip;
@@ -161,7 +186,6 @@ const getOptions = (chartType, chartId) => {
             tooltipEl.innerHTML = `${dp.label}: ${value} (${percent}%)`;
           }
 
-          // --- position relative to the page, not container ---
           const canvasRect = context.chart.canvas.getBoundingClientRect();
           const { caretX, caretY } = tooltipModel;
 
@@ -177,17 +201,54 @@ const getOptions = (chartType, chartId) => {
     },
     scales: {
       x: {
-        ticks: { display: false },
-        grid: { display: showGrid, drawBorder: false },
+        ticks: {
+          display: showGrid,
+          callback: function(value) {
+            // For horizontal bar chart, x-axis shows the values (numbers), no truncation needed
+            if (chartType === "horizontalBar") {
+              return value;
+            }
+            // For vertical bar and line charts, x-axis shows labels - truncate them
+            const label = this.getLabelForValue(value);
+            return truncateLabel(label);
+          },
+          font: {
+            size: 9, //  change font size for X-axis
+          },
+          maxRotation: 20, // Prevent rotation
+          autoSkip: false, // Ensure all labels are shown (they'll be truncated)
+        },
+        grid: {
+          display: showGrid,
+          drawBorder: false,
+        },
       },
       y: {
-        ticks: { display: false },
-        grid: { display: showGrid, drawBorder: false },
+        ticks: {
+          display: showGrid,
+          callback: function(value) {
+            // For horizontal bar chart, y-axis shows labels - truncate them
+            if (chartType === "horizontalBar") {
+              const label = this.getLabelForValue(value);
+              return truncateLabel(label);
+            }
+            // For vertical bar and line charts, y-axis shows values (numbers)
+            return value;
+          },
+          font: {
+            size: 9, // 👈 change font size for X-axis
+          },
+          maxRotation: 20,
+          autoSkip: true,
+        },
+        grid: {
+          display: showGrid,
+          drawBorder: false,
+        },
       },
     },
   };
 };
-
 const ChartData = ({ data }) => {
   const [chartType, setChartType] = useState(data?.graph_type || "pie");
   // Memoize departmentData and total
@@ -204,6 +265,7 @@ const ChartData = ({ data }) => {
           backgroundColor: values.map(
             (_, idx) => colorPalette[idx % colorPalette.length]
           ),
+          fill: true,
         },
       ],
     };
@@ -236,7 +298,7 @@ const ChartData = ({ data }) => {
     },
   ];
 
- const getHeading = () => {
+  const getHeading = () => {
     if (data?.isPeriodType) {
       if (PeriodType[data?.PeriodType]) {
         return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
@@ -275,19 +337,24 @@ const ChartData = ({ data }) => {
           ))}
         </div>
       </div>
-      <div className="relative  max-h-[21rem] overflow-auto scrollbar-fancy mt-1">
+      <div className="relative max-h-[21rem] overflow-auto scrollbar-fancy mt-1">
         <div
           style={{
             width:
+              chartType === "pie" || chartType === "doughnut" ? "180px" : "100%",
+            height:
               chartType === "pie" || chartType === "doughnut"
                 ? "180px"
-                : "250px",
-            height: chartType === "pie" || chartType === "doughnut" ? "180px" : "180px",
-            display :  chartType !== "pie" || chartType !== "doughnut" ? "flex" : "",
-            alignItems :  chartType !== "pie" || chartType !== "doughnut" ? "end" : "",
+                : "auto",
+            display:
+              chartType !== "pie" || chartType !== "doughnut" ? "flex" : "",
+            alignItems:
+              chartType !== "pie" || chartType !== "doughnut" ? "end" : "",
             position: "relative",
+            margin:
+              chartType === "pie" || chartType === "doughnut" ? "auto" : "none",
           }}
-          className="my-2  mx-auto"
+          className="mb-2"
         >
           {data?.data?.length === 0 && (
             <label className="text-center">No Record Available</label>
@@ -328,7 +395,8 @@ const ChartData = ({ data }) => {
             />
           )}
         </div>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+        <hr />
+        <div className="grid grid-cols-4 gap-x-2 gap-y-1">
           {data?.data?.length > 0 &&
             data?.data?.map((e, idx) => (
               <div

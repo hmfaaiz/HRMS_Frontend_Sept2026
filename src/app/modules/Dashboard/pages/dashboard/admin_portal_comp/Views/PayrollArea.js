@@ -162,7 +162,7 @@ const PayrollArea = ({
           </div>
         </div> */}
         {/* chart area  */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4  gap-x-2 gap-y-2">
+        <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
               if (e?.dashlet_type === "chart" && e?.tab_key === "payroll") {
