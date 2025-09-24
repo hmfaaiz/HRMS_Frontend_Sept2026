@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { connect, useSelector, shallowEqual, useDispatch } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { login } from "../_redux/authCrud";
-import { toAbsoluteUrl } from "../../../../_metronic/_helpers";
-import { CircleArrowRight } from 'lucide-react';
+import { CircleArrowRight, RotateCcw } from "lucide-react";
 /*
   INTL (i18n) docs:
   https://github.com/formatjs/react-intl/blob/master/docs/Components.md#formattedmessage
@@ -21,6 +20,7 @@ import { CircleArrowRight } from 'lucide-react';
 const initialValues = {
   email: "",
   password: "",
+  otp: "",
 };
 // const initialValues = {
 //   email: "abdul@gmail.com",
@@ -30,6 +30,8 @@ const initialValues = {
 function Login(props) {
   const { intl } = props;
   const [loading, setLoading] = useState(false);
+  const [isOTP, setIsOTP] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
 
   // const user = useSelector(({ auth }) => auth, shallowEqual)
 
@@ -55,6 +57,13 @@ function Login(props) {
           id: "AUTH.VALIDATION.REQUIRED_FIELD",
         })
       ),
+    otp: Yup.string().when("isOTP", {
+      is: true,
+      then: Yup.string()
+        .required("OTP is required")
+        .min(5)
+        .max(6),
+    }),
   });
 
   const enableLoading = () => {
@@ -83,27 +92,42 @@ function Login(props) {
     onSubmit: (values, { setStatus, setSubmitting }) => {
       enableLoading();
       setTimeout(() => {
-        login(values.email, values.password)
+        setStatus("");
+        login(values.email, values.password, values?.otp)
           .then((data) => {
             disableLoading();
-            const res = Object.values(data?.data?.data?.userAccess).flatMap(
-              (items) => items
-            );
-            const HRMSRoutesLength = res.filter(
-              (e) => e?.isResourceShow && e.portalType === 1
-            ).length;
-            localStorage.setItem(
-              "isEmployeePortal",
-              HRMSRoutesLength > 0 ? false : true
-            );
-            props.login(data?.data?.data);
+            const response = data?.data?.data;
+            if (response?.isOTP) {
+              setIsOTP(true);
+              setResendTimer(60); // start 60s countdown
+            } else {
+              setIsOTP(false);
+              const res = Object.values(response?.userAccess).flatMap(
+                (items) => items
+              );
+              const HRMSRoutesLength = res.filter(
+                (e) => e?.isResourceShow && e.portalType === 1
+              ).length;
+              localStorage.setItem(
+                "isEmployeePortal",
+                HRMSRoutesLength > 0 ? false : true
+              );
+              props.login(response);
+            }
           })
-          .catch(() => {
-            setStatus(
-              intl.formatMessage({
-                id: "AUTH.VALIDATION.INVALID_LOGIN",
-              })
-            );
+          .catch((error) => {
+            // setStatus(
+            //   intl.formatMessage({
+            //     id: "AUTH.VALIDATION.INVALID_LOGIN",
+            //   })
+            // );
+            // Extract message from API error
+            let message =
+              error?.response?.data?.message ||
+              error?.response?.data?.error ||
+              "Something went wrong";
+            // Pass it to formik.status so you can display it
+            setStatus(message);
           })
           .finally(() => {
             disableLoading();
@@ -113,38 +137,65 @@ function Login(props) {
     },
   });
 
+  useEffect(() => {
+    let interval;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
+
+  const handleResend = () => {
+    if (resendTimer > 0) return; // prevent resend
+    setResendTimer(60);
+    formik.setStatus(""); // ✅ reset status error message
+    formik.setFieldValue("otp", ""); // clear OTP field
+    // Call API again with only email + password to re-trigger OTP
+    login(formik.values.email, formik.values.password)
+      .then((data) => {
+        const response = data?.data?.data;
+        if (response?.isOTP) {
+          setIsOTP(true);
+        }
+      })
+      .catch((error) => {
+        let message =
+          error?.response?.data?.message ||
+          error?.response?.data?.error ||
+          "Something went wrong";
+        // Pass it to formik.status so you can display it
+        formik.setStatus(message);
+      });
+  };
+
   return (
     <div className="d-flex flex-column  h-100 ">
       <div
         className="bg-white p-10 h-100 rounded-top opacity-97"
         id="kt_login_signin_form"
-     
       >
-
-
         <div>
           <img
             className="fluid"
             src="/media/bg/Login/DSC-Logo.svg"
             alt="DSC"
-            style={{ height: "7vh", backgroundSize: 'cover', }}
-
+            style={{ height: "7vh", backgroundSize: "cover" }}
           />
         </div>
 
         {/* <br /> */}
         <br />
 
-      
-          <h1
-            className="fw-bold mt-10 " style={{ color: '#000000', fontWeight: 400,height:"2vh" }}
+        <h1
+          className="fw-bold mt-10 "
+          style={{ color: "#000000", fontWeight: 400, height: "2vh" }}
           // style={{ color: "#2490CF", fontSize: "2rem" }}
-          >
-            Log In
-          </h1>
+        >
+          Log In
+        </h1>
 
-
-      
         <br />
         <br />
         {/* end::Head */}
@@ -153,18 +204,19 @@ function Login(props) {
         <form
           onSubmit={formik.handleSubmit}
           className="form   "
-        // className="login-form"
+          // className="login-form"
         >
-         
-
-          <div className="flex flex-col" >
-            <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
+          <div className="flex flex-col">
+            <label
+              className=" pb-2"
+              style={{ color: "#000000", fontWeight: 400 }}
+            >
               Email address
             </label>
             <input
               placeholder="Email"
               type="text"
-
+              disabled={isOTP}
               className={`login-control form-control-solid  ${getInputClasses(
                 "email"
               )} inputcolor !h-[7vh]`}
@@ -178,41 +230,73 @@ function Login(props) {
             ) : null}
           </div>
 
-          <div className="flex flex-col mt-4" >
-            <label className=" pb-2" style={{ color: '#000000', fontWeight: 400 }}>
+          <div className="flex flex-col mt-4">
+            <label
+              className=" pb-2"
+              style={{ color: "#000000", fontWeight: 400 }}
+            >
               Password
             </label>
             <input
               placeholder="Password"
               type="password"
+              disabled={isOTP}
               className={`login-control form-control-solid !h-[7vh]  ${getInputClasses(
                 "password"
               )} inputcolor`}
               name="password"
               {...formik.getFieldProps("password")}
             />
-            {(formik.touched.password && formik.errors.password) || formik.status ? (
+            {(formik.touched.password && formik.errors.password) ||
+            formik.status ? (
               <div className="fv-plugins-message-container">
                 {formik.errors.password && (
                   <div className="fv-help-block">{formik.errors.password}</div>
                 )}
-             
               </div>
             ) : null}
             {/* <br />
   <br /> */}
-            {formik.status ? (
-              <div className="alert alert-custom alert-light-danger alert-dismissible text-center h-2 mt-10">
-                <div className="alert-text font-weight-bold">{formik.status}</div>
-              </div>
-            ) : (
-
-              ""
-            )}
-
           </div>
 
-     
+          {isOTP && (
+            <div className="grid grid-cols-3 gap-x-1 mt-4">
+              <div className="col-span-2 flex flex-col !h-[7vh]" >
+              {/* <label
+                className=" pb-2"
+                style={{ color: "#000000", fontWeight: 400 }}
+              >
+                OTP
+              </label> */}
+              <input
+                name="otp"
+                type="text"
+                value={formik.values.otp}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, ""); // remove non-numeric
+                  if (value.length <= 5) {
+                    formik.setFieldValue("otp", value);
+                  }
+                }}
+                className="login-control form-control-solid !h-[7vh] flex-1"
+                placeholder="Enter Code"
+              />
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary text-[1rem] !h-[7vh]"
+                onClick={handleResend}
+                disabled={resendTimer > 0}
+              >
+                <RotateCcw className="w-7 h-7" />
+                {resendTimer > 0 ? `${resendTimer}s` : "Resend"}
+              </button>
+              {formik.touched.otp && formik.errors.otp && (
+                <div className="fv-help-block">{formik.errors.otp}</div>
+              )}
+            </div>
+           )} 
+
           <br />
           {/* <br /> */}
 
@@ -220,17 +304,27 @@ function Login(props) {
             <button
               id=""
               type="submit"
-              disabled={formik.isSubmitting}
+              disabled={formik.isSubmitting || (isOTP && !formik.values.otp)}
               className="w-full bg-tprimary text-white text-base font-bold h-[7vh] cursor-pointer rounded border-none hover:bg-black"
             >
-
-              <span>Log in    <CircleArrowRight strokeWidth={3} className="w-5 h-5 cursor-pointer" /></span>
+              <span>
+                Log in{" "}
+                <CircleArrowRight
+                  strokeWidth={3}
+                  className="w-5 h-5 cursor-pointer"
+                />
+              </span>
               {loading && <span className="ml-3 spinner spinner-white"></span>}
             </button>
           </div>
-          <div>
-
-          </div>
+          {formik.status ? (
+            <div className="text-center mt-2">
+              <div className="alert-text font-weight-bold text-red-700 text-sm">{formik.status}</div>
+            </div>
+          ) : (
+            ""
+          )}
+          <div></div>
 
           <br />
           {/* <div className="d-flex align-items-center  ">
@@ -245,11 +339,8 @@ function Login(props) {
 
         <br />
         <br />
-
-
       </div>
       <footer className="flex gap-4 bg-tsecondary p-4 rounded-bottom pl-7">
-
         <div>
           <Link
             to="/privacy-policy"
@@ -278,7 +369,6 @@ function Login(props) {
             Contact Us
           </a>
         </div>
-
       </footer>
     </div>
   );
