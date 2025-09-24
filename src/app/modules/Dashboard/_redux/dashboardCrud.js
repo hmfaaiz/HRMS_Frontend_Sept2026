@@ -152,7 +152,7 @@ export function getAnnouncment(filter) {
   return axios.get(`${USERS_URL}/dashboard/announcement` );
 }
 export function getExitReason(id) {
-  console.log("read-all-exit-reason111111",id)
+ 
   return axios.get(`${USERS_URL}/settings/read-all-exit-reason/${id}`);
 }
 
@@ -162,4 +162,10 @@ export async function getAttendance() {
 
 export async function createAttendance(body) {
   return axios.post(`${USERS_URL}/emp_portal/create-attendance` , body);
+}
+export async function getAllUser(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-users` , body);
+}
+export async function getAllAuditTablesName(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-audit-table-names` , body);
 }

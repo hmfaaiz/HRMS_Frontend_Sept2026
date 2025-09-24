@@ -111,17 +111,17 @@ export function DeptTable() {
       // },
     },
 
-    {
-      dataField: "budgetStrength",
-      text: "Strength",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      // style: {
-      //   minWidth: "160px",
-      //   textAlign: "center",
-      // },
-    },
+    // {
+    //   dataField: "budgetStrength",
+    //   text: "Strength",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   // style: {
+    //   //   minWidth: "160px",
+    //   //   textAlign: "center",
+    //   // },
+    // },
 
     {
       dataField: "action",

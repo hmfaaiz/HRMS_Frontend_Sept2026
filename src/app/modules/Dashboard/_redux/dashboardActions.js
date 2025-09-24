@@ -405,6 +405,7 @@ export const fetchExitReasonData = (Id) => async (dispatch) => {
     });
 };
 
+
 export const getAttendance = (setLoading) => (dispatch) => {
   return requestFromServer
     .getAttendance()
@@ -447,5 +448,28 @@ export const createAttendance = (body, setLoading) => (dispatch) => {
         }
       );
       setLoading(false);
+    });
+};
+
+export const fetchAllUserData = (Id) => async (dispatch) => {
+  return await requestFromServer
+    .getAllUser(Id)
+    .then((response) => {
+      const data = response.data?.data;
+      dispatch(actions.AllUserFetch(data));
+    })
+    .catch((error) => {
+      dispatch(actions.AllUserFetch([]));
+    });
+};
+export const fetchAllAuditTablesName = (userId) => async (dispatch) => {
+  return await requestFromServer
+    .getAllAuditTablesName({userId})
+    .then((response) => {
+      const data = response.data?.data;
+      dispatch(actions.AllAuditTablesNameFetch(data));
+    })
+    .catch((error) => {
+      dispatch(actions.AllAuditTablesNameFetch([]));
     });
 };
