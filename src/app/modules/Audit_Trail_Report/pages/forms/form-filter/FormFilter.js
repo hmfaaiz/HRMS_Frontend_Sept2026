@@ -27,6 +27,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import { FileText, Sheet } from "lucide-react";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { fetchAllAuditTablesName } from "../../../../Dashboard/_redux/dashboardActions";
 //Validation for date fields
 const formValidation = Yup.object()
   .shape({
@@ -68,18 +69,19 @@ export function FormFilter({
 
   //Get All dropdown data from state
   const {
-    allEmployees,
-    allSubsidiaryList,
-    allEmployeeGradeList,
-    allDept,
-    allLocationChildMenus,
-    allDesignations,
+    allSubsidiaryList, getAllUserList, getAllAuditTablesNameList,
+
   } = useSelector((state) => state.dashboard);
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
-  const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map((item) => [item.value, item]));
-  }, [allEmployees]);
+  const allUserMap = useMemo(() => {
+    return new Map(getAllUserList?.map((item) => [item.value, item]));
+  }, [getAllUserList]);
+
+
+  const allAuditTablesNameMap = useMemo(() => {
+    return new Map(getAllAuditTablesNameList?.map((item) => [item.value, item]));
+  }, [getAllAuditTablesNameList]);
 
 
   //Fetch Params from Context
@@ -104,7 +106,7 @@ export function FormFilter({
   const getLabels = (values) => {
     return {
 
-      employeeLabel: allEmployeesMap?.get(values.employeeId || '')?.label,
+      userLabel: allUserMap?.get(values.userId || '')?.label,
       fromLabel: values?.from ? formatDates(values.from) : "",
       toLabel: values?.to ? formatDates(values.to) : "",
 
@@ -116,6 +118,7 @@ export function FormFilter({
   const getPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
+
     dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
   };
 
@@ -128,8 +131,8 @@ export function FormFilter({
   };
 
   const employeeStatus = [
-    { value: "0", label: "In Active" },
-    { value: "1", label: "Active" },
+    { value: 0, label: "In Active" },
+    { value: 1, label: "Active" },
   ];
   const chnageMode = [
     { value: "0", label: "Add" },
@@ -137,16 +140,7 @@ export function FormFilter({
     { value: "2", label: "Delete" },
   ];
 
-  useEffect(() => {
-    // Extract subsidiaryId logic
-    const subsidiaryId =
-      allSubsidiaryList && allSubsidiaryList.length > 0
-        ? allSubsidiaryList[0].value
-        : null;
 
-    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
-    dispatch(fetchAllDept(subsidiaryId));
-  }, [allSubsidiaryList]);
 
   return (
     <>
@@ -155,11 +149,7 @@ export function FormFilter({
 
         initialValues={{
           ...initialFilter.filter,
-          subsidiaryId:
-            initialFilter.filter?.subsidiaryId ||
-            (allSubsidiaryList && allSubsidiaryList.length > 0
-              ? allSubsidiaryList[0].value
-              : ""), // Set default subsidiaryId if it's not provided
+          employeeStatusId: initialFilter.filter?.employeeStatusId ?? 1
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -194,60 +184,8 @@ export function FormFilter({
                   <div>
                     <h6 className="font-bold mb-0 text-primary">Employee</h6>
                     <div className="grid gird-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-1">
-                      {/* Subsidiary Field Start */}
-                      {/* <div className="col-span-1">
 
-                        <SubsidiarySelect
-                          name="subsidiaryId"
-                          label={
-                            <span>
-                              Subsidiary<span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          onChange={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("subsidiaryId", value);
-                            dispatch(
-                              fetchAllActiveEmployeesBySubsidiary(value)
-                            );
 
-                          }}
-                          error={errors.subsidiaryId}
-                          touched={touched.subsidiaryId}
-                          currentValue={values?.subsidiaryId}
-                          initializeSubsidiary={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("subsidiaryId", value);
-                            dispatch(
-                              fetchAllActiveEmployeesBySubsidiary(value)
-                            );
-
-                          }}
-                        />
-                      </div> */}
-                      {/* Subsidiary Field End */}
-
-                      {/* <div className="col-span-1">
-                        <Field
-                          name="employeeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e?.value === "Select" ? "" : Number(e?.value);
-                            setFieldValue("employeeId", value);
-                            setFieldValue("employeeStatusId", null);
-                          }}
-                          label={<span> Employee</span>}
-                          value={allEmployeesMap?.get(values?.employeeId) || ""}
-                          autoComplete="off"
-                          options={[
-                            { label: "Select", value: "" },
-                            ...(Array.isArray(allEmployees) ? allEmployees : []), // ✅ Use array, not Map
-                          ]}
-                        />
-                      </div> */}
 
 
                       <div className="col-span-1">
@@ -255,10 +193,11 @@ export function FormFilter({
                           name="employeeStatusId"
                           component={SearchSelect}
                           onBlur={handleBlur}
-                          isDisabled={values?.employeeId}
+                          // isDisabled={values?.userId}
                           onChange={(e) => {
                             const value = e?.value === "Select" ? "" : e?.value;
                             setFieldValue("employeeStatusId", value);
+                            setFieldValue("userid", null);
                           }}
                           label={<span> Employee Status</span>}
                           value={
@@ -273,6 +212,32 @@ export function FormFilter({
                           ]}
                         />
                       </div>
+
+
+                      <div className="col-span-1">
+                        <Field
+                          name="userId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e?.value === "Select" ? "" : Number(e?.value);
+                            setFieldValue("userId", value);
+                            dispatch(fetchAllAuditTablesName(value));
+                            // setFieldValue("employeeStatusId", null);
+                          }}
+                          label={<span> User</span>}
+                          value={allUserMap?.get(values?.userId) || ""}
+                          autoComplete="off"
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(getAllUserList)
+                              ? getAllUserList.filter(item => item?.deactiveflag == values?.employeeStatusId)
+                              : []
+                            )
+                          ]}
+                        />
+                      </div>
+
 
                       <div className="col-span-1">
                         <Field
@@ -297,6 +262,28 @@ export function FormFilter({
                           ]}
                         />
                       </div>
+
+                      <div className="col-span-1">
+                        <Field
+                          name="tableName"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value = e?.value === "Select" ? "" : e?.value; // number hata do
+                            setFieldValue("tableName", value);
+                          }}
+                          label={<span>Form Name</span>}
+
+                          value={allAuditTablesNameMap?.get(values?.tableName) || ""}
+                          autoComplete="off"
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(getAllAuditTablesNameList) ? getAllAuditTablesNameList : []),
+                          ]}
+                        />
+
+                      </div>
+
 
 
 
@@ -384,7 +371,7 @@ export function FormFilter({
                     onClick={() => {
                       getPdf(values);
                     }}
-                    disabled={pdfLoading || !values?.subsidiaryId || !isValid}
+                    disabled={pdfLoading || !values.from || !values.to}
                     className="border-none bg-transparent"
                   >
                     <FileText className="w-4 h-4 text-black cursor-pointer" />
@@ -404,7 +391,7 @@ export function FormFilter({
                       getExcel(values);
                     }}
                     disabled={
-                      registerExcelLoading || !values?.subsidiaryId || !isValid
+                      registerExcelLoading
                     }
                     className="border-none bg-transparent"
                     type="button"

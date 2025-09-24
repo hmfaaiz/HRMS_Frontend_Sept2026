@@ -12,9 +12,10 @@ export const sizePerPageList = [
 export const initialFilter = {
   filter: {
     subsidiaryId: "",
-    employeeId: "",
-    employeeStatusId: "",
+    userId: "",
+    employeeStatusId:null,
     changeModeId:null,
+    tableName:null,
     from: "",
     to: "",
     

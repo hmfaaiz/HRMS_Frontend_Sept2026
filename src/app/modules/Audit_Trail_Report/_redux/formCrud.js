@@ -21,13 +21,13 @@ export async function getAllEmployeeRegisterSetup(body) {
  * @returns res
  */
 export async function getAllEmployeeRegisterForPdf(body) {
-  return axios.post(`${USERS_URL}/employee_register/read-all-registered-employees-pdf-data`, body,{
+  return axios.post(`${USERS_URL}/audit_trail/read-all-audit-trail-pdf-data`, body,{
     responseType:'arraybuffer'
   });
 }
 
 export async function generateExcel(body) {
-  return axios.post(`${USERS_URL}/employee_register/read-all-registered-employees-excel`, body,{
+  return axios.post(`${USERS_URL}/audit_trail/read-all-audit-trail-excel-data`, body,{
     responseType:'arraybuffer'
   });
 }

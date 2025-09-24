@@ -37,7 +37,7 @@ export function FormTable() {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
-console.log("entities1111",entities)
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,10 +69,21 @@ console.log("entities1111",entities)
         minWidth: "160px",
         maxWidth: "160px",
       },
+    }, 
+       {
+      dataField: "user.email",
+      text: "Email",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
     },
     {
       dataField: "date", // Reference the parent object (department)
-      text: "Chnage date", // Column heading
+      text: "Change date", // Column heading
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -106,6 +117,16 @@ console.log("entities1111",entities)
         minWidth: "160px",
         maxWidth: "160px",
       },
+    },   {
+      dataField: "dataId",
+      text: "Primary Information",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
     },
 
     {
@@ -130,6 +151,10 @@ console.log("entities1111",entities)
         minWidth: "160px",
         maxWidth: "160px",
       },
+       formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 20 ? cell.substring(0, 20) + "..." : cell;
+      }
      
     },
 
@@ -143,6 +168,10 @@ console.log("entities1111",entities)
         minWidth: "160px",
         maxWidth: "160px",
       },
+       formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 20 ? cell.substring(0, 20) + "..." : cell;
+      }
      
     },
     {

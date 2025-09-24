@@ -84,6 +84,8 @@ const initialDashboardState = {
   allExitTypeList:[],
   allExitReasonList:[],
   currentAtt : null,
+  getAllUserList:[],
+  getAllAuditTablesNameList:[],
 };
 
 export const callTypes = {
@@ -340,6 +342,12 @@ export const dashboardSlice = createSlice({
     },
     CurrentAttFetch: (state, action) => {
       state.currentAtt = action.payload;
+    }, 
+     AllUserFetch: (state, action) => {
+      state.getAllUserList = action.payload;
+    },
+      AllAuditTablesNameFetch: (state, action) => {
+      state.getAllAuditTablesNameList = action.payload;
     },
   },
 });

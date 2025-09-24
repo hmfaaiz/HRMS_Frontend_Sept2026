@@ -15,6 +15,7 @@ import { FormUIProvider } from "./FormUIContext";
 import { CardHeader } from "../../../../../_metronic/_partials/controls";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
+import { fetchAllAuditTablesName, fetchAllUserData } from "../../../Dashboard/_redux/dashboardActions";
 
 export function AuditTrailReportPage() {
   const dispatch = useDispatch();
@@ -30,8 +31,15 @@ export function AuditTrailReportPage() {
    
     if (!dashboard?.allSubsidiaryList?.length)
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+  
+    if (!dashboard?.getAllUserList?.length)
+      dispatch(fetchAllUserData("getAllUserList"));
+    
+    if (!dashboard?.getAllAuditTablesNameList?.length)
+      dispatch(fetchAllAuditTablesName("getAllAuditTablesNameList"));
 
-  }, [dispatch]);
+  }
+  , [dispatch]);
 
   return (
     <FormUIProvider FormUIEvents={{}}>
