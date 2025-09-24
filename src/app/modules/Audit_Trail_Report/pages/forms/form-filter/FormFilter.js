@@ -304,7 +304,7 @@ export function FormFilter({
                             component={DatePickerField}
                             dateFormat="dd-MMM-yyyy"
                             className="form-control"
-                            label={<span> From</span>}
+                            label={<span> From<span style={{ color: "red" }}>*</span></span>}
                             onChange={(date) => {
                               setFieldValue("from", date);
                               setFieldValue("to", date);
@@ -319,7 +319,7 @@ export function FormFilter({
                             onBlur={handleBlur}
                             className="form-control"
                             dateFormat="dd-MMM-yyyy"
-                            label={<span> To</span>}
+                            label={<span> To<span style={{ color: "red" }}>*</span></span>}
                             onChange={(date) => {
                               setFieldValue("to", date);
                             }}
@@ -361,7 +361,7 @@ export function FormFilter({
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
-              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+              {/* <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
                 <OverlayTrigger
                   overlay={
                     <Tooltip id="products-edit-tooltip">Export PDF</Tooltip>
@@ -402,7 +402,7 @@ export function FormFilter({
                     )}
                   </button>
                 </OverlayTrigger>
-              </div>
+              </div> */}
             </Modal.Footer>
           </>
         )}
