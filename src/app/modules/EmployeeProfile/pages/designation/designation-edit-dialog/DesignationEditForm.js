@@ -111,7 +111,7 @@ const profileValidation = Yup.object()
       .test(
         "dateOfBirth",
         "Date of joining must be after the date of birth",
-        function(value) {
+        function (value) {
           const { dateOfBirth } = this.parent; // Access the value of min_year
           return value > dateOfBirth; // Ensure max_year is greater than min_year
         }
@@ -126,8 +126,12 @@ const profileValidation = Yup.object()
     drivingLicenseExpiry: Yup.date()
       .nullable()
       .min(currentDate, "ID Card Expiry must be a future date")
-      .typeError("ID Card Expiry must be a valid date"),
-
+      .typeError("ID Card Expiry must be a valid date")
+      .when("nic_no", {
+        is: (val) => !!val, // jab nic_no ho (null/empty na ho)
+        then: (schema) => schema.required("Required*"),
+        otherwise: (schema) => schema.nullable(),
+      }),
     // Other fields...
 
     lastReviewDate: Yup.date()
@@ -141,9 +145,9 @@ const profileValidation = Yup.object()
       .when("lastReviewDate", (lastReviewDate, schema) => {
         return lastReviewDate
           ? schema.min(
-              lastReviewDate,
-              "Next review date cannot be earlier than last review date"
-            )
+            lastReviewDate,
+            "Next review date cannot be earlier than last review date"
+          )
           : schema; // Return the original schema if lastReviewDate is not present
       }),
 
@@ -152,9 +156,9 @@ const profileValidation = Yup.object()
       .when("dateOfJoining", (dateOfJoining, schema) => {
         return dateOfJoining
           ? schema.min(
-              dateOfJoining,
-              "Date of confirmation cannot be earlier than the date of joining"
-            )
+            dateOfJoining,
+            "Date of confirmation cannot be earlier than the date of joining"
+          )
           : schema;
       }),
     dateOfConfirmationDue: Yup.date()
@@ -162,9 +166,9 @@ const profileValidation = Yup.object()
       .when("dateOfJoining", (dateOfJoining, schema) => {
         return dateOfJoining
           ? schema.min(
-              dateOfJoining,
-              "Date confirmation due cannot be earlier than date Of Joining"
-            )
+            dateOfJoining,
+            "Date confirmation due cannot be earlier than date Of Joining"
+          )
           : schema;
       }),
     dateOfConfirmationEnter: Yup.date()
@@ -172,54 +176,54 @@ const profileValidation = Yup.object()
       .when("dateOfConfirmationDue", (dateOfConfirmationDue, schema) => {
         return dateOfConfirmationDue
           ? schema.min(
-              dateOfConfirmationDue,
-              "Date confirmation extended cannot be earlier than date confirmation due"
-            )
+            dateOfConfirmationDue,
+            "Date confirmation extended cannot be earlier than date confirmation due"
+          )
           : schema;
       }),
-  //   dateOfContractExpiry: Yup.date()
-  //     .nullable()
-  //     .when("dateOfConfirmationEnter", (dateOfConfirmationEnter, schema) => {
-  //       return dateOfConfirmationEnter
-  //         ? schema.min(
-  //             dateOfConfirmationEnter,
-  //             "Contract expiry date cannot be earlier than date confirmation extended"
-  //           )
-  //         : schema;
-  //     })
-  //      .min(
-  //   Yup.ref("dateOfJoining"),
-  //   "Contract expiry date cannot be earlier than Date of Joining"
-  // ),
+    //   dateOfContractExpiry: Yup.date()
+    //     .nullable()
+    //     .when("dateOfConfirmationEnter", (dateOfConfirmationEnter, schema) => {
+    //       return dateOfConfirmationEnter
+    //         ? schema.min(
+    //             dateOfConfirmationEnter,
+    //             "Contract expiry date cannot be earlier than date confirmation extended"
+    //           )
+    //         : schema;
+    //     })
+    //      .min(
+    //   Yup.ref("dateOfJoining"),
+    //   "Contract expiry date cannot be earlier than Date of Joining"
+    // ),
 
-dateOfContractExpiry: Yup.date()
-  .nullable()
-  .test(
-    "check-contract-expiry",
-    "Contract expiry date validation failed",
-    function (value) {
-      const { employeeTypeId, dateOfConfirmationEnter, dateOfJoining } = this.parent;
+    dateOfContractExpiry: Yup.date()
+      .nullable()
+      .test(
+        "check-contract-expiry",
+        "Contract expiry date validation failed",
+        function (value) {
+          const { employeeTypeId, dateOfConfirmationEnter, dateOfJoining } = this.parent;
 
-      // Only validate if employeeTypeId = 147
-      if (employeeTypeId === "147" || employeeTypeId === 147) {
-        if (dateOfConfirmationEnter && value < dateOfConfirmationEnter) {
-          return this.createError({
-            path: "dateOfContractExpiry",
-            message: "Contract expiry date cannot be earlier than date confirmation extended",
-          });
+          // Only validate if employeeTypeId = 147
+          if (employeeTypeId === "147" || employeeTypeId === 147) {
+            if (dateOfConfirmationEnter && value < dateOfConfirmationEnter) {
+              return this.createError({
+                path: "dateOfContractExpiry",
+                message: "Contract expiry date cannot be earlier than date confirmation extended",
+              });
+            }
+
+            if (dateOfJoining && value < dateOfJoining) {
+              return this.createError({
+                path: "dateOfContractExpiry",
+                message: "Contract expiry date cannot be earlier than Date of Joining",
+              });
+            }
+          }
+
+          return true;
         }
-
-        if (dateOfJoining && value < dateOfJoining) {
-          return this.createError({
-            path: "dateOfContractExpiry",
-            message: "Contract expiry date cannot be earlier than Date of Joining",
-          });
-        }
-      }
-
-      return true;
-    }
-  ),
+      ),
 
 
     nic_no: Yup.string()
@@ -310,9 +314,9 @@ dateOfContractExpiry: Yup.date()
   .test(
     "check-marital-status",
     "Invalid marital status for selected title",
-    function(value) {
+    function (value) {
       // if (title === 'Mrs.' && maritalStatus === '261') {
-      const { title, maritalStatus, gender ,employeeTypeId} = value;
+      const { title, maritalStatus, gender, employeeTypeId } = value;
 
       // Check conditions based on title // 196 == Single
       if (title === "Mrs." && maritalStatus !== "267") {
@@ -650,9 +654,9 @@ export function DesignationEditForm({
     }
     setDefualtSubsidiaryList(
       dashboard.allSubsidiaryList &&
-        dashboard.allSubsidiaryList.filter((item) => {
-          return item.value === subsidiaryId;
-        })
+      dashboard.allSubsidiaryList.filter((item) => {
+        return item.value === subsidiaryId;
+      })
     );
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
 
@@ -661,9 +665,9 @@ export function DesignationEditForm({
     if (user.dateOfJoining) {
       setJoiningDate(new Date(user.dateOfJoining));
     }
-  else {
-    setJoiningDate(null);
-  }
+    else {
+      setJoiningDate(null);
+    }
   }, [user.dateOfJoining]);
 
   //=========== END
@@ -673,7 +677,7 @@ export function DesignationEditForm({
     if (user.dateOfBirth) {
       setDOBDate(new Date(user.dateOfBirth));
     }
-    else{
+    else {
       setDOBDate(null);
     }
   }, [user.dateOfBirth]);
@@ -681,7 +685,7 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.dateOfRetirement) {
       setDRetirmentDate(new Date(user?.dateOfRetirement));
-    }else{
+    } else {
       setDRetirmentDate(null);
     }
   }, [user.dateOfRetirement]);
@@ -696,7 +700,7 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.dateOfConfirmationDue) {
       setConfirmationDueDate(new Date(user?.dateOfConfirmationDue));
-    }else{
+    } else {
       setConfirmationDueDate(null)
     }
   }, [user.dateOfConfirmationDue]);
@@ -705,7 +709,7 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.lastReviewDate) {
       setlastReviewDate(new Date(user.lastReviewDate));
-    }else{
+    } else {
       setlastReviewDate(null)
     }
   }, [user.lastReviewDate]);
@@ -720,7 +724,7 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.nextReviewDate) {
       setnextReviewDate(new Date(user.nextReviewDate));
-    }else{
+    } else {
       setnextReviewDate(null)
     }
   }, [user.nextReviewDate]);
@@ -730,7 +734,7 @@ export function DesignationEditForm({
     if (user.passportExpiry) {
       setpassportExpiry(new Date(user.passportExpiry));
     }
-    else{
+    else {
       setpassportExpiry(null)
     }
   }, [user.passportExpiry]);
@@ -739,7 +743,7 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.drivingLicenseExpiry) {
       setdrivingLicenseExpiry(new Date(user.drivingLicenseExpiry));
-    }else{
+    } else {
       setdrivingLicenseExpiry(null)
     }
   }, [user.drivingLicenseExpiry]);
@@ -753,7 +757,7 @@ export function DesignationEditForm({
     if (user?.dateOfConfirmation) {
       setConfirmationDate(new Date(user?.dateOfConfirmation));
     }
-    else{
+    else {
       setConfirmationDate(null);
     }
 
@@ -763,7 +767,7 @@ export function DesignationEditForm({
     if (user?.professional_summary) {
       setProfessionalSummary(user.professional_summary);
     }
-    else{
+    else {
       setProfessionalSummary(null);
     }
 
@@ -777,9 +781,9 @@ export function DesignationEditForm({
       : user.designationId;
     setDefualtEmpDesignation(
       dashboard.allDesignationByGrade &&
-        dashboard.allDesignationByGrade.filter((item) => {
-          return item.value === designationId;
-        })
+      dashboard.allDesignationByGrade.filter((item) => {
+        return item.value === designationId;
+      })
     );
   }, [user?.designationId, dashboard.designationId]);
 
@@ -789,9 +793,9 @@ export function DesignationEditForm({
       : user.cycleTypeId;
     setcycleType(
       dashboard.allCycleTypeList &&
-        dashboard.allCycleTypeList.filter((item) => {
-          return item.value == cycleType;
-        })
+      dashboard.allCycleTypeList.filter((item) => {
+        return item.value == cycleType;
+      })
     );
   }, [user?.cycleTypeId, dashboard.cycleTypeId]);
 
@@ -802,9 +806,9 @@ export function DesignationEditForm({
 
     setcontractType(
       dashboard.allContractTypeList &&
-        dashboard.allContractTypeList.filter((item) => {
-          return item.value == contractType;
-        })
+      dashboard.allContractTypeList.filter((item) => {
+        return item.value == contractType;
+      })
     );
   }, [user?.contractTypeId, dashboard.contractTypeId]);
 
@@ -816,9 +820,9 @@ export function DesignationEditForm({
       : user.maritalStatus;
     setDefaultMaritalStatus(
       dashboard.allMaritalStatus &&
-        dashboard.allMaritalStatus.filter((item) => {
-          return item.value == maritalStatus;
-        })
+      dashboard.allMaritalStatus.filter((item) => {
+        return item.value == maritalStatus;
+      })
     );
   }, [user?.maritalStatus, dashboard.maritalStatus]);
 
@@ -826,7 +830,7 @@ export function DesignationEditForm({
   useEffect(() => {
     if (user.dateOfConfirmationEnter) {
       setConfirmationEnterDate(new Date(user.dateOfConfirmationEnter));
-    }else{
+    } else {
       setConfirmationEnterDate(null)
     }
   }, [user.dateOfConfirmationEnter]);
@@ -838,7 +842,7 @@ export function DesignationEditForm({
     if (user.dateOfContractExpiry) {
       setContractExpiryDate(new Date(user.dateOfContractExpiry));
     }
-    else{
+    else {
       setContractExpiryDate(null)
     }
   }, [user.dateOfContractExpiry]);
@@ -851,26 +855,26 @@ export function DesignationEditForm({
       : user.gradeId;
     setDefualtEmployeeGrade(
       dashboard.allEmployeeGradeList &&
-        dashboard.allEmployeeGradeList.filter((item) => {
-          return item.value === gradeId;
-        })
+      dashboard.allEmployeeGradeList.filter((item) => {
+        return item.value === gradeId;
+      })
     );
   }, [user?.gradeId, dashboard.gradeId]);
 
-  useEffect(()=>{
-    if(user?.gradeId){
-      dispatch(fetchAllDesignationByGradeId(user?.gradeId , "allDesignationByGrade"))
+  useEffect(() => {
+    if (user?.gradeId) {
+      dispatch(fetchAllDesignationByGradeId(user?.gradeId, "allDesignationByGrade"))
     }
-  },[user?.gradeId])
+  }, [user?.gradeId])
   // This method is used for when edit record and get selected dept where id save in DB
   useEffect(() => {
     const deptId = defDept?.value ? defDept.value : user.departmentId;
 
     setDefaultDept(
       dashboard.allDept &&
-        dashboard.allDept.filter((item) => {
-          return item.value === deptId;
-        })
+      dashboard.allDept.filter((item) => {
+        return item.value === deptId;
+      })
     );
   }, [user?.departmentId, dashboard.departmentId]);
 
@@ -878,9 +882,9 @@ export function DesignationEditForm({
     const countryId = defCountry?.value ? defCountry.value : user.countryId;
     setDefaultCountry(
       dashboard.allCountry &&
-        dashboard.allCountry.filter((item) => {
-          return item.value === countryId;
-        })
+      dashboard.allCountry.filter((item) => {
+        return item.value === countryId;
+      })
     );
   }, [user?.countryId, dashboard.countryId]);
   //======================= Payroll Group
@@ -890,9 +894,9 @@ export function DesignationEditForm({
       : user.payrollGroupId;
     setDefaultChildMenus(
       dashboard.allChildMenus &&
-        dashboard.allChildMenus.filter((item) => {
-          return item.value === payrollGroupId;
-        })
+      dashboard.allChildMenus.filter((item) => {
+        return item.value === payrollGroupId;
+      })
     );
   }, [user?.payrollGroupId, dashboard.payrollGroupId]);
   //======================= End
@@ -905,9 +909,9 @@ export function DesignationEditForm({
       : user.teamId;
     setDefaultChildTeamsMenus(
       dashboard.allTeamsChildMenus &&
-        dashboard.allTeamsChildMenus.filter((item) => {
-          return item.value === teamId;
-        })
+      dashboard.allTeamsChildMenus.filter((item) => {
+        return item.value === teamId;
+      })
     );
   }, [user?.teamId, dashboard.teamId]);
   //======================= End
@@ -919,9 +923,9 @@ export function DesignationEditForm({
       : user.regionId;
     setDefaultChildRegionMenus(
       dashboard.allRegionChildMenus &&
-        dashboard.allRegionChildMenus.filter((item) => {
-          return item.value === regionId;
-        })
+      dashboard.allRegionChildMenus.filter((item) => {
+        return item.value === regionId;
+      })
     );
   }, [user?.regionId, dashboard.regionId]);
   //======================= End
@@ -934,9 +938,9 @@ export function DesignationEditForm({
       : user.religionId;
     setDefaultChildReligionMenus(
       dashboard.allReligionChildMenus &&
-        dashboard.allReligionChildMenus.filter((item) => {
-          return item.value === religionId;
-        })
+      dashboard.allReligionChildMenus.filter((item) => {
+        return item.value === religionId;
+      })
     );
   }, [user?.religionId, dashboard.religionId]);
   //======================= End
@@ -948,9 +952,9 @@ export function DesignationEditForm({
 
     setEmployeeReportToDefault(
       dashboard?.allEmployeesWithNoPermissionList &&
-        dashboard?.allEmployeesWithNoPermissionList?.filter((item) => {
-          return item?.value === reportTo;
-        })
+      dashboard?.allEmployeesWithNoPermissionList?.filter((item) => {
+        return item?.value === reportTo;
+      })
     );
   }, [user?.reportTo, dashboard.reportTo]);
 
@@ -981,16 +985,16 @@ export function DesignationEditForm({
 
     setDefemployeeStatus(
       dashboard.allEmployeeStatus &&
-        dashboard.allEmployeeStatus.filter((item) => {
-          return item.value === empStatusId;
-        })
+      dashboard.allEmployeeStatus.filter((item) => {
+        return item.value === empStatusId;
+      })
     );
-     setEmployeeStatusLabel(
-  dashboard.allEmployeeStatus &&
-    dashboard.allEmployeeStatus.find((item) => item.value === empStatusId)?.label
-);
+    setEmployeeStatusLabel(
+      dashboard.allEmployeeStatus &&
+      dashboard.allEmployeeStatus.find((item) => item.value === empStatusId)?.label
+    );
 
-       
+
   }, [user?.employeeStatusId]);
   //======================= End
 
@@ -1000,9 +1004,9 @@ export function DesignationEditForm({
       : user.locationId;
     setDefaultChildLocationMenus(
       dashboard.allLocationChildMenus &&
-        dashboard.allLocationChildMenus.filter((item) => {
-          return item.value === locationId;
-        })
+      dashboard.allLocationChildMenus.filter((item) => {
+        return item.value === locationId;
+      })
     );
   }, [user?.locationId, dashboard.locationId]);
 
@@ -1012,9 +1016,9 @@ export function DesignationEditForm({
 
     setDefaultCity(
       dashboard.allCity &&
-        dashboard.allCity.filter((item) => {
-          return item.value === cityId;
-        })
+      dashboard.allCity.filter((item) => {
+        return item.value === cityId;
+      })
     );
   }, [user?.cityId, dashboard.allCity]);
 
@@ -1149,8 +1153,8 @@ export function DesignationEditForm({
         if (ind == index) {
           // val[key] = new Date(el)
           // val[key] = el ? new Date(el) : null;
-              let e = formatDates(el, "dd-MMM-yyyy");
-              val[key] = e || null;
+          let e = formatDates(el, "dd-MMM-yyyy");
+          val[key] = e || null;
         }
         return val;
       }),
@@ -1195,8 +1199,8 @@ export function DesignationEditForm({
         if (ind == index) {
           // val[key] = new Date(el)
           // val[key] = el ? new Date(el) : null;
-              let e = formatDates(el, "dd-MMM-yyyy");
-              val[key] = e || null;
+          let e = formatDates(el, "dd-MMM-yyyy");
+          val[key] = e || null;
         }
         return val;
       }),
@@ -1269,15 +1273,15 @@ export function DesignationEditForm({
       gender == "Female" && dateOfBirth
         ? profilePolicy?.data?.data[0]?.retirementAgeFemale
         : gender == "Male" && dateOfBirth
-        ? profilePolicy?.data?.data[0]?.retirementAgeMale
-        : null;
+          ? profilePolicy?.data?.data[0]?.retirementAgeMale
+          : null;
 
     if (retirementAge) {
       const retirementDate = new Date(dateOfBirth);
 
       retirementDate.setFullYear(retirementDate.getFullYear() + retirementAge);
       // Subtract 1 day (to get last day before birthday)
-       retirementDate.setDate(retirementDate.getDate() - 1);
+      retirementDate.setDate(retirementDate.getDate() - 1);
 
       setDRetirmentDate(new Date(retirementDate));
       setFieldValue("dateOfRetirement", new Date(retirementDate));
@@ -1308,7 +1312,7 @@ export function DesignationEditForm({
     const confirmationDueDate = new Date(dateOfJoining);
     confirmationDueDate.setFullYear(
       confirmationDueDate.getFullYear() +
-        Math.floor(probationPolicyInMonth / 12)
+      Math.floor(probationPolicyInMonth / 12)
     ); // Add full years
     confirmationDueDate.setMonth(
       confirmationDueDate.getMonth() + (probationPolicyInMonth % 12)
@@ -1318,16 +1322,16 @@ export function DesignationEditForm({
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setHideContractExpDate(true);
 
-     const doubleProbationInMonth = probationPolicyInMonth * 2;
+    const doubleProbationInMonth = probationPolicyInMonth * 2;
     const confirmationDate = new Date(dateOfJoining);
     confirmationDate.setFullYear(
       confirmationDate.getFullYear() +
-        Math.floor(doubleProbationInMonth / 12)
+      Math.floor(doubleProbationInMonth / 12)
     ); // Add full years
     confirmationDate.setMonth(
       confirmationDate.getMonth() + (doubleProbationInMonth % 12)
-    ); 
-   
+    );
+
     setMaxProbationPolicyInMonth(new Date(confirmationDate))
   };
 
@@ -1366,7 +1370,7 @@ export function DesignationEditForm({
     const confirmationDueDate = new Date(dateOfJoining);
     confirmationDueDate.setFullYear(
       confirmationDueDate.getFullYear() +
-        Math.floor(probationPolicyInMonth / 12)
+      Math.floor(probationPolicyInMonth / 12)
     ); // Add full years
     confirmationDueDate.setMonth(
       confirmationDueDate.getMonth() + (probationPolicyInMonth % 12)
@@ -1376,7 +1380,7 @@ export function DesignationEditForm({
     setFieldValue("dateOfConfirmationDue", new Date(confirmationDueDate));
     setDisableConfDueDate(true);
 
-   
+
   };
 
 
@@ -1454,8 +1458,8 @@ export function DesignationEditForm({
         if (ind == index) {
           // val[key] = new Date(el)
           // val[key] = el ? new Date(el) : null;
-             let e = formatDates(el, "dd-MMM-yyyy");
-              val[key] = e || null;
+          let e = formatDates(el, "dd-MMM-yyyy");
+          val[key] = e || null;
         }
         return val;
       }),
@@ -1511,7 +1515,7 @@ export function DesignationEditForm({
         newErrors[`relation_name-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!contact.relation_text) {
-        newErrors[`relation_text-${index}`] =  VALIDATION_MESSAGES.required;
+        newErrors[`relation_text-${index}`] = VALIDATION_MESSAGES.required;
       }
       // if (!contact.contactNo || !/^\d{11}$/.test(contact.contactNo)) {
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 t0 15 digits';
@@ -1527,7 +1531,7 @@ export function DesignationEditForm({
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 to 15 digits';
       // }
       if (!contactNo) {
-        newErrors[`contactNo-${index}`] =  VALIDATION_MESSAGES.required;
+        newErrors[`contactNo-${index}`] = VALIDATION_MESSAGES.required;
       } else if (!/^\d{7,15}$/.test(contactNo)) {
         newErrors[`contactNo-${index}`] =
           "Contact No must be between 7 to 15 digits";
@@ -1537,17 +1541,17 @@ export function DesignationEditForm({
     // Validations for Work Experience
     workExperienceList.forEach((obj, index) => {
       if (!obj.companyName) {
-        newErrors[`companyName-${index}`] =  VALIDATION_MESSAGES.required;
+        newErrors[`companyName-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!obj.positionHeld) {
         newErrors[`positionHeld-${index}`] = VALIDATION_MESSAGES.required;
       }
       if (!obj.countryId) {
-        newErrors[`countryId-W-${index}`] =  VALIDATION_MESSAGES.required;
+        newErrors[`countryId-W-${index}`] = VALIDATION_MESSAGES.required;
       }
 
       if (!obj.cityId) {
-        newErrors[`cityId-W-${index}`] =  VALIDATION_MESSAGES.required;
+        newErrors[`cityId-W-${index}`] = VALIDATION_MESSAGES.required;
       }
 
       const num = getDateDiffInDays(obj.startDate, new Date().getTime());
@@ -1574,37 +1578,37 @@ export function DesignationEditForm({
       if (obj?.startDate && !obj?.endDate) {
         newErrors[`endDate_W-${index}`] = VALIDATION_MESSAGES.required;
       }
-      
+
       if (!obj?.startDate && obj?.endDate) {
         newErrors[`startDate_W-${index}`] = VALIDATION_MESSAGES.required;
       }
-      
+
       // Dono agar filled hain, to endDate > startDate check karo
       // if (obj?.startDate && obj?.endDate) {
       //   const start = new Date(obj.startDate);
       //   const end = new Date(obj.endDate);
-      
+
       //   if (end <= start) {
       //     newErrors[`endDate_W-${index}`] = VALIDATION_MESSAGES.endDateMustBeGreater;
       //   }
       // }
 
 
-         if (!obj?.startDate && obj?.endDate) {
+      if (!obj?.startDate && obj?.endDate) {
         newErrors[`startDate_W-${index}`] = VALIDATION_MESSAGES.required;
       } else if (obj?.startDate && obj?.endDate) {
         const start = new Date(obj.startDate);
         const end = new Date(obj.endDate);
-      
+
         if (start > new Date()) {
           newErrors[`startDate_W-${index}`] = "Cannot be a future date";
         }
-      
+
         if (end <= start) {
           newErrors[`endDate_W-${index}`] = "Must be later than Start Date";
         }
-          if (end > new Date()) {
-           newErrors[`startDate_W-${index}`] = "Cannot be a future date";
+        if (end > new Date()) {
+          newErrors[`startDate_W-${index}`] = "Cannot be a future date";
         }
       }
 
@@ -1623,8 +1627,8 @@ export function DesignationEditForm({
           newErrors[`lengthInYear_W-${index}`] = "Must be less than 100";
         }
       }
-      
-      
+
+
     });
 
     // Validations for Academic
@@ -1660,9 +1664,9 @@ export function DesignationEditForm({
           newErrors[`gpa-${index}`] = "Must be a valid digit";
         }
       }
-      
+
       if (!obj.cityId) {
-        newErrors[`cityId-A-${index}`] =VALIDATION_MESSAGES.required;
+        newErrors[`cityId-A-${index}`] = VALIDATION_MESSAGES.required;
       }
       // if (new Date(obj.startDate) > new Date()) {
       //   newErrors[`startDate_A-${index}`] =
@@ -1689,21 +1693,21 @@ export function DesignationEditForm({
       // }
 
 
-     if (!obj?.startDate && obj?.endDate) {
+      if (!obj?.startDate && obj?.endDate) {
         newErrors[`startDate_A-${index}`] = VALIDATION_MESSAGES.required;
       } else if (obj?.startDate && obj?.endDate) {
         const start = new Date(obj.startDate);
         const end = new Date(obj.endDate);
-      
+
         if (start > new Date()) {
           newErrors[`startDate_A-${index}`] = "Cannot be a future date";
         }
-      
+
         if (end <= start) {
           newErrors[`endDate_A-${index}`] = "Must be later than Start Date";
         }
       }
-      
+
 
       // if (!obj?.endDate) {
       //   newErrors[`endDate_A-${index}`] = 'Required';
@@ -1723,7 +1727,7 @@ export function DesignationEditForm({
           newErrors[`lengthInYear_A-${index}`] = "Must be less than 100";
         }
       }
-      
+
     });
 
     // Validations for Skills
@@ -1765,15 +1769,15 @@ export function DesignationEditForm({
       if (obj?.startDate && !obj?.endDate) {
         newErrors[`endDate-${index}`] = VALIDATION_MESSAGES.required;
       } else if (!obj?.startDate && obj?.endDate) {
-        newErrors[`startDate-${index}`] =  VALIDATION_MESSAGES.required;
+        newErrors[`startDate-${index}`] = VALIDATION_MESSAGES.required;
       } else if (obj?.startDate && obj?.endDate) {
         const start = new Date(obj.startDate);
         const end = new Date(obj.endDate);
-      
+
         if (start > new Date()) {
           newErrors[`startDate-${index}`] = "Cannot be a future date";
         }
-      
+
         if (end <= start) {
           newErrors[`endDate-${index}`] = "Must be later than Start Date";
         }
@@ -1793,8 +1797,8 @@ export function DesignationEditForm({
           newErrors[`lengthInMonths-${index}`] = "Must be less than 100";
         }
       }
-      
-      
+
+
     });
 
     // Validations for Incident
@@ -1857,59 +1861,59 @@ export function DesignationEditForm({
     );
   };
 
-useEffect(() => {
+  useEffect(() => {
 
-  if (defSubsidiary?.localizationId) {
-    setLocalizationId(defSubsidiary?.localizationId);
-  
-  }
-}, [defSubsidiary]);
+    if (defSubsidiary?.localizationId) {
+      setLocalizationId(defSubsidiary?.localizationId);
 
-const getServicePeriod = (start, end, rightindex,handler,field,year=false,month=false) => {
-  if (!start || !end) return;
+    }
+  }, [defSubsidiary]);
 
-  const startDate = new Date(start);
-  const endDate = new Date(end);
+  const getServicePeriod = (start, end, rightindex, handler, field, year = false, month = false) => {
+    if (!start || !end) return;
 
-  // Years, months, days difference
-  let years = endDate.getFullYear() - startDate.getFullYear();
-  let months = endDate.getMonth() - startDate.getMonth();
-  let days = endDate.getDate() - startDate.getDate();
+    const startDate = new Date(start);
+    const endDate = new Date(end);
 
-  if (days < 0) {
-    months -= 1;
-    const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
-    days += prevMonthDays;
-  }
+    // Years, months, days difference
+    let years = endDate.getFullYear() - startDate.getFullYear();
+    let months = endDate.getMonth() - startDate.getMonth();
+    let days = endDate.getDate() - startDate.getDate();
 
-  if (months < 0) {
-    years -= 1;
-    months += 12;
-  }
+    if (days < 0) {
+      months -= 1;
+      const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+      days += prevMonthDays;
+    }
 
-
-  let totalMonths = years * 12 + months;
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
 
 
-  const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
-  const fraction = days > 0 ? days / maxDaysInMonth : 0;
-
-  totalMonths += fraction;
- if(year){
-  const lengthInYears = parseFloat((totalMonths / 12).toFixed(2));
-
-  // Call your field update
-  handler(rightindex, field, lengthInYears);
- }else{
-  const lengthInMonths = Math.round(totalMonths * 10) / 10;
-  //  const lengthInMonths = parseFloat(totalMonths.toFixed(2));
-
-  // Call your field update
-  handler(rightindex, field, lengthInMonths);
- }
+    let totalMonths = years * 12 + months;
 
 
-};
+    const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+    const fraction = days > 0 ? days / maxDaysInMonth : 0;
+
+    totalMonths += fraction;
+    if (year) {
+      const lengthInYears = parseFloat((totalMonths / 12).toFixed(2));
+
+      // Call your field update
+      handler(rightindex, field, lengthInYears);
+    } else {
+      const lengthInMonths = Math.round(totalMonths * 10) / 10;
+      //  const lengthInMonths = parseFloat(totalMonths.toFixed(2));
+
+      // Call your field update
+      handler(rightindex, field, lengthInMonths);
+    }
+
+
+  };
 
 
 
@@ -1920,16 +1924,16 @@ const getServicePeriod = (start, end, rightindex,handler,field,year=false,month=
       <Formik
         enableReinitialize={true}
         // initialValues={user}
-        
+
         initialValues={{
           ...user,
           professional_summary: user?.professional_summary || "",
-          email_official:user?.email_official || "",
-          email_personal:user?.email_personal || "",
+          email_official: user?.email_official || "",
+          email_personal: user?.email_personal || "",
 
-  
+
         }}
-      
+
         validationSchema={profileValidation}
         onSubmit={async (values) => {
           //const t =  handleSubmit();
@@ -1942,49 +1946,49 @@ const getServicePeriod = (start, end, rightindex,handler,field,year=false,month=
             setErrors({});
 
             enableLoading();
-             const payload = {
-        ...values,
-        dateOfBirth: values.dateOfBirth
-          ? formatDates(values.dateOfBirth, "dd-MMM-yyyy")
-          : null,
-           dateOfConfirmation: values.dateOfConfirmation
-          ? formatDates(values.dateOfConfirmation, "dd-MMM-yyyy")
-          : null,
-            dateOfConfirmationDue: values.dateOfConfirmationDue
-          ? formatDates(values.dateOfConfirmationDue, "dd-MMM-yyyy")
-          : null,
-  dateOfConfirmationEnter: values?.dateOfConfirmationEnter
-          ? formatDates(values?.dateOfConfirmationEnter, "dd-MMM-yyyy")
-          : null,
-            dateOfContractExpiry: values.dateOfContractExpiry
-          ? formatDates(values.dateOfContractExpiry, "dd-MMM-yyyy")
-          : null,
-            dateOfJoining: values.dateOfJoining
-          ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
-          : null, 
-          dateOfRetirement: values.dateOfRetirement
-          ? formatDates(values.dateOfRetirement, "dd-MMM-yyyy")
-          : null, 
-          dateOfRetirementOptional: values.dateOfRetirementOptional
-          ? formatDates(values.dateOfRetirementOptional, "dd-MMM-yyyy")
-          : null,
-           drivingLicenseExpiry: values.drivingLicenseExpiry
-          ? formatDates(values.drivingLicenseExpiry, "dd-MMM-yyyy")
-          : null,  
-          passportExpiry: values.passportExpiry
-          ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
-          : null, 
-           nextReviewDate: values.nextReviewDate
-          ? formatDates(values.nextReviewDate, "dd-MMM-yyyy")
-          : null, 
-          nicExpiry: values.nicExpiry
-          ? formatDates(values.nicExpiry, "dd-MMM-yyyy")
-          : null,
-passportExpiry: values.passportExpiry
-          ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
-          : null,
+            const payload = {
+              ...values,
+              dateOfBirth: values.dateOfBirth
+                ? formatDates(values.dateOfBirth, "dd-MMM-yyyy")
+                : null,
+              dateOfConfirmation: values.dateOfConfirmation
+                ? formatDates(values.dateOfConfirmation, "dd-MMM-yyyy")
+                : null,
+              dateOfConfirmationDue: values.dateOfConfirmationDue
+                ? formatDates(values.dateOfConfirmationDue, "dd-MMM-yyyy")
+                : null,
+              dateOfConfirmationEnter: values?.dateOfConfirmationEnter
+                ? formatDates(values?.dateOfConfirmationEnter, "dd-MMM-yyyy")
+                : null,
+              dateOfContractExpiry: values.dateOfContractExpiry
+                ? formatDates(values.dateOfContractExpiry, "dd-MMM-yyyy")
+                : null,
+              dateOfJoining: values.dateOfJoining
+                ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
+                : null,
+              dateOfRetirement: values.dateOfRetirement
+                ? formatDates(values.dateOfRetirement, "dd-MMM-yyyy")
+                : null,
+              dateOfRetirementOptional: values.dateOfRetirementOptional
+                ? formatDates(values.dateOfRetirementOptional, "dd-MMM-yyyy")
+                : null,
+              drivingLicenseExpiry: values.drivingLicenseExpiry
+                ? formatDates(values.drivingLicenseExpiry, "dd-MMM-yyyy")
+                : null,
+              passportExpiry: values.passportExpiry
+                ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
+                : null,
+              nextReviewDate: values.nextReviewDate
+                ? formatDates(values.nextReviewDate, "dd-MMM-yyyy")
+                : null,
+              nicExpiry: values.nicExpiry
+                ? formatDates(values.nicExpiry, "dd-MMM-yyyy")
+                : null,
+              passportExpiry: values.passportExpiry
+                ? formatDates(values.passportExpiry, "dd-MMM-yyyy")
+                : null,
 
-      };
+            };
 
             if (file) {
               let formData = new FormData();
@@ -2002,7 +2006,7 @@ passportExpiry: values.passportExpiry
                     skillsList,
                     incidentList,
                     imagePolicy,
-                    isImageReq,employeeStatusLabel,localizationId
+                    isImageReq, employeeStatusLabel, localizationId
                   );
                 });
             } else {
@@ -2015,7 +2019,7 @@ passportExpiry: values.passportExpiry
                 skillsList,
                 incidentList,
                 imagePolicy,
-                isImageReq,employeeStatusLabel,localizationId
+                isImageReq, employeeStatusLabel, localizationId
               );
             }
           }
@@ -2039,7 +2043,7 @@ passportExpiry: values.passportExpiry
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                {console.log("eeeee1111",errors)}
+                {console.log("eeeee1111", errors)}
                 <h6 className="font-bold mb-0 text-primary mt-2">
                   Basic Information
                 </h6>
@@ -2112,8 +2116,8 @@ passportExpiry: values.passportExpiry
                         />
                       </div>
                       {id ||
-                      profilePolicy?.data?.data[0]
-                        .isEmployeeCodeGenerationAuto ? (
+                        profilePolicy?.data?.data[0]
+                          .isEmployeeCodeGenerationAuto ? (
                         <>
                           <div>
                             <Field
@@ -2194,14 +2198,14 @@ passportExpiry: values.passportExpiry
                                 // setEmployeeCode(response?.data?.data[0]?.codePrefix + "-" +setEmployee);
                                 setEmployeeCode(
                                   profilePolicy?.data?.data[0]?.codePrefix +
-                                    "-" +
-                                    e.target.value
+                                  "-" +
+                                  e.target.value
                                 );
                                 setFieldValue(
                                   "employeeCode",
                                   profilePolicy?.data?.data[0]?.codePrefix +
-                                    "-" +
-                                    e.target.value
+                                  "-" +
+                                  e.target.value
                                 );
                                 setFieldValue(
                                   "codePrefix",
@@ -2382,9 +2386,9 @@ passportExpiry: values.passportExpiry
                         onChange={(e) => {
                           setFieldValue("gradeId", e.value || null);
                           setDefualtEmployeeGrade(e);
-                          setFieldValue("designationId",  null);
+                          setFieldValue("designationId", null);
                           setDefualtEmpDesignation(null);
-                          dispatch(fetchAllDesignationByGradeId(e?.value , "allDesignationByGrade"))
+                          dispatch(fetchAllDesignationByGradeId(e?.value, "allDesignationByGrade"))
                           // dispatch(fetchAllFormsMenu(e.value));
                         }}
                         value={defEmployeeGrade || null}
@@ -2454,13 +2458,13 @@ passportExpiry: values.passportExpiry
                           label="HOD"
                           disabled={
                             dashboard?.allEmployeesWithNoPermissionList &&
-                            values?.departmentId
+                              values?.departmentId
                               ? dashboard.allEmployeesWithNoPermissionList.some(
-                                  (x) =>
-                                    x.departmentId === values.departmentId &&
-                                    x.hod === 1 &&
-                                    x.value !== user.Id
-                                )
+                                (x) =>
+                                  x.departmentId === values.departmentId &&
+                                  x.hod === 1 &&
+                                  x.value !== user.Id
+                              )
                               : false
                           }
                         />
@@ -2916,7 +2920,7 @@ passportExpiry: values.passportExpiry
                       {errors.gender && touched.gender && (
                         <label className="invalid-feedback">{errors.gender}</label>
                       )}
-                      
+
                     </div>
                     <div>
                       <SearchSelect
@@ -2986,11 +2990,11 @@ passportExpiry: values.passportExpiry
                             setFieldValue("dateOfBirth", date);
                             setDOBDate(date);
                             // if (!id) {
-                              updateRetirmentPolicy(
-                                setFieldValue,
-                                date,
-                                values?.gender
-                              );
+                            updateRetirmentPolicy(
+                              setFieldValue,
+                              date,
+                              values?.gender
+                            );
                             // }
                             //  else {
                             //   doBnotify();
@@ -3008,19 +3012,19 @@ passportExpiry: values.passportExpiry
                           minDate={
                             maxAgeLimin !== null
                               ? new Date(
-                                  new Date().getFullYear() - maxAgeLimin,
-                                  new Date().getMonth(),
-                                  new Date().getDate()
-                                )
+                                new Date().getFullYear() - maxAgeLimin,
+                                new Date().getMonth(),
+                                new Date().getDate()
+                              )
                               : null
                           }
                           maxDate={
                             minAgeLimin !== null
                               ? new Date(
-                                  new Date().getFullYear() - minAgeLimin,
-                                  new Date().getMonth(),
-                                  new Date().getDate()
-                                )
+                                new Date().getFullYear() - minAgeLimin,
+                                new Date().getMonth(),
+                                new Date().getDate()
+                              )
                               : new Date()
                           }
                         />
@@ -3045,18 +3049,18 @@ passportExpiry: values.passportExpiry
                             setFieldValue("dateOfJoining", date);
                             setJoiningDate(date);
                             // if (!id) {
-                              updateConfirmationDuePolicy(
-                                setFieldValue,
-                                values.employeeTypeId,
-                                values.employeeStatusId,
-                                date
-                              );
-                              updateContractExpiryPolicy(
-                                setFieldValue,
-                                values.employeeTypeId,
-                                values.employeeStatusId,
-                                date
-                              );
+                            updateConfirmationDuePolicy(
+                              setFieldValue,
+                              values.employeeTypeId,
+                              values.employeeStatusId,
+                              date
+                            );
+                            updateContractExpiryPolicy(
+                              setFieldValue,
+                              values.employeeTypeId,
+                              values.employeeStatusId,
+                              date
+                            );
                             // } else {
                             //   doJnotify();
                             // }
@@ -3093,20 +3097,20 @@ passportExpiry: values.passportExpiry
                             values.dateOfBirth
                               ? minAgeLimin !== null
                                 ? new Date(
-                                    new Date(values.dateOfBirth).getFullYear() +
-                                      minAgeLimin,
-                                    new Date(values.dateOfBirth).getMonth(),
-                                    new Date(values.dateOfBirth).getDate()
-                                  )
+                                  new Date(values.dateOfBirth).getFullYear() +
+                                  minAgeLimin,
+                                  new Date(values.dateOfBirth).getMonth(),
+                                  new Date(values.dateOfBirth).getDate()
+                                )
                                 : new Date(values.dateOfBirth)
                               : new Date()
                           }
 
-                          // minDate={
-                          //   values.dateOfBirth
-                          //     ? new Date(values.dateOfBirth)
-                          //     : null
-                          // }
+                        // minDate={
+                        //   values.dateOfBirth
+                        //     ? new Date(values.dateOfBirth)
+                        //     : null
+                        // }
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -3138,8 +3142,8 @@ passportExpiry: values.passportExpiry
                             values.dateOfJoining
                               ? new Date(values.dateOfJoining)
                               : null
-                          } 
-                           maxDate={
+                          }
+                          maxDate={
                             maxProbationPolicyInMonth
                               ? new Date(maxProbationPolicyInMonth)
                               : null
@@ -3219,7 +3223,7 @@ passportExpiry: values.passportExpiry
                         <DatePicker
                           className="form-control"
                           placeholder=" Date Of Retirement"
-                         disabled={true}
+                          disabled={true}
                           selected={RetirementSelected}
                           showYearDropdown
                           scrollableMonthYearDropdown
@@ -3230,7 +3234,7 @@ passportExpiry: values.passportExpiry
                           timeInputLabel="Time:"
                           dateFormat="dd-MMM-yyyy"
                           // showTimeInput
-                         minDate={values.dateOfJoining? new Date(values.dateOfJoining): null}
+                          minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
                           name="dateOfRetirement"
                           // disabled={isUserForRead || !values?.subsidiaryId}
                           autoComplete="off"
@@ -3242,27 +3246,27 @@ passportExpiry: values.passportExpiry
                         />
                       </div>
 
-                      
+
                     )}
 
 
-                     {values.employeeTypeId !== 147 && (
+                    {values.employeeTypeId !== 147 && (
                       <div>
-              
 
-<label>
-Date of Retirement (Optional)
-</label>
+
+                        <label>
+                          Date of Retirement (Optional)
+                        </label>
 
                         <DatePicker
                           className="form-control"
                           placeholder=" Date Of Retirement (Optional)"
                           // selected={RetirementSelectedOptional || null} 
-                             selected={
-        values.dateOfRetirementOptional
-          ? new Date(values.dateOfRetirementOptional)
-          : null
-      }
+                          selected={
+                            values.dateOfRetirementOptional
+                              ? new Date(values.dateOfRetirementOptional)
+                              : null
+                          }
                           showYearDropdown
                           scrollableMonthYearDropdown
                           onChange={(date) => {
@@ -3276,7 +3280,7 @@ Date of Retirement (Optional)
                           disabled={isUserForRead || !values?.subsidiaryId}
                           autoComplete="off"
 
-                           minDate={
+                          minDate={
                             values.dateOfJoining
                               ? new Date(values.dateOfJoining)
                               : null
@@ -3289,7 +3293,7 @@ Date of Retirement (Optional)
                         />
                       </div>
 
-                    
+
                     )}
                   </div>
                 </div>
@@ -3299,7 +3303,7 @@ Date of Retirement (Optional)
                     Personal Information
                   </h6>
 
-                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-1 mt-2">
+                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-x-3 gap-y-1 mt-2">
                     <div>
                       <Field
                         name="nic_no"
@@ -3334,6 +3338,32 @@ Date of Retirement (Optional)
                     </div>
 
                     <div>
+                      <label>ID Card Expiry</label>
+                      <DatePicker
+                        className="form-control"
+                        placeholder="ID Card Expiry Date"
+                        selected={defdrivingLicenseExpiry}
+                        showYearDropdown
+                        scrollableMonthYearDropdown
+                        onChange={(date) => {
+                          setFieldValue("drivingLicenseExpiry", date);
+                          setdrivingLicenseExpiry(date);
+                        }}
+                        timeInputLabel="Time:"
+                        dateFormat="dd-MMM-yyyy"
+                        // showTimeInput
+                        name="drivingLicenseExpiry"
+                        autoComplete="off"
+                        minDate={new Date()}
+                      />
+                      <ErrorMessage
+                        className="form-feedBack"
+                        name="drivingLicenseExpiry"
+                        component="div"
+                      />
+                    </div>
+
+                    <div>
                       <Field
                         name="email_official"
                         component={Input}
@@ -3341,7 +3371,7 @@ Date of Retirement (Optional)
                         label="Official Email"
                         autoComplete="off"
                         maxLength="30"
-                        
+
                       />
                     </div>
 
@@ -3353,7 +3383,7 @@ Date of Retirement (Optional)
                         label="Personal Email"
                         autoComplete="off"
                         maxLength="30"
-                       
+
                       />
                     </div>
 
@@ -3508,8 +3538,8 @@ Date of Retirement (Optional)
                           error={errors.regionId}
                           touched={touched.regionId}
                           options=
-                            {[
-                              { value: null, label: "Select" },
+                          {[
+                            { value: null, label: "Select" },
                             ...dashboard.allRegionChildMenus]}
 
                         />
@@ -3581,7 +3611,7 @@ Date of Retirement (Optional)
                               : new Date(values.dateOfJoining)
                           }
 
-                          // minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
+                        // minDate={values.dateOfJoining ? new Date(values.dateOfJoining) : null}
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -3641,7 +3671,7 @@ Date of Retirement (Optional)
                           name="nextReviewDate"
                           minDate={new Date()}
                           autoComplete="off"
-                          // minDate={values.dateOfJoining ? new Date(values.dateOfJoining):  null}
+                        // minDate={values.dateOfJoining ? new Date(values.dateOfJoining):  null}
                         />
                         <ErrorMessage
                           className="form-feedBack"
@@ -3685,7 +3715,7 @@ Date of Retirement (Optional)
                           type="text"
                         />
                       </div>
-                      {localizationId==2 &&   <div>
+                      {localizationId == 2 && <div>
                         <Field
                           name="sourceOfHire"
                           maxLength="20"
@@ -3695,9 +3725,9 @@ Date of Retirement (Optional)
                           autoComplete="off"
                         />
                       </div>}
-                    
+
                       <div className="flex items-center gap-2">
-                        {localizationId==2 &&      <div className="flex items-center mt-5">
+                        {localizationId == 2 && <div className="flex items-center mt-5">
                           <input
                             name="salesRep"
                             type="checkbox"
@@ -3714,27 +3744,27 @@ Date of Retirement (Optional)
                             <span className="ml-2">Sales Representative</span>
                           </label>
                         </div>}
-                   
-                   {localizationId==2 &&
-                        <div className="flex items-center mt-5">
-                        <input
-                          name="supportRep"
-                          type="checkbox"
-                          // onChange={handleChange}
-                          onChange={() =>
-                            setFieldValue("supportRep", !values?.supportRep)
-                          }
-                          onBlur={handleBlur}
-                          value={values.supportRep}
-                          checked={values.supportRep}
-                          label="Support Representative"
-                        />
-                        <label>
-                          <span className="ml-2">Support Representative</span>
-                        </label>
-                      </div>
-                   }
-                   
+
+                        {localizationId == 2 &&
+                          <div className="flex items-center mt-5">
+                            <input
+                              name="supportRep"
+                              type="checkbox"
+                              // onChange={handleChange}
+                              onChange={() =>
+                                setFieldValue("supportRep", !values?.supportRep)
+                              }
+                              onBlur={handleBlur}
+                              value={values.supportRep}
+                              checked={values.supportRep}
+                              label="Support Representative"
+                            />
+                            <label>
+                              <span className="ml-2">Support Representative</span>
+                            </label>
+                          </div>
+                        }
+
                       </div>
                     </div>
 
@@ -3862,8 +3892,8 @@ Date of Retirement (Optional)
                               error={errors.cycleTypeId}
                               touched={touched.cycleTypeId}
                               options=
-                                {[
-                                  { value: null, label: "Select" },
+                              {[
+                                { value: null, label: "Select" },
                                 ...dashboard.allCycleTypeList]}
                             />
                           </div>
@@ -3908,7 +3938,7 @@ Date of Retirement (Optional)
                             />
                           </div>
                         )}
-                        <div>
+                        {/* <div>
                           <label>ID Card Expiry</label>
                           <DatePicker
                             className="form-control"
@@ -3932,7 +3962,7 @@ Date of Retirement (Optional)
                             name="drivingLicenseExpiry"
                             component="div"
                           />
-                        </div>
+                        </div> */}
 
                         {localizationId == 2 && (
                           <div>
@@ -3974,7 +4004,7 @@ Date of Retirement (Optional)
                             {/* <ErrorMessage style={{color:"red"}} name="nic_no" component="div" /> */}
                           </div>
                         )}
-{localizationId==2   && <div>
+                        {localizationId == 2 && <div>
                           <SearchSelect
                             name="contractTypeId"
                             label={<span> Contract Type</span>}
@@ -3992,13 +4022,13 @@ Date of Retirement (Optional)
                             error={errors.contractTypeId}
                             touched={touched.contractTypeId}
                             options=
-                              {[
-                                { value: null, label: "Select" },
+                            {[
+                              { value: null, label: "Select" },
                               ...dashboard.allContractTypeList]}
                           />
                         </div>
                         }
-                     
+
                         <div className="col-span-3 md:col-span-4 lg:col-span-5">
                           <Field
                             name="professional_summary"
@@ -4372,7 +4402,7 @@ Date of Retirement (Optional)
                                       ""
                                     );
 
-                                    getServicePeriod( el,obj.endDate, rightindex,handleFieldChangedExperience,"lengthInYear",true);
+                                    getServicePeriod(el, obj.endDate, rightindex, handleFieldChangedExperience, "lengthInYear", true);
 
 
                                     setErrors((prev) => ({
@@ -4417,7 +4447,7 @@ Date of Retirement (Optional)
                                       rightindex,
                                       ""
                                     );
-                                       getServicePeriod( obj.startDate,el, rightindex,handleFieldChangedExperience,"lengthInYear",true);
+                                    getServicePeriod(obj.startDate, el, rightindex, handleFieldChangedExperience, "lengthInYear", true);
                                     setErrors((prev) => ({
                                       ...prev,
                                       [`endDate_W-${rightindex}`]: "",
@@ -4444,7 +4474,7 @@ Date of Retirement (Optional)
                                 )}
                               </td>
 
-                              
+
                               <td>
                                 <input
                                   className="form-control"
@@ -4715,10 +4745,10 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>{
+                                  onChange={(el) => {
 
-                                  
-                                    getServicePeriod( el,obj.endDate, rightindex,handleFieldChangedAcademic,"lengthInYear",true)
+
+                                    getServicePeriod(el, obj.endDate, rightindex, handleFieldChangedAcademic, "lengthInYear", true)
                                     handleDatePickerAcademic(
                                       el,
                                       "startDate",
@@ -4757,16 +4787,16 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>{
-                                      getServicePeriod( obj.startDate,el, rightindex,handleFieldChangedAcademic,"lengthInYear",true)
-                              
+                                  onChange={(el) => {
+                                    getServicePeriod(obj.startDate, el, rightindex, handleFieldChangedAcademic, "lengthInYear", true)
+
                                     handleDatePickerAcademic(
                                       el,
                                       "endDate",
                                       rightindex,
                                       ""
                                     )
-                                  }    }
+                                  }}
                                   id={"endDate_A-" + rightindex}
                                   timeInputLabel="Time:"
                                   dateFormat="dd-MMM-yyyy"
@@ -4787,7 +4817,7 @@ Date of Retirement (Optional)
                                 )}
                               </td>
 
-                                   
+
                               <td>
                                 <input
                                   className="form-control"
@@ -4976,15 +5006,16 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>{
-                                      getServicePeriod( el,obj.endDate, rightindex,handleFieldChangedSkills,"lengthInMonths",false,true)
-                                 
+                                  onChange={(el) => {
+                                    getServicePeriod(el, obj.endDate, rightindex, handleFieldChangedSkills, "lengthInMonths", false, true)
+
                                     handleDatePickerSkills(
                                       el,
                                       "startDate",
                                       rightindex,
                                       ""
-                                    ) }
+                                    )
+                                  }
                                   }
                                   id={"startDate-" + rightindex}
                                   timeInputLabel="Time:"
@@ -5016,16 +5047,16 @@ Date of Retirement (Optional)
                                   }
                                   showYearDropdown
                                   scrollableMonthYearDropdown
-                                  onChange={(el) =>{
-                                       getServicePeriod( obj.startDate,el, rightindex,handleFieldChangedSkills,"lengthInMonths",false,true)
-                                 
+                                  onChange={(el) => {
+                                    getServicePeriod(obj.startDate, el, rightindex, handleFieldChangedSkills, "lengthInMonths", false, true)
+
                                     handleDatePickerSkills(
                                       el,
                                       "endDate",
                                       rightindex,
                                       ""
                                     )
-                                  } }
+                                  }}
                                   id={"endDate-" + rightindex}
                                   timeInputLabel="Time:"
                                   dateFormat="dd-MMM-yyyy"
@@ -5045,7 +5076,7 @@ Date of Retirement (Optional)
                                   </div>
                                 )}
                               </td>
-                                    
+
                               <td>
                                 <input
                                   className="form-control"

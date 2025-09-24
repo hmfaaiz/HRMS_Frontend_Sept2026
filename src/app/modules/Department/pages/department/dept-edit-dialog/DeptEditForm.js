@@ -33,9 +33,9 @@ const userEditSchema_2 = Yup.object().shape({
     // .matches(/^[A-Za-z\s\:-]*$/, "Name must only contain letters.")
     .trim()
     .required(VALIDATION_MESSAGES.required),
-  budgetStrength: Yup.string()
-    .matches(/^\d+$/, "Must contain only digits")
-    .required(VALIDATION_MESSAGES.required),
+  // budgetStrength: Yup.string()
+  //   .matches(/^\d+$/, "Must contain only digits")
+  //   .required(VALIDATION_MESSAGES.required),
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
   // parentDept: Yup.string().required("*Required"),
   // parentDept: Yup.string().nullable().required("*Required"),
@@ -254,7 +254,7 @@ export function DeptEditForm({
                         </div>
 
 
-                        <div className="col-12 col-md-6 mt-1 ">
+                        {/* <div className="col-12 col-md-6 mt-1 ">
                           <Field
                             name="budgetStrength"
                             maxLength={6}
@@ -268,7 +268,7 @@ export function DeptEditForm({
                               </span>
                             }
                           />
-                        </div>
+                        </div> */}
 
 
 
