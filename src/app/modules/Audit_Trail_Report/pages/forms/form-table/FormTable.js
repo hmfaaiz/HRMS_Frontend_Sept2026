@@ -59,17 +59,17 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
-    {
-      dataField: "userId",
-      text: "User Id",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    }, 
+    // {
+    //   dataField: "userId",
+    //   text: "User Id",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // }, 
        {
       dataField: "user.email",
       text: "Email",

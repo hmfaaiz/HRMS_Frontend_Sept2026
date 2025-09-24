@@ -105,14 +105,17 @@ export function FormFilter({
   //Get Labels of Dropdown to Display in PDF
   const getLabels = (values) => {
     return {
-
-      userLabel: allUserMap?.get(values.userId || '')?.label,
+      userLabel: allUserMap?.get(values.userId || '')?.label || "",
       fromLabel: values?.from ? formatDates(values.from) : "",
       toLabel: values?.to ? formatDates(values.to) : "",
-
-
+      employeeStatusLabel:
+        employeeStatus.find((item) => item.value === values.employeeStatusId)?.label || "",
+      changeModeLabel:
+        chnageMode.find((item) => item.value === values.changeModeId)?.label || "",
+      tableNameLabel: allAuditTablesNameMap?.get(values.tableName || '')?.label || "",
     };
   };
+
 
   //Trugger request to download PDF of data according to filters
   const getPdf = (values) => {
@@ -123,8 +126,10 @@ export function FormFilter({
   };
 
   const getExcel = (values) => {
+    console.log("click3333")
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
+    console.log("click34444")
     dispatch(
       actions.generateRegisterExcel(newQueryParams.filter, document, labels)
     );
@@ -197,7 +202,7 @@ export function FormFilter({
                           onChange={(e) => {
                             const value = e?.value === "Select" ? "" : e?.value;
                             setFieldValue("employeeStatusId", value);
-                            setFieldValue("userid", null);
+                            setFieldValue("userId", null);
                           }}
                           label={<span> Employee Status</span>}
                           value={
@@ -361,8 +366,8 @@ export function FormFilter({
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
-              {/* <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
-                <OverlayTrigger
+              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+                {/* <OverlayTrigger
                   overlay={
                     <Tooltip id="products-edit-tooltip">Export PDF</Tooltip>
                   }
@@ -380,7 +385,7 @@ export function FormFilter({
                       <span className="ml-3 mr-3 spinner spinner-white"></span>
                     )}
                   </button>
-                </OverlayTrigger>
+                </OverlayTrigger> */}
                 <OverlayTrigger
                   overlay={
                     <Tooltip id="products-edit-tooltip">Export Excel</Tooltip>
@@ -388,6 +393,7 @@ export function FormFilter({
                 >
                   <button
                     onClick={() => {
+                      console.log("click1111")
                       getExcel(values);
                     }}
                     disabled={
@@ -402,7 +408,7 @@ export function FormFilter({
                     )}
                   </button>
                 </OverlayTrigger>
-              </div> */}
+              </div>
             </Modal.Footer>
           </>
         )}

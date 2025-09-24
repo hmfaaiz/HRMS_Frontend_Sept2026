@@ -70,6 +70,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
 
 
 export const generateRegisterExcel = (filter, document, labels = {}) => async (dispatch) => {
+  console.log("click2222")
   dispatch(actions.startCall({ callType: callTypes.registerExcel }));
   return requestFromServer.generateExcel({ ...filter, labels })
     .then((res) => {
@@ -79,7 +80,7 @@ export const generateRegisterExcel = (filter, document, labels = {}) => async (d
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'employee_register.xlsx');
+      link.setAttribute('download', 'audit_trail_reportr.xlsx');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.registerExcelFetched({}));
