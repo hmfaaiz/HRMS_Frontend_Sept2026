@@ -5,7 +5,8 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { Modal } from "react-bootstrap";
 import {
   Input,
-  TextArea,Select
+  TextArea,Select,
+  Checkbox
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { amountLimitDynamic } from "../../../../../utils/common";
@@ -62,6 +63,9 @@ const formSchema = Yup.object().shape({
       localizationId: Yup.string()
   .nullable()
   .required(VALIDATION_MESSAGES.required),
+   isAttendanceLocation: Yup.boolean()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
 
 
@@ -364,6 +368,9 @@ export const EditForm = ({
                         
               
                       )}
+                    </div>
+                    <div className="mt-6">
+                      <Checkbox isSelected={values?.isAttendanceLocation} onChange={(e)=> setFieldValue("isAttendanceLocation" , e?.target?.checked)} children={'Location required for Attendance Marking'}  />
                     </div>
                   <div className="col-span-2 md:col-span-3 grid  grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                     {

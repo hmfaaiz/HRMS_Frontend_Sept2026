@@ -39,6 +39,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     TIN: null,
     Logo: "",
     localizationId: null,
+    isAttendanceLocation : false,
   };
 
   const value = {
