@@ -474,7 +474,7 @@ export function FormEditForm({
                               <td title="Maximum No of Installments Allowed" className="cursor-pointer max-lg:min-w-96">
                                 Max. No. of Installments
                               </td>
-                              <td title="No of Months in which Loan Installment can be started" className="cursor-pointer max-lg:min-w-96">
+                              <td title="No of Months in which Loan Installment can be started from Active Payroll Month Starting Date" className="cursor-pointer max-lg:min-w-96">
                                 Installment Start Date
                               </td>
 

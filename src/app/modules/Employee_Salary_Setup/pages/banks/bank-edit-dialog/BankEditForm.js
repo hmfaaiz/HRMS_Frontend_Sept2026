@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { Input } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-
+import { toast } from "react-toastify";
 import {
   fetchAllFormsMenu,
   fetchAllActiveEmployees,
@@ -132,7 +132,7 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.date().nullable(), // Optional if pension_member is false
     }),
   overtime_working_day: Yup.number()
-    .max(100, "Value cannot be greater than 100")
+    .max(9.99, "Value cannot be greater than 9.99")
     .min(0, "Value cannot be less than 0")
     .when("overtime_allowance", {
       is: (value) => value === true || value === 1, // if select value is 2
@@ -140,7 +140,7 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.number().notRequired(),
     }),
   overtime_off_day: Yup.number()
-    .max(100, "Value cannot be greater than 100")
+    .max(9.99, "Value cannot be greater than 9.99")
     .min(0, "Value cannot be less than 0")
     .when("overtime_allowance", {
       is: (value) => value === true || value === 1, // if select value is 2
@@ -148,7 +148,7 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.number().notRequired(),
     }),
   overtime_holiday: Yup.number()
-    .max(100, "Value cannot be greater than 100")
+    .max(9.99, "Value cannot be greater than 9.99")
     .min(0, "Value cannot be less than 0")
     .when("overtime_allowance", {
       is: (value) => value === true || value === 1, // if select value is 2
@@ -1264,6 +1264,7 @@ useEffect(()=>{
                                         </div>
                                       )}
                                     </td>
+                                      {!isUserForRead && (
                                     <td
                                       className="text-right"
                                       id={rightindex}
@@ -1276,6 +1277,7 @@ useEffect(()=>{
                                         <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                       )}{" "}
                                     </td>
+                                      )}
                                   </tr>
                                 </>
                               )
@@ -1482,15 +1484,18 @@ useEffect(()=>{
                                         </div>
                                       )}
                                     </td>
+                                    {!isUserForRead && (
                                     <td
                                       className="text-right"
                                       id={rightindex}
+                                      disabled={isUserForRead}
                                       // onClick={deleteRow}
                                        onClick={() => deleteRow(rightindex, "Other")}
                                     >
                                       {" "}
                                       <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                     </td>
+                                    )}
                                   </tr>
                                 </>
                               )
@@ -1679,6 +1684,7 @@ useEffect(()=>{
                                         </div>
                                       )}
                                     </td>
+                                      {!isUserForRead && (
                                     <td
                                       className="text-right"
                                       id={rightindex}
@@ -1688,6 +1694,7 @@ useEffect(()=>{
                                       {" "}
                                       <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                     </td>
+                                      )}
                                   </tr>
                                 </>
                               )
@@ -1770,6 +1777,7 @@ useEffect(()=>{
                       </div>
                       <div>
                         <AmountInput
+                        allowNegative={true}
                           field={{
                             name: `netSalary`,
                             value:
@@ -1789,14 +1797,15 @@ useEffect(()=>{
                           }}
                           label={"Net Salary"}
                           disabled={true}
-                          value={
-                            values.grossSalary > 0
-                              ? Number(values.grossSalary) +
-                                Number(totalGross) -
-                                Number(totalDeduction)
-                              : Number(defGrossSalary) + Number(totalGross)
-                          }
+                          // value={
+                          //   values.grossSalary > 0
+                          //     ? Number(values.grossSalary) +
+                          //       Number(totalGross) -
+                          //       Number(totalDeduction)
+                          //     : Number(defGrossSalary) + Number(totalGross)
+                          // }
                         />
+                         <ErrorMessage name="netSalary" component="div" className="text-danger" />
                         {/* Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input> */}
                       </div>
                     </div>
@@ -2029,7 +2038,7 @@ useEffect(()=>{
                               value={values.overtime_allowance}
                               checked={values.overtime_allowance}
                             />{" "}
-                            Over Time
+                            Overtime
                           </div>
                         </div>
                         <div className="grid grid-cols-3 gap-x-3 gap-y-1">
@@ -2282,7 +2291,7 @@ useEffect(()=>{
                             />
                             <ErrorMessage
                               className="form-feedBack"
-                              name="eobi_reg_date"
+                              name="social_security_reg_date"
                               component="div"
                             />
                           </div>
@@ -2364,6 +2373,14 @@ useEffect(()=>{
                   type="submit"
                   onClick={(e) =>    {
                     // calculateEmployeeSalaryPolicy(e, setFieldValue, values) ;
+                    if( (
+      values.grossSalary > 0
+        ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
+        : Number(defGrossSalary) + Number(totalGross)
+    ) <= 0){
+      return toast.error("Net Salary must be greater than 0");
+    }
+                    
                     handleSubmit()}}
                   className="btn btn-primary btn-elevate"
                 >
