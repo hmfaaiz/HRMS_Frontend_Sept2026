@@ -9,9 +9,11 @@ export const AttendanceMarking = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(new Date());
-  const { currentAtt } = useSelector(
+  const { currentAtt, isAttendanceLocation } = useSelector(
     (state) => ({
       currentAtt: state?.dashboard?.currentAtt,
+      isAttendanceLocation:
+        state?.auth?.user?.EmployeeMapping?.subsidiary?.isAttendanceLocation,
     }),
     shallowEqual
   );
@@ -27,42 +29,51 @@ export const AttendanceMarking = () => {
 
   const handleToggle = () => {
     setLoading(true);
-
-    if (!navigator.geolocation) {
-      toast.error("Location is not supported on this device.");
-      setLoading(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const now = new Date();
-        const body = {
-          AttDate: formatDates(now),
-          AttDateTesting: now,
-          Time: now,
-          Status: currentAtt?.Status == "01" ? "02" : "01",
-          lat: position.coords.latitude,
-          long: position.coords.longitude,
-        };
-
-        dispatch(action?.createAttendance(body, setLoading));
-      },
-      (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          toast.error(
-            "Location is not enabled. Please enable location services."
-          );
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          toast.error("Location information is unavailable.");
-        } else if (error.code === error.TIMEOUT) {
-          toast.error("Location request timed out.");
-        } else {
-          toast.error("An unknown error occurred while getting location.");
-        }
+    if (isAttendanceLocation) {
+      if (!navigator.geolocation) {
+        toast.error("Location is not supported on this device.");
         setLoading(false);
+        return;
       }
-    );
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const now = new Date();
+          const body = {
+            AttDate: formatDates(now),
+            AttDateTesting: now,
+            Time: now,
+            Status: currentAtt?.Status == "01" ? "02" : "01",
+            lat: position.coords.latitude,
+            long: position.coords.longitude,
+          };
+
+          dispatch(action?.createAttendance(body, setLoading));
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            toast.error(
+              "Location is not enabled. Please enable location services."
+            );
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            toast.error("Location information is unavailable.");
+          } else if (error.code === error.TIMEOUT) {
+            toast.error("Location request timed out.");
+          } else {
+            toast.error("An unknown error occurred while getting location.");
+          }
+          setLoading(false);
+        }
+      );
+    } else {
+      const now = new Date();
+      const body = {
+        AttDate: formatDates(now),
+        AttDateTesting: now,
+        Time: now,
+        Status: currentAtt?.Status == "01" ? "02" : "01",
+      };
+      dispatch(action?.createAttendance(body, setLoading));
+    }
   };
 
   return (
