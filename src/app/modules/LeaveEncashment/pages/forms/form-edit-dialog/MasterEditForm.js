@@ -87,7 +87,7 @@ export function MasterEditForm({
     const limit =
       leaveType && leaveTypeArr.find((el) => el.value == leaveType)?.limit;
     return limit && balance != null
-      ? `(Max. Encashment Days : ${limit - balance})`
+      ? `(Max encashment leave : ${limit - balance})`
       : "";
   };
 

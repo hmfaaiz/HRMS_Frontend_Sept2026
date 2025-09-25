@@ -264,7 +264,7 @@ export function FormEditForm({
                       name="accountId"
                       label={
                         <span>
-                          Account<span style={{ color: "red" }}>*</span>
+                          Account Receivable<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}

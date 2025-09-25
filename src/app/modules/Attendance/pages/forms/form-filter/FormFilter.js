@@ -597,7 +597,7 @@ export function FormFilter({
                         className="ml-2 mb-3"
                         htmlFor="markAttendancewithshift"
                       >
-                        Mark attendance with shift timings if not exists.
+                        Use shift timings if attendance not recorded
                       </label>
                     </div>
                   )}

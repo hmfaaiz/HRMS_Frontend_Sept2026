@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React from "react";
 import { Modal } from "react-bootstrap";
 
@@ -42,7 +43,12 @@ const SmallTableModal = ({ onHide, show, data }) => {
                   </div>
                 </div>
                 <div className={`text-sm font-semibold m-0 ${theme}`}>
-                  <span>{person?.main_value}</span>
+                  <span>
+                    {" "}
+                    {person?.main_value
+                      ? format(new Date(person?.main_value), "dd-MMM-yyyy")
+                      : ""}
+                  </span>
                 </div>
               </div>
             ))
