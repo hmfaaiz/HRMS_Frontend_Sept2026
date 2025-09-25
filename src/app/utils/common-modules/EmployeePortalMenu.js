@@ -30,9 +30,9 @@ const EmployeePortalMenu = ({
           {isAnouncement && announcement?.length > 0 && (
             <div className="px-2 py-1 bg-tlight rounded-md col-span-4 flex items-center gap-1">
               <Megaphone className="text-black w-4 h-4 mr-1 stroke-3" />
-              <h6 className="font-bold mb-0 text-primary">Announcements</h6>
+              <h6 className="font-bold mb-0 max-md:hidden text-primary">Announcements</h6>
               <Marquee
-                className="content-center ml-5"
+                className="content-center ml-1 max-md:ml-5"
                 speed={20}
                 gradient={false}
                 pauseOnHover={true}
