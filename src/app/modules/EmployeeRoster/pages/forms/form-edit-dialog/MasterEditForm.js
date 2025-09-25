@@ -398,7 +398,6 @@ export function MasterEditForm({
                         &nbsp;<span>Create Roster Via Shift</span>
                       </label>
                     </div>
-
                     {/* Create Roster Via shift  */}
                     <div>
                       <Field
@@ -411,7 +410,7 @@ export function MasterEditForm({
                         }
                         placeholder=""
                         onBlur={handleBlur}
-                        disabled={isEdit}
+                        disabled={isEdit || !values?.isEnable_roster_via_shift}
                         onChange={(e) => {
                           setFieldValue("offDay_1", e.target.value);
                         }}
@@ -440,7 +439,7 @@ export function MasterEditForm({
                             : "form-control"
                         }
                         placeholder=""
-                        disabled={isEdit}
+                        disabled={isEdit || !values?.isEnable_roster_via_shift}
                         onBlur={handleBlur}
                         onChange={(e) => {
                           setFieldValue("offDay_2", e.target.value);
@@ -493,7 +492,7 @@ export function MasterEditForm({
                             : "form-control"
                         }
                         isDisabled={
-                          checkPayrolMonth(values, payrollData) || isEdit
+                          checkPayrolMonth(values, payrollData) || isEdit || !values?.isEnable_roster_via_shift
                         }
                         placeholder=""
                         onBlur={handleBlur}
@@ -530,8 +529,8 @@ export function MasterEditForm({
                     </div>
                     {/* Shift Field End */}
                   </div>
-
-                  <div className="col-span-1">
+                  <div></div>
+                  <div className="col-span-1 mt-2">
                     <div>
                       <input
                         name="isEnable_roster_via_pattern"
@@ -593,7 +592,7 @@ export function MasterEditForm({
                             : "form-control"
                         }
                         isDisabled={
-                          checkPayrolMonth(values, payrollData) || isEdit
+                          checkPayrolMonth(values, payrollData) || isEdit || !values?.isEnable_roster_via_pattern
                         }
                         placeholder=""
                         onBlur={handleBlur}
