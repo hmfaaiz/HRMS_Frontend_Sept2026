@@ -34,7 +34,9 @@ const ReimbursementSchema = Yup.object().shape({
         .required(VALIDATION_MESSAGES.required),
       attachment_required: Yup.string().required(VALIDATION_MESSAGES.required),
       grades: Yup.string().required(VALIDATION_MESSAGES.required),
-       limit_type: Yup.string().required(VALIDATION_MESSAGES.required),
+       limit_type: Yup.number()
+      .nullable()
+       .required(VALIDATION_MESSAGES.required),
     })
   ),
 
@@ -288,6 +290,7 @@ export function FormEditForm({
                                 max_amount: "",
                                 attachment_required: "",
                                 grades: "",
+                                limit_type: "",
                               })
                             }
                             className="btn btn-primary btn-sm mt-1"
@@ -538,13 +541,13 @@ export function FormEditForm({
                                     )} */}
 
                                         {errors.policies?.[index]
-                                          ?.attachment_required &&
+                                          ?.limit_type &&
                                           touched.policies?.[index]
-                                            ?.attachment_required && (
+                                            ?.limit_type && (
                                             <div className="text-danger">
                                               {
                                                 errors.policies[index]
-                                                  .attachment_required
+                                                  .limit_type
                                               }
                                             </div>
                                           )}

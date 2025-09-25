@@ -438,7 +438,7 @@ export function FormEditForm({
                 <FieldArray name="details">
                   {({ push, remove }) => (
                     <div>
-                      <div className="flex justify-between items-center mt-1">
+                      <div className="flex justify-between items-center mt-2">
                         <h6 className="font-bold mb-0 text-primary">Details</h6>
                         {!isUserForRead && (
                           <button
@@ -617,6 +617,8 @@ export function FormEditForm({
                                               ? null
                                               : e.target.value
                                           );
+                                         console.log("aaaa1111", e.target.value, values.details[index].basis);
+
 
                                           if (e.target.value == "N/A") {
                                             setFieldValue(
@@ -662,12 +664,16 @@ export function FormEditForm({
                                         type="number"
                                         className="form-control"
                                         // disabled={isUserForRead}
-                                        disabled={
-                                          isUserForRead ||
-                                          values.details[index]?.basis ==
-                                            "N/A" ||
-                                          !values.details[index]?.basis
-                                        }
+                                        // disabled={
+                                        //   isUserForRead ||
+                                        //   values.details[index]?.basis ==
+                                        //     "N/A" 
+                                            
+                                       
+                                        // }
+                                         disabled={
+    isUserForRead || values.details[index]?.basis === null
+  }
                                         onInput={(e) => {
                                           if (e.target.value.length > 2) {
                                             e.target.value = e.target.value.slice(
