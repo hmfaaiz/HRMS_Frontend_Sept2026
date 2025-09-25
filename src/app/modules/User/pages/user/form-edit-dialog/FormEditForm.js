@@ -179,13 +179,13 @@ export function FormEditForm({
 
                     <div>
                     <label>
-                      Auth Type<span style={{ color: "red" }}>*</span>
+                      ‘Authentication Type<span style={{ color: "red" }}>*</span>
                     </label>
                     <Field
                       name="authType"
                       as="select"
                       className="form-control"
-                      disabled={isUserForRead || true}
+                      disabled={isUserForRead}
                     >
                       <option value="">Select</option>
                       {authTypeOption.map((option) => (
