@@ -34,6 +34,7 @@ const ReimbursementSchema = Yup.object().shape({
         .required(VALIDATION_MESSAGES.required),
       attachment_required: Yup.string().required(VALIDATION_MESSAGES.required),
       grades: Yup.string().required(VALIDATION_MESSAGES.required),
+       limit_type: Yup.string().required(VALIDATION_MESSAGES.required),
     })
   ),
 
@@ -42,6 +43,7 @@ const ReimbursementSchema = Yup.object().shape({
       reimbursement_typeId: Yup.number().required(VALIDATION_MESSAGES.required),
       expense_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
       bank_accountId: Yup.number().required(VALIDATION_MESSAGES.required),
+      
     })
   ),
 });
@@ -63,6 +65,11 @@ export function FormEditForm({
   const basisOptions = [
     { value: true, label: "Yes" },
     { value: false, label: "No" },
+  ];
+
+   const limitOptions = [
+    { value: 1, label: "Monthly" },
+    { value: 2, label: "Yearly" },
   ];
 
   // Fetch necessary data if not already present
@@ -273,7 +280,7 @@ export function FormEditForm({
                         </h6>
                         {!isUserForRead && (
                           <button
-                            c
+                            
                             type="button"
                             onClick={() =>
                               push({
@@ -298,7 +305,8 @@ export function FormEditForm({
                               <td className="min-w-32">Max Amount Allowed</td>
                               <td className="min-w-32">Attachment Required</td>
                               <td className="min-w-32">Salary Grade</td>
-                              <td className="min-w-32">
+                              <td className="min-w-32">Limit Type</td>
+                              <td className="min-w-32 text-right">
                                 {" "}
                                 {!isUserForRead && <p> Action</p>}
                               </td>
@@ -495,6 +503,52 @@ export function FormEditForm({
                                             {errors.policies[index].grades}
                                           </div>
                                         )}
+                                    </td>
+
+                                        <td>
+                                      <div className="">
+                                        <Field
+                                          name={`policies[${index}].limit_type`}
+                                          as="select"
+                                          className="form-control"
+                                          disabled={isUserForRead}
+                                          onChange={(e) => {
+                                            setFieldValue(
+                                              `policies[${index}].limit_type`,
+                                              e.target.value
+                                            ); // Use the raw value
+                                          }}
+                                        >
+                                          <option value="">Select</option>
+                                          {limitOptions.map((option) => (
+                                            <option
+                                              key={option.value}
+                                              value={option.value}
+                                            >
+                                              {option.label}
+                                            </option>
+                                          ))}
+                                        </Field>
+
+                                        {/* {errors.attachment_required &&
+                                    touched.attachment_required && (
+                                      <div className="text-danger">
+                                        {errors.attachment_required}
+                                      </div>
+                                    )} */}
+
+                                        {errors.policies?.[index]
+                                          ?.attachment_required &&
+                                          touched.policies?.[index]
+                                            ?.attachment_required && (
+                                            <div className="text-danger">
+                                              {
+                                                errors.policies[index]
+                                                  .attachment_required
+                                              }
+                                            </div>
+                                          )}
+                                      </div>
                                     </td>
 
                                     <td className="text-right">

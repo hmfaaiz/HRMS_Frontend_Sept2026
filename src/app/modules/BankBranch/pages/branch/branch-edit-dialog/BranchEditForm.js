@@ -41,7 +41,7 @@ const userEditSchema_2 = Yup.object().shape({
   branchCode: Yup.string().required(VALIDATION_MESSAGES.required),
   Name: Yup.string()
     // .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters.')
-    .matches(/^[A-Za-z\s.-]+$/, "Name must only contain letters.")
+    // .matches(/^[A-Za-z\s.-]+$/, "Name must only contain letters.")
     .required(VALIDATION_MESSAGES.required),
   BankId: Yup.string()
     .nullable()

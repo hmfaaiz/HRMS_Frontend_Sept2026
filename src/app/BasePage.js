@@ -290,6 +290,9 @@ const LoanWorkflowAdmin = lazy(() =>
 const ChartOfAccounts = lazy(()=>
  import("./modules/ChartOfAccounts/pages/index"))
 
+const AuditTrailReport = lazy(()=>
+ import("./modules/Audit_Trail_Report/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -405,6 +408,7 @@ const ROUTES = {
   attendance_workflow: AttendanceWorkflowAdmin,
   loan_workflow: LoanWorkflowAdmin,
   chart_account : ChartOfAccounts,
+  audit_trail:AuditTrailReport,
 };
 
 export default function BasePage() {
@@ -413,6 +417,7 @@ export default function BasePage() {
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
+
   const SettingsAccess = auth?.userAccess?.Settings;
   // );
   return (
