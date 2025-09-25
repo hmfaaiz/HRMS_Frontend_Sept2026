@@ -159,10 +159,10 @@ const formValidation = Yup.object().shape({
     .when("isOverTime", {
       is: true, // Only validate if overTime is enabled
       then: Yup.string()
-        .required("Over Time Start is required")
+        .required("Overtime Start is required")
         .test(
           "overTimeStart-is-valid",
-          "Over Time Start should not be less than End Time",
+          "Overtime Start should not be less than End Time",
           function(value) {
             const { endTime } = this.parent; // Access the `endTime` field
             if (!value || !endTime) return true; // If there's no value or endTime, validation is skipped

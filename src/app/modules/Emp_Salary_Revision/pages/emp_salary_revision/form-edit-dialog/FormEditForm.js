@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { Input } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-
 import {
   fetchAllFormsMenu,
   fetchAllActiveEmployees,
@@ -165,7 +164,7 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.date().nullable(), // Optional if pension_member is false
     }),
   overtime_working_day: Yup.number()
-    .max(100, "Value cannot be greater than 100")
+    .max(9.99, "Value cannot be greater than 9.99")
     .min(0, "Value cannot be less than 0")
     .when("overtime_allowance", {
       is: (value) => value === true || value === 1, // if select value is 2
@@ -173,7 +172,7 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.number().notRequired(),
     }),
   overtime_off_day: Yup.number()
-    .max(100, "Value cannot be greater than 100")
+    .max(9.99, "Value cannot be greater than 9.99")
     .min(0, "Value cannot be less than 0")
     .when("overtime_allowance", {
       is: (value) => value === true || value === 1, // if select value is 2
@@ -181,7 +180,7 @@ const formValidation = Yup.object().shape({
       otherwise: Yup.number().notRequired(),
     }),
   overtime_holiday: Yup.number()
-    .max(100, "Value cannot be greater than 100")
+    .max(9.99, "Value cannot be greater than 9.99")
     .min(0, "Value cannot be less than 0")
     .when("overtime_allowance", {
       is: (value) => value === true || value === 1, // if select value is 2
@@ -793,21 +792,21 @@ export function FormEditForm({
   };
 
   const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
-    return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
+    return item.transactionType === "Earning" ? sum + Number(item.updatedAmount) : sum;
   }, 0);
 
   const totalGross =
     defMapEarningDeductionList?.reduce((prev, curr) => {
       return curr.transactionType == "Earning" &&
         curr.isPartOfGrossSalary == false
-        ? prev + Number(curr.amount)
+        ? prev + Number(curr.updatedAmount)
         : prev;
     }, 0) || 0;
 
   const totalDeduction =
     defMapEarningDeductionList?.reduce((prev, curr) => {
       return curr.transactionType == "Deduction"
-        ? prev + Number(curr.amount)
+        ? prev + Number(curr.updatedAmount)
         : prev;
     }, 0) || 0;
 
@@ -2133,6 +2132,7 @@ const comparisonFields = [
                                                   : item
                                               )
                                           )}}
+                                           max={100}
                                       // label={null}
                                       disabled={
                                         obj.calculation_type === "Fixed Amount"
@@ -2233,6 +2233,7 @@ const comparisonFields = [
                                       </div>
                                     )}
                                   </td>
+                                       {!dataForRead && (
                                   <td id={rightindex}
                                   
                                   // onClick={deleteRow}
@@ -2241,6 +2242,7 @@ const comparisonFields = [
                                     {" "}
                                     <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                   </td>
+                                       )}
                                 </tr>
                               </>
                             )
@@ -2408,6 +2410,7 @@ const comparisonFields = [
                                       type="number"
                                       className="form-control"
                                       style={{ width: "100px" }}
+                                      max={100}
                                       disabled={
                                         obj.calculation_type === "Fixed Amount"
                                       }
@@ -2514,6 +2517,7 @@ const comparisonFields = [
                                       </div>
                                     )}
                                   </td>
+                                       {!dataForRead && (
                                   <td
                                     className="text-right"
                                     id={rightindex}
@@ -2522,6 +2526,7 @@ const comparisonFields = [
                                     {" "}
                                     <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                   </td>
+                                       )}
                                 </tr>
                               </>
                             )
@@ -2613,6 +2618,7 @@ const comparisonFields = [
                     </div>
                     <div>
                       <AmountInput
+                      allowNegative={true}
                         field={{
                           name: `netSalary`,
                           value:
@@ -2632,13 +2638,13 @@ const comparisonFields = [
                         }}
                         label={"Net Salary"}
                         disabled={true}
-                        value={
-                          values.grossSalary > 0
-                            ? Number(values.grossSalary) +
-                              Number(totalGross) -
-                              Number(totalDeduction)
-                            : Number(defGrossSalary) + Number(totalGross)
-                        }
+                        // value={
+                        //   values.grossSalary > 0
+                        //     ? Number(values.grossSalary) +
+                        //       Number(totalGross) -
+                        //       Number(totalDeduction)
+                        //     : Number(defGrossSalary) + Number(totalGross)
+                        // }
                       />
                       {/* Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input> */}
                     </div>
@@ -2867,7 +2873,7 @@ const comparisonFields = [
                               value={values.overtime_allowance}
                               checked={values.overtime_allowance}
                             />{" "}
-                            Over Time
+                            Overtime
                           </div>
                         </div>
 
@@ -3233,7 +3239,7 @@ const comparisonFields = [
                           value={values.overtime_allowance}
                           checked={values.overtime_allowance}
                         />{" "}
-                        Over Time
+                        Overtime
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-x-3 gap-y-1">
@@ -3481,7 +3487,7 @@ const comparisonFields = [
                         />
                         <ErrorMessage
                           className="form-feedBack"
-                          name="eobi_reg_date"
+                          name="social_security_reg_date"
                           component="div"
                         />
                       </div>
@@ -3524,6 +3530,13 @@ const comparisonFields = [
                     type="button"
                     onClick={() => {
                       // setemployeeId(null);
+                       if( (
+                            values.grossSalary > 0
+                              ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
+                              : Number(defGrossSalary) + Number(totalGross)
+                          ) <= 0){
+                            return toast.error("Net Salary must be greater than 0");
+                          }
                       dispatch(clearPreviousSalaryRevisionFetched());
                       dispatch(fetchCurrentEmpSalary(null));
                       setIds("");
@@ -3564,7 +3577,7 @@ const comparisonFields = [
                     onClick={(e) => {
                       calculateEmployeeSalaryPolicy(e, setFieldValue, values);
                       // handleSubmit();
-                      setDataSaveConfirmationModal(true)
+                  
 
                       if (
                         values.revisedDate === null ||
@@ -3581,6 +3594,18 @@ const comparisonFields = [
                         toast.error("Please select a designation");
                         return;
                       }
+
+
+                 
+                        if( (
+                            values.grossSalary > 0
+                              ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
+                              : Number(defGrossSalary) + Number(totalGross)
+                          ) <= 0){
+                            return toast.error("Net Salary must be greater than 0");
+                          }
+
+                              setDataSaveConfirmationModal(true)
                     }}
                     className="btn btn-primary btn-elevate m-1"
                   >

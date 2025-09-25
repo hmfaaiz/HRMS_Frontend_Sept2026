@@ -1315,7 +1315,7 @@ export function BankEditForm({
                             value={values.overtime_allowance}
                             checked={values.overtime_allowance}
                           />{" "}
-                          Over Time
+                          Overtime
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-x-3 gap-y-1">

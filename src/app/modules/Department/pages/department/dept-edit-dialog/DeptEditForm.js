@@ -276,7 +276,7 @@ export function DeptEditForm({
                           <SearchSelect
                             name="parentDept"
                             label={<span> Parent Department</span>}
-                            isDisabled={isUserForRead && true}
+                            isDisabled={user.deptId}
                             onBlur={() => {
                               // handleBlur({ target: { name: "countryId" } });
                             }}

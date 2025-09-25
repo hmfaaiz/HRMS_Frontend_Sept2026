@@ -1857,8 +1857,8 @@ export function FormTable(user) {
 
           </Form>
 
-            <div className="from-group row">
-              <div className="col-12 col-md-4 mt-3">
+            <div className="from-group row text-right">
+              <div className="col-12 col-md-4 mt-3 ">
                 {isAccessForRead && !user.readOnly && (
                   <button
                     type="submit"
