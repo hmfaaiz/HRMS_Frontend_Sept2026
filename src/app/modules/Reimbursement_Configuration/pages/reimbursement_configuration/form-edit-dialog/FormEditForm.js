@@ -453,7 +453,7 @@ export function FormEditForm({
 
                                     <td>
                                       <div>
-                                        <div className="overflow-auto max-h-16 border-none">
+                                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
                                           {dashboard.allEmployeeGradeList
                                             .filter(
                                               (option) => option.value !== null

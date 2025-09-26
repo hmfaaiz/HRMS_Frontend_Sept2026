@@ -170,7 +170,7 @@ export function FormEditForm({
 
                     <div>
                       <label htmlFor="basis_of_gratuityId">
-                        Select Active Status
+                        Visible
                         <span style={{ color: "red" }}>*</span>
                       </label>
                       <Field

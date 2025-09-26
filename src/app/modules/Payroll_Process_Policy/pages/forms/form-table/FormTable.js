@@ -1070,7 +1070,10 @@ export function FormTable(user) {
 
 
               <hr></hr>
-
+              
+  {dashboard.allSubidiaryList?.find(
+  (option) => option.value === values.subsidiaryId
+)?.localizationId == 1 && (<>
               <h6 className="font-bold mb-0 text-primary my-1">
                 Tax Integration
               </h6>
@@ -1149,7 +1152,7 @@ export function FormTable(user) {
                 </div>
 
               </div>
-
+</>)}
               <hr></hr>
 
               <h6 className="font-bold mb-0 text-primary my-2">
@@ -1857,8 +1860,8 @@ export function FormTable(user) {
 
           </Form>
 
-            <div className="from-group row text-right">
-              <div className="col-12 col-md-4 mt-3 ">
+            {/* <div className="from-group row text-right bg-slate-500">
+              <div className="col-12 col-md-4 mt-3 justify-content-end ">
                 {isAccessForRead && !user.readOnly && (
                   <button
                     type="submit"
@@ -1874,7 +1877,24 @@ export function FormTable(user) {
                   </button>
                 )}
               </div>
-            </div>
+            </div> */}
+       
+       <div className=" flex justify-end p-3">
+  {isAccessForRead && !user.readOnly && (
+    <button
+      type="submit"
+      onClick={handleSubmit}
+      disabled={Boolean(actionsLoading)}
+      className="btn btn-primary btn-elevate"
+    >
+      Save
+      {actionsLoading && (
+        <span className="ml-3 mr-3 spinner spinner-white"></span>
+      )}
+    </button>
+  )}
+</div>
+
           </>
 
         )}
