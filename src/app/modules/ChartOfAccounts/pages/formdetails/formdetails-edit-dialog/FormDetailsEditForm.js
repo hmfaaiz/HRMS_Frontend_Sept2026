@@ -18,7 +18,7 @@ const FormEditSchema = Yup.object().shape({
   formCode: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required)
-    .matches(/^[0-9]{20}$/, "Form Code must be exactly 6 digits"), // <-- enforce 6 digit number
+    .matches(/^[0-9]{1,20}$/, "Code should not be greater than 20 character"), // <-- enforce 6 digit number
 
   accountType: Yup.string()
     .nullable()
