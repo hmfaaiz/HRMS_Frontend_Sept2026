@@ -105,9 +105,13 @@ onHide();
       });
     })
     .catch((error) => {
+      onHide();
+      const apiMessage =
+    error?.response?.data?.message;
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES?.updatedFail);
+      toast.error(apiMessage || SERVER_MESSAGES?.updatedFail);
     });
+
 };
 
 

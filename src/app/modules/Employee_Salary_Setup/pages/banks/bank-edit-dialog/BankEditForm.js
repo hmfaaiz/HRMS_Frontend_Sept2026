@@ -1038,7 +1038,7 @@ useEffect(()=>{
                         disabled
                         value={defBasicSalaryFactor}
                         component={Input}
-                        placeholder="Enter Basic Salary"
+                        // placeholder="Enter Basic Salary"
                         label={
                           <span>
                             {" "}
