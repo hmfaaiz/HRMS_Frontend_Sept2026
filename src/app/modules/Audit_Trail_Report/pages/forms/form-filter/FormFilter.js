@@ -140,9 +140,9 @@ export function FormFilter({
     { value: 1, label: "Active" },
   ];
   const chnageMode = [
-    { value: "0", label: "Add" },
-    { value: "1", label: "Edit" },
-    { value: "2", label: "Delete" },
+    { value: "0", label: "CREATE" },
+    { value: "1", label: "UPDATE" },
+    { value: "2", label: "DELETE" },
   ];
 
 

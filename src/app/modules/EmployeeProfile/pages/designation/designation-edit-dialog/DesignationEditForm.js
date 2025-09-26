@@ -177,7 +177,7 @@ const profileValidation = Yup.object()
         return dateOfConfirmationDue
           ? schema.min(
             dateOfConfirmationDue,
-            "Date confirmation extended cannot be earlier than date confirmation due"
+            "Date of Confirmation Extended cannot be earlier than date confirmation due"
           )
           : schema;
       }),
@@ -187,7 +187,7 @@ const profileValidation = Yup.object()
     //       return dateOfConfirmationEnter
     //         ? schema.min(
     //             dateOfConfirmationEnter,
-    //             "Contract expiry date cannot be earlier than date confirmation extended"
+    //             "Contract expiry date cannot be earlier than Date of Confirmation Extended"
     //           )
     //         : schema;
     //     })
@@ -209,7 +209,7 @@ const profileValidation = Yup.object()
             if (dateOfConfirmationEnter && value < dateOfConfirmationEnter) {
               return this.createError({
                 path: "dateOfContractExpiry",
-                message: "Contract expiry date cannot be earlier than date confirmation extended",
+                message: "Contract expiry date cannot be earlier than Date of Confirmation Extended",
               });
             }
 
@@ -3590,7 +3590,7 @@ export function DesignationEditForm({
                       </div>
 
                       <div>
-                        <label>Date Confirmation Extended </label>
+                        <label>Date of Confirmation Extended </label>
                         <DatePicker
                           className="form-control"
                           placeholder=" Confirmation  Date"
