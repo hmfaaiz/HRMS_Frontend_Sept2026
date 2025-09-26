@@ -221,7 +221,7 @@ const generateColumns = (sampleRow, action , onHide) => {
       sort: false,
       style: { minWidth: "50px" },
       formatter: (cell) => (
-        <Link onClick={onHide} to={action.url?.replace(":Id", cell)}>
+        <Link target={"_blank"} onClick={onHide} to={action.url?.replace(":Id", cell)}>
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </Link>
       ),
