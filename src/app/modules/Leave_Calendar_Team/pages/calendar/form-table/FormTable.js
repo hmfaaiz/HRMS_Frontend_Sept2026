@@ -21,7 +21,6 @@ export function FormTable() {
 
   const { leaveCalendar, dateRange } = currentState;
 
-
   const getEarliestDate = (data) => {
     if (!data || data.length === 0) return new Date(); // fallback
 
@@ -97,6 +96,7 @@ export function FormTable() {
           } \n${leave?.t_leave_type?.name || "Leave"} \n${leave?.from} - ${
             leave?.to
           }`,
+          request_status: `${leave?.request_status}`,
         });
       }
     });
@@ -112,7 +112,6 @@ export function FormTable() {
     setDefaultCalendarDate(earliestDate);
     setCurrentDate(earliestDate);
   }, [leaveCalendar, dispatch]);
-
 
   return (
     <div style={{ height: "800px" }}>
@@ -186,19 +185,35 @@ export function FormTable() {
             // ),
           }}
           dayPropGetter={(date) => {
-                      const day = moment(date).day(); // 0 = Sunday, 6 = Saturday
-                      const isToday = moment(date).isSame(new Date(), "day");
-          
-                      if (isToday) {
-                        return {
-                          style: {
-                            backgroundColor: "#ffffff",
-                            border: "2px solid #0093dd",
-                          },
-                        };
-                      }
-          
-                      return {};
+            const day = moment(date).day(); // 0 = Sunday, 6 = Saturday
+            const isToday = moment(date).isSame(new Date(), "day");
+
+            if (isToday) {
+              return {
+                style: {
+                  backgroundColor: "#ffffff",
+                  border: "2px solid #0093dd",
+                },
+              };
+            }
+
+            return {};
+          }}
+          eventPropGetter={(event) => {
+            let backgroundColor = "#0093DD"; // default
+
+            if (event.request_status == "P") {
+              backgroundColor = "hsl(62, 78%, 41%)"; // Approved -> Yellow
+            }
+
+            return {
+              style: {
+                backgroundColor,
+                color: "white",
+                borderRadius: "6px",
+                padding: "2px",
+              },
+            };
           }}
         />
       )}
