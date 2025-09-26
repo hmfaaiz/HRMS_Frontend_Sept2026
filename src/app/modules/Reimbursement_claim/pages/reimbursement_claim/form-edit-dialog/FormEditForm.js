@@ -124,6 +124,8 @@ export function FormEditForm({
     }
   }, [employeeId]);
 
+  const { activeFiscalYear } = useSelector((state) => state.dashboard);
+
   const calculateRemainingAmount = (
     reimbursementTypeId,
     payrollForId,
@@ -138,18 +140,57 @@ export function FormEditForm({
         (item) => item.reimbursement_typeId === reimbursementTypeId
       )?.max_amount || 0;
 
+    const limit_type =
+      policies?.find(
+        (item) => item.reimbursement_typeId === reimbursementTypeId
+      )?.limit_type || 1;
+
     // Calculate the claimed amount for the selected reimbursement type and payroll
 
-    const claimedAmount = entities
-      ?.filter(
-        (entity) =>
-          entity.reimbursement_typeId === reimbursementTypeId &&
-          entity.pay_in_payroll_forId === payrollForId
-        // && entity.approved_status == 1
-      )
-      ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
+    // const claimedAmount = entities
+    //   ?.filter(
+    //     (entity) =>
+    //       entity.reimbursement_typeId === reimbursementTypeId &&
+    //       entity.pay_in_payroll_forId === payrollForId
+    //     // && entity.approved_status == 1
+    //   )
+    //   ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
+
+
 
     // Return the remaining amount
+
+    let claimedAmount = 0;
+    if (limit_type == 1) {
+      claimedAmount = entities
+        ?.filter(
+          (entity) =>
+            entity.reimbursement_typeId === reimbursementTypeId &&
+            entity.pay_in_payroll_forId === payrollForId
+          // && entity.approved_status == 1
+        )
+        ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
+
+    }
+    else if (limit_type == 2) {
+
+    claimedAmount = entities
+        ?.filter((entity) => {
+          const entityStartDate = new Date(entity.PayInPayrollForId.startDate);
+          const entityEndDate = new Date(entity.PayInPayrollForId.endDate);
+          const startDate = new Date(activeFiscalYear?.fiscallyear?.startDate);
+          const endDate = new Date(activeFiscalYear?.fiscallyear?.endDate);
+
+          return (
+            entity.reimbursement_typeId === reimbursementTypeId &&
+            entityStartDate >= startDate &&
+            entityStartDate <= endDate
+            // && entity.approved_status == 1
+          );
+        })
+        ?.reduce((sum, entity) => sum + (entity.amount || 0), 0);
+
+    }
 
     let finalMaxAmount = (maxAmount || 0) - (claimedAmount || 0);
     if (isEdit & (values.approved_status == 1)) {
@@ -176,7 +217,7 @@ export function FormEditForm({
     }
   };
 
-  const { activeFiscalYear } = useSelector((state) => state.dashboard);
+
 
   return (
     <Formik

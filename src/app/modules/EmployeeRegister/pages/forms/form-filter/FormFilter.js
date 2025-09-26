@@ -703,7 +703,7 @@ export function FormFilter({
                             }}
                             checked={values.overtime_allowance === 1} // Checked if the value is 1
                           />{" "}
-                          Over Time
+                          Overtime
                         </div>
 
                         <div className="flex items-center gap-2 text-sm text-black col-span-1">

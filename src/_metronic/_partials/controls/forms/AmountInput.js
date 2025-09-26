@@ -18,7 +18,7 @@ export function AmountInput({
   customFeedbackLabel,
   max = 99999999,
   onChange,
-  value,
+  value,allowNegative = false,
   ...props
 }) {
   const fieldName = field.name;
@@ -39,7 +39,7 @@ export function AmountInput({
         className={inputClass}
         value={value !== undefined ? value : field.value}
         thousandSeparator
-        allowNegative={false}
+        allowNegative={allowNegative}
         isAllowed={({ value }) => value === "" || Number(value) <= max}
         onValueChange={({ value: raw }) => {
           setFieldValue(fieldName, raw);

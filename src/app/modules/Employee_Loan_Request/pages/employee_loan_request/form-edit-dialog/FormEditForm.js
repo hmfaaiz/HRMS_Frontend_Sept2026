@@ -483,6 +483,7 @@ export function FormEditForm({
   };
 
   const addMonthsToDate = (dateStr, months) => {
+   
     const date = new Date(dateStr);
     date.setMonth(date.getMonth() + months);
 
@@ -604,11 +605,12 @@ export function FormEditForm({
                         </span>
                       }
                       isDisabled={
-                        isUserForRead ||
+                        isUserForRead || userForEdit ||
                         !currentState?.loan_config_details_permission
                       }
                       onChange={(e) => {
                         setFieldValue("loan_typeId", e.value || null);
+                        setFieldValue("applied_date", null);
                         setChangeLoanType(e.value);
                         policyLoadByLoanType(e.value);
                       }}
