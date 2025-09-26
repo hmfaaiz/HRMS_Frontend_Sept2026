@@ -337,7 +337,7 @@ const ChartData = ({ data }) => {
           ))}
         </div>
       </div>
-      <div className="relative max-h-[21rem] overflow-auto scrollbar-fancy mt-1">
+      <div className="relative max-h-[23rem] overflow-auto scrollbar-fancy mt-1">
         <div
           style={{
             width:
@@ -352,7 +352,7 @@ const ChartData = ({ data }) => {
               chartType !== "pie" || chartType !== "doughnut" ? "end" : "",
             position: "relative",
             margin:
-              chartType === "pie" || chartType === "doughnut" ? "auto" : "none",
+              chartType === "pie" || chartType === "doughnut" ? "0px auto" : "0px",
           }}
           className="mb-2"
         >
