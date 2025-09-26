@@ -46,8 +46,9 @@ const SmallTableModal = ({ onHide, show, data }) => {
                   <span>
                     {" "}
                     {person?.main_value
-                      ? format(new Date(person?.main_value), "dd-MMM-yyyy")
-                      : ""}
+                      // ? format(new Date(person?.main_value), "dd-MMM-yyyy")
+                      // : ""
+                      }
                   </span>
                 </div>
               </div>

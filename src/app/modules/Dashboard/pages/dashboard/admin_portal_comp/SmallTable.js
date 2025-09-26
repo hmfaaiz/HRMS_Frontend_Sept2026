@@ -49,8 +49,9 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
               <div className={`text-sm font-semibold m-0 ${theme}`}>
                 <span>
                   {person?.main_value
-                    ? format(new Date(person?.main_value), "dd-MMM-yyyy")
-                    : ""}
+                    // ? format(new Date(person?.main_value), "dd-MMM-yyyy")
+                    // : ""
+                    }
                 </span>
               </div>
             </div>
