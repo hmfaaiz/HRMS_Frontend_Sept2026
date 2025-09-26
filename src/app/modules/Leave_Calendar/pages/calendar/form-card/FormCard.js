@@ -341,7 +341,17 @@ export function FormCard() {
                     </Form>
                   </Modal.Body>
 
-                  <Modal.Footer>
+                                    <Modal.Footer className="relative">
+                                      <div className="text-xs absolute left-0 d-flex justify-content-center ">
+                                        <div className="d-flex align-items-center m-3">
+                                          <span className="dot bg_custom_color_1 me-2"></span>{" "}
+                                          Approved
+                                        </div>
+                                        <div className="d-flex align-items-center m-3">
+                                          <span className="dot bg_custom_color_26 me-2"></span>{" "}
+                                          Pending
+                                        </div>
+                                      </div>
                     <button
                       type="button"
                       onClick={() => {

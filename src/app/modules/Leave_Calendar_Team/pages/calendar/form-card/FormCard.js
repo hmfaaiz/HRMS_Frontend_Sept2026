@@ -19,7 +19,10 @@ const formValidation = Yup.object().shape({
   to_date: Yup.date()
     .typeError("Please select the date")
     .required(VALIDATION_MESSAGES.required)
-    .min(Yup.ref("from_date"), "'To Date' should not be less than 'From Date'."),
+    .min(
+      Yup.ref("from_date"),
+      "'To Date' should not be less than 'From Date'."
+    ),
 });
 
 export function FormCard() {
@@ -215,7 +218,17 @@ export function FormCard() {
                     </fieldset>
                   </Form>
 
-                  <Modal.Footer>
+                  <Modal.Footer className="relative">
+                    <div className="text-xs absolute left-0 d-flex justify-content-center ">
+                      <div className="d-flex align-items-center m-3">
+                        <span className="dot bg_custom_color_1 me-2"></span>{" "}
+                        Approved
+                      </div>
+                      <div className="d-flex align-items-center m-3">
+                        <span className="dot bg_custom_color_26 me-2"></span>{" "}
+                        Pending
+                      </div>
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
