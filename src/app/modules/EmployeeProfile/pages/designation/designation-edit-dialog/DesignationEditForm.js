@@ -1916,6 +1916,14 @@ export function DesignationEditForm({
   };
 
 
+  const formatDateStyle = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = date.toLocaleString("en-GB", { month: "short" }); // Sep
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
 
 
@@ -2665,62 +2673,103 @@ export function DesignationEditForm({
                       />
                     </div>
 
-                    <div>
-                      <SearchSelect
-                        name="employeeStatusId"
-                        label={
-                          <span>
-                            {" "}
-                            Employee Status
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={
-                          (isUserForRead && true) || !values?.subsidiaryId
-                        }
-                        onBlur={() => {
-                          // handleBlur({ target: { name: "countryId" } });
-                        }}
-                        onChange={(e) => {
-                          setFieldValue("employeeStatusId", e.value || null);
+                    {values?.isActive == 0 ? (
 
-                          setDefemployeeStatus(e);
-                          setEmployeeStatusLabel(e.label);
-                          //probation
 
-                          // if (e.value == 276) {
-                          if (!id) {
-                            updateConfirmationDuePolicy(
-                              setFieldValue,
-                              values?.employeeTypeId,
-                              e.value,
-                              values?.dateOfJoining
-                            );
-                            updateContractExpiryPolicy(
-                              setFieldValue,
-                              values?.employeeTypeId,
-                              e.value,
-                              values?.dateOfJoining
-                            );
+
+
+                      <div>
+                        <SearchSelect
+                          name="employeeStatusId"
+                          label={
+                            <span>
+                              Employee Status
+                            </span>
                           }
+                          isDisabled={true}
+                          value={{
+                            label: (
+                              <span>
+                                Inactive — Leaving Date{" "}
+                                {values.dateOfLeaving ? formatDateStyle(values.dateOfLeaving) : ""}
+                              </span>
+                            ),
+                            value: "inactive",
+                          }}
+                          options={[
+                            {
+                              label: (
+                                <span>
+                                  Inactive — Leaving Date{" "}
+                                  {values.dateOfLeaving ? formatDateStyle(values.dateOfLeaving) : ""}
+                                </span>
+                              ),
+                              value: "inactive",
+                            },
+                          ]}
+                        />
 
-                          // }
-                          // else {
-                          //   if (!id) {
-                          //     setFieldValue("dateOfConfirmationDue", null)
-                          //     setConfirmationDueDate(null)
-                          //   }
 
-                          //   setContractExpiryDate(null)
-                          //   setFieldValue("dateOfContractExpiry", null);
-                          // }
-                        }}
-                        value={defemployeeStatus || null}
-                        error={errors.employeeStatusId}
-                        touched={touched.employeeStatusId}
-                        options={dashboard?.allEmployeeStatus}
-                      />
-                    </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <SearchSelect
+                          name="employeeStatusId"
+                          label={
+                            <span>
+                              {" "}
+                              Employee Status
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={
+                            (isUserForRead && true) || !values?.subsidiaryId
+                          }
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("employeeStatusId", e.value || null);
+
+                            setDefemployeeStatus(e);
+                            setEmployeeStatusLabel(e.label);
+                            //probation
+
+                            // if (e.value == 276) {
+                            if (!id) {
+                              updateConfirmationDuePolicy(
+                                setFieldValue,
+                                values?.employeeTypeId,
+                                e.value,
+                                values?.dateOfJoining
+                              );
+                              updateContractExpiryPolicy(
+                                setFieldValue,
+                                values?.employeeTypeId,
+                                e.value,
+                                values?.dateOfJoining
+                              );
+                            }
+
+                            // }
+                            // else {
+                            //   if (!id) {
+                            //     setFieldValue("dateOfConfirmationDue", null)
+                            //     setConfirmationDueDate(null)
+                            //   }
+
+                            //   setContractExpiryDate(null)
+                            //   setFieldValue("dateOfContractExpiry", null);
+                            // }
+                          }}
+                          value={defemployeeStatus || null}
+                          error={errors.employeeStatusId}
+                          touched={touched.employeeStatusId}
+                          options={dashboard?.allEmployeeStatus}
+                        />
+                      </div>
+
+                    )}
 
                     <div>
                       <SearchSelect
@@ -4187,7 +4236,7 @@ export function DesignationEditForm({
                                 )}
                               </td>
                               <td>
-                                <input
+                                {/* <input
                                   className="form-control"
                                   type="text"
                                   onChange={(e) => {
@@ -4202,7 +4251,39 @@ export function DesignationEditForm({
                                     })); // Clear error on change
                                   }}
                                   value={obj.contactNo}
-                                ></input>
+                                ></input> */}
+
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  onChange={(e) => {
+                                    const rawValue = e.target.value;
+                                    const newValue = rawValue.trim(); // remove spaces
+
+                                    // check duplicate contact (normalize by trimming)
+                                    const isDuplicate = defContactList.some(
+                                      (c, idx) => c.contactNo?.trim() === newValue && idx !== rightindex
+                                    );
+
+                                    if (isDuplicate) {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`contactNo-${rightindex}`]: "Duplicate contact number not allowed",
+                                      }));
+                                    } else {
+                                      handleFieldChangedContact(rightindex, "contactNo", newValue);
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`contactNo-${rightindex}`]: "",
+                                      })); // clear error if valid
+                                    }
+                                  }}
+                                  value={obj.contactNo}
+                                />
+
+
+
+
                                 {deferrors[`contactNo-${rightindex}`] && (
                                   <div className="form-feedBack">
                                     {deferrors[`contactNo-${rightindex}`]}
