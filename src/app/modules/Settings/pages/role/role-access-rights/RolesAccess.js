@@ -27,7 +27,8 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import TCard from "../../../../../utils/common-modules/TCard";
-
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 export function RolesAccess({
   history,
   match: {
@@ -192,7 +193,10 @@ export function RolesAccess({
       ))} */}
       <TCard isSecondChild={false} name={"Role Access page"}></TCard>
       {/* for hrms  */}
-      <div className="px-3 py-2 rounded-lg bg-white mt-2">
+      <div className="flex items-center px-3 py-2 rounded-lg bg-white mt-2">
+         <Link to={"/settings/read-all-roles"}>
+                        <ArrowLeft className="w-5 h-5 text-tprimary" />{" "}
+                      </Link>
         <h6 className="m-0 text-tprimary font-bold text-base sm:text-lg py-1">
           HRMS Roles Access
         </h6>
