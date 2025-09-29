@@ -74,6 +74,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
   const saveForm = async (formData) => {
 
     delete formData.employeetatus
+    delete formData.all_report_to
 
 
 

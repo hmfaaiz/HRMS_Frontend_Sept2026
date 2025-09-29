@@ -1728,6 +1728,11 @@ export function DesignationEditForm({
         }
       }
 
+      const isOverlap = checkDateOverlap(academicList, index, "degreeId", obj.degreeId);
+      if (isOverlap) {
+        newErrors[`degreeId-${index}`] = "Duplicate record!";
+      }
+
     });
 
     // Validations for Skills
@@ -1798,6 +1803,27 @@ export function DesignationEditForm({
         }
       }
 
+       if (obj.skill && obj.startDate && obj.endDate) {
+    const start = new Date(obj.startDate);
+    const end = new Date(obj.endDate);
+
+    const isOverlap = skillsList.some((other, otherIdx) => {
+      if (otherIdx === index) return false; // apne aap ko skip karo
+      if (other.skill !== obj.skill) return false; // sirf same skill compare karo
+      if (!other.startDate || !other.endDate) return false; // dono dates honi chahiye
+
+      const otherStart = new Date(other.startDate);
+      const otherEnd = new Date(other.endDate);
+
+      return start <= otherEnd && end >= otherStart; // overlap condition
+    });
+
+    if (isOverlap) {
+      newErrors[`skill-${index}`] =
+        "Duplicate record!";
+    }
+  }
+
 
     });
 
@@ -1823,6 +1849,27 @@ export function DesignationEditForm({
       } else if (new Date(obj.incidentDate) > new Date()) {
         newErrors[`incidentDate-${index}`] =
           "Cannot be a future date";
+      }
+
+      if (!obj.incidentDate) {
+        newErrors[`incidentDate-${index}`] = "Required";
+      } else if (new Date(obj.incidentDate) > new Date()) {
+        newErrors[`incidentDate-${index}`] = "Cannot be a future date";
+      } else {
+        //  duplicate date check
+        const isDuplicate = incidentList.some((other, otherIdx) => {
+          if (otherIdx === index) return false; // apne aap se compare na kare
+          return (
+            other.incidentDate &&
+            new Date(other.incidentDate).toDateString() ===
+            new Date(obj.incidentDate).toDateString()
+          );
+        });
+
+        if (isDuplicate) {
+          newErrors[`incidentDate-${index}`] =
+            "Incident already exists on this date!";
+        }
       }
     });
 
@@ -1916,7 +1963,49 @@ export function DesignationEditForm({
   };
 
 
+  const formatDateStyle = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = date.toLocaleString("en-GB", { month: "short" }); // Sep
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
+  // Helper function
+  const checkDateOverlap = (academicList, currentIndex, field, newValue) => {
+    const currentObj = {
+      ...academicList[currentIndex],
+      [field]: newValue
+    };
+    console.log("currentObj2222", academicList);
+    // Filter same degree wali entries
+    const sameDegreeEntries = academicList.filter(
+      (item, idx) =>
+        idx !== currentIndex && item.degreeId == currentObj.degreeId
+    );
+
+    // agar start aur end dono date available hain
+    if (currentObj.startDate && currentObj.endDate) {
+      const newStart = new Date(currentObj.startDate);
+      const newEnd = new Date(currentObj.endDate);
+
+      for (let entry of sameDegreeEntries) {
+        if (entry.startDate && entry.endDate) {
+          const start = new Date(entry.startDate);
+          const end = new Date(entry.endDate);
+
+          // overlap condition
+          if (
+            (newStart <= end && newEnd >= start) // ranges overlap
+          ) {
+            return true; // overlap found
+          }
+        }
+      }
+    }
+    return false;
+  };
 
 
   return (
@@ -2665,62 +2754,103 @@ export function DesignationEditForm({
                       />
                     </div>
 
-                    <div>
-                      <SearchSelect
-                        name="employeeStatusId"
-                        label={
-                          <span>
-                            {" "}
-                            Employee Status
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={
-                          (isUserForRead && true) || !values?.subsidiaryId
-                        }
-                        onBlur={() => {
-                          // handleBlur({ target: { name: "countryId" } });
-                        }}
-                        onChange={(e) => {
-                          setFieldValue("employeeStatusId", e.value || null);
+                    {values?.isActive == 0 ? (
 
-                          setDefemployeeStatus(e);
-                          setEmployeeStatusLabel(e.label);
-                          //probation
 
-                          // if (e.value == 276) {
-                          if (!id) {
-                            updateConfirmationDuePolicy(
-                              setFieldValue,
-                              values?.employeeTypeId,
-                              e.value,
-                              values?.dateOfJoining
-                            );
-                            updateContractExpiryPolicy(
-                              setFieldValue,
-                              values?.employeeTypeId,
-                              e.value,
-                              values?.dateOfJoining
-                            );
+
+
+                      <div>
+                        <SearchSelect
+                          name="employeeStatusId"
+                          label={
+                            <span>
+                              Employee Status
+                            </span>
                           }
+                          isDisabled={true}
+                          value={{
+                            label: (
+                              <span>
+                                Inactive — Leaving Date{" "}
+                                {values.dateOfLeaving ? formatDateStyle(values.dateOfLeaving) : ""}
+                              </span>
+                            ),
+                            value: "inactive",
+                          }}
+                          options={[
+                            {
+                              label: (
+                                <span>
+                                  Inactive — Leaving Date{" "}
+                                  {values.dateOfLeaving ? formatDateStyle(values.dateOfLeaving) : ""}
+                                </span>
+                              ),
+                              value: "inactive",
+                            },
+                          ]}
+                        />
 
-                          // }
-                          // else {
-                          //   if (!id) {
-                          //     setFieldValue("dateOfConfirmationDue", null)
-                          //     setConfirmationDueDate(null)
-                          //   }
 
-                          //   setContractExpiryDate(null)
-                          //   setFieldValue("dateOfContractExpiry", null);
-                          // }
-                        }}
-                        value={defemployeeStatus || null}
-                        error={errors.employeeStatusId}
-                        touched={touched.employeeStatusId}
-                        options={dashboard?.allEmployeeStatus}
-                      />
-                    </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <SearchSelect
+                          name="employeeStatusId"
+                          label={
+                            <span>
+                              {" "}
+                              Employee Status
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={
+                            (isUserForRead && true) || !values?.subsidiaryId
+                          }
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("employeeStatusId", e.value || null);
+
+                            setDefemployeeStatus(e);
+                            setEmployeeStatusLabel(e.label);
+                            //probation
+
+                            // if (e.value == 276) {
+                            if (!id) {
+                              updateConfirmationDuePolicy(
+                                setFieldValue,
+                                values?.employeeTypeId,
+                                e.value,
+                                values?.dateOfJoining
+                              );
+                              updateContractExpiryPolicy(
+                                setFieldValue,
+                                values?.employeeTypeId,
+                                e.value,
+                                values?.dateOfJoining
+                              );
+                            }
+
+                            // }
+                            // else {
+                            //   if (!id) {
+                            //     setFieldValue("dateOfConfirmationDue", null)
+                            //     setConfirmationDueDate(null)
+                            //   }
+
+                            //   setContractExpiryDate(null)
+                            //   setFieldValue("dateOfContractExpiry", null);
+                            // }
+                          }}
+                          value={defemployeeStatus || null}
+                          error={errors.employeeStatusId}
+                          touched={touched.employeeStatusId}
+                          options={dashboard?.allEmployeeStatus}
+                        />
+                      </div>
+
+                    )}
 
                     <div>
                       <SearchSelect
@@ -4187,7 +4317,7 @@ export function DesignationEditForm({
                                 )}
                               </td>
                               <td>
-                                <input
+                                {/* <input
                                   className="form-control"
                                   type="text"
                                   onChange={(e) => {
@@ -4202,7 +4332,39 @@ export function DesignationEditForm({
                                     })); // Clear error on change
                                   }}
                                   value={obj.contactNo}
-                                ></input>
+                                ></input> */}
+
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  onChange={(e) => {
+                                    const rawValue = e.target.value;
+                                    const newValue = rawValue.trim(); // remove spaces
+
+                                    // check duplicate contact (normalize by trimming)
+                                    const isDuplicate = defContactList.some(
+                                      (c, idx) => c.contactNo?.trim() === newValue && idx !== rightindex
+                                    );
+
+                                    if (isDuplicate) {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`contactNo-${rightindex}`]: "Duplicate contact number not allowed",
+                                      }));
+                                    } else {
+                                      handleFieldChangedContact(rightindex, "contactNo", newValue);
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`contactNo-${rightindex}`]: "",
+                                      })); // clear error if valid
+                                    }
+                                  }}
+                                  value={obj.contactNo}
+                                />
+
+
+
+
                                 {deferrors[`contactNo-${rightindex}`] && (
                                   <div className="form-feedBack">
                                     {deferrors[`contactNo-${rightindex}`]}
@@ -4606,15 +4768,31 @@ export function DesignationEditForm({
                                   className="form-control"
                                   value={obj.degreeId}
                                   onChange={(e) => {
+                                    const newDegreeId = e.target.value;
                                     handleFieldChangedAcademic(
                                       rightindex,
                                       "degreeId",
                                       e.target.value
                                     );
-                                    setErrors((prev) => ({
-                                      ...prev,
-                                      [`degreeId-${rightindex}`]: "",
-                                    })); // Clear error on change
+                                    const isOverlap = checkDateOverlap(
+                                      academicList,
+                                      rightindex,
+                                      "degreeId",
+                                      newDegreeId
+                                    );
+                                    if (isOverlap) {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`degreeId-${rightindex}`]: "Duplicate record!"
+                                      }));
+                                    } else {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`degreeId-${rightindex}`]: "",
+                                      })); // Clear error on change
+
+                                    }
+
                                   }}
                                   id={"degreeId-" + rightindex}
                                 >
@@ -4734,7 +4912,7 @@ export function DesignationEditForm({
                                 )}
                               </td>
                               <td>
-                                <DatePicker
+                                {/* <DatePicker
                                   className="form-control"
                                   placeholder="Start Date"
                                   // selected={new Date(obj.startDate || currentDate)}
@@ -4775,10 +4953,40 @@ export function DesignationEditForm({
                                   <div className="form-feedBack">
                                     {deferrors[`startDate_A-${rightindex}`]}
                                   </div>
-                                )}
+                                )} */}
+                                <DatePicker
+                                  className="form-control"
+                                  placeholder="Start Date"
+                                  selected={obj?.startDate ? new Date(obj?.startDate) : null}
+                                  onChange={(el) => {
+                                    getServicePeriod(el, obj.endDate, rightindex, handleFieldChangedAcademic, "lengthInYear", true)
+                                    const isOverlap = checkDateOverlap(
+                                      academicList,
+                                      rightindex,
+                                      "startDate",
+                                      el
+                                    );
+
+                                    if (isOverlap) {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`startDate_A-${rightindex}`]: "Duplicate date range for same degree!"
+                                      }));
+                                    } else {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`startDate_A-${rightindex}`]: ""
+                                      }));
+                                    }
+
+                                    handleDatePickerAcademic(el, "startDate", rightindex, "");
+                                  }}
+                                  dateFormat="dd-MMM-yyyy"
+                                />
+
                               </td>
                               <td>
-                                <DatePicker
+                                {/* <DatePicker
                                   className="form-control"
                                   placeholder="End Date"
                                   // selected={new Date(obj.endDate || currentDate)}
@@ -4809,7 +5017,37 @@ export function DesignationEditForm({
                                       ? new Date(values.dateOfBirth)
                                       : null
                                   }
+                                /> */}
+                                <DatePicker
+                                  className="form-control"
+                                  placeholder="End Date"
+                                  selected={obj?.endDate ? new Date(obj?.endDate) : null}
+                                  onChange={(el) => {
+                                    getServicePeriod(obj.startDate, el, rightindex, handleFieldChangedAcademic, "lengthInYear", true)
+                                    const isOverlap = checkDateOverlap(
+                                      academicList,
+                                      rightindex,
+                                      "endDate",
+                                      el
+                                    );
+
+                                    if (isOverlap) {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`endDate_A-${rightindex}`]: "Duplicate date range for same degree!"
+                                      }));
+                                    } else {
+                                      setErrors((prev) => ({
+                                        ...prev,
+                                        [`endDate_A-${rightindex}`]: ""
+                                      }));
+                                    }
+
+                                    handleDatePickerAcademic(el, "endDate", rightindex, "");
+                                  }}
+                                  dateFormat="dd-MMM-yyyy"
                                 />
+
                                 {deferrors[`endDate_A-${rightindex}`] && (
                                   <div className="form-feedBack">
                                     {deferrors[`endDate_A-${rightindex}`]}
