@@ -11,6 +11,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import Marquee from "react-fast-marquee";
 import { Linkedin, Youtube, Facebook, Instagram } from 'lucide-react';
 import { Carousel } from 'react-bootstrap';
+import ResetLinkPassword from "./ResetLinkPassword";
 
 
 export function AuthPage() {
@@ -49,6 +50,10 @@ export function AuthPage() {
                 <ContentRoute
                   path="/auth/forgot-password"
                   component={ForgotPassword}
+                />
+                <ContentRoute
+                  path="/auth/reset-link-password/:Id"
+                  component={ResetLinkPassword}
                 />
                 <Redirect from="/auth" exact={true} to="/auth/login" />
                 <Redirect to="/auth/login" />
