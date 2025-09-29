@@ -4349,7 +4349,7 @@ export function DesignationEditForm({
                                     if (isDuplicate) {
                                       setErrors((prev) => ({
                                         ...prev,
-                                        [`contactNo-${rightindex}`]: "Duplicate contact number not allowed",
+                                        [`contactNo-${rightindex}`]: "Duplicate contact number not allowed!",
                                       }));
                                     } else {
                                       handleFieldChangedContact(rightindex, "contactNo", newValue);
