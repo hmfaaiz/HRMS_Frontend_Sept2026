@@ -17,7 +17,7 @@ export function RichTextInput({
       <ReactQuill
         theme="snow"
         value={value}
-        style={{ height: "250px", backgroundColor: "white", overflow: "auto" }}
+        style={{ backgroundColor: "white" }}
         onChange={onChange}
         modules={{
           toolbar: [
