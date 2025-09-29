@@ -48,17 +48,36 @@ export function FormTable() {
 
     
   const columns = [
-    {
-      dataField: "tableName",
-      text: "Form Name",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+    // {
+    //   dataField: "primaryInformation.formName",
+    //   text: "Form Name",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
+     {
+    dataField: "primaryInformation.formName",
+    text: "Form Name",
+    sort: false,
+    sortCaret: sortCaret,
+    headerSortingClasses,
+    style: {
+      minWidth: "160px",
+      maxWidth: "160px",
     },
+    formatter: (cell, row) => {
+      // agar primaryInformation aur formName dono available hain to wahi show karo
+      if (row?.primaryInformation?.formName) {
+        return row.primaryInformation.formName;
+      }
+      // warna fallback tableName
+      return row.tableName;
+    },
+  },
     // {
     //   dataField: "userId",
     //   text: "User Id",
@@ -117,8 +136,9 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-    },   {
-      dataField: "dataId",
+    },  
+     {
+      dataField: "primaryValue",
       text: "Primary Information",
       sort: false,
       sortCaret: sortCaret,
