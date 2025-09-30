@@ -452,9 +452,9 @@ export function FormEditForm({
                         onClick={() =>{
                           dispatch(actions.separateById(
                             { employeeId: formData.employeeId, Id: formData.Id },
-                            onHide
+                            onHide,formUIProps.queryParams
                           ))
-                           dispatch(actions.fetchSeparation(formUIProps.queryParams));
+                          //  dispatch(actions.fetchSeparation(formUIProps.queryParams));
                         }
                         }
                         className="btn btn-primary btn-elevate"
