@@ -115,7 +115,7 @@ onHide();
 };
 
 
-export const createSeparation = (separationForCreation, disbaleLoading, onHide) => (
+export const createSeparation = (separationForCreation, disbaleLoading, onHide,props) => (
   dispatch
 ) => {
 
@@ -138,6 +138,7 @@ export const createSeparation = (separationForCreation, disbaleLoading, onHide) 
         draggable: true,
         progress: undefined,
       });
+      dispatch(fetchSeparation(props));
       onHide();
     })
     .catch((error) => {
