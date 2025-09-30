@@ -94,7 +94,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
 
-      dispatch(actions.createSeparation(formData, disbaleLoading, onHide));
+      dispatch(actions.createSeparation(formData, disbaleLoading, onHide,formUIProps.queryParams));
       dispatch(actions.fetchSeparation(formUIProps.queryParams));
 
 

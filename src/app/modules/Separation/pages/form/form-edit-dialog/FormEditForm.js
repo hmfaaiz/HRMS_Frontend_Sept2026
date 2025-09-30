@@ -304,16 +304,16 @@ export function FormEditForm({
   }, [activeEmployeeList]);
 
   const FormUIContext = useFormUIContext();
-  
-    const formUIProps = useMemo(() => {
-      return {
-        initUser: FormUIContext.initUser,
-        queryParams: FormUIContext.queryParams,
-        setemployeeId: FormUIContext.setemployeeId,
-        setPanelMode: FormUIContext.setPanelMode,
-        panelMode: FormUIContext.panelMode,
-      };
-    }, [FormUIContext]);
+
+  const formUIProps = useMemo(() => {
+    return {
+      initUser: FormUIContext.initUser,
+      queryParams: FormUIContext.queryParams,
+      setemployeeId: FormUIContext.setemployeeId,
+      setPanelMode: FormUIContext.setPanelMode,
+      panelMode: FormUIContext.panelMode,
+    };
+  }, [FormUIContext]);
 
   return (
     <Formik
@@ -333,7 +333,7 @@ export function FormEditForm({
         values,
         setFieldValue, handleBlur,
         handleChange,
-        setFieldTouched
+        setFieldTouched, validateForm
       }) => (
         <>
 
@@ -449,14 +449,45 @@ export function FormEditForm({
                     ) : (
                       <button
                         type="button"
-                        onClick={() =>{
-                          dispatch(actions.separateById(
-                            { employeeId: formData.employeeId, Id: formData.Id },
-                            onHide
-                          ))
-                           dispatch(actions.fetchSeparation(formUIProps.queryParams));
-                        }
-                        }
+                        // onClick={() => {
+                        //   getSeparationEditSchema(formData)
+                        //   delete formData.employeetatus
+                        //   delete formData.all_report_to
+
+                        //   // dispatch(actions.separateById(
+                        //   //   values,
+                        //   //   onHide, formUIProps.queryParams
+                        //   // ))
+                        //   // dispatch(actions.separateById(
+                        //   //   { employeeId: formData.employeeId, Id: formData.Id },
+                        //   //   onHide,formUIProps.queryParams
+                        //   // ))
+
+                        // }
+
+                        onClick={async () => {
+                          const errors = await validateForm(values);
+
+                          // sari fields ko touched mark karna taake UI me error dikhe
+                          Object.keys(errors).forEach((field) => setFieldTouched(field, true, true));
+
+                          if (Object.keys(errors).length === 0) {
+                            //  valid form
+                            delete formData.employeetatus;
+                            delete formData.all_report_to;
+
+                            // ab apna dispatch call karo
+                            dispatch(
+                              actions.separateById(
+                                values,
+                                onHide,
+                                formUIProps.queryParams
+                              )
+                            );
+
+
+                          }
+                        }}
                         className="btn btn-primary btn-elevate"
                       >
                         Yes
@@ -1174,7 +1205,7 @@ export function FormEditForm({
                       label={
                         <span>
 
-                         Reason for marking Blacklist
+                          Reason for marking Blacklist
                         </span>
                       }
                       autoComplete="off"
