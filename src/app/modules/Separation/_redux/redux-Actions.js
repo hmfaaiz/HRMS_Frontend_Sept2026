@@ -9,7 +9,6 @@ const { actions } = SeparationSlice;
 export const fetchSeparation = (queryparm) => async (dispatch) => {
 
 
-
   return requestFromServer.getAllSeparation(queryparm)
 
     .then((response) => {
@@ -116,7 +115,7 @@ onHide();
 };
 
 
-export const createSeparation = (separationForCreation, disbaleLoading, onHide) => (
+export const createSeparation = (separationForCreation, disbaleLoading, onHide,props) => (
   dispatch
 ) => {
 
@@ -139,6 +138,7 @@ export const createSeparation = (separationForCreation, disbaleLoading, onHide) 
         draggable: true,
         progress: undefined,
       });
+      dispatch(fetchSeparation(props));
       onHide();
     })
     .catch((error) => {
