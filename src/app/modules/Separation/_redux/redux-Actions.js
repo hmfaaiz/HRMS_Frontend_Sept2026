@@ -88,11 +88,12 @@ export const deleteSeparation = (id) => (dispatch) => {
     });
 };
 
-export const separateById = (body,onHide) => (dispatch) => {
+export const separateById = (body,onHide,props) => (dispatch) => {
 
   return requestFromServer
     .separateById(body)
     .then((response) => {
+      dispatch(fetchSeparation(props));
 onHide();
       toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
