@@ -9,7 +9,6 @@ const { actions } = SeparationSlice;
 export const fetchSeparation = (queryparm) => async (dispatch) => {
 
 
-
   return requestFromServer.getAllSeparation(queryparm)
 
     .then((response) => {
