@@ -32,7 +32,7 @@ const formSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   phone: Yup.string()
-    .nullable()
+    .nullable().required(VALIDATION_MESSAGES.required)
     .test(
       "phone-validation",
       "Invalid Number",
@@ -47,7 +47,7 @@ const formSchema = Yup.object().shape({
     ),
   email: Yup.string()
     .nullable()
-    .email(VALIDATION_MESSAGES.invalidEmail)
+    .email(VALIDATION_MESSAGES.invalidEmail).required(VALIDATION_MESSAGES.required)
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols"),
   web: Yup.string()
@@ -287,7 +287,7 @@ export const EditForm = ({
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
-                      label={<span>Phone</span>}
+                      label={<span>Phone<span style={{ color: "red" }}>*</span></span>}
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 15);
                       }}
@@ -312,7 +312,7 @@ export const EditForm = ({
                       name="email"
                       component={Input}
                       placeholder="Enter Email"
-                      label="Email"
+                      label={<span>Email<span style={{ color: "red" }}>*</span></span>}
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 50);
                       }}

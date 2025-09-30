@@ -13,6 +13,7 @@ import {
   Mars,
   Venus,
   Cake,
+  User2Icon,
 } from "lucide-react";
 import { HolidayTable } from "../../EmpPortalComponent/HolidayCalendar";
 
@@ -154,11 +155,21 @@ const EmployeeArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
+              name={"Employee On Probation"}
+              value={summaryData?.probEmployee || 0}
+              keyName={"probEmployee"}
+              icon={<User2Icon className="w-5 h-5 text-white" />}
+            />
+            <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Male Employees"}
               value={summaryData?.maleEmployee || 0}
               keyName={"maleEmployee"}
               icon={<Mars className="w-5 h-5 text-white" />}
             />
+          </div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
@@ -167,8 +178,6 @@ const EmployeeArea = ({
               keyName={"femaleEmployee"}
               icon={<Venus className="w-5 h-5 text-white" />}
             />
-          </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
