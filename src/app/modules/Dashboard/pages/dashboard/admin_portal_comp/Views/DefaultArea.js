@@ -7,6 +7,8 @@ import {
   HeartHandshake,
   HouseWifi,
   NotepadText,
+  User,
+  User2Icon,
   UserCheck,
   Users,
   UserX,
@@ -167,21 +169,29 @@ const DefaultArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Today Employees On Leave"}
-              value={summaryData?.employeeOnLeave || 0}
-              keyName={"employeeOnLeave"}
-              icon={<HouseWifi className="w-5 h-5 text-white" />}
+              name={"Employee On Probation"}
+              value={summaryData?.probEmployee || 0}
+              keyName={"probEmployee"}
+              icon={<User2Icon className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
+              name={"Today Employees On Leave"}
+              value={summaryData?.employeeOnLeave || 0}
+              keyName={"employeeOnLeave"}
+              icon={<HouseWifi className="w-5 h-5 text-white" />}
+            />
+            {/* <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
               name={"Active Jobs"}
               value={summaryData?.openJobs || 0}
               keyName={"openJobs"}
               icon={<BriefcaseBusiness className="w-5 h-5 text-white" />}
-            />
+            /> */}
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
