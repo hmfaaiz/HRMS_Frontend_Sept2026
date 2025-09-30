@@ -2,7 +2,8 @@ import axios from "axios";
 
 export const LOGIN_URL = `${process.env.REACT_APP_API_URL}/auth/login`;
 export const REGISTER_URL = "api/auth/register";
-export const REQUEST_PASSWORD_URL = "api/auth/forgot-password";
+export const REQUEST_PASSWORD_URL = `${process.env.REACT_APP_API_URL}/auth/forget-password`;
+export const UPDATE_PASSWORD = `${process.env.REACT_APP_API_URL}/auth/update-forget-password`;
 // export const ME_URL = `${process.env.REACT_APP_API_URL}/auth/refresh-tokens`
 
 export function login(email, password, otp) {
@@ -15,6 +16,10 @@ export function register(email, fullname, username, password) {
 
 export function requestPassword(email) {
   return axios.post(REQUEST_PASSWORD_URL, { email });
+}
+
+export function updatePassword(body) {
+  return axios.post(UPDATE_PASSWORD, body);
 }
 
 // export function getUserByToken() {

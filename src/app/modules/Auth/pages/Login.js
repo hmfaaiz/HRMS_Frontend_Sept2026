@@ -261,26 +261,26 @@ function Login(props) {
 
           {isOTP && (
             <div className="grid grid-cols-3 gap-x-1 mt-4">
-              <div className="col-span-2 flex flex-col !h-[7vh]" >
-              {/* <label
+              <div className="col-span-2 flex flex-col !h-[7vh]">
+                {/* <label
                 className=" pb-2"
                 style={{ color: "#000000", fontWeight: 400 }}
               >
                 OTP
               </label> */}
-              <input
-                name="otp"
-                type="text"
-                value={formik.values.otp}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, ""); // remove non-numeric
-                  if (value.length <= 5) {
-                    formik.setFieldValue("otp", value);
-                  }
-                }}
-                className="login-control form-control-solid !h-[7vh] flex-1"
-                placeholder="Enter Code"
-              />
+                <input
+                  name="otp"
+                  type="text"
+                  value={formik.values.otp}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, ""); // remove non-numeric
+                    if (value.length <= 5) {
+                      formik.setFieldValue("otp", value);
+                    }
+                  }}
+                  className="login-control form-control-solid !h-[7vh] flex-1"
+                  placeholder="Enter Code"
+                />
               </div>
               <button
                 type="button"
@@ -295,7 +295,7 @@ function Login(props) {
                 <div className="fv-help-block">{formik.errors.otp}</div>
               )}
             </div>
-           )} 
+          )}
 
           <br />
           {/* <br /> */}
@@ -319,7 +319,9 @@ function Login(props) {
           </div>
           {formik.status ? (
             <div className="text-center mt-2">
-              <div className="alert-text font-weight-bold text-red-700 text-sm">{formik.status}</div>
+              <div className="alert-text font-weight-bold text-red-700 text-sm">
+                {formik.status}
+              </div>
             </div>
           ) : (
             ""
@@ -327,14 +329,11 @@ function Login(props) {
           <div></div>
 
           <br />
-          {/* <div className="d-flex align-items-center  ">
-            <span
-              className="ml-1"
-              style={{ fontSize: "15px", color: "#007bff" }}
-            >
-              Forgot Password?
+          <div className="d-flex align-items-center  ">
+            <span className="text-sm text-tprimary">
+              <Link to="/auth/forgot-password">Forgot Password?</Link>
             </span>
-          </div> */}
+          </div>
         </form>
 
         <br />

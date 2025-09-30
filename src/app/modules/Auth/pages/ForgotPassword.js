@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { injectIntl } from "react-intl";
 import * as auth from "../_redux/authRedux";
 import { requestPassword } from "../_redux/authCrud";
+import { CircleArrowRight } from "lucide-react";
 
 const initialValues = {
   email: "",
@@ -13,6 +14,7 @@ const initialValues = {
 
 function ForgotPassword(props) {
   const { intl } = props;
+  const [loading, setLoading] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
   const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string()
@@ -43,16 +45,14 @@ function ForgotPassword(props) {
     validationSchema: ForgotPasswordSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
       requestPassword(values.email)
-        .then(() => setIsRequested(true))
-        .catch(() => {
+        .then(() => {
+          setStatus("Reset link sent to your email successfully");
+          setTimeout(() => setIsRequested(true), 2500);
+        })
+        .catch((err) => {
           setIsRequested(false);
           setSubmitting(false);
-          setStatus(
-            intl.formatMessage(
-              { id: "AUTH.VALIDATION.NOT_FOUND" },
-              { name: values.email }
-            )
-          );
+          setStatus(err?.response?.data?.message || "Something went wrong");
         });
     },
   });
@@ -61,59 +61,137 @@ function ForgotPassword(props) {
     <>
       {isRequested && <Redirect to="/auth" />}
       {!isRequested && (
-        <div className="login-form login-forgot" style={{ display: "block" }}>
-          <div className="text-center mb-10 mb-lg-20">
-            <h3 className="font-size-h1">Forgotten Password ?</h3>
-            <div className="text-muted font-weight-bold">
-              Enter your email to reset your password
-            </div>
-          </div>
-          <form
-            onSubmit={formik.handleSubmit}
-            className="form fv-plugins-bootstrap fv-plugins-framework animated animate__animated animate__backInUp"
+        <div className="d-flex flex-column  h-100 ">
+          <div
+            className="bg-white p-10 h-100 rounded-top opacity-97"
+            id="kt_login_signin_form"
           >
-            {formik.status && (
-              <div className="mb-10 alert alert-custom alert-light-danger alert-dismissible">
-                <div className="alert-text font-weight-bold">
-                  {formik.status}
-                </div>
-              </div>
-            )}
-            <div className="form-group fv-plugins-icon-container">
-              <input
-                type="email"
-                className={`form-control form-control-solid h-auto py-5 px-6 ${getInputClasses(
-                  "email"
-                )}`}
-                name="email"
-                {...formik.getFieldProps("email")}
+            <div>
+              <img
+                className="fluid"
+                src="/media/bg/Login/DSC-Logo.svg"
+                alt="DSC"
+                style={{ height: "7vh", backgroundSize: "cover" }}
               />
-              {formik.touched.email && formik.errors.email ? (
-                <div className="fv-plugins-message-container">
-                  <div className="fv-help-block">{formik.errors.email}</div>
-                </div>
-              ) : null}
             </div>
-            <div className="form-group d-flex flex-wrap flex-center">
-              <button
-                id="kt_login_forgot_submit"
-                type="submit"
-                className="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4"
-                disabled={formik.isSubmitting}
-              >
-                Submit
-              </button>
-              <Link to="/auth">
-                <button
-                  type="button"
-                  id="kt_login_forgot_cancel"
-                  className="btn btn-light-primary font-weight-bold px-9 py-4 my-3 mx-4"
+
+            {/* <br /> */}
+            <br />
+
+            <p
+              className=" mt-10 text-lg text-center"
+              style={{ color: "#000000", fontWeight: 400, height: "2vh" }}
+              // style={{ color: "#2490CF", fontSize: "2rem" }}
+            >
+              Enter your email to reset your password
+            </p>
+
+            <br />
+            <br />
+            {/* end::Head */}
+
+            {/*begin::Form*/}
+            <form
+              onSubmit={formik.handleSubmit}
+              className="form   "
+              // className="login-form"
+            >
+              <div className="flex flex-col">
+                <label
+                  className=" pb-2"
+                  style={{ color: "#000000", fontWeight: 400 }}
                 >
-                  Cancel
+                  Email address
+                </label>
+                <input
+                  placeholder="Email"
+                  type="text"
+                  className={`login-control form-control-solid  ${getInputClasses(
+                    "email"
+                  )} inputcolor !h-[7vh]`}
+                  name="emails"
+                  {...formik.getFieldProps("email")}
+                />
+                {formik.touched.email && formik.errors.email ? (
+                  <div className="fv-plugins-message-container">
+                    <div className="fv-help-block">{formik.errors.email}</div>
+                  </div>
+                ) : null}
+              </div>
+
+              <br />
+
+              <div className="">
+                <button
+                  id=""
+                  type="submit"
+                  disabled={formik.isSubmitting}
+                  className="w-full bg-tprimary text-white text-base font-bold h-[7vh] cursor-pointer rounded border-none hover:bg-black"
+                >
+                  <span>
+                    Submit
+                    <CircleArrowRight
+                      strokeWidth={3}
+                      className="w-5 h-5 cursor-pointer"
+                    />
+                  </span>
+                  {loading && (
+                    <span className="ml-3 spinner spinner-white"></span>
+                  )}
                 </button>
+              </div>
+              {formik.status ? (
+                <div className="text-center mt-2">
+                  <div className="alert-text font-weight-bold text-red-700 text-sm">
+                    {formik.status}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+              <div></div>
+
+              <br />
+              <div className="d-flex align-items-center  ">
+                <span className="text-sm text-tprimary">
+                  <Link to="/auth/login">Go to Login Page</Link>
+                </span>
+              </div>
+            </form>
+
+            <br />
+            <br />
+          </div>
+          <footer className="flex gap-4 bg-tsecondary p-4 rounded-bottom pl-7">
+            <div>
+              <Link
+                to="/privacy-policy"
+                className=" text-black hover:underline cursor-pointer"
+              >
+                Privacy Policy
               </Link>
             </div>
-          </form>
+
+            <div>
+              <Link
+                to="/disclaimer"
+                className=" text-black hover:underline cursor-pointer"
+              >
+                Disclaimer
+              </Link>
+            </div>
+
+            <div>
+              <a
+                href="https://dynasoftcloud.com/contact-us.php"
+                target="_blank"
+                rel="noopener noreferrer"
+                className=" text-black hover:underline cursor-pointer"
+              >
+                Contact Us
+              </a>
+            </div>
+          </footer>
         </div>
       )}
     </>
