@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import he from "he";
 import {
   DatePickerField,
   Input,
@@ -27,6 +28,7 @@ import {
 import DatePicker from "react-datepicker";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { RichTextInput } from "../../../../../../_metronic/_partials/controls/forms/RichTextInput";
 
 const jobVacancyEditSchema = Yup.object().shape({
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -93,9 +95,9 @@ const jobVacancyEditSchema = Yup.object().shape({
     .when("jobPeriodEnd", (jobPeriodEnd, schema) =>
       jobPeriodEnd
         ? schema.max(
-            Yup.ref("jobPeriodEnd"),
-            "Job Posting To date must be before Job Period End"
-          )
+          Yup.ref("jobPeriodEnd"),
+          "Job Posting To date must be before Job Period End"
+        )
         : schema
     ),
 
@@ -104,7 +106,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .test(
       "not-same-as-designation",
       "Designation and Reporting Designation cannot be the same",
-      function(value) {
+      function (value) {
         const { designationId } = this.parent;
         return value !== designationId;
       }
@@ -142,7 +144,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .test(
       "within-job-period",
       "Desired Date of Appointment must be within the Job Period range",
-      function(value) {
+      function (value) {
         const { jobPeriodStart, jobPeriodEnd } = this.parent;
 
         if (!value) return true; // Already handled by .required()
@@ -188,7 +190,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .test(
       "no-duplicate-skills",
       "Preferred and optional skills must not have overlapping values.",
-      function(value) {
+      function (value) {
         const { optionalJobSkillsId } = this.parent;
 
         if (!value || !optionalJobSkillsId) return true;
@@ -322,11 +324,11 @@ export function FormEditForm({
     fetchData(setJobCode);
   }, []);
 
-  useEffect(()=>{
-   if(cleanedFormData?.gradeId){
-      dispatch(fetchAllDesignationByGradeId(cleanedFormData?.gradeId , "allDesignationByGrade"))
-   }
-  },[cleanedFormData?.gradeId])
+  useEffect(() => {
+    if (cleanedFormData?.gradeId) {
+      dispatch(fetchAllDesignationByGradeId(cleanedFormData?.gradeId, "allDesignationByGrade"))
+    }
+  }, [cleanedFormData?.gradeId])
 
   return (
     <Formik
@@ -337,6 +339,20 @@ export function FormEditForm({
         jobDate: cleanedFormData?.jobDate
           ? cleanedFormData?.jobDate
           : formatDates(new Date(), "yyyy-MM-dd"),
+
+        comment: he.decode(
+          cleanedFormData?.comment || ""
+        ), workExpDetail: he.decode(
+          cleanedFormData?.workExpDetail || ""
+        ), additionalReq: he.decode(
+          cleanedFormData?.additionalReq || ""
+        ), incentivePackages: he.decode(
+          cleanedFormData?.incentivePackages || ""
+        ), otherBenefits: he.decode(
+          cleanedFormData?.otherBenefits || ""
+        ), jobSummary: he.decode(
+          cleanedFormData?.jobSummary || ""
+        ),
       }}
       validationSchema={jobVacancyEditSchema}
       onSubmit={(values) => {
@@ -445,11 +461,11 @@ export function FormEditForm({
                         }
                         isDisabled={isdataForRead}
                         onChange={(e) => {
-                          if(e?.value){
+                          if (e?.value) {
                             setFieldValue("gradeId", e.value || null);
-                            setFieldValue("designationId" , null)
-                            setFieldValue("jobTitle" , "")
-                            dispatch(fetchAllDesignationByGradeId(e?.value , "allDesignationByGrade"))
+                            setFieldValue("designationId", null)
+                            setFieldValue("jobTitle", "")
+                            dispatch(fetchAllDesignationByGradeId(e?.value, "allDesignationByGrade"))
                           }
                         }}
                         value={
@@ -1035,7 +1051,7 @@ export function FormEditForm({
                               ? new Date(values.jobPostingDateFrom)
                               : new Date()
                           }
-                          //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
+                        //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
                         />
 
                         {/* {touched.desireDateOfApp && errors.desireDateOfApp && (
@@ -1097,7 +1113,7 @@ export function FormEditForm({
                   </div>
                 </div>
 
-                <div className=" col-span-6  mt-1">
+                {/* <div className=" col-span-6  mt-1">
                   <label>
                     <span>Job Vacancy Detail</span>
                   </label>
@@ -1108,6 +1124,22 @@ export function FormEditForm({
                     className="form-control " // Force full height
                     type="text"
                   />
+                </div> */}
+
+
+                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                  <div className="">
+                    <RichTextInput
+                      label="Job Vacancy Detail"
+                      name="comment"
+                      touched={touched?.comment}
+                      errors={errors?.comment}
+                      value={values?.comment || ""}
+                      onChange={(e) => {
+                        setFieldValue("comment", e);
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <hr></hr>
@@ -1397,7 +1429,7 @@ export function FormEditForm({
                   </div>
                 </div>
 
-                <div className="mt-1  ">
+                {/* <div className="mt-1  ">
                   <label>
                     <span>Work Experience Detail</span>
                   </label>
@@ -1408,9 +1440,24 @@ export function FormEditForm({
                     className="form-control"
                     type="text"
                   />
+                </div> */}
+
+                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                  <div className="">
+                    <RichTextInput
+                      label="Work Experience Detail"
+                      name="workExpDetail"
+                      touched={touched?.workExpDetail}
+                      errors={errors?.workExpDetail}
+                      value={values?.workExpDetail || ""}
+                      onChange={(e) => {
+                        setFieldValue("workExpDetail", e);
+                      }}
+                    />
+                  </div>
                 </div>
 
-                <div className=" mt-1">
+                {/* <div className=" mt-1">
                   <label>
                     <span>Additional Requirement</span>
                   </label>
@@ -1421,6 +1468,21 @@ export function FormEditForm({
                     className="form-control"
                     type="text"
                   />
+                </div> */}
+
+                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                  <div className="">
+                    <RichTextInput
+                      label="Additional Requirement"
+                      name="additionalReq"
+                      touched={touched?.additionalReq}
+                      errors={errors?.additionalReq}
+                      value={values?.additionalReq || ""}
+                      onChange={(e) => {
+                        setFieldValue("additionalReq", e);
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* Compensation & Benefits */}
@@ -1484,7 +1546,7 @@ export function FormEditForm({
                   Compensation & Benefits
                 </h6>
 
-                <div className="mt-1">
+                {/* <div className="mt-1">
                   <label>
                     <span>Incentive Packages</span>
                   </label>
@@ -1495,22 +1557,52 @@ export function FormEditForm({
                     className="form-control "
                     type="text"
                   />
+                </div> */}
+
+                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                  <div className="">
+                    <RichTextInput
+                      label="Incentive Packages"
+                      name="incentivePackages"
+                      touched={touched?.incentivePackages}
+                      errors={errors?.incentivePackages}
+                      value={values?.incentivePackages || ""}
+                      onChange={(e) => {
+                        setFieldValue("incentivePackages", e);
+                      }}
+                    />
+                  </div>
                 </div>
 
-                <div className="mt-1">
+                {/* <div className="mt-1">
                   <label>
                     <span>Other Benefits</span>
-                  </label>
-                  <Field
+                  </label> */}
+                {/* <Field
                     name="otherBenefits"
                     component={TextArea}
                     placeholder="Enter other benefits"
                     className="form-control"
                     type="text"
-                  />
-                </div>
+                  /> */}
 
-                <div className=" mt-1">
+                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                  <div className="">
+                    <RichTextInput
+                      label="Other Benefits"
+                      name="otherBenefits"
+                      touched={touched?.otherBenefits}
+                      errors={errors?.otherBenefits}
+                      value={values?.otherBenefits || ""}
+                      onChange={(e) => {
+                        setFieldValue("otherBenefits", e);
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* </div> */}
+
+                {/* <div className=" mt-1">
                   <label>
                     <span>
                       Job Summary<span style={{ color: "red" }}>*</span>
@@ -1523,11 +1615,22 @@ export function FormEditForm({
                     className="form-control"
                     type="text"
                   />
-                  {/* <ErrorMessage
-                    className="form-feedBack "
-                    name="jobSummary"
-                    component="div"
-                  /> */}
+             
+                </div> */}
+
+                <div className="grid grid-cols-1 gap-x-3 gap-y-1 mt-1">
+                  <div className="">
+                    <RichTextInput
+                      label="  Job Summary"
+                      name="jobSummary"
+                      touched={touched?.jobSummary}
+                      errors={errors?.jobSummary}
+                      value={values?.jobSummary || ""}
+                      onChange={(e) => {
+                        setFieldValue("jobSummary", e);
+                      }}
+                    />
+                  </div>
                 </div>
               </fieldset>
             </Form>
