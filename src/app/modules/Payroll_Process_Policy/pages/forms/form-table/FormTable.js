@@ -315,12 +315,13 @@ export function FormTable(user) {
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
-      arrearTaxDeductionId: Yup.number()
-        .when('isEnableTax', {
-          is: true, // if select value is 2
-          then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
-          otherwise: Yup.number().notRequired(),
-        }),
+      // arrearTaxDeductionId: Yup.number()
+      //   .when('isEnableTax', {
+      //     is: true, // if select value is 2
+      //     then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
+      //     otherwise: Yup.number().notRequired(),
+      //   }),
+      
       // leaveDeductionId: Yup.number()
       //   .when('isEnableAttandanceIntegration', {
       //     is: true, // if select value is 2
@@ -1134,7 +1135,7 @@ export function FormTable(user) {
                   {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="form-feedBack" name="payrollTax_DeductionTypeId" component="div" />}
                 </div>
                 <div className="col-apnan2">
-                  {<span><label>Arrears Tax Deduction</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
+                  {<span><label>Arrears Tax Deduction</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}></span>}</span>}
                   <select className="form-control"
                     disabled={!Boolean(values.isEnableTax)}
                     onChange={(e) => {
