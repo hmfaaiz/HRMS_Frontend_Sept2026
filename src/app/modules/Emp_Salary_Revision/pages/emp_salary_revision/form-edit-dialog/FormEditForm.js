@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Input } from "../../../../../../_metronic/_partials/controls";
+import { Input, TextArea } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
@@ -1399,6 +1399,25 @@ const comparisonFields = [
                       </div>
                     )}
                   </div>
+
+                   
+                                <div className=" col-span-5 ">
+                                  <label>
+                                    <span>
+                                     Revision Remarks
+                                     
+                                    </span>
+                                  </label>
+                                  <Field
+                                    name="revisionRemarks"
+                                    component={TextArea}
+                                    placeholder="Enter revision remarks"
+                                    type="text"
+                                    className="form-control"
+                                  />
+                                
+                                </div>
+                       
                 </div>
 
 
@@ -3649,6 +3668,10 @@ const comparisonFields = [
                 </div>
                   )}
               </div>
+
+
+              
+                             
 
               <div className="form-group row justify-content-end p-5">
                 {!dataForRead ? (

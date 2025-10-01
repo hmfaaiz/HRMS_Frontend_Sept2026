@@ -234,7 +234,7 @@ const PreviewPayslipPDF = () => {
         if (raw) {
             const parsed = JSON.parse(raw);
             setData(parsed);  // Set the data from localStorage
-          localStorage.removeItem('previewPayslipPdf'); // Clear it
+            localStorage.removeItem('previewPayslipPdf'); // Clear it
         }
     }, []);
 
@@ -357,7 +357,7 @@ const PreviewPayslipPDF = () => {
                                                 <tr>
                                                     <td colSpan="2"><strong>Deduction</strong></td>
                                                 </tr>
-                                                {deductionData.map((deduction, index) => (
+                                                {/* {deductionData.map((deduction, index) => (
                                                     <tr key={index}>
                                                         <td>{deduction.EarningName}</td>
                                                         <td className="payslip-right-align">{deduction.Amount_Actual}</td>
@@ -369,7 +369,26 @@ const PreviewPayslipPDF = () => {
                                                         <td>{loan.EarningName}</td>
                                                         <td className="payslip-right-align">{loan.Amount_Actual}</td>
                                                     </tr>
-                                                ))}
+                                                ))} */}
+
+                                                {deductionData
+                                                    .filter(deduction => Number(deduction.Amount_Actual) !== 0)
+                                                    .map((deduction, index) => (
+                                                        <tr key={index}>
+                                                            <td>{deduction.EarningName}</td>
+                                                            <td className="payslip-right-align">{deduction.Amount_Actual}</td>
+                                                        </tr>
+                                                    ))}
+
+                                                {loanData
+                                                    .filter(loan => Number(loan.Amount_Actual) !== 0)
+                                                    .map((loan, index) => (
+                                                        <tr key={index}>
+                                                            <td>{loan.EarningName}</td>
+                                                            <td className="payslip-right-align">{loan.Amount_Actual}</td>
+                                                        </tr>
+                                                    ))}
+
                                             </tbody>
                                         </table>
                                     </td>
@@ -379,7 +398,7 @@ const PreviewPayslipPDF = () => {
                                                 <tr>
                                                     <td colSpan="1"><strong>Balance</strong></td>
                                                 </tr>
-                                                {deductionData.map((deduction, index) => (
+                                                {/* {deductionData.map((deduction, index) => (
                                                     <tr key={index}>
                                                         {deduction.Amount_Actual_2 && (
                                                             <td className="payslip-right-align">{deduction.Amount_Actual_2}</td>
@@ -393,7 +412,24 @@ const PreviewPayslipPDF = () => {
                                                             <td className="payslip-right-align">{loan.Amount_Actual_2}</td>
                                                         )}
                                                     </tr>
-                                                ))}
+                                                ))} */}
+
+                                                {deductionData
+                                                    .filter(deduction => Number(deduction.Amount_Actual_2) !== 0)
+                                                    .map((deduction, index) => (
+                                                        <tr key={index}>
+                                                            <td className="payslip-right-align">{deduction.Amount_Actual_2}</td>
+                                                        </tr>
+                                                    ))}
+
+                                                {loanData
+                                                    .filter(loan => Number(loan.Amount_Actual_2) !== 0)
+                                                    .map((loan, index) => (
+                                                        <tr key={index}>
+                                                            <td className="payslip-right-align">{loan.Amount_Actual_2}</td>
+                                                        </tr>
+                                                    ))}
+
                                             </tbody>
                                         </table>
                                     </td>
