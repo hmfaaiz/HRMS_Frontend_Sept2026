@@ -113,3 +113,9 @@ export function getleaveDetail(id) {
 export function updateleaveDetail(body) {
   return axios.post(`${USERS_URL}/leave_application/update-leave-detail`, body);
 }
+
+export function getSandwichPolicy(subsidiaryId) {
+  return axios.get(
+    `${USERS_URL}/leave_application/read-sandwich-policy/${subsidiaryId}`
+  );
+}

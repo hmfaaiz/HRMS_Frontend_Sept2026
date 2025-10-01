@@ -16,6 +16,7 @@ const initialState = {
   payrollData: null,
   leaveBalances: [],
   detailUpdateLoading: false,
+  sandwichPolicy : null
 };
 
 export const callTypes = {
@@ -111,6 +112,11 @@ export const LeaveApplicationSlice = createSlice({
       const payrollData = action?.payload?.payrollData;
       state.error = null;
       state.payrollData = payrollData;
+    },
+    SandwichPolicyFetched: (state, action) => {
+      const sandwichPolicy = action?.payload?.sandwichPolicy;
+      state.error = null;
+      state.sandwichPolicy = sandwichPolicy;
     },
     LeaveBalancesFetched: (state, action) => {
       const leaveBalances = action.payload.data?.data;

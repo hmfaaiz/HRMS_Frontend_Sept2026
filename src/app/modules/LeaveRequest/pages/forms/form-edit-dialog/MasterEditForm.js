@@ -36,10 +36,16 @@ export function MasterEditForm({
 }) {
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
-  const { allLeaveTypes, userAccess, leaveBalances } = useSelector(
+  const {
+    allLeaveTypes,
+    userAccess,
+    leaveBalances,
+    sandwichPolicy,
+  } = useSelector(
     (state) => ({
       allLeaveTypes: state.dashboard.allLeaveTypes,
       leaveBalances: state.leave_request?.leaveBalances,
+      sandwichPolicy: state.leave_request?.sandwichPolicy,
       userAccess: state?.auth?.userAccess["Leave Request"],
     }),
     shallowEqual
@@ -74,6 +80,8 @@ export function MasterEditForm({
             "Leave days exceed available balance",
             function(to) {
               const { from, leaveType } = this.parent;
+              // if sandwich is disabled → skip balance check completely
+              if (sandwichPolicy?.isSandwich == 0) return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
               const diffDays = getDateDiffInDays(from, to);
@@ -105,6 +113,8 @@ export function MasterEditForm({
             "Leave days exceed available balance",
             function(to) {
               const { from, leaveType } = this.parent;
+              // if sandwich is disabled → skip balance check completely
+              if (sandwichPolicy?.isSandwich == 0) return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
               const diffDays = getDateDiffInDays(from, to);
@@ -126,7 +136,7 @@ export function MasterEditForm({
         remarks: Yup.string().required(VALIDATION_MESSAGES.required),
       });
     }
-  }, [payrollData, leaveBalances]);
+  }, [payrollData, leaveBalances, sandwichPolicy]);
 
   return (
     <>
