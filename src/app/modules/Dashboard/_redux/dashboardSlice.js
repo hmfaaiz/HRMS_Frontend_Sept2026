@@ -86,6 +86,7 @@ const initialDashboardState = {
   currentAtt : null,
   getAllUserList:[],
   getAllAuditTablesNameList:[],
+  fiscalyearBySubList:[],
 };
 
 export const callTypes = {
@@ -349,5 +350,10 @@ export const dashboardSlice = createSlice({
       AllAuditTablesNameFetch: (state, action) => {
       state.getAllAuditTablesNameList = action.payload;
     },
+
+      AllFiscalYearBySubListFetch: (state, action) => {
+      state.fiscalyearBySubList = action.payload;
+    },
+
   },
 });
