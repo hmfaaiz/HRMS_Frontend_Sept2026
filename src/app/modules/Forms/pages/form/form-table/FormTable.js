@@ -120,7 +120,13 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
-      formatter: (cell) => (cell == 1 ? "Employee" : "Recuritment"),
+      // formatter: (cell) => (cell == 1 ? "Employee" : "Recuritment"),
+      formatter: (cell) => {
+  if (cell == 1) return "Employee";
+  if (cell == 2) return "Recruitment";
+  if (cell == 3) return "Appraisal";
+  return "Unknown"; // agar koi aur value ho
+}
     },
     // {
     //   dataField: "MenuName",

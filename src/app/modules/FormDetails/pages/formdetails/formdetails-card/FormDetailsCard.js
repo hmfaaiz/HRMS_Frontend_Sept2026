@@ -115,6 +115,18 @@ export function FormCard() {
             >
               Recruitment
             </button>
+
+               <button
+              type="button"
+              className={`btn mr-2 rounded-xl ${
+                FormUIProps.queryParams.moduleType === 3
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+              }`}
+              onClick={() => switchModule(3)}
+            >
+              Appraisal
+            </button>
             {/* )} */}
           </div>
           {/* <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">

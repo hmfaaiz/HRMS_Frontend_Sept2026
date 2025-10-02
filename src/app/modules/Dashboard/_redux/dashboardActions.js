@@ -473,3 +473,17 @@ export const fetchAllAuditTablesName = (userId) => async (dispatch) => {
       dispatch(actions.AllAuditTablesNameFetch([]));
     });
 };
+
+
+
+export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (dispatch) => {
+  return await requestFromServer
+    .getAllFiscalYearBySubsidiaryId({ subsidiaryId })
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllFiscalYearBySubListFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};

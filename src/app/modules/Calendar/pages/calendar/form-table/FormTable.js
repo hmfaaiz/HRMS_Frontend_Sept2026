@@ -81,7 +81,7 @@ const [currentDate, setCurrentDate] = useState(null);
       <Calendar
         localizer={localizer}
         events={events}
-          views={['month', 'week', 'day']} // ✅ Agenda ko remove kiya yahan
+          views={['month', 'week', 'day']} // Agenda ko remove kiya yahan
           defaultView="month"
           date={currentDate}                    // Controlled date
           onNavigate={(date) => setCurrentDate(date)} 

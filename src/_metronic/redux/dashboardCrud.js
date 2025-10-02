@@ -302,3 +302,4 @@ export const getAllChartOfAccounts = async (Id, accountType=null) => {
     accountType: accountType,
   });
 };
+
