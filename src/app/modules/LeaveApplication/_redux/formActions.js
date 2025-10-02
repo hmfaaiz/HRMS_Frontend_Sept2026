@@ -281,3 +281,20 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
       });
   }
 };
+
+export const getSandwichPolicy = (subsidiaryId) => (dispatch) => {
+  if (!subsidiaryId) {
+    dispatch(actions.SandwichPolicyFetched({ sandwichPolicy: null }));
+  } else {
+    return requestFromServer
+      .getSandwichPolicy(subsidiaryId)
+      .then((res) => {
+        const sandwichPolicy = res.data?.data;
+        dispatch(actions.SandwichPolicyFetched({ sandwichPolicy }));
+      })
+      .catch((error) => {
+        dispatch(actions.SandwichPolicyFetched({ sandwichPolicy: null }));
+        error.clientMessage = "Can't Get Sandwich Policy";
+      });
+  }
+};

@@ -11,12 +11,7 @@ import {
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { useSelector, shallowEqual } from "react-redux";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
-import {
-  formatDates,
-  getDateDiffInDays,
-  getFileName,
-  getUploadUrl,
-} from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
@@ -33,15 +28,20 @@ export function MasterEditForm({
 }) {
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
-  const { allLeaveTypes, userAccess, leaveBalances } = useSelector(
+  const {
+    allLeaveTypes,
+    userAccess,
+    leaveBalances,
+    sandwichPolicy,
+  } = useSelector(
     (state) => ({
       allLeaveTypes: state.dashboard.allLeaveTypes,
       leaveBalances: state.leave_application?.leaveBalances,
+      sandwichPolicy: state.leave_application?.sandwichPolicy,
       userAccess: state?.auth?.userAccess["Leave_Application"],
     }),
     shallowEqual
   );
-
   //Check Access for creation and Updation
   const accessUser = useMemo(
     () =>
@@ -52,6 +52,7 @@ export function MasterEditForm({
       ),
     [userAccess]
   );
+  console.log("sansnnss", sandwichPolicy);
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
@@ -76,6 +77,8 @@ export function MasterEditForm({
             "Leave days exceed available balance",
             function(to) {
               const { from, leaveType } = this.parent;
+              // if sandwich is disabled → skip balance check completely
+              if (sandwichPolicy?.isSandwich == 0) return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
               const diffDays = getDateDiffInDays(from, to);
@@ -83,7 +86,7 @@ export function MasterEditForm({
                 leaveBalances?.find((el) => el?.leaveType === leaveType)
                   ?.remainingCount || 0;
 
-              return diffDays <= balance; // ✅ enforce balance
+              return diffDays <= balance; //  enforce balance
             }
           ),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -107,6 +110,9 @@ export function MasterEditForm({
             "Leave days exceed available balance",
             function(to) {
               const { from, leaveType } = this.parent;
+              // if sandwich is disabled → skip balance check completely
+              if (sandwichPolicy?.isSandwich == 0) return true;
+
               if (!from || !to || !leaveType) return true; // skip if missing values
 
               const diffDays = getDateDiffInDays(from, to);
@@ -128,7 +134,7 @@ export function MasterEditForm({
         remarks: Yup.string().required(VALIDATION_MESSAGES.required),
       });
     }
-  }, [payrollData, leaveBalances]);
+  }, [payrollData, leaveBalances, sandwichPolicy]);
 
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
 
