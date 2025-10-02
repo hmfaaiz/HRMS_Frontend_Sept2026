@@ -16,14 +16,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- 
+
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
     };
   }, [FormUIContext]);
 
-  const formUIProps  = useMemo(() => {
+  const formUIProps = useMemo(() => {
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
@@ -47,14 +47,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     userStatusTypes,
     isuserForRead,
   } = useSelector((state) => ({
-    
-    
+
+
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
-    userForEdit: state.holidays.userForEdit,
+    userForEdit: state.appraisal_period_setup.userForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
-    isuserForRead: state.holidays.userForRead,
+    isuserForRead: state.appraisal_period_setup.userForRead,
   }));
 
 
@@ -68,14 +68,15 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   const saveForm = async (data) => {
-
+    delete data.fiscalYearStart
+    delete data.fiscalYearEnd
 
 
     if (!id) {
 
       dispatch(actions.createHoliday(data, disbaleLoading, onHide));
-      
-      
+
+
 
     } else {
       const formUpdatedFields = {
@@ -84,14 +85,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         fiscalYearId: data.fiscalYearId,
         startDate: data.startDate,
         endDate: data.endDate,
-     
-     
+
+
       };
 
-      
 
-     await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide));
-     await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+
+      await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
     }
   };
 
@@ -105,15 +106,14 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       <FormEditDialogHeader id={id} isUserForRead={userForRead} />
       <FormEditForm
         saveForm={saveForm}
-        user={userForEdit || formUIProps .initUser}
+        data={userForEdit || formUIProps.initUser}
         onHide={onHide}
         roles={roles}
-        centers={centers}
         userStatusTypes={userStatusTypes}
         isUserForRead={userForRead}
         enableLoading={enableLoading}
         loading={loading}
-     
+
       />
       <ToastContainer
         position="top-right"

@@ -25,11 +25,16 @@ const holidaysEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
 
 
-  startDate: Yup.date().required(VALIDATION_MESSAGES.required),
-  endDate: Yup.date()
-    .min(Yup.ref("startDate"), "End date cannot be earlier than from date")
+  startDate: Yup.date()
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
-  fiscalYearId: Yup.number().required(VALIDATION_MESSAGES.required),
+  endDate: Yup.date()
+    .nullable()
+    .min(Yup.ref("startDate"), "End date cannot be earlier than start date")
+    .required(VALIDATION_MESSAGES.required),
+  fiscalYearId: Yup.number()
+  .nullable()
+  // .required(VALIDATION_MESSAGES.required),
 
 
 });
@@ -45,26 +50,15 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [start_date, setStart_date] = useState();
-  const [end_date, setEnd_date] = useState();
-  const [diffInDate, setDiffInDate] = useState();
-  useEffect(() => {
- 
-     
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      dispatch(fetchAllFiscalYearDataBySubsidiaryId(data?.subsidiaryId));
 
- 
+  useEffect(() => {
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllFiscalYearDataBySubsidiaryId(data?.subsidiaryId));
+
+
   }, [dispatch, data?.Id]);
 
-  const { currentState, userAccess } = useSelector((state) => {
-    return {
-      currentState: state.appraisal_period_setup,
-      userAccess: state?.auth?.userAccess["appraisal_period_setup"],
-    };
-  }, shallowEqual);
 
-  const { userForEdit } = currentState;
 
 
 
@@ -102,7 +96,7 @@ export function FormEditForm({
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1">
-                     
+
                       <SearchSelect
                         name="subsidiaryId"
                         label={
@@ -110,82 +104,105 @@ export function FormEditForm({
                             Subsidiary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        isDisabled={isUserForRead}
+                        isDisabled={isUserForRead || data.subsidiaryId}
+                        value={
+                          dashboard?.allSubsidiaryList?.find(
+                            (option) => option.value == values.subsidiaryId
+                          ) || null
+                        }
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
-                           dispatch(fetchAllFiscalYearDataBySubsidiaryId(e.value));
+                          console.log("aaaa1", e.value)
+                          dispatch(fetchAllFiscalYearDataBySubsidiaryId(e.value));
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
-                         options={dashboard?.allSubsidiaryList}
-                        // currentValue={values?.subsidiaryId}
-                        // initializeSubsidiary={(e) => {
-                        //   setFieldValue("subsidiaryId", e.value || null);
-                        // }}
+                        options={dashboard?.allSubsidiaryList}
+
                       />
                     </div>
 
-                  </div>
-            
-                  <div className="col-span-1">
-                    <label>
-                      Start Date <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="startDate"
-                      component={DatePickerField} // Custom component
-                      dateFormat="dd-MMM-yyyy"
-                      placeholder="Select Date"
-                      type="date"
-                      onChange={(e) => {
-                        setFieldValue("startDate", e);
-                        setStart_date(e);
-                      }}
-                    />
-                  </div>
-
-                  <div className="col-span-1">
-                    <label>
-                      End Date <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <Field
-                      name="endDate"
-                      component={DatePickerField}
-                      dateFormat="dd-MMM-yyyy"
-                      placeholder="Select Date"
-                      // type="date"
-                      onChange={(e) => {
-                        setFieldValue("endDate", e);
-                        setEnd_date(e);
-                      }}
-
-                      // minDate={dateOfJoining}
-                      // disabled={userForEdit?.details[0]?.is_deducted }
-                    />
                   </div>
 
                   <div className="col-span-1">
                     <SearchSelect
                       name="fiscalYearId"
-                      label={<span>Select Fiscal Year</span>}
+                      label={
+                        <span>
+                          Fiscal Year
+                        </span>
+                      }
                       isDisabled={isUserForRead}
                       onChange={(e) => {
+                        const selectedFY = dashboard?.fiscalyearBySubList?.find(
+                          (option) => option.value === e?.value
+                        );
+
                         setFieldValue("fiscalYearId", e.value || null);
+                        setFieldValue("fiscalYearStart", selectedFY ? new Date(selectedFY.startDate) : null);
+                        setFieldValue("fiscalYearEnd", selectedFY ? new Date(selectedFY.endDate) : null);
+                        setFieldValue("startDate", null)
+                        setFieldValue("endDate", null)
                       }}
-                     
+
                       value={
                         dashboard?.fiscalyearBySubList?.find(
                           (option) => option.value === values.fiscalYearId
                         ) || null
                       }
 
-                      options={dashboard?.fiscalyearBySubList}
+                      // options={dashboard?.fiscalyearBySubList}
+                          options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.fiscalyearBySubList) ? dashboard?.fiscalyearBySubList : []),]}
 
-                  
+
                       error={errors.fiscalYearId}
                       touched={touched.fiscalYearId}
                     />
                   </div>
+
+                  <div className="col-span-1">
+                    <label>
+                      Start Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Field
+                      name="startDate"
+                      component={DatePickerField} // Custom component
+                      dateFormat="dd-MMM-yyyy"
+                      placeholder="Select Date"
+                      minDate={values?.fiscalYearStart || null}   // fiscal year ki start date
+                      maxDate={values?.fiscalYearEnd || null}
+                      // disabled={!values.fiscalYearId}
+                      type="date"
+                      onChange={(e) => {
+                        setFieldValue("startDate", e);
+
+                      }}
+                    />
+                  </div>
+
+                  <div className="col-span-1">
+                    <label>
+                      End Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Field
+                      name="endDate"
+                      component={DatePickerField}
+                      dateFormat="dd-MMM-yyyy"
+                      placeholder="Select Date"
+                      // disabled={!values.fiscalYearId}
+                      minDate={values?.fiscalYearStart || null } // start date ke baad ka hi date
+                      maxDate={values?.fiscalYearEnd || null}                       // fiscal year ke end se zyada na ho
+                      onChange={(e) => {
+                        setFieldValue("endDate", e);
+
+                      }}
+
+                    // minDate={dateOfJoining}
+                    // disabled={userForEdit?.details[0]?.is_deducted }
+                    />
+                  </div>
+
+
                 </div>
               </fieldset>
             </Form>

@@ -20,12 +20,12 @@ export function ActionsColumnFormatter(
 ) {
   const isUserRead = false;
 
-  const recordIsEditable = () => {
-    if (new Date(row?.from_date) >= new Date(row?.activePayrollMonth?.startDate)) {
-      return true;
-    }
-    return false;
-  };
+  // const recordIsEditable = () => {
+  //   if (new Date(row?.from_date) >= new Date(row?.activePayrollMonth?.startDate)) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   return (
     <div className="space-x-2">
@@ -41,7 +41,7 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
-      {isAccessForEdit && row.isActive && recordIsEditable() && (
+      {isAccessForEdit  && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -51,7 +51,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete && recordIsEditable() && (
+      {isAccessForDelete  && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">

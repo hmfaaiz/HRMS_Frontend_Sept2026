@@ -18,7 +18,7 @@ export function getAllHoliday(body) {
 
 export function getHolidayById(Id) {
 
-  return axios.post(`${USERS_URL}/appraisal_period_setup/read-appraisal-period-setup${Id}`);
+  return axios.get(`${USERS_URL}/appraisal_period_setup/read-appraisal-period-setup/${Id}`);
 }
 
 //Update
@@ -30,5 +30,5 @@ export function updateHoliday(body) {
 //Delete
 export function deleteHoliday(Id) {
 
-  return axios.patch(`${USERS_URL}/appraisal_period_setup/delete-appraisal-period-setup/${Id}`);
+  return axios.delete(`${USERS_URL}/appraisal_period_setup/delete-appraisal-period-setup/${Id}`);
 }

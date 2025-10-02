@@ -49,7 +49,7 @@ export function FormTable() {
     shallowEqual
   );
 
-
+console.log("userAccess1111",userAccess)
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -64,13 +64,14 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
+
     (item) => item.componentName === "UpdateAppraisalPeriodSetup"
   );
 
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteAppraisalPeriodSetup"
   );
-
+console.log("isAccessForEdit111",isAccessForEdit)
 
   // Table columns
   const columns = [

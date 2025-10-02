@@ -27,7 +27,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
   const initUser = {
-    Id: "",
     subsidiaryId: "",
     fiscalYearId: "",
     startDate: "",

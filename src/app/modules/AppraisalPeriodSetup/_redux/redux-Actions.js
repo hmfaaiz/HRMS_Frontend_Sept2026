@@ -24,15 +24,15 @@ export const fetchHolidays = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchHoliday = (id) => (dispatch) => {
+export const fetchHoliday = (Id) => (dispatch) => {
 
 
-  if (!id) {
+  if (!Id) {
     return dispatch(actions.HolidayFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getHolidayById({ Id: id })
+    .getHolidayById( Id)
     .then((response) => {
       const entities = response.data?.data;
 
@@ -45,14 +45,14 @@ export const fetchHoliday = (id) => (dispatch) => {
     });
 };
 
-export const deleteHoliday = (id) => (dispatch) => {
+export const deleteHoliday = (Id) => (dispatch) => {
 
   return requestFromServer
-    .deleteHoliday({ Id: id })
+    .deleteHoliday(Id)
     .then((response) => {
     
-      dispatch(actions.HolidayDeleted({ Id: id }));
-      toast.success("Successfully Deleted", {
+      dispatch(actions.HolidayDeleted({ Id}));
+      toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -68,19 +68,7 @@ export const deleteHoliday = (id) => (dispatch) => {
     });
 };
 
-export const sendHolidayEmail = (id) => (dispatch) => {
-  dispatch(actions.startCall({ callType: callTypes.action }));
-  return requestFromServer
-    .sendHolidayEmail({ Id: id })
-    .then((response) => {
-      dispatch(actions.HolidayEmailSend());
-      toast.success(SERVER_MESSAGES.emailSuccess);
-    })
-    .catch((error) => {
-      dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES.emailFail);
-    });
-};
+
 
 
 
@@ -98,7 +86,7 @@ export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
   
       dispatch(actions.holidayCreated(user));
       disbaleLoading();
-      toast.success("Successfully Created", {
+      toast.success(SERVER_MESSAGES.insertedSuccess,{
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -136,7 +124,7 @@ export const updateHoliday = (user, disbaleLoading, onHide) => (dispatch) => {
     
       disbaleLoading();
       onHide();
-      toast.success(response.data.message , {
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

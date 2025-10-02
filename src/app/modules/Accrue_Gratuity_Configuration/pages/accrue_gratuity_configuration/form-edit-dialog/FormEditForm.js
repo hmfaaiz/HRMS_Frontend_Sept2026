@@ -150,7 +150,7 @@ export function FormEditForm({
                             Subsidiary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
-                        isDisabled={isUserForRead}
+                        isDisabled={isUserForRead || user?.subsidiaryId}
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
                           check_Existed_Data(e.value);
