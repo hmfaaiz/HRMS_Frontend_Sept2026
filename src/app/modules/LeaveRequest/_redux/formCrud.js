@@ -51,3 +51,9 @@ export function getEmployeeAuthorties(empId, workflowTypeId) {
     `${USERS_URL}/workflow_policy/get-employee-authorties/${empId}/${workflowTypeId}`
   );
 }
+
+export function getSandwichPolicy(subsidiaryId) {
+  return axios.get(
+    `${USERS_URL}/leave_application/read-sandwich-policy/${subsidiaryId}`
+  );
+}

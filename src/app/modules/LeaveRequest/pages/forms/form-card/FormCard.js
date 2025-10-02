@@ -102,6 +102,7 @@ export function FormCard() {
         fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId.value)
       );
       dispatch(actions.getPayrollMonth(formUIProps.employeeId.value));
+      dispatch(actions.getSandwichPolicy(formUIProps.employeeId.value));
     }
   }, [formUIProps.employeeId?.value]);
   useEffect(() => {

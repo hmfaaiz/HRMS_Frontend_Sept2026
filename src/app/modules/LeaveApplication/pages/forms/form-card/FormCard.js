@@ -69,6 +69,7 @@ export function FormCard() {
     dispatch(actions.fetchLeaveBalances(formUIProps.employeeId));
     dispatch(fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId));
     dispatch(actions.getPayrollMonth(formUIProps.employeeId));
+    dispatch(actions.getSandwichPolicy(formUIProps.employeeId));
   }, [dispatch, formUIProps.employeeId, entities]);
 
   const SubmitLeaveDetail = async (data, onHide) => {
