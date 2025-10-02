@@ -61,9 +61,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchHoliday(id));
+    dispatch(actions.fetchAppraisal(id));
 
-    // dispatch(actions.fetchHoliday(formUIProps .queryParams))
+    // dispatch(actions.fetchAppraisal(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
@@ -74,7 +74,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     if (!id) {
 
-      dispatch(actions.createHoliday(data, disbaleLoading, onHide));
+      dispatch(actions.createAppraisal(data, disbaleLoading, onHide));
 
 
 
@@ -91,8 +91,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
 
-      await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide));
-      await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      await dispatch(actions.updateAppraisal(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.fetchAppraisals(usersUIProps.queryParams));
     }
   };
 

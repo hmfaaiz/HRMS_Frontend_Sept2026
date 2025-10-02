@@ -19,7 +19,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { fetchAllFiscalYearDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
 
 // percentage: Yup.string().required("Required*"),
-const holidaysEditSchema = Yup.object().shape({
+const appraisalForCreation = Yup.object().shape({
   // from_amount: Yup.string().required("Required*"),
 
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -67,7 +67,7 @@ export function FormEditForm({
       enableReinitialize={true}
 
       initialValues={data}
-      validationSchema={holidaysEditSchema}
+      validationSchema={appraisalForCreation}
       onSubmit={(values) => {
         enableLoading();
         const payload = {

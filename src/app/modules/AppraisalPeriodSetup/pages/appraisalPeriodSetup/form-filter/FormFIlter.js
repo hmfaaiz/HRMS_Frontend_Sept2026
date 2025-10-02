@@ -105,25 +105,7 @@ export function FormFIlter({ listLoading,user }) {
 
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            {/* <div className="row"> */}
-
-              {/* <div className="col-12 col-md-12">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="searchText"
-                  placeholder="Search"
-                  onBlur={handleBlur}
-                  value={values.searchText}
-                  onChange={(e) => {
-                    setFieldValue("searchText", e.target.value.trim())
-                    handleSubmit()
-                  }}
-                />
-                <small className="form-text text-muted">
-                  <b>Search</b> in holiday
-                </small>
-              </div> */}
+           
 
               
               <InputSearch

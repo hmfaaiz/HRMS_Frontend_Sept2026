@@ -39,7 +39,7 @@ export const AppraisalPeriodsSetupSlice = createSlice({
             }
         },
 
-        holidayFetched: (state, action) => {
+        appraisalFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;
@@ -64,7 +64,7 @@ export const AppraisalPeriodsSetupSlice = createSlice({
         },
 
          //get User By ID
-         HolidayFetchedForEdit: (state, action) => {
+         AppraisalFetchedForEdit: (state, action) => {
            
    
             state.actionsLoading = false;
@@ -73,7 +73,7 @@ export const AppraisalPeriodsSetupSlice = createSlice({
         },
 
       
-        HolidayDeleted: (state, action) => {
+        AppraisalDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -83,19 +83,13 @@ export const AppraisalPeriodsSetupSlice = createSlice({
                 (el) => el.Id !== action.payload.Id
             );
         },
-                HolidayEmailSend: (state, action) => {
-
-            state.error = null;
-            state.actionsLoading = false;
-         
-          
-        },
+       
 
 
 
 
 
-        // holidayCreated: (state, action) => {
+        // appraisalCreated: (state, action) => {
            
         //     state.actionsLoading = false;
         //     state.error = null;
@@ -103,7 +97,7 @@ export const AppraisalPeriodsSetupSlice = createSlice({
         // },
 
 
-        holidayCreated: (state, action) => {
+        appraisalCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
         
@@ -127,7 +121,7 @@ export const AppraisalPeriodsSetupSlice = createSlice({
 
 
 
-        holidayUpdated: (state, action) => {
+        appraisalUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
@@ -138,9 +132,9 @@ export const AppraisalPeriodsSetupSlice = createSlice({
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedHoliday);
+                let finalObj = JSON.parse(payloadObj.updatedAppraisal);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedHoliday;
+                    return finalObj; //action.payload.updatedAppraisal;
                 }
                 return entity;
             });

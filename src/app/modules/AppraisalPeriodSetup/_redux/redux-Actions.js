@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 const { actions } = AppraisalPeriodsSetupSlice;
 
 
-export const fetchHolidays = (queryparm) => async (dispatch) => {
+export const fetchAppraisals = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllHoliday(queryparm)
+  return requestFromServer.getAllAppraisal(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.holidayFetched(response));
+      dispatch(actions.appraisalFetched(response));
     })
     .catch((error) => {
     
@@ -24,20 +24,20 @@ export const fetchHolidays = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchHoliday = (Id) => (dispatch) => {
+export const fetchAppraisal = (Id) => (dispatch) => {
 
 
   if (!Id) {
-    return dispatch(actions.HolidayFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.AppraisalFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getHolidayById( Id)
+    .getAppraisalById( Id)
     .then((response) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.HolidayFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.AppraisalFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -45,13 +45,13 @@ export const fetchHoliday = (Id) => (dispatch) => {
     });
 };
 
-export const deleteHoliday = (Id) => (dispatch) => {
+export const deleteAppraisal = (Id) => (dispatch) => {
 
   return requestFromServer
-    .deleteHoliday(Id)
+    .deleteAppraisal(Id)
     .then((response) => {
     
-      dispatch(actions.HolidayDeleted({ Id}));
+      dispatch(actions.AppraisalDeleted({ Id}));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -72,19 +72,19 @@ export const deleteHoliday = (Id) => (dispatch) => {
 
 
 
-export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
+export const createAppraisal = (appraisalForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createHoliday(holidayForCreation)
+    .createAppraisal(appraisalForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.holidayCreated(user));
+      dispatch(actions.appraisalCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess,{
         position: "top-right",
@@ -113,14 +113,14 @@ export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
     });
 };
 
-export const updateHoliday = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateAppraisal = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateHoliday(user)
+    .updateAppraisal(user)
     .then((response) => {
   
-      const updatedHoliday = response?.config?.data; // response.data?.data;
+      const updatedAppraisal = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.holidayUpdated({ updatedHoliday }));
+      dispatch(actions.appraisalUpdated({ updatedAppraisal }));
     
       disbaleLoading();
       onHide();
