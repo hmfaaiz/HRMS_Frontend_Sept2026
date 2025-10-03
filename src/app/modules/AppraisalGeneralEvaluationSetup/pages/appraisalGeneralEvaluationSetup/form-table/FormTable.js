@@ -78,7 +78,7 @@ console.log("userAccess1111",userAccess)
 
     {
       dataField: "Competency.formName",
-      text: "Competency",
+      text: "Appraisal Competency",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
