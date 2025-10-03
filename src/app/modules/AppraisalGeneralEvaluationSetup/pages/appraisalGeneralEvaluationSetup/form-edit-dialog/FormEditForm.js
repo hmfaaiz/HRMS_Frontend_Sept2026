@@ -113,7 +113,7 @@ export function FormEditForm({
                         name="competencyId"
                         label={
                           <span>
-                            Competency<span style={{ color: "red" }}>*</span>
+                           Appraisal Competency<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead || data.competencyId}
@@ -213,6 +213,7 @@ export function FormEditForm({
 
                                     // Update Formik state
                                     setFieldValue("subsidiaryId", newValues);
+                                    setFieldValue("departmentId", null);
 
                                     // Call API with updated IDs
                                     dispatch(fetchAllDepartmentBySubsidiaryIds(newValues));

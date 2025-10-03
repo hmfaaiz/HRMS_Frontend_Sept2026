@@ -303,6 +303,9 @@ const AppraisalPeriodSetup = lazy(()=>
 const GeneralEvaluationSetup = lazy(()=>
  import("./modules/AppraisalGeneralEvaluationSetup/pages/index"))
 
+const HrEvaluationSetup = lazy(()=>
+ import("./modules/AppraisalHrEvaluationSetup/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -422,6 +425,7 @@ const ROUTES = {
   appraisal_rating : AppraisalRating,
   appraisal_period_setup:AppraisalPeriodSetup,
   general_evaluation_setup:GeneralEvaluationSetup,
+  hr_evaluation_setup:HrEvaluationSetup,
 };
 
 export default function BasePage() {
