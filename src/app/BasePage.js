@@ -293,6 +293,9 @@ const ChartOfAccounts = lazy(()=>
 const AuditTrailReport = lazy(()=>
  import("./modules/Audit_Trail_Report/pages/index"))
 
+const AppraisalRating = lazy(()=>
+ import("./modules/Appraisal_Rating/pages/index"))
+
 const AppraisalPeriodSetup = lazy(()=>
  import("./modules/AppraisalPeriodSetup/pages/index"))
 
@@ -416,6 +419,7 @@ const ROUTES = {
   loan_workflow: LoanWorkflowAdmin,
   chart_account : ChartOfAccounts,
   audit_trail:AuditTrailReport,
+  appraisal_rating : AppraisalRating,
   appraisal_period_setup:AppraisalPeriodSetup,
   general_evaluation_setup:GeneralEvaluationSetup,
 };
