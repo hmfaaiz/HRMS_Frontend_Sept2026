@@ -60,7 +60,7 @@ console.log("userAccess1111",userAccess)
     formUIProps.setIds([]);
 
 
-    dispatch(actions.fetchAppraisals(formUIProps.queryParams));
+    dispatch(actions.fetchGeneralEvaluationSetups(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(

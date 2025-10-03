@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 const { actions } = GeneralEvaluationSetupSlice;
 
 
-export const fetchAppraisals = (queryparm) => async (dispatch) => {
+export const fetchGeneralEvaluationSetups = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllAppraisal(queryparm)
+  return requestFromServer.getAllGeneralEvaluationSetup(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.appraisalFetched(response));
+      dispatch(actions.generalEvaluationSetupFetched(response));
     })
     .catch((error) => {
     
@@ -24,20 +24,20 @@ export const fetchAppraisals = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchAppraisal = (Id) => (dispatch) => {
+export const fetchGeneralEvaluationSetup = (Id) => (dispatch) => {
 
 
   if (!Id) {
-    return dispatch(actions.AppraisalFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.generalEvaluationSetupFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getAppraisalById( Id)
+    .getGeneralEvaluationSetupById( Id)
     .then((response) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.AppraisalFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.generalEvaluationSetupFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -45,13 +45,13 @@ export const fetchAppraisal = (Id) => (dispatch) => {
     });
 };
 
-export const deleteAppraisal = (Id) => (dispatch) => {
+export const deleteGeneralEvaluationSetup = (Id) => (dispatch) => {
 
   return requestFromServer
-    .deleteAppraisal(Id)
+    .deleteGeneralEvaluationSetup(Id)
     .then((response) => {
     
-      dispatch(actions.AppraisalDeleted({ Id}));
+      dispatch(actions.GeneralEvaluationSetupDeleted({ Id}));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -72,19 +72,19 @@ export const deleteAppraisal = (Id) => (dispatch) => {
 
 
 
-export const createAppraisal = (appraisalForCreation, disbaleLoading, onHide) => (
+export const createGeneralEvaluationSetup = (appraisalForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createAppraisal(appraisalForCreation)
+    .createGeneralEvaluationSetup(appraisalForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.appraisalCreated(user));
+      dispatch(actions.generalEvaluationSetupCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess,{
         position: "top-right",
@@ -113,14 +113,14 @@ export const createAppraisal = (appraisalForCreation, disbaleLoading, onHide) =>
     });
 };
 
-export const updateAppraisal = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateGeneralEvaluationSetup = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateAppraisal(user)
+    .updateGeneralEvaluationSetup(user)
     .then((response) => {
   
       const updatedAppraisal = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.appraisalUpdated({ updatedAppraisal }));
+      dispatch(actions.generalEvaluationSetupUpdated({ updatedAppraisal }));
     
       disbaleLoading();
       onHide();

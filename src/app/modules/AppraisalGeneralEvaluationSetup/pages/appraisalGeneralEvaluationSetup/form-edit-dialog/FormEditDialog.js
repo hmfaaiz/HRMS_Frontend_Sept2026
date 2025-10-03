@@ -61,9 +61,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchAppraisal(id));
+    dispatch(actions.fetchGeneralEvaluationSetup(id));
 
-    // dispatch(actions.fetchAppraisal(formUIProps .queryParams))
+    // dispatch(actions.fetchGeneralEvaluationSetup(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
@@ -73,7 +73,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     if (!id) {
 
-      dispatch(actions.createAppraisal(data, disbaleLoading, onHide));
+      dispatch(actions.createGeneralEvaluationSetup(data, disbaleLoading, onHide));
 
 
 
@@ -94,8 +94,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
 
-      await dispatch(actions.updateAppraisal(formUpdatedFields, disbaleLoading, onHide));
-      await dispatch(actions.fetchAppraisals(usersUIProps.queryParams));
+      await dispatch(actions.updateGeneralEvaluationSetup(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.fetchGeneralEvaluationSetups(usersUIProps.queryParams));
     }
   };
 

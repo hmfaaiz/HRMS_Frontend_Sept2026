@@ -39,7 +39,7 @@ export const GeneralEvaluationSetupSlice = createSlice({
             }
         },
 
-        appraisalFetched: (state, action) => {
+        generalEvaluationSetupFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;
@@ -55,7 +55,7 @@ export const GeneralEvaluationSetupSlice = createSlice({
         },
 
          //get User By ID
-         AppraisalFetchedForEdit: (state, action) => {
+         generalEvaluationSetupFetchedForEdit: (state, action) => {
            
    
             state.actionsLoading = false;
@@ -64,7 +64,7 @@ export const GeneralEvaluationSetupSlice = createSlice({
         },
 
       
-        AppraisalDeleted: (state, action) => {
+        GeneralEvaluationSetupDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -80,7 +80,7 @@ export const GeneralEvaluationSetupSlice = createSlice({
 
 
 
-        // appraisalCreated: (state, action) => {
+        // generalEvaluationSetupCreated: (state, action) => {
            
         //     state.actionsLoading = false;
         //     state.error = null;
@@ -88,7 +88,7 @@ export const GeneralEvaluationSetupSlice = createSlice({
         // },
 
 
-        appraisalCreated: (state, action) => {
+        generalEvaluationSetupCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
         
@@ -112,7 +112,7 @@ export const GeneralEvaluationSetupSlice = createSlice({
 
 
 
-        appraisalUpdated: (state, action) => {
+        generalEvaluationSetupUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)

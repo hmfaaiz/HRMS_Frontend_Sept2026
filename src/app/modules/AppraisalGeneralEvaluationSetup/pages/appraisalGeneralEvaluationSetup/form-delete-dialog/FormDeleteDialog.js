@@ -42,13 +42,13 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteAppraisal = () => {
+  const deleteGeneralEvaluationSetup = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteAppraisal(id)).then(() => {
+    dispatch(actions.deleteGeneralEvaluationSetup(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchAppraisals(usersUIProps.queryParams));
+      dispatch(actions.fetchGeneralEvaluationSetups(usersUIProps.queryParams));
    
       disableLoading();
     });
@@ -84,7 +84,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteAppraisal}
+            onClick={deleteGeneralEvaluationSetup}
             className="btn btn-danger  btn-elevate"
           >
             Delete 
