@@ -123,6 +123,7 @@ import { LoanWorkflowAdminSlice } from "../app/modules/LoanWorkflowAdmin/redux/f
 import { ChartOfAccountSlice } from "../app/modules/ChartOfAccounts/_redux/formdetailsSlice";
 import { AuditTrailReportSlice } from "../app/modules/Audit_Trail_Report/_redux/AuditTrailReportSlice";
 import { appraisalRatingSlice } from "../app/modules/Appraisal_Rating/_redux/redux-Slice"; 
+import { AppraisalPeriodsSetupSlice } from "../app/modules/AppraisalPeriodSetup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -244,6 +245,7 @@ export const rootReducer = combineReducers({
   chart_of_accounts : ChartOfAccountSlice.reducer,
   audit_trail : AuditTrailReportSlice.reducer,
   appraisal_rating : appraisalRatingSlice.reducer,
+  appraisal_period_setup : AppraisalPeriodsSetupSlice.reducer,
 });
 
 export function* rootSaga() {

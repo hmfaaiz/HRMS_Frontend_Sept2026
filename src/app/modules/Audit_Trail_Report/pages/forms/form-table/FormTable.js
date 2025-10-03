@@ -46,7 +46,7 @@ export function FormTable() {
 
   // Table columns
 
-    
+
   const columns = [
     // {
     //   dataField: "primaryInformation.formName",
@@ -59,25 +59,25 @@ export function FormTable() {
     //     maxWidth: "160px",
     //   },
     // },
-     {
-    dataField: "primaryInformation.formName",
-    text: "Form Name",
-    sort: false,
-    sortCaret: sortCaret,
-    headerSortingClasses,
-    style: {
-      minWidth: "160px",
-      maxWidth: "160px",
+    {
+      dataField: "primaryInformation.formName",
+      text: "Form Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+        maxWidth: "160px",
+      },
+      formatter: (cell, row) => {
+        // agar primaryInformation aur formName dono available hain to wahi show karo
+        if (row?.primaryInformation?.formName) {
+          return row.primaryInformation.formName;
+        }
+        // warna fallback tableName
+        return row.tableName;
+      },
     },
-    formatter: (cell, row) => {
-      // agar primaryInformation aur formName dono available hain to wahi show karo
-      if (row?.primaryInformation?.formName) {
-        return row.primaryInformation.formName;
-      }
-      // warna fallback tableName
-      return row.tableName;
-    },
-  },
     // {
     //   dataField: "userId",
     //   text: "User Id",
@@ -89,7 +89,7 @@ export function FormTable() {
     //     maxWidth: "160px",
     //   },
     // }, 
-       {
+    {
       dataField: "user.email",
       text: "Email",
       sort: false,
@@ -110,7 +110,7 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
@@ -136,8 +136,20 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-    },  
-     {
+    },
+    //  {
+    //   dataField: "primaryValue",
+    //   text: "Primary Information",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
+    // },
+
+    {
       dataField: "primaryValue",
       text: "Primary Information",
       sort: false,
@@ -147,7 +159,11 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
+      formatter: (cell, row) => {
+        return cell ? cell : row.dataId;
+      },
     },
+
 
     {
       dataField: "fieldName",
@@ -171,11 +187,11 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 20 ? cell.substring(0, 20) + "..." : cell;
       }
-     
+
     },
 
     {
@@ -188,11 +204,11 @@ export function FormTable() {
         minWidth: "160px",
         maxWidth: "160px",
       },
-       formatter: (cell) => {
+      formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 20 ? cell.substring(0, 20) + "..." : cell;
       }
-     
+
     },
     {
       dataField: "IPAddress",

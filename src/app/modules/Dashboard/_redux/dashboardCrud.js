@@ -169,3 +169,7 @@ export async function getAllUser(body) {
 export async function getAllAuditTablesName(body) {
   return axios.post(`${USERS_URL}/settings/read-all-audit-table-names` , body);
 }
+
+export const getAllFiscalYearBySubsidiaryId = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-fiscal-year-by-SubsidiaryId`,body);
+};
