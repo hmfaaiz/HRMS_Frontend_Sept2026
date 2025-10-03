@@ -299,6 +299,10 @@ const AppraisalRating = lazy(()=>
 const AppraisalPeriodSetup = lazy(()=>
  import("./modules/AppraisalPeriodSetup/pages/index"))
 
+
+const GeneralEvaluationSetup = lazy(()=>
+ import("./modules/AppraisalGeneralEvaluationSetup/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -417,6 +421,7 @@ const ROUTES = {
   audit_trail:AuditTrailReport,
   appraisal_rating : AppraisalRating,
   appraisal_period_setup:AppraisalPeriodSetup,
+  general_evaluation_setup:GeneralEvaluationSetup,
 };
 
 export default function BasePage() {

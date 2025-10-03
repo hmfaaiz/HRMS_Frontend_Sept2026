@@ -622,7 +622,7 @@ export function FormEditForm({
       });
     });
 
-    // ✅ Filter out duplicate skill names
+    //  Filter out duplicate skill names
     const uniqueBySkill = [];
     const seen = new Set();
 
@@ -634,10 +634,10 @@ export function FormEditForm({
       }
     });
 
-    // ✅ Set for UI dropdown or tracking
+    //  Set for UI dropdown or tracking
     setAllSkillNames(uniqueBySkill.map((s) => s.skillName));
 
-    // ✅ Remove existing skills related to the deleted jobVacancyId
+    //  Remove existing skills related to the deleted jobVacancyId
     let cleanedFormData = { ...formData };
     if (forDelete) {
       cleanedFormData.details_applicant_skills = (
@@ -645,7 +645,7 @@ export function FormEditForm({
       ).filter((skill) => skill.jobVacancyId !== forDelete);
     }
 
-    // ✅ Add new skills
+    //  Add new skills
     return updateApplicantSkills(cleanedFormData, uniqueBySkill);
   };
 
