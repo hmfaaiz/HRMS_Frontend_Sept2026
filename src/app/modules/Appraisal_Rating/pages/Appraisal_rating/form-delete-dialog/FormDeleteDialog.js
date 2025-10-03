@@ -80,9 +80,9 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={deleteRecord}
-            className="btn btn-primary btn-elevate"
+            className="btn btn-danger btn-elevate"
           >
-            Delete Record
+            Delete
             {loading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}
