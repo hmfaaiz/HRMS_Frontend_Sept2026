@@ -19,7 +19,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   useEffect(() => {
     let _title = id ? "" : "Add General Evaluation Setup";
     if (id) {
-      _title = `Edit GGeneral Evaluation Setup`;
+      _title = `Edit General Evaluation Setup`;
     } 
     
     setTitle(_title);
