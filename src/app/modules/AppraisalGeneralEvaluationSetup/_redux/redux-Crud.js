@@ -5,7 +5,7 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 //Create user
 export function createAppraisal(body) {
 
-  return axios.post(`${USERS_URL}/appraisal_period_setup/create-appraisal-period-setup`, body);
+  return axios.post(`${USERS_URL}/general_evaluation_setup/create-general-evaluation-setup`, body);
   
 }
 
@@ -13,22 +13,22 @@ export function createAppraisal(body) {
 // Read
 export function getAllAppraisal(body) {
 
-  return axios.post(`${USERS_URL}/appraisal_period_setup/read-all-appraisal-period-setup`, body);
+  return axios.post(`${USERS_URL}/general_evaluation_setup/read-all-general-evaluation-setup`, body);
 }
 
 export function getAppraisalById(Id) {
 
-  return axios.get(`${USERS_URL}/appraisal_period_setup/read-appraisal-period-setup/${Id}`);
+  return axios.get(`${USERS_URL}/general_evaluation_setup/read-general-evaluation-setup/${Id}`);
 }
 
 //Update
 export function updateAppraisal(body) {
    
-  return axios.put(`${USERS_URL}/appraisal_period_setup/update-appraisal-period-setup`, body);
+  return axios.put(`${USERS_URL}/general_evaluation_setup/update-general-evaluation-setup`, body);
 }
 
 //Delete
 export function deleteAppraisal(Id) {
 
-  return axios.delete(`${USERS_URL}/appraisal_period_setup/delete-appraisal-period-setup/${Id}`);
+  return axios.delete(`${USERS_URL}/general_evaluation_setup/delete-general-evaluation-setup/${Id}`);
 }

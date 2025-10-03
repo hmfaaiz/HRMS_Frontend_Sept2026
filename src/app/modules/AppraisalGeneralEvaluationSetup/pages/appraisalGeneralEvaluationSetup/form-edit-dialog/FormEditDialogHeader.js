@@ -10,7 +10,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   const { userForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      userForEdit: state.appraisal_period_setup.userForEdit,
+      userForEdit: state.general_evaluation_setup.userForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
@@ -19,7 +19,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   useEffect(() => {
     let _title = id ? "" : "Add General Evaluation Setup";
     if (id) {
-      _title = `Edit General EvaluationSetup`;
+      _title = `Edit GGeneral Evaluation Setup`;
     } 
     
     setTitle(_title);
@@ -30,7 +30,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View HoliAppraisal Period Setupdays"}
+          {!isUserForRead ? title : "View General Evaluation Setup"}
         </Modal.Title>
       </Modal.Header>
     </>

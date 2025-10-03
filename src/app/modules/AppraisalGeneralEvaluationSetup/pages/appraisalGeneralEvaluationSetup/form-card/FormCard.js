@@ -26,26 +26,26 @@ export function FormCard() {
 
   const { userAccess } = useSelector(
     (state) => ({
-      userAccess: state.auth?.userAccess?.appraisal_period_setup,
+      userAccess: state.auth?.userAccess?.general_evaluation_setup,
     }),
     shallowEqual
   );
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateAppraisalPeriodSetup"
+    (item) => item.componentName === "CreateGeneralEvaluationSetup"
   );
 
   const { currentState } = useSelector((state) => {
     return {
-      currentState: state.appraisal_period_setup,
-      userAccess: state?.auth?.userAccess["appraisal_period_setup"],
+      currentState: state.general_evaluation_setup,
+      userAccess: state?.auth?.userAccess["general_evaluation_setup"],
     };
   }, shallowEqual);
 
   // const { currentState } = useSelector();
 
   const { entities } = currentState;
-
+console.log("CurrentModuleName1110",CurrentModuleName())
   return (
   
       <TCard name={CurrentModuleName()}>

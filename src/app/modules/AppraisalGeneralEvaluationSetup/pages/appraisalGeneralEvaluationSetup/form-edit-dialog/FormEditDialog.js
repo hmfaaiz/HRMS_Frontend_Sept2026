@@ -51,10 +51,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
-    userForEdit: state.appraisal_period_setup.userForEdit,
+    userForEdit: state.general_evaluation_setup.userForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
-    isuserForRead: state.appraisal_period_setup.userForRead,
+    isuserForRead: state.general_evaluation_setup.userForRead,
   }));
 
 
@@ -68,8 +68,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   const saveForm = async (data) => {
-    delete data.fiscalYearStart
-    delete data.fiscalYearEnd
+  
 
 
     if (!id) {
@@ -82,9 +81,13 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       const formUpdatedFields = {
         Id: data.Id,
         subsidiaryId: data.subsidiaryId,
-        fiscalYearId: data.fiscalYearId,
-        startDate: data.startDate,
-        endDate: data.endDate,
+        competencyId: data.competencyId,
+        name: data.name,
+        description: data.description,
+        departmentId: data.departmentId,
+        designationId: data.designationId,
+        isAllowRatingSelection: data.isAllowRatingSelection,
+        isMarkCommentAsMandatory: data.isMarkCommentAsMandatory,
 
 
       };

@@ -27,10 +27,14 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
   const initUser = {
+    competencyId: "",
+    name: "",
+    description: "",
     subsidiaryId: "",
-    fiscalYearId: "",
-    startDate: "",
-    endDate: "",
+    departmentId: "",
+    designationId: "",
+    isAllowRatingSelection:null,
+    isMarkCommentAsMandatory: false,
  
 
   };

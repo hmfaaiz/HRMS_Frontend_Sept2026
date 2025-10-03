@@ -42,8 +42,8 @@ export function FormTable() {
       return {
 
 
-        currentState: state.appraisal_period_setup,
-        userAccess: state?.auth?.userAccess["appraisal_period_setup"],
+        currentState: state.general_evaluation_setup,
+        userAccess: state?.auth?.userAccess["general_evaluation_setup"],
       }
     },
     shallowEqual
@@ -65,13 +65,13 @@ console.log("userAccess1111",userAccess)
 
   const isAccessForEdit = userAccess?.find(
 
-    (item) => item.componentName === "UpdateAppraisalPeriodSetup"
+    (item) => item.componentName === "UpdateGeneralEvaluationSetup"
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteAppraisalPeriodSetup"
+    (item) => item.componentName === "DeleteGeneralEvaluationSetup"
   );
-console.log("isAccessForEdit111",isAccessForEdit)
+
 
   // Table columns
   const columns = [
@@ -98,8 +98,8 @@ console.log("isAccessForEdit111",isAccessForEdit)
      
     },
     {
-      dataField: "isAllowRatingSelection",
-      text: "Is Allow Rating Selection",
+      dataField: "isMarkCommentAsMandatory",
+      text: "Mark Comment As Mandatory",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

@@ -71,7 +71,7 @@ console.log("userAccess1111",userAccess)
   const isAccessForDelete = userAccess?.find(
     (item) => item.componentName === "DeleteAppraisalPeriodSetup"
   );
-console.log("isAccessForEdit111",isAccessForEdit)
+
 
   // Table columns
   const columns = [
