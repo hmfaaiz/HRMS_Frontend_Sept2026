@@ -366,6 +366,7 @@ export const VALIDATION_MESSAGES = {
   maxTwoDigits: 'Maximum two digit number allowed',
   maxThreeDigit: 'Maximum three digit number allowed',
   minZeroValue: 'Should not be less than 0',
+  maxTenValue: 'Should not be greater than 10',
   minOneValue: 'Should not be less than 1',
   maxHundredValue: 'Should not be greater than 100',
   maxNineHundredNinetyNineValue: 'Should not be greater than 999',
