@@ -75,6 +75,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         isUserForRead={userForRead}
         enableLoading={enableLoading}
         loading={loading}
+        subsidiaryId={formUIProps?.fetchSubsidiaryId}
       />
       <ToastContainer
         position="top-right"

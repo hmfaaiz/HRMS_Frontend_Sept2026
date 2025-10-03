@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -6,6 +6,7 @@ import { Input } from "../../../../../../_metronic/_partials/controls"; // Adjus
 import { useSelector } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
+import { getLastTableId } from "../../../../../../_metronic/redux/dashboardCrud";
 
 const formSchema = Yup.object().shape({
   code: Yup.string()
@@ -79,17 +80,35 @@ export function FormEditForm({
   isUserForRead,
   enableLoading,
   loading,
+  subsidiaryId,
 }) {
+  const [code, setCode] = useState(null);
+
   const { actionsLoading } = useSelector((state) => {
     return {
       actionsLoading: state.appraisal_rating?.actionsLoading,
     };
   });
 
+  const generateCode = async () => {
+    let codeRes = await getLastTableId(
+      "a_appraisal_ratting",
+      "code",
+      `subsidiaryId = ${subsidiaryId}`
+    );
+    setCode(codeRes?.data?.data[0]?.NewId || null);
+  };
+
+  useEffect(() => {
+    if (!user?.Id) {
+      generateCode();
+    }
+  }, [user?.Id]);
+
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={user}
+      initialValues={{ ...user, code: user?.Id ? user?.code : code }}
       validationSchema={formSchema}
       onSubmit={(values) => {
         enableLoading();
@@ -111,6 +130,7 @@ export function FormEditForm({
                     <Field
                       name="code"
                       component={Input}
+                      disabled={true}
                       max={6}
                       type="number"
                       label={
