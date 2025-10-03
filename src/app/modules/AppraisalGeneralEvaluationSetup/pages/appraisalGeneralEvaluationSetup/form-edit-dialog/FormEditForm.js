@@ -213,6 +213,7 @@ export function FormEditForm({
 
                                     // Update Formik state
                                     setFieldValue("subsidiaryId", newValues);
+                                    setFieldValue("departmentId", null);
 
                                     // Call API with updated IDs
                                     dispatch(fetchAllDepartmentBySubsidiaryIds(newValues));
