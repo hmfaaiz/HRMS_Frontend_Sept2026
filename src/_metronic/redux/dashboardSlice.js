@@ -77,6 +77,7 @@ const initialDashboardState = {
   allPayrollAccountList: [],
   allExitTypeList: [],
   allExitReasonList: [],
+  allAppraisalCompetencySetupList: [],
 
   
 };

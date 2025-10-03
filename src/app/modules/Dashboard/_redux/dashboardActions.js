@@ -487,3 +487,15 @@ export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (dis
       toast.error("Something went wrong");
     });
 };
+
+export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (dispatch) => {
+  return await requestFromServer
+    .getAllDepartmentBySubsidiaryIds({ subsidiaryIds })
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllDepartmentBysSubIdsListFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};

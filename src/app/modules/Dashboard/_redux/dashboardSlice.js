@@ -87,6 +87,7 @@ const initialDashboardState = {
   getAllUserList:[],
   getAllAuditTablesNameList:[],
   fiscalyearBySubList:[],
+  departmentBySubIdsList:[],
 };
 
 export const callTypes = {
@@ -353,6 +354,10 @@ export const dashboardSlice = createSlice({
 
       AllFiscalYearBySubListFetch: (state, action) => {
       state.fiscalyearBySubList = action.payload;
+    },   
+    
+    AllDepartmentBysSubIdsListFetch: (state, action) => {
+      state.departmentBySubIdsList = action.payload;
     },
 
   },
