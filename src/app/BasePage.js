@@ -293,6 +293,9 @@ const ChartOfAccounts = lazy(()=>
 const AuditTrailReport = lazy(()=>
  import("./modules/Audit_Trail_Report/pages/index"))
 
+const AppraisalRating = lazy(()=>
+ import("./modules/Appraisal_Rating/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -409,6 +412,7 @@ const ROUTES = {
   loan_workflow: LoanWorkflowAdmin,
   chart_account : ChartOfAccounts,
   audit_trail:AuditTrailReport,
+  appraisal_rating : AppraisalRating,
 };
 
 export default function BasePage() {

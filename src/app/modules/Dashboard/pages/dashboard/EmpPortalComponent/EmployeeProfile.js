@@ -41,7 +41,7 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { width } = useWindowSize();
   const dispatch = useDispatch();
-  const { user, data, contactInfo, skillsInfo , leave } = useSelector(
+  const { user, data, contactInfo, skillsInfo, leave } = useSelector(
     (state) => ({
       user: state?.auth?.user,
       data: state?.dashboard?.profileInfo,
@@ -52,7 +52,7 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
     shallowEqual
   );
 
-  console.log("leave" , leave)
+  console.log("leave", leave);
 
   useEffect(() => {
     if (user?.employeeIdMapping) {
@@ -102,8 +102,7 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
         </div>
         {isAttMarkShow &&
           leave?.find(
-            (el) =>
-              el?.componentName === "CreateLeaveRequest" && el?.isAccess
+            (el) => el?.componentName === "CreateLeaveRequest" && el?.isAccess
           ) && <AttendanceMarking />}
       </div>
 
@@ -158,14 +157,8 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
                   ["Location", data?.location?.formName],
                   // ["Region", data?.region?.formName],
                   // ["Gender", data?.gender],
-                  [
-                    "Date of Joining",
-                    formatDate(data?.dateOfJoining, "yy-MMM-yyyy"),
-                  ],
-                  [
-                    "Date of Confirmation",
-                    formatDate(data?.dateOfConfirmation, "yy-MMM-yyyy"),
-                  ],
+                  ["Date of Joining", data?.dateOfJoining],
+                  ["Date of Confirmation", data?.dateOfConfirmation],
                   // [
                   //   "Date of Birth",
                   //   formatDate(data?.dateOfBirth, "dd-MMM-yyyy"),
