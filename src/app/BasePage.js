@@ -306,6 +306,9 @@ const GeneralEvaluationSetup = lazy(()=>
 const HrEvaluationSetup = lazy(()=>
  import("./modules/AppraisalHrEvaluationSetup/pages/index"))
 
+const RequisitionJobVacancy = lazy(()=>
+ import("./modules/RequisitionJobVacancy/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -426,6 +429,7 @@ const ROUTES = {
   appraisal_period_setup:AppraisalPeriodSetup,
   general_evaluation_setup:GeneralEvaluationSetup,
   hr_evaluation_setup:HrEvaluationSetup,
+  requisition_job_vacancy:RequisitionJobVacancy,
 };
 
 export default function BasePage() {
