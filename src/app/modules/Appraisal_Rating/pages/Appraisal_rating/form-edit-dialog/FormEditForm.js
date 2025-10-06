@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import { Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { useSelector } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
@@ -159,7 +159,7 @@ export function FormEditForm({
                     <div>
                       <Field
                         name="description"
-                        component={Input}
+                        component={TextArea}
                         type="text"
                         label={
                           <span>
