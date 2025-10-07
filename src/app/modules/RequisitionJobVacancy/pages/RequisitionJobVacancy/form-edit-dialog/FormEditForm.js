@@ -48,6 +48,9 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
+  jobPreferenceId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
   noOfPosition: Yup.number()
     .required(VALIDATION_MESSAGES.required)
@@ -63,7 +66,7 @@ const jobVacancyEditSchema = Yup.object().shape({
 
 
 
-  preferredShiftId: Yup.string().required(VALIDATION_MESSAGES.required),
+
 
   preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
 
@@ -80,7 +83,16 @@ const jobVacancyEditSchema = Yup.object().shape({
       "Salary To must be greater than Salary From"
     ),
 
-  jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
+  isReplacement: Yup.boolean(),
+  replacementEmpId: Yup.string()
+    .nullable()
+    .when("isReplacement", {
+      is: true, // jab isReplacement true ho
+      then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+  // jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
 });
 
 export function FormEditForm({
@@ -100,24 +112,13 @@ export function FormEditForm({
   //drop down
   useEffect(() => {
     if (!formData.Id) {
-      dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-      // dispatch(fetchAllFormsMenu(158, "allDesignations"));
-      dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
-      dispatch(fetchAllCountry());
-      dispatch(fetchAllCity());
+
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // For Location
-      dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
-      dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
-      dispatch(fetchAllFormsMenu(275, "allEmployeeStatus"));
+
       dispatch(fetchAllFormsMenu(410, "allHiringReasonList"));
       dispatch(fetchAllFormsMenu(442, "alljobPreferenceList"));
-      dispatch(fetchAllFormsMenu(409, "allAppointmentTypeList"));
-      dispatch(fetchAllFormsMenu(412, "allPriorityTypeList"));
       dispatch(fetchAllFormsMenu(108, "allQualificationList"));
-      dispatch(fetchAllFormsMenu(413, "allJobShiftList"));
-      dispatch(fetchAllFormsMenu(187, "allGenderList"));
-      dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
-      dispatch(fetchAllFormsMenu(416, "allJobIndustryList"));
+
       dispatch(fetchAllParentDept());
       dispatch(fetchAllEmployeesWithNoPermissionData("allEmployeesWithNoPermissionList"));
     }
@@ -130,19 +131,7 @@ export function FormEditForm({
     };
   }, shallowEqual);
 
-  console.log("vvvvvv111", currentUser?.EmployeeMapping?.departmentId)
-  // const formData = useMemo(() => {
 
-  //     const {
-  //       Id,
-  //       jobCode,
-  //       dateOfRequest,
-  //       ...rest
-  //     } = formData;
-  //     return rest;
-
-  //   return formData;
-  // }, [formData]);
 
   const fetchData = async (setJobCode) => {
     if (!formData.Id) {
@@ -158,7 +147,7 @@ export function FormEditForm({
   };
   useEffect(() => {
     fetchData(setJobCode);
-  }, []);
+  }, [formData.Id]);
 
 
   // jobPostingStatus 4: Requisition Request
@@ -407,41 +396,6 @@ export function FormEditForm({
                     </h6>
 
                     <div className="grid md:grid-cols-4 gap-x-3">
-                      <div className="">
-                        <label>
-                          {" "}
-                          Shift<span style={{ color: "red" }}>*</span>
-                        </label>
-
-                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-                          {dashboard?.allJobShiftList?.map((option) => (
-                            <div key={option?.value}>
-                              <label className="flex items-center space-x-1">
-                                <input
-                                  className="mr-1"
-                                  name="preferredShiftId"
-                                  type="checkbox"
-                                  value={option?.value}
-                                  checked={Boolean(
-                                    values?.preferredShiftId?.includes(
-                                      option?.value?.toString()
-                                    )
-                                  )}
-                                  onChange={handleChange}
-                                />
-                                {option?.label}
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                        {errors.preferredShiftId &&
-                          touched.preferredShiftId && (
-                            <div className="invalid-feedback">
-                              {errors.preferredShiftId}
-                            </div>
-                          )}
-                      </div>
-
 
 
 
@@ -476,6 +430,30 @@ export function FormEditForm({
                             {errors.locationId}
                           </div>
                         )}
+                      </div>
+                      <div className="">
+                        <SearchSelect
+                          name="jobPreferenceId"
+                          label={
+                            <span>
+                              Job Preference
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={isdataForRead}
+                          onChange={(e) => {
+                            setFieldValue("jobPreferenceId", e.value || null);
+                          }}
+                          value={
+                            dashboard?.alljobPreferenceList?.find(
+                              (option) =>
+                                option.value === values.jobPreferenceId
+                            ) || null
+                          }
+                          options={dashboard?.alljobPreferenceList}
+                          error={errors.jobPreferenceId}
+                          touched={touched.jobPreferenceId}
+                        />
                       </div>
 
 
@@ -558,6 +536,8 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("jobSummary", e);
                       }}
+                   
+
                     />
                   </div>
                 </div>

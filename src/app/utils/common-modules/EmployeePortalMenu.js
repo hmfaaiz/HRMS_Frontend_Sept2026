@@ -11,6 +11,7 @@ const EmployeePortalMenu = ({
   isBackButton = false,
   isAnouncement = false,
   announcement,
+  isDashboardRedirect = false,
 }) => {
   const history = useHistory();
   return (
@@ -21,7 +22,16 @@ const EmployeePortalMenu = ({
           {isBackButton && (
             <CircleArrowLeft
               className="w-8 h-8 text-black cursor-pointer rounded-md p-1"
-              onClick={() => history.goBack()}
+
+              onClick={() => {
+                if (!isDashboardRedirect) {
+                 history.goBack()}
+                 else{
+                  history.push("/")
+                 }
+              }
+              }
+
             />
           )}
           <h5 className="m-0 text-black font-bold text-base sm:text-lg py-1">

@@ -13,20 +13,20 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 
 
 
-export function FormEditDialog({ id, show, onHide, dataForRead,status }) {
-console.log("hitting1111")
+export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
+  
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
 
- const [activeKey, setActiveKey] = useState("0");
+  const [activeKey, setActiveKey] = useState("0");
 
   useEffect(() => {
-  
-      setActiveKey("0"); // jab new user aaye to accordion open kar do
-   
-  }, [id,status]);
+
+    setActiveKey("0"); // jab new user aaye to accordion open kar do
+
+  }, [id, status]);
   const usersUIProps = useMemo(() => {
     return {
       queryParams: FormUIContext.queryParams,
@@ -94,79 +94,29 @@ console.log("hitting1111")
       // user.number_of_days=
       const formUpdatedFields = {
         Id: formData.Id,
-        // subsidiaryId: formData.subsidiaryId,
-        // companyId: formData.companyId,
-        // jobCode: formData.jobCode,
-        // jobDate: formData.jobDate,
-        // designationId: formData.designationId,
-        // jobTitle: formData.jobTitle,
-        // gradeId: formData.gradeId,
-        // locationId: formData.locationId,
-        // jobPostingDateFrom: formData.jobPostingDateFrom,
-        // jobPostingDateTo: formData.jobPostingDateTo,
-        // countryId: formData.countryId,
-        // cityId: formData.cityId,
-        // employeeTypeId: formData.employeeTypeId,
-        // employeeStatusId: formData.employeeStatusId,
-        // departmentId: formData.departmentId,
-        // reportToDesignationId: formData.reportToDesignationId,
-        // relationshipWithReportTo: formData.relationshipWithReportTo,
-        // noOfPosition: formData.noOfPosition,
-        // hiringReasonId: formData.hiringReasonId,
-        // jobPreferenceId: formData.jobPreferenceId,
-        // appointmentTypeId: formData.appointmentTypeId,
-        // comment: formData.comment,
-        // jobPeriodStart: formData.jobPeriodStart,
-        // jobPeriodEnd: formData.jobPeriodEnd,
-        // desireDateOfApp: formData.desireDateOfApp,
-        // priorityTypeId: formData.priorityTypeId,
-        // criticalDays: formData.criticalDays,
-        // preferredAgeFrom: formData.preferredAgeFrom,
-        // preferredAgeTo: formData.preferredAgeTo,
-        // preferredShiftId: formData.preferredShiftId,
-        // preferredGenderId: formData.preferredGenderId,
-        // preferredQualificationId: formData.preferredQualificationId,
-        // preferredJobSkillsId: formData.preferredJobSkillsId,
-        // preferredJobIndustryId: formData.preferredJobIndustryId,
-        // workExpFrom: formData.workExpFrom,
-        // workExpTo: formData.workExpTo,
-        // workExpDetail: formData.workExpDetail,
-        // additionalReq: formData.additionalReq,
-        // salaryRangeFrom: formData.salaryRangeFrom,
-        // salaryRangeTo: formData.salaryRangeTo,
-        // incentivePackages: formData.incentivePackages,
-        // otherBenefits: formData.otherBenefits,
-        // jobSummary: formData.jobSummary,
-        // optionalJobSkillsId: formData.optionalJobSkillsId
+        jobCode: formData.jobCode || "",
+        dateOfRequest: formData.dateOfRequest || null,
+        jobTitle: formData.jobTitle || "",
+        locationId: formData.locationId, // safe array
+        departmentId: formData.departmentId,
+        noOfPosition: formData.noOfPosition,
+        hiringReasonId: formData.hiringReasonId,
+        jobPreferenceId: formData.jobPreferenceId,
+        desireDateOfApp: formData.desireDateOfApp,
 
-        // optionalJobSkillsId: formData.optionalJobSkillsId,
-        // optionalJobSkillsId: formData.optionalJobSkillsId,
+        jobPreferenceId: formData.jobPreferenceId,
 
+        preferredQualificationId: formData.preferredQualificationId || null,
 
+        salaryRangeFrom: formData.salaryRangeFrom,
 
-         jobCode: formData.jobCode || "",
-  dateOfRequest: formData.dateOfRequest || null,
-  jobTitle: formData.jobTitle || "",
-  locationId: formData.locationId , // safe array
-  departmentId: formData.departmentId,
-  noOfPosition: formData.noOfPosition,
-  hiringReasonId: formData.hiringReasonId ,
-  jobPreferenceId: formData.jobPreferenceId ,
-  desireDateOfApp: formData.desireDateOfApp ,
+        salaryRangeTo: formData.salaryRangeTo,
 
-  preferredShiftId:formData.preferredShiftId,
-
-  preferredQualificationId: formData.preferredQualificationId || null,
-
-  salaryRangeFrom: formData.salaryRangeFrom,
-
-  salaryRangeTo: formData.salaryRangeTo,
-
-  jobSummary: formData.jobSummary || "",
-  isReplacement: formData.isReplacement ,
-  replacementEmpId: formData.replacementEmpId,
-  reasonForRequest: formData.reasonForRequest ,
-  keyResponsibility: formData.keyResponsibility,
+        jobSummary: formData.jobSummary || "",
+        isReplacement: formData.isReplacement,
+        replacementEmpId: formData.replacementEmpId,
+        reasonForRequest: formData.reasonForRequest,
+        keyResponsibility: formData.keyResponsibility,
       };
 
 
@@ -205,40 +155,40 @@ console.log("hitting1111")
     //     </Card.Header>
     //     <Accordion.Collapse eventKey="0">
     //       <Card.Body>
-        
+
 
     //       </Card.Body>
     //     </Accordion.Collapse>
     //   </Card>
     // </Accordion>
 
-        <div className="bg-white">
-          <hr></hr>
-              <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
-              <FormEditForm
-                saveForm={saveForm}
-                formData={dataForEdit || formUIProps.initUser}
-                onHide={onHide}
-                roles={roles}
-                centers={centers}
-                userStatusTypes={userStatusTypes}
-                isdataForRead={dataForRead}
-                enableLoading={enableLoading}
-                loading={loading}
+    <div className="bg-white">
+      <hr></hr>
+      <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
+      <FormEditForm
+        saveForm={saveForm}
+        formData={dataForEdit || formUIProps.initUser}
+        onHide={onHide}
+        roles={roles}
+        centers={centers}
+        userStatusTypes={userStatusTypes}
+        isdataForRead={dataForRead}
+        enableLoading={enableLoading}
+        loading={loading}
 
-              />
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-              />
-            </div>
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </div>
 
     // </Modal>
   );

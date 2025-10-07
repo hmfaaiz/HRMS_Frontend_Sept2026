@@ -60,6 +60,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
+            isDashboardRedirect={true}
             menuOptions={[
 
             ]}
@@ -73,6 +74,7 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
+              isDashboardRedirect={true}
             menuOptions={[
 
             ]}

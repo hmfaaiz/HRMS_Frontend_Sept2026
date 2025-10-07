@@ -39,7 +39,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     hiringReasonId: "",
     jobPreferenceId: "",
     desireDateOfApp: "",
-    preferredShiftId: "",
     preferredQualificationId: "",
     salaryRangeFrom: "",
     salaryRangeTo: "",
