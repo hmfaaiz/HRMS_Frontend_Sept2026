@@ -299,6 +299,8 @@ const AppraisalRating = lazy(()=>
 const AppraisalPeriodSetup = lazy(()=>
  import("./modules/AppraisalPeriodSetup/pages/index"))
 
+const AppraisalConfig = lazy(()=>
+import("./modules/Appraisal_Configuration/pages/index"))
 
 const GeneralEvaluationSetup = lazy(()=>
  import("./modules/AppraisalGeneralEvaluationSetup/pages/index"))
@@ -431,6 +433,7 @@ const ROUTES = {
   audit_trail:AuditTrailReport,
   appraisal_rating : AppraisalRating,
   appraisal_period_setup:AppraisalPeriodSetup,
+  appraisal_configuration : AppraisalConfig,
   general_evaluation_setup:GeneralEvaluationSetup,
   hr_evaluation_setup:HrEvaluationSetup,
   requisition_job_vacancy:RequisitionJobVacancy,

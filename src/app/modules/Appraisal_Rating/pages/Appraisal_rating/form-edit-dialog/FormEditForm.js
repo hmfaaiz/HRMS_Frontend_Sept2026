@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Input } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+import { Input, TextArea } from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
 import { useSelector } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
@@ -18,6 +18,7 @@ const formSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   description: Yup.string()
     .nullable()
+    .max(200 , "Maximum 200 charachter allowed")
     .required(VALIDATION_MESSAGES.required),
   points: Yup.number()
     .transform((value, originalValue) =>
@@ -126,44 +127,48 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-12">
-                  <div>
-                    <Field
-                      name="code"
-                      component={Input}
-                      disabled={true}
-                      max={6}
-                      type="number"
-                      label={
-                        <span>
-                          Rating Code<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    />
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 col-span-2 lg:col-span-4">
+                    <div>
+                      <Field
+                        name="code"
+                        component={Input}
+                        disabled={true}
+                        max={6}
+                        type="number"
+                        label={
+                          <span>
+                            Rating Code<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Field
+                        name="name"
+                        component={Input}
+                        type="text"
+                        label={
+                          <span>
+                            Rating Name<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Field
-                      name="name"
-                      component={Input}
-                      type="text"
-                      label={
-                        <span>
-                          Rating Name<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    />
-                  </div>
-                  <div className="col-span-2">
-                    <Field
-                      name="description"
-                      component={Input}
-                      type="text"
-                      label={
-                        <span>
-                          Rating Description
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    />
+                  <div className="col-span-2 lg:col-span-4">
+                    <div>
+                      <Field
+                        name="description"
+                        component={TextArea}
+                        type="text"
+                        label={
+                          <span>
+                            Rating Description
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                      />
+                    </div>
                   </div>
                   <div>
                     <Field
