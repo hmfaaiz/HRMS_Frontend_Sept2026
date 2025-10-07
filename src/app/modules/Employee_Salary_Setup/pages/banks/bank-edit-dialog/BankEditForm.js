@@ -85,7 +85,8 @@ const formValidation = Yup.object().shape({
   // company_from_accNo: Yup.string()
   //   .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
-  emp_bank_accNo: Yup.string().matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+  emp_bank_accNo: Yup.string()
+  .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
   gratuity_startDate: Yup.date()
     .nullable()
@@ -1829,6 +1830,12 @@ useEffect(()=>{
                         onChange={(e) => {
                           setFieldValue("payment_mode_Id", e.value || null);
                           setDefualtPaymentModeCodeList(e);
+                          
+                             setFieldValue("emp_bankId",null);
+                             setFieldValue("emp_bank_branchId", null);
+                             setFieldValue("emp_bank_accNo", "");
+                             setDefaultBanks("")
+                       
                         }}
                         value={defPaymentModeList || null}
                         error={errors.payment_mode_Id}
@@ -1849,7 +1856,7 @@ useEffect(()=>{
                           setFieldValue("emp_bankId", e.value);
                           setFieldValue("emp_bank_branchId", null);
                           setDefaultEmpBankBranch(null);
-                          console.log("defEmpBankBranch1111",defEmpBankBranch)
+                        
                           setDefaultBanks(e);
                           // dispatch(fetchAllBanks(e.value));
                           fetchBranch(e.value);

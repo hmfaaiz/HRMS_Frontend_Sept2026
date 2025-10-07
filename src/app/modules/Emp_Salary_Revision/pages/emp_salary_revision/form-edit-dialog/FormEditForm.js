@@ -2815,6 +2815,11 @@ const comparisonFields = [
                       onChange={(e) => {
                         setFieldValue("payment_mode_Id", e.value || null);
                         setDefualtPaymentModeCodeList(e);
+                        
+                             setFieldValue("emp_bankId",null);
+                             setFieldValue("emp_bank_branchId", null);
+                             setFieldValue("emp_bank_accNo", "");
+                             setDefaultBanks("")
                       }}
                       // value={defPaymentModeList || null}
                     
