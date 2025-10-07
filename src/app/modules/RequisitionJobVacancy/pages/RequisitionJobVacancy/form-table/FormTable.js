@@ -58,7 +58,7 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadRequisitionJobVacancyy"
+    (item) => item.componentName === "ReadRequisitionJobVacancy"
   );
 
   const isAccessForEdit = userAccess?.find((item) => {

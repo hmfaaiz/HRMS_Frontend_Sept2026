@@ -160,7 +160,7 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...formData,
-        jobCode: formData.jobCode ? formData?.jobCode : jobCode, jobPostingStatus: 4, departmentId: currentUser?.EmployeeMapping?.departmentId,
+        jobCode: formData.jobCode ? formData?.jobCode : jobCode, departmentId: currentUser?.EmployeeMapping?.departmentId,
         dateOfRequest: formData?.dateOfRequest
           ? formData?.dateOfRequest
           : formatDates(new Date(), "yyyy-MM-dd"),

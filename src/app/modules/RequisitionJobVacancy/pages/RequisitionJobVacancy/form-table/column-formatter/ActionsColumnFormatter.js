@@ -46,7 +46,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Edit */}
-      {isAccessForEdit  && (
+      {isAccessForEdit  && !row.requestReviewedBy &&(
         <OverlayTrigger
           overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
         >
@@ -57,7 +57,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Delete or Activate */}
-      {isAccessForDelete && (
+      {isAccessForDelete && !row.requestReviewedBy && (
         <OverlayTrigger
           overlay={
             <Tooltip id="delete-tooltip">
