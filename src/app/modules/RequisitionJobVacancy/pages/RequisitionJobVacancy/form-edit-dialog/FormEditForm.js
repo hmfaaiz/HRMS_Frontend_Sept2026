@@ -47,7 +47,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     .max(100, "Job title must be at most 100 characters")
     .required(VALIDATION_MESSAGES.required),
 
-  locationId: Yup.string().required(VALIDATION_MESSAGES.required),
+  locationId: Yup.string()
+  .nullable().required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -56,7 +57,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required)
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
-  hiringReasonId: Yup.string().required(VALIDATION_MESSAGES.required),
+  hiringReasonId: Yup.string()
+  .nullable().required(VALIDATION_MESSAGES.required),
 
   desireDateOfApp: Yup.date()
     .nullable()
@@ -68,7 +70,9 @@ const jobVacancyEditSchema = Yup.object().shape({
 
 
 
-  preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredQualificationId: Yup.number()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
 
 
   salaryRangeFrom: Yup.number()
