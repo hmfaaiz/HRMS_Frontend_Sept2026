@@ -117,6 +117,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
         replacementEmpId: formData.replacementEmpId,
         reasonForRequest: formData.reasonForRequest,
         keyResponsibility: formData.keyResponsibility,
+        workExpFrom: formData.workExpFrom,
+        workExpTo: formData.workExpTo,
       };
 
 

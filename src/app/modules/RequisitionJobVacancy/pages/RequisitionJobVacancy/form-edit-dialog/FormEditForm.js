@@ -66,7 +66,20 @@ const jobVacancyEditSchema = Yup.object().shape({
 
 
 
+  workExpFrom: Yup.number()
+  .nullable()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
 
+    .required(VALIDATION_MESSAGES.required),
+
+  workExpTo: Yup.number()
+  .nullable()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
+    .required(VALIDATION_MESSAGES.required)
+    .moreThan(
+      Yup.ref("workExpFrom"),
+      "Experience (to) must be greater than experience from"
+    ),
 
 
 
@@ -377,6 +390,42 @@ export function FormEditForm({
                         />
                       </div>
 
+                          <div className="">
+                                                                <label>
+                                                                  <span>
+                                                                    Work Experience From
+                                                                    <span style={{ color: "red" }}>*</span>
+                                                                  </span>
+                                                                </label>
+                                                                <Field
+                                                                  name="workExpFrom"
+                                                                  component={Input}
+                                                                  placeholder="Enter work experience (from)"
+                                                                  type="number"
+                                                                  onInput={(e) => {
+                                                                    e.target.value = amountLimitDynamic(e.target.value, 2);
+                                                                  }}
+                                                                />
+                                                              </div>
+                                            
+                                                              <div className="">
+                                                                <label>
+                                                                  <span>
+                                                                    Work Experience To
+                                                                    <span style={{ color: "red" }}>*</span>
+                                                                  </span>
+                                                                </label>
+                                                                <Field
+                                                                  name="workExpTo"
+                                                                  component={Input}
+                                                                  placeholder="Enter work experience (to)"
+                                                                  type="number"
+                                                                  onInput={(e) => {
+                                                                    e.target.value = amountLimitDynamic(e.target.value, 2);
+                                                                  }}
+                                                                />
+                                                              </div>
+
                     </div>
 
                   </div>
@@ -578,7 +627,8 @@ export function FormEditForm({
                 <hr></hr>
 
                 <h6 className="font-bold mb-0 text-primary my-2">
-                  Salary Range (Per Month)
+                  {/* Salary Range (Per Month) */}
+                  Proposed Salary Range (Per Month)
                 </h6>
 
                 <div className="grid md:grid-cols-6 gap-x-3 gap-y-1">

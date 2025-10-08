@@ -67,13 +67,26 @@ const jobVacancyEditSchema = Yup.object().shape({
 
 
 
-notApprovedRemarks: Yup.string().when("decision", {
-    is: 0, // if decision === 2
-    then: (schema) => schema.required(VALIDATION_MESSAGES.required),
-    otherwise: (schema) => schema.nullable().notRequired(),
-  }),
+  // notApprovedRemarks: Yup.string().when("decision", {
+  //     is: 0, // if decision === 2
+  //     then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+  //     otherwise: (schema) => schema.nullable().notRequired(),
+  //   }),
 
+  workExpFrom: Yup.number()
+  .nullable()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
 
+    .required(VALIDATION_MESSAGES.required),
+
+  workExpTo: Yup.number()
+   .nullable()
+    .min(0, VALIDATION_MESSAGES.minZeroValue)
+    .required(VALIDATION_MESSAGES.required)
+    .moreThan(
+      Yup.ref("workExpFrom"),
+      "Experience (to) must be greater than experience from"
+    ),
 
   preferredQualificationId: Yup.number()
     .nullable()
@@ -169,7 +182,7 @@ export function FormEditForm({
   const decisionOptions = [
     { value: 0, label: "Not Approved" },
     { value: 1, label: "Approved" },
-    { value: 2, label: "Send Back for Clarification" },
+    // { value: 2, label: "Send Back for Clarification" },
 
   ];
 
@@ -320,9 +333,17 @@ export function FormEditForm({
 
 
                         }}
+                        // value={
+                        //   dashboard?.allEmployeesWithNoPermissionList?.find(
+                        //     (option) => option?.value == values?.requestedBy  || option?.value == currentUser?.employeeIdMapping
+                        //   ) || null
+                        // }
+
                         value={
                           dashboard?.allEmployeesWithNoPermissionList?.find(
-                            (option) => option?.value == values?.requestedBy  || option?.value == currentUser?.employeeIdMapping
+                            (option) =>
+                              option?.value ===
+                              (values?.requestedBy ?? currentUser?.employeeIdMapping)
                           ) || null
                         }
                         error={errors.requestedBy}
@@ -506,6 +527,43 @@ export function FormEditForm({
 
                         />
                       </div>
+
+
+                       <div className="">
+                                          <label>
+                                            <span>
+                                              Work Experience From
+                                              <span style={{ color: "red" }}>*</span>
+                                            </span>
+                                          </label>
+                                          <Field
+                                            name="workExpFrom"
+                                            component={Input}
+                                            placeholder="Enter work experience (from)"
+                                            type="number"
+                                            onInput={(e) => {
+                                              e.target.value = amountLimitDynamic(e.target.value, 2);
+                                            }}
+                                          />
+                                        </div>
+                      
+                                        <div className="">
+                                          <label>
+                                            <span>
+                                              Work Experience To
+                                              <span style={{ color: "red" }}>*</span>
+                                            </span>
+                                          </label>
+                                          <Field
+                                            name="workExpTo"
+                                            component={Input}
+                                            placeholder="Enter work experience (to)"
+                                            type="number"
+                                            onInput={(e) => {
+                                              e.target.value = amountLimitDynamic(e.target.value, 2);
+                                            }}
+                                          />
+                                        </div>
 
                     </div>
 
@@ -826,7 +884,7 @@ export function FormEditForm({
                       disabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("decision", e.target.value); // Use the raw value
-                      setFieldValue("notApprovedRemarks","")
+                        setFieldValue("notApprovedRemarks", "")
                       }}
                     >
                       <option value="">Select </option>
@@ -851,9 +909,9 @@ export function FormEditForm({
                   <div className="md:col-span-5 mt-1">
                     <Field
                       name="notApprovedRemarks"
-                      disabled={values.decision!=0}
+
                       component={TextArea}
-                      label="Not Approved Remarks"
+                      label="Decision Remarks"
                     />
                   </div>
                 </div>

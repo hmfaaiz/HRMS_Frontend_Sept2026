@@ -54,6 +54,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     additionalNotes:"",
     decision:null,
     notApprovedRemarks:"",
+    workExpFrom:"",
+    workExpTo:""
 
 
   };

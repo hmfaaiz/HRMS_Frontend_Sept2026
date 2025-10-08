@@ -40,12 +40,16 @@ const jobVacancyEditSchema = Yup.object().shape({
   jobDate: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
-  designationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  designationId: Yup.number()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
   jobTitle: Yup.string()
     .min(1, "Job title must be at least 1 characters")
     .max(100, "Job title must be at most 100 characters")
     .required(VALIDATION_MESSAGES.required),
-  gradeId: Yup.string().required(VALIDATION_MESSAGES.required),
+  gradeId: Yup.number()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
   locationId: Yup.string().required(VALIDATION_MESSAGES.required),
   countryId: Yup.number().nullable(), // optional banane ke liye
 
@@ -102,6 +106,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
 
   reportToDesignationId: Yup.number()
+  .nullable()
     .required(VALIDATION_MESSAGES.required)
     .test(
       "not-same-as-designation",
@@ -112,6 +117,7 @@ const jobVacancyEditSchema = Yup.object().shape({
       }
     ),
   relationshipWithReportTo: Yup.string()
+  .nullable()
     .min(5, "Must be  5 characters")
     .required(VALIDATION_MESSAGES.required),
   noOfPosition: Yup.number()
@@ -120,8 +126,12 @@ const jobVacancyEditSchema = Yup.object().shape({
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   hiringReasonId: Yup.string().required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.string().required(VALIDATION_MESSAGES.required),
-  appointmentTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
-  priorityTypeId: Yup.string().required(VALIDATION_MESSAGES.required),
+  appointmentTypeId: Yup.number()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
+  priorityTypeId: Yup.number()
+  .nullable()
+  .required(VALIDATION_MESSAGES.required),
   // criticalDays: Yup.number()
   //   .min(1, VALIDATION_MESSAGES.minOneValue)
   //   .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
@@ -180,8 +190,8 @@ const jobVacancyEditSchema = Yup.object().shape({
       Yup.ref("preferredAgeFrom"),
       "Preferred age (to) must be greater than age (from)"
     ),
-  preferredShiftId: Yup.string().required(VALIDATION_MESSAGES.required),
-  preferredGenderId: Yup.string().required(VALIDATION_MESSAGES.required),
+  preferredShiftId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
+  preferredGenderId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
   preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
   // preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredJobSkillsId: Yup.string()
@@ -206,7 +216,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
 
   optionalJobSkillsId: Yup.string().nullable(),
-  preferredJobIndustryId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredJobIndustryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
 

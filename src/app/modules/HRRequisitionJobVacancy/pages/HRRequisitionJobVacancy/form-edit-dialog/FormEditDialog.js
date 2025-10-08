@@ -125,6 +125,8 @@ console.log("id11111",id)
         additionalNotes: formData.additionalNotes,
         decision: formData.decision,
         notApprovedRemarks: formData.notApprovedRemarks,
+        workExpFrom: formData.workExpFrom,
+        workExpTo: formData.workExpTo,
       };
 
 
