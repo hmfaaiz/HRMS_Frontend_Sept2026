@@ -150,6 +150,7 @@ export function FormFIlter({ listLoading, user }) {
     { value: 1, label: "Currently Posted" },
     { value: 2, label: "On Hold" },
     { value: 3, label: "Closed / Expired Job" },
+    { value: 4, label: "Requisition Request" },
   ];
 
 
