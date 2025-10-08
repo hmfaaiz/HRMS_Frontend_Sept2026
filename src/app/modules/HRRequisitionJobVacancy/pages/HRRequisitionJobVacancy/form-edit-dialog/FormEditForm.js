@@ -826,6 +826,7 @@ export function FormEditForm({
                       disabled={isdataForRead}
                       onChange={(e) => {
                         setFieldValue("decision", e.target.value); // Use the raw value
+                      setFieldValue("notApprovedRemarks","")
                       }}
                     >
                       <option value="">Select </option>
@@ -844,9 +845,13 @@ export function FormEditForm({
                   </div>
 
 
+
+
+
                   <div className="md:col-span-5 mt-1">
                     <Field
                       name="notApprovedRemarks"
+                      disabled={values.decision!=0}
                       component={TextArea}
                       label="Not Approved Remarks"
                     />
