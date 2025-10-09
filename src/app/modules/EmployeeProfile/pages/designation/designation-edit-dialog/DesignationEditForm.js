@@ -54,8 +54,8 @@ const cnicRegExp = /^[0-9]{5}-[0-9]{7}-[0-9]$/;
 // Password Regex
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
-const profileValidation = Yup.object()
-  .shape({
+const profileValidation = (localizationId) =>
+  Yup.object().shape({
     deligationId: Yup.string().when("requireDeligation", {
       is: true, // Condition: when 'requireDeligation' is true
       then: Yup.string()
@@ -78,7 +78,7 @@ const profileValidation = Yup.object()
     title: Yup.string().required("Required*"),
     subsidiaryId: Yup.string().required("Required*"),
     gradeId: Yup.string().required("Required*"),
-    designationId: Yup.string().required("Required*"),
+    designationId: Yup.string().nullable().required("Required*"),
     departmentId: Yup.string().required("Required*"),
     // teamId: Yup.string()
     //   .required("Required*"),
@@ -226,12 +226,29 @@ const profileValidation = Yup.object()
       ),
 
 
-    nic_no: Yup.string()
-      .matches(
-        /^\d{5}-\d{7}-\d{1}$/,
-        "ID Card No must be in the format 12345-6789012-3"
-      )
-      .required("Required*"),
+    // nic_no: Yup.string()
+    //   .matches(
+    //     /^\d{5}-\d{7}-\d{1}$/,
+    //     "ID Card No must be in the format 12345-6789012-3"
+    //   )
+    //   .required("Required*"),
+
+    nic_no: Yup.string().when([], {
+      is: () => localizationId == 1, // use external variable here
+      then: (schema) =>
+        schema
+          .matches(
+            /^\d{5}-\d{7}-\d{1}$/,
+            "ID Card No must be in the format 12345-6789012-3"
+          )
+          .required("Required*"),
+      otherwise: (schema) =>
+        schema
+          .nullable()
+          .notRequired()
+          .matches(/^[0-9]*$/, "Only numbers are allowed")
+          .max(20, "Maximum length is 20 characters"),
+    }),
 
     passportNo: Yup.string()
       .nullable()
@@ -311,72 +328,72 @@ const profileValidation = Yup.object()
 
     additional_summary: Yup.string().required("Required*"),
   })
-  .test(
-    "check-marital-status",
-    "Invalid marital status for selected title",
-    function (value) {
-      // if (title === 'Mrs.' && maritalStatus === '261') {
-      const { title, maritalStatus, gender, employeeTypeId } = value;
+    .test(
+      "check-marital-status",
+      "Invalid marital status for selected title",
+      function (value) {
+        // if (title === 'Mrs.' && maritalStatus === '261') {
+        const { title, maritalStatus, gender, employeeTypeId } = value;
 
-      // Check conditions based on title // 196 == Single
-      if (title === "Mrs." && maritalStatus !== "267") {
-        //married
+        // Check conditions based on title // 196 == Single
+        if (title === "Mrs." && maritalStatus !== "267") {
+          //married
 
-        return this.createError({
-          path: "maritalStatus",
-          message: "Mrs. only for Married",
-        });
+          return this.createError({
+            path: "maritalStatus",
+            message: "Mrs. only for Married",
+          });
+        }
+
+        if (title === "Mrs." && maritalStatus === "266") {
+          //single
+          return this.createError({
+            path: "maritalStatus",
+            message: "Mrs. cannot be single.",
+          });
+        }
+
+        if ((title == "Mrs." || title == "Ms.") && gender == "Male") {
+          return this.createError({
+            path: "gender",
+            message: "Mrs. Ms. cannot be male.",
+          });
+        }
+
+        // if ((title === 'Mr.' || title === 'Dr.' || title === 'Professor.' || title === 'Captain') && gender === 'Female') {
+        //   return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
+        // }
+
+        if (title === "Mr." && gender === "Female") {
+          return this.createError({
+            path: "gender",
+            message: "Mr. cannot be female.",
+          });
+        }
+
+        // if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267 && maritalStatus != 269) { //divorced
+
+        //   return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
+        // }
+        if (title === "Mr." && maritalStatus == 268) {
+          //Widow
+
+          return this.createError({
+            path: "maritalStatus",
+            message: "Mr. cannot be widow.",
+          });
+        }
+
+        if (title === "Ms." && maritalStatus == 267) {
+          return this.createError({
+            path: "maritalStatus",
+            message: "Ms. only for single woman.",
+          });
+        }
+
+        return true; // No error
       }
-
-      if (title === "Mrs." && maritalStatus === "266") {
-        //single
-        return this.createError({
-          path: "maritalStatus",
-          message: "Mrs. cannot be single.",
-        });
-      }
-
-      if ((title == "Mrs." || title == "Ms.") && gender == "Male") {
-        return this.createError({
-          path: "gender",
-          message: "Mrs. Ms. cannot be male.",
-        });
-      }
-
-      // if ((title === 'Mr.' || title === 'Dr.' || title === 'Professor.' || title === 'Captain') && gender === 'Female') {
-      //   return this.createError({ path: 'gender', message: 'Mr. cannot be female.' });
-      // }
-
-      if (title === "Mr." && gender === "Female") {
-        return this.createError({
-          path: "gender",
-          message: "Mr. cannot be female.",
-        });
-      }
-
-      // if (title === 'Mr.' && maritalStatus != 266 && maritalStatus != 267 && maritalStatus != 269) { //divorced
-
-      //   return this.createError({ path: 'maritalStatus', message: 'Mr. cannot be female.' });
-      // }
-      if (title === "Mr." && maritalStatus == 268) {
-        //Widow
-
-        return this.createError({
-          path: "maritalStatus",
-          message: "Mr. cannot be widow.",
-        });
-      }
-
-      if (title === "Ms." && maritalStatus == 267) {
-        return this.createError({
-          path: "maritalStatus",
-          message: "Ms. only for single woman.",
-        });
-      }
-
-      return true; // No error
-    }
-  );
+    );
 
 
 // Step 1: Set up state to manage visibility
@@ -652,12 +669,21 @@ export function DesignationEditForm({
     if (subsidiaryId) {
       fetchEmployeePolicyBySubsidiaryId(subsidiaryId);
     }
+
     setDefualtSubsidiaryList(
       dashboard.allSubsidiaryList &&
       dashboard.allSubsidiaryList.filter((item) => {
         return item.value === subsidiaryId;
       })
     );
+    const matchedSubsidiary = dashboard.allSubsidiaryList?.find(
+      (item) => item.value === subsidiaryId
+    );
+
+    if (matchedSubsidiary) {
+      setLocalizationId(matchedSubsidiary?.localizationId);
+    }
+    console.log("ggggg44444", matchedSubsidiary)
   }, [user?.subsidiaryId, dashboard.subsidiaryId]);
 
   //===== Date Of Joining
@@ -1803,26 +1829,26 @@ export function DesignationEditForm({
         }
       }
 
-       if (obj.skill && obj.startDate && obj.endDate) {
-    const start = new Date(obj.startDate);
-    const end = new Date(obj.endDate);
+      if (obj.skill && obj.startDate && obj.endDate) {
+        const start = new Date(obj.startDate);
+        const end = new Date(obj.endDate);
 
-    const isOverlap = skillsList.some((other, otherIdx) => {
-      if (otherIdx === index) return false; // apne aap ko skip karo
-      if (other.skill !== obj.skill) return false; // sirf same skill compare karo
-      if (!other.startDate || !other.endDate) return false; // dono dates honi chahiye
+        const isOverlap = skillsList.some((other, otherIdx) => {
+          if (otherIdx === index) return false; // apne aap ko skip karo
+          if (other.skill !== obj.skill) return false; // sirf same skill compare karo
+          if (!other.startDate || !other.endDate) return false; // dono dates honi chahiye
 
-      const otherStart = new Date(other.startDate);
-      const otherEnd = new Date(other.endDate);
+          const otherStart = new Date(other.startDate);
+          const otherEnd = new Date(other.endDate);
 
-      return start <= otherEnd && end >= otherStart; // overlap condition
-    });
+          return start <= otherEnd && end >= otherStart; // overlap condition
+        });
 
-    if (isOverlap) {
-      newErrors[`skill-${index}`] =
-        "Duplicate record!";
-    }
-  }
+        if (isOverlap) {
+          newErrors[`skill-${index}`] =
+            "Duplicate record!";
+        }
+      }
 
 
     });
@@ -1908,13 +1934,14 @@ export function DesignationEditForm({
     );
   };
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (defSubsidiary?.localizationId) {
-      setLocalizationId(defSubsidiary?.localizationId);
+  //   if (defSubsidiary?.localizationId) {
+  //     console.log("defSubsidiary?.localizationId111", defSubsidiary?.localizationId)
+  //     setLocalizationId(defSubsidiary?.localizationId);
 
-    }
-  }, [defSubsidiary]);
+  //   }
+  // }, [defSubsidiary]);
 
   const getServicePeriod = (start, end, rightindex, handler, field, year = false, month = false) => {
     if (!start || !end) return;
@@ -2023,7 +2050,8 @@ export function DesignationEditForm({
 
         }}
 
-        validationSchema={profileValidation}
+        // validationSchema={profileValidation}
+        validationSchema={profileValidation(localizationId)}
         onSubmit={async (values) => {
           //const t =  handleSubmit();
           const validationErrors = validate();
@@ -2160,6 +2188,13 @@ export function DesignationEditForm({
                           onChange={(e) => {
                             setFieldValue("subsidiaryId", e.value || null);
                             setDefualtSubsidiaryList(e);
+                            const matchedSubsidiary = dashboard.allSubsidiaryList?.find(
+                              (item) => item.value === e.value
+                            );
+
+                            if (matchedSubsidiary) {
+                              setLocalizationId(matchedSubsidiary?.localizationId);
+                            }
 
                             if (!id) {
                               setEmployeeCode(" ");
@@ -3437,29 +3472,53 @@ export function DesignationEditForm({
                     <div>
                       <Field
                         name="nic_no"
-                        mask={[
-                          /[1-9]/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          "-",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          "-",
-                          /\d/,
-                        ]}
-                        component={MaskInput}
+                        // mask={[
+                        //   /[1-9]/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   "-",
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   /\d/,
+                        //   "-",
+                        //   /\d/,
+                        // ]}
+
+                        mask={
+                          localizationId === 1
+                            ? [
+                              /[1-9]/,
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              "-",
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              /\d/,
+                              "-",
+                              /\d/,
+                            ]
+                            : [] // no mask if localization ≠ 1
+                        }
+                        component={localizationId == 1 ? MaskInput : Input}
                         placeholder=" ID Card No"
                         label={
                           <span>
-                            {" "}
-                            ID Card No.<span style={{ color: "red" }}>*</span>
+                            ID Card No
+                            {localizationId == 1 && (
+                              <span style={{ color: "red" }}> *</span>
+                            )}
                           </span>
                         }
                         autoComplete="off"

@@ -302,16 +302,42 @@ const PreviewPayslipPDF = () => {
                                     <td className="payslip-tdWidthEmpAtt payslip-right-align">{employeeData.monthDays}</td>
                                     <td className='payslip-tdWidth'>Payable Days:</td>
                                     <td className="payslip-tdWidthEmpAtt payslip-right-align">{employeeData.paidDays}</td>
-                                    <td className='payslip-tdWidth'>Bank Name:</td>
-                                    <td className='payslip-tdWidth'>{employeeData.bankName}</td>
+
+                                    {employeeData.payment_mode_Id !== 153 ? (
+                                        <>
+                                            <td className="payslip-tdWidth">Payment Mode</td>
+                                            <td className="payslip-tdWidth">{employeeData.bankName}</td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td className="payslip-tdWidth">Bank Name:</td>
+                                            <td className="payslip-tdWidth">{employeeData.bankName}</td>
+                                        </>
+                                    )}
+
+                                    {/* <td className='payslip-tdWidth'>Bank Name:</td>
+                                    <td className='payslip-tdWidth'>{employeeData.bankName}</td> */}
                                 </tr>
                                 <tr>
                                     <td>Leaves Deducted:</td>
                                     <td className="payslip-tdWidthEmpAtt payslip-right-align">{employeeData.leaveCount}</td>
                                     <td>Total Lates:</td>
                                     <td className="payslip-tdWidthEmpAtt payslip-right-align">{employeeData.LateDaysCount}</td>
-                                    <td>Account No:</td>
-                                    <td>{employeeData.accountNumber}</td>
+                                    {employeeData.payment_mode_Id !== 153 ? (
+                                        <>
+                                            <td className="tdWidth"></td>
+                                            <td className="tdWidth"></td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td>Account No:</td>
+                                            <td>{employeeData.accountNumber}</td>
+                                        </>
+                                    )}
+
+
+                                    {/* <td>Account No:</td>
+                                    <td>{employeeData.accountNumber}</td> */}
                                 </tr>
                                 <tr>
                                     <td>Absent:</td>
@@ -457,17 +483,19 @@ const PreviewPayslipPDF = () => {
                                 {leaveDetailData.length > 0 && (
                                     <>
                                         <tr className="payslip-section-title">
-                                            <td colSpan="6">Leave Balance</td>
+                                            <td colSpan="6">Leave Balance (YTD)</td>
                                         </tr>
                                         <tr>
                                             <td colSpan="2"><strong>Leave Type</strong></td>
-                                            <td colSpan="2"><strong>Allocated Leaves</strong></td>
-                                            <td colSpan="2"><strong>Remaining Leaves</strong></td>
+                                            <td colSpan="1"><strong>Leave Allocated </strong></td>
+                                            <td colSpan="1"><strong>Leave Availed </strong></td>
+                                            <td colSpan="2"><strong>Remaining Balance</strong></td>
                                         </tr>
                                         {leaveDetailData.map((leave, index) => (
                                             <tr key={index}>
                                                 <td colSpan="2">{leave.name}</td>
-                                                <td colSpan="2" className="payslip-right-align">{leave.allocatedCount}</td>
+                                                <td colSpan="1" className="payslip-right-align">{leave.allocatedCount}</td>
+                                                <td colSpan="1" className="payslip-right-align">{leave.AvailedCount}</td>
                                                 <td colSpan="2" className="payslip-right-align">{leave.remainingCount}</td>
                                             </tr>
                                         ))}

@@ -6,7 +6,7 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import * as action from "../../../_redux/dashboardActions";
 import useWindowSize from "../../../../../utils/useWindowSize";
 import { AttendanceMarking } from "./AttendanceMarking";
-
+import { Link } from "react-router-dom";
 const formatDate = (date, fmt) => (date ? format(new Date(date), fmt) : "N/A");
 
 const renderInfoGrid = (data, fields) => (
@@ -41,18 +41,19 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { width } = useWindowSize();
   const dispatch = useDispatch();
-  const { user, data, contactInfo, skillsInfo, leave } = useSelector(
+  const { user, data, contactInfo, skillsInfo, leave ,requisition_job_vacancy} = useSelector(
     (state) => ({
       user: state?.auth?.user,
       data: state?.dashboard?.profileInfo,
       contactInfo: state?.dashboard?.contactInfo,
       skillsInfo: state?.dashboard?.skillsInfo,
       leave: state?.auth?.userAccess["Leave Request"],
+      requisition_job_vacancy: state?.auth?.userAccess.requisition_job_vacancy,
     }),
     shallowEqual
   );
 
-  console.log("leave", leave);
+
 
   useEffect(() => {
     if (user?.employeeIdMapping) {
@@ -211,6 +212,29 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
           )}
         </div>
       )}
+
+
+        {/* Requisition */}
+      {isOpen && requisition_job_vacancy?.length > 0 && (
+  <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
+    <h6 className="font-bold mb-0 text-primary my-2">
+      Job Requisition Form
+    </h6>
+
+    {requisition_job_vacancy?.length > 0 ? (
+        <div className="font-size-xs text-black font-bold">
+       <p className="m-0 underline">
+       <Link to={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}>
+                        Request Job Vacancy{" "}
+        </Link>
+     </p>
+     </div>
+    ) : (
+      <p className="text-sm mb-0">No Request for Job Vacancy Found</p>
+    )}
+  </div>
+)}
+
     </>
   );
 };

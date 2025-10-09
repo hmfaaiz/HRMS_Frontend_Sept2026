@@ -33,7 +33,7 @@ export function ActionsColumnFormatter(
 
     <div className="space-x-2">
       {/* Post */}
-      {isAccessForPosting &&
+      {isAccessForPosting && !row.isRequisitionForm &&
         (row?.jobPostingStatus == 0 || row?.jobPostingStatus == 2) && (
           <OverlayTrigger
             overlay={<Tooltip id="post-tooltip">Post Job Vacancy</Tooltip>}
@@ -55,7 +55,7 @@ export function ActionsColumnFormatter(
         )}
 
       {/* Hold */}
-      {isAccessForHold && row?.jobPostingStatus == 1 && (
+      {isAccessForHold && !row.isRequisitionForm  && row?.jobPostingStatus == 1 && (
         <OverlayTrigger
           overlay={<Tooltip id="hold-tooltip">Hold Job Vacancy</Tooltip>}
         >
@@ -76,7 +76,7 @@ export function ActionsColumnFormatter(
       )}
 
       {/* Close */}
-      {isAccessForClose &&
+      {isAccessForClose  && !row.isRequisitionForm &&
         (row?.jobPostingStatus == 1 || row?.jobPostingStatus == 2) && (
           <OverlayTrigger
             overlay={<Tooltip id="close-tooltip">Close Job Vacancy</Tooltip>}
@@ -98,7 +98,7 @@ export function ActionsColumnFormatter(
         )}
 
       {/* View */}
-      {isAccessForView && (
+      {isAccessForView &&(
         <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
           <a className="" onClick={() => openReadFormDialog(row.Id)}>
             <Eye className="w-4 h-4 text-black cursor-pointer" />
