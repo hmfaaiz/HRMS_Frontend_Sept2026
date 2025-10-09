@@ -33,6 +33,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     superVisorRattingToEmp: false,
     empRattingToSuperVisor: false,
     ratingScaleSelection: false,
+    // departmentId: "",
+    // designationId: "",
   };
 
   const value = {

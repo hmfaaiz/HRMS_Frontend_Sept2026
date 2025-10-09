@@ -9,8 +9,12 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllParentDept,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 
 const formSchema = Yup.object()
   .shape({
@@ -35,6 +39,14 @@ const formSchema = Yup.object()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
       .required(VALIDATION_MESSAGES.required),
+
+    // departmentId: Yup.string()
+    //   .nullable()
+    //   .optional(),
+
+    // designationId: Yup.string()
+    //   .nullable()
+    //   .optional(),
 
     superVisorRattingToEmp: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
@@ -72,11 +84,15 @@ export function FormEditForm({
   const [totalConfigPercentage, seTotalConfigPercentage] = useState(0);
 
   const dispatch = useDispatch();
-  const { actionsLoading } = useSelector((state) => {
-    return {
-      actionsLoading: state.appraisal_config?.actionsLoading,
-    };
-  });
+  const { actionsLoading, dashboard, designationList } = useSelector(
+    (state) => {
+      return {
+        actionsLoading: state.appraisal_config?.actionsLoading,
+        designationList: state.appraisal_config?.designationList,
+        dashboard: state?.dashboard,
+      };
+    }
+  );
 
   // Calculate total %
   const calculateTotalConfigPerc = (value) => {
@@ -90,6 +106,10 @@ export function FormEditForm({
 
   useEffect(() => {
     calculateTotalConfigPerc(user);
+    dispatch(fetchAllParentDept());
+    if (user?.departmentId) {
+      dispatch(actions.getDesignationByDeptId(user?.departmentId));
+    }
   }, [user]);
 
   useEffect(() => {
@@ -113,6 +133,7 @@ export function FormEditForm({
         touched,
         values,
         resetForm,
+        handleChange,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -135,6 +156,7 @@ export function FormEditForm({
                         }
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          dispatch(fetchAllParentDept(e.value));
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
@@ -259,6 +281,92 @@ export function FormEditForm({
                       }}
                     />
                   </div>
+                  {/* <div>
+                    <SearchSelect
+                      name={"departmentId"}
+                      label={
+                        <span>
+                          Department<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={!values?.subsidiaryId}
+                      onChange={(e) => {
+                        setFieldValue("departmentId", e?.value || null);
+                        setFieldValue("designationId", "");
+                        dispatch(actions.getDesignationByDeptId(e?.value));
+                      }}
+                      value={
+                        dashboard?.allParentDept?.find(
+                          (el) => el?.value === values?.departmentId
+                        ) || null
+                      }
+                      error={errors?.departmentId}
+                      touched={touched?.departmentId}
+                      options={dashboard?.allParentDept}
+                    />
+                  </div>
+                  <div className="text-black mt-1">
+                    <label>
+                      Designation<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div
+                      className="overflow-auto scrollbar-fancy"
+                      style={{ maxHeight: "150px" }}
+                    >
+                      <div className="p-0 m-0" style={{ fontSize: "10.2px" }}>
+                        <div className="flex justify-start items-center font-semibold">
+                          <input
+                            type="checkbox"
+                            className="mr-1"
+                            checked={
+                              values?.designationId?.length ===
+                              designationList?.length
+                            }
+                            disabled={!values?.departmentId}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                // Sab select
+                                const allValues = designationList?.map((opt) =>
+                                  opt.value.toString()
+                                );
+                                setFieldValue("designationId", allValues);
+                              } else {
+                                setFieldValue("designationId", []);
+                              }
+                            }}
+                          />
+                          Select All
+                        </div>
+
+                        {designationList?.map((option) => (
+                          <div
+                            key={option.value}
+                            className="flex justify-start items-center"
+                          >
+                            <input
+                              className="mr-1"
+                              name="designationId"
+                              type="checkbox"
+                              disabled={!values?.departmentId}
+                              value={option.value}
+                              checked={Boolean(
+                                values?.designationId?.includes(
+                                  option?.value?.toString()
+                                )
+                              )}
+                              onChange={handleChange}
+                            />
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {errors.designationId && touched.designationId && (
+                      <div className="invalid-feedback">
+                        {errors.designationId}
+                      </div>
+                    )}
+                  </div> */}
                 </div>
               </fieldset>
             </Form>

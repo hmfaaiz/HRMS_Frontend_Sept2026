@@ -127,6 +127,7 @@ import { AppraisalPeriodsSetupSlice } from "../app/modules/AppraisalPeriodSetup/
 import { appraisalConfigSlice } from "../app/modules/Appraisal_Configuration/_redux/redux-Slice";
 import { GeneralEvaluationSetupSlice } from "../app/modules/AppraisalGeneralEvaluationSetup/_redux/redux-Slice";
 import { HrEvaluationSetupSlice } from "../app/modules/AppraisalHrEvaluationSetup/_redux/redux-Slice";
+import { appraisalPublishSlice } from "../app/modules/Appraisal_Publishing/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -252,6 +253,7 @@ export const rootReducer = combineReducers({
   appraisal_config : appraisalConfigSlice.reducer,
   general_evaluation_setup : GeneralEvaluationSetupSlice.reducer,
   hr_evaluation_setup : HrEvaluationSetupSlice.reducer,
+  appraisal_publish : appraisalPublishSlice.reducer,
 });
 
 export function* rootSaga() {

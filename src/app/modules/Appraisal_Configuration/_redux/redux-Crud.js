@@ -40,3 +40,10 @@ export function deleteAppraisalConfig(body) {
     body
   );
 }
+/// get designation
+export function getDesignationBaseOnDepartment(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_configuration/get-designation`,
+    body
+  );
+}

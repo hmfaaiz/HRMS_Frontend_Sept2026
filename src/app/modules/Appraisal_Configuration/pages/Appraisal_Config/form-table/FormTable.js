@@ -113,7 +113,7 @@ export function FormTable() {
       formatter: (cell) => (cell ? "Yes" : "No"),
     },
     {
-      dataField: "EmpRattingToSuperVisor",
+      dataField: "empRattingToSuperVisor",
       text: "Show Employee Rating to Supervisor",
       sort: false,
       sortCaret: sortCaret,
