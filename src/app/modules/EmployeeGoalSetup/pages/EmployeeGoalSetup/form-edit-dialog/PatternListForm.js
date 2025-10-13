@@ -14,7 +14,7 @@ function PatternListForm({
   errors,
   touched,
   dropdownData,
-  isdataForRead,
+  isdataForRead, appraisalPeriod,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -30,7 +30,7 @@ function PatternListForm({
   }, [values.list, setFieldValue]);
 
 
-  console.log("allAppraisalCompetencySetupList1111", dashboard.allAppraisalCompetencySetupList)
+
   return (
     <>
       <FieldArray name="list">
@@ -195,7 +195,7 @@ function PatternListForm({
                             </div>
                           )}
                         </td>
-                    
+
 
                         <td>
                           <Field
@@ -225,7 +225,7 @@ function PatternListForm({
                           )}
                         </td>
 
-                            <td className="max-w-18">
+                        <td className="max-w-18">
                           <DatePicker
                             className="form-control"
                             placeholderText="Select Date"
@@ -242,9 +242,20 @@ function PatternListForm({
                             name={`list[${index}].targetDate`}
                             autoComplete="off"
                             showPopperArrow={false}
+                  
+                            minDate={
+                              appraisalPeriod?.startDate
+                                ? new Date(appraisalPeriod?.startDate)
+                                : new Date()
+                            } maxDate={
+                              appraisalPeriod?.endDate
+                                ? new Date(appraisalPeriod?.endDate)
+                                : new Date()
+                            }
+
                           />
 
-                          {errors.list?.[index]?.targetDate && touched.list?.[index]?.targetDate && (
+                          {errors.list?.[index]?.targetDate  && (
                             <div className="text-danger">{errors.list[index].targetDate}</div>
                           )}
                         </td>

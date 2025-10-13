@@ -21,6 +21,7 @@ export function ActionsColumnFormatter(
   }
 ) {
   const isUserRead = false;
+  console.log("row111",row)
   return (
     <div className="space-x-2">
       <OverlayTrigger
@@ -58,7 +59,7 @@ export function ActionsColumnFormatter(
             <a
               title=""
               className=""
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+              onClick={() => openDeleteFormDialog(row.Id)}
             >
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -16,20 +16,22 @@ import { fetchDesignationWiseGoalSetupByEmp } from "../../../_redux/redux-Action
 
 
 const employeeEditSchema = Yup.object().shape({
-  employeeId: Yup.string().required(VALIDATION_MESSAGES.required),
-  appraisalPeriodId: Yup.string().required(VALIDATION_MESSAGES.required),
+  employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
+  appraisalPeriodId: Yup.number().required(VALIDATION_MESSAGES.required),
 
   list: Yup.array()
     .of(
       Yup.object().shape({
         goalName: Yup.string()
           .trim()
+          .nullable()
           .max(50, "Maximum 50 characters allowed")
           .required(VALIDATION_MESSAGES.required),
 
         goalDescription: Yup.string()
           .trim()
           .max(100, "Maximum 100 characters allowed")
+          .nullable()
           .required(VALIDATION_MESSAGES.required),
 
         weightage: Yup.number()
@@ -51,7 +53,7 @@ const employeeEditSchema = Yup.object().shape({
         isActive: Yup.boolean(),
 
         sno: Yup.number().required(VALIDATION_MESSAGES.required),
-        targetDate: Yup.date().required(VALIDATION_MESSAGES.required),
+        targetDate: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
       })
     )
 
@@ -69,7 +71,7 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-
+  const [appraisalPeriod, setAppraisalPeriod] = useState()
 
   useEffect(() => {
 
@@ -162,7 +164,7 @@ export function FormEditForm({
                       touched={touched.employeeId}
                     />
                   </div>
-                  
+
                   <div>
                     <SearchSelect
                       name="appraisalPeriodId"
@@ -175,6 +177,17 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("appraisalPeriodId", e.value || null);
 
+                        setAppraisalPeriod(dashboard?.appraisalPeriodList?.find(
+                          (option) => option?.value == e?.value
+                        ) || null)
+                        if (values.list && values.list.length > 0) {
+                          const updatedList = values.list.map((item) => ({
+                            ...item,
+                            targetDate: "", // or null, if you want to nullify
+                          }));
+                          setFieldValue("list", updatedList);
+                        }
+
                       }}
                       value={
                         dashboard?.appraisalPeriodList?.find(
@@ -184,7 +197,7 @@ export function FormEditForm({
                       options={dashboard?.appraisalPeriodList}
 
 
-                      error={errors.appraisalPeriodId}
+                       error={errors.appraisalPeriodId}
                       touched={touched.appraisalPeriodId}
                     />
                   </div>
@@ -197,6 +210,7 @@ export function FormEditForm({
                 <div>
                   <PatternListForm
                     values={values}
+
                     setFieldValue={setFieldValue}
                     errors={errors}
                     touched={touched}
@@ -207,6 +221,7 @@ export function FormEditForm({
                     //   ),
                     // }}
                     isdataForRead={isdataForRead}
+                    appraisalPeriod={appraisalPeriod}
                   />
                 </div>
               </fieldset>
