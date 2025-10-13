@@ -318,6 +318,10 @@ const HRRequisitionJobVacancy = lazy(()=>
 const DesignationWiseGoalSetup = lazy(()=>
  import("./modules/DesignationWiseGoalSetup/pages/index"))
 
+
+const EmployeeGoalSetup = lazy(()=>
+ import("./modules//EmployeeGoalSetup/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -442,6 +446,7 @@ const ROUTES = {
   requisition_job_vacancy:RequisitionJobVacancy,
   hr_requisition_job_vacancy:HRRequisitionJobVacancy,
   designation_wise_goal_setup:DesignationWiseGoalSetup,
+  employee_goal_setup:EmployeeGoalSetup,
 };
 
 export default function BasePage() {
