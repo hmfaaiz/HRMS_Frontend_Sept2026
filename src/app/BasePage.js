@@ -319,6 +319,8 @@ const HRRequisitionJobVacancy = lazy(()=>
 const AppraisalEvaluationManagement = lazy(()=>
  import("./modules/Appraisal_Evaluation/pages/index")
 )
+const DesignationWiseGoalSetup = lazy(()=>
+ import("./modules/DesignationWiseGoalSetup/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -445,6 +447,7 @@ const ROUTES = {
   requisition_job_vacancy:RequisitionJobVacancy,
   hr_requisition_job_vacancy:HRRequisitionJobVacancy,
   appraisal_evaluation : AppraisalEvaluationManagement,
+  designation_wise_goal_setup:DesignationWiseGoalSetup,
 };
 
 export default function BasePage() {
