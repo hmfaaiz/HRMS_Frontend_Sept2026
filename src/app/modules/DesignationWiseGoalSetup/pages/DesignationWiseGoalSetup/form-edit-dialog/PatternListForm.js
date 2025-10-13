@@ -27,6 +27,9 @@ function PatternListForm({
       setFieldValue(`list[${index}].sno`, index + 1);
     });
   }, [values.list, setFieldValue]);
+
+
+  console.log("allAppraisalCompetencySetupList1111", dashboard.allAppraisalCompetencySetupList)
   return (
     <>
       <FieldArray name="list">
@@ -45,7 +48,7 @@ function PatternListForm({
                     goalDescription: "",
                     competencyId: "",
                     weightage: "",
-
+                    isActive: 1,
                     sno: "",
                   })
                 }
@@ -60,12 +63,13 @@ function PatternListForm({
                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                   <thead>
                     <tr className="custom-table-header">
-                      <td>S.No.</td>
-                      <td>Competency</td>
-                      <td>Goal Name</td>
-                      <td>Goal Description</td>
-                      <td>Weightage (%)</td>
-                      <td>Mark Comment as Mandatory</td>
+                      <td className="w-[5px]">S.No.</td>
+                      <td className="w-[200px]">Competency</td>
+                      <td className="w-[200px]">Goal Name</td>
+                      <td className="w-[250px]">Goal Description</td>
+                      <td className="w-[100px]">Weightage (%)</td>
+                      <td className="w-[120px]">Mark Comment as Mandatory</td>
+                      <td className="w-[10px]">Active</td>
                       <td className="text-right">Action</td>
                     </tr>
                   </thead>
@@ -140,26 +144,33 @@ function PatternListForm({
 
                           <SearchSelect
                             name={`list[${index}].competencyId`}
+                            // value={
+                            //   dashboard?.allAppraisalCompetencySetupList?.find(
+                            //     (option) => option.value === values.list[index].competencyId
+                            //   ) || null
+                            // }
+
                             value={
-                              dashboard?.allAppraisalCompetencySetupList?.find(
-                                (option) => option.value === values.list[index].competencyId
-                              ) || null
+                              dashboard?.allAppraisalCompetencySetupList
+                                ?.filter((option) => option.value === values.list[index].competencyId)
+                                ?.map((option) => ({
+                                  label: option.onlyLabel, //  onlyLabel will be displayed
+                                  value: option.value,
+                                }))[0] || null
                             }
+
                             onChange={(selectedOption) => {
                               const selectedValue = selectedOption ? selectedOption.value : "";
                               setFieldValue(`list[${index}].competencyId`, selectedValue);
                             }}
-                            // Filter options to prevent selecting already chosen ones
+                    
                             options={
-                              dashboard?.allAppraisalCompetencySetupList?.filter(
-                                (option) =>
-                                  // allow if not already selected OR it's the current row's selected value
-                                  !values.list.some(
-                                    (item, i) =>
-                                      i !== index && item.competencyId === option.value
-                                  )
-                              ) || []
+                              dashboard?.allAppraisalCompetencySetupList?.map((option) => ({
+                                  label: option.onlyLabel, // show only this field as label
+                                  value: option.value,     // keep value for Formik binding
+                                })) || []
                             }
+
                           />
 
 
@@ -276,6 +287,31 @@ function PatternListForm({
                           {errors?.list?.[index]?.isManadatory && touched?.list?.[index]?.isManadatory && (
                             <div className="invalid-feedback">
                               {errors.list[index].isManadatory}
+                            </div>
+                          )}
+                        </td>
+                        <td>
+
+
+                          <Checkbox
+                            isSelected={values.list[index].isActive}
+                            name={`list[${index}].isActive`}
+                            checked={!!values.list[index].isActive}
+                            disabled={isdataForRead}
+                            onChange={(e) => {
+                              setFieldValue(`list[${index}].isActive`, e.target.checked ? 1 : 0);
+                            }}
+                            className={
+                              errors.list?.[index]?.isActive && touched.list?.[index]?.isActive
+                                ? "form-check-input is-invalid"
+                                : "form-check-input"
+                            }
+                          />
+
+                          {/* Error message */}
+                          {errors?.list?.[index]?.isActive && touched?.list?.[index]?.isActive && (
+                            <div className="invalid-feedback">
+                              {errors.list[index].isActive}
                             </div>
                           )}
                         </td>

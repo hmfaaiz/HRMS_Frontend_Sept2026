@@ -35,6 +35,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     designationId: "",
     isAllowRatingSelection:null,
     isMarkCommentAsMandatory: false,
+    isActive: true,
  
 
   };

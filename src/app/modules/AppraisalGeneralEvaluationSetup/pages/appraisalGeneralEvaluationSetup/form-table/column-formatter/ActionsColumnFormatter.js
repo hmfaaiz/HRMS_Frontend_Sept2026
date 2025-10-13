@@ -59,7 +59,7 @@ export function ActionsColumnFormatter(
             </Tooltip>
           }
         >
-          {row.isActive ? (
+        
             <a
               title=""
               className=""
@@ -67,15 +67,7 @@ export function ActionsColumnFormatter(
             >
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
-          ) : (
-            <a
-              title=""
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-3"
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          )}
+       
         </OverlayTrigger>
       )}
     </div>

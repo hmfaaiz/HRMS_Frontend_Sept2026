@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
+  Checkbox,
   DatePickerField,
   Input,
   TextArea,
@@ -113,15 +114,24 @@ export function FormEditForm({
                         name="competencyId"
                         label={
                           <span>
-                           Appraisal Competency<span style={{ color: "red" }}>*</span>
+                            Appraisal Competency<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         isDisabled={isUserForRead || data.competencyId}
+                        // value={
+                        //   dashboard?.allAppraisalCompetencySetupList?.find(
+                        //     (option) => option.value == values.competencyId
+                        //   ) || null
+                        // }
                         value={
-                          dashboard?.allAppraisalCompetencySetupList?.find(
-                            (option) => option.value == values.competencyId
-                          ) || null
+                          dashboard?.allAppraisalCompetencySetupList
+                            ?.filter((option) => option.value === values.competencyId)
+                            ?.map((option) => ({
+                              label: option.onlyLabel, //  onlyLabel will be displayed
+                              value: option.value,
+                            }))[0] || null
                         }
+
                         onChange={(e) => {
                           setFieldValue("competencyId", e.value || null);
 
@@ -129,7 +139,14 @@ export function FormEditForm({
                         }}
                         error={errors?.competencyId}
                         touched={touched?.competencyId}
-                        options={dashboard?.allAppraisalCompetencySetupList}
+                        // options={dashboard?.allAppraisalCompetencySetupList}
+                        options={
+                          dashboard?.allAppraisalCompetencySetupList?.map((option) => ({
+                            label: option.onlyLabel, // show only this field as label
+                            value: option.value,     // keep value for Formik binding
+                          })) || []
+                        }
+
 
                       />
                     </div>
@@ -150,6 +167,39 @@ export function FormEditForm({
                         autoComplete="off"
                       />
                     </div>
+                    <div className="col-span-1">
+
+                      <Checkbox
+                        isSelected={values.isActive}
+                        name="isActive"
+                        checked={!!values.isActive}
+                        disabled={isUserForRead}
+                        // onChange={(e) => {
+                        //   setFieldValue(`isActive`, e.target.checked ? 1 : 0);
+                        // }}
+                        onChange={(e) => {
+                          setFieldValue("isActive", e.target.checked); //  boolean true/false
+                        }}
+                        className={
+                          errors.isActive && touched.isActive
+                            ? "form-check-input is-invalid"
+                            : "form-check-input"
+                        }
+                      />
+                      <label
+                        htmlFor="isActive"
+
+                      >
+                        Active
+                      </label>
+
+                      {/* Error message */}
+                      {errors?.isActive && touched?.isActive && (
+                        <div className="invalid-feedback">
+                          {errors.isActive}
+                        </div>
+                      )}
+                    </div>
 
 
                     <div className="col-span-4">
@@ -167,7 +217,7 @@ export function FormEditForm({
                   <hr></hr>
                   <h6 className="font-bold mb-0 text-primary my-2">
                     General Evaluation Rating eligibility
- 
+
                   </h6>
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">
                     <div className="col-span-1 text-black mt-1 scrollbar-fancy">

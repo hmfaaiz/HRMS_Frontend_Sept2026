@@ -87,7 +87,9 @@ export const getApplicantProfileEditSchema = (formData) => {
       religionId: Yup.string().required(VALIDATION_MESSAGES.required),
 
       //address
-      additional_summary: Yup.string().required(VALIDATION_MESSAGES.required),
+      additional_summary: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
 
       phone_official: Yup.string()
         .nullable() // Allows null values
