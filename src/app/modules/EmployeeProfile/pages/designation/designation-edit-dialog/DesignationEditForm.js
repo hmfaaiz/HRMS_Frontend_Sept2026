@@ -326,7 +326,9 @@ const profileValidation = (localizationId) =>
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
     // .required('Required*'),
 
-    additional_summary: Yup.string().required("Required*"),
+    additional_summary: Yup.string()
+    .nullable()
+    .required("Required*"),
   })
     .test(
       "check-marital-status",
