@@ -207,19 +207,21 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-2 text-sm text-black">
-                  <div className="font-medium">Competency</div>
+                  <div className="font-medium text-tprimary">Competency</div>
                   <div className="col-span-5">
                     {currentQues?.CompetencyName}
                   </div>
-                  <div className="font-medium">{currentQues?.type}</div>
+                  <div className="font-medium text-tprimary">
+                    {currentQues?.type}
+                  </div>
                   <div className="col-span-5">{currentQues?.questionName}</div>
-                  <div className="font-medium">Question</div>
+                  <div className="font-medium text-tprimary">Question</div>
                   <div className="col-span-5">
                     {currentQues?.questionDescription}
                   </div>
                   <hr className="col-span-5 lg:col-span-6" />
                   {ratingSelection && (
-                    <span>
+                    <span className="font-medium text-tprimary">
                       Rating
                       <span style={{ color: "red" }}>*</span>
                     </span>
@@ -279,7 +281,7 @@ export function FormEditForm({
                           }
                         }}
                         label={
-                          <span>
+                          <span className="font-medium text-tprimary">
                             Rating
                             <span style={{ color: "red" }}>*</span>
                           </span>
@@ -320,7 +322,7 @@ export function FormEditForm({
               </button>
             ) : (
               <>
-                {/* Prev button (if not first question) */}
+                {/* Previous Question button (if not first question) */}
                 {localUserForEdit?.length > 0 &&
                   localUserForEdit[0]?.Id !== currentQues?.Id && (
                     <button
@@ -328,11 +330,11 @@ export function FormEditForm({
                       onClick={() => prevClick(values)}
                       className="btn btn-primary btn-elevate"
                     >
-                      Prev
+                      Previous Question
                     </button>
                   )}
 
-                {/* Next or OK button */}
+                {/* Next Question or OK button */}
                 {localUserForEdit?.length > 0 &&
                 localUserForEdit[localUserForEdit.length - 1]?.Id ===
                   currentQues?.Id ? (
@@ -349,7 +351,7 @@ export function FormEditForm({
                     onClick={() => navigateToNextQuestion(values)}
                     className="btn btn-primary btn-elevate"
                   >
-                    Next
+                    Next Question
                   </button>
                 )}
               </>
@@ -374,7 +376,7 @@ export function FormEditForm({
                       className="btn btn-primary btn-elevate"
                       disabled={loading}
                     >
-                      Prev
+                      Previous Question
                       {loading && (
                         <span className="ml-3 mr-3 spinner spinner-white"></span>
                       )}
@@ -391,7 +393,7 @@ export function FormEditForm({
                       className="btn btn-primary btn-elevate"
                       disabled={loading}
                     >
-                      Next
+                      Next Question
                       {loading && (
                         <span className="ml-3 mr-3 spinner spinner-white"></span>
                       )}
@@ -408,7 +410,7 @@ export function FormEditForm({
                       className="btn btn-primary btn-elevate"
                       disabled={loading}
                     >
-                      Submit Appraisal
+                      Submit Feedback
                       {loading && (
                         <span className="ml-3 mr-3 spinner spinner-white"></span>
                       )}
