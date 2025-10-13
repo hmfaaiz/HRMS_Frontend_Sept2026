@@ -126,9 +126,9 @@ const jobVacancyEditSchema = Yup.object().shape({
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   hiringReasonId: Yup.string().required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.string().required(VALIDATION_MESSAGES.required),
-  appointmentTypeId: Yup.number()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+  // appointmentTypeId: Yup.number()
+  // .nullable()
+  // .required(VALIDATION_MESSAGES.required),
   priorityTypeId: Yup.number()
   .nullable()
   .required(VALIDATION_MESSAGES.required),
@@ -244,7 +244,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
   // incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
   // otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
-  jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
+  jobSummary: Yup.string(),
+  // .required(VALIDATION_MESSAGES.required),
 });
 
 export function FormEditForm({
@@ -1075,7 +1076,7 @@ export function FormEditForm({
                 </div>
 
                 <div className="grid md:grid-cols-6 gap-x-3 mt-1">
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="appointmentTypeId"
                       label={
@@ -1097,7 +1098,7 @@ export function FormEditForm({
                       error={errors.appointmentTypeId}
                       touched={touched.appointmentTypeId}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="">
                     <SearchSelect

@@ -48,7 +48,6 @@ export function FormUIProvider({ FormUIEvents, children }) {
     noOfPosition: "",
     hiringReasonId: "",
     jobPreferenceId: "",
-    appointmentTypeId: "",
     comment: "",
     jobPeriodStart: "",
     jobPeriodEnd: "",
