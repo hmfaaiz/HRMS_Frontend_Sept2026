@@ -79,7 +79,7 @@ export const FormFIlter = () => {
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
-    dispatch(fetchAllFormsMenu(544, "allAppraisalCategory"));
+    dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
   }, []);
 
   return (
