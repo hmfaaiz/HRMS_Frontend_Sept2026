@@ -77,6 +77,7 @@ const roster_patternEditSchema = Yup.object().shape({
 
 
         isManadatory: Yup.boolean(),
+        isActive: Yup.boolean(),
 
         sno: Yup.number().required(VALIDATION_MESSAGES.required),
       })
