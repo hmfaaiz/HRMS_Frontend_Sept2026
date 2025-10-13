@@ -378,7 +378,7 @@ export function FormFIlter({ listLoading, user }) {
                         </div>
 
                         {/* Appointment */}
-                        <div className="">
+                        {/* <div className="">
                           <SearchSelect
                             name="appointmentTypeId"
                             label={
@@ -401,7 +401,7 @@ export function FormFIlter({ listLoading, user }) {
                             options={[{ label: 'Select', value: '' }, ...(Array.isArray(dashboard?.allAppointmentTypeList) ? dashboard?.allAppointmentTypeList : []),]}
 
                           />
-                        </div>
+                        </div> */}
 
 
 
