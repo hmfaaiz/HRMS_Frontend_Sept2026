@@ -8,6 +8,7 @@ const initialState = {
   userForEdit: undefined,
   lastError: null,
   userForRead: false,
+  designationList: [],
 };
 
 export const callTypes = {
@@ -42,7 +43,11 @@ export const appraisalConfigSlice = createSlice({
       state.userForEdit = action.payload.userForEdit;
       state.error = null;
     },
-
+    DesignationList: (state, action) => {
+      state.actionsLoading = false;
+      state.designationList = action.payload;
+      state.error = null;
+    },
     AppraisalConfigDeleted: (state, action) => {
       state.error = null;
       state.actionsLoading = false;

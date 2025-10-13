@@ -127,8 +127,10 @@ import { AppraisalPeriodsSetupSlice } from "../app/modules/AppraisalPeriodSetup/
 import { appraisalConfigSlice } from "../app/modules/Appraisal_Configuration/_redux/redux-Slice";
 import { GeneralEvaluationSetupSlice } from "../app/modules/AppraisalGeneralEvaluationSetup/_redux/redux-Slice";
 import { HrEvaluationSetupSlice } from "../app/modules/AppraisalHrEvaluationSetup/_redux/redux-Slice";
+import { appraisalPublishSlice } from "../app/modules/Appraisal_Publishing/_redux/redux-Slice";
 import { RequisitionJobVacancySlice } from "../app/modules/RequisitionJobVacancy/_redux/redux-Slice";
 import { HRRequisitionJobVacancySlice } from "../app/modules/HRRequisitionJobVacancy/_redux/redux-Slice";
+import { appraisalEvaluationSlice } from "../app/modules/Appraisal_Evaluation/_redux/redux-Slice";
 import { DesignationWiseGoalSetupSlice } from "../app/modules/DesignationWiseGoalSetup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
@@ -255,8 +257,10 @@ export const rootReducer = combineReducers({
   appraisal_config : appraisalConfigSlice.reducer,
   general_evaluation_setup : GeneralEvaluationSetupSlice.reducer,
   hr_evaluation_setup : HrEvaluationSetupSlice.reducer,
+  appraisal_publish : appraisalPublishSlice.reducer,
   requisition_job_vacancy : RequisitionJobVacancySlice.reducer,
   hr_requisition_job_vacancy : HRRequisitionJobVacancySlice.reducer,
+  appraisal_evaluation : appraisalEvaluationSlice.reducer,
   designation_wise_goal_setup : DesignationWiseGoalSetupSlice.reducer,
 });
 

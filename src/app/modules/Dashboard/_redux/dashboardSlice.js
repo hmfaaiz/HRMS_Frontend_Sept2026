@@ -87,6 +87,7 @@ const initialDashboardState = {
   getAllUserList:[],
   getAllAuditTablesNameList:[],
   fiscalyearBySubList:[],
+  appraisalPeriodBySubList:[],
   departmentBySubIdsList:[],
 };
 
@@ -359,6 +360,10 @@ export const dashboardSlice = createSlice({
     AllDepartmentBysSubIdsListFetch: (state, action) => {
       state.departmentBySubIdsList = action.payload;
     },
+    
+      AllAppraisalPeriodBySubListFetch: (state, action) => {
+      state.appraisalPeriodBySubList = action.payload;
+    }, 
 
   },
 });

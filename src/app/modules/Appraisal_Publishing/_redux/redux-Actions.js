@@ -1,0 +1,97 @@
+import { SERVER_MESSAGES } from "../../../utils/constants";
+import * as requestFromServer from "./redux-Crud";
+import { appraisalPublishSlice, callTypes } from "./redux-Slice";
+import { toast } from "react-toastify";
+
+const { actions } = appraisalPublishSlice;
+
+export const fetchAppraisalPublish = (queryparm) => async (dispatch) => {
+  return requestFromServer
+    .getAllAppraisalPublish(queryparm)
+    .then((response) => {
+      dispatch(actions.AppraisalPublishFetched(response));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};
+
+export const deleteAppraisalPublish = (body) => (dispatch) => {
+  return requestFromServer
+    .deleteAppraisalPublish(body)
+    .then((response) => {
+      dispatch(actions.AppraisalPublishDeleted());
+      toast.success(SERVER_MESSAGES.deletedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(SERVER_MESSAGES.deletedFail);
+    });
+};
+
+export const publishAppraisal = (body) => (dispatch) => {
+  return requestFromServer
+    .publishAppraisal(body)
+    .then((response) => {
+      dispatch(actions.AppraisalPublishUpdated());
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const holdAppraisalPublish = (body) => (dispatch) => {
+  return requestFromServer
+    .holdAppraisalPublish(body)
+    .then((response) => {
+      dispatch(actions.AppraisalPublishUpdated());
+      toast.success(SERVER_MESSAGES.updatedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

@@ -132,3 +132,19 @@ export const updateAppraisalConfig = (user, disbaleLoading, onHide) => (
       });
     });
 };
+
+export const getDesignationByDeptId = (id) => (dispatch) => {
+  if (!id) {
+    return dispatch(actions.DesignationList([]));
+  }
+  return requestFromServer
+    .getDesignationBaseOnDepartment({ Id: id })
+    .then((response) => {
+      const entities = response.data?.data || [];
+      dispatch(actions.DesignationList(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

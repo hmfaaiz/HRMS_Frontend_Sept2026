@@ -499,3 +499,16 @@ export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (dispa
       toast.error("Something went wrong");
     });
 };
+
+export const fetchAllAppraisalPeriodDataBySubsidiaryId = (subsidiaryId) => async (dispatch) => {
+  return await requestFromServer
+    .getAllAppraisalPeriodBySubsidiaryId({ subsidiaryId })
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllAppraisalPeriodBySubListFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
+
