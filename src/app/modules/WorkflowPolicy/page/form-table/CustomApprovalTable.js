@@ -541,8 +541,8 @@ function CustomApprovalWorkflowTable({
                           </td>
                           {/* if is workglow type is employee performance evaluation
                            */}
-                          <td>
-                            {values?.workflowTypeId == "565" && (
+                          {values?.workflowTypeId == "565" && (
+                            <td>
                               <>
                                 <Checkbox
                                   isSelected={row?.isHREvaluation}
@@ -566,8 +566,8 @@ function CustomApprovalWorkflowTable({
                                     />
                                   )}
                               </>
-                            )}
-                          </td>
+                            </td>
+                          )}
                           {/* Delete Button Starts */}
                           <td className="text-right">
                             <button

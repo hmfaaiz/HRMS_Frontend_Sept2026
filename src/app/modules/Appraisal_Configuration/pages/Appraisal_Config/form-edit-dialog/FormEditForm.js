@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import {
+  fetchAllActiveEmployees,
   fetchAllParentDept,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
@@ -34,19 +35,22 @@ const formSchema = Yup.object()
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
       .required(VALIDATION_MESSAGES.required),
 
+    appraisalFeedbackPeriod: Yup.number()
+      .integer("Only whole numbers are allowed") //  ensures no decimals
+      .nullable()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
+      .required(VALIDATION_MESSAGES.required),
+
     HRRating: Yup.number()
       .nullable()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
       .required(VALIDATION_MESSAGES.required),
 
-    // departmentId: Yup.string()
-    //   .nullable()
-    //   .optional(),
-
-    // designationId: Yup.string()
-    //   .nullable()
-    //   .optional(),
+    appraisalFacilitatorId: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
 
     superVisorRattingToEmp: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
@@ -106,7 +110,7 @@ export function FormEditForm({
 
   useEffect(() => {
     calculateTotalConfigPerc(user);
-    dispatch(fetchAllParentDept());
+    dispatch(fetchAllActiveEmployees());
     if (user?.departmentId) {
       dispatch(actions.getDesignationByDeptId(user?.departmentId));
     }
@@ -281,31 +285,52 @@ export function FormEditForm({
                       }}
                     />
                   </div>
-                  {/* <div>
+                  <div>
                     <SearchSelect
-                      name={"departmentId"}
+                      name={"appraisalFacilitatorId"}
                       label={
                         <span>
-                          Department<span style={{ color: "red" }}>*</span>
+                          Appraisal Facilitator
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={!values?.subsidiaryId}
                       onChange={(e) => {
-                        setFieldValue("departmentId", e?.value || null);
-                        setFieldValue("designationId", "");
-                        dispatch(actions.getDesignationByDeptId(e?.value));
+                        setFieldValue(
+                          "appraisalFacilitatorId",
+                          e?.value || null
+                        );
                       }}
                       value={
-                        dashboard?.allParentDept?.find(
-                          (el) => el?.value === values?.departmentId
+                        dashboard?.allEmployees?.find(
+                          (el) => el?.value === values?.appraisalFacilitatorId
                         ) || null
                       }
-                      error={errors?.departmentId}
-                      touched={touched?.departmentId}
-                      options={dashboard?.allParentDept}
+                      error={errors?.appraisalFacilitatorId}
+                      touched={touched?.appraisalFacilitatorId}
+                      options={dashboard?.allEmployees}
                     />
                   </div>
-                  <div className="text-black mt-1">
+                  <div>
+                    <Field
+                      name="appraisalFeedbackPeriod"
+                      component={Input}
+                      type="number"
+                      label={
+                        <span>
+                          Appraisal Feedback Period
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      onChange={(e) => {
+                        setFieldValue(
+                          "appraisalFeedbackPeriod",
+                          e?.target?.value
+                        );
+                      }}
+                    />
+                  </div>
+                  {/* <div className="text-black mt-1">
                     <label>
                       Designation<span style={{ color: "red" }}>*</span>
                     </label>

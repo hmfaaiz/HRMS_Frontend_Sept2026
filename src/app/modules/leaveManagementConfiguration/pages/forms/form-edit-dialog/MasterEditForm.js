@@ -295,7 +295,7 @@ export function MasterEditForm({
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="col-span-1">
-                      {/* <Field
+                      <Field
                         name="subsidiaryId"
                         component={Select}
                         disabled={isEdit}
@@ -336,8 +336,8 @@ export function MasterEditForm({
                           data: allSubsidiaryList,
                           firstElement: { label: "Select", value: null },
                         })}
-                      /> */}
-                      <SubsidiarySelect
+                      />
+                      {/* <SubsidiarySelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -357,11 +357,9 @@ export function MasterEditForm({
                               "allLeaveTypes",
                               value
                             )
-                          ); //When subsidiary is updated then fetch leave types dropdown data according to the subsidiary selected
-                          setFieldValue("subsidiaryId", value);
+                          ); setFieldValue("subsidiaryId", value);
                           const filter = {
-                            subsidiaryId: value /* gradeId: values.gradeId, employeeTypeId: values.employeeTypeId*/,
-                          };
+                            subsidiaryId: value  };
                           getOldData(filter);
                         }}
                         error={errors?.subsidiaryId}
@@ -380,11 +378,10 @@ export function MasterEditForm({
                           ); //When subsidiary is updated then fetch leave types dropdown data according to the subsidiary selected
                           setFieldValue("subsidiaryId", value);
                           const filter = {
-                            subsidiaryId: value /* gradeId: values.gradeId, employeeTypeId: values.employeeTypeId*/,
-                          };
+                            subsidiaryId: value };
                           getOldData(filter);
                         }}
-                      />
+                      /> */}
                       {/* {errors.subsidiaryId && touched.subsidiaryId && (
                         <CustomErrorLabel
                           touched={true}
