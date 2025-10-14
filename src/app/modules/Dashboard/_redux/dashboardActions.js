@@ -500,6 +500,18 @@ export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (dispa
     });
 };
 
+
+export const fetchAllAppraisalPeriod = (employeeId) => async (dispatch) => {
+  return await requestFromServer
+    .getAllAppraisalPeriod({employeeId})
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllAppraisalPeriodListFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
 export const fetchAllAppraisalPeriodDataBySubsidiaryId = (subsidiaryId) => async (dispatch) => {
   return await requestFromServer
     .getAllAppraisalPeriodBySubsidiaryId({ subsidiaryId })
