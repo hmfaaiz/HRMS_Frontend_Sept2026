@@ -11,15 +11,15 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 export const setDefaultSubsidiary = (
   value,
   allSubsidiaryList,
+  defaultValue
 ) => {
   if (!Array.isArray(allSubsidiaryList)) return null;
 
   if (value) {
     return allSubsidiaryList.find((el) => el?.value === value) || null;
-  } 
-  // else {
-  //   return allSubsidiaryList.find((el) => el?.value === defaultValue) || null;
-  // }
+  } else {
+    return allSubsidiaryList.find((el) => el?.value === defaultValue) || null;
+  }
 };
 
 /**
@@ -49,9 +49,9 @@ export const SubsidiarySelect = ({
   const [initialized, setInitialized] = useState(false);
 
   // Get subsidiary list from Redux if no external `options` are passed
-  const {  allSubsidiaryList } = useSelector(
+  const { defaultSubsidiary, allSubsidiaryList } = useSelector(
     (state) => ({
-      // defaultSubsidiary: state?.auth?.user?.EmployeeMapping?.subsidiaryId,
+      defaultSubsidiary: state?.auth?.user?.EmployeeMapping?.subsidiaryId,
       allSubsidiaryList: state?.dashboard?.allSubsidiaryList,
     }),
     shallowEqual
@@ -65,48 +65,28 @@ export const SubsidiarySelect = ({
     ? [{ value: null, label: "All" }, ...effectiveOptions]
     : effectiveOptions;
 
-  // useEffect(() => {
-  //   // debugger
-  //   // Only run initialization when we have real subsidiaries (not just "All")
-  //   if (!initialized && effectiveOptions.length > 0) {
-  //     setInitialized(true);
+  useEffect(() => {
+    // debugger
+    // Only run initialization when we have real subsidiaries (not just "All")
+    if (!initialized && effectiveOptions.length > 0) {
+      setInitialized(true);
 
-  //     const result = setDefaultSubsidiary(
-  //       currentValue,
-  //       effectiveOptions,
-  //       defaultSubsidiary
-  //     );
+      const result = setDefaultSubsidiary(
+        currentValue,
+        effectiveOptions,
+        defaultSubsidiary
+      );
 
-  //     if (result && !currentValue) {
-  //       initializeSubsidiary(result);
-  //       if(isIntializeDisable){
-  //         setInitialized(false)
-  //       }
-  //     }
-  //   }
-  // }, [currentValue, defaultSubsidiary, initialized, effectiveOptions]);
+      if (result && !currentValue) {
+        initializeSubsidiary(result);
+        if (isIntializeDisable) {
+          setInitialized(false);
+        }
+      }
+    }
+  }, [currentValue, defaultSubsidiary, initialized, effectiveOptions]);
 
   // Match the selected value
-
-  useEffect(() => {
-    if (effectiveOptions.length === 0) return;
-
-    const result = setDefaultSubsidiary(
-      currentValue,
-      effectiveOptions
-    );
-
-    // If API has provided a value, always respect it
-    if (currentValue && result?.value === currentValue) {
-      initializeSubsidiary(result);
-    }
-    // Otherwise initialize from default (only once)
-    else if (!initialized && !currentValue && result) {
-      initializeSubsidiary(result);
-      setInitialized(true);
-    }
-  }, [currentValue, effectiveOptions]);
-
   const selectedValue =
     effectiveOptionsWithAll?.find((option) => option?.value === currentValue) ||
     null;
