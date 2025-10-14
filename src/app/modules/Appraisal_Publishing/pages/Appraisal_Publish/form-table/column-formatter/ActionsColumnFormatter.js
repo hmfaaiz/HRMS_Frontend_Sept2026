@@ -1,6 +1,13 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { ArrowUpRight, CirclePause, CirclePower, Trash2 } from "lucide-react";
+import {
+  ArrowUpRight,
+  CirclePause,
+  CirclePower,
+  Eye,
+  Trash2,
+  Users,
+} from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -10,7 +17,10 @@ export function ActionsColumnFormatter(
     openPublishFormDialog,
     openHoldFormDialog,
     openDeleteFormDialog,
+    openAuthortiesFormDialog,
+    openDetailFormDialog,
     isAccessForPublish,
+    isAccessForDetail,
     isAccessForHold,
     isAccessForDelete,
     setYearId,
@@ -33,6 +43,44 @@ export function ActionsColumnFormatter(
             }}
           >
             <ArrowUpRight className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+      {isAccessForDetail && row?.isActive && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">View Authorties</Tooltip>
+          }
+        >
+          <a
+            title=""
+            className=""
+            onClick={() => {
+              setYearId(row?.yearId);
+              setAppraisalCategoryId(row?.appraisalCategoryId);
+              openAuthortiesFormDialog(row.Id);
+            }}
+          >
+            <Users className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+        </OverlayTrigger>
+      )}
+      {isAccessForDetail && row?.isActive && (
+        <OverlayTrigger
+          overlay={
+            <Tooltip id="products-edit-tooltip">View Questions</Tooltip>
+          }
+        >
+          <a
+            title=""
+            className=""
+            onClick={() => {
+              setYearId(row?.yearId);
+              setAppraisalCategoryId(row?.appraisalCategoryId);
+              openDetailFormDialog(row.Id);
+            }}
+          >
+            <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}

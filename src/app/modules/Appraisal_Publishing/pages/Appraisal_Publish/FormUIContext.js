@@ -34,6 +34,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     appraisalCategoryId,
     setAppraisalCategoryId,
     openPublishFormDialog: FormUIEvents.openPublishFormDialog,
+    openAuthortiesFormDialog: FormUIEvents.openAuthortiesFormDialog,
+    openDetailFormDialog: FormUIEvents.openDetailFormDialog,
     openHoldFormDialog: FormUIEvents.openHoldFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
   };

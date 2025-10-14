@@ -95,3 +95,14 @@ export const holdAppraisalPublish = (body) => (dispatch) => {
       });
     });
 };
+
+export const viewAppraisalDetail = (body) => (dispatch) => {
+  return requestFromServer
+    .viewAppraisalDetail(body)
+    .then((response) => {
+      dispatch(actions.AppraisalDetailFetched(response?.data?.data));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
