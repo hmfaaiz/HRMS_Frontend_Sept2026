@@ -229,6 +229,7 @@ function PatternListForm({
                           <DatePicker
                             className="form-control"
                             placeholderText="Select Date"
+                            disabled={!appraisalPeriod?.startDate}
                             selected={
                               values?.list?.[index]?.targetDate
                                 ? new Date(values.list[index].targetDate)

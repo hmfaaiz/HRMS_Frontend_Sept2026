@@ -81,14 +81,22 @@ export function FormEditForm({
         "allEmployeesWithNoPermissionList"
       )
     );
+
     if (data?.employeeId) {
       dispatch(
         fetchAllAppraisalPeriod(data?.employeeId)
       );
+      // console.log("setting111", data.appraisalPeriodId, dashboard?.appraisalPeriodList?.find(
+      //   (option) => option?.value == data.appraisalPeriodId
+      // ))
+
+      // setAppraisalPeriod(dashboard?.appraisalPeriodList?.find(
+      //   (option) => option?.value == data.appraisalPeriodId
+      // ) || null)
     }
 
 
-  }, [dispatch, data.Id]);
+  }, [dispatch, data.employeeId]);
 
   const { currentState } = useSelector(
     (state) => {
@@ -191,9 +199,9 @@ export function FormEditForm({
                           setFieldValue("list", updatedList);
                         }
 
-                         if (values.employeeId && e.value ) {
+                        if (values.employeeId && e.value) {
                           dispatch(
-                            fetchDesignationWiseGoalSetupByEmp({ employeeId:values.employeeId , appraisalPeriodId: e.value })
+                            fetchDesignationWiseGoalSetupByEmp({ employeeId: values.employeeId, appraisalPeriodId: e.value })
                           );
                         }
 
