@@ -22,7 +22,7 @@ export function FormDeleteDialog({ id, show, onHide }) {
   // Customers Redux state
   const dispatch = useDispatch();
   const { isLoading } = useSelector(
-    (state) => ({ isLoading: state.appraisal_config.actionsLoading }),
+    (state) => ({ isLoading: state.appraisal_publish.actionsLoading }),
     shallowEqual
   );
 
@@ -86,6 +86,7 @@ export function FormDeleteDialog({ id, show, onHide }) {
             onClick={() => {
               onHide();
               usersUIProps.setYearId(null);
+              usersUIProps?.setAppraisalCategoryId(null);
             }}
             className="btn btn-light btn-elevate"
           >
