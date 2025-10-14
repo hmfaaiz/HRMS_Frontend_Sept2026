@@ -34,7 +34,7 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
-      {isAccessForEdit && row.isActive && (
+      {isAccessForEdit && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -50,7 +50,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
+              { "Delete"}
             </Tooltip>
           }
         >

@@ -132,6 +132,7 @@ import { RequisitionJobVacancySlice } from "../app/modules/RequisitionJobVacancy
 import { HRRequisitionJobVacancySlice } from "../app/modules/HRRequisitionJobVacancy/_redux/redux-Slice";
 import { appraisalEvaluationSlice } from "../app/modules/Appraisal_Evaluation/_redux/redux-Slice";
 import { DesignationWiseGoalSetupSlice } from "../app/modules/DesignationWiseGoalSetup/_redux/redux-Slice";
+import { EmployeeGoalSetupSlice } from "../app/modules/EmployeeGoalSetup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -262,6 +263,7 @@ export const rootReducer = combineReducers({
   hr_requisition_job_vacancy : HRRequisitionJobVacancySlice.reducer,
   appraisal_evaluation : appraisalEvaluationSlice.reducer,
   designation_wise_goal_setup : DesignationWiseGoalSetupSlice.reducer,
+  employee_goal_setup : EmployeeGoalSetupSlice.reducer,
 });
 
 export function* rootSaga() {
