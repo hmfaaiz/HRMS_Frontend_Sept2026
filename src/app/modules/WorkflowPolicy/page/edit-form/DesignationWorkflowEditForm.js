@@ -48,6 +48,7 @@ const validationSchema = Yup.object().shape({
         workflowApprovalTypeId: Yup.number()
           .nullable()
           .required(VALIDATION_MESSAGES.required),
+        isHREvaluation: Yup.boolean().required(),
         levelId: Yup.number()
           .nullable()
           .when("workflowApprovalTypeId", {

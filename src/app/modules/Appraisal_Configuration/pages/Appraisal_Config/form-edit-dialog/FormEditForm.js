@@ -9,8 +9,13 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllActiveEmployees,
+  fetchAllParentDept,
+  fetchAllSubsidiaryData,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 
 const formSchema = Yup.object()
   .shape({
@@ -30,10 +35,21 @@ const formSchema = Yup.object()
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
       .required(VALIDATION_MESSAGES.required),
 
+    appraisalFeedbackPeriod: Yup.number()
+      .integer("Only whole numbers are allowed") //  ensures no decimals
+      .nullable()
+      .min(0, VALIDATION_MESSAGES.minZeroValue)
+      .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
+      .required(VALIDATION_MESSAGES.required),
+
     HRRating: Yup.number()
       .nullable()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
+      .required(VALIDATION_MESSAGES.required),
+
+    appraisalFacilitatorId: Yup.string()
+      .nullable()
       .required(VALIDATION_MESSAGES.required),
 
     superVisorRattingToEmp: Yup.boolean()
@@ -72,11 +88,15 @@ export function FormEditForm({
   const [totalConfigPercentage, seTotalConfigPercentage] = useState(0);
 
   const dispatch = useDispatch();
-  const { actionsLoading } = useSelector((state) => {
-    return {
-      actionsLoading: state.appraisal_config?.actionsLoading,
-    };
-  });
+  const { actionsLoading, dashboard, designationList } = useSelector(
+    (state) => {
+      return {
+        actionsLoading: state.appraisal_config?.actionsLoading,
+        designationList: state.appraisal_config?.designationList,
+        dashboard: state?.dashboard,
+      };
+    }
+  );
 
   // Calculate total %
   const calculateTotalConfigPerc = (value) => {
@@ -90,6 +110,10 @@ export function FormEditForm({
 
   useEffect(() => {
     calculateTotalConfigPerc(user);
+    dispatch(fetchAllActiveEmployees());
+    if (user?.departmentId) {
+      dispatch(actions.getDesignationByDeptId(user?.departmentId));
+    }
   }, [user]);
 
   useEffect(() => {
@@ -113,6 +137,7 @@ export function FormEditForm({
         touched,
         values,
         resetForm,
+        handleChange,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -135,6 +160,7 @@ export function FormEditForm({
                         }
                         onChange={(e) => {
                           setFieldValue("subsidiaryId", e.value || null);
+                          dispatch(fetchAllParentDept(e.value));
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
@@ -259,6 +285,113 @@ export function FormEditForm({
                       }}
                     />
                   </div>
+                  <div>
+                    <SearchSelect
+                      name={"appraisalFacilitatorId"}
+                      label={
+                        <span>
+                          Appraisal Facilitator
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={!values?.subsidiaryId}
+                      onChange={(e) => {
+                        setFieldValue(
+                          "appraisalFacilitatorId",
+                          e?.value || null
+                        );
+                      }}
+                      value={
+                        dashboard?.allEmployees?.find(
+                          (el) => el?.value === values?.appraisalFacilitatorId
+                        ) || null
+                      }
+                      error={errors?.appraisalFacilitatorId}
+                      touched={touched?.appraisalFacilitatorId}
+                      options={dashboard?.allEmployees}
+                    />
+                  </div>
+                  <div>
+                    <Field
+                      name="appraisalFeedbackPeriod"
+                      component={Input}
+                      type="number"
+                      label={
+                        <span>
+                          Appraisal Feedback Period
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      onChange={(e) => {
+                        setFieldValue(
+                          "appraisalFeedbackPeriod",
+                          e?.target?.value
+                        );
+                      }}
+                    />
+                  </div>
+                  {/* <div className="text-black mt-1">
+                    <label>
+                      Designation<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <div
+                      className="overflow-auto scrollbar-fancy"
+                      style={{ maxHeight: "150px" }}
+                    >
+                      <div className="p-0 m-0" style={{ fontSize: "10.2px" }}>
+                        <div className="flex justify-start items-center font-semibold">
+                          <input
+                            type="checkbox"
+                            className="mr-1"
+                            checked={
+                              values?.designationId?.length ===
+                              designationList?.length
+                            }
+                            disabled={!values?.departmentId}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                // Sab select
+                                const allValues = designationList?.map((opt) =>
+                                  opt.value.toString()
+                                );
+                                setFieldValue("designationId", allValues);
+                              } else {
+                                setFieldValue("designationId", []);
+                              }
+                            }}
+                          />
+                          Select All
+                        </div>
+
+                        {designationList?.map((option) => (
+                          <div
+                            key={option.value}
+                            className="flex justify-start items-center"
+                          >
+                            <input
+                              className="mr-1"
+                              name="designationId"
+                              type="checkbox"
+                              disabled={!values?.departmentId}
+                              value={option.value}
+                              checked={Boolean(
+                                values?.designationId?.includes(
+                                  option?.value?.toString()
+                                )
+                              )}
+                              onChange={handleChange}
+                            />
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {errors.designationId && touched.designationId && (
+                      <div className="invalid-feedback">
+                        {errors.designationId}
+                      </div>
+                    )}
+                  </div> */}
                 </div>
               </fieldset>
             </Form>

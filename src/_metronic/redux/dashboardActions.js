@@ -710,7 +710,6 @@ export const fetchAllDesignationByGradeId = (
     .getAllDesignationByGradeId(id)
     .then((response) => {
       const entities = [...response.data?.data];
-      console.log("entitiesentities" , entities , key)
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
     .catch((error) => {

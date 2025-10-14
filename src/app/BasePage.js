@@ -308,6 +308,7 @@ const GeneralEvaluationSetup = lazy(()=>
 const HrEvaluationSetup = lazy(()=>
  import("./modules/AppraisalHrEvaluationSetup/pages/index"))
 
+const AppraisalPublish = lazy(()=> import("./modules/Appraisal_Publishing/pages/index"))
 const RequisitionJobVacancy = lazy(()=>
  import("./modules/RequisitionJobVacancy/pages/index"))
 
@@ -315,6 +316,9 @@ const RequisitionJobVacancy = lazy(()=>
 const HRRequisitionJobVacancy = lazy(()=>
  import("./modules/HRRequisitionJobVacancy/pages/index"))
 
+const AppraisalEvaluationManagement = lazy(()=>
+ import("./modules/Appraisal_Evaluation/pages/index")
+)
 const DesignationWiseGoalSetup = lazy(()=>
  import("./modules/DesignationWiseGoalSetup/pages/index"))
 
@@ -443,8 +447,10 @@ const ROUTES = {
   appraisal_configuration : AppraisalConfig,
   general_evaluation_setup:GeneralEvaluationSetup,
   hr_evaluation_setup:HrEvaluationSetup,
+  appraisal_publish : AppraisalPublish,
   requisition_job_vacancy:RequisitionJobVacancy,
   hr_requisition_job_vacancy:HRRequisitionJobVacancy,
+  appraisal_evaluation : AppraisalEvaluationManagement,
   designation_wise_goal_setup:DesignationWiseGoalSetup,
   employee_goal_setup:EmployeeGoalSetup,
 };
