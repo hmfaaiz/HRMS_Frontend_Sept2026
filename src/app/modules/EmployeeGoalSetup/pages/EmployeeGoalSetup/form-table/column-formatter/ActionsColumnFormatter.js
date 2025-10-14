@@ -21,7 +21,7 @@ export function ActionsColumnFormatter(
   }
 ) {
   const isUserRead = false;
-  console.log("row111",row)
+
   return (
     <div className="space-x-2">
       <OverlayTrigger
@@ -30,7 +30,7 @@ export function ActionsColumnFormatter(
         <a
           title=""
           className=""
-          onClick={() => openReadFormDialog(row.Id, isUserRead)}
+          onClick={() => openReadFormDialog(row.employeeId, row.appraisalPeriodId, isUserRead)}
         >
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
@@ -39,7 +39,7 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a title="" className="" onClick={() => openEditFormDialog(row.Id)}>
+          <a title="" className="" onClick={() => openEditFormDialog(row.employeeId, row.appraisalPeriodId)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -47,23 +47,23 @@ export function ActionsColumnFormatter(
 
       <> </>
 
-      {isAccessForDelete &&(
+      {isAccessForDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
-              { "Delete"}
+              {"Delete"}
             </Tooltip>
           }
         >
-      
-            <a
-              title=""
-              className=""
-              onClick={() => openDeleteFormDialog(row.Id)}
-            >
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          
+
+          <a
+            title=""
+            className=""
+            onClick={() => openDeleteFormDialog(row.employeeId, row.appraisalPeriodId)}
+          >
+            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+          </a>
+
         </OverlayTrigger>
       )}
     </div>

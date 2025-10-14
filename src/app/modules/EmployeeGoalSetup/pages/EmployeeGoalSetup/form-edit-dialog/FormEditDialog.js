@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormUIContext } from "../FormUIContext";
 
 
-export function FormEditDialog({ id, show, onHide, dataForRead }) {
+export function FormEditDialog({ show,employeeId,appraisalPeriodId, onHide, dataForRead }) {
   const [action, setaction] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
@@ -60,10 +60,13 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchExitTypeExitReasonDataForEdit(id));
+  
+   dispatch(actions.fetchExitTypeExitReasonDataForEdit({employeeId, appraisalPeriodId}));
+ 
+ 
 
     // dispatch(actions.fetchExitTypeExitReasonDataForEdit(formUIProps .queryParams))
-  }, [id, dispatch,show]);
+  }, [employeeId,appraisalPeriodId, dispatch,show]);
 
 
   const saveForm = async (data) => {
@@ -103,7 +106,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead }) {
       onHide={onHide}
       aria-labelledby="example-modal-sizes-title-lg"
     >
-      <FormEditDialogHeader id={id} isdataForRead={dataForRead} />
+      <FormEditDialogHeader employeeId={employeeId} isdataForRead={dataForRead} />
       <FormEditForm
         saveForm={saveForm}
         data={dataForEdit || formUIProps.initUser}

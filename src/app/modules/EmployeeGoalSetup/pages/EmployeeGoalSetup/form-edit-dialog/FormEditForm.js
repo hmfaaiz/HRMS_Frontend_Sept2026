@@ -146,9 +146,12 @@ export function FormEditForm({
                           fetchAllAppraisalPeriod(e.value)
                         );
 
-                        dispatch(
-                          fetchDesignationWiseGoalSetupByEmp(e.value)
-                        );
+                        if (e.value && values.appraisalPeriodId) {
+                          dispatch(
+                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, appraisalPeriodId: values.appraisalPeriodId })
+                          );
+                        }
+
 
 
                       }}
@@ -188,6 +191,12 @@ export function FormEditForm({
                           setFieldValue("list", updatedList);
                         }
 
+                         if (values.employeeId && e.value ) {
+                          dispatch(
+                            fetchDesignationWiseGoalSetupByEmp({ employeeId:values.employeeId , appraisalPeriodId: e.value })
+                          );
+                        }
+
                       }}
                       value={
                         dashboard?.appraisalPeriodList?.find(
@@ -197,7 +206,7 @@ export function FormEditForm({
                       options={dashboard?.appraisalPeriodList}
 
 
-                       error={errors.appraisalPeriodId}
+                      error={errors.appraisalPeriodId}
                       touched={touched.appraisalPeriodId}
                     />
                   </div>

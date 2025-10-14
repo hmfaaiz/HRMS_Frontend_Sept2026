@@ -16,9 +16,9 @@ export function getAllAccrueGratuityConfig(body) {
   return axios.post(`${USERS_URL}/employee_goal_setup/read-all-employee-goal-setup`, body);
 }
 
-export function getAccrueGratuityConfigById(id) {
+export function getAccrueGratuityConfigById(body) {
 
-  return axios.get(`${USERS_URL}/employee_goal_setup/read-employee-goal-setup/${id}`);
+  return axios.post(`${USERS_URL}/employee_goal_setup/read-employee-goal-setup`, body);
 }
 
 //Update
@@ -28,12 +28,14 @@ export function updateExitTypeExitReason(accrueGratuityConfig) {
 }
 
 //Delete
-export function deleteExitTypeExitReason(Id) {
+export function deleteExitTypeExitReason(body) {
 
-  return axios.delete(`${USERS_URL}/employee_goal_setup/delete-employee-goal-setup/${Id}`);
+  return axios.delete(`${USERS_URL}/employee_goal_setup/delete-employee-goal-setup`, {
+     data: body,
+  });
 }
 //Designation wise goal setup
-export function getDesignationWiseGoalSetupByEmp(Id) {
+export function getDesignationWiseGoalSetupByEmp(body) {
 
-  return axios.get(`${USERS_URL}/employee_goal_setup/read-designation-wise-goal-setup-byemployeeId/${Id}`);
+  return axios.post(`${USERS_URL}/employee_goal_setup/read-designation-wise-goal-setup-byemployeeId`,body);
 }

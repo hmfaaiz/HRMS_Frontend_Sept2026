@@ -36,8 +36,8 @@ export const EmployeeGoalSetupSlice = createSlice({
         accrueGratuityConfigFetched: (state, action) => {
 
 
-            const entities = action.payload.data?.data.rows;
-
+            const entities = action.payload.data?.data;
+console.log("entities111",entities)
             const totalResult = action.payload.data?.data.totalResults;
 
             state.listLoading = false;

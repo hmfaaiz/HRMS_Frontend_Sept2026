@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Designation Wise Goal Setup";
+    let _title = id ? "" : "Employee Goal Setup";
     if (id) {
-      _title = `Edit Designation Wise Goal Setup`;
+      _title = `Edit Employee Wise Goal Setup`;
     } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }
@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isdataForRead ? title : "View Designation Wise Goal Setup"}
+          {!isdataForRead ? title : "View Employee Goal Setup"}
         </Modal.Title>
       </Modal.Header>
     </>

@@ -22,15 +22,15 @@ export const fetchExitTypeExitReason = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchExitTypeExitReasonDataForEdit = (Id) => (dispatch) => {
+export const fetchExitTypeExitReasonDataForEdit = (body) => (dispatch) => {
 
 
-  if (!Id) {
+  if (!body.employeeId || !body.appraisalPeriodId) {
     return dispatch(actions.AccrueGratuityConfigFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getAccrueGratuityConfigById(Id)
+    .getAccrueGratuityConfigById(body)
     .then((response) => {
       const entities = response.data?.data;
 
@@ -43,12 +43,12 @@ export const fetchExitTypeExitReasonDataForEdit = (Id) => (dispatch) => {
     });
 };
 
-export const deleteExitTypeExitReason = (id) => (dispatch) => {
+export const deleteExitTypeExitReason = (body) => (dispatch) => {
   return requestFromServer
-    .deleteExitTypeExitReason( id)
+    .deleteExitTypeExitReason( body)
     .then((response) => {
 
-      dispatch(actions.AccrueGratuityConfigDeleted({ Id: id }));
+      dispatch(actions.AccrueGratuityConfigDeleted({ Id: body }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -148,15 +148,15 @@ export const updateExitTypeExitReason = (data, disbaleLoading, onHide) => (dispa
 };
 
 
-export const fetchDesignationWiseGoalSetupByEmp= (Id) => (dispatch) => {
+export const fetchDesignationWiseGoalSetupByEmp= (body) => (dispatch) => {
 
 
-  if (!Id) {
+  if (!body.employeeId) {
     return dispatch(actions.DesignationWiseGoalSetupByEmpFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getDesignationWiseGoalSetupByEmp(Id)
+    .getDesignationWiseGoalSetupByEmp(body)
     .then((response) => {
       const entities = response.data?.data;
 

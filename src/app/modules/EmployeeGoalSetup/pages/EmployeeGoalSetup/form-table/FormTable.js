@@ -72,8 +72,19 @@ export function FormTable() {
   const columns = [
 
     {
-      dataField: "fullName",
+      dataField: "employeeName",
       text: "Employee",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+
+    },
+    {
+      dataField: "appraisalPeriod",
+      text: "Appraisal Period",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -84,7 +95,7 @@ export function FormTable() {
     },
 
     {
-      dataField: "goalCount",
+      dataField: "count",
       text: "Goal Count",
       sort: false,
       sortCaret: sortCaret,

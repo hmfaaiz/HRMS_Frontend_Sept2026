@@ -5,7 +5,7 @@ import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
-export function FormDeleteDialog({ id, status, show, onHide }) {
+export function FormDeleteDialog({ employeeId,appraisalPeriodId, status, show, onHide }) {
 
   const [loading, setLoading] = useState(false);
   // Customers UI Context
@@ -33,11 +33,11 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
 
   // if !id we should close modal
   useEffect(() => {
-    if (!id) {
+    if (!(employeeId && appraisalPeriodId)) {
       onHide();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [ employeeId,appraisalPeriodId]);
 
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
@@ -45,7 +45,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   const deleteExitTypeExitReason = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteExitTypeExitReason(id)).then(() => {
+    dispatch(actions.deleteExitTypeExitReason({ employeeId,appraisalPeriodId})).then(() => {
       onHide();
       // refresh list after deletion
       dispatch(actions.fetchExitTypeExitReason(usersUIProps.queryParams));
