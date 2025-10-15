@@ -54,7 +54,7 @@ export const payroll_policySlice = createSlice({
          //get User By ID
          Payroll_Policy_FetchedForEdit: (state, action) => {
             
-            
+       
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
