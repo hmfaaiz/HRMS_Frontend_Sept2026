@@ -50,6 +50,7 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
     regularity_allowance: "",
     punctuality_allowance: "",
     pf_member: "",
+    profit_member: "",
     eobi_member: "",
     social_security_member: "",
     pension_member: "",

@@ -110,6 +110,7 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
         regularity_allowance : user.regularity_allowance,
         punctuality_allowance : user.punctuality_allowance,
         pf_member : user.pf_member,
+        profit_member : user.profit_member,
         eobi_member : user.eobi_member,
         social_security_member : user.social_security_member,
         pension_member : user.pension_member,
