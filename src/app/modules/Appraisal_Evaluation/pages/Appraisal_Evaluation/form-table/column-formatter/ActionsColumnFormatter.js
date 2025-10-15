@@ -23,7 +23,7 @@ export function ActionsColumnFormatter(
       )}
       {isAccessForEdit && !row?.isSubmitted && (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Fill Questions</Tooltip>}
+          overlay={<Tooltip id="products-edit-tooltip">Attempt Feedback</Tooltip>}
         >
           <a title="" className="" onClick={() => openEditFormDialog(row.Id)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
