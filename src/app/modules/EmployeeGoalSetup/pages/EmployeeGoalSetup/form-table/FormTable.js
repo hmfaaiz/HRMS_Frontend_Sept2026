@@ -72,8 +72,50 @@ export function FormTable() {
   const columns = [
 
     {
+      dataField: "employeeCode",
+      text: "Employee Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+
+    },
+    {
       dataField: "employeeName",
       text: "Employee",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+
+    },    {
+      dataField: "department",
+      text: "department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+
+    },    {
+      dataField: "designation",
+      text: "designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+
+    },  
+      {
+      dataField: "dateOfJoining",
+      text: "date Of Joining",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
