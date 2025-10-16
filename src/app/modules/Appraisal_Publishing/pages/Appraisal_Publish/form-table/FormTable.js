@@ -28,6 +28,8 @@ export function FormTable() {
       openPublishFormDialog: formUIContext.openPublishFormDialog,
       openHoldFormDialog: formUIContext.openHoldFormDialog,
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
+      openAuthortiesFormDialog: formUIContext.openAuthortiesFormDialog,
+      openDetailFormDialog: formUIContext.openDetailFormDialog,
       setYearId: formUIContext.setYearId,
       setAppraisalCategoryId: formUIContext.setAppraisalCategoryId,
     };
@@ -59,8 +61,14 @@ export function FormTable() {
     (item) => item.componentName === "PublishAppraisal"
   );
 
+  console.log("userAccessuserAccess", userAccess);
+
   const isAccessForHold = userAccess?.find(
-    (item) => item.componentName === "HoldAppraisalPublish"
+    (item) => item.componentName === "DeleteAppraisalPublish"
+  );
+
+  const isAccessForDetail = userAccess?.find(
+    (item) => item.componentName === "ViewAppraisalDetail"
   );
 
   const isAccessForDelete = userAccess?.find(
@@ -137,10 +145,13 @@ export function FormTable() {
         openPublishFormDialog: formUIProps.openPublishFormDialog,
         openHoldFormDialog: formUIProps.openHoldFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        openAuthortiesFormDialog: formUIProps.openAuthortiesFormDialog,
+        openDetailFormDialog: formUIProps.openDetailFormDialog,
         isAccessForPublish: isAccessForPublish
           ? isAccessForPublish.isAccess
           : false,
         isAccessForHold: isAccessForHold ? isAccessForHold.isAccess : false,
+        isAccessForDetail: isAccessForDetail ? isAccessForDetail.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,

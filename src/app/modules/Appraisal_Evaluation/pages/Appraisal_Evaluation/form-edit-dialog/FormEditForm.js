@@ -228,7 +228,7 @@ export function FormEditForm({
                   )}
                   {ratingSelection ? (
                     <>
-                      <div className="grid grid-cols-4 gap-x-3 gap-y-1 col-span-5 lg:col-span-6">
+                      <div className="grid grid-cols-1 gap-x-3 gap-y-1 col-span-5 lg:col-span-6">
                         {ratingDetail?.ratingList?.map((el, ind) => {
                           return (
                             <Checkbox
@@ -311,113 +311,106 @@ export function FormEditForm({
               </fieldset>
             </Form>
           </Modal.Body>
-          <Modal.Footer>
-            {!isUserForRead ? (
+          <Modal.Footer className="flex justify-between items-center">
+            {/* Center section for question navigation buttons */}
+            <div className="flex justify-center items-center flex-1">
+              {!isUserForRead && (
+                <>
+                  {localUserForEdit?.length > 0 &&
+                    localUserForEdit[0]?.Id !== currentQues?.Id && (
+                      <button
+                        type="button"
+                        onClick={() => prevClick(values)}
+                        className="btn btn-primary btn-elevate mx-2"
+                        disabled={loading}
+                      >
+                        Previous Question
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
+                  {localUserForEdit?.length > 1 &&
+                    localUserForEdit[localUserForEdit.length - 1]?.Id !==
+                      currentQues?.Id && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          nextClick(values, validateForm, setTouched)
+                        }
+                        className="btn btn-primary btn-elevate mx-2"
+                        disabled={loading}
+                      >
+                        Next Question
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
+                  {localUserForEdit?.length > 0 &&
+                    localUserForEdit[localUserForEdit.length - 1]?.Id ===
+                      currentQues?.Id && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          finalSubmissionClick(values, validateForm, setTouched)
+                        }
+                        className="btn btn-primary btn-elevate mx-2"
+                        disabled={loading}
+                      >
+                        Submit Feedback
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                    )}
+                </>
+              )}
+              {isUserForRead && (
+                <>
+                  {localUserForEdit?.length > 0 &&
+                    localUserForEdit[0]?.Id !== currentQues?.Id && (
+                      <button
+                        type="button"
+                        onClick={() => prevClick(values)}
+                        className="btn btn-primary btn-elevate mx-2"
+                      >
+                        Previous Question
+                      </button>
+                    )}
+                  {localUserForEdit?.length > 0 &&
+                  localUserForEdit[localUserForEdit.length - 1]?.Id ===
+                    currentQues?.Id ? (
+                    <button
+                      type="button"
+                      onClick={onHide}
+                      className="btn btn-primary btn-elevate mx-2"
+                    >
+                      OK
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => navigateToNextQuestion(values)}
+                      className="btn btn-primary btn-elevate mx-2"
+                    >
+                      Next Question
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Right side for Cancel button */}
+            <div className="flex justify-end">
               <button
                 type="button"
                 onClick={onHide}
-                className="btn btn-light btn-elevate"
+                className="btn btn-light btn-elevate ml-4"
               >
-                Cancel
+                Close
               </button>
-            ) : (
-              <>
-                {/* Previous Question button (if not first question) */}
-                {localUserForEdit?.length > 0 &&
-                  localUserForEdit[0]?.Id !== currentQues?.Id && (
-                    <button
-                      type="button"
-                      onClick={() => prevClick(values)}
-                      className="btn btn-primary btn-elevate"
-                    >
-                      Previous Question
-                    </button>
-                  )}
-
-                {/* Next Question or OK button */}
-                {localUserForEdit?.length > 0 &&
-                localUserForEdit[localUserForEdit.length - 1]?.Id ===
-                  currentQues?.Id ? (
-                  <button
-                    type="button"
-                    onClick={onHide}
-                    className="btn btn-primary btn-elevate"
-                  >
-                    OK
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => navigateToNextQuestion(values)}
-                    className="btn btn-primary btn-elevate"
-                  >
-                    Next Question
-                  </button>
-                )}
-              </>
-              // <button
-              //   type="button"
-              //   onClick={onHide}
-              //   className="btn btn-primary btn-elevate"
-              // >
-              //   OK
-              // </button>
-            )}
-
-            {!isUserForRead && (
-              <>
-                {localUserForEdit?.length > 0 &&
-                  localUserForEdit[0]?.Id !== currentQues?.Id && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        prevClick(values);
-                      }}
-                      className="btn btn-primary btn-elevate"
-                      disabled={loading}
-                    >
-                      Previous Question
-                      {loading && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  )}
-                {localUserForEdit?.length > 1 &&
-                  localUserForEdit[localUserForEdit?.length - 1]?.Id !==
-                    currentQues?.Id && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        nextClick(values, validateForm, setTouched);
-                      }}
-                      className="btn btn-primary btn-elevate"
-                      disabled={loading}
-                    >
-                      Next Question
-                      {loading && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  )}
-                {localUserForEdit?.length > 0 &&
-                  localUserForEdit[localUserForEdit?.length - 1]?.Id ===
-                    currentQues?.Id && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        finalSubmissionClick(values, validateForm, setTouched);
-                      }}
-                      className="btn btn-primary btn-elevate"
-                      disabled={loading}
-                    >
-                      Submit Feedback
-                      {loading && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  )}
-              </>
-            )}
+            </div>
           </Modal.Footer>
         </>
       )}

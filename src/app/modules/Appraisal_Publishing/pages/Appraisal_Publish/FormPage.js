@@ -7,6 +7,8 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormCard } from "./form-card/FormCard";
 import { FormPublishDialog } from "./form-publish-dialog/FormPublishDialog";
 import { FormHoldDialog } from "./form-hold-dialog/FormHoldDialog";
+import { FormAuthortiesDialog } from "./form-authorties-dialog/FormAuthortiesDialog";
+import { FormDetailDialog } from "./form-detail-dialog/FormDetailDialog";
 
 export function FormPage({ history }) {
   const FormUIEvents = {
@@ -15,12 +17,24 @@ export function FormPage({ history }) {
         `/appraisal_publish/read-all-appraisal-publish/${id}/publish`
       );
     },
-    openHoldFormDialog: (id , status) => {
-      history.push(`/appraisal_publish/read-all-appraisal-publish/${id}/${status}/hold`);
+    openHoldFormDialog: (id, status) => {
+      history.push(
+        `/appraisal_publish/read-all-appraisal-publish/${id}/${status}/hold`
+      );
     },
     openDeleteFormDialog: (id) => {
       history.push(
         `/appraisal_publish/read-all-appraisal-publish/${id}/delete`
+      );
+    },
+    openAuthortiesFormDialog: (id) => {
+      history.push(
+        `/appraisal_publish/read-all-appraisal-publish/${id}/authorties`
+      );
+    },
+    openDetailFormDialog: (id) => {
+      history.push(
+        `/appraisal_publish/read-all-appraisal-publish/${id}/detail`
       );
     },
   };
@@ -54,6 +68,30 @@ export function FormPage({ history }) {
       <Route path="/appraisal_publish/read-all-appraisal-publish/:id/delete">
         {({ history, match }) => (
           <FormDeleteDialog
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() => {
+              history.push("/appraisal_publish/read-all-appraisal-publish");
+            }}
+          />
+        )}
+      </Route>
+
+      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/authorties">
+        {({ history, match }) => (
+          <FormAuthortiesDialog
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() => {
+              history.push("/appraisal_publish/read-all-appraisal-publish");
+            }}
+          />
+        )}
+      </Route>
+
+      <Route path="/appraisal_publish/read-all-appraisal-publish/:id/detail">
+        {({ history, match }) => (
+          <FormDetailDialog
             show={match != null}
             id={match && match.params.id}
             onHide={() => {
