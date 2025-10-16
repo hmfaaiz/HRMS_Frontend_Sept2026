@@ -473,7 +473,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
       SalaryPolicy_Days: Yup.number()
         .when('SalaryPolicy', {
           is: 1, // if select value is 2
-          then: Yup.number().min(1, VALIDATION_MESSAGES.minZeroValue).max(31, "Max 31 days").required(VALIDATION_MESSAGES.required),
+          then: Yup.number().min(1, VALIDATION_MESSAGES.minZeroValue).max(99, "Max 99 days").required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
 
@@ -587,6 +587,9 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
     providentFundAllowancesId:null,
     pf_employer_percent:null,
     pf_employee_percent:null,
+
+
+    SalaryPolicy:0,
 
     //-- Other
   };
@@ -962,7 +965,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                       type="number"
                       placeholder="Salary Policy Days"
 
-                       label={<span>Salary Policy Days{Boolean(!values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+                       label={<span>Salary Policy Days{Boolean(values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
                       
                       autoComplete="off"
                     />
@@ -1569,6 +1572,111 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
                 <hr></hr>
 
+     <div>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Provident Fund Policy
+                  </h6>
+
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="flex  items-start">
+                      <label className="flex items-center space-x-1">
+
+                        <input className="mr-1"
+
+                          name="isProvidentFund"
+                          type="checkbox"
+                          onChange={(e) => {
+                            setFieldValue('isProvidentFund', e.target.checked)
+                          }}
+                          checked={values.isProvidentFund}
+                        />
+                        Enable Provident Fund
+                      </label>
+                    </div>
+
+
+                    <div className="">
+                      {<label>Provident Fund{Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        disabled={!Boolean(values.isProvidentFund)}
+                        onChange={(e) => {
+                          setFieldValue('providentFundId', e.target.value)
+                        }}
+                        value={values.providentFundId}
+                        name="providentFundId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.providentFundId && touched.providentFundId && <ErrorMessage className="form-feedBack" name="providentFundId" component="div" />}
+                    </div>
+
+
+                  </div>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isProvidentFund)}
+                        name="pf_employer_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employeer value"
+                        value={values.pf_employer_percent}
+                        label={<span>Employer(%){Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isProvidentFund)}
+                        name="pf_employee_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employee value"
+                        label={<span>Employee(%){Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <label>  Providen Fund Allowances </label>
+
+
+
+
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+{console.log("defProvidentFundAllowances111",defProvidentFundAllowances)}
+                        {dashboard.allEarnings.map((option) => (
+                          <div key={option.value} className="flex justify-start items-center border-none">
+
+                            <input className="mr-1"
+                              disabled={!Boolean(values.isProvidentFund)}
+                              name="providentFundAllowancesId"
+                              type="checkbox"
+                              checked={defProvidentFundAllowances?.includes(option.value)}
+                              onChange={() => handleCheckboxChangeFor_providentFundAllowances(option.value)}
+                            />
+                            <label> {option.label} </label>
+                          </div>
+                        ))}
+                      </div>
+
+
+
+
+
+
+
+
+                    </div>
+                  </div>
+
+                  <hr></hr>
+
+                </div>
+
+
 
 
                 {dashboard.allSubidiaryList?.find(
@@ -1696,112 +1804,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
 
 
-                <div>
-                  <h6 className="font-bold mb-0 text-primary my-2">
-                    Provident Fund Policy
-                  </h6>
-
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-                    <div className="flex  items-start">
-                      <label className="flex items-center space-x-1">
-
-                        <input className="mr-1"
-
-                          name="isProvidentFund"
-                          type="checkbox"
-                          onChange={(e) => {
-                            setFieldValue('isProvidentFund', e.target.checked)
-                          }}
-                          checked={values.isProvidentFund}
-                        />
-                        Enable Provident Fund
-                      </label>
-                    </div>
-
-
-                    <div className="">
-                      {<label>Provident Fund{Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</label>}
-                      <select className="form-control"
-                        disabled={!Boolean(values.isProvidentFund)}
-                        onChange={(e) => {
-                          setFieldValue('providentFundId', e.target.value)
-                        }}
-                        value={values.providentFundId}
-                        name="providentFundId">
-                        <option value="-1"> Select</option>
-                        {
-                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
-                            return <option value={x.value}> {x.label} </option>
-                          })}
-                      </select>
-                      {errors.providentFundId && touched.providentFundId && <ErrorMessage className="form-feedBack" name="providentFundId" component="div" />}
-                    </div>
-
-
-                  </div>
-                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-                    <div className="">
-                      <Field
-                        disabled={!Boolean(values.isProvidentFund)}
-                        name="pf_employer_percent"
-                        component={Input}
-                        type="number"
-                        placeholder="Employeer value"
-                        value={values.pf_employer_percent}
-                        label={<span>Employer(%){Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="">
-                      <Field
-                        disabled={!Boolean(values.isProvidentFund)}
-                        name="pf_employee_percent"
-                        component={Input}
-                        type="number"
-                        placeholder="Employee value"
-                        label={<span>Employee(%){Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="">
-                      <label>  Providen Fund Allowances </label>
-
-
-
-
-                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-{console.log("defProvidentFundAllowances111",defProvidentFundAllowances)}
-                        {dashboard.allEarnings.map((option) => (
-                          <div key={option.value} className="flex justify-start items-center border-none">
-
-                            <input className="mr-1"
-                              disabled={!Boolean(values.isProvidentFund)}
-                              name="providentFundAllowancesId"
-                              type="checkbox"
-                              checked={defProvidentFundAllowances?.includes(option.value)}
-                              onChange={() => handleCheckboxChangeFor_providentFundAllowances(option.value)}
-                            />
-                            <label> {option.label} </label>
-                          </div>
-                        ))}
-                      </div>
-
-
-
-
-
-
-
-
-                    </div>
-                  </div>
-
-                  <hr></hr>
-
-                </div>
-
-
-
+           
 
 
 
