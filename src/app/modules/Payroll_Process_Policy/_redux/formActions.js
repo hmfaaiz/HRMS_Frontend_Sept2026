@@ -87,13 +87,13 @@ export const activeUser = (id) => (dispatch) => {
     });
 };
 
-export const create_Payroll_Policy = (Payroll_Policy_ForCreation, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList) => (
+export const create_Payroll_Policy = (Payroll_Policy_ForCreation, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList) => (
   dispatch
 ) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
 
   return requestFromServer
-    .create_Payroll_Policy(Payroll_Policy_ForCreation, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList)
+    .create_Payroll_Policy(Payroll_Policy_ForCreation, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList)
     .then((res) => {
       const user = res.data?.data;
 
@@ -126,10 +126,10 @@ export const create_Payroll_Policy = (Payroll_Policy_ForCreation, emailRecipentL
     });
 };
 
-export const update_Payroll_Policy = (user, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList) => (dispatch) => {
+export const update_Payroll_Policy = (user, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList) => (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
-    .update_Payroll_Policy(user, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList)
+    .update_Payroll_Policy(user, emailRecipentList, eobiAllowancesList, bankInfoList, sessiAllowanceList,providentFundAllowancesList)
     .then((response) => {
 
       const payrollUpdatePolicy = response?.config?.data; // response.data?.data;

@@ -3675,6 +3675,133 @@ const comparisonFields = [
               </div>
 
 
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                                    <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
+                                      Provident Fund
+                                    </h6>
+                                    <div className="space-y-1">
+                                      <div
+                                        style={{
+                                          fontSize: "10.2px",
+                                          // fontWeight: "bold",
+                                          // padding: "2px",
+                                        }}
+                                        className="text-black mt-1 justify-start items-center grid md:grid-cols-2"
+                                      >
+                                    
+                                          <div className="flex  items-center col-span-1">
+                                            <input
+                                              type="checkbox"
+                                              className="p-0 m-0 mr-1 "
+                                              name="pf_member"
+                                              disabled={dataForRead}
+                                              onChange={(e) => {
+                                                setFieldValue("pf_member", e.target.checked);
+                                                setFieldValue("profit_member",0);
+                                                  setFieldValue("pf_reg_date", null);
+                                                  setFieldValue("pf_accNo", "");
+                                                  setProvidentFundDate("");
+                                              }}
+                                              onBlur={handleBlur}
+                                              value={values.pf_member}
+                                              checked={values.pf_member}
+                                            />{" "}
+                                            PF Member
+              
+                                          </div>
+              
+                                          <div className="flex  items-center col-span-1">
+                                            <input
+                                              type="checkbox"
+                                              className="p-0 m-0 mr-1 "
+                                              name="profit_member"
+                                              disabled={dataForRead}
+                                              onChange={(e) => {
+                                                setFieldValue("profit_member", e.target.checked);
+                                              }}
+                                              onBlur={handleBlur}
+                                              value={values.profit_member}
+                                              checked={values.profit_member}
+                                            />{" "}
+                                            Profit Member
+                                          </div>
+              
+                                       
+              
+              
+                                      </div>
+                                      <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                                        <div>
+                                          {
+                                            <label>
+                                              {" "}
+                                              Date Of Registration
+                                              {Boolean(values.pf_member) && (
+                                                <span style={{ color: "red" }}>*</span>
+                                              )}{" "}
+                                            </label>
+                                          }
+              
+                                          <DatePicker
+                                            className="form-control"
+                                            placeholder="Enter Provident Fund Reg Date"
+                                            selected={values.pf_member && defProvidenFund}
+                                            label="PF Reg Date"
+                                            onChange={(date) => {
+                                              setFieldValue("pf_reg_date", date);
+                                              setProvidentFundDate(date);
+                                            }}
+                                            timeInputLabel="Time:"
+                                            dateFormat="dd-MMM-yyyy"
+                                            // showTimeInput
+                                            name="pf_reg_date"
+                                            autoComplete="off"
+                                            disabled={!values.pf_member || dataForRead}
+              
+                                            minDate={
+                                              dateOfBirth
+                                                ? new Date(dateOfBirth)
+                                                : null
+                                            }
+                                          />
+                                          <ErrorMessage
+                                            className="form-feedBack"
+                                            name="pf_reg_date"
+                                            component="div"
+                                          />
+                                        </div>
+                                        <div>
+                                          <Field
+                                            name="pf_accNo"
+                                            type="number"
+                                            component={Input}
+                                            onInput={(e) => {
+                                              e.target.value = amountLimitDynamic(
+                                                e.target.value,
+                                                15
+                                              ); // Limit to 3 digits
+                                            }}
+                                            placeholder="Enter PF Account No"
+                                            label={
+                                              <span>
+                                                {" "}
+                                                PF Account No
+                                                {Boolean(values.pf_member) && (
+                                                  <span style={{ color: "red" }}>*</span>
+                                                )}{" "}
+                                              </span>
+                                            }
+                                            autoComplete="off"
+                                            disabled={!values.pf_member || dataForRead}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+              
+                                  </div>
+
+
               
                              
 
