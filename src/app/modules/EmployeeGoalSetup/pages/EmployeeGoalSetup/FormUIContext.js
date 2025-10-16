@@ -13,6 +13,7 @@ export const ReceiptUIConsumer = FormUIContext.Consumer;
 export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds] = useState([]);
+    const [panelMode, setPanelMode] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -40,7 +41,8 @@ list:[],
     setQueryParams,
     ids,
     setIds,
-    initUser,
+    initUser,panelMode,
+    setPanelMode,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,

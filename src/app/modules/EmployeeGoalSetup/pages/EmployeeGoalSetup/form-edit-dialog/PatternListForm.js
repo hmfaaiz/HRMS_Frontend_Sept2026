@@ -36,13 +36,13 @@ function PatternListForm({
       <FieldArray name="list">
         {({ insert, remove, push }) => (
           <>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-end items-center text-right ">
 
               {/* {!isdataForRead && values?.list.length < 31 && ( */}
               <button
                 disabled={!values.employeeId}
                 type="button"
-                className="btn btn-primary btn-elevate"
+                className="btn btn-primary btn-elevate text-right"
                 onClick={() =>
                   push({
                     goalName: "",
@@ -55,7 +55,7 @@ function PatternListForm({
                   })
                 }
               >
-                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3 " />{" "}
                 Add
               </button>
               {/* )} */}
@@ -229,7 +229,7 @@ function PatternListForm({
                           <DatePicker
                             className="form-control"
                             placeholderText="Select Date"
-                            disabled={!appraisalPeriod?.startDate}
+                            // disabled={!appraisalPeriod?.startDate}
                             selected={
                               values?.list?.[index]?.targetDate
                                 ? new Date(values.list[index].targetDate)
