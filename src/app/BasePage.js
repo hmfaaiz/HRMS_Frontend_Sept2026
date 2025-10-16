@@ -326,6 +326,10 @@ const DesignationWiseGoalSetup = lazy(()=>
 const EmployeeGoalSetup = lazy(()=>
  import("./modules//EmployeeGoalSetup/pages/index"))
 
+const ReleasePayslip = lazy(()=>
+import("./modules/Release_Payslip/pages/index")
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -453,6 +457,7 @@ const ROUTES = {
   appraisal_evaluation : AppraisalEvaluationManagement,
   designation_wise_goal_setup:DesignationWiseGoalSetup,
   employee_goal_setup:EmployeeGoalSetup,
+  release_payslip: ReleasePayslip,
 };
 
 export default function BasePage() {
