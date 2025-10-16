@@ -27,6 +27,8 @@ export function FormEditDialog({ show,employeeId,appraisalPeriodId, onHide, data
     return {
       initUser: FormUIContext.initUser,
       queryParams: FormUIContext.queryParams,
+        panelMode: FormUIContext.panelMode,
+      setPanelMode: FormUIContext.setPanelMode,
     };
   }, [FormUIContext]);
 
@@ -108,6 +110,8 @@ export function FormEditDialog({ show,employeeId,appraisalPeriodId, onHide, data
     >
       <FormEditDialogHeader employeeId={employeeId} isdataForRead={dataForRead} />
       <FormEditForm
+        setPanelMode={formUIProps.setPanelMode}
+        panelMode={formUIProps.panelMode}
         saveForm={saveForm}
         data={dataForEdit || formUIProps.initUser}
         onHide={onHide}

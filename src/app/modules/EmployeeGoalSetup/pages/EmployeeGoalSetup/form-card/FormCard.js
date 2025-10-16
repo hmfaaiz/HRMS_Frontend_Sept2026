@@ -21,6 +21,8 @@ export function FormCard() {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
       openEditFormDialog: FormUIContext.openEditFormDialog,
+      panelMode: FormUIContext.panelMode,
+      setPanelMode: FormUIContext.setPanelMode,
     };
   }, [FormUIContext]);
 

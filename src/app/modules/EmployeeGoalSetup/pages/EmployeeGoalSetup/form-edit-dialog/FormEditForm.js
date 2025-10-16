@@ -12,6 +12,8 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
 import { fetchAllAppraisalPeriod } from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchDesignationWiseGoalSetupByEmp } from "../../../_redux/redux-Actions";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { Eye, XCircle } from "lucide-react";
 
 
 
@@ -67,7 +69,7 @@ export function FormEditForm({
   onHide,
   isdataForRead,
   enableLoading,
-  loading,
+  loading, setPanelMode, panelMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -97,6 +99,20 @@ export function FormEditForm({
 
 
   }, [dispatch, data.employeeId]);
+
+
+  useEffect(() => {
+    if (data?.appraisalPeriodId && dashboard?.appraisalPeriodList?.length > 0) {
+      const selected = dashboard.appraisalPeriodList.find(
+        (option) => Number(option?.value) === Number(data?.appraisalPeriodId)
+      );
+
+      setAppraisalPeriod(selected || null);
+      console.log("setting111 fixed", selected);
+    }
+  }, [data?.appraisalPeriodId, dashboard?.appraisalPeriodList]);
+
+
 
   const { currentState } = useSelector(
     (state) => {
@@ -138,43 +154,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
-                  <div>
-                    <SearchSelect
-                      name="employeeId"
-                      label={
-                        <span>
-                          Employee<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isdataForRead || data.dataIsExist}
-                      onChange={(e) => {
-                        setFieldValue("employeeId", e.value || null);
-                        setFieldValue("list", []);
-                        dispatch(
-                          fetchAllAppraisalPeriod(e.value)
-                        );
 
-                        if (e.value && values.appraisalPeriodId) {
-                          dispatch(
-                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, appraisalPeriodId: values.appraisalPeriodId })
-                          );
-                        }
-
-
-
-                      }}
-                      value={
-                        dashboard?.allEmployeesWithNoPermissionList?.find(
-                          (option) => option?.value == values?.employeeId
-                        ) || null
-                      }
-                      options={dashboard?.allEmployeesWithNoPermissionList}
-
-
-                      error={errors.employeeId}
-                      touched={touched.employeeId}
-                    />
-                  </div>
 
                   <div>
                     <SearchSelect
@@ -220,9 +200,82 @@ export function FormEditForm({
                   </div>
 
 
+                  <div>
+                    <SearchSelect
+                      name="employeeId"
+                      label={
+                        <span>
+                          Employee<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isdataForRead || data.dataIsExist}
+                      onChange={(e) => {
+                        setFieldValue("employeeId", e.value || null);
+                        setFieldValue("list", []);
+                        dispatch(
+                          fetchAllAppraisalPeriod(e.value)
+                        );
+
+                        if (e.value && values.appraisalPeriodId) {
+                          dispatch(
+                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, appraisalPeriodId: values.appraisalPeriodId })
+                          );
+                        }
+
+
+
+                      }}
+                      value={
+                        dashboard?.allEmployeesWithNoPermissionList?.find(
+                          (option) => option?.value == values?.employeeId
+                        ) || null
+                      }
+                      options={dashboard?.allEmployeesWithNoPermissionList}
+
+
+                      error={errors.employeeId}
+                      touched={touched.employeeId}
+                    />
+                  </div>
+                  <div className="mt-6">
+
+
+
+                    {panelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+
+
+                        <Eye className="w-4 h-4 text-white" />
+                        View Details
+                      </button>
+                    )}
+
+
+
+
+                  </div>
+
 
 
                 </div>
+
+                <EmployeeProfile
+                  employeeId={values.employeeId}
+                  panelMode={panelMode}
+                />
                 <hr />
                 <div>
                   <PatternListForm

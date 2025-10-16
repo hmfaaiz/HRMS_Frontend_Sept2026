@@ -70,6 +70,7 @@ export function FormTable(user) {
   const [defBankInfoList = null, setDefaultBankInfoList] = useState([]);
   const [defEmailRecipents, setDefaultEmailRecipents] = useState([]); //  For Email Recipents
   const [defEOBIAllowances, setDefaultEOBIAllowances] = useState([]);
+  const [defProvidentFundAllowances, setDefaultProvidentFundAllowances] = useState([]);
   const [defSESSIAllowances, setDefaultSESSIAllowances] = useState([]);
   const [defBank, setDefaultBanks] = useState({});
   const [otherErrors, setotherErrors] = useState({})
@@ -125,9 +126,9 @@ export function FormTable(user) {
       dispatch(fetchAllSubsidiaryData("allSubidiaryList")) // For All Subsisidaries
       dispatch(fetchAllActiveEmployees()); // For Getting Salaried Employees
       dispatch(fetchAllFormsMenu(127, "allChildMenus")); // For Payroll Group
-      dispatch(fetchAllAccountsByType(45,accountType.Assets , "allJournalBankAccounts")); // For Basic Pay Accounts
-      dispatch(fetchAllAccountsByType(45, accountType.Liabilities , "allPayrollPayableAccounts")); // For Payable Accounts
-      dispatch(fetchAllAccountsByType(45, accountType.Assets , "allDefaultLoanAccounts")); // For Payable Accounts
+      dispatch(fetchAllAccountsByType(45, accountType.Assets, "allJournalBankAccounts")); // For Basic Pay Accounts
+      dispatch(fetchAllAccountsByType(45, accountType.Liabilities, "allPayrollPayableAccounts")); // For Payable Accounts
+      dispatch(fetchAllAccountsByType(45, accountType.Assets, "allDefaultLoanAccounts")); // For Payable Accounts
       dispatch(fetchRoles());
     }
   }, [dispatch]);
@@ -164,6 +165,21 @@ export function FormTable(user) {
     );
   }, [currentState.userForEdit?.tran_payroll_policy_eobiAllowances]);
 
+
+
+
+  useEffect(() => {
+    const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_eobiAllowances?.map((x) => {
+      return x.earningId
+    }) || [];
+
+
+    (
+      [...eobiAllowance]
+    );
+  }, [currentState.userForEdit?.tran_payroll_policy_eobiAllowances]);
+
+
   // FOR SESSI List Configuration
   useEffect(() => {
     const sessiAllowance = currentState.userForEdit?.tran_payroll_policy_sessiAllowances?.map((x) => {
@@ -173,6 +189,31 @@ export function FormTable(user) {
       [...sessiAllowance]
     );
   }, [currentState.userForEdit?.tran_payroll_policy_sessiAllowances]);
+
+console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowances1111",currentState?.userForEdit?.tran_payroll_policy_providentFundAllowances)
+
+  useEffect(() => {
+    const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_providentFundAllowances?.map((x) => {
+      return x.earningId
+    }) || [];
+    console.log("eobiAllowance1111",eobiAllowance)
+    setDefaultProvidentFundAllowances(
+      [...eobiAllowance]
+    );
+  }, [currentState.userForEdit?.tran_payroll_policy_providentFundAllowances]);
+
+
+
+  useEffect(() => {
+    const eobiAllowance = currentState.userForEdit?.tran_payroll_policy_providentFundAllowances?.map((x) => {
+      return x.earningId
+    }) || [];
+
+
+    (
+      [...eobiAllowance]
+    );
+  }, [currentState.userForEdit?.tran_payroll_policy_providentFundAllowances]);
 
 
 
@@ -201,6 +242,14 @@ export function FormTable(user) {
   };
 
 
+  const handleCheckboxChangeFor_providentFundAllowances = (option) => {
+    console.log("option111",option)
+    setDefaultProvidentFundAllowances((prevState) =>
+      prevState.includes(option)
+        ? prevState.filter(item => item !== option)
+        : [...prevState, option]
+    );
+  };
 
   const deleteRowBankInfo = (element) => {
 
@@ -321,7 +370,7 @@ export function FormTable(user) {
       //     then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
       //     otherwise: Yup.number().notRequired(),
       //   }),
-      
+
       // leaveDeductionId: Yup.number()
       //   .when('isEnableAttandanceIntegration', {
       //     is: true, // if select value is 2
@@ -406,10 +455,62 @@ export function FormTable(user) {
           then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
           otherwise: Yup.number().notRequired(),
         }),
-        journalCashAccountId : Yup.string()
+      journalCashAccountId: Yup.string()
         .notRequired(),
-                journalChequeAccountId : Yup.string()
+      journalChequeAccountId: Yup.string()
         .notRequired(),
+
+
+      OvertimeBasis: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      SalaryPolicy: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+
+      SalaryPolicy_Days: Yup.number()
+        .when('SalaryPolicy', {
+          is: 1, // if select value is 2
+          then: Yup.number().min(1, VALIDATION_MESSAGES.minZeroValue).max(99, "Max 99 days").required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+
+
+
+      // Provident Fund 
+          providentFundId: Yup.number()
+          .nullable()
+        .when('isProvidentFund', {
+          is: true, // if select value is 2
+          then: Yup.number().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+      // providentFundAllowancesId: Yup.number()
+      // .nullable()
+      //   .when('isProvidentFund', {
+      //     is: true, // if select value is 2
+      //     then: Yup.number().required(VALIDATION_MESSAGES.required),
+      //     otherwise: Yup.number().notRequired(),
+      //   }),
+      pf_employer_percent: Yup.number()
+      .nullable()
+        .when('isProvidentFund', {
+          is: true, // if select value is 2
+          then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+      pf_employee_percent: Yup.number()
+      .nullable()
+        .when('isProvidentFund', {
+          is: true, // if select value is 2
+
+          then: Yup.number().min(0, VALIDATION_MESSAGES.minZeroValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+
+
     },
 
   );
@@ -476,10 +577,19 @@ export function FormTable(user) {
     sessi_employeer_value_in_percent: "",
     sessi_employee_value_in_percent: "",
 
-    journalChequeAccountId : "",
-    journalCashAccountId : "",
+    journalChequeAccountId: "",
+    journalCashAccountId: "",
 
-    
+
+    // --  Provident Fund Configuration
+    isProvidentFund: false,
+    providentFundId: null,
+    providentFundAllowancesId:null,
+    pf_employer_percent:null,
+    pf_employee_percent:null,
+
+
+    SalaryPolicy:0,
 
     //-- Other
   };
@@ -493,11 +603,11 @@ export function FormTable(user) {
     page: FormUIProps.queryParams.pageNumber,
   };
 
-  const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList) => {
+  const SavePayrollPolicy = async (user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances) => {
 
     if (!user.Id) {
 
-      await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList));
+      await dispatch(actions.create_Payroll_Policy(user, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList, providentFundAllowances));
       //  const list = await dispatch(actions.fetchUsers(usersUIProps.queryParams));
 
 
@@ -572,13 +682,29 @@ export function FormTable(user) {
         loanApproverId: user.loanApproverId,
         payrollApproverId: user.payrollApproverId,
 
-        journalChequeAccountId : user?.journalChequeAccountId,
-        journalCashAccountId : user?.journalCashAccountId
+        journalChequeAccountId: user?.journalChequeAccountId,
+        journalCashAccountId: user?.journalCashAccountId,
+
+
+        // Salary Policy
+        SalaryPolicy: user.SalaryPolicy,
+        SalaryPolicy_Days: user.SalaryPolicy_Days,
+        OvertimeBasis: user.OvertimeBasis,
+
+
+
+        //--  Provident Configuration
+        isProvidentFund: user.isProvidentFund,
+        providentFundId: user.providentFundId,
+        providentFundAllowancesId: user.providentFundAllowancesId,
+
+        pf_employer_percent: user.pf_employer_percent,
+        pf_employee_percent: user.pf_employee_percent,
 
       };
 
 
-      await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList));
+      await dispatch(actions.update_Payroll_Policy(payrollUpdateObj, emailRecipentList, eobiAllowances, bankInfoList, sessiAllowanceList,providentFundAllowances));
       // await dispatch(actions.fetchUsers(usersUIProps.queryParams));
     }
   };
@@ -629,7 +755,7 @@ export function FormTable(user) {
       }
     });
 
-    // ✅ Check if exactly one default is selected
+    //  Check if exactly one default is selected
     if (defaultCount > 1) {
       newErrors["isDefault"] = "Only one row can be marked as default.";
     }
@@ -665,6 +791,15 @@ export function FormTable(user) {
 
   // }, [dispatch]);
 
+  const salaryPolicyOptions = [
+    { value: 0, label: "Month Days" },
+    { value: 1, label: "Fixed Days " },
+  ];
+
+  const overtimeBasisOptions = [
+    { value: 0, label: "Basic Salary" },
+    { value: 1, label: "Gross Salary" },
+  ];
 
   return (
     <>
@@ -704,243 +839,281 @@ export function FormTable(user) {
         </PaginationProvider>
       </div>
       {user?.active && <div className="rounded-b-lg bg-white px-3 py-2 mt-2">
-      <Formik
-        enableReinitialize={true}
-        initialValues={currentState.userForEdit || initialValues}
-        validationSchema={formValidation}
+        <Formik
+          enableReinitialize={true}
+          initialValues={currentState.userForEdit || initialValues}
+          validationSchema={formValidation}
 
-        onSubmit={async (values) => {
+          onSubmit={async (values) => {
 
-          const validationErrors = validate();
-          if (Object.keys(validationErrors).length > 0) {
-            setotherErrors(validationErrors);
-          } else {
-            defaultCount = 0
-            setotherErrors(validate());
-            SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances);
+            const validationErrors = validate();
+            if (Object.keys(validationErrors).length > 0) {
+              setotherErrors(validationErrors);
+            } else {
+              defaultCount = 0
+              setotherErrors(validate());
+              SavePayrollPolicy(values, defEmailRecipents, defEOBIAllowances, defBankInfoList, defSESSIAllowances, defProvidentFundAllowances);
 
-            if (user.formid) {
-              dispatch(actions.fetchUser(null));
+              if (user.formid) {
+                dispatch(actions.fetchUser(null));
+              }
+              else {
+                dispatch(actions.fetchUser(''));
+              }
+              user.setid(0);
             }
-            else {
-              dispatch(actions.fetchUser(''));
-            }
-            user.setid(0);
-          }
-        }}
-      >
-        {({
-          handleSubmit,
-          errors,
-          touched,
-          values,
-          handleBlur,
-          handleChange,
-          setFieldValue,
-          setFieldTouched,
-          formik,
-        }) => (
-          <>  <Form className="form form-label-right">
-            <fieldset disabled={user?.readOnly || false} >
+          }}
+        >
+          {({
+            handleSubmit,
+            errors,
+            touched,
+            values,
+            handleBlur,
+            handleChange,
+            setFieldValue,
+            setFieldTouched,
+            formik,
+          }) => (
+            <>  <Form className="form form-label-right">
+              {console.log("errors11111",errors)}
+              <fieldset disabled={user?.readOnly || false} >
 
-<div className="flex justify-between">
-              <h6 className="font-bold mb-0 text-primary ">
-                Payroll Configuration From
-              </h6>
-              <X title="Close" onClick={()=> 
- user.setActive(false)} className="w-4 h-4 text-black cursor-pointer"/>
-</div>
-
-
-              <div className="grid grid-cols-1 lg:grid-cols-6 gap-x-3 ">
-                <div className="col-span-2">
-                  <SearchSelect
-                    name="subsidiaryId"
-                    isDisabled={Boolean(user?.readOnly)}
-                    label={<span>Subsidiary<span style={{ color: 'red' }}>*</span></span>}
-                    onBlur={() => {
-                      // handleBlur({ target: { name: "countryId" } });
-                    }}
-                    onChange={(e) => {
-                      setFieldValue("subsidiaryId", e.value || null);
-                      setDefualtSubsidiaryList(e);
-                      dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes", e.value));
-                      dispatch(fetchAllDeductionList(2, e.value, ''));
-                      dispatch(fetchAllEarningList(1, e.value, ''));
-                      //handlePaymenModeChanged(e)
-                    }}
-
-                    value={
-                      dashboard.allSubidiaryList.find(
-                        (option) => option.value === values.subsidiaryId
-                      ) || null
-                    }
-                    error={errors.subsidiaryId}
-                    touched={touched.subsidiaryId}
-                    options={dashboard.allSubidiaryList}
-                  />
-
+                <div className="flex justify-between">
+                  <h6 className="font-bold mb-0 text-primary ">
+                    Payroll Configuration From
+                  </h6>
+                  <X title="Close" onClick={() =>
+                    user.setActive(false)} className="w-4 h-4 text-black cursor-pointer" />
                 </div>
 
 
+                <div className="grid grid-cols-1 lg:grid-cols-6 gap-x-3 ">
+                  <div className="">
+                    <SearchSelect
+                      name="subsidiaryId"
+                      isDisabled={Boolean(user?.readOnly)}
+                      label={<span>Subsidiary<span style={{ color: 'red' }}>*</span></span>}
+                      onBlur={() => {
+                        // handleBlur({ target: { name: "countryId" } });
+                      }}
+                      onChange={(e) => {
+                        setFieldValue("subsidiaryId", e.value || null);
+                        setDefualtSubsidiaryList(e);
+                        dispatch(fetchAllLeaveTypeBySubsidiary("allLeaveTypes", e.value));
+                        dispatch(fetchAllDeductionList(2, e.value, ''));
+                        dispatch(fetchAllEarningList(1, e.value, ''));
+                        //handlePaymenModeChanged(e)
+                      }}
 
-                <div className="col-span-2">
-                  <SearchSelect
-                    name="basicSalaryId"
-                    label={<span>Basic Salary<span style={{ color: 'red' }}>*</span></span>}
-                    onChange={(e) => {
-                      setFieldValue("basicSalaryId", e.value || null);
-                    }}
-                    value={allEarningsMap?.get(values?.basicSalaryId || '') || ''}
-                    error={errors.basicSalaryId}
-                    touched={touched.basicSalaryId}
-                    options={dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")}
-                    isDisabled={Boolean(user?.readOnly)}
-                  />
+                      value={
+                        dashboard.allSubidiaryList.find(
+                          (option) => option.value === values.subsidiaryId
+                        ) || null
+                      }
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      options={dashboard.allSubidiaryList}
+                    />
+
+                  </div>
+
+
+
+                  <div className="">
+                    <SearchSelect
+                      name="basicSalaryId"
+                      label={<span>Basic Salary<span style={{ color: 'red' }}>*</span></span>}
+                      onChange={(e) => {
+                        setFieldValue("basicSalaryId", e.value || null);
+                      }}
+                      value={allEarningsMap?.get(values?.basicSalaryId || '') || ''}
+                      error={errors.basicSalaryId}
+                      touched={touched.basicSalaryId}
+                      options={dashboard?.allEarnings?.filter((el) => el?.mappedAllowance === "1")}
+                      isDisabled={Boolean(user?.readOnly)}
+                    />
+                  </div>
+
+                  <div className="">
+                    <SearchSelect
+                      name="SalaryPolicy"
+                      label={<span>Salary Policy<span style={{ color: 'red' }}>*</span></span>}
+                      onChange={(e) => {
+                        setFieldValue("SalaryPolicy", Number(e?.value));
+                        setFieldValue("SalaryPolicy_Days", 0);
+                      }}
+
+                      value={
+                        salaryPolicyOptions.find(
+                          (option) => option.value === Number(values?.SalaryPolicy)
+                        ) || null
+                      }
+
+                      error={errors.SalaryPolicy}
+                      touched={touched.SalaryPolicy}
+                      options={salaryPolicyOptions}
+                      isDisabled={Boolean(user?.readOnly)}
+                    />
+                  </div>
+
+                  <div className="">
+                    <Field
+                      disabled={!Boolean(values.SalaryPolicy)}
+                      name="SalaryPolicy_Days"
+                       component={Input}
+                      type="number"
+                      placeholder="Salary Policy Days"
+
+                       label={<span>Salary Policy Days{Boolean(values.SalaryPolicy) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      
+                      autoComplete="off"
+                    />
+                  </div>
+
+
+
+
+                  <div className="col-span-1">
+                    <SearchSelect
+                      name="salaryRoundingId"
+                      label={<span>Salary Rounding </span>}
+                      onChange={(e) => {
+                        setFieldValue("salaryRoundingId", e.value || null);
+                      }}
+                      value={allEarningsMap?.get(values?.salaryRoundingId || '') || ''}
+                      error={errors.salaryRoundingId}
+                      touched={touched.salaryRoundingId}
+                      options={dashboard?.allEarnings?.filter((el) => el?.mappedAllowance === "1")}
+                      isDisabled={Boolean(user?.readOnly)}
+                    />
+                  </div>
                 </div>
+                {/* </div> */}
+                <hr></hr>
 
 
 
-                <div className="col-span-2">
-                  <SearchSelect
-                    name="salaryRoundingId"
-                    label={<span>Salary Rounding </span>}
-                    onChange={(e) => {
-                      setFieldValue("salaryRoundingId", e.value || null);
-                    }}
-                    value={allEarningsMap?.get(values?.salaryRoundingId || '') || ''}
-                    error={errors.salaryRoundingId}
-                    touched={touched.salaryRoundingId}
-                    options={dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")}
-                    isDisabled={Boolean(user?.readOnly)}
-                  />
-                </div>
-              </div>
-              {/* </div> */}
-              <hr></hr>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-3 ">
 
 
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-3 ">
+                  <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
+                    <div>
+                      <h6 className="font-bold text-primary m-0 h-5">
+                        Approval Authorities
+                      </h6>
 
-
-
-                <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
-                  <div>
-                    <h6 className="font-bold text-primary m-0 h-5">
-                      Approval Authorities
-                    </h6>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
-                      <div className="">
-                        <label>
-                          Salary Setup Approver
-                        </label>
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
+                        <div className="">
+                          <label>
+                            Salary Setup Approver
+                          </label>
 
 
 
 
 
-                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-                          {roles?.map((option) => (
-                            <div key={option.Id} className="flex justify-start items-center">
-                              <input className="mr-1"
-                                name="salaryApproverId"
-                                type="checkbox"
-                                value={option.value}
-                                checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
-                                onChange={handleChange}
-                              />
-                              <label>{option.label}
-                              </label>
-                            </div>
-                          ))}
+                          <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                            {roles?.map((option) => (
+                              <div key={option.Id} className="flex justify-start items-center">
+                                <input className="mr-1"
+                                  name="salaryApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.salaryApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+                                <label>{option.label}
+                                </label>
+                              </div>
+                            ))}
+
+                          </div>
+
 
                         </div>
 
 
-                      </div>
+
+
+
+
+                        <div className="">
+                          <label>
+                            Loan Approver
+                          </label>
 
 
 
 
 
+                          <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                            {roles?.map((option) => (
+                              <div key={option.Id} className="flex justify-start items-center">
+                                <input className="mr-1"
+                                  name="loanApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+                                <label>{option.label}
+                                </label>
+                              </div>
+                            ))}
 
-                      <div className="">
-                        <label>
-                          Loan Approver
-                        </label>
+                          </div>
 
-
-
-
-
-                                             <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-                          {roles?.map((option) => (
-                            <div key={option.Id} className="flex justify-start items-center">
-                              <input className="mr-1"
-                                name="loanApproverId"
-                                type="checkbox"
-                                value={option.value}
-                                checked={Boolean(values?.loanApproverId?.includes(option?.value?.toString()))}
-                                onChange={handleChange}
-                              />
-                              <label>{option.label}
-                              </label>
-                            </div>
-                          ))}
 
                         </div>
 
 
-                      </div>
 
 
-
-
-                      <div className="">
-                        <label>
-                          Payroll Approver
-                        </label>
+                        <div className="">
+                          <label>
+                            Payroll Approver
+                          </label>
 
 
 
 
 
-                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-                          {roles?.map((option) => (
-                            <div key={option.Id} className="flex justify-start items-center">
-                              <input className="mr-1"
-                                name="payrollApproverId"
-                                type="checkbox"
-                                value={option.value}
-                                checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
-                                onChange={handleChange}
-                              />
-                              <label>{option.label}
-                              </label>
-                            </div>
-                          ))}
+                          <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                            {roles?.map((option) => (
+                              <div key={option.Id} className="flex justify-start items-center">
+                                <input className="mr-1"
+                                  name="payrollApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.payrollApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+                                <label>{option.label}
+                                </label>
+                              </div>
+                            ))}
+
+                          </div>
+
 
                         </div>
-
 
                       </div>
 
                     </div>
-
                   </div>
-                </div>
-                {/* <h6 className="font-bold mb-0 text-primary ">
+                  {/* <h6 className="font-bold mb-0 text-primary ">
                   Email Preferences
                 </h6> */}
-                <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
+                  <div className="grid grid-cols-1 lg:grid-cols-1 gap-x-2">
 
-                  <h6 className="font-bold mb-0 text-primary mt-0">
-                    Email Preferences
-                  </h6>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
-                    {/* <div className="">
+                    <h6 className="font-bold mb-0 text-primary mt-0">
+                      Email Preferences
+                    </h6>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
+                      {/* <div className="">
                       <SearchSelect
                         name="sender_emailId"
                         label={<span>Email Sender</span>}
@@ -959,48 +1132,48 @@ export function FormTable(user) {
                         options={dashboard.allEmployees}
                       />
                     </div> */}
-                    <div className="md:ml-20">
-                      <label>Email Recipients</label>
+                      <div className="md:ml-20">
+                        <label>Email Recipients</label>
 
 
 
 
-                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-                        {dashboard.allEmployees.map((option) => (
-                          <div key={option.value} className="flex justify-start items-center border-none">
-                            <input className="mr-1"
-                              name="employee_email_recipentId"
-                              type="checkbox"
-                              checked={defEmailRecipents?.includes(option.value)}
-                              onChange={() => handleCheckboxChangeFor_EmailReciepents(option.value)}
-                            />
-                            <label>{option.label}
-                            </label>
-                          </div>
-                        ))}
+                        <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                          {dashboard.allEmployees.map((option) => (
+                            <div key={option.value} className="flex justify-start items-center border-none">
+                              <input className="mr-1"
+                                name="employee_email_recipentId"
+                                type="checkbox"
+                                checked={defEmailRecipents?.includes(option.value)}
+                                onChange={() => handleCheckboxChangeFor_EmailReciepents(option.value)}
+                              />
+                              <label>{option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+
+
                       </div>
 
-
                     </div>
-
                   </div>
+
                 </div>
 
-              </div>
+                {/* <br></br> */}
 
-              {/* <br></br> */}
-
-              <hr></hr>
+                <hr></hr>
 
 
 
 
-              <h6 className="font-bold mb-0 text-primary my-1">
-                Accounting Impact
-              </h6>
+                <h6 className="font-bold mb-0 text-primary my-1">
+                  Accounting Impact
+                </h6>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3 ">
-                {/* <div className="flex justify-start items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3 ">
+                  {/* <div className="flex justify-start items-center">
                   <input className="mr-1"
                     name="isEnableAccounting"
                     type="checkbox"
@@ -1014,73 +1187,73 @@ export function FormTable(user) {
 
                 </div> */}
 
-                <div className="col-span-1">
-                  <label className="flex items-center mt-1">
-                    <input
-                      className="mr-1"
-                      name="isEnableAccounting"
-                      type="checkbox"
+                  <div className="col-span-1">
+                    <label className="flex items-center mt-1">
+                      <input
+                        className="mr-1"
+                        name="isEnableAccounting"
+                        type="checkbox"
+                        onChange={(e) => {
+                          setFieldValue('isEnableAccounting', e.target.checked);
+                        }}
+                        checked={values.isEnableAccounting}
+                      />
+                      <span>Enable Accounting Impact</span>
+                    </label>
+                  </div>
+
+                  <div className="">
+                    <SearchSelect
+                      name="payroll_payable_accountId"
+                      label={<span>Payroll Payable Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
                       onChange={(e) => {
-                        setFieldValue('isEnableAccounting', e.target.checked);
+                        setFieldValue("payroll_payable_accountId", e.value || null);
+                        setDefaultPaybleAccount(e);
                       }}
-                      checked={values.isEnableAccounting}
+                      value={
+                        dashboard.allPayrollPayableAccounts.find(
+                          (option) => option.value === values.payroll_payable_accountId
+                        ) || null
+                      }
+                      error={errors.payroll_payable_accountId}
+                      touched={touched.payroll_payable_accountId}
+                      options={dashboard.allPayrollPayableAccounts}
                     />
-                    <span>Enable Accounting Impact</span>
-                  </label>
+                  </div>
+                  <div className="">
+                    <SearchSelect
+                      name="default_loan_accountId"
+                      label={<span>Default Loan Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
+                      onChange={(e) => {
+                        setFieldValue("default_loan_accountId", e.value || null);
+                        setDefaultPaybleAccount(e);
+                      }}
+                      value={
+                        dashboard.allDefaultLoanAccounts.find(
+                          (option) => option.value === values.default_loan_accountId
+                        ) || null
+                      }
+                      error={errors.default_loan_accountId}
+                      touched={touched.default_loan_accountId}
+                      options={dashboard.allDefaultLoanAccounts}
+                    />
+                  </div>
                 </div>
 
-                <div className="">
-                  <SearchSelect
-                    name="payroll_payable_accountId"
-                    label={<span>Payroll Payable Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
-                    onChange={(e) => {
-                      setFieldValue("payroll_payable_accountId", e.value || null);
-                      setDefaultPaybleAccount(e);
-                    }}
-                    value={
-                      dashboard.allPayrollPayableAccounts.find(
-                        (option) => option.value === values.payroll_payable_accountId
-                      ) || null
-                    }
-                    error={errors.payroll_payable_accountId}
-                    touched={touched.payroll_payable_accountId}
-                    options={dashboard.allPayrollPayableAccounts}
-                  />
-                </div>
-                <div className="">
-                  <SearchSelect
-                    name="default_loan_accountId"
-                    label={<span>Default Loan Account{Boolean(values.isEnableAccounting) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    isDisabled={!Boolean(values.isEnableAccounting) || Boolean(user?.readOnly)}
-                    onChange={(e) => {
-                      setFieldValue("default_loan_accountId", e.value || null);
-                      setDefaultPaybleAccount(e);
-                    }}
-                    value={
-                      dashboard.allDefaultLoanAccounts.find(
-                        (option) => option.value === values.default_loan_accountId
-                      ) || null
-                    }
-                    error={errors.default_loan_accountId}
-                    touched={touched.default_loan_accountId}
-                    options={dashboard.allDefaultLoanAccounts}
-                  />
-                </div>
-              </div>
 
+                <hr></hr>
 
-              <hr></hr>
-              
-  {dashboard.allSubidiaryList?.find(
-  (option) => option.value === values.subsidiaryId
-)?.localizationId == 1 && (<>
-              <h6 className="font-bold mb-0 text-primary my-1">
-                Tax Integration
-              </h6>
+                {dashboard.allSubidiaryList?.find(
+                  (option) => option.value === values.subsidiaryId
+                )?.localizationId == 1 && (<>
+                  <h6 className="font-bold mb-0 text-primary my-1">
+                    Tax Integration
+                  </h6>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3  ">
-                {/* <div className="flex justify-start items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-3  ">
+                    {/* <div className="flex justify-start items-center">
                   <input className="mr-1"
                     name="isEnableTax"
                     type="checkbox"
@@ -1097,771 +1270,906 @@ export function FormTable(user) {
                   <br></br>
                 </div> */}
 
-                <div className="flex items-start">
+                    <div className="flex items-start">
+                      <label className="flex items-center mt-1">
+                        <input className="mr-1"
+                          name="isEnableTax"
+                          type="checkbox"
+                          onChange={(e) => {
+                            setFieldValue('isEnableTax', e.target.checked)
+                          }}
+                          checked={values.isEnableTax}
+
+                        />
+                        <span>
+                          Enable Tax Integration
+                        </span>
+                      </label>
+
+                    </div>
+
+
+
+                    <div className="col-apnan2">
+                      {<span><label>Payroll Tax Deduction Type</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      <select className="form-control"
+                        disabled={!Boolean(values.isEnableTax)}
+                        onChange={(e) => {
+                          setFieldValue('payrollTax_DeductionTypeId', e.target.value)
+                        }}
+                        value={values.payrollTax_DeductionTypeId}
+                        name="payrollTax_DeductionTypeId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="form-feedBack" name="payrollTax_DeductionTypeId" component="div" />}
+                    </div>
+                    <div className="col-apnan2">
+                      {<span><label>Arrears Tax Deduction</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}></span>}</span>}
+                      <select className="form-control"
+                        disabled={!Boolean(values.isEnableTax)}
+                        onChange={(e) => {
+                          setFieldValue('arrearTaxDeductionId', e.target.value)
+                        }}
+                        value={values.arrearTaxDeductionId}
+                        name="arrearTaxDeductionId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.arrearTaxDeductionId && touched.arrearTaxDeductionId && <ErrorMessage className="form-feedBack" name="arrearTaxDeductionId" component="div" />}
+                    </div>
+
+                  </div>
+                </>)}
+                <hr></hr>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  Leave/Attendance Integration
+                </h6>
+
+
+
+                <div className="flex  items-start">
                   <label className="flex items-center mt-1">
                     <input className="mr-1"
-                      name="isEnableTax"
+                      name="isEnableAttandanceIntegration"
                       type="checkbox"
                       onChange={(e) => {
-                        setFieldValue('isEnableTax', e.target.checked)
+                        setFieldValue('isEnableAttandanceIntegration', e.target.checked)
                       }}
-                      checked={values.isEnableTax}
+                      checked={values.isEnableAttandanceIntegration}
 
                     />
                     <span>
-                      Enable Tax Integration
+                      Enable Attendance Integration
                     </span>
                   </label>
-
                 </div>
 
 
 
-                <div className="col-apnan2">
-                  {<span><label>Payroll Tax Deduction Type</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}>*</span>}</span>}
-                  <select className="form-control"
-                    disabled={!Boolean(values.isEnableTax)}
-                    onChange={(e) => {
-                      setFieldValue('payrollTax_DeductionTypeId', e.target.value)
-                    }}
-                    value={values.payrollTax_DeductionTypeId}
-                    name="payrollTax_DeductionTypeId">
-                    <option value="-1"> Select</option>
-                    {
-                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
-                        return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
-                      })}
-                  </select>
-                  {errors.payrollTax_DeductionTypeId && touched.payrollTax_DeductionTypeId && <ErrorMessage className="form-feedBack" name="payrollTax_DeductionTypeId" component="div" />}
-                </div>
-                <div className="col-apnan2">
-                  {<span><label>Arrears Tax Deduction</label>{Boolean(values.isEnableTax) && <span style={{ color: 'red' }}></span>}</span>}
-                  <select className="form-control"
-                    disabled={!Boolean(values.isEnableTax)}
-                    onChange={(e) => {
-                      setFieldValue('arrearTaxDeductionId', e.target.value)
-                    }}
-                    value={values.arrearTaxDeductionId}
-                    name="arrearTaxDeductionId">
-                    <option value="-1"> Select</option>
-                    {
-                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
-                        return <option disabled={defMapEarningDeductionList.find(el => el.earning_deduction_id == x.value) ? true : false} value={x.value}> {x.label} </option>
-                      })}
-                  </select>
-                  {errors.arrearTaxDeductionId && touched.arrearTaxDeductionId && <ErrorMessage className="form-feedBack" name="arrearTaxDeductionId" component="div" />}
-                </div>
 
-              </div>
-</>)}
-              <hr></hr>
+                <div>
 
-              <h6 className="font-bold mb-0 text-primary my-2">
-                Leave/Attendance Integration
-              </h6>
+                  <h6 className="font-semibold mb-0 text-primary mt-2 text-sm">
+                    Late Deduction
+                  </h6>
+                  <div className="grid lg:grid-cols-3 gap-x-3">
 
-
-
-              <div className="flex  items-start">
-                <label className="flex items-center mt-1">
-                  <input className="mr-1"
-                    name="isEnableAttandanceIntegration"
-                    type="checkbox"
-                    onChange={(e) => {
-                      setFieldValue('isEnableAttandanceIntegration', e.target.checked)
-                    }}
-                    checked={values.isEnableAttandanceIntegration}
-
-                  />
-                  <span>
-                    Enable Attendance Integration
-                  </span>
-                </label>
-              </div>
-
-
-
-
-              <div>
-
-                <h6 className="font-semibold mb-0 text-primary mt-2 text-sm">
-                  Late Deduction
-                </h6>
-                <div className="grid lg:grid-cols-3 gap-x-3">
-
-                  <div className="">
-                    <Field
-                      name="lateCountPerDaySalaryDeduction"
-                      onChange={(e) => {
-                        //setGrossSalaryDB(e.target.value);
-                        setFieldValue("lateCountPerDaySalaryDeduction", e.target.value);
-                      }}
-                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                      value={values.lateCountPerDaySalaryDeduction}
-                      component={Input}
-                      placeholder="Enter value"
-                      label={<span>Late Count Per Day Salary Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
-                      autoComplete="off"
-                    />
-                  </div>
-
-
-
-                  <div className="">
-                    <label>
-                      Leave Deduction
-                      {Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}
-                    </label>
-                    <select
-                      className="form-control"
-                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                      onChange={(e) => {
-                        // If 'N/A' is selected, set the value to null, else convert the selected value to a number
-                        const value = e.target.value === 'N/A' ? null : Number(e.target.value);
-                        setFieldValue('leaveDeductionId', value); // Update form value with the selected option
-                      }}
-                      value={values.leaveDeductionId || 'N/A'} // Default to 'N/A' if no value is selected
-                      name="leaveDeductionId"
-                    >
-                      {/* Add 'N/A' option */}
-                      <option value="N/A">N/A</option>
-
-                      {/* Filter out 'Select' and render other options for leave types */}
-                      {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
-                        <option key={x.value} value={x.value}>
-                          {x.label}
-                        </option>
-                      ))}
-                    </select>
-
-                    {errors.leaveDeductionId && touched.leaveDeductionId && (
-                      <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />
-                    )}
-                  </div>
-
-
-
-
-
-
-                  <div className="">
-                    {<label>Late Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
-                    <select className="form-control"
-                      onChange={(e) => {
-                        setFieldValue('lateDeductionId', e.target.value)
-                      }}
-                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                      value={values.lateDeductionId}
-                      name="lateDeductionId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.lateDeductionId && touched.lateDeductionId && <ErrorMessage className="form-feedBack" name="lateDeductionId" component="div" />}
-                  </div>
-
-                </div>
-              </div>
-
-
-
-              <div >
-
-
-                <h6 className="font-semibold mb-0 text-primary text-sm my-2">
-                  Overtime / Leave Encashment
-                </h6>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3">
-                  <div className="flex items-start">
-                    <label className="flex items-center space-x-1">
-                      <input className="mr-1"
-                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                        type="checkbox"
-                        name="isEnableOverTimeCalc"
+                    <div className="">
+                      <Field
+                        name="lateCountPerDaySalaryDeduction"
                         onChange={(e) => {
-                          setFieldValue('isEnableOverTimeCalc', e.target.checked)
+                          //setGrossSalaryDB(e.target.value);
+                          setFieldValue("lateCountPerDaySalaryDeduction", e.target.value);
                         }}
-                        checked={values.isEnableOverTimeCalc}
-                      />
-                      Enable Overtime Calculation
-                    </label>
-                  </div>
-                  <div className="">
-                    {<label>Overtime Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
-                    <select className="form-control"
-                      onChange={(e) => {
-                        setFieldValue('overTimeEarningId', e.target.value)
-                      }}
-                      value={values.overTimeEarningId}
-                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                      name="overTimeEarningId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.overTimeEarningId && touched.overTimeEarningId && <ErrorMessage className="form-feedBack" name="overTimeEarningId" component="div" />}
-                  </div>
-                  <div className="">
-                    {<label>Encashment Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
-                    <select className="form-control"
-                      onChange={(e) => {
-                        setFieldValue('leaveEnchashment_EarningId', e.target.value)
-                      }}
-                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                      value={values.leaveEnchashment_EarningId}
-                      name="leaveEnchashment_EarningId">
-                      <option value="-1"> Select</option>
-                      {
-                        dashboard?.allEarnings?.filter((el)=> el?.mappedAllowance === "1")?.map((x) => {
-                          return <option value={x.value}> {x.label} </option>
-                        })}
-                    </select>
-                    {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="form-feedBack" name="leaveEnchashment_EarningId" component="div" />}
-                  </div>
-
-                </div>
-              </div>
-
-
-
-              <div >
-
-
-                <h6 className="font-semibold mb-0 text-primary  text-sm my-2">
-                  Leave Management
-                </h6>
-                <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-
-
-                  <div className="flex items-start">
-                    <label className="flex items-center space-x-1">
-                      <input className="mr-1"
-                        type="checkbox"
-                        name="isEnableLeaveManagemenent"
-                        onChange={(e) => {
-                          setFieldValue('isEnableLeaveManagemenent', e.target.checked)
-                        }}
-                        checked={values.isEnableLeaveManagemenent}
                         disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        value={values.lateCountPerDaySalaryDeduction}
+                        component={Input}
+                        placeholder="Enter value"
+                        label={<span>Late Count Per Day Salary Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
                       />
-                      Enable Leave Management
-                    </label>
+                    </div>
+
+
+
+                    <div className="">
+                      <label>
+                        Leave Deduction
+                        {Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}
+                      </label>
+                      <select
+                        className="form-control"
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        onChange={(e) => {
+                          // If 'N/A' is selected, set the value to null, else convert the selected value to a number
+                          const value = e.target.value === 'N/A' ? null : Number(e.target.value);
+                          setFieldValue('leaveDeductionId', value); // Update form value with the selected option
+                        }}
+                        value={values.leaveDeductionId || 'N/A'} // Default to 'N/A' if no value is selected
+                        name="leaveDeductionId"
+                      >
+                        {/* Add 'N/A' option */}
+                        <option value="N/A">N/A</option>
+
+                        {/* Filter out 'Select' and render other options for leave types */}
+                        {dashboard.allLeaveTypes?.filter(x => x.value !== null).map((x) => (
+                          <option key={x.value} value={x.value}>
+                            {x.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      {errors.leaveDeductionId && touched.leaveDeductionId && (
+                        <ErrorMessage className="form-feedBack" name="leaveDeductionId" component="div" />
+                      )}
+                    </div>
+
+
+
+
+
+
+                    <div className="">
+                      {<label>Late Deduction{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        onChange={(e) => {
+                          setFieldValue('lateDeductionId', e.target.value)
+                        }}
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        value={values.lateDeductionId}
+                        name="lateDeductionId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.lateDeductionId && touched.lateDeductionId && <ErrorMessage className="form-feedBack" name="lateDeductionId" component="div" />}
+                    </div>
+
                   </div>
-                  <div className="">
-                    <Select
-                      className="form-control"
-                      name="isEnableSandwichLeavePolicy"
-                      value={values.isEnableSandwichLeavePolicy}
-                      label={<span>Enable Sandwich Policy For Leave</span>}
-                      onChange={(e) => {
-                        setFieldValue("isEnableSandwichLeavePolicy", e.target.value);
+                </div>
 
-                      }}
-                      disabled={!Boolean(values.isEnableAttandanceIntegration)}
-                      onBlur={handleBlur}
-                    >
-                      <option value="-1">Select</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
 
-                    </Select>
+
+                <div >
+
+
+                  <h6 className="font-semibold mb-0 text-primary text-sm my-2">
+                    Overtime / Leave Encashment
+                  </h6>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3">
+                    <div className="flex items-start">
+                      <label className="flex items-center space-x-1">
+                        <input className="mr-1"
+                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                          type="checkbox"
+                          name="isEnableOverTimeCalc"
+                          onChange={(e) => {
+                            setFieldValue('isEnableOverTimeCalc', e.target.checked)
+                          }}
+                          checked={values.isEnableOverTimeCalc}
+                        />
+                        Enable Overtime Calculation
+                      </label>
+                    </div>
+                    <div className="">
+                      {<label>Overtime Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        onChange={(e) => {
+                          setFieldValue('overTimeEarningId', e.target.value)
+                        }}
+                        value={values.overTimeEarningId}
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        name="overTimeEarningId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allEarnings?.filter((el) => el?.mappedAllowance === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.overTimeEarningId && touched.overTimeEarningId && <ErrorMessage className="form-feedBack" name="overTimeEarningId" component="div" />}
+                    </div>
+                    <div className="">
+                      {<label>Encashment Allowance{Boolean(values.isEnableAttandanceIntegration) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        onChange={(e) => {
+                          setFieldValue('leaveEnchashment_EarningId', e.target.value)
+                        }}
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        value={values.leaveEnchashment_EarningId}
+                        name="leaveEnchashment_EarningId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allEarnings?.filter((el) => el?.mappedAllowance === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.leaveEnchashment_EarningId && touched.leaveEnchashment_EarningId && <ErrorMessage className="form-feedBack" name="leaveEnchashment_EarningId" component="div" />}
+                    </div>
+
+                    <div className="">
+                      <SearchSelect
+                        name="OvertimeBasis"
+                        label={<span>Overtime Basis<span style={{ color: 'red' }}>*</span></span>}
+                        onChange={(e) => {
+                          setFieldValue("OvertimeBasis", Number(e?.value));
+
+                        }}
+
+                        value={
+                          overtimeBasisOptions.find(
+                            (option) => option.value === Number(values?.OvertimeBasis)
+                          ) || null
+                        }
+
+                        error={errors.OvertimeBasis}
+                        touched={touched.OvertimeBasis}
+                        options={overtimeBasisOptions}
+                        isDisabled={Boolean(user?.readOnly)}
+                      />
+                    </div>
 
                   </div>
-
-                </div>
-              </div>
-
-              <hr></hr>
-
-
-
-                  {dashboard.allSubidiaryList?.find(
-  (option) => option.value === values.subsidiaryId
-)?.localizationId == 1 && (<>
-              <h6 className="font-bold mb-0 text-primary my-2">
-                EOBI Configuration
-              </h6>
-
-              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-                <div className="flex  items-start">
-                  <label className="flex items-center space-x-1">
-
-                    <input className="mr-1"
-
-                      name="isEnableEOBI"
-                      type="checkbox"
-                      onChange={(e) => {
-                        setFieldValue('isEnableEOBI', e.target.checked)
-                      }}
-                      checked={values.isEnableEOBI}
-                    />
-                    Enable EOBI
-                  </label>
                 </div>
 
 
-                <div className="">
-                  {<label>EOBI Deduction{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</label>}
-                  <select className="form-control"
-                    disabled={!Boolean(values.isEnableEOBI)}
-                    onChange={(e) => {
-                      setFieldValue('eobi_deductionId', e.target.value)
-                    }}
-                    value={values.eobi_deductionId}
-                    name="eobi_deductionId">
-                    <option value="-1"> Select</option>
-                    {
-                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
-                        return <option value={x.value}> {x.label} </option>
-                      })}
-                  </select>
-                  {errors.eobi_deductionId && touched.eobi_deductionId && <ErrorMessage className="form-feedBack" name="eobi_deductionId" component="div" />}
+
+                <div >
+
+
+                  <h6 className="font-semibold mb-0 text-primary  text-sm my-2">
+                    Leave Management
+                  </h6>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+
+
+                    <div className="flex items-start">
+                      <label className="flex items-center space-x-1">
+                        <input className="mr-1"
+                          type="checkbox"
+                          name="isEnableLeaveManagemenent"
+                          onChange={(e) => {
+                            setFieldValue('isEnableLeaveManagemenent', e.target.checked)
+                          }}
+                          checked={values.isEnableLeaveManagemenent}
+                          disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        />
+                        Enable Leave Management
+                      </label>
+                    </div>
+                    <div className="">
+                      <Select
+                        className="form-control"
+                        name="isEnableSandwichLeavePolicy"
+                        value={values.isEnableSandwichLeavePolicy}
+                        label={<span>Enable Sandwich Policy For Leave</span>}
+                        onChange={(e) => {
+                          setFieldValue("isEnableSandwichLeavePolicy", e.target.value);
+
+                        }}
+                        disabled={!Boolean(values.isEnableAttandanceIntegration)}
+                        onBlur={handleBlur}
+                      >
+                        <option value="-1">Select</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+
+                      </Select>
+
+                    </div>
+
+                  </div>
                 </div>
 
-                <div className="">
-                  <AmountInput
-                    field={{
-                      name: `eobi_basis`,
-                      value: values?.eobi_basis,
-                    }}
-                    form={{
-                      touched,
-                      errors,
-                      setFieldValue,
-                      setFieldTouched,
-                    }}
-                    placeholder="Minimum Wage"
-                    label={<span>Minimum Wage{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    disabled={!Boolean(values.isEnableEOBI)}
-                  />
-                </div>
-              </div>
-              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-                <div className="">
-                  <Field
-                    disabled={!Boolean(values.isEnableEOBI)}
-                    name="eobi_employeer_value_in_percent"
-                    component={Input}
-                    type="number"
-                    placeholder="Employeer value"
-                    value={values.eobi_employeer_value_in_percent}
-                    label={<span>Employer(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="">
-                  <Field
-                    disabled={!Boolean(values.isEnableEOBI)}
-                    name="eobi_employee_value_in_percent"
-                    component={Input}
-                    type="number"
-                    placeholder="Employee value"
-                    label={<span>Employee(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="">
-                  <label>  EOBI Allowances </label>
+                <hr></hr>
 
+     <div>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Provident Fund Policy
+                  </h6>
 
-
-
-                  <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-
-                    {dashboard.allEarnings.map((option) => (
-                      <div key={option.value} className="flex justify-start items-center border-none">
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="flex  items-start">
+                      <label className="flex items-center space-x-1">
 
                         <input className="mr-1"
-                          disabled={!Boolean(values.isEnableEOBI)}
-                          name="eobi_earningId"
+
+                          name="isProvidentFund"
                           type="checkbox"
-                          checked={defEOBIAllowances?.includes(option.value)}
-                          onChange={() => handleCheckboxChangeFor_EOBIAllowances(option.value)}
+                          onChange={(e) => {
+                            setFieldValue('isProvidentFund', e.target.checked)
+                          }}
+                          checked={values.isProvidentFund}
                         />
-                        <label> {option.label} </label>
-                      </div>
-                    ))}
-                  </div>
-
-
-
-
-
-
-
-
-                </div>
-              </div>
-
-              <hr></hr>
-
-             </>   )  }
-
-              {dashboard.allSubidiaryList?.find(
-  (option) => option.value === values.subsidiaryId
-)?.localizationId == 1 && (<>
-              <h6 className="font-bold mb-0 text-primary my-2">
-                Social Security Configuration
-              </h6>
-
-
-              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-                <div className="flex items-start">
-                  <label className="flex items-center space-x-1">
-
-                    <input className="mr-1"
-                      name="isEnableSESSI"
-                      type="checkbox"
-                      onChange={(e) => {
-                        setFieldValue('isEnableSESSI', e.target.checked)
-                      }}
-                      checked={values.isEnableSESSI}
-                    />
-                    Enable Social Security
-                  </label>
-                </div>
-
-
-
-                <div className="">
-                  {<label>Social Security Deduction{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
-                  <select className="form-control"
-
-                    onChange={(e) => {
-                      setFieldValue('sessi_deductionId', e.target.value)
-                    }}
-                    value={values.sessi_deductionId}
-                    disabled={!Boolean(values.isEnableSESSI)}
-                    name="sessi_deductionId">
-                    <option value="-1"> Select</option>
-                    {
-                      dashboard?.allDeductions?.filter((el)=> el?.mappedDeduction === "1")?.map((x) => {
-                        return <option value={x.value}> {x.label} </option>
-                      })}
-                  </select>
-                  {errors.sessi_deductionId && touched.sessi_deductionId && <ErrorMessage className="form-feedBack" name="sessi_deductionId" component="div" />}
-                </div>
-
-                <div className="">
-                  <AmountInput
-                    field={{
-                      name: `sessi_basis`,
-                      value: values?.sessi_basis,
-                    }}
-                    form={{
-                      touched,
-                      errors,
-                      setFieldValue,
-                      setFieldTouched,
-                    }}
-                    disabled={!Boolean(values.isEnableSESSI)}
-                    placeholder="Minimum Wage"
-                    label={<span>Minimum Wage{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
-                  />
-                </div>
-              </div>
-              <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
-                <div className="">
-                  <Field
-                    name="sessi_employeer_value_in_percent"
-                    component={Input}
-                    type="number"
-                    disabled={!Boolean(values.isEnableSESSI)}
-                    placeholder="Employeer value"
-                    value={values.sessi_employeer_value_in_percent}
-                    label={<label>Employeer(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="">
-                  <Field
-                    name="sessi_employee_value_in_percent"
-                    component={Input}
-                    type="number"
-                    disabled={!Boolean(values.isEnableSESSI)}
-                    placeholder="Employee value"
-                    value={values.sessi_employee_value_in_percent}
-                    label={<label>Employee(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="">
-                  <label> Social Security Allowances </label>
-
-
-
-
-                  <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-                    {dashboard.allEarnings.map((option) => (
-                      <div key={option.value} className="flex justify-start items-center border-none">
-
-                        <input
-                          name="sessi_earningId"
-                          type="checkbox"
-                          disabled={!Boolean(values.isEnableSESSI)}
-                          checked={defSESSIAllowances?.includes(option.value)}
-                          onChange={() => handleCheckboxChangeFor_SESSIAllowances(option.value)}
-                        />
-                        <label> {option.label} </label>
-                      </div>
-                    ))}
-                  </div>
-
-
-
-                </div>
-              </div>
-
-              <hr></hr>
-</>)  }
-              <div>
-                <div className="my-1">
-                  <h6 className="font-bold mb-0 text-primary">
-                    Journal Cash & Cheque Information{"  "}
-                  </h6>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3">
-                    <div>
-                  <label> Cash Account </label>
-                          <select className="form-control"
-
-                    onChange={(e) => {
-                      setFieldValue('journalCashAccountId', e.target.value)
-                    }}
-                    value={values.journalCashAccountId}
-                    name="journalCashAccountId">
-                    <option value="-1"> Select</option>
-                    {
-                      dashboard?.allJournalBankAccounts?.map((x) => {
-                        return <option value={x.value}> {x.label} </option>
-                      })}
-                  </select>
-                  {errors.journalCashAccountId && touched.journalCashAccountId && <ErrorMessage className="form-feedBack" name="journalCashAccountId" component="div" />}
+                        Enable Provident Fund
+                      </label>
                     </div>
-               <div>
-                      <label> Cheque Account </label>
-                          <select className="form-control"
 
-                    onChange={(e) => {
-                      setFieldValue('journalChequeAccountId', e.target.value)
-                    }}
-                    value={values.journalChequeAccountId}
-                    name="journalChequeAccountId">
-                    <option value="-1"> Select</option>
-                    {
-                      dashboard?.allJournalBankAccounts?.map((x) => {
-                        return <option value={x.value}> {x.label} </option>
-                      })}
-                  </select>
-                  {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="form-feedBack" name="journalChequeAccountId" component="div" />}
+
+                    <div className="">
+                      {<label>Provident Fund{Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        disabled={!Boolean(values.isProvidentFund)}
+                        onChange={(e) => {
+                          setFieldValue('providentFundId', e.target.value)
+                        }}
+                        value={values.providentFundId}
+                        name="providentFundId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.providentFundId && touched.providentFundId && <ErrorMessage className="form-feedBack" name="providentFundId" component="div" />}
+                    </div>
+
+
+                  </div>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isProvidentFund)}
+                        name="pf_employer_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employeer value"
+                        value={values.pf_employer_percent}
+                        label={<span>Employer(%){Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isProvidentFund)}
+                        name="pf_employee_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employee value"
+                        label={<span>Employee(%){Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <label>  Providen Fund Allowances </label>
+
+
+
+
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+{console.log("defProvidentFundAllowances111",defProvidentFundAllowances)}
+                        {dashboard.allEarnings.map((option) => (
+                          <div key={option.value} className="flex justify-start items-center border-none">
+
+                            <input className="mr-1"
+                              disabled={!Boolean(values.isProvidentFund)}
+                              name="providentFundAllowancesId"
+                              type="checkbox"
+                              checked={defProvidentFundAllowances?.includes(option.value)}
+                              onChange={() => handleCheckboxChangeFor_providentFundAllowances(option.value)}
+                            />
+                            <label> {option.label} </label>
+                          </div>
+                        ))}
+                      </div>
+
+
+
+
+
+
+
+
                     </div>
                   </div>
-                  </div>                
-                <div className="flex justify-between items-center">
-                  <h6 className="font-bold mb-0 text-primary">
-                    Journal Accounts & Bank Information{"  "}
-                  </h6>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    id="Other"
-                    onClick={addRowBankInfo}
-                  >
-                    <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                    Add
-                  </button>
+
+                  <hr></hr>
+
                 </div>
-                <div className="w-full overflow-x-auto">
-                  <div className="react-bootstrap-table table-responsive">
-                    <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                      <tr className="custom-table-header">
-                        {/* <td>Employee</td> */}
-
-                        <td className="col-32">Journal Bank Account</td>
-                        <td className="col-32">Bank Code Employer</td>
-                        <td className="col-32">Bank Account No</td>
-                        <td className="col-31">Default</td>
-                        <td className="col-32">Bank Name</td>
-                        <td className="col-32">Branch Name</td>
-                        <td>Action</td>
-                      </tr>
-                      {defBankInfoList?.map((obj, rightindex) => (
-
-                        <><tr>
-
-                          <td>
-
-                            <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
-                              handleFieldChanged(e);
-                              // setotherErrors(validate());
-                            }}
-                              id={"journalBankAccountId-" + rightindex}>
-                              <option value="-1">Select</option>
-
-                              {
-                                dashboard.allJournalBankAccounts?.map((x) => {
-                                  return <option value={x.value}> {x.label} </option>
-                                })}
-                            </select>
-
-                            {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
 
 
 
 
+                {dashboard.allSubidiaryList?.find(
+                  (option) => option.value === values.subsidiaryId
+                )?.localizationId == 1 && (<>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    EOBI Configuration
+                  </h6>
 
-                          </td>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="flex  items-start">
+                      <label className="flex items-center space-x-1">
 
-                          <td>
+                        <input className="mr-1"
 
-                            <input className="form-control" onChange={(e) => {
-                              handleFieldChanged(e);
-                              // setotherErrors(validate());
-                            }}
-                              placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
-
-                            {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
-                          </td>
-
-                          <td>
-                            <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
-                              handleFieldChanged(e);
-                              // setotherErrors(validate());
-                            }}
-                              id={"bankAccountNo-" + rightindex}></input>
-
-                            {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
-                          </td>
-                          <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
-
-                            type="checkbox"
-                            id={"isDefault-" + rightindex}
-                            onChange={(e) => {
-                              handleFieldChanged(e);
-                              // setotherErrors(validate());
-
-                            }}
-
-                            checked={obj.isDefault}
-
-                          />
+                          name="isEnableEOBI"
+                          type="checkbox"
+                          onChange={(e) => {
+                            setFieldValue('isEnableEOBI', e.target.checked)
+                          }}
+                          checked={values.isEnableEOBI}
+                        />
+                        Enable EOBI
+                      </label>
+                    </div>
 
 
-                          </td>
+                    <div className="">
+                      {<label>EOBI Deduction{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+                        disabled={!Boolean(values.isEnableEOBI)}
+                        onChange={(e) => {
+                          setFieldValue('eobi_deductionId', e.target.value)
+                        }}
+                        value={values.eobi_deductionId}
+                        name="eobi_deductionId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.eobi_deductionId && touched.eobi_deductionId && <ErrorMessage className="form-feedBack" name="eobi_deductionId" component="div" />}
+                    </div>
 
-                          {/* <td>
+                    <div className="">
+                      <AmountInput
+                        field={{
+                          name: `eobi_basis`,
+                          value: values?.eobi_basis,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        placeholder="Minimum Wage"
+                        label={<span>Minimum Wage{Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        disabled={!Boolean(values.isEnableEOBI)}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isEnableEOBI)}
+                        name="eobi_employeer_value_in_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employeer value"
+                        value={values.eobi_employeer_value_in_percent}
+                        label={<span>Employer(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <Field
+                        disabled={!Boolean(values.isEnableEOBI)}
+                        name="eobi_employee_value_in_percent"
+                        component={Input}
+                        type="number"
+                        placeholder="Employee value"
+                        label={<span>Employee(%){Boolean(values.isEnableEOBI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <label>  EOBI Allowances </label>
+
+
+
+
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+
+                        {dashboard.allEarnings.map((option) => (
+                          <div key={option.value} className="flex justify-start items-center border-none">
+
+                            <input className="mr-1"
+                              disabled={!Boolean(values.isEnableEOBI)}
+                              name="eobi_earningId"
+                              type="checkbox"
+                              checked={defEOBIAllowances?.includes(option.value)}
+                              onChange={() => handleCheckboxChangeFor_EOBIAllowances(option.value)}
+                            />
+                            <label> {option.label} </label>
+                          </div>
+                        ))}
+                      </div>
+
+
+
+
+
+
+
+
+                    </div>
+                  </div>
+
+                  <hr></hr>
+
+                </>)}
+
+
+
+
+           
+
+
+
+
+                {dashboard.allSubidiaryList?.find(
+                  (option) => option.value === values.subsidiaryId
+                )?.localizationId == 1 && (<>
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Social Security Configuration
+                  </h6>
+
+
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="flex items-start">
+                      <label className="flex items-center space-x-1">
+
+                        <input className="mr-1"
+                          name="isEnableSESSI"
+                          type="checkbox"
+                          onChange={(e) => {
+                            setFieldValue('isEnableSESSI', e.target.checked)
+                          }}
+                          checked={values.isEnableSESSI}
+                        />
+                        Enable Social Security
+                      </label>
+                    </div>
+
+
+
+                    <div className="">
+                      {<label>Social Security Deduction{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                      <select className="form-control"
+
+                        onChange={(e) => {
+                          setFieldValue('sessi_deductionId', e.target.value)
+                        }}
+                        value={values.sessi_deductionId}
+                        disabled={!Boolean(values.isEnableSESSI)}
+                        name="sessi_deductionId">
+                        <option value="-1"> Select</option>
+                        {
+                          dashboard?.allDeductions?.filter((el) => el?.mappedDeduction === "1")?.map((x) => {
+                            return <option value={x.value}> {x.label} </option>
+                          })}
+                      </select>
+                      {errors.sessi_deductionId && touched.sessi_deductionId && <ErrorMessage className="form-feedBack" name="sessi_deductionId" component="div" />}
+                    </div>
+
+                    <div className="">
+                      <AmountInput
+                        field={{
+                          name: `sessi_basis`,
+                          value: values?.sessi_basis,
+                        }}
+                        form={{
+                          touched,
+                          errors,
+                          setFieldValue,
+                          setFieldTouched,
+                        }}
+                        disabled={!Boolean(values.isEnableSESSI)}
+                        placeholder="Minimum Wage"
+                        label={<span>Minimum Wage{Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</span>}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
+                    <div className="">
+                      <Field
+                        name="sessi_employeer_value_in_percent"
+                        component={Input}
+                        type="number"
+                        disabled={!Boolean(values.isEnableSESSI)}
+                        placeholder="Employeer value"
+                        value={values.sessi_employeer_value_in_percent}
+                        label={<label>Employer(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <Field
+                        name="sessi_employee_value_in_percent"
+                        component={Input}
+                        type="number"
+                        disabled={!Boolean(values.isEnableSESSI)}
+                        placeholder="Employee value"
+                        value={values.sessi_employee_value_in_percent}
+                        label={<label>Employee(%){Boolean(values.isEnableSESSI) && <span style={{ color: 'red' }}>*</span>}</label>}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="">
+                      <label> Social Security Allowances </label>
+
+
+
+
+                      <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                        {dashboard.allEarnings.map((option) => (
+                          <div key={option.value} className="flex justify-start items-center border-none">
+
+                            <input
+                              name="sessi_earningId"
+                              type="checkbox"
+                              disabled={!Boolean(values.isEnableSESSI)}
+                              checked={defSESSIAllowances?.includes(option.value)}
+                              onChange={() => handleCheckboxChangeFor_SESSIAllowances(option.value)}
+                            />
+                            <label> {option.label} </label>
+                          </div>
+                        ))}
+                      </div>
+
+
+
+                    </div>
+                  </div>
+
+                  <hr></hr>
+                </>)}
+                <div>
+                  <div className="my-1">
+                    <h6 className="font-bold mb-0 text-primary">
+                      Journal Cash & Cheque Information{"  "}
+                    </h6>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3">
+                      <div>
+                        <label> Cash Account </label>
+                        <select className="form-control"
+
+                          onChange={(e) => {
+                            setFieldValue('journalCashAccountId', e.target.value)
+                          }}
+                          value={values.journalCashAccountId}
+                          name="journalCashAccountId">
+                          <option value="-1"> Select</option>
+                          {
+                            dashboard?.allJournalBankAccounts?.map((x) => {
+                              return <option value={x.value}> {x.label} </option>
+                            })}
+                        </select>
+                        {errors.journalCashAccountId && touched.journalCashAccountId && <ErrorMessage className="form-feedBack" name="journalCashAccountId" component="div" />}
+                      </div>
+                      <div>
+                        <label> Cheque Account </label>
+                        <select className="form-control"
+
+                          onChange={(e) => {
+                            setFieldValue('journalChequeAccountId', e.target.value)
+                          }}
+                          value={values.journalChequeAccountId}
+                          name="journalChequeAccountId">
+                          <option value="-1"> Select</option>
+                          {
+                            dashboard?.allJournalBankAccounts?.map((x) => {
+                              return <option value={x.value}> {x.label} </option>
+                            })}
+                        </select>
+                        {errors.journalChequeAccountId && touched.journalChequeAccountId && <ErrorMessage className="form-feedBack" name="journalChequeAccountId" component="div" />}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <h6 className="font-bold mb-0 text-primary">
+                      Journal Accounts & Bank Information{"  "}
+                    </h6>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      id="Other"
+                      onClick={addRowBankInfo}
+                    >
+                      <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                      Add
+                    </button>
+                  </div>
+                  <div className="w-full overflow-x-auto">
+                    <div className="react-bootstrap-table table-responsive">
+                      <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                        <tr className="custom-table-header">
+                          {/* <td>Employee</td> */}
+
+                          <td className="col-32">Journal Bank Account</td>
+                          <td className="col-32">Bank Code Employer</td>
+                          <td className="col-32">Bank Account No</td>
+                          <td className="col-31">Default</td>
+                          <td className="col-32">Bank Name</td>
+                          <td className="col-32">Branch Name</td>
+                          <td>Action</td>
+                        </tr>
+                        {defBankInfoList?.map((obj, rightindex) => (
+
+                          <><tr>
+
+                            <td>
+
+                              <select value={obj.journalBankAccountId} className="form-control" onChange={(e) => {
+                                handleFieldChanged(e);
+                                // setotherErrors(validate());
+                              }}
+                                id={"journalBankAccountId-" + rightindex}>
+                                <option value="-1">Select</option>
+
+                                {
+                                  dashboard.allJournalBankAccounts?.map((x) => {
+                                    return <option value={x.value}> {x.label} </option>
+                                  })}
+                              </select>
+
+                              {otherErrors[`journalBankAccountId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`journalBankAccountId-${rightindex}`]}</div>}
+
+
+
+
+
+                            </td>
+
+                            <td>
+
+                              <input className="form-control" onChange={(e) => {
+                                handleFieldChanged(e);
+                                // setotherErrors(validate());
+                              }}
+                                placeholder="Enter Bank Code" value={obj.bankCode} type="number" id={"bankCode-" + rightindex}></input>
+
+                              {otherErrors[`bankCode-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankCode-${rightindex}`]}</div>}
+                            </td>
+
+                            <td>
+                              <input type="number" className="form-control" placeholder="Enter Bank Account No" value={obj.bankAccountNo} onChange={(e) => {
+                                handleFieldChanged(e);
+                                // setotherErrors(validate());
+                              }}
+                                id={"bankAccountNo-" + rightindex}></input>
+
+                              {otherErrors[`bankAccountNo-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankAccountNo-${rightindex}`]}</div>}
+                            </td>
+                            <td>  <input style={{ backgroundColor: "#ffffff", padding: "10px", width: "40px", height: "20px" }}
+
+                              type="checkbox"
+                              id={"isDefault-" + rightindex}
+                              onChange={(e) => {
+                                handleFieldChanged(e);
+                                // setotherErrors(validate());
+
+                              }}
+
+                              checked={obj.isDefault}
+
+                            />
+
+
+                            </td>
+
+                            {/* <td>
                           <input type="text" className="form-control" placeholder="Enter Bank Name" onChange={handleFieldChanged} value={obj.bankName} id={'bankName-' + rightindex}></input>
 
                           {otherErrors[`bankName-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankName-${rightindex}`]}</div>}
                         </td> */}
 
 
-                          <td>
+                            <td>
 
-                            <select value={obj.bankId} className="form-control"
+                              <select value={obj.bankId} className="form-control"
 
-                              onChange={(e) => {
-                                const bankId = e.target.value;
+                                onChange={(e) => {
+                                  const bankId = e.target.value;
 
-                                // Update the field
-                                handleFieldChanged(e);
-
-
-
-                                // Fetch branches for selected bank
-                                if (bankId && bankId !== "-1") {
-                                  filteredBranches(bankId);
+                                  // Update the field
+                                  handleFieldChanged(e);
 
 
-                                }
 
-                                // setotherErrors(validate());
-
-                              }}
-
-
-                              id={"bankId-" + rightindex}>
-                              <option value="">Select</option>
-
-                              {
-                                dashboard.allBanks?.map((x) => {
-                                  return <option value={x.value}> {x.label} </option>
-                                })}
-                            </select>
-
-                            {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
-
-                          </td>
-                          <td>
-                            <select
-                              value={obj.branchId}
-                              className="form-control"
-                              onChange={(e) => {
-                                handleFieldChanged(e);
-                                // setotherErrors(validate());
-                              }}
-
-                              id={"branchId-" + rightindex}
-                            >
-                              <option value="">Select</option>
-
-                              {filteredBranches(obj.bankId)?.map((x) => (
-                                <option key={x.value} value={x.value}>
-                                  {x.label}
-                                </option>
-                              ))}
-                            </select>
-
-                            {otherErrors[`branchId-${rightindex}`] && (
-                              <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
-                            )}
-                          </td>
-
-                          <td id={rightindex} className="text-right">
-                            <button id={rightindex} className="bg-transparent border-none" disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>    <Trash2 className="w-4 h-4 text-black cursor-pointer" /></button></td>
+                                  // Fetch branches for selected bank
+                                  if (bankId && bankId !== "-1") {
+                                    filteredBranches(bankId);
 
 
-                        </tr>
-                        </>
-                      ))}
+                                  }
 
-                    </table>
+                                  // setotherErrors(validate());
 
-                    {/* <div className="from-group row">
+                                }}
+
+
+                                id={"bankId-" + rightindex}>
+                                <option value="">Select</option>
+
+                                {
+                                  dashboard.allBanks?.map((x) => {
+                                    return <option value={x.value}> {x.label} </option>
+                                  })}
+                              </select>
+
+                              {otherErrors[`bankId-${rightindex}`] && <div className="form-feedBack">{otherErrors[`bankId-${rightindex}`]}</div>}
+
+                            </td>
+                            <td>
+                              <select
+                                value={obj.branchId}
+                                className="form-control"
+                                onChange={(e) => {
+                                  handleFieldChanged(e);
+                                  // setotherErrors(validate());
+                                }}
+
+                                id={"branchId-" + rightindex}
+                              >
+                                <option value="">Select</option>
+
+                                {filteredBranches(obj.bankId)?.map((x) => (
+                                  <option key={x.value} value={x.value}>
+                                    {x.label}
+                                  </option>
+                                ))}
+                              </select>
+
+                              {otherErrors[`branchId-${rightindex}`] && (
+                                <div className="form-feedBack">{otherErrors[`branchId-${rightindex}`]}</div>
+                              )}
+                            </td>
+
+                            <td id={rightindex} className="text-right">
+                              <button id={rightindex} className="bg-transparent border-none" disabled={rightindex !== defBankInfoList.length - 1} onClick={deleteRowBankInfo}>    <Trash2 className="w-4 h-4 text-black cursor-pointer" /></button></td>
+
+
+                          </tr>
+                          </>
+                        ))}
+
+                      </table>
+
+                      {/* <div className="from-group row">
                       <div className="col-12 col-md-4 mt-3">
                         <input type='button' className="btn btn-primary" id="bank_info" onClick={addRowBankInfo} value='+Add'></input>
                       </div>
 
                     </div> */}
+                    </div>
+
+                    {otherErrors["isDefault"] && (
+                      <tr>
+                        <td colSpan={6}>
+                          <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
+                        </td>
+                      </tr>
+                    )}
+
+
+
+
+
+
+
                   </div>
-
-                  {otherErrors["isDefault"] && (
-                    <tr>
-                      <td colSpan={6}>
-                        <div className="form-feedBack text-danger">{otherErrors["isDefault"]}</div>
-                      </td>
-                    </tr>
-                  )}
-
-
-
-
-
-
-
                 </div>
-              </div>
 
 
-            </fieldset>
+              </fieldset>
 
 
-          </Form>
+            </Form>
 
-            {/* <div className="from-group row text-right bg-slate-500">
+              {/* <div className="from-group row text-right bg-slate-500">
               <div className="col-12 col-md-4 mt-3 justify-content-end ">
                 {isAccessForRead && !user.readOnly && (
                   <button
@@ -1879,29 +2187,29 @@ export function FormTable(user) {
                 )}
               </div>
             </div> */}
-       
-       <div className=" flex justify-end p-3">
-  {isAccessForRead && !user.readOnly && (
-    <button
-      type="submit"
-      onClick={handleSubmit}
-      disabled={Boolean(actionsLoading)}
-      className="btn btn-primary btn-elevate"
-    >
-      Save
-      {actionsLoading && (
-        <span className="ml-3 mr-3 spinner spinner-white"></span>
-      )}
-    </button>
-  )}
-</div>
 
-          </>
+              <div className=" flex justify-end p-3">
+                {isAccessForRead && !user.readOnly && (
+                  <button
+                    type="submit"
+                    onClick={handleSubmit}
+                    disabled={Boolean(actionsLoading)}
+                    className="btn btn-primary btn-elevate"
+                  >
+                    Save
+                    {actionsLoading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
+                )}
+              </div>
 
-        )}
+            </>
+
+          )}
 
 
-      </Formik >
+        </Formik >
       </div>}
     </>
   );
