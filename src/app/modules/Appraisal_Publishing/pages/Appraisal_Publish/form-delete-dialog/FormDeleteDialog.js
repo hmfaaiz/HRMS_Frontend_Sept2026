@@ -88,6 +88,7 @@ export function FormDeleteDialog({ id, show, onHide }) {
               usersUIProps.setYearId(null);
               usersUIProps?.setAppraisalCategoryId(null);
             }}
+            disabled={isLoading}
             className="btn btn-light btn-elevate"
           >
             Cancel
@@ -96,10 +97,11 @@ export function FormDeleteDialog({ id, show, onHide }) {
           <button
             type="button"
             onClick={deleteRecord}
+            disabled={isLoading}
             className="btn btn-danger btn-elevate"
           >
             Delete
-            {loading && (
+            {isLoading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}
           </button>
