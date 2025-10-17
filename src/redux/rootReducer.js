@@ -133,6 +133,8 @@ import { HRRequisitionJobVacancySlice } from "../app/modules/HRRequisitionJobVac
 import { appraisalEvaluationSlice } from "../app/modules/Appraisal_Evaluation/_redux/redux-Slice";
 import { DesignationWiseGoalSetupSlice } from "../app/modules/DesignationWiseGoalSetup/_redux/redux-Slice";
 import { EmployeeGoalSetupSlice } from "../app/modules/EmployeeGoalSetup/_redux/redux-Slice";
+import { ContributionReportSlice } from "../app/modules/ContributionRreport/_redux/ContributionReportSlice";
+
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,

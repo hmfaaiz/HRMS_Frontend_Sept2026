@@ -478,7 +478,7 @@ export function FormEditForm({
                       <div>
 
                         <div className="flex items-center gap-1 mt-1">
-                          <label>Replacemen By</label>
+                          <label>Replacement By</label>
                           <input
                             name="isReplacement"
                             type="checkbox"

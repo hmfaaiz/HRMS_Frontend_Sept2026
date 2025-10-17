@@ -132,9 +132,7 @@ const jobVacancyEditSchema = Yup.object().shape({
   priorityTypeId: Yup.number()
   .nullable()
   .required(VALIDATION_MESSAGES.required),
-  // criticalDays: Yup.number()
-  //   .min(1, VALIDATION_MESSAGES.minOneValue)
-  //   .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
+
   jobPeriodStart: Yup.date()
     .nullable()
     .min(Yup.ref("jobPostingDateTo"), "Start date must be after posting date"),
