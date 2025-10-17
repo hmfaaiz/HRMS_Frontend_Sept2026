@@ -249,7 +249,7 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <Checkbox
                       isSelected={values?.superVisorRattingToEmp}
                       children={"Show Supervisor Rating to Employee"}
@@ -260,7 +260,7 @@ export function FormEditForm({
                         );
                       }}
                     />
-                  </div>
+                  </div> */}
                   <div>
                     <Checkbox
                       isSelected={values?.empRattingToSuperVisor}

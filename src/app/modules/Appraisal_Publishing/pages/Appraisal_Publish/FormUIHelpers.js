@@ -38,6 +38,7 @@ export const initialFilter = {
     designationId: "",
     statusId: 1,
     appraisalCategoryId: "",
+    employeeId: "",
   },
 
   sortOrder: "asc",

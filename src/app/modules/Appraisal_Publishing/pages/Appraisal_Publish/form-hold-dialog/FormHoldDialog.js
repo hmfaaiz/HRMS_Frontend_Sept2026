@@ -73,7 +73,7 @@ export function FormHoldDialog({ id, status, show, onHide }) {
       {/*end::Loading*/}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          Hold Appraisal Record
+          {status == 0 ? "Hold" : "Resume"} Appraisal Record
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -90,6 +90,7 @@ export function FormHoldDialog({ id, status, show, onHide }) {
         <div>
           <button
             type="button"
+            disabled={isLoading}
             onClick={() => {
               onHide();
               usersUIProps.setYearId(null);
@@ -102,10 +103,15 @@ export function FormHoldDialog({ id, status, show, onHide }) {
           <button
             type="button"
             onClick={publishRecord}
-            className="btn btn-danger btn-elevate"
+            disabled={isLoading}
+            className={
+              status == 0
+                ? "btn btn-danger btn-elevate"
+                : "btn btn-primary btn-elevate"
+            }
           >
-            Hold
-            {loading && (
+            {status == 0 ? "Hold" : "Resume"}
+            {isLoading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}
           </button>

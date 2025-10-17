@@ -18,6 +18,7 @@ export const fetchAppraisalPublish = (queryparm) => async (dispatch) => {
 };
 
 export const deleteAppraisalPublish = (body) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .deleteAppraisalPublish(body)
     .then((response) => {
@@ -39,6 +40,7 @@ export const deleteAppraisalPublish = (body) => (dispatch) => {
 };
 
 export const publishAppraisal = (body) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .publishAppraisal(body)
     .then((response) => {
@@ -68,6 +70,7 @@ export const publishAppraisal = (body) => (dispatch) => {
 };
 
 export const holdAppraisalPublish = (body) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .holdAppraisalPublish(body)
     .then((response) => {
@@ -97,6 +100,7 @@ export const holdAppraisalPublish = (body) => (dispatch) => {
 };
 
 export const viewAppraisalDetail = (body) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .viewAppraisalDetail(body)
     .then((response) => {

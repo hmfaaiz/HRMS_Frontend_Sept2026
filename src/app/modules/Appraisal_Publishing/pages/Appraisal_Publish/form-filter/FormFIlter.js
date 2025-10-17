@@ -7,6 +7,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { fetchAllAppraisalPeriodDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
+  fetchAllActiveEmployees,
   fetchAllDesignationByGradeId,
   fetchAllFormsMenu,
   fetchAllParentDept,
@@ -34,6 +35,9 @@ const formValidator = Yup.object().shape({
     .nullable()
     .optional(),
   designationId: Yup.number()
+    .nullable()
+    .optional(),
+  employeeId: Yup.number()
     .nullable()
     .optional(),
 });
@@ -80,6 +84,7 @@ export const FormFIlter = () => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
     dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
+    dispatch(fetchAllActiveEmployees());
   }, []);
 
   return (
@@ -225,6 +230,7 @@ export const FormFIlter = () => {
                   label={<span>Grade</span>}
                   onChange={(e) => {
                     setFieldValue("gradeId", e?.value || null);
+                    setFieldValue("designationId", "");
                     dispatch(
                       fetchAllDesignationByGradeId(
                         e?.value,
@@ -259,6 +265,24 @@ export const FormFIlter = () => {
                   error={errors?.designationId}
                   touched={touched?.designationId}
                   options={dashboard?.allDesignationByGrade}
+                />
+              </div>
+              {/* employee  */}
+              <div>
+                <SearchSelect
+                  name={"employeeId"}
+                  label={<span>Employee</span>}
+                  onChange={(e) => {
+                    setFieldValue("employeeId", e?.value || null);
+                  }}
+                  value={
+                    dashboard?.allEmployees?.find(
+                      (el) => el?.value === values?.employeeId
+                    ) || null
+                  }
+                  error={errors?.employeeId}
+                  touched={touched?.employeeId}
+                  options={dashboard?.allEmployees}
                 />
               </div>
             </div>

@@ -79,7 +79,7 @@ function ForgotPassword(props) {
             <br />
 
             <p
-              className=" mt-10 text-lg text-center"
+              className=" mt-10 text-lg text-left"
               style={{ color: "#000000", fontWeight: 400, height: "2vh" }}
               // style={{ color: "#2490CF", fontSize: "2rem" }}
             >
@@ -154,7 +154,7 @@ function ForgotPassword(props) {
               <br />
               <div className="d-flex align-items-center  ">
                 <span className="text-sm text-tprimary">
-                  <Link to="/auth/login">Go to Login Page</Link>
+                  <Link to="/auth/login">Back to Login Page</Link>
                 </span>
               </div>
             </form>

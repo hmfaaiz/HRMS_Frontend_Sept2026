@@ -34,11 +34,13 @@ export const fetchAppraisalEvaluationById = (id) => (dispatch) => {
       const question = response.data?.data?.questions || [];
       const ratingSelection = response.data?.data?.ratingSelection || false;
       const ratingDetail = response.data?.data?.ratingDetail || {};
+      const employeeDetail = response.data?.data?.employeeDetail || {};
       dispatch(
         actions.AppraisalEvaluationByIdFetched({
           question,
           ratingSelection,
           ratingDetail,
+          employeeDetail,
         })
       );
     })

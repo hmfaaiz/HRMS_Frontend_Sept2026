@@ -42,12 +42,15 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const { actionsLoading, userForEdit } = useSelector((state) => {
-    return {
-      actionsLoading: state.appraisal_evaluation?.actionsLoading,
-      userForEdit: state.appraisal_evaluation?.userForEdit,
-    };
-  });
+  const { actionsLoading, userForEdit, employeeDetail } = useSelector(
+    (state) => {
+      return {
+        actionsLoading: state.appraisal_evaluation?.actionsLoading,
+        userForEdit: state.appraisal_evaluation?.userForEdit,
+        employeeDetail: state.appraisal_evaluation?.employeeDetail,
+      };
+    }
+  );
 
   const [currentQues, setCurrentQues] = useState(null);
   const [localUserForEdit, setLocalUserForEdit] = useState([]);
@@ -207,86 +210,124 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-5 lg:grid-cols-6 gap-x-3 gap-y-2 text-sm text-black">
+                  {/* <div className="font-medium text-tprimary"> */}
+                  <div className="col-span-5 lg:col-span-6">
+                    {employeeDetail?.formName} for the employee:{" "}
+                    <span className="text-tprimary">
+                      {employeeDetail?.employeeCode} -{" "}
+                      {employeeDetail?.firstName} {employeeDetail?.middleName}{" "}
+                      {employeeDetail?.lastName} (
+                      {employeeDetail?.designation?.formName})
+                    </span>
+                  </div>
+                  <div className="col-span-5 lg:col-span-6 my-1" />
                   <div className="font-medium text-tprimary">Competency</div>
                   <div className="col-span-5">
                     {currentQues?.CompetencyName}
                   </div>
+
                   <div className="font-medium text-tprimary">
                     {currentQues?.type}
                   </div>
                   <div className="col-span-5">{currentQues?.questionName}</div>
-                  <div className="font-medium text-tprimary">Question</div>
-                  <div className="col-span-5">
+
+                  <div className="font-medium text-tprimary">
+                    Question{" "}
+                    {localUserForEdit?.findIndex(
+                      (el) => el?.Id == currentQues?.Id
+                    ) + 1}
+                  </div>
+                  <div className="col-span-5 whitespace-pre-line">
                     {currentQues?.questionDescription}
                   </div>
+
                   <hr className="col-span-5 lg:col-span-6" />
-                  {ratingSelection && (
-                    <span className="font-medium text-tprimary">
-                      Rating
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  )}
-                  {ratingSelection ? (
-                    <>
-                      <div className="grid grid-cols-1 gap-x-3 gap-y-1 col-span-5 lg:col-span-6">
-                        {ratingDetail?.ratingList?.map((el, ind) => {
-                          return (
-                            <Checkbox
-                              key={ind}
-                              isSelected={
-                                Number(values?.ratingValue) ===
-                                Number(el?.points)
-                              }
-                              onChange={() => {
-                                setFieldValue("ratingValue", el?.points);
-                                setFieldValue("ratingName", el?.name);
-                                setFieldValue(
-                                  "ratingDescription",
-                                  el?.description
-                                );
-                              }}
-                              children={el?.name}
-                            />
-                          );
-                        })}
-                      </div>
-                      {errors?.ratingValue && (
-                        <div className="invalid-feedback">
-                          {errors?.ratingValue}
+                  <div className="col-span-3">
+                    {ratingSelection && (
+                      <span className="font-medium text-tprimary">
+                        Rating
+                        <span style={{ color: "red" }}>*</span>
+                      </span>
+                    )}
+                    {ratingSelection ? (
+                      <>
+                        <div className="grid grid-cols-1 gap-x-3 gap-y-1">
+                          {ratingDetail?.ratingList?.map((el, ind) => {
+                            return (
+                              <Checkbox
+                                key={ind}
+                                isSelected={
+                                  Number(values?.ratingValue) ===
+                                  Number(el?.points)
+                                }
+                                onChange={() => {
+                                  setFieldValue("ratingValue", el?.points);
+                                  setFieldValue("ratingName", el?.name);
+                                  setFieldValue(
+                                    "ratingDescription",
+                                    el?.description
+                                  );
+                                }}
+                                children={el?.name}
+                              />
+                            );
+                          })}
                         </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="col-span-2">
-                      <Field
-                        name="ratingValue"
-                        component={Input}
-                        type="number"
-                        onChange={(e) => {
-                          const value = Number(e?.target?.value);
-                          setFieldValue("ratingValue", e?.target?.value);
-                          if (ratingDetail?.ratingList?.length) {
-                            const nearest = ratingDetail.ratingList.reduce(
-                              (prev, curr) =>
-                                Math.abs(curr.points - value) <
-                                Math.abs(prev.points - value)
-                                  ? curr
-                                  : prev
-                            );
-                            setFieldValue("ratingName", nearest?.name || null);
-                            setFieldValue(
-                              "ratingDescription",
-                              nearest?.description || null
-                            );
+                        {errors?.ratingValue && (
+                          <div className="invalid-feedback">
+                            {errors?.ratingValue}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div>
+                        <Field
+                          name="ratingValue"
+                          component={Input}
+                          type="number"
+                          onChange={(e) => {
+                            const value = Number(e?.target?.value);
+                            setFieldValue("ratingValue", e?.target?.value);
+                            if (ratingDetail?.ratingList?.length) {
+                              const nearest = ratingDetail.ratingList.reduce(
+                                (prev, curr) =>
+                                  Math.abs(curr.points - value) <
+                                  Math.abs(prev.points - value)
+                                    ? curr
+                                    : prev
+                              );
+                              setFieldValue(
+                                "ratingName",
+                                nearest?.name || null
+                              );
+                              setFieldValue(
+                                "ratingDescription",
+                                nearest?.description || null
+                              );
+                            }
+                          }}
+                          label={
+                            <span className="font-medium text-tprimary">
+                              Rating
+                              <span style={{ color: "red" }}>*</span>
+                            </span>
                           }
-                        }}
-                        label={
-                          <span className="font-medium text-tprimary">
-                            Rating
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                      />
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {employeeDetail?.showRating && values?.selfRating && (
+                    <div className="col-span-3 justify-self-end">
+                      <span className="badge badge-light-info text-uppercase text-sm text-tprimary text-right">
+                        {employeeDetail?.firstName} {employeeDetail?.middleName}{" "}
+                        {employeeDetail?.lastName} Rating:{" "}
+                        {ratingSelection
+                          ? ratingDetail?.ratingList?.find(
+                              (el, ind) =>
+                                Number(el?.points) == Number(values?.selfRating)
+                            )?.name
+                          : values?.selfRating}
+                      </span>
                     </div>
                   )}
                   <div className="col-span-5 lg:col-span-6">

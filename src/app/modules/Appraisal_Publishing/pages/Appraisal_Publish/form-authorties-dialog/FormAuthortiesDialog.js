@@ -75,7 +75,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       },
     },
     {
-      dataField: "department.deptName",
+      dataField: "department",
       text: "Department",
       sort: false,
       sortCaret: sortCaret,
@@ -86,7 +86,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       },
     },
     {
-      dataField: "designation.formName",
+      dataField: "designation",
       text: "Designation",
       sort: false,
       sortCaret: sortCaret,
@@ -97,7 +97,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       },
     },
     {
-      dataField: "employeeType.formName",
+      dataField: "employeeType",
       text: "Employee Type",
       sort: false,
       sortCaret: sortCaret,
@@ -109,7 +109,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
     },
     {
       dataField: "isHREvaluation",
-      text: "feedbackType",
+      text: "Feedback Type",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -119,6 +119,32 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
       },
       formatter: (cell, row) => {
         return cell ? "HR" : row?.isSelf ? "Self" : "Supervisor";
+      },
+    },
+    {
+      dataField: "isSubmitted",
+      text: "Feedback Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+        maxWidth: "70px",
+      },
+      formatter: (cell) => {
+        let text = "";
+        let classname = "";
+        if (cell === "noRecord") {
+          text = "-";
+          classname = "font-bold";
+        } else if (cell) {
+          text = "Completed";
+          classname = "text-approved font-bold";
+        } else if (!cell) {
+          text = "Pending";
+          classname = "text-pending font-bold";
+        }
+        return <span className={classname}>{text}</span>;
       },
     },
   ];

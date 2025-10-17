@@ -10,6 +10,7 @@ const initialState = {
   userForRead: false,
   ratingSelection: false,
   ratingDetail: [],
+  employeeDetail: null,
 };
 
 export const callTypes = {
@@ -51,6 +52,7 @@ export const appraisalEvaluationSlice = createSlice({
       state.userForEdit = action.payload?.question;
       state.ratingSelection = action.payload?.ratingSelection;
       state.ratingDetail = action.payload?.ratingDetail;
+      state.employeeDetail = action.payload?.employeeDetail;
     },
     AppraisalEvaluationUpdated: (state, action) => {
       state.actionsLoading = false;

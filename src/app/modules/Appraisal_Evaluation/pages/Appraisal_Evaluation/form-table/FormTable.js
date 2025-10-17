@@ -39,7 +39,6 @@ export function FormTable() {
     };
   }, shallowEqual);
 
-
   const { totalCount, entities, listLoading } = currentState;
 
   //totalCount = 10
@@ -148,7 +147,16 @@ export function FormTable() {
         minWidth: "70px",
       },
       formatter: (cell) => {
-        return cell ? "Completed" : "Pending";
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Completed";
+        } else {
+          classname = "text-pending font-bold";
+          text = "Pending";
+        }
+        return <span className={classname}>{text}</span>;
       },
     },
     {

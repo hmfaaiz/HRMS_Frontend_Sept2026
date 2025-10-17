@@ -83,6 +83,7 @@ export function FormPublishDialog({ id, show, onHide }) {
         <div>
           <button
             type="button"
+            disabled={isLoading}
             onClick={() => {
               onHide();
               usersUIProps.setYearId(null);
@@ -95,10 +96,11 @@ export function FormPublishDialog({ id, show, onHide }) {
           <button
             type="button"
             onClick={publishRecord}
+            disabled={isLoading}
             className="btn btn-primary btn-elevate"
           >
             Publish
-            {loading && (
+            {isLoading && (
               <span className="ml-3 mr-3 spinner spinner-white"></span>
             )}
           </button>
