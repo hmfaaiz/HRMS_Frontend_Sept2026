@@ -3,15 +3,15 @@ import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { isEqual } from "lodash";
 import { useFormUIContext } from "../FormUIContext";
-import { Form, Modal, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form, Modal, } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
-  DatePickerField,
+
   Select,
 } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+
+
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
 import { formatDates } from "../../../../../utils/common";
@@ -19,17 +19,13 @@ import {
   fetchAllActiveEmployeesBySubsidiary,
   fetchAllDept,
 } from "../../../../../../_metronic/redux/dashboardActions";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
-import SVG from "react-inlinesvg";
-import { Download, FileText } from "lucide-react";
+
+import { Download, } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  // from: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-  // to: Yup.date().nullable()
-  //   .required(VALIDATION_MESSAGES.required)
-  //   .min(Yup.ref("from"), "'To Date' should not be less than 'From Date'."),
+
 });
 
 //Prepare new Filter
@@ -107,29 +103,26 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
       employeeLabel: allEmployeesMap?.get(values.employeeId || "")?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || "")?.label,
-      reportToLabel: allEmployeesMap?.get(values.reportTo || "")?.label,
+
       gradeLabel: allGradeMap?.get(values.gradeId || "")?.label,
       designationLabel: allDesignationsMap?.get(values.designationId || "")
         ?.label,
       locationLabel: allLocationMap?.get(values.locationId || "")?.label,
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
-      fromLabel: values?.from ? formatDates(values.from) : "",
-      toLabel: values?.to ? formatDates(values.to) : "",
-      employeeTypeLabel: values?.employeeType
-        ? ATTENDANCE_TYPE.find((el) => el.value == values.employeeType)?.label
-        : "",
+
+      employeeTypeLabel: employeeTypeOptions.find((el) => el.value == values.employeeType)?.label,
     };
   };
 
   //Trugger request to download PDF of data according to filters
-  const getPdf = (values) => {
+  const getSocialSecurityPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
-    dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
+    dispatch(actions.fetchAllSocialSecurityContributionSummaryForPdf(newQueryParams.filter, document, labels));
   };
 
 
-  const getLeaveBalancePdf = (values) => {
+  const getEOBIPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
     dispatch(actions.fetchAllEOBIContributionSummaryForPdf(newQueryParams.filter, document, labels));
@@ -160,8 +153,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
         onSubmit={(values) => {
           const formattedValues = {
             ...values,
-            from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
-            to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+
           };
           applyFilter(formattedValues);
         }}
@@ -320,24 +312,28 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                       {/* Employee Type Field Start */}
                       <div className="col-span-1">
+                        <label >
+                          Employee Type
+                        </label>
                         <Field
+                          as="select"
                           name="employeeType"
-                          component={Select}
-                          placeholder=""
+                          className="form-control"
+
                           onChange={(e) => {
-                            const value =
-                              e.target.value == -1 ? "" : Number(e.target.value);
+                            const value = e.target.value === "" ? null : Number(e.target.value);
                             setFieldValue("employeeType", value);
                           }}
-                          label={<span> Employee Type</span>}
-                          value={employeeTypeOptions.find(
-                            (option) => option.value === values.employeeType
-                          )}
-                          autoComplete="off"
-                          options={employeeTypeOptions}
+                        >
 
-                        />
+                          {employeeTypeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </Field>
                       </div>
+
                       {/* Employee Type Field End */}
 
                       {/* Employee Field Start */}
@@ -371,7 +367,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getLeaveBalancePdf(values);
+                                getLabels(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -388,7 +384,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           </button>   <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getLeaveBalancePdf(values);
+                                getSocialSecurityPdf(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -405,7 +401,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           </button>   <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getLeaveBalancePdf(values);
+                                getSocialSecurityPdf(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -457,7 +453,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getPdf(values);
+                                getSocialSecurityPdf(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -471,10 +467,11 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                             <Download className="w-4 h-4 ml-2" />
 
-                          </button>  <button
+                          </button>
+                          <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getPdf(values);
+                                getSocialSecurityPdf(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -488,10 +485,13 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                             <Download className="w-4 h-4 ml-2" />
 
-                          </button>  <button
+                          </button>
+
+
+                          <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getPdf(values);
+                                getSocialSecurityPdf(values);
                               }
                             }}
                             disabled={pdfLoading}

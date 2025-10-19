@@ -3,38 +3,9 @@ import * as requestFromServer from "./formCrud";
 import { ContributionReportSlice, callTypes } from "./ContributionReportSlice";
 const { actions } = ContributionReportSlice;
 
-/**
- * 
- * Fetch All Registered Leaves Paginated from the server
- * 
- * @param {Object} queryparm 
- * @returns 
- */
-export const fetchLeaveRegister = (queryparm) => async (dispatch) => {
-  dispatch(actions.startCall({ callType: callTypes.list }));
-  return requestFromServer.getAllLeaveRegisterSetup(queryparm)
-    .then((response) => {
-      dispatch(actions.LeaveRegisterFetched(response));
-    })
-    .catch((error) => {
-      error.clientMessage = "Can't find Registered leaves";
-      dispatch(actions.catchError({ error, callType: callTypes.list }));
-    });
-};
-
-
-/**
- * 
- * Fetch Pdf from server
- * 
- * @param {Object} filter 
- * @param {Document} document 
- * @param {Object} labels 
- * @returns 
- */
-export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) => {
+export const fetchAllEOBIContributionSummaryForPdf = (filter, document, labels = {}) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.pdf }));
-  return requestFromServer.getAllLeaveRegisterForPdf({ ...filter, labels })
+  return requestFromServer.getAllEOBIContributionSummaryForPdf({ ...filter, labels })
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -42,7 +13,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'leave_register.pdf');
+      link.setAttribute('download', 'eobi_contribution_summary.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -62,9 +33,10 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
       });
     });
 };
-export const fetchAllEOBIContributionSummaryForPdf = (filter, document, labels = {}) => async (dispatch) => {
+
+export const fetchAllSocialSecurityContributionSummaryForPdf = (filter, document, labels = {}) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.pdf }));
-  return requestFromServer.getAllEOBIContributionSummaryForPdf({ ...filter, labels })
+  return requestFromServer.getAllSocialSecurityContributionSummaryForPdf({ ...filter, labels })
     .then((res) => {
       const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -72,7 +44,7 @@ export const fetchAllEOBIContributionSummaryForPdf = (filter, document, labels =
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'eobi_contribution_summary.pdf');
+      link.setAttribute('download', 'social_security_contribution_summary.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));

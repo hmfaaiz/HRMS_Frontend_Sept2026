@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FormTable } from "./form-table/FormTable";
+
 import { FormFilter } from "./form-filter/FormFilter";
 import {
   fetchAllDept,
@@ -61,7 +61,7 @@ export function ContributionReportPage() {
       {/* Filter Form Ends */}
 
       {/* Table Starts */}
-      {/* <FormTable /> */}
+
       {/* Table Ends */}
 
       {/* Card Ends */}

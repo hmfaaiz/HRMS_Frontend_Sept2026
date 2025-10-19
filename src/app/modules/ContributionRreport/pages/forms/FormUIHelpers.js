@@ -13,13 +13,13 @@ export const initialFilter = {
   filter: {
     subsidiaryId: "",
     departmentId: "",
-    reportTo: "",
+
     gradeId: "",
     designationId: "",
     locationId: "",
-    attendanceType: "",
+    employeeType: 1,
     employeeId: "",
-    
+
   },
   sortOrder: "asc",
   pageSize: 50,
