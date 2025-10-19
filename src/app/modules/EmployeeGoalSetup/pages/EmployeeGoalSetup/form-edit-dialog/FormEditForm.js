@@ -153,10 +153,78 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isdataForRead}>
-                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="grid md:grid-cols-9 gap-x-3 gap-y-1 ">
+
+                     <div className="col-span-3">
+                    <SearchSelect
+                      name="employeeId"
+                      label={
+                        <span>
+                          Employee<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      isDisabled={isdataForRead || data.dataIsExist}
+                      onChange={(e) => {
+                        setFieldValue("employeeId", e.value || null);
+                        setFieldValue("list", []);
+                        dispatch(
+                          fetchAllAppraisalPeriod(e.value)
+                        );
+
+                        if (e.value && values.appraisalPeriodId) {
+                          dispatch(
+                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, appraisalPeriodId: values.appraisalPeriodId })
+                          );
+                        }
 
 
-                  <div>
+
+                      }}
+                      value={
+                        dashboard?.allEmployeesWithNoPermissionList?.find(
+                          (option) => option?.value == values?.employeeId
+                        ) || null
+                      }
+                      options={dashboard?.allEmployeesWithNoPermissionList}
+
+
+                      error={errors.employeeId}
+                      touched={touched.employeeId}
+                    />
+                  </div>
+                  <div className="mt-6 col-span-1">
+
+
+
+                    {panelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setPanelMode(!panelMode)}
+                      >
+
+
+                        <Eye className="w-4 h-4 text-white" />
+                        View Details
+                      </button>
+                    )}
+
+
+
+
+                  </div>
+
+
+                  <div className="col-span-3">
                     <SearchSelect
                       name="appraisalPeriodId"
                       label={
@@ -200,73 +268,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div>
-                    <SearchSelect
-                      name="employeeId"
-                      label={
-                        <span>
-                          Employee<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={isdataForRead || data.dataIsExist}
-                      onChange={(e) => {
-                        setFieldValue("employeeId", e.value || null);
-                        setFieldValue("list", []);
-                        dispatch(
-                          fetchAllAppraisalPeriod(e.value)
-                        );
-
-                        if (e.value && values.appraisalPeriodId) {
-                          dispatch(
-                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, appraisalPeriodId: values.appraisalPeriodId })
-                          );
-                        }
-
-
-
-                      }}
-                      value={
-                        dashboard?.allEmployeesWithNoPermissionList?.find(
-                          (option) => option?.value == values?.employeeId
-                        ) || null
-                      }
-                      options={dashboard?.allEmployeesWithNoPermissionList}
-
-
-                      error={errors.employeeId}
-                      touched={touched.employeeId}
-                    />
-                  </div>
-                  <div className="mt-6">
-
-
-
-                    {panelMode ? (
-                      <button
-                        type="button"
-                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
-                        onClick={() => setPanelMode(!panelMode)}
-                      >
-                        <XCircle className="w-3 h-3 text-black" />
-                        Cancel
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-primary d-flex align-items-center gap-2"
-                        onClick={() => setPanelMode(!panelMode)}
-                      >
-
-
-                        <Eye className="w-4 h-4 text-white" />
-                        View Details
-                      </button>
-                    )}
-
-
-
-
-                  </div>
+               
 
 
 
