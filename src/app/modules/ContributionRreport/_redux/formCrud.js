@@ -14,3 +14,10 @@ export async function getAllSocialSecurityContributionSummaryForPdf(body) {
     responseType:'arraybuffer'
   });
 }
+
+
+export async function getAllPFContributionSummaryForPdf(body) {
+  return axios.post(`${USERS_URL}/contribution_report/read-all-pf-contribution-summary-pdf-data`, body,{
+    responseType:'arraybuffer'
+  });
+}

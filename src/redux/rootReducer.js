@@ -266,6 +266,7 @@ export const rootReducer = combineReducers({
   appraisal_evaluation : appraisalEvaluationSlice.reducer,
   designation_wise_goal_setup : DesignationWiseGoalSetupSlice.reducer,
   employee_goal_setup : EmployeeGoalSetupSlice.reducer,
+  contribution_report : ContributionReportSlice.reducer,
 });
 
 export function* rootSaga() {

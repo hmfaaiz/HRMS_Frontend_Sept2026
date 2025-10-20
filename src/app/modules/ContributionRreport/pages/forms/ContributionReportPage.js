@@ -20,8 +20,8 @@ export function ContributionReportPage() {
     const [activeKey, setActiveKey] = useState("0");
   const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
     dashboard: state.dashboard,
-    listLoading: state.leave_register.listLoading,
-    pdfLoading: state.leave_register.pdfLoading,
+    listLoading: state.contribution_report.listLoading,
+    pdfLoading: state.contribution_report.pdfLoading,
   }));
 
   //Get all Dropdown data from server on page load and set it in state

@@ -33,7 +33,7 @@ export function FormTable() {
   const { currentState } = useSelector(
     (state) => {
       return {
-        currentState: state.leave_register,
+        currentState: state.contribution_report,
       }
     },
     shallowEqual
@@ -68,16 +68,7 @@ export function FormTable() {
         maxWidth: "160px",
       },
     },
-    {
-      dataField: "name",
-      text: "Leave Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-    },
+
     {
       dataField: "from",
       text: "Date From",
@@ -102,39 +93,8 @@ export function FormTable() {
       },
       formatter : (cell) => {return cell ? format(new Date(cell) , "dd-MMM-yyyy") : ""}
     },
-    {
-      dataField: "days",
-      text: "Leave Days",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
-    {
-      dataField: "remarks",
-      text: "Remarks",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    },
-    {
-      dataField: "fileStatus",
-      text: "Attachment",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
-    }
+
+
   ];
 
   //Table pagination properties

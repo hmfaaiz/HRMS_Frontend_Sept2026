@@ -50,13 +50,6 @@ export const ContributionReportSlice = createSlice({
         pdfFetched: (state, action) => {
             state.pdfLoading = false;
         },
-        LeaveRegisterFetched: (state, action) => {
-            const entities = action.payload.data?.data.rows;
-            const totalResult = action.payload.data?.data.totalResults;
-            state.listLoading = false;
-            state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
-        }
+       
     },
 });

@@ -18,10 +18,12 @@ import { formatDates } from "../../../../../utils/common";
 import {
   fetchAllActiveEmployeesBySubsidiary,
   fetchAllDept,
+  fetchAllPayrollMonthYearList,
 } from "../../../../../../_metronic/redux/dashboardActions";
 
 import { Download, } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { toast } from "react-toastify";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -50,7 +52,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     allEmployeeGradeList,
     allDept,
     allLocationChildMenus,
-    allDesignations,
+    allDesignations,allPayrollMonthYearList,
   } = useSelector((state) => state.dashboard);
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
@@ -78,7 +80,9 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     return new Map(allDesignations?.map((item) => [item.value, item]));
   }, [allDesignations]);
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
-
+  const allPayrollMonthMap = useMemo(() => {
+    return new Map(allPayrollMonthYearList?.map((item) => [item.value, item]));
+  }, [allPayrollMonthYearList]);
   //Fetch Params from Context
   const formUIProps = useMemo(() => {
     return {
@@ -97,6 +101,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     }
   };
 
+
   //Get Labels of Dropdown to Display in PDF
   const getLabels = (values) => {
     return {
@@ -111,10 +116,17 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
 
       employeeTypeLabel: employeeTypeOptions.find((el) => el.value == values.employeeType)?.label,
+      payrollMonthLabel: allPayrollMonthMap?.get(values.monthId || "")?.label,
     };
   };
 
   //Trugger request to download PDF of data according to filters
+  const getPFPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchAllPFContributionSummaryForPdf(newQueryParams.filter, document, labels));
+  };
+
   const getSocialSecurityPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
@@ -132,6 +144,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     if (allSubsidiaryList && allSubsidiaryList.length > 0) {
       dispatch(fetchAllActiveEmployeesBySubsidiary(allSubsidiaryList[0].value));
       dispatch(fetchAllDept(allSubsidiaryList[0].value));
+
     }
   }, [allSubsidiaryList]);
 
@@ -183,6 +196,12 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             dispatch(fetchAllDept(value));
                             setFieldValue("employeeId", "");
                             setFieldValue("departmentId", "");
+                           dispatch(
+                                  fetchAllPayrollMonthYearList(
+                                    { subsidiaryId: value, employeeId: null },
+                                    "allPayrollMonthYearList"
+                                  )
+                                );
 
                           }}
                           // error={errors?.subsidiaryId}
@@ -197,6 +216,13 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             setFieldValue("employeeId", "");
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
+                            console.log("fetchAllPayrollMonthYearList1111")
+                             dispatch(
+                                  fetchAllPayrollMonthYearList(
+                                    { subsidiaryId: value, employeeId: null },
+                                   "allPayrollMonthYearList"
+                                  )
+                                );
                           }}
                         />
                       </div>
@@ -367,7 +393,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getLabels(values);
+                                delete values.monthId
+                                getEOBIPdf(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -381,9 +408,12 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                             <Download className="w-4 h-4 ml-2" />
 
-                          </button>   <button
-                            onClick={() => {
+                          </button>  
+                           <button
+                           
+                             onClick={() => {
                               if (!pdfLoading) {
+                                delete values.monthId
                                 getSocialSecurityPdf(values);
                               }
                             }}
@@ -401,7 +431,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           </button>   <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getSocialSecurityPdf(values);
+                                delete values.monthId
+                                getPFPdf(values);
                               }
                             }}
                             disabled={pdfLoading}
@@ -429,31 +460,43 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
 
                       {/* Date from Field Start */}
-                      <div className="col-span-1">
-                        <Field
-                          name="employeeType"
-                          component={Select}
-                          placeholder=""
-                          onChange={(e) => {
-                            const value =
-                              e.target.value == -1 ? "" : Number(e.target.value);
-                            setFieldValue("employeeType", value);
-                          }}
-                          label={<span> Payroll Month</span>}
-                          value={values.employeeType}
-                          autoComplete="off"
-                          options={employeeTypeOptions}
-
-                        />
-                      </div>
-
+                      <div className="">
+                                    <Field
+                                      name="monthId"
+                                      component={SearchSelect}
+                                      onBlur={handleBlur}
+                                      onChange={(e) => {
+                                        const value =
+                                          e.value == "--Select--" ? "" : Number(e.value);
+                                        setFieldValue("monthId", value);
+                                      }}
+                                      label={
+                                        <span>
+                                          {" "}
+                                          Payroll Month<span style={{ color: "red" }}>*</span>
+                                        </span>
+                                      }
+                                      value={
+                                        allPayrollMonthMap?.get(values?.monthId || "") || ""
+                                      }
+                                      autoComplete="off"
+                                      options={allPayrollMonthYearList}
+                                    />
+                                  </div>
 
                       <div className="col-span-4 ">
                         <div className="flex items-center gap-2  p-1 rounded-sm justify-end ">
                           <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                getSocialSecurityPdf(values);
+                                if(values.monthId){
+                                    getEOBIPdf(values);
+                                }else{
+                                   toast(
+                                        "Payroll month is required!"
+                                      );
+                                }
+                             
                               }
                             }}
                             disabled={pdfLoading}
@@ -470,8 +513,20 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           </button>
                           <button
                             onClick={() => {
-                              if (!pdfLoading) {
-                                getSocialSecurityPdf(values);
+                              // if (!pdfLoading) {
+                              //   getSocialSecurityPdf(values);
+                              // }
+
+
+                               if (!pdfLoading) {
+                                if(values.monthId){
+                                    getSocialSecurityPdf(values);
+                                }else{
+                                   toast(
+                                        "Payroll month is required!"
+                                      );
+                                }
+                             
                               }
                             }}
                             disabled={pdfLoading}
@@ -490,8 +545,17 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                           <button
                             onClick={() => {
-                              if (!pdfLoading) {
-                                getSocialSecurityPdf(values);
+                            
+
+                               if (!pdfLoading) {
+                                if(values.monthId){
+                                    getPFPdf(values);
+                                }else{
+                                   toast(
+                                        "Payroll month is required!"
+                                      );
+                                }
+                             
                               }
                             }}
                             disabled={pdfLoading}
