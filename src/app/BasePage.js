@@ -324,7 +324,10 @@ const DesignationWiseGoalSetup = lazy(()=>
 
 
 const EmployeeGoalSetup = lazy(()=>
- import("./modules//EmployeeGoalSetup/pages/index"))
+ import("./modules/EmployeeGoalSetup/pages/index"))
+
+const ContributionReport = lazy(()=>
+ import("./modules/ContributionRreport/pages/index"))
 
 const ReleasePayslip = lazy(()=>
 import("./modules/Release_Payslip/pages/index")
@@ -457,6 +460,7 @@ const ROUTES = {
   appraisal_evaluation : AppraisalEvaluationManagement,
   designation_wise_goal_setup:DesignationWiseGoalSetup,
   employee_goal_setup:EmployeeGoalSetup,
+  contribution_report:ContributionReport,
   release_payslip: ReleasePayslip,
 };
 

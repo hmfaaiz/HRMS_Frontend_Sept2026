@@ -157,14 +157,25 @@ export function FormFIlter({ listLoading, user }) {
 
 
   };
-  const vacancyStatusOptions = [
+  // const vacancyStatusOptions = [
+  //   { value: null, label: "All" },
+  //   { value: 0, label: "Vacancy not posted " },
+  //   { value: 1, label: "Currently Posted" },
+  //   { value: 2, label: "On Hold" },
+  //   { value: 3, label: "Closed / Expired Job" },
+  // ];
+
+
+
+    const vacancyStatusOptions = [
     { value: null, label: "All" },
+    { value: 4, label: "Job Requisition Form" },
     { value: 0, label: "Vacancy not posted " },
     { value: 1, label: "Currently Posted" },
     { value: 2, label: "On Hold" },
     { value: 3, label: "Closed / Expired Job" },
+    
   ];
-
 
 
   const [activeKey, setActiveKey] = useState(null);

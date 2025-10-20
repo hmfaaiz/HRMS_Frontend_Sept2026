@@ -53,7 +53,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     jobPeriodEnd: "",
     desireDateOfApp: "",
     priorityTypeId: "",
-    criticalDays: "",
+
     preferredAgeFrom: null,
     preferredAgeTo: null,
     preferredShiftId: "",
