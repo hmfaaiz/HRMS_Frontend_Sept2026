@@ -331,7 +331,7 @@ export function FormEditForm({
   };
   useEffect(() => {
     fetchData(setJobCode);
-  }, []);
+  }, [formData.Id]);
 
   useEffect(() => {
     if (cleanedFormData?.gradeId) {
@@ -1141,6 +1141,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Job Vacancy Detail"
                       name="comment"
+                      disabled={isdataForRead}
                       touched={touched?.comment}
                       errors={errors?.comment}
                       value={values?.comment || ""}
@@ -1456,6 +1457,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Work Experience Detail"
                       name="workExpDetail"
+                      disabled={isdataForRead}
                       touched={touched?.workExpDetail}
                       errors={errors?.workExpDetail}
                       value={values?.workExpDetail || ""}
@@ -1484,6 +1486,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Additional Requirement"
                       name="additionalReq"
+                      disabled={isdataForRead}
                       touched={touched?.additionalReq}
                       errors={errors?.additionalReq}
                       value={values?.additionalReq || ""}
@@ -1573,6 +1576,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Incentive Packages"
                       name="incentivePackages"
+                      disabled={isdataForRead}
                       touched={touched?.incentivePackages}
                       errors={errors?.incentivePackages}
                       value={values?.incentivePackages || ""}
@@ -1600,6 +1604,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Other Benefits"
                       name="otherBenefits"
+                      disabled={isdataForRead}
                       touched={touched?.otherBenefits}
                       errors={errors?.otherBenefits}
                       value={values?.otherBenefits || ""}
@@ -1632,6 +1637,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="  Job Summary"
                       name="jobSummary"
+                      disabled={isdataForRead}
                       touched={touched?.jobSummary}
                       errors={errors?.jobSummary}
                       value={values?.jobSummary || ""}

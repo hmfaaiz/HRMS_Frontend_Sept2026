@@ -9,7 +9,7 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 import { FormDynamicDialogModal } from "./form-delete-dialog/FormDynamicDialogModal";
 import { useSelector, shallowEqual } from "react-redux";
 import { FormCard } from "./form-card/FormCard";
-import { } from "../../_redux/redux-Actions";
+import { fetchJobVacancyById } from "../../_redux/redux-Actions";
 import { FormFIlter } from "./form-filter/FormFIlter";
 import { Switch } from "react-router-dom";
 import { Accordion, Button, Card } from "react-bootstrap";
@@ -31,6 +31,7 @@ export function FormPage({ history }) {
       history.push("/job_vacancy/read-all-job-vacancy/new");
     },
     openEditFormDialog: (id) => {
+      dispatch(fetchJobVacancyById(id));
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
@@ -40,6 +41,7 @@ export function FormPage({ history }) {
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/active`);
     },
     openReadFormDialog: (id, isUserRead) => {
+        dispatch(fetchJobVacancyById(id));
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/read`);
     },
     openPostingFormDialog: (id, status) => {
