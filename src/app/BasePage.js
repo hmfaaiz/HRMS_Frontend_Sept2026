@@ -329,6 +329,10 @@ const EmployeeGoalSetup = lazy(()=>
 const ContributionReport = lazy(()=>
  import("./modules/ContributionRreport/pages/index"))
 
+const ReleasePayslip = lazy(()=>
+import("./modules/Release_Payslip/pages/index")
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -457,6 +461,7 @@ const ROUTES = {
   designation_wise_goal_setup:DesignationWiseGoalSetup,
   employee_goal_setup:EmployeeGoalSetup,
   contribution_report:ContributionReport,
+  release_payslip: ReleasePayslip,
 };
 
 export default function BasePage() {

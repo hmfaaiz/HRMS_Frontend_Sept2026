@@ -107,7 +107,7 @@ function ResetLinkPassword(props) {
           <br />
 
           <p
-            className="mt-10 text-lg text-center"
+            className="mt-10 text-lg text-left"
             style={{ color: "#000000", fontWeight: 400, height: "2vh" }}
           >
             Enter your new password

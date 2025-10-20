@@ -26,7 +26,13 @@ export const appraisalPublishSlice = createSlice({
         state.actionsLoading = false;
       }
     },
-
+    startCall: (state, action) => {
+      if (action.payload.callType === callTypes.list) {
+        state.listLoading = true;
+      } else {
+        state.actionsLoading = true;
+      }
+    },
     AppraisalPublishFetched: (state, action) => {
       const entities = action.payload.data?.data.rows;
       const totalResult = action.payload.data?.data.totalResults;

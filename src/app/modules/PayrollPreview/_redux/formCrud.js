@@ -19,3 +19,7 @@ export async function generatePayslip(body) {
     responseType:'arraybuffer'
   });
 }
+
+export async function fetchPayrollMonth() {
+  return axios.get(`${USERS_URL}/release_payslip/read-payroll-month`);
+}
