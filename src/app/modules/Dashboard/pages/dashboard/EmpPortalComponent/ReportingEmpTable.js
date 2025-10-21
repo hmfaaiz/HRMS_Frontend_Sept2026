@@ -57,7 +57,11 @@ export function ReportingEmpTable({ empAuthorityList }) {
         maxWidth: "60px",
       },
       formatter: (cell) => {
-        return cell?.length > 0 ? formatTime(cell[0].timeIn) : "-";
+        return cell?.length > 0
+          ? cell[0].timeIn
+            ? formatTime(cell[0].timeIn)
+            : "-"
+          : "-";
       },
     },
     {
@@ -71,7 +75,11 @@ export function ReportingEmpTable({ empAuthorityList }) {
         maxWidth: "60px",
       },
       formatter: (cell) => {
-        return cell?.length > 0 ? formatTime(cell[0].timeOut) : "-";
+        return cell?.length > 0
+          ? cell[0]?.timeOut
+            ? formatTime(cell[0].timeOut)
+            : "-"
+          : "-";
       },
     },
     {
@@ -85,9 +93,7 @@ export function ReportingEmpTable({ empAuthorityList }) {
         maxWidth: "90px",
       },
       formatter: (cell) => {
-        return cell?.length > 0
-          ? cell[0]?.timeIn && cell[0]?.timeOut && cell[0]?.status
-          : "-";
+        return cell?.length > 0 ? cell[0]?.status : "-";
       },
     },
   ];
