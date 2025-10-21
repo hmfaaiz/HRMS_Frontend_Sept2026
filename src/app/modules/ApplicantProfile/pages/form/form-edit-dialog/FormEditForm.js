@@ -42,30 +42,35 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 export const getApplicantProfileEditSchema = (formData) => {
   return Yup.object()
     .shape({
-      subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
+      subsidiaryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
 
-      title: Yup.string().required(VALIDATION_MESSAGES.required),
+      title: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
-      applicantCode: Yup.string()
+      applicantCode: Yup.string().nullable()
         .min(6, "Job code must be  6 characters")
         .max(6, "Job code must be  6 characters")
         .required(VALIDATION_MESSAGES.required),
 
-      firstName: Yup.string().required(VALIDATION_MESSAGES.required),
-      lastName: Yup.string().required(VALIDATION_MESSAGES.required),
-      middleName: Yup.string().nullable(),
+      firstName: Yup.string().nullable()
+      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+      .required(VALIDATION_MESSAGES.required),
+      lastName: Yup.string().nullable()
+      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+      .required(VALIDATION_MESSAGES.required),
+      middleName: Yup.string().nullable()
+      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed"),
       // .required(VALIDATION_MESSAGES.required),
       applicantStatusId: Yup.number()
         .nullable()
         .required(VALIDATION_MESSAGES.required),
-      nationality: Yup.string().required(VALIDATION_MESSAGES.required),
+      nationality: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
       dateOfBirth: Yup.date()
         .nullable()
         .typeError("Invalid date format")
         .required(VALIDATION_MESSAGES.required)
         .max(subYears(new Date(), 15), "Must be at least 15 years old"),
 
-      nic_no: Yup.string()
+      nic_no: Yup.string().nullable()
         .matches(
           /^\d{5}-\d{7}-\d{1}$/,
           "ID Card No must be in the format 12345-6789012-3"
@@ -73,18 +78,18 @@ export const getApplicantProfileEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
       // .matches(/^\d{15}$/, 'Passport number must be exactly 15 digits long and contain only digits.'),
-      passportNo: Yup.string()
+      passportNo: Yup.string().nullable()
         .nullable()
         .max(15, "Passport number must be at most 15 characters"),
       // .required(VALIDATION_MESSAGES.required),
 
-      maritalStatus: Yup.string().required(VALIDATION_MESSAGES.required),
+      maritalStatus: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
-      gender: Yup.string().required(VALIDATION_MESSAGES.required),
+      gender: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
-      relation_name: Yup.string().required(VALIDATION_MESSAGES.required),
+      relation_name: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
-      religionId: Yup.string().required(VALIDATION_MESSAGES.required),
+      religionId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
       //address
       additional_summary: Yup.string()
@@ -111,27 +116,27 @@ export const getApplicantProfileEditSchema = (formData) => {
         .email("Invalid email address")
         .required(VALIDATION_MESSAGES.required),
 
-      applicantCanJoin: Yup.number()
+      applicantCanJoin: Yup.number().nullable()
         .min(1, VALIDATION_MESSAGES.minOneValue)
         .required(VALIDATION_MESSAGES.required),
 
-      lastDawnSalary: Yup.number()
+      lastDawnSalary: Yup.number().nullable()
         .min(0, VALIDATION_MESSAGES.minZeroValue)
         .required(VALIDATION_MESSAGES.required),
 
-      lastDawnSalaryCurrencyId: Yup.number().required(
+      lastDawnSalaryCurrencyId: Yup.number().nullable().required(
         VALIDATION_MESSAGES.required
       ),
 
-      lastDawnSalaryPayTypeId: Yup.number().required(
+      lastDawnSalaryPayTypeId: Yup.number().nullable().required(
         VALIDATION_MESSAGES.required
       ),
 
-      expectedSalaryRangeFrom: Yup.number()
+      expectedSalaryRangeFrom: Yup.number().nullable()
         .min(0, VALIDATION_MESSAGES.minZeroValue)
         .required(VALIDATION_MESSAGES.required),
 
-      expectedSalaryRangeTo: Yup.number()
+      expectedSalaryRangeTo: Yup.number().nullable()
         .min(0, VALIDATION_MESSAGES.minZeroValue)
         .required(VALIDATION_MESSAGES.required)
         .test(
@@ -143,18 +148,18 @@ export const getApplicantProfileEditSchema = (formData) => {
           }
         ),
 
-      expectedSalaryCurrencyId: Yup.number().required(
+      expectedSalaryCurrencyId: Yup.number().nullable().required(
         VALIDATION_MESSAGES.required
       ),
 
-      expectedSalaryPayTypeId: Yup.number().required(
+      expectedSalaryPayTypeId: Yup.number().nullable().required(
         VALIDATION_MESSAGES.required
       ),
 
       // otherInformation: Yup.string()
       //   .required(VALIDATION_MESSAGES.required),
 
-      currentDesignation: Yup.string().required(VALIDATION_MESSAGES.required),
+      currentDesignation: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
 
       jobVacancyId: Yup.string().nullable(), // optional banane ke liye
 
@@ -182,7 +187,7 @@ export const getApplicantProfileEditSchema = (formData) => {
           otherwise: Yup.string().nullable(),
         }),
 
-      file: Yup.mixed()
+      file: Yup.mixed().nullable()
         .required(VALIDATION_MESSAGES.required)
         .test("fileSize", "File size must be less than 1 MB", (value) => {
           // Skip validation if it's an existing file (string)
