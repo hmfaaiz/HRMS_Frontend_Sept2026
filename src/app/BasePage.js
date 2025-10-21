@@ -333,6 +333,10 @@ const ReleasePayslip = lazy(()=>
 import("./modules/Release_Payslip/pages/index")
 )
 
+const DesignationDepMapforExitClearance = lazy(()=>
+import("./modules/Designation_Dep_Map_for_Exit_Clearance/pages/index")
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -462,6 +466,7 @@ const ROUTES = {
   employee_goal_setup:EmployeeGoalSetup,
   contribution_report:ContributionReport,
   release_payslip: ReleasePayslip,
+  designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
 };
 
 export default function BasePage() {
@@ -479,6 +484,7 @@ export default function BasePage() {
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();
+        
           const path = access
             .split(" ")
             .join("-")

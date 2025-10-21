@@ -136,6 +136,7 @@ import { EmployeeGoalSetupSlice } from "../app/modules/EmployeeGoalSetup/_redux/
 import { ContributionReportSlice } from "../app/modules/ContributionRreport/_redux/ContributionReportSlice";
 
 import { releasePayslipSlice } from "../app/modules/Release_Payslip/_redux/redux-Slice";
+import { DesignationDepMapforExitClearanceSlice } from "../app/modules/Designation_Dep_Map_for_Exit_Clearance/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -269,6 +270,7 @@ export const rootReducer = combineReducers({
   employee_goal_setup : EmployeeGoalSetupSlice.reducer,
   contribution_report : ContributionReportSlice.reducer,
   release_payslip : releasePayslipSlice.reducer,
+  designation_dep_map_for_exit_clearance : DesignationDepMapforExitClearanceSlice.reducer,
 });
 
 export function* rootSaga() {

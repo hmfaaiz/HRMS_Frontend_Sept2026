@@ -331,7 +331,7 @@ export function FormEditForm({
   };
   useEffect(() => {
     fetchData(setJobCode);
-  }, [formData.Id]);
+  }, []);
 
   useEffect(() => {
     if (cleanedFormData?.gradeId) {

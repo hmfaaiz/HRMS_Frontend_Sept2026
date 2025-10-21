@@ -50,7 +50,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     contractualPolicyInMonth: "",
     codePrefix:"",
     salaryMethod:"",
-    localizationId:""
+  
 
 
     

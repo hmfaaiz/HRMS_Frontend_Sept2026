@@ -31,7 +31,7 @@ export function FormPage({ history }) {
       history.push("/job_vacancy/read-all-job-vacancy/new");
     },
     openEditFormDialog: (id) => {
-      dispatch(fetchJobVacancyById(id));
+  
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
@@ -41,7 +41,7 @@ export function FormPage({ history }) {
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/active`);
     },
     openReadFormDialog: (id, isUserRead) => {
-        dispatch(fetchJobVacancyById(id));
+    
       history.push(`/job_vacancy/read-all-job-vacancy/${id}/read`);
     },
     openPostingFormDialog: (id, status) => {
