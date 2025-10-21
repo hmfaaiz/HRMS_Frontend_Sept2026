@@ -5,6 +5,7 @@ import { SearchSelect } from "../../../../../_metronic/_helpers/SearchSelect";
 import CustomErrorLabel from "../../../../utils/common-modules/CustomErrorLabel";
 import { LevelList } from "../FormUIHelper";
 import { CirclePlus, Trash2 } from "lucide-react";
+import { Checkbox } from "../../../../../_metronic/_partials/controls";
 
 function CustomApprovalWorkflowTable({
   isUserForRead,
@@ -67,6 +68,7 @@ function CustomApprovalWorkflowTable({
                       employeeId: null,
                       isHOD: false,
                       roleId: null,
+                      isHREvaluation: false,
                     })
                   }
                 >
@@ -85,6 +87,9 @@ function CustomApprovalWorkflowTable({
                       <td>Approver Type</td>
                       <td>Approver</td>
                       <td>Location</td>
+                      {values?.workflowTypeId == "565" && (
+                        <td>HR Evaluation</td>
+                      )}
                       <td className="text-right">Action</td>
                     </tr>
                   </thead>
@@ -111,9 +116,7 @@ function CustomApprovalWorkflowTable({
                               }
                               onChange={(e) => {
                                 const value =
-                                  e.label == "Select"
-                                    ? ""
-                                    : Number(e.value);
+                                  e.label == "Select" ? "" : Number(e.value);
                                 setFieldValue(
                                   `customApprovalList[${index}].workflowApprovalTypeId`,
                                   value
@@ -536,6 +539,35 @@ function CustomApprovalWorkflowTable({
                               </>
                             )}
                           </td>
+                          {/* if is workglow type is employee performance evaluation
+                           */}
+                          {values?.workflowTypeId == "565" && (
+                            <td>
+                              <>
+                                <Checkbox
+                                  isSelected={row?.isHREvaluation}
+                                  onChange={(e) =>
+                                    setFieldValue(
+                                      `customApprovalList[${index}].isHREvaluation`,
+                                      e.target.checked
+                                    )
+                                  }
+                                />
+                                {errors.customApprovalList?.[index]
+                                  ?.locationId &&
+                                  touched.customApprovalList?.[index]
+                                    ?.locationId && (
+                                    <CustomErrorLabel
+                                      touched={true}
+                                      error={
+                                        errors.customApprovalList?.[index]
+                                          ?.locationId
+                                      }
+                                    />
+                                  )}
+                              </>
+                            </td>
+                          )}
                           {/* Delete Button Starts */}
                           <td className="text-right">
                             <button

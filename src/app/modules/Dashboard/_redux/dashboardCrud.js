@@ -174,6 +174,13 @@ export const getAllFiscalYearBySubsidiaryId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-fiscal-year-by-SubsidiaryId`,body);
 };
 
+export const getAllAppraisalPeriodBySubsidiaryId = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-appraisal-period-by-SubsidiaryId`,body);
+};
+
 export const getAllDepartmentBySubsidiaryIds = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-department-by-SubsidiaryIds`,body);
+};
+export const getAllAppraisalPeriod = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-appraisal-period`,body);
 };

@@ -101,19 +101,19 @@ export function FormTable() {
         minWidth: "60px",
       },
     },
+    // {
+    //   dataField: "superVisorRattingToEmp",
+    //   text: "Show Supervisor Rating to Employee",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    //   formatter: (cell) => (cell ? "Yes" : "No"),
+    // },
     {
-      dataField: "superVisorRattingToEmp",
-      text: "Show Supervisor Rating to Employee",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => (cell ? "Yes" : "No"),
-    },
-    {
-      dataField: "EmpRattingToSuperVisor",
+      dataField: "empRattingToSuperVisor",
       text: "Show Employee Rating to Supervisor",
       sort: false,
       sortCaret: sortCaret,

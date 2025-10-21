@@ -24,4 +24,11 @@ export async function getAllLeaveRegisterForPdf(body) {
   return axios.post(`${USERS_URL}/leave_register/read-all-registered-leaves-pdf-data`, body,{
     responseType:'arraybuffer'
   });
+} 
+
+
+export async function getAllLeaveBalanceForPdf(body) {
+  return axios.post(`${USERS_URL}/leave_register/read-all-registered-balance-leaves-pdf-data`, body,{
+    responseType:'arraybuffer'
+  });
 }

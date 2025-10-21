@@ -80,7 +80,20 @@ export function FormUIProvider({ FormUIEvents, children }) {
     //-- Other
     salaryApproverId:"",
     loanApproverId:"",
-    payrollApproverId:""
+    payrollApproverId:"",
+
+    SalaryPolicy:"",
+    SalaryPolicy_Days:"",
+    OvertimeBasis:"",
+
+
+     isProvidentFund: "",
+    providentFundId: "",
+    providentFundAllowancesId: "",
+    pf_employer_percent: "",
+    pf_employee_percent: "",
+
+
     
   };
 

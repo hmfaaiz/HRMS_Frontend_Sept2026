@@ -114,13 +114,13 @@ export function FormEditDialog({ id, show, onHide, dataForRead,status }) {
         noOfPosition: formData.noOfPosition,
         hiringReasonId: formData.hiringReasonId,
         jobPreferenceId: formData.jobPreferenceId,
-        appointmentTypeId: formData.appointmentTypeId,
+      
         comment: formData.comment,
         jobPeriodStart: formData.jobPeriodStart,
         jobPeriodEnd: formData.jobPeriodEnd,
         desireDateOfApp: formData.desireDateOfApp,
         priorityTypeId: formData.priorityTypeId,
-        criticalDays: formData.criticalDays,
+
         preferredAgeFrom: formData.preferredAgeFrom,
         preferredAgeTo: formData.preferredAgeTo,
         preferredShiftId: formData.preferredShiftId,

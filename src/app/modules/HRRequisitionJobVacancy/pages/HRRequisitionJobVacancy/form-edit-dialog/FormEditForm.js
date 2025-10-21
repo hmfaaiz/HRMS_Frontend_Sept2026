@@ -96,8 +96,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   requisitionReferenceNo: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+    .nullable(),
+    // .required(VALIDATION_MESSAGES.required),
 
 
   salaryRangeFrom: Yup.number()
@@ -391,8 +391,8 @@ export function FormEditForm({
                     <div className="">
                       <label>
                         <span>
-                          Requisition Reference No.
-                          <span style={{ color: "red" }}>*</span>
+                          Requisition Reference No. (if any)
+                          {/* <span style={{ color: "red" }}>*</span> */}
                         </span>
                       </label>
                       <Field
@@ -478,7 +478,7 @@ export function FormEditForm({
                       <div>
 
                         <div className="flex items-center gap-1 mt-1">
-                          <label>Replacemen By</label>
+                          <label>Replacement By</label>
                           <input
                             name="isReplacement"
                             type="checkbox"

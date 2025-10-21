@@ -79,8 +79,8 @@ export const SubsidiarySelect = ({
 
       if (result && !currentValue) {
         initializeSubsidiary(result);
-        if(isIntializeDisable){
-          setInitialized(false)
+        if (isIntializeDisable) {
+          setInitialized(false);
         }
       }
     }

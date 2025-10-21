@@ -21,7 +21,7 @@ export function FormFilter({ dispatch, pdfLoading }) {
     user,
   } = useSelector((state) => ({
     levelList: state.dashboard?.levelList,
-    allPayrollMonthYearList: state.dashboard?.allPayrollMonthYearList,
+    allPayrollMonthYearList: state.payroll_preview?.allPayrollMonthYearList,
     employeeList: state.dashboard?.employeeList,
     user: state?.auth?.user,
   }));
@@ -86,12 +86,10 @@ export function FormFilter({ dispatch, pdfLoading }) {
 
   // 4. When payrollData is ready, fetch payroll month/year list
   useEffect(() => {
-    if (payrollData?.subsidiaryId) {
-      dispatch(
-        fetchAllPayrollMonthYearList({ subsidiaryId: payrollData.subsidiaryId })
-      );
-    }
-  }, [payrollData]);
+    // if (payrollData?.subsidiaryId) {
+    dispatch(actions.allPayrollMonths());
+    // }
+  }, []);
 
   return (
     <>

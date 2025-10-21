@@ -67,9 +67,14 @@ const profileValidation = (localizationId) =>
       .nullable()
       .matches(/^\d{6}$/, "Must be exactly 6 digits"),
     // .required('Required*'),
-    firstName: Yup.string().required("Required*"),
-    lastName: Yup.string().required("Required*"),
-    middleName: Yup.string().nullable(),
+    firstName: Yup.string()
+    .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+    .required("Required*"),
+    lastName: Yup.string()
+    .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+    .required("Required*"),
+    middleName: Yup.string().nullable()
+    .matches(/^[A-Za-z\s]*$/, "Only letters are allowed"),
     // .required("Required*"),
     employeeCode: Yup.string()
       .nullable()
@@ -326,7 +331,9 @@ const profileValidation = (localizationId) =>
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
     // .required('Required*'),
 
-    additional_summary: Yup.string().required("Required*"),
+    additional_summary: Yup.string()
+    .nullable()
+    .required("Required*"),
   })
     .test(
       "check-marital-status",

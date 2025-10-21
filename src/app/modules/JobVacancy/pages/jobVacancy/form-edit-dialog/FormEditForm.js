@@ -126,15 +126,13 @@ const jobVacancyEditSchema = Yup.object().shape({
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   hiringReasonId: Yup.string().required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.string().required(VALIDATION_MESSAGES.required),
-  appointmentTypeId: Yup.number()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+  // appointmentTypeId: Yup.number()
+  // .nullable()
+  // .required(VALIDATION_MESSAGES.required),
   priorityTypeId: Yup.number()
   .nullable()
   .required(VALIDATION_MESSAGES.required),
-  // criticalDays: Yup.number()
-  //   .min(1, VALIDATION_MESSAGES.minOneValue)
-  //   .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
+
   jobPeriodStart: Yup.date()
     .nullable()
     .min(Yup.ref("jobPostingDateTo"), "Start date must be after posting date"),
@@ -244,7 +242,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
   // incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
   // otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
-  jobSummary: Yup.string().required(VALIDATION_MESSAGES.required),
+  jobSummary: Yup.string(),
+  // .required(VALIDATION_MESSAGES.required),
 });
 
 export function FormEditForm({
@@ -1075,7 +1074,7 @@ export function FormEditForm({
                 </div>
 
                 <div className="grid md:grid-cols-6 gap-x-3 mt-1">
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="appointmentTypeId"
                       label={
@@ -1097,7 +1096,7 @@ export function FormEditForm({
                       error={errors.appointmentTypeId}
                       touched={touched.appointmentTypeId}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="">
                     <SearchSelect
@@ -1142,6 +1141,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Job Vacancy Detail"
                       name="comment"
+                      disabled={isdataForRead}
                       touched={touched?.comment}
                       errors={errors?.comment}
                       value={values?.comment || ""}
@@ -1457,6 +1457,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Work Experience Detail"
                       name="workExpDetail"
+                      disabled={isdataForRead}
                       touched={touched?.workExpDetail}
                       errors={errors?.workExpDetail}
                       value={values?.workExpDetail || ""}
@@ -1485,6 +1486,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Additional Requirement"
                       name="additionalReq"
+                      disabled={isdataForRead}
                       touched={touched?.additionalReq}
                       errors={errors?.additionalReq}
                       value={values?.additionalReq || ""}
@@ -1574,6 +1576,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Incentive Packages"
                       name="incentivePackages"
+                      disabled={isdataForRead}
                       touched={touched?.incentivePackages}
                       errors={errors?.incentivePackages}
                       value={values?.incentivePackages || ""}
@@ -1601,6 +1604,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="Other Benefits"
                       name="otherBenefits"
+                      disabled={isdataForRead}
                       touched={touched?.otherBenefits}
                       errors={errors?.otherBenefits}
                       value={values?.otherBenefits || ""}
@@ -1633,6 +1637,7 @@ export function FormEditForm({
                     <RichTextInput
                       label="  Job Summary"
                       name="jobSummary"
+                      disabled={isdataForRead}
                       touched={touched?.jobSummary}
                       errors={errors?.jobSummary}
                       value={values?.jobSummary || ""}

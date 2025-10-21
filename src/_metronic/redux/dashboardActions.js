@@ -504,6 +504,7 @@ export const fetchAllReimbursementConfigList = (key) => async (dispatch) => {
 };
 
 export const fetchAllPayrollMonthYearList = (body, key) => async (dispatch) => {
+  console.log("hitting1111")
   return await requestFromServer
     .getAllPayrollMonthYearList(body, key)
     .then((response) => {
@@ -710,7 +711,6 @@ export const fetchAllDesignationByGradeId = (
     .getAllDesignationByGradeId(id)
     .then((response) => {
       const entities = [...response.data?.data];
-      console.log("entitiesentities" , entities , key)
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
     .catch((error) => {

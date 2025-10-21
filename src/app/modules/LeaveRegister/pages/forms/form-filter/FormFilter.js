@@ -21,7 +21,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
-import { FileText } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 //Validation for date fields
@@ -35,16 +35,16 @@ const formValidation = Yup.object().shape({
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams };
-   const formattedValues = {
-            ...values,
-            from: values.from
-              ? formatDates(values.from, "dd-MMM-yyyy")
-              : null,
-            to: values.to
-              ? formatDates(values.to, "dd-MMM-yyyy")
-              : null,
-          
-          };
+  const formattedValues = {
+    ...values,
+    from: values.from
+      ? formatDates(values.from, "dd-MMM-yyyy")
+      : null,
+    to: values.to
+      ? formatDates(values.to, "dd-MMM-yyyy")
+      : null,
+
+  };
   newQueryParams.filter = { ...formattedValues };
   return newQueryParams;
 };
@@ -133,6 +133,13 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
   };
 
+
+  const getLeaveBalancePdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchLeaveBalancePdfData(newQueryParams.filter, document, labels));
+  };
+
   useEffect(() => {
     if (allSubsidiaryList && allSubsidiaryList.length > 0) {
       dispatch(fetchAllActiveEmployeesBySubsidiary(allSubsidiaryList[0].value));
@@ -167,10 +174,13 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
                 <fieldset>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
+                  <div className="">
                     {/* Subsidiary Field Start */}
-                    <div className="col-span-1">
-                      {/* <Field
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
+
+
+                      <div className="col-span-1">
+                        {/* <Field
                         name="subsidiaryId"
                         component={SearchSelect}
                         onBlur={handleBlur}
@@ -197,45 +207,45 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             : []),
                         ]}
                       /> */}
-                      <SubsidiarySelect
-                        name="subsidiaryId"
-                        label={<span> Subsidiary</span>}
-                        // isDisabled={isUserForRead && true}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          dispatch(fetchAllDept(value));
-                          setFieldValue("employeeId", "");
-                          setFieldValue("departmentId", "");
-                           if(e?.payrollMonth){
-                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
-                          }
-                        }}
-                        // error={errors?.subsidiaryId}
-                        // touched={touched?.subsidiaryId}
-                        currentValue={values?.subsidiaryId}
-                        initializeSubsidiary={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-                          setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                          setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
-                          setFieldValue("departmentId", "");
-                          setFieldValue("employeeId", "");
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          dispatch(fetchAllDept(value));
-                        }}
-                      />
-                    </div>
-                    {/* Subsidiary Field End */}
+                        <SubsidiarySelect
+                          name="subsidiaryId"
+                          label={<span> Subsidiary<span style={{ color: "red" }}>*</span></span>}
+                          // isDisabled={isUserForRead && true}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("subsidiaryId", value);
+                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                            dispatch(fetchAllDept(value));
+                            setFieldValue("employeeId", "");
+                            setFieldValue("departmentId", "");
+                            if (e?.payrollMonth) {
+                              setFieldValue("from", new Date(e?.payrollMonth?.startDate))
+                              setFieldValue("to", new Date(e?.payrollMonth?.endDate))
+                            }
+                          }}
+                          // error={errors?.subsidiaryId}
+                          // touched={touched?.subsidiaryId}
+                          currentValue={values?.subsidiaryId}
+                          initializeSubsidiary={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("subsidiaryId", value);
+                            setFieldValue("from", new Date(e?.payrollMonth?.startDate))
+                            setFieldValue("to", new Date(e?.payrollMonth?.endDate))
+                            setFieldValue("departmentId", "");
+                            setFieldValue("employeeId", "");
+                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                            dispatch(fetchAllDept(value));
+                          }}
+                        />
+                      </div>
+                      {/* Subsidiary Field End */}
 
-                    {/* Active payroll month */}
+                      {/* Active payroll month */}
 
-                    {/* <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
+                      {/* <div className="col-12 col-md-8 mt-3 d-flex flex-column align-items-end">
 
 {values?.subsidiaryId ? (() => {
  const selectedSubsidiary = allSubsidiaryMap?.get(values?.subsidiaryId);
@@ -254,212 +264,291 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 })() : null}
 </div> */}
 
-                    {/* Deparment Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="departmentId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("departmentId", value);
-                        }}
-                        label={<span> Department</span>}
-                        value={
-                          allDeptMap?.get(values?.departmentId || "") || ""
-                        }
-                        autoComplete="off"
-                        // options={allDept}
-                        options={[
-                          { label: "Select", value: "" },
-                          ...(Array.isArray(allDept) ? allDept : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Deparment Field End */}
+                      {/* Deparment Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="departmentId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("departmentId", value);
+                          }}
+                          label={<span> Department</span>}
+                          value={
+                            allDeptMap?.get(values?.departmentId || "") || ""
+                          }
+                          autoComplete="off"
+                          // options={allDept}
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(allDept) ? allDept : []),
+                          ]}
+                        />
+                      </div>
+                      {/* Deparment Field End */}
 
-                    {/* Report To Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="reportTo"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("reportTo", value);
-                        }}
-                        label={<span> Report To</span>}
-                        value={
-                          allEmployeesMap?.get(values?.reportTo || "") || ""
-                        }
-                        autoComplete="off"
-                        // options={allEmployees}
-                        options={[
-                          { label: "Select", value: "" },
-                          ...(Array.isArray(allEmployees) ? allEmployees : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Report To Field End */}
+                      {/* Report To Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="reportTo"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("reportTo", value);
+                          }}
+                          label={<span> Report To</span>}
+                          value={
+                            allEmployeesMap?.get(values?.reportTo || "") || ""
+                          }
+                          autoComplete="off"
+                          // options={allEmployees}
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(allEmployees) ? allEmployees : []),
+                          ]}
+                        />
+                      </div>
+                      {/* Report To Field End */}
 
-                    {/* Grade Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="gradeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("gradeId", value);
-                        }}
-                        label={<span> Grade</span>}
-                        value={allGradeMap?.get(values?.gradeId || "") || ""}
-                        autoComplete="off"
-                        // options={allEmployeeGradeList}
-                        options={[
-                          { label: "Select", value: "" },
-                          ...(Array.isArray(allEmployeeGradeList)
-                            ? allEmployeeGradeList
-                            : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Grade Field End */}
+                      {/* Grade Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="gradeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("gradeId", value);
+                          }}
+                          label={<span> Grade</span>}
+                          value={allGradeMap?.get(values?.gradeId || "") || ""}
+                          autoComplete="off"
+                          // options={allEmployeeGradeList}
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(allEmployeeGradeList)
+                              ? allEmployeeGradeList
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      {/* Grade Field End */}
 
-                    {/* Designation Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="designationId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("designationId", value);
-                        }}
-                        label={<span> Designation</span>}
-                        value={
-                          allDesignationsMap?.get(
-                            values?.designationId || ""
-                          ) || ""
-                        }
-                        autoComplete="off"
-                        // options={allDesignations}
-                        options={[
-                          { label: "Select", value: "" },
-                          ...(Array.isArray(allDesignations)
-                            ? allDesignations
-                            : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Designation Field End */}
+                      {/* Designation Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="designationId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("designationId", value);
+                          }}
+                          label={<span> Designation</span>}
+                          value={
+                            allDesignationsMap?.get(
+                              values?.designationId || ""
+                            ) || ""
+                          }
+                          autoComplete="off"
+                          // options={allDesignations}
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(allDesignations)
+                              ? allDesignations
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      {/* Designation Field End */}
 
-                    {/* Location Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="locationId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("locationId", value);
-                        }}
-                        label={<span> Location</span>}
-                        value={
-                          allLocationMap?.get(values?.locationId || "") || ""
-                        }
-                        autoComplete="off"
-                        // options={allLocationChildMenus}
-                        options={[
-                          { label: "Select", value: "" },
-                          ...(Array.isArray(allLocationChildMenus)
-                            ? allLocationChildMenus
-                            : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Location Field End */}
+                      {/* Location Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="locationId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("locationId", value);
+                          }}
+                          label={<span> Location</span>}
+                          value={
+                            allLocationMap?.get(values?.locationId || "") || ""
+                          }
+                          autoComplete="off"
+                          // options={allLocationChildMenus}
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(allLocationChildMenus)
+                              ? allLocationChildMenus
+                              : []),
+                          ]}
+                        />
+                      </div>
+                      {/* Location Field End */}
 
-                    {/* Attendance Type Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="attendanceType"
-                        component={Select}
-                        placeholder=""
-                        onChange={(e) => {
-                          const value =
-                            e.target.value == -1 ? "" : Number(e.target.value);
-                          setFieldValue("attendanceType", value);
-                        }}
-                        label={<span> Attendance Type</span>}
-                        value={values.attendanceType}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: ATTENDANCE_TYPE })}
-                      />
-                    </div>
-                    {/* Attendance Type Field End */}
+                      {/* Attendance Type Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="attendanceType"
+                          component={Select}
+                          placeholder=""
+                          onChange={(e) => {
+                            const value =
+                              e.target.value == -1 ? "" : Number(e.target.value);
+                            setFieldValue("attendanceType", value);
+                          }}
+                          label={<span> Attendance Type</span>}
+                          value={values.attendanceType}
+                          autoComplete="off"
+                          children={CustomDropdown({ data: ATTENDANCE_TYPE })}
+                        />
+                      </div>
+                      {/* Attendance Type Field End */}
 
-                    {/* Employee Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="employeeId"
-                        component={SearchSelect}
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "Select" ? "" : Number(e.value);
-                          setFieldValue("employeeId", value);
-                        }}
-                        label={<span> Employee</span>}
-                        value={
-                          allEmployeesMap?.get(values?.employeeId || "") || ""
-                        }
-                        autoComplete="off"
-                        // options={allEmployees}
-                        options={[
-                          { label: "Select", value: "" },
-                          ...(Array.isArray(allEmployees) ? allEmployees : []),
-                        ]}
-                      />
-                    </div>
-                    {/* Employee Field End */}
+                      {/* Employee Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="employeeId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "Select" ? "" : Number(e.value);
+                            setFieldValue("employeeId", value);
+                          }}
+                          label={<span> Employee</span>}
+                          value={
+                            allEmployeesMap?.get(values?.employeeId || "") || ""
+                          }
+                          autoComplete="off"
+                          // options={allEmployees}
+                          options={[
+                            { label: "Select", value: "" },
+                            ...(Array.isArray(allEmployees) ? allEmployees : []),
+                          ]}
+                        />
+                      </div>
+                      {/* Employee Field End */}
+                      <div className="col-span-2">
 
-                    {/* Date from Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="from"
-                        component={DatePickerField}
-                        dateFormat="dd-MMM-yyyy"
-                        className="form-control"
-                        label={<span>From</span>}
-                        onChange={(date) => {
-                          setFieldValue("from", date);
-                          setFieldValue("to", date);
-                        }}
-                        autoComplete="off"
-                      />
-                    </div>
-                    {/* Date from Field End */}
+                        {/* <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
+                          <OverlayTrigger
+                            overlay={
+                              <Tooltip id="products-edit-tooltip">Export Leave Balance Report PDF</Tooltip>
+                            }
+                          >
+                            <button
+                              onClick={() => {
+                                if (!pdfLoading) {
+                                  getLeaveBalancePdf(values);
+                                }
+                              }}
+                              disabled={pdfLoading}
+                              className={`border-none bg-transparent ${pdfLoading ? "opacity-50 cursor-not-allowed" : ""
+                                }`}
+                            >
+                              <FileText className="w-4 h-4 text-black cursor-pointer" />
 
-                    {/* Date to Field Start */}
-                    <div className="col-span-1">
-                      <Field
-                        name="to"
-                        component={DatePickerField}
-                        onBlur={handleBlur}
-                        className="form-control"
-                        dateFormat="dd-MMM-yyyy"
-                        label={<span>To</span>}
-                        onChange={(date) => {
-                          setFieldValue("to", date);
-                        }}
-                        autoComplete="off"
-                      />
+                            
+                            </button>
+                          </OverlayTrigger>
+                        </div> */}
+                        <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
+                          <button
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                getLeaveBalancePdf(values);
+                              }
+                            }}
+                            disabled={pdfLoading}
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                            Leave Balance Summary Report
+
+                            <Download className="w-4 h-4 ml-2" />
+
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <hr></hr>
+                    <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
+
+
+
+
+                      {/* Date from Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="from"
+                          component={DatePickerField}
+                          dateFormat="dd-MMM-yyyy"
+                          className="form-control"
+                          label={<span>From</span>}
+                          onChange={(date) => {
+                            setFieldValue("from", date);
+                            setFieldValue("to", date);
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
+                      {/* Date from Field End */}
+
+                      {/* Date to Field Start */}
+                      <div className="col-span-1">
+                        <Field
+                          name="to"
+                          component={DatePickerField}
+                          onBlur={handleBlur}
+                          className="form-control"
+                          dateFormat="dd-MMM-yyyy"
+                          label={<span>To</span>}
+                          onChange={(date) => {
+                            setFieldValue("to", date);
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
+
+                      <div className="col-span-3 ">
+                        <div className="flex items-center gap-2  p-1 rounded-sm justify-end ">
+                          <button
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                getPdf(values);
+                              }
+                            }}
+                            disabled={pdfLoading}
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                            Leave Availed Report
+
+                            <Download className="w-4 h-4 ml-2" />
+
+                          </button>
+                        </div>
+                      </div>
+
                     </div>
                     {/* Date to Field End */}
                   </div>
@@ -489,7 +578,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
-              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
+              {/* <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
                 <OverlayTrigger
                   overlay={
                     <Tooltip id="products-edit-tooltip">Export PDF</Tooltip>
@@ -497,23 +586,22 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                 >
                   <button
                     onClick={() => {
-                      if(!pdfLoading){
+                      if (!pdfLoading) {
                         getPdf(values);
                       }
                     }}
                     disabled={pdfLoading}
-                    className={`border-none bg-transparent ${
-                    pdfLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                    className={`border-none bg-transparent ${pdfLoading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                   >
                     <FileText className="w-4 h-4 text-black cursor-pointer" />
 
-                    {/* {pdfLoading && (
-                      <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )} */}
+                 
                   </button>
                 </OverlayTrigger>
-              </div>
+              </div> */}
+
+
             </Modal.Footer>
           </>
         )}

@@ -59,6 +59,7 @@ const formValidation = Yup.object().shape({
     }),
 
   pf_accNo: Yup.string()
+  .nullable()
     .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("pf_member", {
       is: true, // Condition to check if pf_member is true
@@ -86,7 +87,7 @@ const formValidation = Yup.object().shape({
   //   .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
   emp_bank_accNo: Yup.string()
-  .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+    .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
   gratuity_startDate: Yup.date()
     .nullable()
@@ -162,20 +163,20 @@ const formValidation = Yup.object().shape({
     .min(1, VALIDATION_MESSAGES.required),
 
   emp_bankId: Yup.number()
-  .nullable()
-  .when("payment_mode_Id", {
-    is: 153, // if select value is 153
-    then: Yup.number().required(VALIDATION_MESSAGES.required),
-    otherwise: Yup.number().notRequired(),
-  }),
+    .nullable()
+    .when("payment_mode_Id", {
+      is: 153, // if select value is 153
+      then: Yup.number().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().notRequired(),
+    }),
 
   emp_bank_branchId: Yup.number()
-  .nullable()
-  .when("payment_mode_Id", {
-    is: 153, // if select value is 153
-    then: Yup.number().required(VALIDATION_MESSAGES.required),
-    otherwise: Yup.number().notRequired(),
-  }),
+    .nullable()
+    .when("payment_mode_Id", {
+      is: 153, // if select value is 153
+      then: Yup.number().required(VALIDATION_MESSAGES.required),
+      otherwise: Yup.number().notRequired(),
+    }),
 
   // emp_bank_accountTitle: Yup.string().when("payment_mode_Id", {
   //   is: (value) => value === 152, // if select value is 151
@@ -210,7 +211,7 @@ export function BankEditForm({
   loading,
   id,
   approveSalary,
-  approveLoading,panelMode,setPanelMode,
+  approveLoading, panelMode, setPanelMode,
 }) {
   const { dashboard } = useSelector((state) => state);
   // Get User Details
@@ -292,17 +293,17 @@ export function BankEditForm({
     const emp_bankId = defBank?.value ? defBank.value : user.emp_bankId;
     setDefaultBanks(
       dashboard.allBanks &&
-        dashboard.allBanks.filter((item) => {
-          return item.value === emp_bankId;
-        })
+      dashboard.allBanks.filter((item) => {
+        return item.value === emp_bankId;
+      })
     );
   }, [user?.emp_bankId, dashboard.emp_bankId]);
-useEffect(()=>{
-  if (user?.emp_bankId) {
-    dispatch(fetchAllBankBranch(user.emp_bankId));
-  };
-  
-},[user.emp_bankId])  
+  useEffect(() => {
+    if (user?.emp_bankId) {
+      dispatch(fetchAllBankBranch(user.emp_bankId));
+    };
+
+  }, [user.emp_bankId])
   // useEffect(() => {
   //   const emp_bank_branchId = defEmpBankBranch?.value
   //     ? defEmpBankBranch.value
@@ -321,9 +322,9 @@ useEffect(()=>{
       : user.company_bankId;
     setDefaultCompanyBanks(
       dashboard.allCompanyBanks &&
-        dashboard.allCompanyBanks.filter((item) => {
-          return item.value === company_bankId;
-        })
+      dashboard.allCompanyBanks.filter((item) => {
+        return item.value === company_bankId;
+      })
     );
   }, [user?.company_bankId, dashboard.allCompanyBanks]);
 
@@ -333,9 +334,9 @@ useEffect(()=>{
       : user.company_branchId;
     setDefaultCompanyBankBranch(
       dashboard.allBankBranch &&
-        dashboard.allBankBranch.filter((item) => {
-          return item.value === company_branchId;
-        })
+      dashboard.allBankBranch.filter((item) => {
+        return item.value === company_branchId;
+      })
     );
   }, [user?.company_branchId, dashboard.company_branchId]);
 
@@ -370,9 +371,9 @@ useEffect(()=>{
     dispatch(fetchAllActiveEmployeesSalaryForDDL(employeeId));
     setEmployeeDefault(
       dashboard.allEmployeesSalaryDDL &&
-        dashboard.allEmployeesSalaryDDL.filter((item) => {
-          return item.value === employeeId;
-        })
+      dashboard.allEmployeesSalaryDDL.filter((item) => {
+        return item.value === employeeId;
+      })
     );
 
     fetchEmployeeSalaryEarningList(employeeId, 0, null);
@@ -385,9 +386,9 @@ useEffect(()=>{
 
     setDefualtCurrencyCodeList(
       dashboard.allCurrencyCodeList &&
-        dashboard.allCurrencyCodeList.filter((item) => {
-          return item.value === currencyId;
-        })
+      dashboard.allCurrencyCodeList.filter((item) => {
+        return item.value === currencyId;
+      })
     );
   }, [user?.currencyId, dashboard.currencyId]);
 
@@ -397,9 +398,9 @@ useEffect(()=>{
       : user.payment_mode_Id;
     setDefualtPaymentModeCodeList(
       dashboard.allPaymentModeList &&
-        dashboard.allPaymentModeList.filter((item) => {
-          return item.value === payment_mode_Id;
-        })
+      dashboard.allPaymentModeList.filter((item) => {
+        return item.value === payment_mode_Id;
+      })
     );
   }, [user?.payment_mode_Id, dashboard.payment_mode_Id]);
 
@@ -411,9 +412,9 @@ useEffect(()=>{
       : user.earning_deduction_id;
     setDefaultEarningList(
       dashboard.allEarnings &&
-        dashboard.allEarnings.filter((item) => {
-          return item.value === earning_deduction_id;
-        })
+      dashboard.allEarnings.filter((item) => {
+        return item.value === earning_deduction_id;
+      })
     );
   }, [user?.earning_deduction_id, dashboard.earning_deduction_id]);
 
@@ -448,11 +449,11 @@ useEffect(()=>{
       } else {
         setDefaultMapEarningDeductionList(response?.data?.data);
       }
-     
+
       setBasicSalaryFactor(
         response?.data?.data[0]?.basicSalaryFactor ||
-          response?.data?.data[0]?.basicFactor ||
-          ""
+        response?.data?.data[0]?.basicFactor ||
+        ""
       );
       setGrossSalaryDB(response?.data?.data[0]?.grossSalary || "");
       setBasicSalaryDB(response?.data?.data[0]?.basicSalary || "");
@@ -460,13 +461,13 @@ useEffect(()=>{
       setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
       setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
       setLocalizationId(response?.data?.data[0]?.localizationId || "");
-     
+
 
       if (response.data?.data?.[0]?.salaryMethod) {
         setcurrentSalaryMethod(response.data?.data?.[0]?.salaryMethod || "");
         setdropdownData(
           DROPDOWN[response.data?.data?.[0]?.salaryMethod] ||
-            DEFAULT_CALCULATION_TYPE_DROPDOWN
+          DEFAULT_CALCULATION_TYPE_DROPDOWN
         );
       } else {
         const value = response?.data?.data?.find(
@@ -523,9 +524,9 @@ useEffect(()=>{
         setFieldValue("currencyId", currencyId || "");
         setDefualtCurrencyCodeList(
           dashboard.allCurrencyCodeList &&
-            dashboard.allCurrencyCodeList.filter((item) => {
-              return item.value === currencyId;
-            })
+          dashboard.allCurrencyCodeList.filter((item) => {
+            return item.value === currencyId;
+          })
         );
       }
     } catch (error) {
@@ -570,23 +571,23 @@ useEffect(()=>{
   const addRow = (element) => {
 
 
-  if (element.target.id === "Other") {
-    setDefaultMapEarningDeductionList([
-      ...defMapEarningDeductionList,
-      { transactionType: "Earning", isPartOfGrossSalary: 0 },
-    ]);
-  } else if (element.target.id === "Gross") {
-    setDefaultMapEarningDeductionList([
-      ...defMapEarningDeductionList,
-      { transactionType: "Earning", isPartOfGrossSalary: 1 },
-    ]);
-  } else if (element.target.id === "Deduction") {
-    setDefaultMapEarningDeductionList([
-      ...defMapEarningDeductionList,
-      { transactionType: "Deduction", isPartOfGrossSalary: 0 },
-    ]);
-  }
-};
+    if (element.target.id === "Other") {
+      setDefaultMapEarningDeductionList([
+        ...defMapEarningDeductionList,
+        { transactionType: "Earning", isPartOfGrossSalary: 0 },
+      ]);
+    } else if (element.target.id === "Gross") {
+      setDefaultMapEarningDeductionList([
+        ...defMapEarningDeductionList,
+        { transactionType: "Earning", isPartOfGrossSalary: 1 },
+      ]);
+    } else if (element.target.id === "Deduction") {
+      setDefaultMapEarningDeductionList([
+        ...defMapEarningDeductionList,
+        { transactionType: "Deduction", isPartOfGrossSalary: 0 },
+      ]);
+    }
+  };
 
   // const deleteRow = (element) => {
 
@@ -599,22 +600,22 @@ useEffect(()=>{
 
   // Delete functionality problem (11-9-2025)
   const deleteRow = (index, type) => {
- 
-  setDefaultMapEarningDeductionList((list) =>
-    list.filter((item, idx) => {
-      if (type === "Gross") {
-        return !(idx === index && item.transactionType === "Earning" && item.isPartOfGrossSalary);
-      }
-      if (type === "Other") {
-        return !(idx === index && item.transactionType === "Earning" && !item.isPartOfGrossSalary);
-      }
-      if (type === "Deduction") {
-        return !(idx === index && item.transactionType === "Deduction");
-      }
-      return true;
-    })
-  );
-};
+
+    setDefaultMapEarningDeductionList((list) =>
+      list.filter((item, idx) => {
+        if (type === "Gross") {
+          return !(idx === index && item.transactionType === "Earning" && item.isPartOfGrossSalary);
+        }
+        if (type === "Other") {
+          return !(idx === index && item.transactionType === "Earning" && !item.isPartOfGrossSalary);
+        }
+        if (type === "Deduction") {
+          return !(idx === index && item.transactionType === "Deduction");
+        }
+        return true;
+      })
+    );
+  };
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
@@ -762,7 +763,7 @@ useEffect(()=>{
         newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
       }
 
-            // Check if amount is required
+      // Check if amount is required
       if (
         !objValidate.amount
         // objValidate.calculation_type == "Fixed Amount"
@@ -772,14 +773,14 @@ useEffect(()=>{
 
 
 
-           // Fixed Amount case
-    // if (
-    //   objValidate.calculation_type ==(objValidate.calculation_type == "% Of Gross" ||
-    //       objValidate.calculation_type == "% Of Basic")
-    //   (!objValidate.amount && Number(objValidate.factorValue) > 0)
-    // ) {
-    //   newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
-    // }
+      // Fixed Amount case
+      // if (
+      //   objValidate.calculation_type ==(objValidate.calculation_type == "% Of Gross" ||
+      //       objValidate.calculation_type == "% Of Basic")
+      //   (!objValidate.amount && Number(objValidate.factorValue) > 0)
+      // ) {
+      //   newErrors[`amount-${index}`] = VALIDATION_MESSAGES.required;
+      // }
 
 
 
@@ -828,27 +829,27 @@ useEffect(()=>{
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values) => {
-       
+
           const validationErrors = validate();
 
           if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-      
+
           } else {
             enableLoading();
             saveEarningDeductionTran(
               {
                 ...values,
-                
-                 gratuity_startDate: values.gratuity_startDate
-                    ? formatDates(values.gratuity_startDate, "dd-MMM-yyyy")
-                    : null,
-                     eobi_reg_date: values.eobi_reg_date
-                    ? formatDates(values.eobi_reg_date, "dd-MMM-yyyy")
-                    : null, 
-                      social_security_reg_date: values.social_security_reg_date
-                    ? formatDates(values.social_security_reg_date, "dd-MMM-yyyy")
-                    : null,
+
+                gratuity_startDate: values.gratuity_startDate
+                  ? formatDates(values.gratuity_startDate, "dd-MMM-yyyy")
+                  : null,
+                eobi_reg_date: values.eobi_reg_date
+                  ? formatDates(values.eobi_reg_date, "dd-MMM-yyyy")
+                  : null,
+                social_security_reg_date: values.social_security_reg_date
+                  ? formatDates(values.social_security_reg_date, "dd-MMM-yyyy")
+                  : null,
                 basicFactor: defBasicSalaryFactor,
                 grossPackage:
                   values.grossSalary > 0
@@ -872,7 +873,7 @@ useEffect(()=>{
           formik,
         }) => (
           <>
-          {console.log("aaaa1111",errors)}
+            {console.log("aaaa1111", errors)}
             <Modal.Body className="overlay overlay-block cursor-default">
               {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
@@ -884,66 +885,66 @@ useEffect(()=>{
                   <div className="grid grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
                     <div className="flex item-end gap-1 justify-end">
                       <div className="w-full">
-                           <SearchSelect
-                        name="employeeId"
-                        label={
-                          <span>
-                            {" "}
-                            Employee<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={user.employeeId && true}
-                        onBlur={() => {
-                          // handleBlur({ target: { name: "countryId" } });
-                        }}
-                        onChange={(e) => {
-                          setFieldValue("employeeId", e.value || null);
-                          setEmployeeDefault(e);
-                          handleChanged(e, setFieldValue);
-                          dispatch(fetchAllEarningList(1, "", e.value, true));
-                          dispatch(fetchAllDeductionList(2, "", e.value));
-                          //  dispatch(fetchAllActiveEmployees(e.value));
-                        }}
-                        value={
-                          (user.employeeId &&
-                            dashboard.allEmployeesSalaryDDL &&
-                            dashboard.allEmployeesSalaryDDL.filter((item) => {
-                              return item.value === user.employeeId;
-                            })) ||
-                          defEmployee ||
-                          null
-                        }
-                        error={errors.employeeId}
-                        touched={touched.employeeId}
-                        options={dashboard.allEmployeesSalaryDDL}
-                      />
+                        <SearchSelect
+                          name="employeeId"
+                          label={
+                            <span>
+                              {" "}
+                              Employee<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          isDisabled={user.employeeId && true}
+                          onBlur={() => {
+                            // handleBlur({ target: { name: "countryId" } });
+                          }}
+                          onChange={(e) => {
+                            setFieldValue("employeeId", e.value || null);
+                            setEmployeeDefault(e);
+                            handleChanged(e, setFieldValue);
+                            dispatch(fetchAllEarningList(1, "", e.value, true));
+                            dispatch(fetchAllDeductionList(2, "", e.value));
+                            //  dispatch(fetchAllActiveEmployees(e.value));
+                          }}
+                          value={
+                            (user.employeeId &&
+                              dashboard.allEmployeesSalaryDDL &&
+                              dashboard.allEmployeesSalaryDDL.filter((item) => {
+                                return item.value === user.employeeId;
+                              })) ||
+                            defEmployee ||
+                            null
+                          }
+                          error={errors.employeeId}
+                          touched={touched.employeeId}
+                          options={dashboard.allEmployeesSalaryDDL}
+                        />
 
                       </div>
-                   
-                        <div className="flex items-end justify-end">
-                    {panelMode ? (
-                      <button
-                        type="button"
-                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
-                        onClick={() => setPanelMode(!panelMode)}
-                      >
-                        <XCircle className="w-3 h-3 text-black" />
-                        Cancel
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-primary d-flex align-items-center gap-2"
-                        onClick={() => setPanelMode(!panelMode)}
-                      >
-                        <Eye className="w-4 h-4 text-white" />
-                        View
-                      </button>
-                    )}
-                  </div>
+
+                      <div className="flex items-end justify-end">
+                        {panelMode ? (
+                          <button
+                            type="button"
+                            className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                            onClick={() => setPanelMode(!panelMode)}
+                          >
+                            <XCircle className="w-3 h-3 text-black" />
+                            Cancel
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-primary d-flex align-items-center gap-2"
+                            onClick={() => setPanelMode(!panelMode)}
+                          >
+                            <Eye className="w-4 h-4 text-white" />
+                            View
+                          </button>
+                        )}
+                      </div>
                     </div>
 
-                      
+
                     <div className="">
                       <SearchSelect
                         name="currencyId"
@@ -975,7 +976,7 @@ useEffect(()=>{
                           name: "grossSalary",
                           value: values.grossSalary,
                           onBlur: () => setFieldTouched("grossSalary", true),
-                          onChange: () => {},
+                          onChange: () => { },
                         }}
                         form={{
                           touched,
@@ -1009,7 +1010,7 @@ useEffect(()=>{
                           name: "basicSalary",
                           value: values.basicSalary,
                           onBlur: () => setFieldTouched("basicSalary", true),
-                          onChange: () => {},
+                          onChange: () => { },
                         }}
                         form={{
                           touched,
@@ -1047,10 +1048,10 @@ useEffect(()=>{
                             {Boolean(
                               currentSalaryMethod == "Gross to Basic"
                             ) && (
-                              <>
-                                <span style={{ color: "red" }}>*</span>
-                              </>
-                            )}
+                                <>
+                                  <span style={{ color: "red" }}>*</span>
+                                </>
+                              )}
                           </span>
                         }
                         autoComplete="off"
@@ -1069,229 +1070,229 @@ useEffect(()=>{
                       value="Calculate"
                     ></input>
                   </div>
-                  <br/>
-                                                         <EmployeeProfile
-        employeeId={values.employeeId}
-        panelMode={panelMode}
-      />
+                  <br />
+                  <EmployeeProfile
+                    employeeId={values.employeeId}
+                    panelMode={panelMode}
+                  />
                   <hr />
 
                   {currentSalaryMethod && (<>
-                 
-<div>
-                    <div className="flex justify-between items-center">
-                      <h6 className="font-bold mb-0 text-primary">
-                        Earnings{"  "}
-                      </h6>
-                      {!Boolean(currentSalaryMethod) && (
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          id="Earning"
-                          onClick={addRow}
-                        >
-                          <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
-                          Add
-                        </button>
-                      )}
-                    </div>
 
-   
-                    <div className="w-full overflow-x-auto">
-                      <div className="react-bootstrap-table table-responsive">
-                        <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                          <tr className="custom-table-header">
-                            {/* <td>Employee</td> */}
-                            <td>Earning</td>
-                            <td>Calculation Type</td>
-                            <td>Factor</td>
-                            <td>Amount</td>
-                            <td className="text-right">Action</td>
-                          </tr>
-                          {defMapEarningDeductionList?.map(
-                            (obj, rightindex) =>
-                              obj.transactionType == "Earning" &&
-                              obj.isPartOfGrossSalary == true && (
-                                <>
-                                  <tr>
-                                    <td>
-                                      <select
-                                        disabled={Boolean(currentSalaryMethod)}
-                                        className="form-control"
-                                        onChange={(e) => {
-                                          handleFieldChanged(e);
-                                          setErrors((prev) => ({
-                                            ...prev,
-                                            [`earning_deduction_id-${rightindex}`]: "",
-                                          })); // Clear error on change
-                                        }}
-                                        id={
-                                          "earning_deduction_id-" + rightindex
-                                        }
-                                        value={obj.earning_deduction_id}
-                                      >
-                                        <option value="-1"> Select</option>
-                                        {dashboard.allEarnings?.map((x) => {
-                                          return (
-                                            <option
-                                              disabled={
-                                                defMapEarningDeductionList.find(
-                                                  (el) =>
-                                                    el.earning_deduction_id ==
-                                                    x.value
-                                                )
-                                                  ? true
-                                                  : false
-                                              }
-                                              value={x.value}
-                                            >
-                                              {" "}
-                                              {x.label}{" "}
-                                            </option>
-                                          );
-                                        })}
-                                      </select>
-                                      {deferrors[
-                                        `earning_deduction_id-${rightindex}`
-                                      ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
-                                              `earning_deduction_id-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
-                                    </td>
-                                    <td>
-                                      <select
-                                        className="form-control"
-                                        value={obj.calculation_type}
-                                        disabled={Boolean(currentSalaryMethod)}
-                                        onChange={(e) => {
-                                          handleFieldChanged(e);
-                                          setErrors((prev) => ({
-                                            ...prev,
-                                            [`calculation_type-${rightindex}`]: "",
-                                          })); // Clear error on change
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Earnings{"  "}
+                        </h6>
+                        {!Boolean(currentSalaryMethod) && (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            id="Earning"
+                            onClick={addRow}
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                            Add
+                          </button>
+                        )}
+                      </div>
 
-                                          if (
-                                            e.target.value == "Fixed Amount"
-                                          ) {
-                                            obj.factorValue = 0;
-                                          } else {
-                                            obj.amount = 0;
-                                          }
-                                        }}
-                                        id={"calculation_type-" + rightindex}
-                                      >
-                                        {createDropdown(dropdownData || [])}
-                                      </select>
-                                      {deferrors[
-                                        `calculation_type-${rightindex}`
-                                      ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
-                                              `calculation_type-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
-                                    </td>
-                                    {/* <td>{obj.transactionType}</td> */}
-                                    <td>
-                                      <input
-                                        className="form-control"
-                                        disabled
-                                        type="number"
-                                        onChange={(e) => {
-                                          handleFieldChanged(e);
-                                          setErrors((prev) => ({
-                                            ...prev,
-                                            [`factorValue-${rightindex}`]: "",
-                                          })); // Clear error on change
-                                        }}
-                                        value={obj.factorValue}
-                                        id={"factorValue-" + rightindex}
-                                      ></input>
-                                      {deferrors[
-                                        `factorValue-${rightindex}`
-                                      ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
-                                              `factorValue-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
-                                    </td>
-                                    <td>
-                                      <AmountInput
-                                        className="form-control"
-                                        field={{
-                                          name: `amount-${rightindex}`,
-                                          value: obj.amount,
-                                          onBlur: () => {},
-                                          onChange: () => {},
-                                        }}
-                                        form={{
-                                          touched: {},
-                                          errors: {},
-                                          setFieldValue: (field, value) => {
-                                            setDefaultMapEarningDeductionList(
-                                              (list) =>
-                                                list.map((item, idx) =>
-                                                  idx === rightindex
-                                                    ? { ...item, amount: value }
-                                                    : item
-                                                )
-                                            );
+
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+                              {/* <td>Employee</td> */}
+                              <td>Earning</td>
+                              <td>Calculation Type</td>
+                              <td>Factor</td>
+                              <td>Amount</td>
+                              <td className="text-right">Action</td>
+                            </tr>
+                            {defMapEarningDeductionList?.map(
+                              (obj, rightindex) =>
+                                obj.transactionType == "Earning" &&
+                                obj.isPartOfGrossSalary == true && (
+                                  <>
+                                    <tr>
+                                      <td>
+                                        <select
+                                          disabled={Boolean(currentSalaryMethod)}
+                                          className="form-control"
+                                          onChange={(e) => {
+                                            handleFieldChanged(e);
                                             setErrors((prev) => ({
                                               ...prev,
-                                              [`amount-${rightindex}`]: "",
-                                            }));
-                                          },
-                                          setFieldTouched: () => {},
-                                        }}
-                                        label={null}
-                                        disabled={true}
-                                        value={obj.amount}
-                                      />
-                                      {deferrors[`amount-${rightindex}`] && (
-                                        <div className="form-feedBack">
-                                          {deferrors[`amount-${rightindex}`]}
-                                        </div>
-                                      )}
-                                    </td>
+                                              [`earning_deduction_id-${rightindex}`]: "",
+                                            })); // Clear error on change
+                                          }}
+                                          id={
+                                            "earning_deduction_id-" + rightindex
+                                          }
+                                          value={obj.earning_deduction_id}
+                                        >
+                                          <option value="-1"> Select</option>
+                                          {dashboard.allEarnings?.map((x) => {
+                                            return (
+                                              <option
+                                                disabled={
+                                                  defMapEarningDeductionList.find(
+                                                    (el) =>
+                                                      el.earning_deduction_id ==
+                                                      x.value
+                                                  )
+                                                    ? true
+                                                    : false
+                                                }
+                                                value={x.value}
+                                              >
+                                                {" "}
+                                                {x.label}{" "}
+                                              </option>
+                                            );
+                                          })}
+                                        </select>
+                                        {deferrors[
+                                          `earning_deduction_id-${rightindex}`
+                                        ] && (
+                                            <div className="form-feedBack">
+                                              {
+                                                deferrors[
+                                                `earning_deduction_id-${rightindex}`
+                                                ]
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+                                      <td>
+                                        <select
+                                          className="form-control"
+                                          value={obj.calculation_type}
+                                          disabled={Boolean(currentSalaryMethod)}
+                                          onChange={(e) => {
+                                            handleFieldChanged(e);
+                                            setErrors((prev) => ({
+                                              ...prev,
+                                              [`calculation_type-${rightindex}`]: "",
+                                            })); // Clear error on change
+
+                                            if (
+                                              e.target.value == "Fixed Amount"
+                                            ) {
+                                              obj.factorValue = 0;
+                                            } else {
+                                              obj.amount = 0;
+                                            }
+                                          }}
+                                          id={"calculation_type-" + rightindex}
+                                        >
+                                          {createDropdown(dropdownData || [])}
+                                        </select>
+                                        {deferrors[
+                                          `calculation_type-${rightindex}`
+                                        ] && (
+                                            <div className="form-feedBack">
+                                              {
+                                                deferrors[
+                                                `calculation_type-${rightindex}`
+                                                ]
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+                                      {/* <td>{obj.transactionType}</td> */}
+                                      <td>
+                                        <input
+                                          className="form-control"
+                                          disabled
+                                          type="number"
+                                          onChange={(e) => {
+                                            handleFieldChanged(e);
+                                            setErrors((prev) => ({
+                                              ...prev,
+                                              [`factorValue-${rightindex}`]: "",
+                                            })); // Clear error on change
+                                          }}
+                                          value={obj.factorValue}
+                                          id={"factorValue-" + rightindex}
+                                        ></input>
+                                        {deferrors[
+                                          `factorValue-${rightindex}`
+                                        ] && (
+                                            <div className="form-feedBack">
+                                              {
+                                                deferrors[
+                                                `factorValue-${rightindex}`
+                                                ]
+                                              }
+                                            </div>
+                                          )}
+                                      </td>
+                                      <td>
+                                        <AmountInput
+                                          className="form-control"
+                                          field={{
+                                            name: `amount-${rightindex}`,
+                                            value: obj.amount,
+                                            onBlur: () => { },
+                                            onChange: () => { },
+                                          }}
+                                          form={{
+                                            touched: {},
+                                            errors: {},
+                                            setFieldValue: (field, value) => {
+                                              setDefaultMapEarningDeductionList(
+                                                (list) =>
+                                                  list.map((item, idx) =>
+                                                    idx === rightindex
+                                                      ? { ...item, amount: value }
+                                                      : item
+                                                  )
+                                              );
+                                              setErrors((prev) => ({
+                                                ...prev,
+                                                [`amount-${rightindex}`]: "",
+                                              }));
+                                            },
+                                            setFieldTouched: () => { },
+                                          }}
+                                          label={null}
+                                          disabled={true}
+                                          value={obj.amount}
+                                        />
+                                        {deferrors[`amount-${rightindex}`] && (
+                                          <div className="form-feedBack">
+                                            {deferrors[`amount-${rightindex}`]}
+                                          </div>
+                                        )}
+                                      </td>
                                       {!isUserForRead && (
-                                    <td
-                                      className="text-right"
-                                      id={rightindex}
-                                      onClick={
-                                        !Boolean(currentSalaryMethod) &&
-                                        deleteRow
-                                      }
-                                    >
-                                      {!Boolean(currentSalaryMethod) && (
-                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                      )}{" "}
-                                    </td>
+                                        <td
+                                          className="text-right"
+                                          id={rightindex}
+                                          onClick={
+                                            !Boolean(currentSalaryMethod) &&
+                                            deleteRow
+                                          }
+                                        >
+                                          {!Boolean(currentSalaryMethod) && (
+                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                          )}{" "}
+                                        </td>
                                       )}
-                                  </tr>
-                                </>
-                              )
-                          )}
-                        </table>
+                                    </tr>
+                                  </>
+                                )
+                            )}
+                          </table>
+                        </div>
                       </div>
                     </div>
-                  </div>
                     <hr /> </>
                   )}
-                  
+
                   {/* For Earning WIth Payroll Include ByDefault No  */}
-                
+
                   <div>
                     <div className="flex justify-between items-center">
                       <h6 className="font-bold mb-0 text-primary">
@@ -1365,14 +1366,14 @@ useEffect(()=>{
                                       {deferrors[
                                         `earning_deduction_id-${rightindex}`
                                       ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
+                                          <div className="form-feedBack">
+                                            {
+                                              deferrors[
                                               `earning_deduction_id-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </td>
                                     <td>
                                       <select
@@ -1403,14 +1404,14 @@ useEffect(()=>{
                                       {deferrors[
                                         `calculation_type-${rightindex}`
                                       ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
+                                          <div className="form-feedBack">
+                                            {
+                                              deferrors[
                                               `calculation_type-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </td>
                                     {/* <td>{obj.transactionType}</td> */}
                                     <td>
@@ -1433,14 +1434,14 @@ useEffect(()=>{
                                       {deferrors[
                                         `factorValue-${rightindex}`
                                       ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
+                                          <div className="form-feedBack">
+                                            {
+                                              deferrors[
                                               `factorValue-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </td>
 
                                     <td>
@@ -1448,8 +1449,8 @@ useEffect(()=>{
                                         field={{
                                           name: `amount-${rightindex}`,
                                           value: obj.amount,
-                                          onBlur: () => {},
-                                          onChange: (e) => {},
+                                          onBlur: () => { },
+                                          onChange: (e) => { },
                                         }}
                                         id={"amount-" + rightindex}
                                         onChange={(e) => {
@@ -1458,9 +1459,9 @@ useEffect(()=>{
                                               list.map((item, idx) =>
                                                 idx === rightindex
                                                   ? {
-                                                      ...item,
-                                                      amount: Number(e),
-                                                    }
+                                                    ...item,
+                                                    amount: Number(e),
+                                                  }
                                                   : item
                                               )
                                           );
@@ -1468,13 +1469,13 @@ useEffect(()=>{
                                         form={{
                                           touched: {},
                                           errors: {},
-                                          setFieldValue: (field, value) => {},
-                                          setFieldTouched: () => {},
+                                          setFieldValue: (field, value) => { },
+                                          setFieldTouched: () => { },
                                         }}
                                         label={null}
                                         disabled={
                                           obj.calculation_type ==
-                                            "% Of Gross" ||
+                                          "% Of Gross" ||
                                           obj.calculation_type == "% Of Basic"
                                         }
                                         value={obj.amount}
@@ -1486,16 +1487,16 @@ useEffect(()=>{
                                       )}
                                     </td>
                                     {!isUserForRead && (
-                                    <td
-                                      className="text-right"
-                                      id={rightindex}
-                                      disabled={isUserForRead}
-                                      // onClick={deleteRow}
-                                       onClick={() => deleteRow(rightindex, "Other")}
-                                    >
-                                      {" "}
-                                      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                    </td>
+                                      <td
+                                        className="text-right"
+                                        id={rightindex}
+                                        disabled={isUserForRead}
+                                        // onClick={deleteRow}
+                                        onClick={() => deleteRow(rightindex, "Other")}
+                                      >
+                                        {" "}
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </td>
                                     )}
                                   </tr>
                                 </>
@@ -1576,14 +1577,14 @@ useEffect(()=>{
                                       {deferrors[
                                         `earning_deduction_id-${rightindex}`
                                       ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
+                                          <div className="form-feedBack">
+                                            {
+                                              deferrors[
                                               `earning_deduction_id-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </td>
                                     <td>
                                       <select
@@ -1603,14 +1604,14 @@ useEffect(()=>{
                                       {deferrors[
                                         `calculation_type-${rightindex}`
                                       ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
+                                          <div className="form-feedBack">
+                                            {
+                                              deferrors[
                                               `calculation_type-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </td>
                                     {/* <td>{obj.transactionType}</td> */}
                                     <td>
@@ -1633,22 +1634,22 @@ useEffect(()=>{
                                       {deferrors[
                                         `factorValue-${rightindex}`
                                       ] && (
-                                        <div className="form-feedBack">
-                                          {
-                                            deferrors[
+                                          <div className="form-feedBack">
+                                            {
+                                              deferrors[
                                               `factorValue-${rightindex}`
-                                            ]
-                                          }
-                                        </div>
-                                      )}
+                                              ]
+                                            }
+                                          </div>
+                                        )}
                                     </td>
                                     <td>
                                       <AmountInput
                                         field={{
                                           name: `amount-${rightindex}`,
                                           value: obj.amount,
-                                          onBlur: () => {},
-                                          onChange: (e) => {},
+                                          onBlur: () => { },
+                                          onChange: (e) => { },
                                         }}
                                         id={"amount-" + rightindex}
                                         onChange={(e) => {
@@ -1657,9 +1658,9 @@ useEffect(()=>{
                                               list.map((item, idx) =>
                                                 idx === rightindex
                                                   ? {
-                                                      ...item,
-                                                      amount: Number(e),
-                                                    }
+                                                    ...item,
+                                                    amount: Number(e),
+                                                  }
                                                   : item
                                               )
                                           );
@@ -1667,13 +1668,13 @@ useEffect(()=>{
                                         form={{
                                           touched: {},
                                           errors: {},
-                                          setFieldValue: (field, value) => {},
-                                          setFieldTouched: () => {},
+                                          setFieldValue: (field, value) => { },
+                                          setFieldTouched: () => { },
                                         }}
                                         label={null}
                                         disabled={
                                           obj.calculation_type ==
-                                            "% Of Gross" ||
+                                          "% Of Gross" ||
                                           obj.calculation_type == "% Of Basic"
                                         }
                                         value={obj.amount}
@@ -1685,17 +1686,17 @@ useEffect(()=>{
                                         </div>
                                       )}
                                     </td>
-                                      {!isUserForRead && (
-                                    <td
-                                      className="text-right"
-                                      id={rightindex}
-                                      // onClick={deleteRow}
-                                       onClick={() => deleteRow(rightindex, "Deduction")}
-                                    >
-                                      {" "}
-                                      <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                    </td>
-                                      )}
+                                    {!isUserForRead && (
+                                      <td
+                                        className="text-right"
+                                        id={rightindex}
+                                        // onClick={deleteRow}
+                                        onClick={() => deleteRow(rightindex, "Deduction")}
+                                      >
+                                        {" "}
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </td>
+                                    )}
                                   </tr>
                                 </>
                               )
@@ -1713,16 +1714,16 @@ useEffect(()=>{
                             value:
                               values.grossSalary > 0
                                 ? Number(values.grossSalary) +
-                                  Number(totalGross)
+                                Number(totalGross)
                                 : Number(defGrossSalary) + Number(totalGross),
-                            onBlur: () => {},
-                            onChange: (e) => {},
+                            onBlur: () => { },
+                            onChange: (e) => { },
                           }}
                           form={{
                             touched: {},
                             errors: {},
-                            setFieldValue: (field, value) => {},
-                            setFieldTouched: () => {},
+                            setFieldValue: (field, value) => { },
+                            setFieldTouched: () => { },
                           }}
                           label={"Gross Package"}
                           disabled={true}
@@ -1740,14 +1741,14 @@ useEffect(()=>{
                           field={{
                             name: `totalAllowance`,
                             value: totalAllowance,
-                            onBlur: () => {},
-                            onChange: (e) => {},
+                            onBlur: () => { },
+                            onChange: (e) => { },
                           }}
                           form={{
                             touched: {},
                             errors: {},
-                            setFieldValue: (field, value) => {},
-                            setFieldTouched: () => {},
+                            setFieldValue: (field, value) => { },
+                            setFieldTouched: () => { },
                           }}
                           label={"Total Allowance"}
                           disabled={true}
@@ -1761,14 +1762,14 @@ useEffect(()=>{
                           field={{
                             name: `totalDeduction`,
                             value: { totalDeduction },
-                            onBlur: () => {},
-                            onChange: (e) => {},
+                            onBlur: () => { },
+                            onChange: (e) => { },
                           }}
                           form={{
                             touched: {},
                             errors: {},
-                            setFieldValue: (field, value) => {},
-                            setFieldTouched: () => {},
+                            setFieldValue: (field, value) => { },
+                            setFieldTouched: () => { },
                           }}
                           label={"Total Deductions"}
                           disabled={true}
@@ -1778,35 +1779,35 @@ useEffect(()=>{
                       </div>
                       <div>
                         <AmountInput
-                        allowNegative={true}
+                          allowNegative={true}
                           field={{
                             name: `netSalary`,
                             value:
                               values.grossSalary > 0
                                 ? Number(values.grossSalary) +
-                                  Number(totalGross) -
-                                  Number(totalDeduction)
+                                Number(totalGross) -
+                                Number(totalDeduction)
                                 : Number(defGrossSalary) + Number(totalGross),
-                            onBlur: () => {},
-                            onChange: (e) => {},
+                            onBlur: () => { },
+                            onChange: (e) => { },
                           }}
                           form={{
                             touched: {},
                             errors: {},
-                            setFieldValue: (field, value) => {},
-                            setFieldTouched: () => {},
+                            setFieldValue: (field, value) => { },
+                            setFieldTouched: () => { },
                           }}
                           label={"Net Salary"}
                           disabled={true}
-                          // value={
-                          //   values.grossSalary > 0
-                          //     ? Number(values.grossSalary) +
-                          //       Number(totalGross) -
-                          //       Number(totalDeduction)
-                          //     : Number(defGrossSalary) + Number(totalGross)
-                          // }
+                        // value={
+                        //   values.grossSalary > 0
+                        //     ? Number(values.grossSalary) +
+                        //       Number(totalGross) -
+                        //       Number(totalDeduction)
+                        //     : Number(defGrossSalary) + Number(totalGross)
+                        // }
                         />
-                         <ErrorMessage name="netSalary" component="div" className="text-danger" />
+                        <ErrorMessage name="netSalary" component="div" className="text-danger" />
                         {/* Net Salary <input disabled="true" value={values.grossSalary > 0 ? (Number(values.grossSalary) + Number(totalGross)) - Number(totalDeduction) : Number(defGrossSalary) + Number(totalGross)} type="number" id="txtGrossPackage"></input> */}
                       </div>
                     </div>
@@ -1830,12 +1831,12 @@ useEffect(()=>{
                         onChange={(e) => {
                           setFieldValue("payment_mode_Id", e.value || null);
                           setDefualtPaymentModeCodeList(e);
-                          
-                             setFieldValue("emp_bankId",null);
-                             setFieldValue("emp_bank_branchId", null);
-                             setFieldValue("emp_bank_accNo", "");
-                             setDefaultBanks("")
-                       
+
+                          setFieldValue("emp_bankId", null);
+                          setFieldValue("emp_bank_branchId", null);
+                          setFieldValue("emp_bank_accNo", "");
+                          setDefaultBanks("")
+
                         }}
                         value={defPaymentModeList || null}
                         error={errors.payment_mode_Id}
@@ -1856,7 +1857,7 @@ useEffect(()=>{
                           setFieldValue("emp_bankId", e.value);
                           setFieldValue("emp_bank_branchId", null);
                           setDefaultEmpBankBranch(null);
-                        
+
                           setDefaultBanks(e);
                           // dispatch(fetchAllBanks(e.value));
                           fetchBranch(e.value);
@@ -1887,10 +1888,10 @@ useEffect(()=>{
                         }}
                         value={
                           !checkReadOnlyStatus(values, [151, 152])
-                            ?dashboard.allBankBranch?.find(
-                          (option) => option.value === values.emp_bank_branchId
-                        ) || null
-                    
+                            ? dashboard.allBankBranch?.find(
+                              (option) => option.value === values.emp_bank_branchId
+                            ) || null
+
                             : ""
                         }
                         error={errors.emp_bank_branchId}
@@ -1920,7 +1921,7 @@ useEffect(()=>{
                       />
                       {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                     </div>
-                 
+
                     {/* <div>
                       <Field
                         name="emp_bank_accountTitle"
@@ -2007,11 +2008,11 @@ useEffect(()=>{
                             autoComplete="off"
                             disabled={!values.gratuity_member || isUserForRead}
                             // value = {values.dateOfJoining}
-                             minDate={
-                                    dateOfJoining
-                                      ? new Date(dateOfJoining)
-                                      : null
-                                  }
+                            minDate={
+                              dateOfJoining
+                                ? new Date(dateOfJoining)
+                                : null
+                            }
                           />
                           <ErrorMessage
                             className="form-feedBack"
@@ -2137,8 +2138,210 @@ useEffect(()=>{
                     </div>
                     {localizationId == 1 && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
+                        <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
+                          Deduction
+                        </h6>
+                        <div className="space-y-1">
+                          <div
+                            style={{
+                              fontSize: "10.2px",
+                              // fontWeight: "bold",
+                              // padding: "2px",
+                            }}
+                            className="text-black mt-1 flex justify-start items-center"
+                          >
+                            <div className="flex justify-start items-center">
+                              <input
+                                type="checkbox"
+                                className="p-0 m-0 mr-1 "
+                                name="eobi_member"
+                                disabled={isUserForRead}
+                                onChange={(e) => {
+                                  setFieldValue("eobi_member", e.target.checked);
+                                }}
+                                onBlur={handleBlur}
+                                value={values.eobi_member}
+                                checked={values.eobi_member}
+                              />{" "}
+                              EOBI Member
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                            <div>
+                              {
+                                <label>
+                                  {" "}
+                                  Date Of Registration
+                                  {Boolean(values.eobi_member) && (
+                                    <span style={{ color: "red" }}>*</span>
+                                  )}{" "}
+                                </label>
+                              }
+
+                              <DatePicker
+                                className="form-control"
+                                placeholder="Enter EOBI Reg Date"
+                                selected={values.eobi_member && defEOBIDate}
+                                label="EOBI Reg Date"
+                                onChange={(date) => {
+                                  setFieldValue("eobi_reg_date", date);
+                                  setEOBIDate(date);
+                                }}
+                                timeInputLabel="Time:"
+                                dateFormat="dd-MMM-yyyy"
+                                // showTimeInput
+                                name="eobi_reg_date"
+                                autoComplete="off"
+                                disabled={!values.eobi_member || isUserForRead}
+
+                                minDate={
+                                  dateOfBirth
+                                    ? new Date(dateOfBirth)
+                                    : null
+                                }
+                              />
+                              <ErrorMessage
+                                className="form-feedBack"
+                                name="eobi_reg_date"
+                                component="div"
+                              />
+                            </div>
+                            <div>
+                              <Field
+                                name="eobi_accNo"
+                                type="number"
+                                component={Input}
+                                onInput={(e) => {
+                                  e.target.value = amountLimitDynamic(
+                                    e.target.value,
+                                    15
+                                  ); // Limit to 3 digits
+                                }}
+                                placeholder="Enter EOBI Account No"
+                                label={
+                                  <span>
+                                    {" "}
+                                    EOBI Account No
+                                    {Boolean(values.eobi_member) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}{" "}
+                                  </span>
+                                }
+                                autoComplete="off"
+                                disabled={!values.eobi_member || isUserForRead}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <div
+                            style={{
+                              fontSize: "10.2px",
+                              // fontWeight: "bold",
+                              // padding: "2px",
+                            }}
+                            className="text-black mt-1 flex justify-start items-center"
+                          >
+                            <div className="flex justify-start items-center">
+                              <input
+                                className="p-0 m-0 mr-1 "
+                                type="checkbox"
+                                disabled={isUserForRead}
+                                name="social_security_member"
+                                onChange={(e) => {
+                                  setFieldValue(
+                                    "social_security_member",
+                                    e.target.checked
+                                  );
+                                }}
+                                onBlur={handleBlur}
+                                value={values.social_security_member}
+                                checked={values.social_security_member}
+                              />{" "}
+                              Social Security Member
+                              {/* {values.social_security_member} */}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                            <div>
+                              <label>
+                                Date Of Registration
+                                {Boolean(values.eobi_member) && (
+                                  <span style={{ color: "red" }}>*</span>
+                                )}
+                              </label>
+                              <DatePicker
+                                className="form-control"
+                                placeholder="Enter Social Security Reg Date"
+                                selected={
+                                  values.social_security_member &&
+                                  defSocialSecurity
+                                }
+                                onChange={(date) => {
+                                  setFieldValue("social_security_reg_date", date);
+                                  setSocialSecurityDate(date);
+                                }}
+                                timeInputLabel="Time:"
+                                dateFormat="dd-MMM-yyyy"
+                                // showTimeInput
+                                name="social_security_reg_date"
+                                autoComplete="off"
+                                disabled={
+                                  !values.social_security_member || isUserForRead
+                                }
+                                minDate={
+                                  dateOfBirth
+                                    ? new Date(dateOfBirth)
+                                    : null
+                                }
+
+                              // value = {values.dateOfJoining}
+                              />
+                              <ErrorMessage
+                                className="form-feedBack"
+                                name="social_security_reg_date"
+                                component="div"
+                              />
+                            </div>
+                            <div>
+                              <Field
+                                onInput={(e) => {
+                                  e.target.value = amountLimitDynamic(
+                                    e.target.value,
+                                    15
+                                  ); // Limit to 3 digits
+                                }}
+                                name="social_security_accNo"
+                                component={Input}
+                                type="number"
+                                placeholder="Enter Social Security AccNo"
+                                label={
+                                  <span>
+                                    {" "}
+                                    Social Security Account No
+                                    {Boolean(values.social_security_member) && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
+                                  </span>
+                                }
+                                autoComplete="off"
+                                disabled={
+                                  !values.social_security_member || isUserForRead
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    )
+                    }
+
+
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1">
                       <h6 className="font-bold mb-0 sm:col-span-2 text-primary">
-                        Deduction
+                        Provident Fund
                       </h6>
                       <div className="space-y-1">
                         <div
@@ -2147,23 +2350,49 @@ useEffect(()=>{
                             // fontWeight: "bold",
                             // padding: "2px",
                           }}
-                          className="text-black mt-1 flex justify-start items-center"
+                          className="text-black mt-1 justify-start items-center grid md:grid-cols-2"
                         >
-                          <div className="flex justify-start items-center">
-                            <input
-                              type="checkbox"
-                              className="p-0 m-0 mr-1 "
-                              name="eobi_member"
-                              disabled={isUserForRead}
-                              onChange={(e) => {
-                                setFieldValue("eobi_member", e.target.checked);
-                              }}
-                              onBlur={handleBlur}
-                              value={values.eobi_member}
-                              checked={values.eobi_member}
-                            />{" "}
-                            EOBI Member
-                          </div>
+                      
+                            <div className="flex  items-center col-span-1">
+                              <input
+                                type="checkbox"
+                                className="p-0 m-0 mr-1 "
+                                name="pf_member"
+                                disabled={isUserForRead}
+                                onChange={(e) => {
+                                  setFieldValue("pf_member", e.target.checked);
+                                  setFieldValue("profit_member",0);
+                                    setFieldValue("pf_reg_date", null);
+                                    setFieldValue("pf_accNo", "");
+                                    setProvidentFundDate("");
+                                }}
+                                onBlur={handleBlur}
+                                value={values.pf_member}
+                                checked={values.pf_member}
+                              />{" "}
+                              PF Member
+
+                            </div>
+
+                            <div className="flex  items-center col-span-1">
+                              <input
+                                type="checkbox"
+                                className="p-0 m-0 mr-1 "
+                                name="profit_member"
+                                disabled={isUserForRead}
+                                onChange={(e) => {
+                                  setFieldValue("profit_member", e.target.checked);
+                                }}
+                                onBlur={handleBlur}
+                                value={values.profit_member}
+                                checked={values.profit_member}
+                              />{" "}
+                              Profit Member
+                            </div>
+
+                         
+
+
                         </div>
                         <div className="grid grid-cols-2 gap-x-3 gap-y-1">
                           <div>
@@ -2171,7 +2400,7 @@ useEffect(()=>{
                               <label>
                                 {" "}
                                 Date Of Registration
-                                {Boolean(values.eobi_member) && (
+                                {Boolean(values.pf_member) && (
                                   <span style={{ color: "red" }}>*</span>
                                 )}{" "}
                               </label>
@@ -2179,35 +2408,35 @@ useEffect(()=>{
 
                             <DatePicker
                               className="form-control"
-                              placeholder="Enter EOBI Reg Date"
-                              selected={values.eobi_member && defEOBIDate}
-                              label="EOBI Reg Date"
+                              placeholder="Enter Provident Fund Reg Date"
+                              selected={values.pf_member && defProvidenFund}
+                              label="PF Reg Date"
                               onChange={(date) => {
-                                setFieldValue("eobi_reg_date", date);
-                                setEOBIDate(date);
+                                setFieldValue("pf_reg_date", date);
+                                setProvidentFundDate(date);
                               }}
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
                               // showTimeInput
-                              name="eobi_reg_date"
+                              name="pf_reg_date"
                               autoComplete="off"
-                              disabled={!values.eobi_member || isUserForRead}
-                            
-                               minDate={
-                                    dateOfBirth
-                                      ? new Date(dateOfBirth)
-                                      : null
-                                  }
+                              disabled={!values.pf_member || isUserForRead}
+
+                              minDate={
+                                dateOfBirth
+                                  ? new Date(dateOfBirth)
+                                  : null
+                              }
                             />
                             <ErrorMessage
                               className="form-feedBack"
-                              name="eobi_reg_date"
+                              name="pf_reg_date"
                               component="div"
                             />
                           </div>
                           <div>
                             <Field
-                              name="eobi_accNo"
+                              name="pf_accNo"
                               type="number"
                               component={Input}
                               onInput={(e) => {
@@ -2216,127 +2445,26 @@ useEffect(()=>{
                                   15
                                 ); // Limit to 3 digits
                               }}
-                              placeholder="Enter EOBI Account No"
+                              placeholder="Enter PF Account No"
                               label={
                                 <span>
                                   {" "}
-                                  EOBI Account No
-                                  {Boolean(values.eobi_member) && (
+                                  PF Account No
+                                  {Boolean(values.pf_member) && (
                                     <span style={{ color: "red" }}>*</span>
                                   )}{" "}
                                 </span>
                               }
                               autoComplete="off"
-                              disabled={!values.eobi_member || isUserForRead}
+                              disabled={!values.pf_member || isUserForRead}
                             />
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-1">
-                        <div
-                          style={{
-                            fontSize: "10.2px",
-                            // fontWeight: "bold",
-                            // padding: "2px",
-                          }}
-                          className="text-black mt-1 flex justify-start items-center"
-                        >
-                          <div className="flex justify-start items-center">
-                            <input
-                              className="p-0 m-0 mr-1 "
-                              type="checkbox"
-                              disabled={isUserForRead}
-                              name="social_security_member"
-                              onChange={(e) => {
-                                setFieldValue(
-                                  "social_security_member",
-                                  e.target.checked
-                                );
-                              }}
-                              onBlur={handleBlur}
-                              value={values.social_security_member}
-                              checked={values.social_security_member}
-                            />{" "}
-                            Social Security Member
-                            {/* {values.social_security_member} */}
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-                          <div>
-                            <label>
-                              Date Of Registration
-                              {Boolean(values.eobi_member) && (
-                                <span style={{ color: "red" }}>*</span>
-                              )}
-                            </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="Enter Social Security Reg Date"
-                              selected={
-                                values.social_security_member &&
-                                defSocialSecurity
-                              }
-                              onChange={(date) => {
-                                setFieldValue("social_security_reg_date", date);
-                                setSocialSecurityDate(date);
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="social_security_reg_date"
-                              autoComplete="off"
-                              disabled={
-                                !values.social_security_member || isUserForRead
-                              }
-                               minDate={
-                                    dateOfBirth
-                                      ? new Date(dateOfBirth)
-                                      : null
-                                  }
-                            
-                              // value = {values.dateOfJoining}
-                            />
-                            <ErrorMessage
-                              className="form-feedBack"
-                              name="social_security_reg_date"
-                              component="div"
-                            />
-                          </div>
-                          <div>
-                            <Field
-                              onInput={(e) => {
-                                e.target.value = amountLimitDynamic(
-                                  e.target.value,
-                                  15
-                                ); // Limit to 3 digits
-                              }}
-                              name="social_security_accNo"
-                              component={Input}
-                              type="number"
-                              placeholder="Enter Social Security AccNo"
-                              label={
-                                <span>
-                                  {" "}
-                                  Social Security Account No
-                                  {Boolean(values.social_security_member) && (
-                                    <span style={{ color: "red" }}>*</span>
-                                  )}
-                                </span>
-                              }
-                              autoComplete="off"
-                              disabled={
-                                !values.social_security_member || isUserForRead
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                      
-                    )
-                    }
 
-                    
+                    </div>
+
+
                   </div>
                 </fieldset>
               </Form>
@@ -2378,17 +2506,18 @@ useEffect(()=>{
               {!isUserForRead && (
                 <button
                   type="submit"
-                  onClick={(e) =>    {
+                  onClick={(e) => {
                     // calculateEmployeeSalaryPolicy(e, setFieldValue, values) ;
-                    if( (
-      values.grossSalary > 0
-        ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
-        : Number(defGrossSalary) + Number(totalGross)
-    ) <= 0){
-      return toast.error("Net Salary must be greater than 0");
-    }
-                    
-                    handleSubmit()}}
+                    if ((
+                      values.grossSalary > 0
+                        ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
+                        : Number(defGrossSalary) + Number(totalGross)
+                    ) <= 0) {
+                      return toast.error("Net Salary must be greater than 0");
+                    }
+
+                    handleSubmit()
+                  }}
                   className="btn btn-primary btn-elevate"
                 >
                   Save

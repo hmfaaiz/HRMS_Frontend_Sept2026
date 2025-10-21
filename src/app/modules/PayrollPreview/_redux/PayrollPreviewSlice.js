@@ -6,6 +6,7 @@ const initialState = {
   previewPayslipPdfData: [],
   previewPayslipPdftotalCount: 0,
   payrollData: null,
+  allPayrollMonthYearList : []
 };
 
 export const callTypes = {
@@ -40,6 +41,11 @@ export const PayrollPreviewSlice = createSlice({
       const payrollData = action?.payload?.payrollData;
       state.error = null;
       state.payrollData = payrollData;
+    },
+    AllPayrollMonthFetched: (state, action) => {
+      const payrollData = action?.payload;
+      state.error = null;
+      state.allPayrollMonthYearList = payrollData;
     },
     previewPayslipPdfFetched: (state, action) => {
       const previewPayslipPdfData = action.payload.data?.data;

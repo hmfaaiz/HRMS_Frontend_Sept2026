@@ -73,3 +73,16 @@ export const getPayrollMonth = (employeeId) => (dispatch) => {
       });
   }
 };
+
+export const allPayrollMonths = () => (dispatch) => {
+    return requestFromServer
+      .fetchPayrollMonth()
+      .then((res) => {
+        const payrollData = res.data?.data;
+        dispatch(actions.AllPayrollMonthFetched(payrollData));
+      })
+      .catch((error) => {
+        dispatch(actions.AllPayrollMonthFetched([]));
+        error.clientMessage = "Can't Get Payroll Data";
+      });
+};

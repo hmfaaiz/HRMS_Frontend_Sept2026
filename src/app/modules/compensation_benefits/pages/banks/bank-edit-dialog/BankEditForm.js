@@ -1462,6 +1462,32 @@ export function BankEditForm({
                           />{" "}
                           Social Security Member
                         </div>
+
+
+                           <div className="flex justify-start items-center">
+                          <input
+                            className="p-0 m-0 mr-1 "
+                            name="pf_member"
+                            type="checkbox"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pf_member}
+                            checked={values.pf_member}
+                          />{" "}
+                          PF Member
+                        </div>
+                        {/* <div className="flex justify-start items-center">
+                          <input
+                            className="p-0 m-0 mr-1"
+                            type="checkbox"
+                            name="profit_member"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.profit_member}
+                            checked={values.profit_member}
+                          />{" "}
+                          Profit Member
+                        </div> */}
                       </div>
                     </div>
 )}

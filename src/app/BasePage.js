@@ -308,12 +308,34 @@ const GeneralEvaluationSetup = lazy(()=>
 const HrEvaluationSetup = lazy(()=>
  import("./modules/AppraisalHrEvaluationSetup/pages/index"))
 
+const AppraisalPublish = lazy(()=> import("./modules/Appraisal_Publishing/pages/index"))
 const RequisitionJobVacancy = lazy(()=>
  import("./modules/RequisitionJobVacancy/pages/index"))
 
 
 const HRRequisitionJobVacancy = lazy(()=>
  import("./modules/HRRequisitionJobVacancy/pages/index"))
+
+const AppraisalEvaluationManagement = lazy(()=>
+ import("./modules/Appraisal_Evaluation/pages/index")
+)
+const DesignationWiseGoalSetup = lazy(()=>
+ import("./modules/DesignationWiseGoalSetup/pages/index"))
+
+
+const EmployeeGoalSetup = lazy(()=>
+ import("./modules/EmployeeGoalSetup/pages/index"))
+
+const ContributionReport = lazy(()=>
+ import("./modules/ContributionRreport/pages/index"))
+
+const ReleasePayslip = lazy(()=>
+import("./modules/Release_Payslip/pages/index")
+)
+
+const DesignationDepMapforExitClearance = lazy(()=>
+import("./modules/Designation_Dep_Map_for_Exit_Clearance/pages/index")
+)
 
 const ROUTES = {
   settings: SettingsPage,
@@ -436,8 +458,15 @@ const ROUTES = {
   appraisal_configuration : AppraisalConfig,
   general_evaluation_setup:GeneralEvaluationSetup,
   hr_evaluation_setup:HrEvaluationSetup,
+  appraisal_publish : AppraisalPublish,
   requisition_job_vacancy:RequisitionJobVacancy,
   hr_requisition_job_vacancy:HRRequisitionJobVacancy,
+  appraisal_evaluation : AppraisalEvaluationManagement,
+  designation_wise_goal_setup:DesignationWiseGoalSetup,
+  employee_goal_setup:EmployeeGoalSetup,
+  contribution_report:ContributionReport,
+  release_payslip: ReleasePayslip,
+  designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
 };
 
 export default function BasePage() {
@@ -455,6 +484,7 @@ export default function BasePage() {
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();
+        
           const path = access
             .split(" ")
             .join("-")

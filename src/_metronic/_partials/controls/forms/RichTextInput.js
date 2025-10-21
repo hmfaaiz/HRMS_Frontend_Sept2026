@@ -9,7 +9,7 @@ export function RichTextInput({
   value,
   touched,
   errors,
-  name,
+  name,disabled,
 }) {
   return (
     <>
@@ -19,6 +19,7 @@ export function RichTextInput({
         value={value}
         style={{ backgroundColor: "white" }}
         onChange={onChange}
+        readOnly={disabled}
         modules={{
           toolbar: [
             [{ header: [1, 2, 3, 4, 5, 6, false] }],
