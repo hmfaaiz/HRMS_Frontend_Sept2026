@@ -137,6 +137,7 @@ import { ContributionReportSlice } from "../app/modules/ContributionRreport/_red
 
 import { releasePayslipSlice } from "../app/modules/Release_Payslip/_redux/redux-Slice";
 import { DesignationDepMapforExitClearanceSlice } from "../app/modules/Designation_Dep_Map_for_Exit_Clearance/_redux/redux-Slice";
+import { ExitClearanceSlice } from "../app/modules/Separate_Exit_Clearance/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -271,6 +272,7 @@ export const rootReducer = combineReducers({
   contribution_report : ContributionReportSlice.reducer,
   release_payslip : releasePayslipSlice.reducer,
   designation_dep_map_for_exit_clearance : DesignationDepMapforExitClearanceSlice.reducer,
+  exit_clearance : ExitClearanceSlice.reducer,
 });
 
 export function* rootSaga() {
