@@ -51,7 +51,7 @@ function EmployeeListTable({
                 <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                   <thead>
                     <tr className="custom-table-header">
-                      <td>Employee</td>
+                      <td className="w-80">Employee</td>
                       <td className="text-right">Action</td>
                     </tr>
                   </thead>
