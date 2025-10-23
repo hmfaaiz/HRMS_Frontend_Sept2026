@@ -119,6 +119,12 @@ const DesignationWorkflowEditForm = ({
     dispatch(fetchAllActiveEmployees());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (data?.subsidiaryId) {
+      dispatch(action.fetchWorkflowTypeRecord(data?.subsidiaryId));
+    }
+  }, [data?.subsidiaryId]);
+
   const allOption = { value: "all", label: "All" };
   const options = [allOption, ...dashboard?.allDesignations];
 
@@ -154,7 +160,7 @@ const DesignationWorkflowEditForm = ({
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-1">
                   <div className="col-span-1">
-                    {/* <SearchSelect
+                    <SearchSelect
                       isDisabled={isUserForRead}
                       name="subsidiaryId"
                       label={
@@ -166,6 +172,7 @@ const DesignationWorkflowEditForm = ({
                       }
                       onChange={({ value }) => {
                         setFieldValue("subsidiaryId", value);
+                        dispatch(action.fetchWorkflowTypeRecord(value));
                       }}
                       value={
                         dashboard?.allSubsidiaryList?.find(
@@ -175,8 +182,8 @@ const DesignationWorkflowEditForm = ({
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                       options={dashboard?.allSubsidiaryList}
-                    /> */}
-                    <SubsidiarySelect
+                    />
+                    {/* <SubsidiarySelect
                       isDisabled={isUserForRead}
                       name="subsidiaryId"
                       label={
@@ -197,7 +204,7 @@ const DesignationWorkflowEditForm = ({
                         setFieldValue("subsidiaryId", e?.value);
                         dispatch(action.fetchWorkflowTypeRecord(e?.value));
                       }}
-                    />
+                    /> */}
                   </div>
                   {/* designation workflow set  */}
                   <div className="col-span-1">
