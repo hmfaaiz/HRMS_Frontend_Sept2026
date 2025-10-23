@@ -90,6 +90,7 @@ const initialDashboardState = {
   appraisalPeriodBySubList:[],
   departmentBySubIdsList:[],
   appraisalPeriodList:[],
+  approvedResignedEmpList:[],
 };
 
 export const callTypes = {
@@ -367,6 +368,10 @@ export const dashboardSlice = createSlice({
     
       AllAppraisalPeriodBySubListFetch: (state, action) => {
       state.appraisalPeriodBySubList = action.payload;
+    }, 
+      
+    AllApprovedResignedEmpListFetch: (state, action) => {
+      state.approvedResignedEmpList = action.payload;
     }, 
 
   },

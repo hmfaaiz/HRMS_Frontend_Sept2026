@@ -337,6 +337,10 @@ const DesignationDepMapforExitClearance = lazy(()=>
 import("./modules/Designation_Dep_Map_for_Exit_Clearance/pages/index")
 )
 
+const ExitClearance = lazy(()=>
+import("./modules/Separate_Exit_Clearance/pages/index")
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -467,6 +471,7 @@ const ROUTES = {
   contribution_report:ContributionReport,
   release_payslip: ReleasePayslip,
   designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
+  exit_clearance: ExitClearance,
 };
 
 export default function BasePage() {
