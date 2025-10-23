@@ -92,7 +92,7 @@ export function FormTable() {
         minWidth: "10px",
       },
 
-    },    {
+    }, {
       dataField: "department",
       text: "department",
       sort: false,
@@ -102,7 +102,7 @@ export function FormTable() {
         minWidth: "10px",
       },
 
-    },    {
+    }, {
       dataField: "designation",
       text: "designation",
       sort: false,
@@ -112,8 +112,8 @@ export function FormTable() {
         minWidth: "10px",
       },
 
-    },  
-      {
+    },
+    {
       dataField: "dateOfJoining",
       text: "date Of Joining",
       sort: false,
@@ -124,6 +124,22 @@ export function FormTable() {
       },
 
     },
+
+    // {
+    //   dataField: "isApproved",
+    //   text: "Approved",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   formatter: (cell) => {
+    //     if (cell == 1)
+    //       return <span >Yes</span>;
+    //     if (cell == 0)
+    //       return <span >No</span>;
+    //     return <span >-</span>;
+    //   },
+
+    // },
 
 
     {
@@ -159,42 +175,42 @@ export function FormTable() {
   };
 
   return (
-    
 
-     <div className="w-full overflow-x-auto">
-   
-        {/* {({ paginationProps, paginationTableProps }) => {
+
+    <div className="w-full overflow-x-auto">
+
+      {/* {({ paginationProps, paginationTableProps }) => {
           return ( */}
-            {/* <Pagination
+      {/* <Pagination
               isLoading={listLoading}
               // paginationProps={paginationProps}
             > */}
-              <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={entities === null ? [] : entities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   entities,
+      <BootstrapTable
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={entities === null ? [] : entities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(
+          formUIProps.setQueryParams
+        )}
+      // selectRow={getSelectRow({
+      //   entities,
 
-                // })}
-                // {...paginationTableProps}
-              >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
-              </BootstrapTable>
-            {/* </Pagination> */}
-          {/* ); */}
-        {/* }} */}
-    
+      // })}
+      // {...paginationTableProps}
+      >
+        <PleaseWaitMessage entities={entities} />
+        <NoRecordsFoundMessage entities={entities} />
+      </BootstrapTable>
+      {/* </Pagination> */}
+      {/* ); */}
+      {/* }} */}
+
     </div>
   );
 }

@@ -90,6 +90,7 @@ export function FormEditDialog({ show,Id, onHide, dataForRead }) {
 
       const formUpdatedFields = {
         employeeId: data?.employeeId,
+        isApproved: data?.isApproved,
 
         list:data?.list,
       };

@@ -10,7 +10,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import PatternListForm from "./PatternListForm";
-import { fetchAllAppraisalPeriod } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllAppraisalPeriod, fetchAllApprovedResignedEmp } from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchDesignationWiseGoalSetupByEmp } from "../../../_redux/redux-Actions";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { Eye, XCircle } from "lucide-react";
@@ -70,14 +70,13 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
-  const [appraisalPeriod, setAppraisalPeriod] = useState()
+  const [clearanceDate, setClearanceDate] = useState()
 
   useEffect(() => {
 
-    // dispatch(fetchAllFormsMenu(158, "allEmployeesWithNoPermissionList"));
-    dispatch(
-      fetchAllEmployeesWithNoPermissionData(
-        "allEmployeesWithNoPermissionList"
+      dispatch(
+      fetchAllApprovedResignedEmp(
+        "approvedResignedEmpList"
       )
     );
 
@@ -88,7 +87,16 @@ export function FormEditForm({
 
 
 
+  useEffect(() => {
+    if (data?.employeeId && dashboard?.approvedResignedEmpList?.length > 0) {
+      const selected = dashboard.approvedResignedEmpList.find(
+        (option) => Number(option?.value) === Number(data?.employeeId)
+      );
 
+      setClearanceDate(selected || null);
+      console.log("setting111 fixed", selected);
+    }
+  }, [dashboard?.approvedResignedEmpList]);
 
 
   const { currentState } = useSelector(
@@ -105,7 +113,7 @@ export function FormEditForm({
   const { entities } = currentState;
 
 
-
+console.log('data.Id1111111,',data.dataIsExist)
   return (
     <Formik
       enableReinitialize={true}
@@ -121,7 +129,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
         <>
-     
+
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -144,21 +152,21 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("employeeId", e.value || null);
                         setFieldValue("list", []);
-                         if (e.value) {
-                                                  dispatch(
-                                                    fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value,designationId: e.designationId })
-                                                  );
-                                                }
+                        if (e.value) {
+                          dispatch(
+                            fetchDesignationWiseGoalSetupByEmp({ employeeId: e.value, designationId: e.designationId })
+                          );
+                        }
 
 
 
                       }}
                       value={
-                        dashboard?.allEmployeesWithNoPermissionList?.find(
+                        dashboard?.approvedResignedEmpList?.find(
                           (option) => option?.value == values?.employeeId
                         ) || null
                       }
-                      options={dashboard?.allEmployeesWithNoPermissionList}
+                      options={dashboard?.approvedResignedEmpList}
 
 
                       error={errors.employeeId}
@@ -218,7 +226,7 @@ export function FormEditForm({
                     touched={touched}
 
                     isdataForRead={isdataForRead}
-                    appraisalPeriod={appraisalPeriod}
+                    clearanceDate={clearanceDate}
                   />
                 </div>
               </fieldset>
@@ -261,19 +269,27 @@ export function FormEditForm({
                 className="btn btn-primary btn-elevate"
                 disabled={!values?.list?.length}
               >
-                Save
+                Save {data.Id}
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
-            )} 
-             {!isdataForRead && (
+            )}
+         {(!isdataForRead && data?.dataIsExist) && (
               <button
                 type="submit"
                 // onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
-                disabled={true}
-              >
+                disabled={isdataForRead || values.list?.some(item => item?.isClearanceProvided == 0)}
+               onClick={() =>{
+                setFieldValue("isApproved",1)
+                 handleSubmit()
+                
+                }
+                
+                
+                }
+             >
                 Approve
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>

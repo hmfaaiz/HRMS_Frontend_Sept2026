@@ -183,4 +183,8 @@ export const getAllDepartmentBySubsidiaryIds = async (body) => {
 };
 export const getAllAppraisalPeriod = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-appraisal-period`,body);
+
+
+};export const getAllApprovedResignedEmp = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-approved-resigned-employee`,body);
 };

@@ -29,6 +29,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   }, []);
   const initUser = {
     employeeId: "",
+    isApproved:0,
  
 list:[],
   };

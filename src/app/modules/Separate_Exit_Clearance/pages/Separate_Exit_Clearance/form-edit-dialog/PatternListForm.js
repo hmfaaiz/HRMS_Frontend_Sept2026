@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { formatDates } from "../../../../../utils/common";
 import { CirclePlus, Trash2 } from "lucide-react";
-import { fetchAllDept, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchAllDept, fetchAllEmployeesWithNoPermissionData, fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { useDispatch, useSelector } from "react-redux";
 
 import DatePicker from "react-datepicker";
@@ -12,7 +12,7 @@ function PatternListForm({
   setFieldValue,
   errors,
   touched,
-  isdataForRead, appraisalPeriod,
+  isdataForRead, clearanceDate,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -34,6 +34,20 @@ function PatternListForm({
     { value: 0, label: 'No' },
     { value: 2, label: 'Not Required' },
   ]
+
+
+  useEffect(() => {
+
+    dispatch(
+      fetchAllEmployeesWithNoPermissionData(
+        "allEmployeesWithNoPermissionList"
+      )
+    );
+
+
+
+
+  }, [dispatch, values?.employeeId]);
 
   return (
     <>
@@ -100,7 +114,7 @@ function PatternListForm({
                             )}
                         </td>
 
-                        <td>
+                        {/* <td>
                           <SearchSelect
                             name={`list[${index}].departmentId`}
                             className={
@@ -119,6 +133,52 @@ function PatternListForm({
                               // if SearchSelect returns the full object { value, label }
                               const value = selectedOption ? selectedOption.value : "";
                               setFieldValue(`list[${index}].departmentId`, value);
+                              setFieldValue(`list[${index}].approverEmployeeId`, "");
+                              setFieldValue(`list[${index}].designationId`, "");
+
+                            }}
+                            placeholder="Select Department"
+                          />
+
+                       
+                          {errors?.list?.[index]?.departmentId && touched?.list?.[index]?.departmentId && (
+                            <div className="invalid-feedback">
+                              {errors.list[index].departmentId}
+                            </div>
+                          )}
+                        </td> */}
+
+
+                        <td>
+                          <SearchSelect
+                            name={`list[${index}].departmentId`}
+                            className={
+                              errors.list?.[index]?.departmentId && touched.list?.[index]?.departmentId
+                                ? "form-control is-invalid"
+                                : "form-control"
+                            }
+                            isDisabled={isdataForRead}
+                            options={
+                              (dashboard?.allDept || []).filter((dept) => {
+                                // already selected departments (excluding current row)
+                                const selectedDepts = values.list
+                                  ?.filter((_, i) => i !== index)
+                                  ?.map((item) => item.departmentId)
+                                  ?.filter(Boolean);
+
+                                return !selectedDepts.includes(dept.value);
+                              })
+                            }
+                            value={
+                              dashboard?.allDept?.find(
+                                (option) => option?.value === values?.list?.[index]?.departmentId
+                              ) || null
+                            }
+                            onChange={(selectedOption) => {
+                              const value = selectedOption ? selectedOption.value : "";
+                              setFieldValue(`list[${index}].departmentId`, value);
+                              setFieldValue(`list[${index}].approverEmployeeId`, "");
+                              setFieldValue(`list[${index}].designationId`, "");
 
                             }}
                             placeholder="Select Department"
@@ -131,6 +191,7 @@ function PatternListForm({
                             </div>
                           )}
                         </td>
+
 
                         <td>
                           <SearchSelect
@@ -246,7 +307,7 @@ function PatternListForm({
                           <DatePicker
                             className="form-control"
                             placeholderText="Select Date"
-                            disabled={isdataForRead || values.list?.[index]?.isClearanceProvided!=1}
+                            disabled={isdataForRead || values.list?.[index]?.isClearanceProvided != 1}
                             selected={
                               values?.list?.[index]?.clearanceDate
                                 ? new Date(values.list[index].clearanceDate)
@@ -261,10 +322,10 @@ function PatternListForm({
                             autoComplete="off"
                             showPopperArrow={false}
 
-                            minDate={new Date()
-                              // appraisalPeriod?.startDate
-                              // ? new Date(appraisalPeriod?.startDate)
-                              // : new Date()
+                            minDate={
+                              clearanceDate?.resignationDate
+                                ? new Date(clearanceDate?.resignationDate)
+                                : new Date()
                             }
                           // maxDate={
                           //   appraisalPeriod?.endDate
@@ -279,18 +340,22 @@ function PatternListForm({
                           )}
                         </td>
 
-                        <td className="text-right">
-                          <button
-                            disabled={isdataForRead}
-                            className="border-none bg-transparent"
-                            type="button"
-                            onClick={() => {
-                              remove(index);
-                            }}
-                          >
-                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                          </button>
-                        </td>
+                        {
+                          !values.list?.[index]?.isFromDesignationMap && (
+                            <td className="text-right">
+                              <button
+                                disabled={isdataForRead}
+                                className="border-none bg-transparent"
+                                type="button"
+                                onClick={() => remove(index)}
+                              >
+                                <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                              </button>
+                            </td>
+                          )
+                        }
+
+
                         {/* )} */}
 
                       </tr>
