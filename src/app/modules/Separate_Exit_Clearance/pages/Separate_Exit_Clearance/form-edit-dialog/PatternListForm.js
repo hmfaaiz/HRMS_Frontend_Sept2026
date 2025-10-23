@@ -157,7 +157,7 @@ function PatternListForm({
                                 ? "form-control is-invalid"
                                 : "form-control"
                             }
-                            isDisabled={isdataForRead}
+                            isDisabled={isdataForRead || values.list?.[index]?.isFromDesignationMap}
                             options={
                               (dashboard?.allDept || []).filter((dept) => {
                                 // already selected departments (excluding current row)
@@ -261,7 +261,7 @@ function PatternListForm({
                               const value = selectedOption ? selectedOption.value : "";
                               setFieldValue(`list[${index}].designationId`, value);
                             }}
-                            placeholder="Select Department"
+                            placeholder="Select designation"
                           />
 
                           {/* Error message */}
@@ -280,9 +280,16 @@ function PatternListForm({
                                 ? "form-control is-invalid"
                                 : "form-control"
                             }
-                            disabled={isdataForRead || !values.list?.[index]?.departmentId}
-                            options={clearanceProvidedOptions || []}
+                            isDisabled={isdataForRead || !values.list?.[index]?.departmentId}
+                            options={
+                              clearanceProvidedOptions?.map(opt =>
+                                !values.list?.[index]?.isFromDesignationMap && opt.value === 2
+                                  ? { ...opt, isDisabled: true } // ya disabled: true (depend karta hai component pe)
+                                  : opt
+                              )
+                            }
                             value={
+
                               clearanceProvidedOptions?.find(
                                 (option) => option?.value === values?.list?.[index]?.isClearanceProvided
                               ) || null
@@ -291,6 +298,7 @@ function PatternListForm({
                               // if SearchSelect returns the full object { value, label }
                               const value = selectedOption ? selectedOption.value : "";
                               setFieldValue(`list[${index}].isClearanceProvided`, value);
+                              setFieldValue(`list[${index}].clearanceDate`, "");
                             }}
                             placeholder="Select Department"
                           />

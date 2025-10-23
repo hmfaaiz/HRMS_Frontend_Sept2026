@@ -125,21 +125,21 @@ export function FormTable() {
 
     },
 
-    // {
-    //   dataField: "isApproved",
-    //   text: "Approved",
-    //   sort: false,
-    //   sortCaret: sortCaret,
-    //   headerSortingClasses,
-    //   formatter: (cell) => {
-    //     if (cell == 1)
-    //       return <span >Yes</span>;
-    //     if (cell == 0)
-    //       return <span >No</span>;
-    //     return <span >-</span>;
-    //   },
+    {
+      dataField: "isApproved",
+      text: "Approved",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      formatter: (cell) => {
+        if (cell == 1)
+          return <span >Yes</span>;
+        if (cell == 0)
+          return <span >No</span>;
+        return <span >-</span>;
+      },
 
-    // },
+    },
 
 
     {
