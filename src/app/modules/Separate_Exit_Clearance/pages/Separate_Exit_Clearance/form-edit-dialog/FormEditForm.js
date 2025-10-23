@@ -74,7 +74,7 @@ export function FormEditForm({
 
   useEffect(() => {
 
-      dispatch(
+    dispatch(
       fetchAllApprovedResignedEmp(
         "approvedResignedEmpList"
       )
@@ -113,7 +113,7 @@ export function FormEditForm({
   const { entities } = currentState;
 
 
-console.log('data.Id1111111,',data.dataIsExist)
+  console.log('entities1111,', entities)
   return (
     <Formik
       enableReinitialize={true}
@@ -166,7 +166,13 @@ console.log('data.Id1111111,',data.dataIsExist)
                           (option) => option?.value == values?.employeeId
                         ) || null
                       }
-                      options={dashboard?.approvedResignedEmpList}
+                      // options={dashboard?.approvedResignedEmpList}
+                      options={
+                        dashboard?.approvedResignedEmpList?.map((opt) => ({
+                          ...opt,
+                          isDisabled: entities?.some((ent) => ent.employeeId === opt.value),
+                        })) || []
+                      }
 
 
                       error={errors.employeeId}
@@ -275,22 +281,22 @@ console.log('data.Id1111111,',data.dataIsExist)
                 )}
               </button>
             )}
-         {(!isdataForRead && data?.dataIsExist) && (
+            {(!isdataForRead && data?.dataIsExist) && (
               <button
                 type="submit"
                 // onClick={() => handleSubmit()}
                 className="btn btn-primary btn-elevate"
                 disabled={isdataForRead || values.list?.some(item => item?.isClearanceProvided == 0)}
-               onClick={() =>{
-                setFieldValue("isApproved",1)
-                 handleSubmit()
-                
+                onClick={() => {
+                  setFieldValue("isApproved", 1)
+                  handleSubmit()
+
                 }
-                
-                
+
+
                 }
-             >
-                Approve
+              >
+               Finalize
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
