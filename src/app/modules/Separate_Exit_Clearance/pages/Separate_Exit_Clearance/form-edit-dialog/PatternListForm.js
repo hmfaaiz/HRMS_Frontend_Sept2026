@@ -261,7 +261,7 @@ function PatternListForm({
                               const value = selectedOption ? selectedOption.value : "";
                               setFieldValue(`list[${index}].designationId`, value);
                             }}
-                            placeholder="Select Department"
+                            placeholder="Select designation"
                           />
 
                           {/* Error message */}
