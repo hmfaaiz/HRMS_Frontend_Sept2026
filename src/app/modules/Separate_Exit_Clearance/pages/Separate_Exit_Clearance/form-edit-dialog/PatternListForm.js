@@ -185,7 +185,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.departmentId && touched?.list?.[index]?.departmentId && (
+                          {errors?.list?.[index]?.departmentId && (
                             <div className="invalid-feedback">
                               {errors.list[index].departmentId}
                             </div>
@@ -234,7 +234,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.approverEmployeeId && touched?.list?.[index]?.approverEmployeeId && (
+                          {errors?.list?.[index]?.approverEmployeeId  && (
                             <div className="invalid-feedback">
                               {errors.list[index].approverEmployeeId}
                             </div>
@@ -265,7 +265,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.designationId && touched?.list?.[index]?.designationId && (
+                          {errors?.list?.[index]?.designationId  && (
                             <div className="invalid-feedback">
                               {errors.list[index].designationId}
                             </div>
@@ -304,7 +304,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.isClearanceProvided && touched?.list?.[index]?.isClearanceProvided && (
+                          {errors?.list?.[index]?.isClearanceProvided  && (
                             <div className="invalid-feedback">
                               {errors.list[index].isClearanceProvided}
                             </div>
