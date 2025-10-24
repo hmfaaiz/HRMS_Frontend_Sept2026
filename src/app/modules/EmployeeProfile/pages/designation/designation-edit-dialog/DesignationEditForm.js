@@ -895,9 +895,14 @@ export function DesignationEditForm({
   }, [user?.gradeId, dashboard.gradeId]);
 
   useEffect(() => {
-    if (user?.gradeId) {
-      dispatch(fetchAllDesignationByGradeId(user?.gradeId, "allDesignationByGrade"))
+    const fetchDesignationBaseOnGrade = async () => {
+      if (user?.gradeId) {
+        let res = await dispatch(fetchAllDesignationByGradeId(user?.gradeId, "allDesignationByGrade"))
+        let setDesig = res?.find((el)=> el?.value == user?.designationId)
+        setDefualtEmpDesignation(setDesig)
+      }
     }
+    fetchDesignationBaseOnGrade()
   }, [user?.gradeId])
   // This method is used for when edit record and get selected dept where id save in DB
   useEffect(() => {
