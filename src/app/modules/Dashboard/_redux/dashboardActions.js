@@ -524,3 +524,15 @@ export const fetchAllAppraisalPeriodDataBySubsidiaryId = (subsidiaryId) => async
     });
 };
 
+export const fetchAllApprovedResignedEmp= () => async (dispatch) => {
+  return await requestFromServer
+    .getAllApprovedResignedEmp({})
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllApprovedResignedEmpListFetch(entities));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
+

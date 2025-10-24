@@ -324,7 +324,10 @@ const DesignationWiseGoalSetup = lazy(()=>
 
 
 const EmployeeGoalSetup = lazy(()=>
- import("./modules//EmployeeGoalSetup/pages/index"))
+ import("./modules/EmployeeGoalSetup/pages/index"))
+
+const ContributionReport = lazy(()=>
+ import("./modules/ContributionRreport/pages/index"))
 
 const ReleasePayslip = lazy(()=>
 import("./modules/Release_Payslip/pages/index")
@@ -338,6 +341,13 @@ import("./modules/ResignationApproval/page/index"))
 
 const ResignationWorkflowStatus = lazy(()=>
 import("./modules/ResignationWorkflowStatus/page/index"))
+const DesignationDepMapforExitClearance = lazy(()=>
+import("./modules/Designation_Dep_Map_for_Exit_Clearance/pages/index")
+)
+
+const ExitClearance = lazy(()=>
+import("./modules/Separate_Exit_Clearance/pages/index")
+)
 
 const ROUTES = {
   settings: SettingsPage,
@@ -466,11 +476,14 @@ const ROUTES = {
   appraisal_evaluation : AppraisalEvaluationManagement,
   designation_wise_goal_setup:DesignationWiseGoalSetup,
   employee_goal_setup:EmployeeGoalSetup,
+  contribution_report:ContributionReport,
   release_payslip: ReleasePayslip,
   employee_resignation : ResignationRequest,
   resignation_approval : ResignationApproval,
   resignation_workflow_status : ResignationWorkflowStatus,
 
+  designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
+  exit_clearance: ExitClearance,
 };
 
 export default function BasePage() {
@@ -488,6 +501,7 @@ export default function BasePage() {
         {/* <Route path='vehicles/read-all-vehicles' component={VehicleManagment} /> */}
         {Object.keys(UserAccess).map((access, key) => {
           const accessName = access.replace(/ /g, "").toLowerCase();
+        
           const path = access
             .split(" ")
             .join("-")

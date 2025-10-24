@@ -1,0 +1,100 @@
+import React from "react";
+import { useDispatch } from "react-redux";
+import { Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FormUIProvider } from "./FormUIContext";
+import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
+import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
+
+import { FormCard } from "./form-card/FormCard";
+import {} from "../../_redux/redux-Actions";
+
+
+
+export function FormPage({ history }) {
+
+console.log("page1111")
+  const dispatch = useDispatch();
+  const FormUIEvents = {
+    newFormButtonClick: () => {
+      history.push("/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/new");
+    },
+    openEditFormDialog: (id) => {
+      history.push(`/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/${id}/edit`);
+    },
+    openDeleteFormDialog: (id, status) => {
+      history.push(`/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/${id}/${status}/delete`);
+    },
+    openActiveFormDialog: (id) => {
+      history.push(`/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/${id}/active`);
+    },
+    openReadFormDialog: (id, isUserRead) => {
+      history.push(`/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/${id}/read`);
+    },
+  };
+  return (
+
+    
+    <FormUIProvider FormUIEvents={FormUIEvents}>
+      <Route exact path="/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/new">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            onHide={() => {
+              history.push("/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance");
+            }}
+          />
+        )}
+      </Route>
+      <Route path="/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/:id/edit">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            id={match && match.params.id}
+            onHide={() => {
+              history.push("/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance");
+            }}
+          />
+        )}
+      </Route>
+      <Route path="/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/:id/read">
+        {({ history, match }) => (
+          <FormEditDialog
+            show={match != null}
+            id={match && match.params.id}
+            dataForRead={true}
+            onHide={() => {
+              history.push("/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance");
+            }}
+          />
+        )}
+      </Route>
+      <Route path="/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance/:id/:status/delete">
+        {({ history, match }) => (
+          <FormDeleteDialog
+            show={match != null}
+            id={match && match.params.id}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/designation_dep_map_for_exit_clearance/read-all-designation-dep-map-for-exit-clearance");
+            }}
+          />
+        )}
+      </Route>
+    
+      <FormCard />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </FormUIProvider>
+  );
+}

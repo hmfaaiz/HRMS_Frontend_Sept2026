@@ -38,4 +38,8 @@ export const initialFilter = {
     pageSize: 5,
     pageNumber: 1,
     isActive:true,
+    subsidiaryId:"",
+    departmentId:"",
+    employeeTypeId:"",
+    designationId:"",
 }
