@@ -272,17 +272,22 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("departmentId", value);
                           }}
                           label={<span> Department</span>}
+                          // value={
+                          //   allDeptMap?.get(values?.departmentId || "") || ""
+                          // }
                           value={
-                            allDeptMap?.get(values?.departmentId || "") || ""
+                            values.departmentId === ""
+                              ? { label: "All", value: "" }
+                              : allDeptMap?.get(values.departmentId) || ""
                           }
                           autoComplete="off"
                           // options={allDept}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDept) ? allDept : []),
                           ]}
                         />
@@ -297,17 +302,22 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("reportTo", value);
                           }}
                           label={<span> Report To</span>}
+                          // value={
+                          //   allEmployeesMap?.get(values?.reportTo || "") || ""
+                          // }
                           value={
-                            allEmployeesMap?.get(values?.reportTo || "") || ""
+                            values.reportTo === ""
+                              ? { label: "All", value: "" }
+                              : allEmployeesMap?.get(values.reportTo) || ""
                           }
                           autoComplete="off"
                           // options={allEmployees}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployees) ? allEmployees : []),
                           ]}
                         />
@@ -322,15 +332,20 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("gradeId", value);
                           }}
                           label={<span> Grade</span>}
-                          value={allGradeMap?.get(values?.gradeId || "") || ""}
+                          // value={allGradeMap?.get(values?.gradeId || "") || ""}
+                          value={
+                            values.gradeId === ""
+                              ? { label: "All", value: "" }
+                              : allGradeMap?.get(values.gradeId) || ""
+                          }
                           autoComplete="off"
                           // options={allEmployeeGradeList}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployeeGradeList)
                               ? allEmployeeGradeList
                               : []),
@@ -347,19 +362,24 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("designationId", value);
                           }}
                           label={<span> Designation</span>}
+                          // value={
+                          //   allDesignationsMap?.get(
+                          //     values?.designationId || ""
+                          //   ) || ""
+                          // }
                           value={
-                            allDesignationsMap?.get(
-                              values?.designationId || ""
-                            ) || ""
+                            values.designationId === ""
+                              ? { label: "All", value: "" }
+                              : allDesignationsMap?.get(values.designationId) || ""
                           }
                           autoComplete="off"
                           // options={allDesignations}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDesignations)
                               ? allDesignations
                               : []),
@@ -376,17 +396,22 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("locationId", value);
                           }}
                           label={<span> Location</span>}
+                          // value={
+                          //   allLocationMap?.get(values?.locationId || "") || ""
+                          // }
                           value={
-                            allLocationMap?.get(values?.locationId || "") || ""
+                            values.locationId === ""
+                              ? { label: "All", value: "" }
+                              : allLocationMap?.get(values.locationId) || ""
                           }
                           autoComplete="off"
                           // options={allLocationChildMenus}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allLocationChildMenus)
                               ? allLocationChildMenus
                               : []),
@@ -422,17 +447,23 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("employeeId", value);
                           }}
                           label={<span> Employee</span>}
+                          // value={
+                          //   allEmployeesMap?.get(values?.employeeId || "") || ""
+                          // }
+
                           value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
+                            values.employeeId === ""
+                              ? { label: "All", value: "" }
+                              : allEmployeesMap?.get(values.employeeId) || ""
                           }
                           autoComplete="off"
                           // options={allEmployees}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployees) ? allEmployees : []),
                           ]}
                         />

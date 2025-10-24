@@ -251,7 +251,7 @@ export function DashboardSummaryHeader() {
                                 {/* <div><Calendar className="w-3 h-3" /></div> */}
                                 {/* <label> <MoveRight className="w-4 h-4" /> </label> */}
                                 <label className="text-gray-500">Posted:</label>
-                                <label  className="text-gray-500">{job.postedDate} | </label>
+                                <label className="text-gray-500">{job.postedDate} | </label>
 
                             </div>
 
@@ -261,7 +261,7 @@ export function DashboardSummaryHeader() {
                                 {/* <div><Calendar className="w-3 h-3 " /></div> */}
 
                                 <label className="text-gray-500">Expiry:</label>
-                                <label  className="text-gray-500">{job.expiryDate} | </label>
+                                <label className="text-gray-500">{job.expiryDate} | </label>
 
                             </div>
 
@@ -272,6 +272,14 @@ export function DashboardSummaryHeader() {
 
                                 <label className="text-gray-500">Salary:</label>
                                 <label className="text-gray-500">{job.salaryRange} | </label>
+
+                            </div>
+                            <div className="flex gap-x-1 items-center ">
+
+                                {/* <div><Banknote className="w-4 h-4 " /></div> */}
+
+                                <label className="text-gray-500"> No.of Positions:</label>
+                                <label className="text-gray-500">{job.noOfPosition} | </label>
 
                             </div>
 

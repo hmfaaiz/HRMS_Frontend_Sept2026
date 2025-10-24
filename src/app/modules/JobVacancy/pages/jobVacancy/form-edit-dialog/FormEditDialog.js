@@ -107,7 +107,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead,status }) {
         countryId: formData.countryId,
         cityId: formData.cityId,
         employeeTypeId: formData.employeeTypeId,
-        employeeStatusId: formData.employeeStatusId,
+
         departmentId: formData.departmentId,
         reportToDesignationId: formData.reportToDesignationId,
         relationshipWithReportTo: formData.relationshipWithReportTo,
