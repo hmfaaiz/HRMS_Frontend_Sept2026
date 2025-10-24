@@ -122,7 +122,7 @@ import { AttendanceWorkflowAdminSlice } from "../app/modules/AttendanceWorkflowA
 import { LoanWorkflowAdminSlice } from "../app/modules/LoanWorkflowAdmin/redux/formSlice";
 import { ChartOfAccountSlice } from "../app/modules/ChartOfAccounts/_redux/formdetailsSlice";
 import { AuditTrailReportSlice } from "../app/modules/Audit_Trail_Report/_redux/AuditTrailReportSlice";
-import { appraisalRatingSlice } from "../app/modules/Appraisal_Rating/_redux/redux-Slice"; 
+import { appraisalRatingSlice } from "../app/modules/Appraisal_Rating/_redux/redux-Slice";
 import { AppraisalPeriodsSetupSlice } from "../app/modules/AppraisalPeriodSetup/_redux/redux-Slice";
 import { appraisalConfigSlice } from "../app/modules/Appraisal_Configuration/_redux/redux-Slice";
 import { GeneralEvaluationSetupSlice } from "../app/modules/AppraisalGeneralEvaluationSetup/_redux/redux-Slice";
@@ -134,6 +134,9 @@ import { appraisalEvaluationSlice } from "../app/modules/Appraisal_Evaluation/_r
 import { DesignationWiseGoalSetupSlice } from "../app/modules/DesignationWiseGoalSetup/_redux/redux-Slice";
 import { EmployeeGoalSetupSlice } from "../app/modules/EmployeeGoalSetup/_redux/redux-Slice";
 import { releasePayslipSlice } from "../app/modules/Release_Payslip/_redux/redux-Slice";
+import { ResignationRequestSlice } from "../app/modules/Resignation_Request/_redux/redux-Slice";
+import { ResignationApprovalSlice } from "../app/modules/ResignationApproval/redux/formSlice";
+import { ResignationWorkflowStatusSlice } from "../app/modules/ResignationWorkflowStatus/redux/formSlice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -252,20 +255,23 @@ export const rootReducer = combineReducers({
   LeaveWorkflowAdmin: LeaveWorkflowAdminSlice.reducer,
   attendance_workflow_admin: AttendanceWorkflowAdminSlice.reducer,
   loan_workflow_admin: LoanWorkflowAdminSlice.reducer,
-  chart_of_accounts : ChartOfAccountSlice.reducer,
-  audit_trail : AuditTrailReportSlice.reducer,
-  appraisal_rating : appraisalRatingSlice.reducer,
-  appraisal_period_setup : AppraisalPeriodsSetupSlice.reducer,
-  appraisal_config : appraisalConfigSlice.reducer,
-  general_evaluation_setup : GeneralEvaluationSetupSlice.reducer,
-  hr_evaluation_setup : HrEvaluationSetupSlice.reducer,
-  appraisal_publish : appraisalPublishSlice.reducer,
-  requisition_job_vacancy : RequisitionJobVacancySlice.reducer,
-  hr_requisition_job_vacancy : HRRequisitionJobVacancySlice.reducer,
-  appraisal_evaluation : appraisalEvaluationSlice.reducer,
-  designation_wise_goal_setup : DesignationWiseGoalSetupSlice.reducer,
-  employee_goal_setup : EmployeeGoalSetupSlice.reducer,
-  release_payslip : releasePayslipSlice.reducer,
+  chart_of_accounts: ChartOfAccountSlice.reducer,
+  audit_trail: AuditTrailReportSlice.reducer,
+  appraisal_rating: appraisalRatingSlice.reducer,
+  appraisal_period_setup: AppraisalPeriodsSetupSlice.reducer,
+  appraisal_config: appraisalConfigSlice.reducer,
+  general_evaluation_setup: GeneralEvaluationSetupSlice.reducer,
+  hr_evaluation_setup: HrEvaluationSetupSlice.reducer,
+  appraisal_publish: appraisalPublishSlice.reducer,
+  requisition_job_vacancy: RequisitionJobVacancySlice.reducer,
+  hr_requisition_job_vacancy: HRRequisitionJobVacancySlice.reducer,
+  appraisal_evaluation: appraisalEvaluationSlice.reducer,
+  designation_wise_goal_setup: DesignationWiseGoalSetupSlice.reducer,
+  employee_goal_setup: EmployeeGoalSetupSlice.reducer,
+  release_payslip: releasePayslipSlice.reducer,
+  resignation_request: ResignationRequestSlice.reducer,
+  resignation_approval: ResignationApprovalSlice.reducer,
+  ResignationWorkflowStatus : ResignationWorkflowStatusSlice.reducer,
 });
 
 export function* rootSaga() {

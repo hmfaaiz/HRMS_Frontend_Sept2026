@@ -330,6 +330,15 @@ const ReleasePayslip = lazy(()=>
 import("./modules/Release_Payslip/pages/index")
 )
 
+const ResignationRequest = lazy(()=>
+import("./modules/Resignation_Request/pages/index")) 
+
+const ResignationApproval = lazy(()=>
+import("./modules/ResignationApproval/page/index"))
+
+const ResignationWorkflowStatus = lazy(()=>
+import("./modules/ResignationWorkflowStatus/page/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -458,6 +467,10 @@ const ROUTES = {
   designation_wise_goal_setup:DesignationWiseGoalSetup,
   employee_goal_setup:EmployeeGoalSetup,
   release_payslip: ReleasePayslip,
+  employee_resignation : ResignationRequest,
+  resignation_approval : ResignationApproval,
+  resignation_workflow_status : ResignationWorkflowStatus,
+
 };
 
 export default function BasePage() {

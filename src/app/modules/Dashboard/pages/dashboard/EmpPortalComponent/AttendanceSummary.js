@@ -85,7 +85,7 @@ export const AttendanceSummary = ({ attendanceSummary }) => {
               </label>
             )}
           </p>
-          <p className="m-0 underline">
+          {/* <p className="m-0 underline">
             {isHolidayCalendar ? (
               <Link to="/holiday_calendar/my-holiday-calendar">
                 Holiday Calendar
@@ -95,7 +95,7 @@ export const AttendanceSummary = ({ attendanceSummary }) => {
                 Holiday Calendar
               </label>
             )}
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
