@@ -99,7 +99,7 @@ export function ReportingEmpTable({ empAuthorityList }) {
   ];
 
   return (
-    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-max sm:max-h-56 overflow-auto">
+    <div className="w-full font-size-xs px-3 py-2 bg-white rounded-lg max-h-max sm:max-h-56 overflow-auto scrollbar-fancy">
       <h6 className="font-bold mb-0 text-primary my-2">
         Team Members ({empAuthorityList?.length || 0})
       </h6>

@@ -121,15 +121,15 @@ export function FormCard() {
                     el?.isResourceShow
                 ),
               },
-              {
-                name: "Holiday Calendar",
-                link: "/holiday_calendar/my-holiday-calendar",
-                isShow: attendance?.find(
-                  (el) =>
-                    el?.componentName === "MyHolidayCalendar" &&
-                    el?.isResourceShow
-                ),
-              },
+              // {
+              //   name: "Holiday Calendar",
+              //   link: "/holiday_calendar/my-holiday-calendar",
+              //   isShow: attendance?.find(
+              //     (el) =>
+              //       el?.componentName === "MyHolidayCalendar" &&
+              //       el?.isResourceShow
+              //   ),
+              // },
             ]}
             isDashboardIcon={true}
           />
@@ -170,15 +170,15 @@ export function FormCard() {
                     el?.isResourceShow
                 ),
               },
-              {
-                name: "Holiday Calendar",
-                link: "/holiday_calendar/my-holiday-calendar",
-                isShow: attendance?.find(
-                  (el) =>
-                    el?.componentName === "MyHolidayCalendar" &&
-                    el?.isResourceShow
-                ),
-              },
+              // {
+              //   name: "Holiday Calendar",
+              //   link: "/holiday_calendar/my-holiday-calendar",
+              //   isShow: attendance?.find(
+              //     (el) =>
+              //       el?.componentName === "MyHolidayCalendar" &&
+              //       el?.isResourceShow
+              //   ),
+              // },
             ]}
             isDashboardIcon={true}
           />

@@ -75,7 +75,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
  
       user.number_of_days=diffInDate
       const finalObject = { user }
-      dispatch(actions.createHoliday(user, disbaleLoading, onHide));
+      dispatch(actions.createHoliday(user, disbaleLoading, onHide)).then(async ()=>{
+     await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      });
       
       
 
@@ -98,8 +100,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       
 
-     await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide));
+     await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide)).then(async ()=>{
      await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      });
     }
   };
 

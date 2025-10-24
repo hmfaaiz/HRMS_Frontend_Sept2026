@@ -400,7 +400,7 @@ export function MasterEditForm({
                     inputFile.current.value = "";
                   }
                 }}
-                className="btn btn-danger btn-elevate"
+                className="btn btn-light btn-elevate"
               >
                 Clear
               </button>

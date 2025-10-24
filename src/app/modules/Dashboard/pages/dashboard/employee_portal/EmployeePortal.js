@@ -22,6 +22,10 @@ import { fetchLoanApprovalApplication } from "../../../../LoanApproval/redux/for
 import { PendingRequestSelf } from "../EmpPortalComponent/PendingRequest";
 import AttendanceBarChart from "../EmpPortalComponent/AttendanceBarChart";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+import { JobRequestion } from "../EmpPortalComponent/JobRequestion";
+import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
+import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
+import { fetchResignationApprovalApplication } from "../../../../ResignationApproval/redux/formAction";
 
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +36,7 @@ export const EmployeePortal = () => {
     leaveBalances,
     leaveApprovalCount,
     attendanceApprovalCount,
+    resignationApprovalCount,
     loanList,
     payrollData,
     reportingEmployee,
@@ -47,6 +52,7 @@ export const EmployeePortal = () => {
       announcement: state?.dashboard?.announcement,
       user: state?.auth?.user,
       leaveApprovalCount: state.leave_approval.entities,
+      resignationApprovalCount: state.resignation_approval.entities,
       attendanceApprovalCount: state.attendance_approval?.entities,
       loanApprovalCount: state.loan_approval?.entities,
       loanList: state.dashboard?.loanList,
@@ -66,7 +72,10 @@ export const EmployeePortal = () => {
   useEffect(() => {
     if (user?.employeeIdMapping) {
       dispatch(
-        fetchLeaveApprovalApplication(leaveApprovalFilter, user?.employeeIdMapping)
+        fetchLeaveApprovalApplication(
+          leaveApprovalFilter,
+          user?.employeeIdMapping
+        )
       );
       dispatch(
         fetchAttendanceApprovalApplication(
@@ -75,7 +84,16 @@ export const EmployeePortal = () => {
         )
       );
       dispatch(
-        fetchLoanApprovalApplication(loanApprovalFilter, user?.employeeIdMapping)
+        fetchLoanApprovalApplication(
+          loanApprovalFilter,
+          user?.employeeIdMapping
+        )
+      );
+      dispatch(
+        fetchResignationApprovalApplication(
+          loanApprovalFilter,
+          user?.employeeIdMapping
+        )
       );
     }
   }, [user?.employeeIdMapping]);
@@ -147,13 +165,14 @@ export const EmployeePortal = () => {
             </div>
             {reportingEmployee && reportingEmployee?.length > 0 && (
               <>
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col lg:flex-row gap-4">
                   <PendingRequestSelf
                     leaveApprovalCount={leaveApprovalCount?.length || 0}
                     attendanceApprovalCount={
                       attendanceApprovalCount?.length || 0
                     }
                     loanApprovalCount={loanApprovalCount?.length || 0}
+                    resignationApprovalCount={resignationApprovalCount?.length || 0}
                   />
                   <ReportingEmpTable
                     empAuthorityList={
@@ -170,6 +189,11 @@ export const EmployeePortal = () => {
               <EmployeeLoanDetail
                 entities={loanList?.length > 0 ? loanList : []}
               />
+            </div>
+            <div className="flex flex-col md:flex-row gap-4">
+              <JobRequestion />
+              <ResignationRequest />
+              <AppraisalEvaluation />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AttendanceBarChart data={attRecord} />
