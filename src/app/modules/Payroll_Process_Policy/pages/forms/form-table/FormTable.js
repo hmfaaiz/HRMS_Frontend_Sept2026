@@ -494,7 +494,14 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
       //     then: Yup.number().required(VALIDATION_MESSAGES.required),
       //     otherwise: Yup.number().notRequired(),
       //   }),
-      pf_employer_percent: Yup.number()
+      pf_eligibility: Yup.number()
+      .nullable()
+        .when('isProvidentFund', {
+          is: true, // if select value is 2
+          then: Yup.number().min(1, VALIDATION_MESSAGES.minOneValue).max(100, VALIDATION_MESSAGES.maxHundredValue).required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.number().notRequired(),
+        }),
+         pf_employer_percent: Yup.number()
       .nullable()
         .when('isProvidentFund', {
           is: true, // if select value is 2
@@ -587,6 +594,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
     providentFundAllowancesId:null,
     pf_employer_percent:null,
     pf_employee_percent:null,
+    pf_eligibility:0,
 
 
     SalaryPolicy:0,
@@ -700,6 +708,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
         pf_employer_percent: user.pf_employer_percent,
         pf_employee_percent: user.pf_employee_percent,
+        pf_eligibility: user.pf_eligibility,
 
       };
 
@@ -1613,6 +1622,19 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                       {errors.providentFundId && touched.providentFundId && <ErrorMessage className="form-feedBack" name="providentFundId" component="div" />}
                     </div>
 
+                     <div className="">
+                      <Field
+                        disabled={!Boolean(values.isProvidentFund)}
+                        name="pf_eligibility"
+                        component={Input}
+                        type="number"
+                        placeholder="PF Eligibility"
+                        value={values.pf_eligibility}
+                        label={<span>PF Eligibility {Boolean(values.isProvidentFund) && <span style={{ color: 'red' }}>*</span>}</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+
 
                   </div>
                   <div className="grid lg:grid-cols-3 gap-x-3 gap-y-1">
@@ -1646,7 +1668,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
 
                       <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
-{console.log("defProvidentFundAllowances111",defProvidentFundAllowances)}
+
                         {dashboard.allEarnings.map((option) => (
                           <div key={option.value} className="flex justify-start items-center border-none">
 

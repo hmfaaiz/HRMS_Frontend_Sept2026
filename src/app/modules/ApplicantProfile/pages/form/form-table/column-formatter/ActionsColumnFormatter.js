@@ -25,26 +25,75 @@ export function ActionsColumnFormatter(
   }
 ) {
   const isUserRead = false;
-
+  const dateOfJoining = row?.details_applicant_vacancy?.[0]?.dateOfJoining;
+  const isFutureJoiningDate = dateOfJoining
+    ? new Date(dateOfJoining) > new Date()
+    : true; // if no date, treat as future (disable)
+  
   return (
     <div className="space-x-2">
       {isAccessForConvert && row.isToConvertToEmployee && (
+        // <OverlayTrigger
+        //   overlay={
+        //     <Tooltip id="emp-convert-tooltip">
+        //       {isFutureJoiningDate
+        //         ? "Joining date not reached yet"
+        //         : "Convert to Employee"}</Tooltip>
+        //   }
+        // >
+        //   {/* <a className="" onClick={() => openConvertFormDialog(row.Id)}>
+
+        //     <Send className="w-4 h-4 text-black cursor-pointer" />
+        //   </a> */}
+
+
+        //   <span>
+        //     <a
+        //       className={`${isFutureJoiningDate
+        //           ? "pointer-events-none opacity-50 cursor-not-allowed"
+        //           : ""
+        //         }`}
+        //       onClick={() => {
+        //         if (!isFutureJoiningDate) openConvertFormDialog(row.Id);
+        //       }}
+        //     >
+        //       <Send
+        //         className={`w-4 h-4 text-black ${isFutureJoiningDate ? "opacity-80" : "cursor-pointer"
+        //           }`}
+        //       />
+        //     </a>
+        //   </span>
+        // </OverlayTrigger>
         <OverlayTrigger
           overlay={
-            <Tooltip id="emp-convert-tooltip">Convert to Employee</Tooltip>
+            <Tooltip id="emp-convert-tooltip">
+              {isFutureJoiningDate
+                ? "Joining date not reached yet"
+                : "Convert to Employee"}
+            </Tooltip>
           }
+          placement="top"
+          trigger={["hover", "focus"]}
         >
-          <a className="" onClick={() => openConvertFormDialog(row.Id)}>
-            {/* <span className="svg-icon svg-icon-md svg-icon-primary">
-              <SVG
-                src={toAbsoluteUrl(
-                  "/media/svg/icons/Communication/vacancyPost.svg"
-                )}
-              />
-            </span> */}
-            <Send className="w-4 h-4 text-black cursor-pointer" />
-          </a>
+          <span
+            style={{ display: "inline-block", cursor: "pointer" }}
+            onClick={(e) => {
+              if (isFutureJoiningDate) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
+              openConvertFormDialog(row.Id);
+            }}
+          >
+            <Send
+              className={`w-4 h-4 text-black ${isFutureJoiningDate ? "opacity-50" : "cursor-pointer"
+                }`}
+            />
+          </span>
         </OverlayTrigger>
+
+
       )}
 
       {isAccessForOfferLetter && row.isToShowOfferLetter && (

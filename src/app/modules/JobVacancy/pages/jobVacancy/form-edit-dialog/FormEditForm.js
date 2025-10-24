@@ -50,7 +50,7 @@ const jobVacancyEditSchema = Yup.object().shape({
   gradeId: Yup.number()
   .nullable()
   .required(VALIDATION_MESSAGES.required),
-  locationId: Yup.string().required(VALIDATION_MESSAGES.required),
+  locationId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
   countryId: Yup.number().nullable(), // optional banane ke liye
 
   cityId: Yup.string()
@@ -61,8 +61,8 @@ const jobVacancyEditSchema = Yup.object().shape({
     }),
 
   // employeeTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
-  // employeeStatusId: Yup.number().required(VALIDATION_MESSAGES.required),
-  departmentId: Yup.number().required(VALIDATION_MESSAGES.required),
+
+  departmentId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   jobPostingDateFrom: Yup.date()
     .nullable()
     .required(VALIDATION_MESSAGES.required)
@@ -121,11 +121,12 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(5, "Must be  5 characters")
     .required(VALIDATION_MESSAGES.required),
   noOfPosition: Yup.number()
+  .nullable()
     .required(VALIDATION_MESSAGES.required)
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
-  hiringReasonId: Yup.string().required(VALIDATION_MESSAGES.required),
-  jobPreferenceId: Yup.string().required(VALIDATION_MESSAGES.required),
+  hiringReasonId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
+  jobPreferenceId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
   // appointmentTypeId: Yup.number()
   // .nullable()
   // .required(VALIDATION_MESSAGES.required),
@@ -190,7 +191,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
   preferredShiftId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
   preferredGenderId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
-  preferredQualificationId: Yup.number().required(VALIDATION_MESSAGES.required),
+  preferredQualificationId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
   // preferredJobSkillsId: Yup.string().required(VALIDATION_MESSAGES.required),
   preferredJobSkillsId: Yup.string()
     .nullable()
@@ -214,13 +215,16 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
 
   optionalJobSkillsId: Yup.string().nullable(),
-  preferredJobIndustryId: Yup.number().nullable().required(VALIDATION_MESSAGES.required),
+  preferredJobIndustryId: Yup.number().nullable(),
+  // .required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
+  .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
 
     .required(VALIDATION_MESSAGES.required),
 
   workExpTo: Yup.number()
+  .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
@@ -230,10 +234,12 @@ const jobVacancyEditSchema = Yup.object().shape({
   // workExpDetail: Yup.string().required(VALIDATION_MESSAGES.required),
   // additionalReq: Yup.string().required(VALIDATION_MESSAGES.required),
   salaryRangeFrom: Yup.number()
+  .nullable()
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .required(VALIDATION_MESSAGES.required),
 
   salaryRangeTo: Yup.number()
+  .nullable()
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
@@ -242,7 +248,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
   // incentivePackages: Yup.string().required(VALIDATION_MESSAGES.required),
   // otherBenefits: Yup.string().required(VALIDATION_MESSAGES.required),
-  jobSummary: Yup.string(),
+  jobSummary: Yup.string().nullable(),
   // .required(VALIDATION_MESSAGES.required),
 });
 
@@ -331,7 +337,7 @@ export function FormEditForm({
   };
   useEffect(() => {
     fetchData(setJobCode);
-  }, []);
+  }, [!formData.Id]);
 
   useEffect(() => {
     if (cleanedFormData?.gradeId) {
@@ -653,28 +659,7 @@ export function FormEditForm({
                           />
                         </div>
 
-                        <div className="">
-                          <SearchSelect
-                            name="employeeStatusId"
-                            label={<span>Employee Status</span>}
-                            isDisabled={isdataForRead}
-                            onChange={(e) => {
-                              setFieldValue(
-                                "employeeStatusId",
-                                e.value || null
-                              );
-                            }}
-                            value={
-                              dashboard?.allEmployeeStatus?.find(
-                                (option) =>
-                                  option.value === values.employeeStatusId
-                              ) || null
-                            }
-                            options={dashboard?.allEmployeeStatus}
-                            error={errors.employeeStatusId}
-                            touched={touched.employeeStatusId}
-                          />
-                        </div>
+                       
 
                         <div className="">
                           <SearchSelect
@@ -857,7 +842,7 @@ export function FormEditForm({
                   <div className=" col-span-6 ">
                     <label>
                       <span>
-                        Key relationship with Report To
+                        Job Description
                         <span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
@@ -1380,7 +1365,7 @@ export function FormEditForm({
                       label={
                         <span>
                           Job Industry
-                          <span style={{ color: "red" }}>*</span>
+                       
                         </span>
                       }
                       isDisabled={isdataForRead}

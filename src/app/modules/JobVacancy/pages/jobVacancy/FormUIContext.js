@@ -41,7 +41,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     countryId: null,
     cityId: null,
     employeeTypeId: "",
-    employeeStatusId: "",
+  
     departmentId:"",
     reportToDesignationId: "",
     relationshipWithReportTo: "",

@@ -116,7 +116,11 @@ export function ReligionCard({ onHide }) {
                   </span>
                 }
 
-
+                value={
+                  (dashboard?.allSubsidiaryList || []).find(
+                    (item) => item.value === usersUIProps?.queryParams?.subsidiaryId
+                  ) || { label: "All", value: "" }
+                }
                 onChange={(e) => {
 
                   const updatedQueryParams = {
@@ -155,7 +159,11 @@ export function ReligionCard({ onHide }) {
                   </span>
                 }
 
-
+                value={
+                  (dashboard?.allDept || []).find(
+                    (item) => item.value === usersUIProps?.queryParams?.departmentId
+                  ) || { label: "All", value: "" }
+                }
                 onChange={(e) => {
 
                   const updatedQueryParams = {
@@ -194,6 +202,11 @@ export function ReligionCard({ onHide }) {
                 }
 
 
+                value={
+                  (dashboard?.allDesignations || []).find(
+                    (item) => item.value === usersUIProps?.queryParams?.designationId
+                  ) || { label: "All", value: "" }
+                }
                 onChange={(e) => {
 
                   const updatedQueryParams = {

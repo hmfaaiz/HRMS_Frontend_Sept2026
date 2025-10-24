@@ -46,7 +46,7 @@ const formValidation = Yup.object()
 
     alary_type: Yup.string().optional(),
     operator: Yup.string().optional(),
-    amount: Yup.string().optional(),
+    amount: Yup.number().nullable().optional(),
 
     // Custom test to ensure all three fields (salary_type, operator, amount) are selected together
   })
@@ -291,36 +291,7 @@ export function FormFilter({
                     <div className="grid gird-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-1">
                       {/* Subsidiary Field Start */}
                       <div className="col-span-1">
-                        {/* <SearchSelect
-                          name="subsidiaryId"
-                          label={
-                            <span>
-                              Subsidiary<span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          onChange={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("subsidiaryId", value);
-                            dispatch(
-                              fetchAllActiveEmployeesBySubsidiary(value)
-                            );
-                            dispatch(fetchAllDept(value));
-                            setFieldValue("employeeId", "");
-                            setFieldValue("departmentId", "");
-                          }}
-                          value={
-                            allSubsidiaryMap?.get(
-                              values?.subsidiaryId ||
-                                (allSubsidiaryList &&
-                                  allSubsidiaryList[0]?.value)
-                            ) || ""
-                          }
-                          autoComplete="off"
-                          options={allSubsidiaryList}
-                          error={errors.subsidiaryId}
-                          touched={touched.subsidiaryId}
-                        /> */}
+                     
                         <SubsidiarySelect
                           name="subsidiaryId"
                           label={
@@ -330,7 +301,7 @@ export function FormFilter({
                           }
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : (e.value);
                             setFieldValue("subsidiaryId", value);
                             dispatch(
                               fetchAllActiveEmployeesBySubsidiary(value)
@@ -344,7 +315,7 @@ export function FormFilter({
                           currentValue={values?.subsidiaryId}
                           initializeSubsidiary={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("subsidiaryId", value);
                             dispatch(
                               fetchAllActiveEmployeesBySubsidiary(value)
@@ -365,17 +336,22 @@ export function FormFilter({
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" :e.value;
                             setFieldValue("departmentId", value);
                           }}
                           label={<span> Department</span>}
-                          value={
-                            allDeptMap?.get(values?.departmentId || "") || ""
-                          }
+                          // value={
+                          //   allDeptMap?.get(values?.departmentId || "") || ""
+                          // }
+                           value={
+                        values.departmentId === ""
+                          ? { label: "All", value: "" }
+                          : allDeptMap?.get(values.departmentId) || ""
+                      }
                           autoComplete="off"
                           // options={allDept}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDept) ? allDept : []),
                           ]}
                         />
@@ -390,17 +366,22 @@ export function FormFilter({
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("reportTo", value);
                           }}
                           label={<span> Report To</span>}
-                          value={
-                            allEmployeesMap?.get(values?.reportTo || "") || ""
-                          }
+                          // value={
+                          //   allEmployeesMap?.get(values?.reportTo || "") || ""
+                          // }
+                                  value={
+                        values.reportTo === ""
+                          ? { label: "All", value: "" }
+                          : allEmployeesMap?.get(values.reportTo) || ""
+                      }
                           autoComplete="off"
                           // options={allEmployees}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployees)
                               ? allEmployees
                               : []),
@@ -417,15 +398,20 @@ export function FormFilter({
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("gradeId", value);
                           }}
                           label={<span> Grade</span>}
-                          value={allGradeMap?.get(values?.gradeId || "") || ""}
+                          // value={allGradeMap?.get(values?.gradeId || "") || ""}
+                           value={
+                        values.gradeId === ""
+                          ? { label: "All", value: "" }
+                          : allGradeMap?.get(values.gradeId) || ""
+                      }
                           autoComplete="off"
                           // options={allEmployeeGradeList}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployeeGradeList)
                               ? allEmployeeGradeList
                               : []),
@@ -442,19 +428,25 @@ export function FormFilter({
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("designationId", value);
                           }}
                           label={<span> Designation</span>}
-                          value={
-                            allDesignationsMap?.get(
-                              values?.designationId || ""
-                            ) || ""
-                          }
+                          // value={
+                          //   allDesignationsMap?.get(
+                          //     values?.designationId || ""
+                          //   ) || ""
+                          // }
+
+                             value={
+                        values.designationId === ""
+                          ? { label: "All", value: "" }
+                          : allDesignationsMap?.get(values.designationId) || ""
+                      }
                           autoComplete="off"
                           // options={allDesignations}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDesignations)
                               ? allDesignations
                               : []),
@@ -471,17 +463,22 @@ export function FormFilter({
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : e.value;
                             setFieldValue("locationId", value);
                           }}
                           label={<span> Location</span>}
-                          value={
-                            allLocationMap?.get(values?.locationId || "") || ""
-                          }
+                          // value={
+                          //   allLocationMap?.get(values?.locationId || "") || ""
+                          // }
+                                value={
+                        values.locationId === ""
+                          ? { label: "All", value: "" }
+                          : allLocationMap?.get(values.locationId) || ""
+                      }
                           autoComplete="off"
                           // options={allLocationChildMenus}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allLocationChildMenus)
                               ? allLocationChildMenus
                               : []),
@@ -620,7 +617,7 @@ export function FormFilter({
                               setFieldValue("salary_type", e.target.value); // Use the raw value
                             }}
                           >
-                            <option value="">Select </option>
+                            <option value="">All </option>
                             {salaryTypeOptions.map((option) => (
                               <option key={option.value} value={option.value}>
                                 {option.label}
@@ -644,7 +641,7 @@ export function FormFilter({
                               setFieldValue("operator", e.target.value); // Use the raw value
                             }}
                           >
-                            <option value="">Select </option>
+                            <option value="">All </option>
                             {operatorOptions.map((option) => (
                               <option key={option.value} value={option.value}>
                                 {option.label}
@@ -656,7 +653,7 @@ export function FormFilter({
                         <div className="col-span-1">
                           <label>Amount</label>
                           <Field
-                            component={AmountInput}
+                            // component={AmountInput}
                             name="amount"
                             as="input"
                             className="form-control"
