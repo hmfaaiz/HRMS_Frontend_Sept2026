@@ -349,6 +349,10 @@ const ExitClearance = lazy(()=>
 import("./modules/Separate_Exit_Clearance/pages/index")
 )
 
+const ResignationWorkflowAdmin = lazy(()=>
+ import("./modules/ResignationWorkflowAdmin/page/index")
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -481,9 +485,9 @@ const ROUTES = {
   employee_resignation : ResignationRequest,
   resignation_approval : ResignationApproval,
   resignation_workflow_status : ResignationWorkflowStatus,
-
   designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
   exit_clearance: ExitClearance,
+  resignation_workflow : ResignationWorkflowAdmin,
 };
 
 export default function BasePage() {
