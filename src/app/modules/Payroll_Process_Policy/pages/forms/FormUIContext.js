@@ -92,6 +92,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     providentFundAllowancesId: "",
     pf_employer_percent: "",
     pf_employee_percent: "",
+    pf_eligibility: 0,
 
 
     

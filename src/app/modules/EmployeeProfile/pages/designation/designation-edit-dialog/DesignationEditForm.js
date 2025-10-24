@@ -68,13 +68,13 @@ const profileValidation = (localizationId) =>
       .matches(/^\d{6}$/, "Must be exactly 6 digits"),
     // .required('Required*'),
     firstName: Yup.string()
-    .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
-    .required("Required*"),
+      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+      .required("Required*"),
     lastName: Yup.string()
-    .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
-    .required("Required*"),
+      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+      .required("Required*"),
     middleName: Yup.string().nullable()
-    .matches(/^[A-Za-z\s]*$/, "Only letters are allowed"),
+      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed"),
     // .required("Required*"),
     employeeCode: Yup.string()
       .nullable()
@@ -332,8 +332,8 @@ const profileValidation = (localizationId) =>
     // .required('Required*'),
 
     additional_summary: Yup.string()
-    .nullable()
-    .required("Required*"),
+      .nullable()
+      .required("Required*"),
   })
     .test(
       "check-marital-status",
@@ -1544,11 +1544,25 @@ export function DesignationEditForm({
   const validate = () => {
     const newErrors = {};
     defContactList.forEach((contact, index) => {
-      if (!contact.relation_name) {
+      // if (!contact.relation_name) {
+      // if (!/^[A-Za-z\s]+$/.test(contact.relation_name)) {
+      //   newErrors[`relation_name-${index}`] = VALIDATION_MESSAGES.required;
+      // }
+      if (!contact.relation_name || contact.relation_name.trim() === "") {
         newErrors[`relation_name-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (!/^[A-Za-z\s]+$/.test(contact.relation_name.trim())) {
+        newErrors[`relation_name-${index}`] = "Only letters are allowed.";
       }
-      if (!contact.relation_text) {
+
+      // if (!contact.relation_text) {
+      // if (!/^[A-Za-z\s]+$/.test(contact.relation_text)) {
+      //   newErrors[`relation_text-${index}`] = VALIDATION_MESSAGES.required;
+      // }
+
+      if (!contact.relation_text || contact.relation_text.trim() === "") {
         newErrors[`relation_text-${index}`] = VALIDATION_MESSAGES.required;
+      } else if (!/^[A-Za-z\s]+$/.test(contact.relation_text.trim())) {
+        newErrors[`relation_text-${index}`] = "Only letters are allowed.";
       }
       // if (!contact.contactNo || !/^\d{11}$/.test(contact.contactNo)) {
       //   newErrors[`contactNo-${index}`] = 'Contact No must be between 7 t0 15 digits';
