@@ -333,12 +333,24 @@ const ReleasePayslip = lazy(()=>
 import("./modules/Release_Payslip/pages/index")
 )
 
+const ResignationRequest = lazy(()=>
+import("./modules/Resignation_Request/pages/index")) 
+
+const ResignationApproval = lazy(()=>
+import("./modules/ResignationApproval/page/index"))
+
+const ResignationWorkflowStatus = lazy(()=>
+import("./modules/ResignationWorkflowStatus/page/index"))
 const DesignationDepMapforExitClearance = lazy(()=>
 import("./modules/Designation_Dep_Map_for_Exit_Clearance/pages/index")
 )
 
 const ExitClearance = lazy(()=>
 import("./modules/Separate_Exit_Clearance/pages/index")
+)
+
+const ResignationWorkflowAdmin = lazy(()=>
+ import("./modules/ResignationWorkflowAdmin/page/index")
 )
 
 const ROUTES = {
@@ -470,8 +482,12 @@ const ROUTES = {
   employee_goal_setup:EmployeeGoalSetup,
   contribution_report:ContributionReport,
   release_payslip: ReleasePayslip,
+  employee_resignation : ResignationRequest,
+  resignation_approval : ResignationApproval,
+  resignation_workflow_status : ResignationWorkflowStatus,
   designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
   exit_clearance: ExitClearance,
+  resignation_workflow : ResignationWorkflowAdmin,
 };
 
 export default function BasePage() {

@@ -12,10 +12,10 @@ import DonutChart from "../../../../../../component/DonutChart";
 import { useSelector, shallowEqual } from "react-redux";
 
 export function EmployeeLoanDetail({ entities }) {
-  const { loan, appraisal } = useSelector(
+  const { loan } = useSelector(
     (state) => ({
       loan: state?.auth?.userAccess["Payroll"],
-      appraisal: state?.auth?.userAccess["appraisal_evaluation"],
+      // appraisal: state?.auth?.userAccess["appraisal_evaluation"],
     }),
     shallowEqual
   );
@@ -27,10 +27,10 @@ export function EmployeeLoanDetail({ entities }) {
     (el) => el?.componentName === "ReadPayslip" && el?.isResourceShow
   );
 
-  const isAppraisalEvaluation = appraisal?.find(
-    (el) =>
-      el?.componentName === "ReadAllAppraisalEvaluation" && el?.isResourceShow
-  );
+  // const isAppraisalEvaluation = appraisal?.find(
+  //   (el) =>
+  //     el?.componentName === "ReadAllAppraisalEvaluation" && el?.isResourceShow
+  // );
 
   const columns = [
     {
@@ -144,7 +144,7 @@ export function EmployeeLoanDetail({ entities }) {
             )}
           </p>
 
-          <p className="m-0 underline">
+          {/* <p className="m-0 underline">
             {isAppraisalEvaluation ? (
               <Link to={"/appraisal_evaluation/read-all-appraisal-evaluation"}>
                 Appraisal Evaluation
@@ -154,7 +154,7 @@ export function EmployeeLoanDetail({ entities }) {
                 Appraisal Evaluation
               </label>
             )}
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

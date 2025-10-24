@@ -215,7 +215,7 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
 
 
         {/* Requisition */}
-      {isOpen && requisition_job_vacancy?.length > 0 && (
+      {/* {isOpen && requisition_job_vacancy?.length > 0 && (
   <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
     <h6 className="font-bold mb-0 text-primary my-2">
       Job Requisition Form
@@ -233,7 +233,7 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
       <p className="text-sm mb-0">No Request for Job Vacancy Found</p>
     )}
   </div>
-)}
+)} */}
 
     </>
   );
