@@ -353,6 +353,9 @@ const ResignationWorkflowAdmin = lazy(()=>
  import("./modules/ResignationWorkflowAdmin/page/index")
 )
 
+const GeoLocation = lazy(()=>
+import("./modules/GeoLocation/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -488,6 +491,7 @@ const ROUTES = {
   designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
   exit_clearance: ExitClearance,
   resignation_workflow : ResignationWorkflowAdmin,
+  geo_location : GeoLocation,
 };
 
 export default function BasePage() {
