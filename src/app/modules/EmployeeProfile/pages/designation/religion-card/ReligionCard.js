@@ -18,11 +18,15 @@ import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { useLocation, useHistory } from "react-router-dom";
 
 export function ReligionCard({ onHide }) {
   const designationUIContext = useDesignationUIContext();
   const { dashboard } = useSelector((state) => state);
   const dispatch = useDispatch();
+   const location = useLocation();
+  const history = useHistory();
+
   const DesignationUIProps = useMemo(() => {
     return {
       newAcademicButtonClick: designationUIContext.newAcademicButtonClick,
@@ -90,6 +94,34 @@ export function ReligionCard({ onHide }) {
     dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
     dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
   }, [dispatch]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const subsidiaryId = searchParams.get("subsidiary");
+
+    if (subsidiaryId) {
+      //  Update queryParams
+      const updatedQueryParams = {
+        ...usersUIProps.queryParams,
+        subsidiaryId: parseInt(subsidiaryId, 10),
+        pageNumber: 1,
+      };
+
+      usersUIProps.setQueryParams(updatedQueryParams);
+
+      //  Fetch users and departments based on subsidiary
+      dispatch(actions.fetchUsers(updatedQueryParams));
+      dispatch(fetchAllDept(subsidiaryId));
+
+      //  Remove the query param from the URL without reload
+      searchParams.delete("subsidiary");
+      const newUrl =
+        location.pathname +
+        (searchParams.toString() ? `?${searchParams.toString()}` : "");
+      history.replace(newUrl);
+    }
+  }, [location.search]);
+
 
   return (
 
