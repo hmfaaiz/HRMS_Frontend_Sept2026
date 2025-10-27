@@ -712,6 +712,7 @@ export const fetchAllDesignationByGradeId = (
     .then((response) => {
       const entities = [...response.data?.data];
       dispatch(actions.AllChildMenusFetch({ entities, key }));
+      return entities
     })
     .catch((error) => {
       toast.error("Something went wrong");
