@@ -76,9 +76,12 @@ export function FormCard() {
     //     </CardBody>
     //   </Card>
     <TCard name={CurrentModuleName()}>
-      <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-        <FormFIlter />
-        <div className="flex items-center gap-2">
+      <div className="flex justify-between  items-center flex-wrap gap-2">
+      <div>
+  <FormFIlter />
+      </div>
+      
+        <div className="flex items-center gap-2 sm:justify-end">
           {/* <CardHeaderToolbar> */}
           {accessUser && (
             <>
