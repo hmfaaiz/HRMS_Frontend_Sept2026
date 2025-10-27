@@ -67,6 +67,7 @@ function PatternListForm({
                     approverEmployeeId: "",
                     designationId: "",
                     isClearanceProvided: "",
+                    // isClearanceProvided: 0,
                     sno: "",
                     clearanceDate: "",
                   })
@@ -114,39 +115,6 @@ function PatternListForm({
                             )}
                         </td>
 
-                        {/* <td>
-                          <SearchSelect
-                            name={`list[${index}].departmentId`}
-                            className={
-                              errors.list?.[index]?.departmentId && touched.list?.[index]?.departmentId
-                                ? "form-control is-invalid"
-                                : "form-control"
-                            }
-                            isDisabled={isdataForRead}
-                            options={dashboard?.allDept || []}
-                            value={
-                              dashboard?.allDept?.find(
-                                (option) => option?.value === values?.list?.[index]?.departmentId
-                              ) || null
-                            }
-                            onChange={(selectedOption) => {
-                              // if SearchSelect returns the full object { value, label }
-                              const value = selectedOption ? selectedOption.value : "";
-                              setFieldValue(`list[${index}].departmentId`, value);
-                              setFieldValue(`list[${index}].approverEmployeeId`, "");
-                              setFieldValue(`list[${index}].designationId`, "");
-
-                            }}
-                            placeholder="Select Department"
-                          />
-
-                       
-                          {errors?.list?.[index]?.departmentId && touched?.list?.[index]?.departmentId && (
-                            <div className="invalid-feedback">
-                              {errors.list[index].departmentId}
-                            </div>
-                          )}
-                        </td> */}
 
 
                         <td>
@@ -234,7 +202,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.approverEmployeeId  && (
+                          {errors?.list?.[index]?.approverEmployeeId && (
                             <div className="invalid-feedback">
                               {errors.list[index].approverEmployeeId}
                             </div>
@@ -265,7 +233,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.designationId  && (
+                          {errors?.list?.[index]?.designationId && (
                             <div className="invalid-feedback">
                               {errors.list[index].designationId}
                             </div>
@@ -288,11 +256,17 @@ function PatternListForm({
                                   : opt
                               )
                             }
-                            value={
+                            // value={
 
-                              clearanceProvidedOptions?.find(
-                                (option) => option?.value === values?.list?.[index]?.isClearanceProvided
-                              ) || null
+                            //   clearanceProvidedOptions?.find(
+                            //     (option) => option?.value === values?.list?.[index]?.isClearanceProvided
+                            //   ) || null
+                            // }
+
+                            value={
+                              clearanceProvidedOptions.find(
+                                (option) => Number(option.value) === Number(values?.list?.[index]?.isClearanceProvided)
+                              ) || clearanceProvidedOptions.find(opt => opt.value === 0)
                             }
                             onChange={(selectedOption) => {
                               // if SearchSelect returns the full object { value, label }
@@ -304,7 +278,7 @@ function PatternListForm({
                           />
 
                           {/* Error message */}
-                          {errors?.list?.[index]?.isClearanceProvided  && (
+                          {errors?.list?.[index]?.isClearanceProvided && (
                             <div className="invalid-feedback">
                               {errors.list[index].isClearanceProvided}
                             </div>

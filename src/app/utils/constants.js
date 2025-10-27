@@ -359,6 +359,47 @@ export const ATTENDANCE_TYPE = [
   },
 ]
 
+
+
+export const ATTENDANCE_STATUS = [
+  {
+    label: "All",
+    value: ""
+  },
+  {
+    label: "Present",
+    value: "Present"
+  },
+  {
+    label: "Absent",
+    value: "Absent"
+  }, 
+  
+  {
+    label: "On Leave",
+    value: "On_Leave"
+  },  
+  {
+    label: "Day Off",
+    value: "Day_Off"
+  }, 
+    {
+    label: "Holiday",
+    value: "Holiday"
+  }, 
+   {
+    label: "Half Day",
+    value: "Half_Day"
+  },  
+   {
+    label: "Late Arrival",
+    value: "Late"
+  },
+     {
+    label: "Early Out",
+    value: "Early_Out"
+  },
+]
 //Validation Messages for form
 export const VALIDATION_MESSAGES = {
   required: 'Required',

@@ -10,7 +10,7 @@ import {
   DatePickerField,
   Select,
 } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { ATTENDANCE_STATUS, ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import {
@@ -156,6 +156,10 @@ export function FormFilter({
   const handleCheck = (e, setFieldValue) => {
     setFieldValue("markAttendancewithshift", e.target.checked);
   };
+
+
+
+
 
   return (
     <>
@@ -515,6 +519,25 @@ export function FormFilter({
                         setFieldValue("to", date);
                       }}
                       autoComplete="off"
+                    />
+                  </div>
+
+
+                   <div>
+                    <Field
+                      name="attendanceStatus"
+                      component={Select}
+                      placeholder=""
+                      onChange={(e) => {
+                        const value =
+                          e.target.value == "" ? "" : e.target.value;
+                        setFieldValue("attendanceStatus", value);
+                 
+                      }}
+                      label={<span> Attendance Status</span>}
+                      value={values.attendanceStatus}
+                      autoComplete="off"
+                      children={CustomDropdown({ data: ATTENDANCE_STATUS })}
                     />
                   </div>
                   {/* Date to Field End */}
