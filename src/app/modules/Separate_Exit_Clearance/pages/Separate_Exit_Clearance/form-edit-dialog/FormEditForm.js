@@ -119,6 +119,10 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...data,
+        list: data.list?.map(item => ({
+          ...item,
+          isClearanceProvided: item.isClearanceProvided ?? 0
+        })) || []
 
       }}
       validationSchema={employeeEditSchema}
@@ -296,7 +300,7 @@ export function FormEditForm({
 
                 }
               >
-               Finalize
+                Finalize
                 {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
