@@ -392,7 +392,7 @@ export const ATTENDANCE_STATUS = [
     value: "Half_Day"
   },  
    {
-    label: "Late",
+    label: "Late Arrival",
     value: "Late"
   },
      {
