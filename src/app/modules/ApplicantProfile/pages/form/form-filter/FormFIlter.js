@@ -215,7 +215,7 @@ export function FormFIlter({ listLoading, user }) {
                       formUIProps.setQueryParams(updatedQueryParams);
 
 
-                      dispatch(actions.fetchUsers(formUIProps.queryParams));
+                      // dispatch(actions.fetchUsers(formUIProps.queryParams));
                     }}
 
 
@@ -259,7 +259,7 @@ export function FormFIlter({ listLoading, user }) {
                       formUIProps.setQueryParams(updatedQueryParams);
 
 
-                      dispatch(actions.fetchUsers(formUIProps.queryParams));
+                      // dispatch(actions.fetchUsers(formUIProps.queryParams));
                     }}
 
                     // options={filteredCities(formUIProps.queryParams.countryId)}
