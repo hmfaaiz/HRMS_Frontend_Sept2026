@@ -142,6 +142,7 @@ import { ResignationWorkflowStatusSlice } from "../app/modules/ResignationWorkfl
 import { DesignationDepMapforExitClearanceSlice } from "../app/modules/Designation_Dep_Map_for_Exit_Clearance/_redux/redux-Slice";
 import { ExitClearanceSlice } from "../app/modules/Separate_Exit_Clearance/_redux/redux-Slice";
 import { ResignationWorkflowAdminSlice } from "../app/modules/ResignationWorkflowAdmin/redux/formSlice";
+import { FinalSettlementSlice } from "../app/modules/FinalSettlement/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -281,6 +282,7 @@ export const rootReducer = combineReducers({
   designation_dep_map_for_exit_clearance : DesignationDepMapforExitClearanceSlice.reducer,
   exit_clearance : ExitClearanceSlice.reducer,
   resignation_workflow_admin : ResignationWorkflowAdminSlice.reducer,
+  final_settlement : FinalSettlementSlice.reducer,
 });
 
 export function* rootSaga() {

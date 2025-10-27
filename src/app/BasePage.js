@@ -353,6 +353,10 @@ const ResignationWorkflowAdmin = lazy(()=>
  import("./modules/ResignationWorkflowAdmin/page/index")
 )
 
+const FinalSettlement = lazy(()=>
+ import("./modules/FinalSettlement/pages/index")
+)
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -488,6 +492,7 @@ const ROUTES = {
   designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
   exit_clearance: ExitClearance,
   resignation_workflow : ResignationWorkflowAdmin,
+  final_settlement : FinalSettlement,
 };
 
 export default function BasePage() {
