@@ -21,6 +21,7 @@ export const initialFilter = {
     employeeId: "",
     from: "",
     to: "",
+    attendanceStatus:"",
   },
   sortOrder: "asc",
   pageSize: 50,
