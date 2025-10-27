@@ -656,11 +656,12 @@ export function BankEditForm({
       }
     } else if (currentSalaryMethod == "Basic to Gross") {
       let basicSalaryNumber = Number(basicSalaryInput);
+      let originalSalaryNumber = Number(basicSalaryInput);
 
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == "% Of Basic") {
-            x.amount = (basicSalaryNumber * x.factorValue) / 100;
+            x.amount = (originalSalaryNumber * x.factorValue) / 100;
             if (x.isPartOfGrossSalary) {
               basicSalaryNumber += x.amount;
             }
