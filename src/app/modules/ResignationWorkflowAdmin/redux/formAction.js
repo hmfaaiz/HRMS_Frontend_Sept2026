@@ -52,6 +52,6 @@ export const handleResignationRequest = (body, resetForm) => () => {
     })
     .catch((error) => {
       error.clientMessage = "Can't Handle Resignation Request";
-      toast.error(SERVER_MESSAGES.updatedFail);
+      toast.error(error?.response?.data?.message);
     });
 };
