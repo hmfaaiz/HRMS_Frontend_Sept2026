@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isdataForRead ? title : "View Exit Type Exit Reason"}
+          {!isdataForRead ? title : "View Designation / Department Mapping"}
         </Modal.Title>
       </Modal.Header>
     </>
