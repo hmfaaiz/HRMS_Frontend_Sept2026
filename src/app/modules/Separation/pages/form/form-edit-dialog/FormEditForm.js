@@ -88,7 +88,7 @@ export const getSeparationEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
 
-      blackListRemarks: Yup.string().when("blackList", {
+      blackListRemarks: Yup.string().nullable().when("blackList", {
         is: true,
         then: (schema) => schema.required(VALIDATION_MESSAGES.required),
         otherwise: (schema) => schema.notRequired(),
