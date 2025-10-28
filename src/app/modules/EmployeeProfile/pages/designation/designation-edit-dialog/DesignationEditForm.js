@@ -898,7 +898,7 @@ export function DesignationEditForm({
     const fetchDesignationBaseOnGrade = async () => {
       if (user?.gradeId) {
         let res = await dispatch(fetchAllDesignationByGradeId(user?.gradeId, "allDesignationByGrade"))
-        let setDesig = res?.find((el)=> el?.value == user?.designationId)
+        let setDesig = res?.find((el) => el?.value == user?.designationId)
         setDefualtEmpDesignation(setDesig)
       }
     }
@@ -3310,7 +3310,8 @@ export function DesignationEditForm({
                         />
                       </div>
                     }
-                    {
+                    {values.employeeTypeId !== 147 && (
+
                       <div>
                         <label>Date Of Confirmation</label>
                         <DatePicker
@@ -3346,37 +3347,37 @@ export function DesignationEditForm({
                           component="div"
                         />
                       </div>
-                    }
-
-                    <div>
-                      <label>Date Confirmation Due </label>
-                      <DatePicker
-                        className="form-control"
-                        placeholder=" Date Of Confirmation Due"
-                        selected={confirmationDueDateSelected}
-                        onChange={(date) => {
-                          setFieldValue("dateOfConfirmationDue", date);
-                          setConfirmationDueDate(date);
-                        }}
-                        timeInputLabel="Time:"
-                        dateFormat="dd-MMM-yyyy"
-                        // showTimeInput
-                        name="dateOfConfirmationDue"
-                        disabled={disableConfDueDate}
-                        autoComplete="off"
-                        minDate={
-                          values.dateOfJoining
-                            ? new Date(values.dateOfJoining)
-                            : null
-                        }
-                      />
-                      <ErrorMessage
-                        className="form-feedBack"
-                        name="dateOfConfirmationDue"
-                        component="div"
-                      />
-                    </div>
-
+                    )}
+                    {values.employeeTypeId !== 147 && (
+                      <div>
+                        <label>Date Confirmation Due </label>
+                        <DatePicker
+                          className="form-control"
+                          placeholder=" Date Of Confirmation Due"
+                          selected={confirmationDueDateSelected}
+                          onChange={(date) => {
+                            setFieldValue("dateOfConfirmationDue", date);
+                            setConfirmationDueDate(date);
+                          }}
+                          timeInputLabel="Time:"
+                          dateFormat="dd-MMM-yyyy"
+                          // showTimeInput
+                          name="dateOfConfirmationDue"
+                          disabled={disableConfDueDate}
+                          autoComplete="off"
+                          minDate={
+                            values.dateOfJoining
+                              ? new Date(values.dateOfJoining)
+                              : null
+                          }
+                        />
+                        <ErrorMessage
+                          className="form-feedBack"
+                          name="dateOfConfirmationDue"
+                          component="div"
+                        />
+                      </div>
+                    )}
                     {values.employeeTypeId == 147 && (
                       <div>
                         <label>Contract Expiry </label>
