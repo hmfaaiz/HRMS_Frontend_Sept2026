@@ -356,6 +356,8 @@ const ResignationWorkflowAdmin = lazy(()=>
 const FinalSettlement = lazy(()=>
  import("./modules/FinalSettlement/pages/index")
 )
+const GeoLocation = lazy(()=>
+import("./modules/GeoLocation/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -493,6 +495,7 @@ const ROUTES = {
   exit_clearance: ExitClearance,
   resignation_workflow : ResignationWorkflowAdmin,
   final_settlement : FinalSettlement,
+  geo_location : GeoLocation,
 };
 
 export default function BasePage() {
