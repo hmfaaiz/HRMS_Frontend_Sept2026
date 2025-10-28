@@ -3,41 +3,36 @@ import { Button, Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import { useFormUIContext } from "../FormUIContext";
 import * as Yup from "yup";
-import {
-  DatePickerField,
-  Input,
-  MaskInput,
-  Select,
-  TextArea,
-} from "../../../../../../_metronic/_partials/controls"; // Adjust import as needed
+
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import axios from "axios";
 import * as actions from "../../../_redux/redux-Actions";
+import DatePicker from "react-datepicker";
 import {
-  fetchAllCity,
-  fetchAllCountry,
-  fetchAllDept,
+
   fetchAllEmployeesWithNoPermissionData,
   fetchAllFormsMenu,
-  fetchAllSubsidiaryData,
-  getAllJobVacancy,
+
 
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import {
-  amountLimitDynamic,
+
   formatDates,
-  getFileName,
-  getUploadUrl,
+
+
 } from "../../../../../utils/common";
 
 import { subYears } from "date-fns";
 
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { fetchExitReasonData } from "../../../../Dashboard/_redux/dashboardActions";
-import { Eye, XCircle } from "lucide-react";
+import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { Input, TextArea } from "../../../../../../_metronic/_partials/controls";
+import ViewLoans from "./ViewLoans";
+import ViewSeparate from "./ViewSeparate";
 
 
 export const getSeparationEditSchema = (formData) => {
@@ -47,75 +42,16 @@ export const getSeparationEditSchema = (formData) => {
       employeeId: Yup.number()
         .required(VALIDATION_MESSAGES.required),
 
-      exitTypeId: Yup.number()
-        .required(VALIDATION_MESSAGES.required),
-
-      exitReasonId: Yup.number()
-        .required(VALIDATION_MESSAGES.required),
-
-
-      resignationDate: Yup.date()
-
-        .required(VALIDATION_MESSAGES.required),
-
-      lastWorkingDate: Yup.date()
-        .required(VALIDATION_MESSAGES.required)
-        .min(
-          Yup.ref("resignationDate"),
-          "Last working day cannot be before resignation date"
-        ),
-
-      resignationAcceptanceDate: Yup.date()
-        // .required(VALIDATION_MESSAGES.required)
-        .nullable()
-        .min(
-          Yup.ref("resignationDate"),
-          "Acceptance date day cannot be before resignation date"
-        ),
 
 
 
 
-      finalSettlementPolicy: Yup.number()
-
-        .required(VALIDATION_MESSAGES.required),
-
-      noticePeriodDays: Yup.number()
-
-        .required(VALIDATION_MESSAGES.required),
-      noticePeriodtype: Yup.number()
-
-        .required(VALIDATION_MESSAGES.required),
-
-
-      blackListRemarks: Yup.string().when("blackList", {
-        is: true,
-        then: (schema) => schema.required(VALIDATION_MESSAGES.required),
-        otherwise: (schema) => schema.notRequired(),
-      }),
 
 
 
-      // resignationAttachment: Yup.mixed()
-      //   // .required(VALIDATION_MESSAGES.required)
-      //   .test("fileSize", "File size must be less than 1 MB", (value) => {
-      //     // Skip validation if it's an existing file (string)
-      //     if (typeof value === "string") return true;
-      //     return value && value.size <= 3 * 1024 * 1024; // 3 MB
-      //   })
-      //   .test("fileType", "Unsupported file format", (value) => {
-      //     if (typeof value === "string") return true;
-      //     return (
-      //       value &&
-      //       [
-      //         "application/pdf",
-      //         "application/msword",
-      //         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      //         "image/jpeg",
-      //         "image/png",
-      //       ].includes(value.type)
-      //     );
-      //   }),
+
+
+
 
 
 
@@ -144,7 +80,8 @@ export function FormEditForm({
   const [policyMode, setPolicyMode] = useState("");
   const [separateMode, setSeparateMode] = useState("");
 
-
+  const [loanPanel, setLoanPanel] = useState("");
+  const [separatePanel, setSeparatePanel] = useState("");
 
   const handlePolicyModalClose = () => {
     setPolicyMode(false);
@@ -158,18 +95,14 @@ export function FormEditForm({
 
 
 
-      dispatch(fetchAllFormsMenu(526, "allExitTypeList"));
-      dispatch(fetchExitReasonData(formData?.exitTypeId));
-      dispatch(
-        fetchAllEmployeesWithNoPermissionData(
-          "allEmployeesWithNoPermissionList"
-        )
-      );
+
+
+
       // Always run for active employee
       dispatch(actions.fetchEmpBySeparationFlag({ flag: 1, employeeId: formData?.employeeId }));
     }
     else {
-      dispatch(fetchExitReasonData(formData?.exitTypeId));
+
       dispatch(actions.fetchEmpBySeparationFlag({ flag: null, employeeId: formData?.employeeId }));
 
     }
@@ -178,14 +111,14 @@ export function FormEditForm({
 
   const { currentState } = useSelector((state) => {
     return {
-      currentState: state.separation,
-      userAccess: state?.auth?.userAccess["separation"],
+      currentState: state.final_settlement,
+      userAccess: state?.auth?.userAccess["final_settlement"],
     };
   }, shallowEqual);
 
   const { dataForEdit, activeEmployeeList } = currentState;
 
-
+  console.log("currentState1111", currentState, currentState.activeEmployeeList)
   const { allEmployees } = useSelector(
     (state) => ({
       allEmployees: state.dashboard.allEmployees
@@ -194,53 +127,8 @@ export function FormEditForm({
   )
 
 
-  const allEmployeetatus = [
-    { value: 1, label: "Active Employee" },
-    { value: 2, label: "Resigned Employee" },
-    { value: 3, label: "Separated Employee" },
-  ];
-
-  const allfinalSettlementPolicy = [
-    { value: 1, label: "Policy # 01" },
-    { value: 2, label: "Policy # 02" },
-    { value: 3, label: "Policy # 03" },
-    { value: 4, label: "Policy # 04" },
-  ];
-
-  const allNoticePeriodType = [
-    { value: 1, label: "Employee" },
-    { value: 2, label: "Employer" },
-
-  ];
 
 
-  // const getServicePeriod = (start, end) => {
-
-  //   if (!start || !end) return "";
-
-  //   const startDate = new Date(start);
-  //   const endDate = new Date(end);
-
-  //   let years = endDate.getFullYear() - startDate.getFullYear();
-  //   let months = endDate.getMonth() - startDate.getMonth();
-  //   let days = endDate.getDate() - startDate.getDate();
-
-
-  //   if (days < 0) {
-  //     months -= 1;
-  //     const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
-  //     days += prevMonth.getDate();
-  //   }
-
-
-  //   if (months < 0) {
-  //     years -= 1;
-  //     months += 12;
-  //   }
-  //   setGetServicePeriod(`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
-
-  //   return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
-  // };
 
   const getServicePeriod = (start, end) => {
     if (!start || !end) return "";
@@ -338,171 +226,6 @@ export function FormEditForm({
         <>
 
 
-          {policyMode && (
-            <>
-              <Modal
-                show={policyMode}
-                onHide={!policyMode}
-                style={{ zIndex: "99999" }}
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Final Settlement Policy</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="space-y-6">
-                    {/* Policy #01 */}
-                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
-                      <h3 className="text-lg font-semibold text-primary mb-2">
-                        Policy # 01 [Process Salary in One Phase]
-                      </h3>
-                      <p className="text-gray-700 text-sm">
-                        Process Salary from Starting Date of Current Payroll Month till Last Working Date in FINAL SETTLEMENT
-                      </p>
-                    </div>
-
-                    {/* Policy #02 */}
-                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
-                      <h3 className="text-lg font-semibold text-primary mb-2">
-                        Policy # 02 [Process Salary in Two Phases]
-                      </h3>
-                      <p className="text-gray-700 text-sm">
-                        During notice period only last month salary will be paid via FINAL SETTLEMENT remaining via 'Normal Payroll Process'
-                      </p>
-                    </div>
-
-                    {/* Policy #03 */}
-                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
-                      <h3 className="text-lg font-semibold text-primary mb-2">
-                        Policy # 03 [Process Salary in Two Phases]
-                      </h3>
-                      <p className="text-gray-700 text-sm">
-                        From 'Starting Date of Current Payroll Month' till 'Resignation Date' as Normal Salary.
-                        Remaining Working days in FINAL SETTLEMENT
-                      </p>
-                    </div>
-
-                    {/* Policy #04 */}
-                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
-                      <h3 className="text-lg font-semibold text-primary mb-2">
-                        Policy # 04 [Separated Employees]
-                      </h3>
-                      <p className="text-gray-700 text-sm">
-                        These records are generated for Regular Payroll Process.
-                      </p>
-                    </div>
-                  </div>
-                </Modal.Body>
-
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handlePolicyModalClose}>
-                    Cancel
-                  </Button>
-
-
-                </Modal.Footer>
-              </Modal>
-            </>
-          )}
-
-
-          {separateMode && (
-            <>
-              <Modal
-                show={separateMode}
-                onHide={!separateMode}
-                style={{ zIndex: "99999" }}
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Confirmation</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <div className="space-y-6">
-                    {/* {values.lastWorkingDate > new Date() && (
-                      <span>Last Working Date should not be greater than Current Date</span>
-                    ):(
-                    <span>Are you sure want to separate this record?</span>
-                    ) } */}
-
-                    {new Date(values.lastWorkingDate) > new Date() ? (
-                      <span>Unable to Separate Employee earlier than his Last Working Date</span>
-                    ) : (
-                      <span>Are you sure you want to separate this record?</span>
-                    )}
-
-
-
-                  </div>
-                </Modal.Body>
-
-                <Modal.Footer>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={handlePolicyModalClose}
-                      className="btn btn-light btn-elevate"
-                    >
-                      Cancel
-                    </button>
-
-                    {values.lastWorkingDate && new Date(values.lastWorkingDate) > new Date() ? (
-                      null
-                    ) : (
-                      <button
-                        type="button"
-                        // onClick={() => {
-                        //   getSeparationEditSchema(formData)
-                        //   delete formData.employeetatus
-                        //   delete formData.all_report_to
-
-                        //   // dispatch(actions.separateById(
-                        //   //   values,
-                        //   //   onHide, formUIProps.queryParams
-                        //   // ))
-                        //   // dispatch(actions.separateById(
-                        //   //   { employeeId: formData.employeeId, Id: formData.Id },
-                        //   //   onHide,formUIProps.queryParams
-                        //   // ))
-
-                        // }
-
-                        onClick={async () => {
-                          const errors = await validateForm(values);
-
-                          // sari fields ko touched mark karna taake UI me error dikhe
-                          Object.keys(errors).forEach((field) => setFieldTouched(field, true, true));
-
-                          if (Object.keys(errors).length === 0) {
-                            //  valid form
-                            delete formData.employeetatus;
-                            delete formData.all_report_to;
-
-                            // ab apna dispatch call karo
-                            dispatch(
-                              actions.separateById(
-                                values,
-                                onHide,
-                                formUIProps.queryParams
-                              )
-                            );
-
-
-                          }
-                        }}
-                        className="btn btn-primary btn-elevate"
-                      >
-                        Yes
-                        {loading && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
-                    )}
-
-                  </div>
-                </Modal.Footer>
-              </Modal>
-            </>
-          )}
-
 
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -517,38 +240,8 @@ export function FormEditForm({
 
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-
-                  {/* {!formData.Id && (
-                    <div className="">
-                      <SearchSelect
-                        label={
-                          <span>
-                            Employee Status
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={true}
-                        name="employeetatus"
-                        onChange={(e) => {
-                          setFieldValue("employeetatus", e?.value ?? null);
-                          dispatch(actions.fetchEmpBySeparationFlag({ flag: e?.value, employeeId: null }));
-                        }}
-                        value={
-                          allEmployeetatus?.find(
-                            (option) =>
-                              String(option.value) ===
-                              String(values.employeetatus)
-                          ) || null
-                        }
-                        error={errors.employeetatus}
-                        touched={touched.employeetatus}
-                        options={allEmployeetatus}
-                      />
-                    </div>
-                  )}
- */}
-
-                  <div className="">
+                  {/* Employee dropdown */}
+                  <div className="col-span-1">
                     <SearchSelect
                       name="employeeId"
                       className={!values.employeeId ? 'form-control is-invalid' : 'form-control'}
@@ -559,16 +252,13 @@ export function FormEditForm({
                         const value = e.value === "Select" ? null : Number(e.value);
                         setFieldValue("employeeId", value);
 
-
                         const selectedEmp = activeEmployeeList?.find(
                           (emp) => emp.value === value
                         );
 
                         if (selectedEmp) {
-                          setDepartmentId(selectedEmp?.departmentId)
+                          setDepartmentId(selectedEmp?.departmentId);
                           setDateOfJoining(selectedEmp?.dateOfJoining);
-
-
                         }
                       }}
                       label={
@@ -581,21 +271,16 @@ export function FormEditForm({
                           (option) => option?.value === values?.employeeId
                         ) || null
                       }
-                      // value={values.employeeId}
                       autoComplete="off"
-
                       options={activeEmployeeList}
-                      isSearchable={true} // Ensure search functionality is enabled
+                      isSearchable={true}
                       error={errors.employeeId}
                       touched={touched.employeeId}
                     />
                   </div>
 
-
-                  <div className="mt-6">
-
-
-
+                  {/* Buttons */}
+                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6">
                     {panelMode ? (
                       <button
                         type="button"
@@ -612,15 +297,56 @@ export function FormEditForm({
                         onClick={() => setPanelMode(!panelMode)}
                         disabled={!values?.employeeId}
                       >
-
-
                         <Eye className="w-4 h-4 text-white" />
                         View Details
                       </button>
                     )}
 
+                    {separatePanel ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setSeparatePanel(!separatePanel)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => setSeparatePanel(!separatePanel)}
+                        disabled={!values?.employeeId}
+                      >
+                        <Eye className="w-4 h-4 text-white" />
+                        View Separate Details
+                      </button>
+                    )}
+                  </div>
+                </div>
 
 
+                <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                  <div className="">
+                    <Field
+                      name="totalServicePeriod"
+                      component={Input}
+                      placeholder="Enter paid days"
+                      label={
+                        <span>
+                          Paid Days
+                        </span>
+                      }
+                      value={servicePeriod ||
+                        dateOfJoining && values.lastWorkingDate
+                        ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                        : ""
+                      }
+                      autoComplete="off"
+                      type="text"
+
+
+                    />
 
                   </div>
                 </div>
@@ -629,6 +355,10 @@ export function FormEditForm({
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={panelMode}
                 />
+                {/* <ViewSeparate
+                  employeeId={values?.employeeId || formData?.employeeId}
+                  panelMode={separatePanel}
+                /> */}
 
 
 
@@ -638,75 +368,243 @@ export function FormEditForm({
                 {/* Personal Information */}
 
 
-                <div >
+                <div
 
-                  <h6 className="font-bold mb-0 text-primary my-2">
-                    Leaving Reasons
+                >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Earnings
                   </h6>
 
-                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1">
-                    <div className="">
-                      <SearchSelect
-                        name="exitTypeId"
-                        label={
-                          <span>
-                            Exit Type<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead || !values.employeeId}
-                        onChange={(e) => {
-                          setFieldValue("exitTypeId", e.value || null);
-                          dispatch(fetchExitReasonData(e.value));
-                        }}
-                        value={
-                          dashboard?.allExitTypeList?.find(
-                            (option) => option?.value == values?.exitTypeId
-                          ) || null
-                        }
-                        options={dashboard?.allExitTypeList}
-                        error={errors.exitTypeId}
-                        touched={touched.exitTypeId}
-                      />
-                    </div>
+                  <FieldArray name="earning_list">
+                    {({ insert, remove, push }) => (
+                      <>
+                        <div className="flex justify-end items-center text-right ">
 
-                    <div className="">
-                      <SearchSelect
-                        name="exitReasonId"
-                        label={
-                          <span>
-                            Exit Reason<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead || !values.employeeId}
-                        onChange={(e) => {
-                          setFieldValue("exitReasonId", e.value || null);
+                          {/* {!isdataForRead && values?.earning_list.length < 31 && ( */}
+                          <button
+                            disabled={!values.employeeId}
+                            type="button"
+                            className="btn btn-primary btn-elevate text-right"
+                            onClick={() =>
+                              push({
+                                days_hours: "",
+                                amount_actual: "",
+                                earning_deduction_id: "",
+                                remarks: "",
+                                isActive: 1,
+                                sno: "",
+                                targetDate: "",
+                              })
+                            }
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3 " />{" "}
+                            Add
+                          </button>
+                          {/* )} */}
+                        </div>
+                        <div className="w-full overflow-x-auto">
+                          <div className="react-bootstrap-table table-responsive">
+                            <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                              <thead>
+                                <tr className="custom-table-header">
 
-                        }}
-                        value={
-                          dashboard?.allExitReasonList?.find(
-                            (option) => option?.value == values?.exitReasonId
-                          ) || null
-                        }
-                        options={dashboard?.allExitReasonList}
-                        error={errors.exitReasonId}
-                        touched={touched.exitReasonId}
-                      />
-                    </div>
-
-                    <div className="md:col-span-4">
-                      <Field
-                        name="exitRemark"
-                        component={TextArea}
-                        placeholder="Enter exit remarks"
-                        label={<span>Exit Remarks</span>}
-                        className="form-control "  // Force full height
-                        autoComplete="off"
-                      />
-                    </div>
-
-                  </div>
+                                  <td className="w-[200px]">Earning Name</td>
+                                  <td className="w-[200px]">Days to be paid</td>
+                                  <td className="w-[250px]">Salary Amount</td>
+                                  <td className="w-[100px]">Actual Amount</td>
+                                  <td className="w-[120px]">Remarks</td>
+                                  <td className="text-right">Action</td>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {values?.earning_list?.map((row, index) => (
+                                  <tr key={index}>
+                                    {/* Row Starts */}
 
 
+
+                                    <td>
+
+
+
+
+                                      <SearchSelect
+                                        name={`earning_list[${index}].earning_deduction_id`}
+
+
+                                        value={
+                                          dashboard?.allAppraisalCompetencySetupearning_list
+                                            ?.filter((option) => option.value === values.earning_list[index].earning_deduction_id)
+                                            ?.map((option) => ({
+                                              label: option.onlyLabel, //  onlyLabel will be displayed
+                                              value: option.value,
+                                            }))[0] || null
+                                        }
+
+                                        onChange={(selectedOption) => {
+                                          const selectedValue = selectedOption ? selectedOption.value : "";
+                                          setFieldValue(`earning_list[${index}].earning_deduction_id`, selectedValue);
+                                        }}
+
+                                        options={
+                                          dashboard?.allAppraisalCompetencySetupearning_list?.map((option) => ({
+                                            label: option.onlyLabel, // show only this field as label
+                                            value: option.value,     // keep value for Formik binding
+                                          })) || []
+                                        }
+
+                                      />
+
+
+
+                                      {/* Error message */}
+                                      {errors?.earning_list?.[index]?.earning_deduction_id && touched?.earning_list?.[index]?.earning_deduction_id && (
+                                        <div className="invalid-feedback">
+                                          {errors.earning_list[index].earning_deduction_id}
+                                        </div>
+                                      )}
+                                    </td>
+
+                                    <td>
+                                      <Field
+
+                                        name={`earning_list[${index}].days_hours`}
+                                        className={
+                                          errors.earning_list?.[index]?.days_hours && touched.earning_list?.[index]?.days_hours
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`earning_list[${index}].days_hours`, value);
+                                        }}
+                                        value={row?.days_hours || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.earning_list?.[index]?.days_hours && touched?.earning_list?.[index]?.days_hours && (
+                                        <div className="invalid-feedback">
+                                          {errors.earning_list[index].days_hours}
+                                        </div>
+                                      )}
+                                    </td>
+                                    <td>
+                                      <Field
+
+                                        name={`earning_list[${index}].amount_actual`}
+                                        className={
+                                          errors.earning_list?.[index]?.amount_actual && touched.earning_list?.[index]?.amount_actual
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`earning_list[${index}].amount_actual`, value);
+                                        }}
+                                        value={row?.amount_actual || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.earning_list?.[index]?.amount_actual && touched?.earning_list?.[index]?.amount_actual && (
+                                        <div className="invalid-feedback">
+                                          {errors.earning_list[index].amount_actual}
+                                        </div>
+                                      )}
+                                    </td>
+
+
+                                    <td>
+                                      <Field
+
+                                        name={`earning_list[${index}].amount_takeHome`}
+                                        className={
+                                          errors.earning_list?.[index]?.amount_takeHome && touched.earning_list?.[index]?.amount_takeHome
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`earning_list[${index}].amount_takeHome`, value);
+                                        }}
+                                        value={row?.amount_takeHome || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.earning_list?.[index]?.amount_takeHome && touched?.earning_list?.[index]?.amount_takeHome && (
+                                        <div className="invalid-feedback">
+                                          {errors.earning_list[index].amount_takeHome}
+                                        </div>
+                                      )}
+                                    </td>
+
+
+
+                                    <td>
+                                      <Field
+
+                                        name={`earning_list[${index}].remarks`}
+                                        className={
+                                          errors.earning_list?.[index]?.remarks && touched.earning_list?.[index]?.remarks
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`earning_list[${index}].remarks`, value);
+                                        }}
+                                        value={row?.remarks || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.earning_list?.[index]?.remarks && touched?.earning_list?.[index]?.remarks && (
+                                        <div className="invalid-feedback">
+                                          {errors.earning_list[index].remarks}
+                                        </div>
+                                      )}
+                                    </td>
+
+                                    {/* Delete Button Starts */}
+                                    {/* {!values?.earning_list[index]?.isPresent && ( */}
+                                    <td className="text-right">
+                                      <button
+                                        disabled={isdataForRead}
+                                        className="border-none bg-transparent"
+                                        type="button"
+                                        onClick={() => {
+                                          remove(index);
+                                        }}
+                                      >
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </button>
+                                    </td>
+                                    {/* )} */}
+
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </FieldArray>
 
 
 
@@ -716,103 +614,291 @@ export function FormEditForm({
 
                 <hr></hr>
 
+
+
+
                 <div
 
                 >
 
                   <h6 className="font-bold mb-0 text-primary">
-                    Resignation & Notice Period Information
+                    Deductions
                   </h6>
 
+                  <FieldArray name="deduction_list">
+                    {({ insert, remove, push }) => (
+                      <>
+                        <div className="flex justify-end items-center text-right ">
+
+                          {/* {!isdataForRead && values?.deduction_list.length < 31 && ( */}
+                          <button
+                            disabled={!values.employeeId}
+                            type="button"
+                            className="btn btn-primary btn-elevate text-right"
+                            onClick={() =>
+                              push({
+                                days_hours: "",
+                                amount_actual: "",
+                                earning_deduction_id: "",
+                                remarks: "",
+                                isActive: 1,
+                                sno: "",
+                                targetDate: "",
+                              })
+                            }
+                          >
+                            <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3 " />{" "}
+                            Add
+                          </button>
+                          {/* )} */}
+                        </div>
+                        <div className="w-full overflow-x-auto">
+                          <div className="react-bootstrap-table table-responsive">
+                            <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                              <thead>
+                                <tr className="custom-table-header">
+
+                                  <td className="w-[200px]">Deduction Name</td>
+                                  <td className="w-[200px]">Days to be paid</td>
+                                  <td className="w-[250px]">Salary Amount</td>
+                                  <td className="w-[100px]">Actual Amount</td>
+                                  <td className="w-[120px]">Remarks</td>
+                                  <td className="text-right">Action</td>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {values?.deduction_list?.map((row, index) => (
+                                  <tr key={index}>
+                                    {/* Row Starts */}
 
 
 
-                  <div className="grid lg:grid-cols-6 gap-x-3">
+                                    <td>
+
+
+
+
+                                      <SearchSelect
+                                        name={`deduction_list[${index}].earning_deduction_id`}
+
+
+                                        value={
+                                          dashboard?.allAppraisalCompetencySetupdeduction_list
+                                            ?.filter((option) => option.value === values.deduction_list[index].earning_deduction_id)
+                                            ?.map((option) => ({
+                                              label: option.onlyLabel, //  onlyLabel will be displayed
+                                              value: option.value,
+                                            }))[0] || null
+                                        }
+
+                                        onChange={(selectedOption) => {
+                                          const selectedValue = selectedOption ? selectedOption.value : "";
+                                          setFieldValue(`deduction_list[${index}].earning_deduction_id`, selectedValue);
+                                        }}
+
+                                        options={
+                                          dashboard?.allAppraisalCompetencySetupdeduction_list?.map((option) => ({
+                                            label: option.onlyLabel, // show only this field as label
+                                            value: option.value,     // keep value for Formik binding
+                                          })) || []
+                                        }
+
+                                      />
+
+
+
+                                      {/* Error message */}
+                                      {errors?.deduction_list?.[index]?.earning_deduction_id && touched?.deduction_list?.[index]?.earning_deduction_id && (
+                                        <div className="invalid-feedback">
+                                          {errors.deduction_list[index].earning_deduction_id}
+                                        </div>
+                                      )}
+                                    </td>
+
+                                    <td>
+                                      <Field
+
+                                        name={`deduction_list[${index}].days_hours`}
+                                        className={
+                                          errors.deduction_list?.[index]?.days_hours && touched.deduction_list?.[index]?.days_hours
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`deduction_list[${index}].days_hours`, value);
+                                        }}
+                                        value={row?.days_hours || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.deduction_list?.[index]?.days_hours && touched?.deduction_list?.[index]?.days_hours && (
+                                        <div className="invalid-feedback">
+                                          {errors.deduction_list[index].days_hours}
+                                        </div>
+                                      )}
+                                    </td>
+                                    <td>
+                                      <Field
+
+                                        name={`deduction_list[${index}].amount_actual`}
+                                        className={
+                                          errors.deduction_list?.[index]?.amount_actual && touched.deduction_list?.[index]?.amount_actual
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`deduction_list[${index}].amount_actual`, value);
+                                        }}
+                                        value={row?.amount_actual || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.deduction_list?.[index]?.amount_actual && touched?.deduction_list?.[index]?.amount_actual && (
+                                        <div className="invalid-feedback">
+                                          {errors.deduction_list[index].amount_actual}
+                                        </div>
+                                      )}
+                                    </td>
+
+
+                                    <td>
+                                      <Field
+
+                                        name={`deduction_list[${index}].amount_takeHome`}
+                                        className={
+                                          errors.deduction_list?.[index]?.amount_takeHome && touched.deduction_list?.[index]?.amount_takeHome
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`deduction_list[${index}].amount_takeHome`, value);
+                                        }}
+                                        value={row?.amount_takeHome || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.deduction_list?.[index]?.amount_takeHome && touched?.deduction_list?.[index]?.amount_takeHome && (
+                                        <div className="invalid-feedback">
+                                          {errors.deduction_list[index].amount_takeHome}
+                                        </div>
+                                      )}
+                                    </td>
+
+
+
+                                    <td>
+                                      <Field
+
+                                        name={`deduction_list[${index}].remarks`}
+                                        className={
+                                          errors.deduction_list?.[index]?.remarks && touched.deduction_list?.[index]?.remarks
+                                            ? "form-control is-invalid"
+                                            : "form-control"
+                                        }
+                                        disabled={isdataForRead}
+                                        onChange={(e) => {
+                                          const value = e.target.value === "Select" ? "" : e.target.value;
+                                          setFieldValue(`deduction_list[${index}].remarks`, value);
+                                        }}
+                                        value={row?.remarks || ""}
+                                      >
+
+
+                                      </Field>
+
+                                      {/* Error message */}
+                                      {errors?.deduction_list?.[index]?.remarks && touched?.deduction_list?.[index]?.remarks && (
+                                        <div className="invalid-feedback">
+                                          {errors.deduction_list[index].remarks}
+                                        </div>
+                                      )}
+                                    </td>
+
+                                    {/* Delete Button Starts */}
+                                    {/* {!values?.deduction_list[index]?.isPresent && ( */}
+                                    <td className="text-right">
+                                      <button
+                                        disabled={isdataForRead}
+                                        className="border-none bg-transparent"
+                                        type="button"
+                                        onClick={() => {
+                                          remove(index);
+                                        }}
+                                      >
+                                        <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                      </button>
+                                    </td>
+                                    {/* )} */}
+
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </FieldArray>
+
+
+                  <div className="grid md:grid-cols-6 gap-x-3 mt-1 mb-2">
                     <div className="">
-                      <label>
-                        Resignation Submission Date <span style={{ color: "red" }}>*</span>
-                      </label>
                       <Field
-                        className="form-control"
-                        placeholder="Resignation Submission Date"
-                        disabled={!values.employeeId}
-                        component={DatePickerField}
-                        selected={
-                          values?.resignationDate
-                            ? new Date(values.resignationDate)
-                            : null
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Enter other payment"
+                        label={
+                          <span>
+                            Other Payment
+                          </span>
                         }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("resignationDate", selectedDate);
-                          if (date && values.lastWorkingDate) {
-                            // const diffDays = Math.floor(
-                            //   (new Date(values.lastWorkingDate) - new Date(date)) /
-                            //   (1000 * 60 * 60 * 24)
-                            // );
-
-
-
-                            const diffDays = Math.floor(
-                              (new Date(values.lastWorkingDate) - new Date(date)) /
-                              (1000 * 60 * 60 * 24)
-                            ) + 1; // inclusive of last day
-
-                            setFieldValue("noticePeriodDays", diffDays);
-
-                          }
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="resignationDate"
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
                         autoComplete="off"
-                        maxDate={new Date()}
-                        minDate={new Date(dateOfJoining)}
-                      />
+                        type="text"
 
+
+                      />
 
                     </div>
 
-                    <div className="">
-                      <label>
-                        Last Working Date<span style={{ color: "red" }}>*</span>
-                      </label>
+                    <div className="grid md:col-span-2">
                       <Field
-                        className="form-control"
-                        placeholder="Last Working date"
-                        component={DatePickerField}
-                        disabled={!values.employeeId}
-                        selected={
-                          values?.lastWorkingDate
-                            ? new Date(values.lastWorkingDate)
-                            : null
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Enter remarks"
+                        label={
+                          <span>
+                            Remarks
+                          </span>
                         }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("lastWorkingDate", selectedDate);
-                          getServicePeriod(dateOfJoining, selectedDate)
-                          if (values.resignationDate && date) {
-                            // const diffDays = Math.floor(
-                            //   (new Date(date) - new Date(values.resignationDate)) /
-                            //   (1000 * 60 * 60 * 24)
-                            // );
-
-
-                            const diffDays = Math.floor(
-                              (new Date(date) - new Date(values.resignationDate)) /
-                              (1000 * 60 * 60 * 24)
-                            ) + 1; // inclusive
-                            setFieldValue("noticePeriodDays", diffDays);
-
-
-                          }
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="lastWorkingDate"
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
                         autoComplete="off"
-                        // maxDate={new Date()}
-                        minDate={new Date(dateOfJoining)}
-                      />
+                        type="text"
 
+                      />
 
                     </div>
 
@@ -820,10 +906,218 @@ export function FormEditForm({
                       <Field
                         name="totalServicePeriod"
                         component={Input}
-                        placeholder="Auto total service period"
+                        placeholder="Enter other deduction"
                         label={
                           <span>
-                            Total Service Period
+                            Other Deduction
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+
+                    <div className="grid md:col-span-2">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Enter remarks"
+                        label={
+                          <span>
+                            Remarks
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+                  </div>
+
+                  <div className=" grid lg:grid-cols-1 gap-x-3 mt-1 mb-2 ">
+                    <div className="flex md:grid-cols-6 justify-end gap-x-3 ">
+                      <div className="">
+                        <Field
+                          name="totalServicePeriod"
+                          component={Input}
+                          placeholder="Enter total paid earning"
+                          label={
+                            <span>
+                              Total Paid Earning
+                            </span>
+                          }
+                          value={servicePeriod ||
+                            dateOfJoining && values.lastWorkingDate
+                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                            : ""
+                          }
+                          autoComplete="off"
+                          type="text"
+
+                        />
+
+                      </div>
+
+                      <div className="">
+                        <Field
+                          name="totalServicePeriod"
+                          component={Input}
+                          placeholder="Enter total paidd eduction"
+                          label={
+                            <span>
+                              Total Paid Deduction
+                            </span>
+                          }
+                          value={servicePeriod ||
+                            dateOfJoining && values.lastWorkingDate
+                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                            : ""
+                          }
+                          autoComplete="off"
+                          type="text"
+
+                        />
+
+                      </div>
+
+                      <div className="">
+                        <Field
+                          name="totalServicePeriod"
+                          component={Input}
+                          placeholder="Enter net salary"
+                          label={
+                            <span>
+                              Net Salary
+                            </span>
+                          }
+                          value={servicePeriod ||
+                            dateOfJoining && values.lastWorkingDate
+                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                            : ""
+                          }
+                          autoComplete="off"
+                          type="text"
+
+                        />
+
+                      </div>
+
+                    </div>
+
+
+
+
+
+                  </div>
+                </div>
+                <hr></hr>
+
+
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Loan Detail
+                  </h6>
+
+                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Auto total loan outstanding"
+                        label={
+                          <span>
+                            Total Loan Outstanding
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+                        disabled
+                      />
+
+                    </div>
+
+                    <div className="mt-6">
+
+
+
+                      {loanPanel ? (
+                        <button
+                          type="button"
+                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                          onClick={() => setLoanPanel(!loanPanel)}
+                        >
+                          <XCircle className="w-3 h-3 text-black" />
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-primary d-flex align-items-center gap-2"
+                          onClick={() => setLoanPanel(!loanPanel)}
+                          disabled={!values?.employeeId}
+                        >
+
+
+                          <Eye className="w-4 h-4 text-white" />
+                          View Details
+                        </button>
+                      )}
+
+
+
+
+                    </div>
+
+
+                  </div>
+                  <ViewLoans
+                    employeeId={values?.employeeId || formData?.employeeId}
+                    panelMode={loanPanel}
+                    values={values}
+                  />
+
+
+                </div>
+
+
+                <hr></hr>
+
+
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Grautity Detail
+                  </h6>
+
+                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Auto gratuity amount"
+                        label={
+                          <span>
+                            Gratuity Amount
                           </span>
                         }
                         value={servicePeriod ||
@@ -839,389 +1133,258 @@ export function FormEditForm({
                     </div>
 
 
-                    <div className="">
-                      <SearchSelect
-                        label={
-                          <span>
-                            Final Settlement Policy
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead || !values.employeeId}
-                        name="finalSettlementPolicy"
-                        onChange={(e) => {
-                          setFieldValue("finalSettlementPolicy", e?.value ?? null);
-                        }}
-
-                        value={
-                          allfinalSettlementPolicy?.find(
-                            (option) => option?.value == values?.finalSettlementPolicy
-                          ) || null
-                        }
-                        error={errors.finalSettlementPolicy}
-                        touched={touched.finalSettlementPolicy}
-                        options={allfinalSettlementPolicy}
-                      />
-                    </div>
-
-                    <div className="mt-6">
-
-
-
-                      {policyMode ? (
-                        <button
-                          type="button"
-                          className="btn btn-light btn-elevate d-flex align-items-center gap-2"
-                          onClick={() => setPolicyMode(!policyMode)}
-                        >
-                          <XCircle className="w-3 h-3 text-black" />
-                          Cancel
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn btn-primary d-flex align-items-center gap-2"
-                          onClick={() => setPolicyMode(!policyMode)}
-                        >
-
-
-                          <Eye className="w-4 h-4 text-white" />
-                          View Details
-                        </button>
-                      )}
-
-
-
-
-                    </div>
-
-
 
                   </div>
 
+                </div>
 
 
-
-                  <div className="grid lg:grid-cols-6 gap-x-3">
-
-                    <div>
-
-                      <div className="flex items-center gap-1 mt-1">
-                        <label>Accepted By</label>
-                        <input
-                          name="all_report_to"
-                          type="checkbox"
-                          // onChange={handleChange}
-                          onChange={() =>
-                            setFieldValue(
-                              "all_report_to",
-                              !values?.all_report_to
-                            )
-                          }
-                          onBlur={handleBlur}
-                          value={values.all_report_to}
-                          checked={values.all_report_to}
-                          label="Show All"
-                        />
-                        <label>Show All</label>
-                        <ErrorMessage
-                          className="form-feedBack"
-                          name="all_report_to"
-                          component="div"
-                        />
-                      </div>
-                      <SearchSelect
-                        name="acceptedEmployeeId"
-                        isDisabled={isdataForRead || !values.employeeId}
-                        // onBlur={() => {
-                        //   handleBlur({ target: { name: "countryId" } });
-                        // }}
-                        onChange={(e) => {
-                          setFieldValue("acceptedEmployeeId", e.value || null);
+                <hr></hr>
 
 
-                        }}
-                        value={
-                          dashboard?.allEmployeesWithNoPermissionList?.find(
-                            (option) => option?.value == values?.acceptedEmployeeId
-                          ) || null
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Provident Fund Detail
+                  </h6>
+
+                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Enter provident fund contribution"
+                        label={
+                          <span>
+                            Total Provident Fund Contribution
+                          </span>
                         }
-                        error={errors.acceptedEmployeeId}
-                        touched={touched.acceptedEmployeeId}
-                        // options={dashboard.allEmployees.filter(x => x.value != values.Id)}
-                        options={[
-                          { value: null, label: "Select" }, // Adding "All" option with value empty string
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
 
-
-                          ...dashboard.allEmployeesWithNoPermissionList.filter(
-                            (x) => {
-                              if (values?.all_report_to) {
-                                // If "All" is selected, do not filter by department and exclude current user
-                                return x.value !== values.employeeId;
-                              } else {
-                                // If "All" is not selected, filter based on departmentId and exclude current user
-                                return (
-                                  x.departmentId === departmentId &&
-                                  x.value !== values.employeeId
-                                );
-                              }
-                            }
-                          ),
-                        ]}
                       />
+
                     </div>
 
                     <div className="">
-                      <label>
-                        Date of Resignation Acceptance
-                      </label>
                       <Field
-                        className="form-control"
-                        placeholder="Date of Resignation Acceptance"
-                        component={DatePickerField}
-                        disabled={!values.employeeId}
-                        selected={
-                          values?.resignationAcceptanceDate
-                            ? new Date(values.resignationAcceptanceDate)
-                            : null
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Enter employer contribution"
+                        label={
+                          <span>
+                            Employer Contribution
+                          </span>
                         }
-                        onChange={(date) => {
-                          let selectedDate = formatDates(date, "yyyy-MM-dd");
-                          setFieldValue("resignationAcceptanceDate", selectedDate);
-                        }}
-                        dateFormat="dd-MMM-yyyy"
-                        name="resignationAcceptanceDate"
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
                         autoComplete="off"
-                        maxDate={new Date()}
-                        minDate={new Date(dateOfJoining)}
+                        type="text"
 
                       />
 
+                    </div>
+
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Enter employee contribution"
+                        label={
+                          <span>
+                            Employee Contribution
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+
+                      />
 
                     </div>
 
-                    <div className="md:col-span-4">
+                  </div>
+
+                </div>
+
+
+                <hr></hr>
+
+
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    Payment Details
+                  </h6>
+
+                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                    <div className="">
                       <Field
-                        name="acceptanceRemarks"
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Auto net salary"
+                        label={
+                          <span>
+                            Net Salary
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+                        disabled
+
+                      />
+
+                    </div>
+
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Auto loan outstanding"
+                        label={
+                          <span>
+                            Loan Outstanding
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+                        disabled
+
+                      />
+
+                    </div>
+
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Auto gratuity amount"
+                        label={
+                          <span>
+                            Gratuity Amount
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Auto total payable amount"
+                        label={
+                          <span>
+                            Total Payable Amount
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <hr></hr>
+
+
+                <div >
+
+                  <h6 className="font-bold mb-0 text-primary">
+                    HR
+                  </h6>
+
+                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                    <div className="">
+                      <Field
+                        name="totalServicePeriod"
+                        component={Input}
+                        placeholder="Select exit clearance"
+                        label={
+                          <span>
+                            Exit Clearance
+                          </span>
+                        }
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
+                        }
+                        autoComplete="off"
+                        type="text"
+
+                      />
+
+                    </div>
+
+                    <div className="grid md:col-span-5">
+                      <Field
+                        name="totalServicePeriod"
                         component={TextArea}
                         placeholder="Enter remarks"
-                        label={<span>Remarks for Resignation Approval</span>}
-                        className="form-control "  // Force full height
-                        autoComplete="off"
-                      />
-                    </div>
-
-
-
-
-                  </div>
-
-
-
-
-
-
-
-                  <div className="grid lg:grid-cols-6 gap-x-3">
-
-                    <div className="">
-                      <Field
-                        name="noticePeriodDays"
-                        component={Input}
-                        disabled={true}
-                        placeholder="Auto notice period in days"
                         label={
                           <span>
-
-                            Notice Period Days
-
+                            Remarks
                           </span>
                         }
-                        value={
-                          values.resignationDate && values.lastWorkingDate
-                            ? Math.floor(
-                              (new Date(values.lastWorkingDate) - new Date(values.resignationDate)) /
-                              (1000 * 60 * 60 * 24)
-                            ) + 1
-                            : ""
-                        }
-
-                        autoComplete="off"
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimitDynamic(
-                            e.target.value,
-                            3
-                          ); // Limit to 3 digits
-                        }}
-                      />
-                    </div>
-
-
-                    <div className="">
-                      <SearchSelect
-                        label={
-                          <span>
-                            Notice Period Type
-                            <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        isDisabled={isdataForRead || !values.employeeId}
-                        name="noticePeriodtype"
-                        onChange={(e) => {
-                          setFieldValue("noticePeriodtype", e?.value ?? null);
-                        }}
-
-                        value={
-                          allNoticePeriodType?.find(
-                            (option) => option?.value == values?.noticePeriodtype
-                          ) || null
-                        }
-                        error={errors.noticePeriodtype}
-                        touched={touched.noticePeriodtype}
-                        options={allNoticePeriodType}
-                      />
-                    </div>
-
-                    <div className="md:col-span-4">
-                      <Field
-                        name="hrRemarks"
-                        component={TextArea}
-                        placeholder="Enter hr remarks"
-                        className="form-control"  // Force full height
-                        label={
-                          <span>
-
-                            HR Remarks
-                          </span>
+                        value={servicePeriod ||
+                          dateOfJoining && values.lastWorkingDate
+                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
+                          : ""
                         }
                         autoComplete="off"
+                        type="text"
+
                       />
 
                     </div>
 
 
-                  </div>
-
-
-                </div>
-
-
-
-                <div className="grid lg:grid-cols-6 gap-x-3">
-
-                  <div className="col-span-1">
-
-                    <FileUpload
-                      label={
-                        <>
-                          Resignation Letter Attachment
-                        </>
-                      }
-                      id="file"
-                      name="file"
-                      type="file"
-                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                      ref={inputFile}
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        setFieldValue("resignationAttachment", file);
-                      }}
-
-
-                    />
-                    {errors.resignationAttachment && touched.resignationAttachment && (
-                      <div className="invalid-feedback">{errors.resignationAttachment}</div>
-                    )}
-
-
-                    {/* </label> */}
-
-                    {/* Show existing file if any */}
-                    {/* {formData?.resignationAttachment || values?.resignationAttachment && (
-                      <div className="mt-2">
-                        <strong>Existing File: </strong>
-                        <a
-                          href={getUploadUrl(formData?.resignationAttachment ||  values?.resignationAttachment)}
-                          target="_blank"
-                          className="text-blue-600 underline"
-                        >
-                          {getFileName(formData?.resignationAttachment ||  values?.resignationAttachment)}
-                        </a>
-                      </div>
-                    )} */}
-
-
-                    {(formData?.resignationAttachment || values?.resignationAttachment) && (
-                      <div className="mt-2">
-                        <strong>Existing File: </strong>
-                        <a
-                          href={
-                            typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
-                              ? getUploadUrl(values?.resignationAttachment || formData?.resignationAttachment)
-                              : URL.createObjectURL(values?.resignationAttachment || formData?.resignationAttachment)
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline"
-                        >
-                          {typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
-                            ? getFileName(values?.resignationAttachment || formData?.resignationAttachment)
-                            : (values?.resignationAttachment)?.name || formData?.resignationAttachment}
-                        </a>
-                      </div>
-                    )}
-
-                  </div>
-
-                  <div className="">
-                    <label className="flex items-center gap-2">
-                      <Field
-                        type="checkbox"
-                        name="blackList"
-                        checked={values.blackList}
-                        onChange={(e) => setFieldValue("blackList", e.target.checked)}
-                      />
-                      <span>
-                        Mark as Blacklisted
-                      </span>
-                    </label>
-                    {errors.blackList && touched.blackList && (
-                      <div className="invalid-feedback">{errors.blackList}</div>
-                    )}
-                  </div>
-
-
-
-
-                  <div className="md:col-span-4">
-                    <Field
-                      name="blackListRemarks"
-                      component={TextArea}
-                      disabled={!values.blackList}
-                      placeholder="Enter remarks"
-                      className="form-control"  // Force full height
-                      label={
-                        <span>
-
-                          Reason for marking Blacklist
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
 
                   </div>
 
                 </div>
-
-
-
-
-
-
-
-
 
               </fieldset>
 

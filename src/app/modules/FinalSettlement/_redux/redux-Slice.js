@@ -77,6 +77,7 @@ export const FinalSettlementSlice = createSlice({
    
       state.activeEmployeeList = action.payload;
       state.error = null;
+      console.log("aaaaaa111",state.activeEmployeeList)
     },
 
     SeparationDeleted: (state, action) => {
@@ -93,41 +94,22 @@ export const FinalSettlementSlice = createSlice({
       state.actionsLoading = false;
     },
 
-    // separationCreated: (state, action) => {
-
-    //     state.actionsLoading = false;
-    //     state.error = null;
-    //     state.entities.unshift(action.payload);
-    // },
 
     separationCreated: (state, action) => {
       state.actionsLoading = false;
       state.error = null;
 
-      // Clone the payload to avoid direct mutation
-      // let payload = JSON.stringify(action.payload);
-      // let payloadObj = JSON.parse(payload);
 
-      // // If basis_of_gratuityId is 0, set "Gross", if 1, set "Basis"
-      // if (payloadObj.basis_of_gratuityId == 0) {
-
-      //     payloadObj.basis_of_gratuity = "Gross";
-      // } else if (payloadObj.basis_of_gratuityId == 1) {
-
-      //     payloadObj.basis_of_gratuity = "Basis";
-      // }
-
-      // Add the modified payload to the beginning of the entities list
       state.entities.unshift(action.payload);
     },
 
     separationUpdated: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
-      // state.entities.push(action.payload)
+   
 
       state.entities = state.entities.map((entity) => {
-        //const payload = { ...action.payload };
+   
         let payload = JSON.stringify(action.payload);
         let payloadObj = JSON.parse(payload);
         let finalObj = JSON.parse(payloadObj.updatedSeparation);

@@ -5,7 +5,7 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 //Create user
 export function createSeparation(body) {
 
-  return axios.post(`${USERS_URL}/separation/create-separation`, body);
+  return axios.post(`${USERS_URL}/final_settlement/create-final-settlement`, body);
   
 }
 
@@ -13,31 +13,31 @@ export function createSeparation(body) {
 // Read
 export function getAllSeparation(body) {
 
-  return axios.post(`${USERS_URL}/separation/read-all-separation`, body);
+  return axios.post(`${USERS_URL}/separation/read-all-final-settlement`, body);
 }
 
 
 // employee by status
 export function getsEmpBySeparationFlag(body) {
 
-  return axios.post(`${USERS_URL}/separation/read-emp-separation-byflag`, body);
+  return axios.post(`${USERS_URL}/final_settlement/read-final-settlement-byflag`, body);
 }
 
 export function getSeparationById(id) {
 
-  return axios.get(`${USERS_URL}/separation/read-separation/${id}`);
+  return axios.get(`${USERS_URL}/separation/read-final-settlement/${id}`);
 }
 
 //Update
 export function updateSeparation(body) {
    
-  return axios.put(`${USERS_URL}/separation/update-separation`, body);
+  return axios.put(`${USERS_URL}/separation/update-final-settlement`, body);
 }
 
 //Delete
 export function deleteSeparation(id) {
 
-  return axios.delete(`${USERS_URL}/separation/delete-separation/${id}`);
+  return axios.delete(`${USERS_URL}/separation/delete-final-settlement/${id}`);
 }
 
 // separated

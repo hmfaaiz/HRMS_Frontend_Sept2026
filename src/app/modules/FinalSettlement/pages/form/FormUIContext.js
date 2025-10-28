@@ -31,32 +31,24 @@ export function FormUIProvider({ FormUIEvents, children }) {
 const initUser = {
   Id: null,
 
-  employeeId: "",
-  exitTypeId: "",
-  exitReasonId: "",
-  exitRemark: "",
+  employeeId:null,
+  paidDays:null,
+  earning_list:[],
+  deduction_list:[],
+  otherPayment: null,
+  otherPaymentRemarks: null,
+  otherDeduction: null,
+  oherDeductionRemarks: null,
+  totalEarnings: null,
+  totalDeduction: null,
+  netSalary: null,
+  loanBalance: null,
+  gratuityAmount: null,
+  totalPFAmount: null,
+  pf_employer_amount: null,
+  pf_employee_amount: null,
 
-  acceptedEmployeeId: "",
-  acceptanceRemarks: "",
 
-  resignationDate: "",                // DATE
-  resignationAcceptanceDate: "",      // DATE
-  lastWorkingDate: "",                // DATE
-
-  finalSettlementPolicy: "",
-  noticePeriodDays: "",
-  noticePeriodtype: "",
-
-  hrRemarks: "",
-  blackList: false,
-  blackListRemarks: "",
-  resignationAttachment: "",
-
-  resignedFlag: false,
-  separatedFlag: false,
-  reinstatedFlag: false,
-  reinstatedRemarks: "",
-    employeetatus:""
 
  
 };
