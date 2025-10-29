@@ -37,30 +37,123 @@ import ViewLoans from "./ViewLoans";
 import ViewSeparate from "./ViewSeparate";
 
 
-export const getSeparationEditSchema = (formData) => {
-  return Yup.object()
-    .shape({
-
-      employeeId: Yup.number()
-        .required(VALIDATION_MESSAGES.required),
+export const getFinal_SettlementEditSchema = (formData) => {
+  return Yup.object().shape({
 
 
+    employeeId: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    paidDays: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    otherPayment: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    otherPaymentRemarks: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    otherDeduction: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    oherDeductionRemarks: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    loanBalance: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    gratuityAmount: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    pf_employer_amount: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    pf_employee_amount: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    totalPFAmount: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    totalEarnings: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    totalDeduction: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    netSalary: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    netFinalSettlementAmount: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    exitClearence: Yup.number()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    hrRemarks: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
 
 
+    earning_list: Yup.array().of(
+      Yup.object().shape({
+
+        earning_deduction_id: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        amount_takeHome: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        amount_actual: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        days_hours: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        remarks: Yup.string()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+      })
+    ),
+
+    deduction_list: Yup.array().of(
+      Yup.object().shape({
+
+        earning_deduction_id: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        amount_takeHome: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        amount_actual: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+        days_hours: Yup.number()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+        remarks: Yup.string()
+          .nullable().required(VALIDATION_MESSAGES.required),
+
+      })
+    ),
 
 
-
-
-
-
-
-
-
-
-    })
-
-
-};
+  });
+}
 
 export function FormEditForm({
   saveForm,
@@ -88,9 +181,9 @@ export function FormEditForm({
 
   //drop down
   useEffect(() => {
-    if(formData.employeeId){
-       dispatch(fetchAllEarningList(1, "", formData.employeeId, true));
-                        dispatch(fetchAllDeductionList(2, "", formData.employeeId));
+    if (formData.employeeId) {
+      dispatch(fetchAllEarningList(1, "", formData.employeeId, true));
+      dispatch(fetchAllDeductionList(2, "", formData.employeeId));
     }
 
 
@@ -104,7 +197,7 @@ export function FormEditForm({
 
 
 
-  }, [dispatch, formData.Id,formData.employeeId]);
+  }, [dispatch, formData.Id, formData.employeeId]);
 
 
   const { currentState } = useSelector((state) => {
@@ -127,6 +220,12 @@ export function FormEditForm({
 
 
 
+
+  const exitClearanceOptions = [
+    { value: 0, label: "No" },
+    { value: 1, label: "Yes" },
+
+  ];
 
 
 
@@ -161,12 +260,12 @@ export function FormEditForm({
       panelMode: FormUIContext.panelMode,
     };
   }, [FormUIContext]);
-console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
+
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{ ...formData, employeetatus: 1 }}
-      validationSchema={getSeparationEditSchema(formData)}
+      validationSchema={getFinal_SettlementEditSchema(formData)}
       onSubmit={async (values) => {
         enableLoading();
         saveForm(values);
@@ -287,6 +386,19 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
 
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
+                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6">
+                    <button
+
+
+
+                      className="btn btn-primary btn-elevate"
+                    >
+                      Calculate
+                      {loading && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+                  </div>
                   <div className="">
                     <Field
                       name="paidDays"
@@ -305,19 +417,7 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
                     />
 
                   </div>
-                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6">
-                    <button
 
-
-
-                      className="btn btn-primary btn-elevate"
-                    >
-                      Calculate
-                      {loading && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  </div>
 
 
                 </div>
@@ -359,13 +459,14 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
                             className="btn btn-primary btn-elevate text-right"
                             onClick={() =>
                               push({
-                                days_hours: "",
-                                amount_actual: "",
+
+
                                 earning_deduction_id: "",
+                                amount_takeHome: "",
+                                amount_actual: "",
+                                days_hours: "",
                                 remarks: "",
-                                isActive: 1,
-                                sno: "",
-                                targetDate: "",
+
                               })
                             }
                           >
@@ -608,13 +709,13 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
                             className="btn btn-primary btn-elevate text-right"
                             onClick={() =>
                               push({
-                                days_hours: "",
-                                amount_actual: "",
+
                                 earning_deduction_id: "",
+                                amount_takeHome: "",
+                                amount_actual: "",
+                                days_hours: "",
                                 remarks: "",
-                                isActive: 1,
-                                sno: "",
-                                targetDate: "",
+
                               })
                             }
                           >
@@ -668,7 +769,7 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
                                         }}
 
                                         options={
-                                         dashboard?.allDeductions?.map((option) => ({
+                                          dashboard?.allDeductions?.map((option) => ({
                                             label: option.label, // show only this field as label
                                             value: option.value,     // keep value for Formik binding
                                           })) || []
@@ -1193,7 +1294,7 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
                   </h6>
 
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                    <div className="">
+                    {/* <div className="">
                       <Field
                         name="exitClearence"
                         component={Input}
@@ -1209,6 +1310,32 @@ console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
 
                       />
 
+                    </div> */}
+
+
+                    <div className="">
+                      <SearchSelect
+                        label={
+                          <span>
+                            Exit Clearance
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+
+                        name="exitClearence"
+                        onChange={(e) => {
+                          setFieldValue("exitClearence", e?.value ?? null);
+                        }}
+
+                        value={
+                          exitClearanceOptions?.find(
+                            (option) => option?.value == values?.exitClearence
+                          ) || null
+                        }
+                        error={errors.exitClearence}
+                        touched={touched.exitClearence}
+                        options={exitClearanceOptions}
+                      />
                     </div>
 
                     <div className="grid md:col-span-5">

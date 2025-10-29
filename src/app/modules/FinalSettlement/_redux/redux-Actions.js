@@ -24,7 +24,7 @@ export const fetchSeparation = (queryparm) => async (dispatch) => {
 };
 
 export const fetchSeparationById = (id) => (dispatch) => {
-
+console.log("id11111",id)
 
   if (!id) {
     return dispatch(actions.SeparationFetchedForEdit({ dataForEdit: undefined }));
