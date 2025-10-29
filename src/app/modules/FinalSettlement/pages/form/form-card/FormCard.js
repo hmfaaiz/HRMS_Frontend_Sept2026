@@ -26,18 +26,18 @@ export function FormCard() {
 
   const { userAccess } = useSelector((state) => {
     return {
-      userAccess: state.auth.userAccess.separation,
+      userAccess: state.auth.userAccess.final_settlement,
     };
   }, shallowEqual);
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateSeparation"
+    (item) => item.componentName === "CreateFinalSettlement"
   );
 
   const { currentState } = useSelector((state) => {
     return {
-      currentState: state.separation,
-      userAccess: state?.auth?.userAccess["separation"],
+      currentState: state.final_settlement,
+      userAccess: state?.auth?.userAccess["final_settlement"],
     };
   }, shallowEqual);
 

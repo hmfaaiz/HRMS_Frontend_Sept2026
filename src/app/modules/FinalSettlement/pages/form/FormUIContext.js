@@ -47,6 +47,8 @@ const initUser = {
   totalPFAmount: null,
   pf_employer_amount: null,
   pf_employee_amount: null,
+  exitClearence: null,
+  hrRemarks: null,
 
 
 

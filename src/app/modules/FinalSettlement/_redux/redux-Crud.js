@@ -13,7 +13,7 @@ export function createSeparation(body) {
 // Read
 export function getAllSeparation(body) {
 
-  return axios.post(`${USERS_URL}/separation/read-all-final-settlement`, body);
+  return axios.post(`${USERS_URL}/final_settlement/read-all-final-settlement`, body);
 }
 
 
@@ -25,25 +25,25 @@ export function getsEmpBySeparationFlag(body) {
 
 export function getSeparationById(id) {
 
-  return axios.get(`${USERS_URL}/separation/read-final-settlement/${id}`);
+  return axios.get(`${USERS_URL}/final_settlement/read-final-settlement/${id}`);
 }
 
 //Update
 export function updateSeparation(body) {
    
-  return axios.put(`${USERS_URL}/separation/update-final-settlement`, body);
+  return axios.put(`${USERS_URL}/final_settlement/update-final-settlement`, body);
 }
 
 //Delete
 export function deleteSeparation(id) {
 
-  return axios.delete(`${USERS_URL}/separation/delete-final-settlement/${id}`);
+  return axios.delete(`${USERS_URL}/final_settlement/delete-final-settlement/${id}`);
 }
 
 // separated
 export function separateById(body) {
 
-  return axios.put(`${USERS_URL}/separation/separated-byId/`,body);
+  return axios.put(`${USERS_URL}/final_settlement/separated-byId/`,body);
 }
 
 

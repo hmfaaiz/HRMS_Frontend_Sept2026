@@ -11,6 +11,8 @@ import * as actions from "../../../_redux/redux-Actions";
 import DatePicker from "react-datepicker";
 import {
 
+  fetchAllDeductionList,
+  fetchAllEarningList,
   fetchAllEmployeesWithNoPermissionData,
   fetchAllFormsMenu,
 
@@ -76,37 +78,33 @@ export function FormEditForm({
   const [file, setFile] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [dateOfJoining, setDateOfJoining] = useState("");
-  const [servicePeriod, setGetServicePeriod] = useState("");
+
   const [policyMode, setPolicyMode] = useState("");
   const [separateMode, setSeparateMode] = useState("");
 
   const [loanPanel, setLoanPanel] = useState("");
   const [separatePanel, setSeparatePanel] = useState("");
 
-  const handlePolicyModalClose = () => {
-    setPolicyMode(false);
-    setSeparateMode(false)
-  };
-
 
   //drop down
   useEffect(() => {
-    if (!formData.Id) {
-
-
-
-
-
-
-      // Always run for active employee
-      dispatch(actions.fetchEmpBySeparationFlag({ flag: 1, employeeId: formData?.employeeId }));
+    if(formData.employeeId){
+       dispatch(fetchAllEarningList(1, "", formData.employeeId, true));
+                        dispatch(fetchAllDeductionList(2, "", formData.employeeId));
     }
-    else {
 
-      dispatch(actions.fetchEmpBySeparationFlag({ flag: null, employeeId: formData?.employeeId }));
 
-    }
-  }, [dispatch, formData.Id]);
+
+
+
+
+
+    // Always run for active employee
+    dispatch(actions.fetchEmpBySeparationFlag({ flag: 1, employeeId: formData?.employeeId }));
+
+
+
+  }, [dispatch, formData.Id,formData.employeeId]);
 
 
   const { currentState } = useSelector((state) => {
@@ -118,7 +116,7 @@ export function FormEditForm({
 
   const { dataForEdit, activeEmployeeList } = currentState;
 
-  console.log("currentState1111", currentState, currentState.activeEmployeeList)
+
   const { allEmployees } = useSelector(
     (state) => ({
       allEmployees: state.dashboard.allEmployees
@@ -129,45 +127,6 @@ export function FormEditForm({
 
 
 
-
-  const getServicePeriod = (start, end) => {
-    if (!start || !end) return "";
-
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-
-    let years = endDate.getFullYear() - startDate.getFullYear();
-    let months = endDate.getMonth() - startDate.getMonth();
-    let days = endDate.getDate() - startDate.getDate();
-
-    if (days < 0) {
-      months -= 1;
-      const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
-      days += prevMonthDays;
-    }
-
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-
-    //  Inclusive calculation
-    days += 1;
-
-
-    const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
-    if (days > maxDaysInMonth) {
-      days -= maxDaysInMonth;
-      months += 1;
-
-      if (months >= 12) {
-        months -= 12;
-        years += 1;
-      }
-    }
-
-    return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
-  };
 
 
 
@@ -184,7 +143,7 @@ export function FormEditForm({
         setDepartmentId(selectedEmp?.departmentId)
         setDateOfJoining(selectedEmp?.dateOfJoining);
 
-        getServicePeriod(dateOfJoining, formData.lastWorkingDate);
+
 
       }
     }
@@ -202,7 +161,7 @@ export function FormEditForm({
       panelMode: FormUIContext.panelMode,
     };
   }, [FormUIContext]);
-
+console.log('dashboard?.allEarnings1111',dashboard?.allEarnings)
   return (
     <Formik
       enableReinitialize={true}
@@ -251,7 +210,8 @@ export function FormEditForm({
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
                         setFieldValue("employeeId", value);
-
+                        dispatch(fetchAllEarningList(1, "", e.value, true));
+                        dispatch(fetchAllDeductionList(2, "", e.value));
                         const selectedEmp = activeEmployeeList?.find(
                           (emp) => emp.value === value
                         );
@@ -329,7 +289,7 @@ export function FormEditForm({
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
                   <div className="">
                     <Field
-                      name="totalServicePeriod"
+                      name="paidDays"
                       component={Input}
                       placeholder="Enter paid days"
                       label={
@@ -337,11 +297,7 @@ export function FormEditForm({
                           Paid Days
                         </span>
                       }
-                      value={servicePeriod ||
-                        dateOfJoining && values.lastWorkingDate
-                        ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                        : ""
-                      }
+
                       autoComplete="off"
                       type="text"
 
@@ -349,6 +305,21 @@ export function FormEditForm({
                     />
 
                   </div>
+                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6">
+                    <button
+
+
+
+                      className="btn btn-primary btn-elevate"
+                    >
+                      Calculate
+                      {loading && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+                  </div>
+
+
                 </div>
 
                 <EmployeeProfile
@@ -434,10 +405,10 @@ export function FormEditForm({
 
 
                                         value={
-                                          dashboard?.allAppraisalCompetencySetupearning_list
+                                          dashboard?.allEarnings
                                             ?.filter((option) => option.value === values.earning_list[index].earning_deduction_id)
                                             ?.map((option) => ({
-                                              label: option.onlyLabel, //  onlyLabel will be displayed
+                                              label: option.label, //  onlyLabel will be displayed
                                               value: option.value,
                                             }))[0] || null
                                         }
@@ -448,8 +419,8 @@ export function FormEditForm({
                                         }}
 
                                         options={
-                                          dashboard?.allAppraisalCompetencySetupearning_list?.map((option) => ({
-                                            label: option.onlyLabel, // show only this field as label
+                                          dashboard?.allEarnings?.map((option) => ({
+                                            label: option.label, // show only this field as label
                                             value: option.value,     // keep value for Formik binding
                                           })) || []
                                         }
@@ -683,10 +654,10 @@ export function FormEditForm({
 
 
                                         value={
-                                          dashboard?.allAppraisalCompetencySetupdeduction_list
+                                          dashboard?.allDeductions
                                             ?.filter((option) => option.value === values.deduction_list[index].earning_deduction_id)
                                             ?.map((option) => ({
-                                              label: option.onlyLabel, //  onlyLabel will be displayed
+                                              label: option.label, //  onlyLabel will be displayed
                                               value: option.value,
                                             }))[0] || null
                                         }
@@ -697,8 +668,8 @@ export function FormEditForm({
                                         }}
 
                                         options={
-                                          dashboard?.allAppraisalCompetencySetupdeduction_list?.map((option) => ({
-                                            label: option.onlyLabel, // show only this field as label
+                                         dashboard?.allDeductions?.map((option) => ({
+                                            label: option.label, // show only this field as label
                                             value: option.value,     // keep value for Formik binding
                                           })) || []
                                         }
@@ -859,7 +830,7 @@ export function FormEditForm({
                   <div className="grid md:grid-cols-6 gap-x-3 mt-1 mb-2">
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="otherPayment"
                         component={Input}
                         placeholder="Enter other payment"
                         label={
@@ -867,11 +838,7 @@ export function FormEditForm({
                             Other Payment
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -882,7 +849,7 @@ export function FormEditForm({
 
                     <div className="grid md:col-span-2">
                       <Field
-                        name="totalServicePeriod"
+                        name="otherPaymentRemarks"
                         component={Input}
                         placeholder="Enter remarks"
                         label={
@@ -890,11 +857,7 @@ export function FormEditForm({
                             Remarks
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -904,7 +867,7 @@ export function FormEditForm({
 
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="otherDeduction"
                         component={Input}
                         placeholder="Enter other deduction"
                         label={
@@ -912,11 +875,7 @@ export function FormEditForm({
                             Other Deduction
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -927,7 +886,7 @@ export function FormEditForm({
 
                     <div className="grid md:col-span-2">
                       <Field
-                        name="totalServicePeriod"
+                        name="oherDeductionRemarks"
                         component={Input}
                         placeholder="Enter remarks"
                         label={
@@ -935,11 +894,7 @@ export function FormEditForm({
                             Remarks
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -952,7 +907,7 @@ export function FormEditForm({
                     <div className="flex md:grid-cols-6 justify-end gap-x-3 ">
                       <div className="">
                         <Field
-                          name="totalServicePeriod"
+                          name="totalEarnings"
                           component={Input}
                           placeholder="Enter total paid earning"
                           label={
@@ -960,11 +915,7 @@ export function FormEditForm({
                               Total Paid Earning
                             </span>
                           }
-                          value={servicePeriod ||
-                            dateOfJoining && values.lastWorkingDate
-                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                            : ""
-                          }
+
                           autoComplete="off"
                           type="text"
 
@@ -974,7 +925,7 @@ export function FormEditForm({
 
                       <div className="">
                         <Field
-                          name="totalServicePeriod"
+                          name="totalDeduction"
                           component={Input}
                           placeholder="Enter total paidd eduction"
                           label={
@@ -982,11 +933,7 @@ export function FormEditForm({
                               Total Paid Deduction
                             </span>
                           }
-                          value={servicePeriod ||
-                            dateOfJoining && values.lastWorkingDate
-                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                            : ""
-                          }
+
                           autoComplete="off"
                           type="text"
 
@@ -996,7 +943,7 @@ export function FormEditForm({
 
                       <div className="">
                         <Field
-                          name="totalServicePeriod"
+                          name="netSalary"
                           component={Input}
                           placeholder="Enter net salary"
                           label={
@@ -1004,11 +951,7 @@ export function FormEditForm({
                               Net Salary
                             </span>
                           }
-                          value={servicePeriod ||
-                            dateOfJoining && values.lastWorkingDate
-                            ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                            : ""
-                          }
+
                           autoComplete="off"
                           type="text"
 
@@ -1036,7 +979,7 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="loanBalance"
                         component={Input}
                         placeholder="Auto total loan outstanding"
                         label={
@@ -1044,11 +987,7 @@ export function FormEditForm({
                             Total Loan Outstanding
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
                         disabled
@@ -1112,7 +1051,7 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="gratuityAmount"
                         component={Input}
                         placeholder="Auto gratuity amount"
                         label={
@@ -1120,11 +1059,7 @@ export function FormEditForm({
                             Gratuity Amount
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
                         disabled
@@ -1151,7 +1086,7 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="totalPFAmount"
                         component={Input}
                         placeholder="Enter provident fund contribution"
                         label={
@@ -1159,11 +1094,7 @@ export function FormEditForm({
                             Total Provident Fund Contribution
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -1173,7 +1104,7 @@ export function FormEditForm({
 
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="pf_employer_amount"
                         component={Input}
                         placeholder="Enter employer contribution"
                         label={
@@ -1181,11 +1112,7 @@ export function FormEditForm({
                             Employer Contribution
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -1195,7 +1122,7 @@ export function FormEditForm({
 
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="pf_employee_amount"
                         component={Input}
                         placeholder="Enter employee contribution"
                         label={
@@ -1203,11 +1130,7 @@ export function FormEditForm({
                             Employee Contribution
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -1230,78 +1153,16 @@ export function FormEditForm({
                   </h6>
 
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                    <div className="">
-                      <Field
-                        name="totalServicePeriod"
-                        component={Input}
-                        placeholder="Auto net salary"
-                        label={
-                          <span>
-                            Net Salary
-                          </span>
-                        }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
-                        autoComplete="off"
-                        type="text"
-                        disabled
 
-                      />
 
-                    </div>
 
-                    <div className="">
-                      <Field
-                        name="totalServicePeriod"
-                        component={Input}
-                        placeholder="Auto loan outstanding"
-                        label={
-                          <span>
-                            Loan Outstanding
-                          </span>
-                        }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
-                        autoComplete="off"
-                        type="text"
-                        disabled
 
-                      />
 
-                    </div>
-
-                    <div className="">
-                      <Field
-                        name="totalServicePeriod"
-                        component={Input}
-                        placeholder="Auto gratuity amount"
-                        label={
-                          <span>
-                            Gratuity Amount
-                          </span>
-                        }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div>
 
 
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="netFinalSettlementAmount"
                         component={Input}
                         placeholder="Auto total payable amount"
                         label={
@@ -1309,11 +1170,7 @@ export function FormEditForm({
                             Total Payable Amount
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -1338,7 +1195,7 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
                     <div className="">
                       <Field
-                        name="totalServicePeriod"
+                        name="exitClearence"
                         component={Input}
                         placeholder="Select exit clearance"
                         label={
@@ -1346,11 +1203,7 @@ export function FormEditForm({
                             Exit Clearance
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -1360,7 +1213,7 @@ export function FormEditForm({
 
                     <div className="grid md:col-span-5">
                       <Field
-                        name="totalServicePeriod"
+                        name="hrRemarks"
                         component={TextArea}
                         placeholder="Enter remarks"
                         label={
@@ -1368,11 +1221,7 @@ export function FormEditForm({
                             Remarks
                           </span>
                         }
-                        value={servicePeriod ||
-                          dateOfJoining && values.lastWorkingDate
-                          ? getServicePeriod(dateOfJoining, values.lastWorkingDate)
-                          : ""
-                        }
+
                         autoComplete="off"
                         type="text"
 
@@ -1417,7 +1266,7 @@ export function FormEditForm({
 
                 <button
                   type="submit"
-                  disabled={formData.separatedFlag}
+
                   onClick={() => {
                     handleSubmit();
                   }}
@@ -1430,21 +1279,7 @@ export function FormEditForm({
                 </button>
 
 
-                {formData.Id && !formData.separatedFlag && (
-                  <button
 
-                    onClick={() => {
-
-                      setSeparateMode(true)
-                    }}
-                    className="btn btn-primary btn-elevate"
-                  >
-                    Separate
-                    {loading && (
-                      <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )}
-                  </button>
-                )}
 
               </>
             )}

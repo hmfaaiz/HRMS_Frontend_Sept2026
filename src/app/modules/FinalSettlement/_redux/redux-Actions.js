@@ -64,7 +64,7 @@ export const fetchEmpBySeparationFlag= (body) => (dispatch) => {
     });
 };
 
-export const deleteSeparation = (id) => (dispatch) => {
+export const deleteFinalSettlement = (id) => (dispatch) => {
 
   return requestFromServer
     .deleteSeparation(id)

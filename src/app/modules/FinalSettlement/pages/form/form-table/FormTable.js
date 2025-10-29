@@ -43,9 +43,9 @@ export function FormTable() {
       return {
 
 
-        currentState: state.separation,
+        currentState: state.final_settlement,
         
-        userAccess: state?.auth?.userAccess["separation"],
+        userAccess: state?.auth?.userAccess["final_settlement"],
       }
     },
     shallowEqual
@@ -67,14 +67,14 @@ export function FormTable() {
 
 
   const isAccessForView = userAccess?.find(
-    (item) => item.componentName === "ReadSeparation"
+    (item) => item.componentName === "ReadFinalSettlement"
   );
 
   const isAccessForEdit = userAccess?.find((item) => {
-    return item.componentName === "UpdateSeparation";
+    return item.componentName === "UpdateFinalSettlement";
   });
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteSeparation"
+    (item) => item.componentName === "DeleteFinalSettlement"
   );
 
 
@@ -104,50 +104,9 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-
     {
-      dataField: "Employee.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-    },
-
-    {
-      dataField: "Employee.designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-    },
- 
-    {
-      dataField: "Employee.employeeType.formName",
-      text: "employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-    }, {
-      dataField: "ExitType.formName",
-      text: "Exit Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-    }, {
-      dataField: "ExitReason.exitReason",
-      text: "Exit Reason",
+      dataField: "netFinalSettlementAmount",
+      text: "Total Payable Amount",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -155,27 +114,7 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "resignationDateFormatted",
-      text: "Resignation Date",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-      // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
-    },   {
-      dataField: "lastWorkingDateFormatted",
-      text: "Last Working Date",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "50px",
-      },
-      // formatter : (cell) => {return format(new Date(cell) , "dd-MMM-yyyy")}
-    },
+
 
     {
       dataField: "action",
