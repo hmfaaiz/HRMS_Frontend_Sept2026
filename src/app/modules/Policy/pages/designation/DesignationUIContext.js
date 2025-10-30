@@ -34,6 +34,7 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
 
     currencyId: "",
     subsidiaryId:"",
+    defaultRoleId : "",
     retirementAgeMale :"",
     isEmployeeCodeGenerationAuto: "",
 
