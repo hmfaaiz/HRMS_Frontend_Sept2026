@@ -78,6 +78,7 @@ export function DesignationEditDialog({ id, show, onHide, userForRead }) {
         Id: user.Id,
         code: user.code,
         subsidiaryId: user.subsidiaryId,
+        defaultRoleId : user?.defaultRoleId,
         currencyId: user.currencyId,
         isEmployeeCodeGenerationAuto: user.isEmployeeCodeGenerationAuto,
         retirementAgeMale: user.retirementAgeMale,
