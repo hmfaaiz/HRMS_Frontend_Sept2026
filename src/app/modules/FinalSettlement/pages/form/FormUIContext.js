@@ -29,26 +29,26 @@ export function FormUIProvider({ FormUIEvents, children }) {
     });
   }, []);
 const initUser = {
-  Id: null,
+  Id: "",
 
-  employeeId:null,
-  paidDays:null,
+  employeeId:"",
+  paidDays:"",
   earning_list:[],
   deduction_list:[],
-  otherPayment: null,
-  otherPaymentRemarks: null,
-  otherDeduction: null,
-  oherDeductionRemarks: null,
-  totalEarnings: null,
-  totalDeduction: null,
-  netSalary: null,
-  loanBalance: null,
-  gratuityAmount: null,
-  totalPFAmount: null,
-  pf_employer_amount: null,
-  pf_employee_amount: null,
-  exitClearence: null,
-  hrRemarks: null,
+  otherPayment: "",
+  otherPaymentRemarks: "",
+  otherDeduction: "",
+  oherDeductionRemarks: "",
+  totalEarnings: "",
+  totalDeduction: "",
+  netSalary: "",
+  loanBalance: "",
+  gratuityAmount: "",
+  totalPFAmount: "",
+  pf_employer_amount: "",
+  pf_employee_amount: "",
+  exitClearence: "",
+  hrRemarks: "",
 
 
 

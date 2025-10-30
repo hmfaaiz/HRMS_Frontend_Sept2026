@@ -43,7 +43,7 @@ export function deleteSeparation(id) {
 // separated
 export function separateById(body) {
 
-  return axios.put(`${USERS_URL}/final_settlement/separated-byId/`,body);
+  return axios.put(`${USERS_URL}/final_settlement/calculate-final-settlement/`,body);
 }
 
 

@@ -19,22 +19,13 @@ import {
 
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-import {
 
-  formatDates,
-
-
-} from "../../../../../utils/common";
-
-import { subYears } from "date-fns";
-
-import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { fetchExitReasonData } from "../../../../Dashboard/_redux/dashboardActions";
 import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { Input, TextArea } from "../../../../../../_metronic/_partials/controls";
 import ViewLoans from "./ViewLoans";
 import ViewSeparate from "./ViewSeparate";
+import { separateById } from "../../../_redux/redux-Actions";
 
 
 export const getFinal_SettlementEditSchema = (formData) => {
@@ -46,44 +37,49 @@ export const getFinal_SettlementEditSchema = (formData) => {
       .required(VALIDATION_MESSAGES.required),
 
     paidDays: Yup.number()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required),
+      .nullable(),
 
     otherPayment: Yup.number()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required),
+      .nullable(),
 
     otherPaymentRemarks: Yup.string()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+      .when('otherPayment', {
+        is: (val) => val !== null && val !== undefined && val !== '' && Number(val) > 0,
+        then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+        otherwise: (schema) => schema.nullable(),
+      }),
 
     otherDeduction: Yup.number()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required),
+      .nullable(),
 
     oherDeductionRemarks: Yup.string()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+      .when('otherDeduction', {
+        is: (val) => val !== null && val !== undefined && val !== '' && Number(val) > 0,
+        then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+        otherwise: (schema) => schema.nullable(),
+      }),
 
     loanBalance: Yup.number()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
     gratuityAmount: Yup.number()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
     pf_employer_amount: Yup.number()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
     pf_employee_amount: Yup.number()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
     totalPFAmount: Yup.number()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
     totalEarnings: Yup.number()
       .nullable()
@@ -103,11 +99,11 @@ export const getFinal_SettlementEditSchema = (formData) => {
 
     exitClearence: Yup.number()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
     hrRemarks: Yup.string()
       .nullable()
-      .required(VALIDATION_MESSAGES.required),
+    ,
 
 
     earning_list: Yup.array().of(
@@ -120,13 +116,13 @@ export const getFinal_SettlementEditSchema = (formData) => {
           .nullable().required(VALIDATION_MESSAGES.required),
 
         amount_actual: Yup.number()
-          .nullable().required(VALIDATION_MESSAGES.required),
+          .nullable(),
 
         days_hours: Yup.number()
-          .nullable().required(VALIDATION_MESSAGES.required),
+          .nullable(),
 
         remarks: Yup.string()
-          .nullable().required(VALIDATION_MESSAGES.required),
+          .nullable(),
 
       })
     ),
@@ -141,12 +137,12 @@ export const getFinal_SettlementEditSchema = (formData) => {
           .nullable().required(VALIDATION_MESSAGES.required),
 
         amount_actual: Yup.number()
-          .nullable().required(VALIDATION_MESSAGES.required),
+          .nullable(),
         days_hours: Yup.number()
-          .nullable().required(VALIDATION_MESSAGES.required),
+          .nullable(),
 
         remarks: Yup.string()
-          .nullable().required(VALIDATION_MESSAGES.required),
+          .nullable(),
 
       })
     ),
@@ -167,17 +163,15 @@ export function FormEditForm({
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
 
-  const inputFile = useRef(null);
-  const [file, setFile] = useState("");
+
   const [departmentId, setDepartmentId] = useState("");
   const [dateOfJoining, setDateOfJoining] = useState("");
 
-  const [policyMode, setPolicyMode] = useState("");
-  const [separateMode, setSeparateMode] = useState("");
 
   const [loanPanel, setLoanPanel] = useState("");
   const [separatePanel, setSeparatePanel] = useState("");
-
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [toBeCalculated, setToBeCalculated] = useState(false);
 
   //drop down
   useEffect(() => {
@@ -207,29 +201,22 @@ export function FormEditForm({
     };
   }, shallowEqual);
 
-  const { dataForEdit, activeEmployeeList } = currentState;
-
-
-  const { allEmployees } = useSelector(
-    (state) => ({
-      allEmployees: state.dashboard.allEmployees
-    }),
-    shallowEqual
-  )
-
+  const { activeEmployeeList, entities } = currentState;
 
 
 
 
   const exitClearanceOptions = [
-    { value: 0, label: "No" },
-    { value: 1, label: "Yes" },
+    { value: 0, label: "Not Received" },
+    { value: 1, label: "Received" },
 
   ];
 
 
 
-
+const finalize=(values,setFieldValue)=>{
+       setFieldValue("settlementFinalized",true)
+}
 
   useEffect(() => {
     if (formData.employeeId) {
@@ -261,6 +248,43 @@ export function FormEditForm({
     };
   }, [FormUIContext]);
 
+
+  const handleCalculate = (setFieldValue, values, earningList, deductionList, otherPayment, otherDeduction) => {
+
+
+    // Calculate total earnings based on paid days
+    const totalEarning = earningList.reduce((sum, item) => {
+      const amount_takeHome = Number(item.amount_takeHome) || 0;
+
+      return sum + amount_takeHome;
+    }, 0);
+
+    // Calculate total deductions based on paid days
+    const totalDeduction = deductionList.reduce((sum, item) => {
+      const amount_takeHome = Number(item.amount_takeHome) || 0;
+
+      return sum + Number(amount_takeHome);
+    }, 0);
+
+    const totalEarningWithOther = totalEarning + Number(otherPayment || 0);
+    const totalDeductionWithOther = totalDeduction + Number(otherDeduction || 0);
+    // Calculate net salary
+    const netSalary = Number(totalEarningWithOther) - Number(totalDeductionWithOther);
+
+    // Update form fields
+    setFieldValue("totalEarnings", Number(totalEarningWithOther).toFixed(2));
+    setFieldValue("totalDeduction", Number(totalDeductionWithOther).toFixed(2));
+    setFieldValue("netSalary", netSalary.toFixed(2));
+
+    // Calculate total PF Amount (ensure all numeric)
+    const netFinalSettlementAmount =
+      netSalary + Number(values.gratuityAmount || 0) - Number(values.loanBalance || 0);
+
+    setFieldValue("netFinalSettlementAmount", netFinalSettlementAmount.toFixed(2));
+    setToBeCalculated(false)
+  };
+
+
   return (
     <Formik
       enableReinitialize={true}
@@ -283,7 +307,47 @@ export function FormEditForm({
       }) => (
         <>
 
+          <Modal
+            show={confirmationModal}
+            onHide={confirmationModal}
+            aria-labelledby="example-modal-sizes-title-lg"
+          >
 
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+                Confirmation
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <span>Auto-calculating will overwrite all your manual entries. Are you sure want to calculate salary?</span>
+            </Modal.Body>
+            <Modal.Footer>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setConfirmationModal(false)}
+                  className="btn btn-light btn-elevate"
+                >
+                  Cancel
+                </button>
+                <> </>
+                <button
+                  type="button"
+                  onClick={() => {
+                    dispatch(separateById({ "employeeId": values.employeeId, "paidDays": values.paidDays || 0 }))
+
+                    setConfirmationModal(false);
+                  }}
+                  className="btn btn-primary btn-elevate"
+                >
+                  Update Salary
+                  {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+              </div>
+            </Modal.Footer>
+          </Modal>
 
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -331,7 +395,21 @@ export function FormEditForm({
                         ) || null
                       }
                       autoComplete="off"
-                      options={activeEmployeeList}
+                      // options={activeEmployeeList}
+                      options={
+                        activeEmployeeList?.map((option) => {
+                          // check if this employee already exists in entities array
+                          const isAlreadyUsed = entities?.some(
+                            (entity) => entity.employeeId === option.value
+                          );
+
+                          return {
+                            label: option.label,
+                            value: option.value,
+                            isDisabled: isAlreadyUsed, // disable if already used
+                          };
+                        }) || []
+                      }
                       isSearchable={true}
                       error={errors.employeeId}
                       touched={touched.employeeId}
@@ -386,35 +464,57 @@ export function FormEditForm({
 
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6">
-                    <button
+                  <div className="col-span-2 flex items-end justify-start gap-3 mt-6 ">
 
 
+                    <div className="flex items-end gap-3">
 
-                      className="btn btn-primary btn-elevate"
-                    >
-                      Calculate
-                      {loading && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
-                    </button>
-                  </div>
-                  <div className="">
-                    <Field
-                      name="paidDays"
-                      component={Input}
-                      placeholder="Enter paid days"
-                      label={
-                        <span>
-                          Paid Days
-                        </span>
-                      }
+                      <div>
+                        <button
+                          className="btn btn-primary btn-elevate"
+                          disabled={!values.employeeId}
+                          onClick={() => {
+                            setConfirmationModal(true);
+                          }
 
-                      autoComplete="off"
-                      type="text"
+                          }
+                        >
+                          Auto Calculate Final Settlement
+                          {loading && (
+                            <span className="ml-3 mr-3 spinner spinner-white"></span>
+                          )}
+                        </button>
+                      </div>
+
+                      <div className="  w-[300px]">
 
 
-                    />
+                        <Field
+                          name="paidDays"
+                          component={Input}
+                          placeholder="Enter paid days"
+                          label={
+                            <span>
+                              Paid Days
+                            </span>
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value
+                            setFieldValue("paidDays", value);
+                            handleCalculate(value, setFieldValue, values, values.earning_list, values.deduction_list)
+                          }
+
+                          }
+
+                          autoComplete="off"
+                          type="text"
+
+
+                        />
+                      </div>
+
+
+                    </div>
 
                   </div>
 
@@ -481,11 +581,11 @@ export function FormEditForm({
                               <thead>
                                 <tr className="custom-table-header">
 
-                                  <td className="w-[200px]">Earning Name</td>
-                                  <td className="w-[200px]">Days to be paid</td>
-                                  <td className="w-[250px]">Salary Amount</td>
-                                  <td className="w-[100px]">Actual Amount</td>
-                                  <td className="w-[120px]">Remarks</td>
+                                  <td className="w-[310px]">Earning Name</td>
+                                  <td className="w-[310px]">Days to be paid</td>
+                                  <td className="w-[310px]">Salary Amount</td>
+                                  <td className="w-[310px]">Actual Amount</td>
+                                  <td className="w-[310px]">Remarks</td>
                                   <td className="text-right">Action</td>
                                 </tr>
                               </thead>
@@ -495,7 +595,7 @@ export function FormEditForm({
                                     {/* Row Starts */}
 
 
-
+                                    {/* 
                                     <td>
 
 
@@ -509,7 +609,7 @@ export function FormEditForm({
                                           dashboard?.allEarnings
                                             ?.filter((option) => option.value === values.earning_list[index].earning_deduction_id)
                                             ?.map((option) => ({
-                                              label: option.label, //  onlyLabel will be displayed
+                                              label: option.label,
                                               value: option.value,
                                             }))[0] || null
                                         }
@@ -521,8 +621,8 @@ export function FormEditForm({
 
                                         options={
                                           dashboard?.allEarnings?.map((option) => ({
-                                            label: option.label, // show only this field as label
-                                            value: option.value,     // keep value for Formik binding
+                                            label: option.label, 
+                                            value: option.value,  
                                           })) || []
                                         }
 
@@ -530,24 +630,75 @@ export function FormEditForm({
 
 
 
-                                      {/* Error message */}
+                                  
                                       {errors?.earning_list?.[index]?.earning_deduction_id && touched?.earning_list?.[index]?.earning_deduction_id && (
                                         <div className="invalid-feedback">
                                           {errors.earning_list[index].earning_deduction_id}
                                         </div>
                                       )}
+                                    </td> */}
+
+
+
+
+
+                                    <td>
+                                      <SearchSelect
+                                        name={`earning_list[${index}].earning_deduction_id`}
+                                        value={
+                                          dashboard?.allEarnings
+                                            ?.filter(
+                                              (option) => option.value === values.earning_list[index].earning_deduction_id
+                                            )
+                                            ?.map((option) => ({
+                                              label: option.label,
+                                              value: option.value,
+                                            }))[0] || null
+                                        }
+                                        onChange={(selectedOption) => {
+                                          const selectedValue = selectedOption ? selectedOption.value : "";
+                                          setFieldValue(`earning_list[${index}].earning_deduction_id`, selectedValue);
+                                        }}
+                                        options={
+                                          dashboard?.allEarnings?.map((option) => {
+                                            // check if already selected in any other row
+                                            const isSelectedInAnotherRow = values.earning_list.some(
+                                              (item, i) =>
+                                                i !== index && item.earning_deduction_id === option.value
+                                            );
+
+                                            return {
+                                              label: option.label,
+                                              value: option.value,
+                                              isDisabled: isSelectedInAnotherRow, // disable if already chosen elsewhere
+                                            };
+                                          }) || []
+                                        }
+                                        getOptionLabel={(option) => option.label}
+                                        getOptionValue={(option) => option.value}
+                                        isOptionDisabled={(option) => option.isDisabled} // disable the selected ones
+                                      />
+
+                                      {errors?.earning_list?.[index]?.earning_deduction_id &&
+                                        touched?.earning_list?.[index]?.earning_deduction_id && (
+                                          <div className="invalid-feedback">
+                                            {errors.earning_list[index].earning_deduction_id}
+                                          </div>
+                                        )}
                                     </td>
+
 
                                     <td>
                                       <Field
 
                                         name={`earning_list[${index}].days_hours`}
+                                        disabled
                                         className={
                                           errors.earning_list?.[index]?.days_hours && touched.earning_list?.[index]?.days_hours
                                             ? "form-control is-invalid"
                                             : "form-control"
                                         }
-                                        disabled={isdataForRead}
+
                                         onChange={(e) => {
                                           const value = e.target.value === "Select" ? "" : e.target.value;
                                           setFieldValue(`earning_list[${index}].days_hours`, value);
@@ -569,13 +720,15 @@ export function FormEditForm({
                                       <Field
 
                                         name={`earning_list[${index}].amount_actual`}
+                                        disabled
                                         className={
                                           errors.earning_list?.[index]?.amount_actual && touched.earning_list?.[index]?.amount_actual
                                             ? "form-control is-invalid"
                                             : "form-control"
                                         }
-                                        disabled={isdataForRead}
+
                                         onChange={(e) => {
+
                                           const value = e.target.value === "Select" ? "" : e.target.value;
                                           setFieldValue(`earning_list[${index}].amount_actual`, value);
                                         }}
@@ -605,8 +758,10 @@ export function FormEditForm({
                                         }
                                         disabled={isdataForRead}
                                         onChange={(e) => {
+                                          setToBeCalculated(true)
                                           const value = e.target.value === "Select" ? "" : e.target.value;
                                           setFieldValue(`earning_list[${index}].amount_takeHome`, value);
+
                                         }}
                                         value={row?.amount_takeHome || ""}
                                       >
@@ -730,11 +885,11 @@ export function FormEditForm({
                               <thead>
                                 <tr className="custom-table-header">
 
-                                  <td className="w-[200px]">Deduction Name</td>
-                                  <td className="w-[200px]">Days to be paid</td>
-                                  <td className="w-[250px]">Salary Amount</td>
-                                  <td className="w-[100px]">Actual Amount</td>
-                                  <td className="w-[120px]">Remarks</td>
+                                  <td className="w-[310px]">Deduction Name</td>
+                                  <td className="w-[310px]">Days to be paid</td>
+                                  <td className="w-[310px]">Salary Amount</td>
+                                  <td className="w-[310px]">Actual Amount</td>
+                                  <td className="w-[310px]">Remarks</td>
                                   <td className="text-right">Action</td>
                                 </tr>
                               </thead>
@@ -745,7 +900,7 @@ export function FormEditForm({
 
 
 
-                                    <td>
+                                    {/* <td>
 
 
 
@@ -779,13 +934,63 @@ export function FormEditForm({
 
 
 
-                                      {/* Error message */}
+                                 
                                       {errors?.deduction_list?.[index]?.earning_deduction_id && touched?.deduction_list?.[index]?.earning_deduction_id && (
                                         <div className="invalid-feedback">
                                           {errors.deduction_list[index].earning_deduction_id}
                                         </div>
                                       )}
+                                    </td> */}
+
+
+
+
+                                    <td>
+                                      <SearchSelect
+                                        name={`deduction_list[${index}].earning_deduction_id`}
+                                        value={
+                                          dashboard?.allDeductions
+                                            ?.filter(
+                                              (option) => option.value === values.deduction_list[index].earning_deduction_id
+                                            )
+                                            ?.map((option) => ({
+                                              label: option.label,
+                                              value: option.value,
+                                            }))[0] || null
+                                        }
+                                        onChange={(selectedOption) => {
+                                          const selectedValue = selectedOption ? selectedOption.value : "";
+                                          setFieldValue(`deduction_list[${index}].earning_deduction_id`, selectedValue);
+                                        }}
+                                        options={
+                                          dashboard?.allDeductions?.map((option) => {
+                                            // check if already selected in another row
+                                            const isSelectedInAnotherRow = values.deduction_list.some(
+                                              (item, i) =>
+                                                i !== index && item.earning_deduction_id === option.value
+                                            );
+
+                                            return {
+                                              label: option.label,
+                                              value: option.value,
+                                              isDisabled: isSelectedInAnotherRow, // disable if already chosen elsewhere
+                                            };
+                                          }) || []
+                                        }
+                                        getOptionLabel={(option) => option.label}
+                                        getOptionValue={(option) => option.value}
+                                        isOptionDisabled={(option) => option.isDisabled} // React-Select disables those options
+                                      />
+
+                                      {/* Error message */}
+                                      {errors?.deduction_list?.[index]?.earning_deduction_id &&
+                                        touched?.deduction_list?.[index]?.earning_deduction_id && (
+                                          <div className="invalid-feedback">
+                                            {errors.deduction_list[index].earning_deduction_id}
+                                          </div>
+                                        )}
                                     </td>
+
 
                                     <td>
                                       <Field
@@ -796,7 +1001,7 @@ export function FormEditForm({
                                             ? "form-control is-invalid"
                                             : "form-control"
                                         }
-                                        disabled={isdataForRead}
+                                        disabled
                                         onChange={(e) => {
                                           const value = e.target.value === "Select" ? "" : e.target.value;
                                           setFieldValue(`deduction_list[${index}].days_hours`, value);
@@ -823,7 +1028,7 @@ export function FormEditForm({
                                             ? "form-control is-invalid"
                                             : "form-control"
                                         }
-                                        disabled={isdataForRead}
+                                        disabled
                                         onChange={(e) => {
                                           const value = e.target.value === "Select" ? "" : e.target.value;
                                           setFieldValue(`deduction_list[${index}].amount_actual`, value);
@@ -854,8 +1059,11 @@ export function FormEditForm({
                                         }
                                         disabled={isdataForRead}
                                         onChange={(e) => {
+                                          setToBeCalculated(true)
                                           const value = e.target.value === "Select" ? "" : e.target.value;
                                           setFieldValue(`deduction_list[${index}].amount_takeHome`, value);
+
+
                                         }}
                                         value={row?.amount_takeHome || ""}
                                       >
@@ -939,6 +1147,14 @@ export function FormEditForm({
                             Other Payment
                           </span>
                         }
+                        onChange={(e) => {
+
+                          setToBeCalculated(true)
+                          let otherPayment = e.target.value;
+                          setFieldValue("otherPayment", otherPayment)
+                          handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, otherPayment, values.otherDeduction)
+
+                        }}
 
                         autoComplete="off"
                         type="text"
@@ -976,6 +1192,14 @@ export function FormEditForm({
                             Other Deduction
                           </span>
                         }
+                        onChange={(e) => {
+
+                          setToBeCalculated(true)
+                          let otherDeduction = e.target.value;
+                          setFieldValue("otherDeduction", otherDeduction)
+
+                          handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, otherDeduction)
+                        }}
 
                         autoComplete="off"
                         type="text"
@@ -1011,6 +1235,8 @@ export function FormEditForm({
                           name="totalEarnings"
                           component={Input}
                           placeholder="Enter total paid earning"
+                          disabled
+                          value={Number(values.totalEarnings || 0).toFixed(2)}
                           label={
                             <span>
                               Total Paid Earning
@@ -1029,6 +1255,8 @@ export function FormEditForm({
                           name="totalDeduction"
                           component={Input}
                           placeholder="Enter total paidd eduction"
+                          disabled
+                          value={Number(values.totalDeduction || 0).toFixed(2)}
                           label={
                             <span>
                               Total Paid Deduction
@@ -1047,6 +1275,8 @@ export function FormEditForm({
                           name="netSalary"
                           component={Input}
                           placeholder="Enter net salary"
+                          disabled
+                          value={Number(values.netSalary || 0).toFixed(2)}
                           label={
                             <span>
                               Net Salary
@@ -1082,6 +1312,7 @@ export function FormEditForm({
                       <Field
                         name="loanBalance"
                         component={Input}
+                        value={Number(values.loanBalance || 0).toFixed(2)}
                         placeholder="Auto total loan outstanding"
                         label={
                           <span>
@@ -1154,6 +1385,7 @@ export function FormEditForm({
                       <Field
                         name="gratuityAmount"
                         component={Input}
+                        value={Number(values.gratuityAmount || 0).toFixed(2)}
                         placeholder="Auto gratuity amount"
                         label={
                           <span>
@@ -1184,12 +1416,14 @@ export function FormEditForm({
                     Provident Fund Detail
                   </h6>
 
-                  <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                    <div className="">
+                  <div className="flex justify-between items-center gap-4 mt-1 mb-2 w-full">
+                    <div className="min-w-[260px]">
                       <Field
                         name="totalPFAmount"
                         component={Input}
+                        value={Number(values.totalPFAmount || 0).toFixed(2)}
                         placeholder="Enter provident fund contribution"
+                        disabled
                         label={
                           <span>
                             Total Provident Fund Contribution
@@ -1203,11 +1437,13 @@ export function FormEditForm({
 
                     </div>
 
-                    <div className="">
+                    <div className="min-w-[260px]">
                       <Field
                         name="pf_employer_amount"
                         component={Input}
                         placeholder="Enter employer contribution"
+                        disabled
+                        value={Number(values.pf_employer_amount || 0).toFixed(2)}
                         label={
                           <span>
                             Employer Contribution
@@ -1221,11 +1457,13 @@ export function FormEditForm({
 
                     </div>
 
-                    <div className="">
+                    <div className="min-w-[260px]">
                       <Field
                         name="pf_employee_amount"
                         component={Input}
                         placeholder="Enter employee contribution"
+                        value={Number(values.pf_employee_amount || 0).toFixed(2)}
+                        disabled
                         label={
                           <span>
                             Employee Contribution
@@ -1266,6 +1504,8 @@ export function FormEditForm({
                         name="netFinalSettlementAmount"
                         component={Input}
                         placeholder="Auto total payable amount"
+                        disabled
+                        value={Number(values.netFinalSettlementAmount || 0).toFixed(2)}
                         label={
                           <span>
                             Total Payable Amount
@@ -1321,7 +1561,7 @@ export function FormEditForm({
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
-
+                        isDisabled={true}
                         name="exitClearence"
                         onChange={(e) => {
                           setFieldValue("exitClearence", e?.value ?? null);
@@ -1390,20 +1630,61 @@ export function FormEditForm({
             {!isdataForRead && (
 
               <>
+                {toBeCalculated ? (
+                  <button
+                    type="button"
 
-                <button
-                  type="submit"
+                    onClick={() => {
+                      handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
+                    }}
+                    className="btn btn-primary btn-elevate"
+                  >
+                    Calculate
+                    {loading && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
+                  </button>
 
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                  className="btn btn-primary btn-elevate"
-                >
-                  Save
-                  {loading && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
+                ) : (
+                  <>
+
+
+                    <button
+                      type="button"
+                      disabled={!values.exitClearence || values.settlementFinalized || values.netFinalSettlementAmount<0}
+                      onClick={() => {
+                        finalize(values,setFieldValue);
+                      }}
+                      className="btn btn-primary btn-elevate"
+                    >
+                      Finalize
+                      {loading && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+
+
+                    <button
+                      type="submit"
+
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                      className="btn btn-primary btn-elevate"
+                    >
+                      Save
+                      {loading && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+
+
+                  </>
+                )
+                }
+
+
+
 
 
 

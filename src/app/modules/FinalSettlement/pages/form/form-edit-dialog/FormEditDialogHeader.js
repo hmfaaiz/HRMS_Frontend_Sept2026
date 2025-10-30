@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Separation";
+    let _title = id ? "" : "Add Final Settlement";
     if (id) {
-      _title = `Edit Separation`;
+      _title = `Edit Final Settlement`;
     } //else if (isdataForRead) {
     //   _title = `Read user '}'`
     // }

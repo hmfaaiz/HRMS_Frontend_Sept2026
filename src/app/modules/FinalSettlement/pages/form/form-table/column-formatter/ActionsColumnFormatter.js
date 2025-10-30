@@ -36,7 +36,7 @@ export function ActionsColumnFormatter(
       {/* View */}
       {isAccessForView && (
         <OverlayTrigger overlay={<Tooltip id="view-tooltip">View</Tooltip>}>
-          <a className="" onClick={() => openReadFormDialog(row.Id)}>
+          <a className="" onClick={() => openReadFormDialog(row.employeeId)}>
             <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -45,9 +45,9 @@ export function ActionsColumnFormatter(
       {/* Edit */}
       {isAccessForEdit && !row.separatedFlag &&(
         <OverlayTrigger
-          overlay={<Tooltip id={`edit-tooltip-${row.Id}`}>Edit</Tooltip>}
+          overlay={<Tooltip id={`edit-tooltip-${row.employeeId}`}>Edit</Tooltip>}
         >
-          <a onClick={() => openEditFormDialog(row.Id)}>
+          <a onClick={() => openEditFormDialog(row.employeeId)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -63,11 +63,11 @@ export function ActionsColumnFormatter(
           }
         >
           {row.isActive ? (
-            <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
+            <a onClick={() => openDeleteFormDialog(row.employeeId, row.isActive)}>
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>
           ) : (
-            <a onClick={() => openActiveFormDialog(row.Id, row.isActive)}>
+            <a onClick={() => openActiveFormDialog(row.employeeId, row.isActive)}>
               <CirclePower className="w-4 h-4 text-black cursor-pointer" />
             </a>
           )}

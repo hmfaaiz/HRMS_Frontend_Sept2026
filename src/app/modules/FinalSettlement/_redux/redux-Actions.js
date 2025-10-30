@@ -24,14 +24,14 @@ export const fetchSeparation = (queryparm) => async (dispatch) => {
 };
 
 export const fetchSeparationById = (id) => (dispatch) => {
-console.log("id11111",id)
+
 
   if (!id) {
     return dispatch(actions.SeparationFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getSeparationById( id)
+    .getSeparationById(id)
     .then((response) => {
       const entities = response.data?.data;
 
@@ -44,7 +44,7 @@ console.log("id11111",id)
     });
 };
 
-export const fetchEmpBySeparationFlag= (body) => (dispatch) => {
+export const fetchEmpBySeparationFlag = (body) => (dispatch) => {
 
   if (!body.flag && !body.employeeId) {
     return dispatch(actions.EmployeeFetchedList({ employeeList: [] }));
@@ -70,7 +70,7 @@ export const deleteFinalSettlement = (id) => (dispatch) => {
     .deleteSeparation(id)
     .then((response) => {
 
-      dispatch(actions.SeparationDeleted( id));
+      dispatch(actions.SeparationDeleted(id));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -87,13 +87,16 @@ export const deleteFinalSettlement = (id) => (dispatch) => {
     });
 };
 
-export const separateById = (body,onHide,props) => (dispatch) => {
+export const separateById = (body) => (dispatch) => {
 
   return requestFromServer
     .separateById(body)
     .then((response) => {
-      dispatch(fetchSeparation(props));
-onHide();
+        const entities = response.data?.data;
+
+
+      dispatch(actions.SeparationFetchedForEdit({ dataForEdit: entities }));
+ 
       toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -107,7 +110,7 @@ onHide();
     .catch((error) => {
       onHide();
       const apiMessage =
-    error?.response?.data?.message;
+        error?.response?.data?.message;
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       toast.error(apiMessage || SERVER_MESSAGES?.updatedFail);
     });
@@ -115,7 +118,7 @@ onHide();
 };
 
 
-export const createSeparation = (separationForCreation, disbaleLoading, onHide,props) => (
+export const createSeparation = (separationForCreation, disbaleLoading, onHide, props) => (
   dispatch
 ) => {
 
