@@ -119,6 +119,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
         exitClearence: formData.exitClearence,
         hrRemarks: formData.hrRemarks,
         settlementFinalized: formData.settlementFinalized,
+        netFinalSettlementAmount: formData.netFinalSettlementAmount,
       };
 
 
@@ -129,7 +130,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       await dispatch(actions.fetchSeparation(usersUIProps.queryParams));
     }
   };
-console.log("dataForEdit1111",dataForEdit)
+
   return (
 
 

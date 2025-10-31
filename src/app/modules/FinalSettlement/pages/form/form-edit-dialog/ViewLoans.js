@@ -2,17 +2,18 @@
 import React, {  useState } from 'react';
 
 import '../../../../../utils/common-modules/form.css';
-import { FieldArray } from 'formik';
+import { Field, FieldArray } from 'formik';
 import { SearchSelect } from '../../../../../../_metronic/_helpers/SearchSelect';
-
-const ViewLoans = ({ employeeId, panelMode,values }) => {
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+const ViewLoans = ({ employeeId, panelMode,values,errors  }) => {
   const [data, setdata] = useState({});
 
+  const { dashboard } = useSelector((state) => state);
 
   return (
     <>
       {panelMode && (
-               <FieldArray name="earning_list">
+               <FieldArray name="loan_list">
                     {({ insert, remove, push }) => (
                       <>
                         <div className="flex justify-end items-center text-right bg-red-500 ">
@@ -33,7 +34,7 @@ const ViewLoans = ({ employeeId, panelMode,values }) => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {values?.earning_list?.map((row, index) => (
+                                {values?.loan_list?.map((row, index) => (
                                   <tr key={index}>
                                     {/* Row Starts */}
 
@@ -45,26 +46,26 @@ const ViewLoans = ({ employeeId, panelMode,values }) => {
 
 
                                       <SearchSelect
-                                        name={`earning_list[${index}].earning_deduction_id`}
-
+                                        name={`loan_list[${index}].loan_typeId`}
+                                        isDisabled={true}
 
                                         value={
-                                          dashboard?.allAppraisalCompetencySetupearning_list
-                                            ?.filter((option) => option.value === values.earning_list[index].earning_deduction_id)
+                                          dashboard?.allLoanTypeList
+                                            ?.filter((option) => option.value === values.loan_list[index].loan_typeId)
                                             ?.map((option) => ({
-                                              label: option.onlyLabel, //  onlyLabel will be displayed
+                                              label: option.label, //  label will be displayed
                                               value: option.value,
                                             }))[0] || null
                                         }
 
                                         onChange={(selectedOption) => {
                                           const selectedValue = selectedOption ? selectedOption.value : "";
-                                          setFieldValue(`earning_list[${index}].earning_deduction_id`, selectedValue);
+                                          setFieldValue(`loan_list[${index}].loan_typeId`, selectedValue);
                                         }}
 
                                         options={
-                                          dashboard?.allAppraisalCompetencySetupearning_list?.map((option) => ({
-                                            label: option.onlyLabel, // show only this field as label
+                                          dashboard?.allLoanTypeList?.map((option) => ({
+                                            label: option.label, // show only this field as label
                                             value: option.value,     // keep value for Formik binding
                                           })) || []
                                         }
@@ -74,9 +75,9 @@ const ViewLoans = ({ employeeId, panelMode,values }) => {
 
 
                                       {/* Error message */}
-                                      {errors?.earning_list?.[index]?.earning_deduction_id && touched?.earning_list?.[index]?.earning_deduction_id && (
+                                      {errors?.loan_list?.[index]?.loan_typeId && touched?.loan_list?.[index]?.loan_typeId && (
                                         <div className="invalid-feedback">
-                                          {errors.earning_list[index].earning_deduction_id}
+                                          {errors.loan_list[index].loan_typeId}
                                         </div>
                                       )}
                                     </td>
@@ -84,54 +85,54 @@ const ViewLoans = ({ employeeId, panelMode,values }) => {
                                     <td>
                                       <Field
 
-                                        name={`earning_list[${index}].days_hours`}
+                                        name={`loan_list[${index}].loan_paid`}
                                         className={
-                                          errors.earning_list?.[index]?.days_hours && touched.earning_list?.[index]?.days_hours
+                                          errors.loan_list?.[index]?.loan_paid && touched.loan_list?.[index]?.loan_paid
                                             ? "form-control is-invalid"
                                             : "form-control"
                                         }
-                                        disabled={isdataForRead}
+                                        disabled
                                         onChange={(e) => {
                                           const value = e.target.value === "Select" ? "" : e.target.value;
-                                          setFieldValue(`earning_list[${index}].days_hours`, value);
+                                          setFieldValue(`loan_list[${index}].loan_paid`, value);
                                         }}
-                                        value={row?.days_hours || ""}
+                                        value={row?.loan_paid || ""}
                                       >
 
 
                                       </Field>
 
                                       {/* Error message */}
-                                      {errors?.earning_list?.[index]?.days_hours && touched?.earning_list?.[index]?.days_hours && (
+                                      {errors?.loan_list?.[index]?.loan_paid && touched?.loan_list?.[index]?.loan_paid && (
                                         <div className="invalid-feedback">
-                                          {errors.earning_list[index].days_hours}
+                                          {errors.loan_list[index].loan_paid}
                                         </div>
                                       )}
                                     </td>
                                     <td>
                                       <Field
 
-                                        name={`earning_list[${index}].amount_actual`}
+                                        name={`loan_list[${index}].loan_outstanding`}
                                         className={
-                                          errors.earning_list?.[index]?.amount_actual && touched.earning_list?.[index]?.amount_actual
+                                          errors.loan_list?.[index]?.loan_outstanding && touched.loan_list?.[index]?.loan_outstanding
                                             ? "form-control is-invalid"
                                             : "form-control"
                                         }
-                                        disabled={isdataForRead}
+                                        disabled
                                         onChange={(e) => {
                                           const value = e.target.value === "Select" ? "" : e.target.value;
-                                          setFieldValue(`earning_list[${index}].amount_actual`, value);
+                                          setFieldValue(`loan_list[${index}].loan_outstanding`, value);
                                         }}
-                                        value={row?.amount_actual || ""}
+                                        value={row?.loan_outstanding || ""}
                                       >
 
 
                                       </Field>
 
                                       {/* Error message */}
-                                      {errors?.earning_list?.[index]?.amount_actual && touched?.earning_list?.[index]?.amount_actual && (
+                                      {errors?.loan_list?.[index]?.loan_outstanding && touched?.loan_list?.[index]?.loan_outstanding && (
                                         <div className="invalid-feedback">
-                                          {errors.earning_list[index].amount_actual}
+                                          {errors.loan_list[index].loan_outstanding}
                                         </div>
                                       )}
                                     </td>

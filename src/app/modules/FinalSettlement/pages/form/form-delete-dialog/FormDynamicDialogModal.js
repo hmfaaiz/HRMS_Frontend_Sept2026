@@ -7,7 +7,7 @@ import { useFormUIContext } from "../FormUIContext";
 
 export function FormDynamicDialogModal({ id, show, onHide, onConfirm, title, message, confirmButtonText,actionName }) {
 
-    console.log("id, show, onHide, onConfirm, title, message, confirmButtonText,actionName11,",actionName)
+  
 
     const [loading, setLoading] = useState(false);
     // Customers UI Context

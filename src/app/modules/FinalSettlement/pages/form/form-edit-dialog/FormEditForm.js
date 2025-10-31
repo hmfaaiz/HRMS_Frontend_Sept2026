@@ -13,8 +13,7 @@ import {
 
   fetchAllDeductionList,
   fetchAllEarningList,
-  fetchAllEmployeesWithNoPermissionData,
-  fetchAllFormsMenu,
+  getAllLoanType
 
 
 } from "../../../../../../_metronic/redux/dashboardActions";
@@ -168,16 +167,19 @@ export function FormEditForm({
   const [dateOfJoining, setDateOfJoining] = useState("");
 
 
-  const [loanPanel, setLoanPanel] = useState("");
-  const [separatePanel, setSeparatePanel] = useState("");
+  const [loanPanel, setLoanPanel] = useState(false);
+  const [separatePanel, setSeparatePanel] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [toBeCalculated, setToBeCalculated] = useState(false);
+  const [finalizeModal, setFinalizeModal] = useState(false);
 
   //drop down
   useEffect(() => {
     if (formData.employeeId) {
       dispatch(fetchAllEarningList(1, "", formData.employeeId, true));
       dispatch(fetchAllDeductionList(2, "", formData.employeeId));
+
+      dispatch(getAllLoanType({ subsidiaryId: formData?.subsidiaryId }));
     }
 
 
@@ -214,9 +216,9 @@ export function FormEditForm({
 
 
 
-const finalize=(values,setFieldValue)=>{
-       setFieldValue("settlementFinalized",true)
-}
+  const finalize = (values, setFieldValue) => {
+    setFieldValue("settlementFinalized", true)
+  }
 
   useEffect(() => {
     if (formData.employeeId) {
@@ -307,6 +309,53 @@ const finalize=(values,setFieldValue)=>{
       }) => (
         <>
 
+
+          <Modal
+            show={finalizeModal}
+            onHide={finalizeModal}
+            aria-labelledby="example-modal-sizes-title-lg"
+          >
+
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+                Confirmation
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <span>Are you sure you want to finalize and save the salary?
+Once finalized, this transaction will no longer be editable.</span>
+            </Modal.Body>
+            <Modal.Footer>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFieldValue("settlementFinalized", false);
+                    setFinalizeModal(false)
+                  }}
+                  className="btn btn-light btn-elevate"
+                >
+                  Cancel
+                </button>
+                <> </>
+                <button
+                  type="button"
+                     onClick={() => {
+                    setFieldValue("settlementFinalized", true);
+                    handleSubmit();
+                    setFinalizeModal(false)
+                  }}
+                  className="btn btn-primary btn-elevate"
+                >
+                  Finalize
+                  {loading && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+              </div>
+            </Modal.Footer>
+          </Modal>
+
           <Modal
             show={confirmationModal}
             onHide={confirmationModal}
@@ -319,7 +368,7 @@ const finalize=(values,setFieldValue)=>{
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <span>Auto-calculating will overwrite all your manual entries. Are you sure want to calculate salary?</span>
+              <span>Enabling auto-calculation will replace all manual entries. Are you sure you want to proceed with the salary calculation?</span>
             </Modal.Body>
             <Modal.Footer>
               <div>
@@ -334,6 +383,7 @@ const finalize=(values,setFieldValue)=>{
                 <button
                   type="button"
                   onClick={() => {
+                 
                     dispatch(separateById({ "employeeId": values.employeeId, "paidDays": values.paidDays || 0 }))
 
                     setConfirmationModal(false);
@@ -453,7 +503,7 @@ const finalize=(values,setFieldValue)=>{
                         type="button"
                         className="btn btn-primary d-flex align-items-center gap-2"
                         onClick={() => setSeparatePanel(!separatePanel)}
-                        disabled={!values?.employeeId}
+                        disabled={!values?.employeeId || true}
                       >
                         <Eye className="w-4 h-4 text-white" />
                         View Separate Details
@@ -471,6 +521,7 @@ const finalize=(values,setFieldValue)=>{
 
                       <div>
                         <button
+                          type="button"
                           className="btn btn-primary btn-elevate"
                           disabled={!values.employeeId}
                           onClick={() => {
@@ -557,7 +608,7 @@ const finalize=(values,setFieldValue)=>{
                             disabled={!values.employeeId}
                             type="button"
                             className="btn btn-primary btn-elevate text-right"
-                            onClick={() =>
+                            onClick={() => {
                               push({
 
 
@@ -568,7 +619,8 @@ const finalize=(values,setFieldValue)=>{
                                 remarks: "",
 
                               })
-                            }
+                              setToBeCalculated(true)
+                            }}
                           >
                             <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3 " />{" "}
                             Add
@@ -811,11 +863,15 @@ const finalize=(values,setFieldValue)=>{
                                     {/* {!values?.earning_list[index]?.isPresent && ( */}
                                     <td className="text-right">
                                       <button
-                                        disabled={isdataForRead}
+                                        // disabled={isdataForRead || values?.earning_list?.[index]?.AutoCalculation == 1}
                                         className="border-none bg-transparent"
+                                        style={{
+                                          display: isdataForRead || values?.earning_list?.[index]?.AutoCalculation === 1 ? "none" : "inline-flex"
+                                        }}
                                         type="button"
                                         onClick={() => {
                                           remove(index);
+                                          setToBeCalculated(true)
                                         }}
                                       >
                                         <Trash2 className="w-4 h-4 text-black cursor-pointer" />
@@ -862,7 +918,7 @@ const finalize=(values,setFieldValue)=>{
                             disabled={!values.employeeId}
                             type="button"
                             className="btn btn-primary btn-elevate text-right"
-                            onClick={() =>
+                            onClick={() => {
                               push({
 
                                 earning_deduction_id: "",
@@ -872,6 +928,8 @@ const finalize=(values,setFieldValue)=>{
                                 remarks: "",
 
                               })
+                              setToBeCalculated(true)
+                            }
                             }
                           >
                             <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3 " />{" "}
@@ -1113,11 +1171,15 @@ const finalize=(values,setFieldValue)=>{
                                     {/* {!values?.deduction_list[index]?.isPresent && ( */}
                                     <td className="text-right">
                                       <button
-                                        disabled={isdataForRead}
+                                        //  disabled={isdataForRead || values?.deduction_list?.[index]?.AutoCalculation==1}
+                                        style={{
+                                          display: isdataForRead || values?.deduction_list?.[index]?.AutoCalculation === 1 ? "none" : "inline-flex"
+                                        }}
                                         className="border-none bg-transparent"
                                         type="button"
                                         onClick={() => {
                                           remove(index);
+                                          setToBeCalculated(true)
                                         }}
                                       >
                                         <Trash2 className="w-4 h-4 text-black cursor-pointer" />
@@ -1365,6 +1427,7 @@ const finalize=(values,setFieldValue)=>{
                     employeeId={values?.employeeId || formData?.employeeId}
                     panelMode={loanPanel}
                     values={values}
+                    errors={errors}
                   />
 
 
@@ -1518,6 +1581,28 @@ const finalize=(values,setFieldValue)=>{
                       />
 
                     </div>
+                    {toBeCalculated ? (
+                      <button
+                        type="button"
+
+                        onClick={() => {
+                          handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
+                        }}
+className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25px] w-fit bg-red-500 text-white border-none rounded"
+                        // style={{
+                        //   padding: "4px 10px",
+                        //   lineHeight: "1",
+                        //   height: "25px",
+                        //   width: "fit-content",
+                        // }}
+                      >
+                        Calculate
+                        {loading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+
+                    ) : null}
 
                   </div>
 
@@ -1631,19 +1716,20 @@ const finalize=(values,setFieldValue)=>{
 
               <>
                 {toBeCalculated ? (
-                  <button
-                    type="button"
+                  <></>
+                  // <button
+                  //   type="button"
 
-                    onClick={() => {
-                      handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
-                    }}
-                    className="btn btn-primary btn-elevate"
-                  >
-                    Calculate
-                    {loading && (
-                      <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )}
-                  </button>
+                  //   onClick={() => {
+                  //     handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
+                  //   }}
+                  //   className="btn btn-primary btn-elevate"
+                  // >
+                  //   Calculate
+                  //   {loading && (
+                  //     <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  //   )}
+                  // </button>
 
                 ) : (
                   <>
@@ -1651,9 +1737,9 @@ const finalize=(values,setFieldValue)=>{
 
                     <button
                       type="button"
-                      disabled={!values.exitClearence || values.settlementFinalized || values.netFinalSettlementAmount<0}
+                      disabled={!values.exitClearence || values.settlementFinalized || values.netFinalSettlementAmount < 0}
                       onClick={() => {
-                        finalize(values,setFieldValue);
+                         setFinalizeModal(true)
                       }}
                       className="btn btn-primary btn-elevate"
                     >
@@ -1666,6 +1752,7 @@ const finalize=(values,setFieldValue)=>{
 
                     <button
                       type="submit"
+                      disabled={values.settlementFinalized}
 
                       onClick={() => {
                         handleSubmit();

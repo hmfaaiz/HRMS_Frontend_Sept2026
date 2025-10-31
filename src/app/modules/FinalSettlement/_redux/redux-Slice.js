@@ -77,7 +77,7 @@ export const FinalSettlementSlice = createSlice({
    
       state.activeEmployeeList = action.payload;
       state.error = null;
-      console.log("aaaaaa111",state.activeEmployeeList)
+   
     },
 
     SeparationDeleted: (state, action) => {
