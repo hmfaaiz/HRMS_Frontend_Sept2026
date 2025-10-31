@@ -21,6 +21,7 @@ import { Radio } from "@material-ui/core";
 import { amountLimit, amountLimitDynamic } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 
 // Phone Number Regex
 const phoneRegExp = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -31,6 +32,7 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Validation schema
 const formValidationSchema = Yup.object().shape({
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
+  defaultRoleId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
   salaryMethod: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -135,8 +137,6 @@ const formValidationSchema = Yup.object().shape({
   codePrefix: Yup.string()
     .matches(/^[A-Za-z]{1,6}$/, "Must be alphabetic and up to 6 characters")
     .required(VALIDATION_MESSAGES.required),
-
-
 });
 
 const employeeCodeGenerationOptions = [
@@ -164,7 +164,7 @@ export function DesignationEditForm({
   id,
 }) {
   const dispatch = useDispatch();
-  const { dashboard } = useSelector((state) => state);
+  const { dashboard , users } = useSelector((state) => state);
   // Get User Details
   const { auth } = useSelector((state) => state);
 
@@ -179,6 +179,7 @@ export function DesignationEditForm({
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(126, "allCurrencyCodeList"));
     }
+    dispatch(fetchRoles());
   }, [dispatch]);
 
   useEffect(() => {
@@ -215,7 +216,6 @@ export function DesignationEditForm({
 
   const { entities } = currentState;
 
-
   return (
     <>
       <Formik
@@ -248,7 +248,7 @@ export function DesignationEditForm({
                 <fieldset disabled={isUserForRead}>
                   <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-x-3 gap-y-1">
                     <div className="col-span-1">
-                      {/* <SearchSelect
+                      <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -304,8 +304,8 @@ export function DesignationEditForm({
                             // isDisabled:true
                           })
                         )}
-                      /> */}
-                      <SubsidiarySelect
+                      />
+                      {/* <SubsidiarySelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -368,7 +368,7 @@ export function DesignationEditForm({
                           // Optionally, you can call additional functions like setDefaultCurrencyChildMenus
                           setDefualtCurrencyCodeList(e);
                         }}
-                      />
+                      /> */}
                     </div>
 
                     <div className="col-span-1">
@@ -763,9 +763,31 @@ export function DesignationEditForm({
                               </div>
                             )}
                         </div>
-
-
-                   
+                          <div className="col-span-1">
+                      <SearchSelect
+                        name="defaultRoleId"
+                        label={
+                          <span>
+                            {" "}
+                            Default Role Mobile App User<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={isUserForRead && true}
+                        onBlur={() => {
+                        }}
+                        onChange={(e) => {
+                          setFieldValue("defaultRoleId", e.value || null);
+                        }}
+                        value={
+                          users?.roles?.allRoles?.find(
+                            (option) => option.value === values.defaultRoleId
+                          ) || null
+                        }
+                        error={errors.defaultRoleId}
+                        touched={touched.defaultRoleId}
+                        options={users?.roles?.allRoles}
+                      />
+                    </div>
                       </div>
                     </div>
                   </div>

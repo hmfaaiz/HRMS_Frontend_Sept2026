@@ -507,7 +507,7 @@ export function FormEditForm({
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 mt-2">
                   <div className="">
-                    {/* <SearchSelect
+                    <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -543,8 +543,8 @@ export function FormEditForm({
                       // }))}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
-                    /> */}
-                    <SubsidiarySelect
+                    />
+                    {/* <SubsidiarySelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -587,7 +587,7 @@ export function FormEditForm({
                         checkPermission(e.value);
                         dispatch(getAllPayrollAccount(e.value));
                       }}
-                    />
+                    /> */}
                   </div>
 
                   <div className="">
