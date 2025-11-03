@@ -50,7 +50,7 @@ export const FinalSettlementSlice = createSlice({
       state.pdfGenerateLoading = false;
     },
 
-    separationFetched: (state, action) => {
+    finalSettlementFetched: (state, action) => {
      
       const entities = action.payload.data?.data.rows;
 
@@ -63,7 +63,7 @@ export const FinalSettlementSlice = createSlice({
     },
 
     //get User By ID
-    SeparationFetchedForEdit: (state, action) => {
+    FinalSettlementFetchedForEdit: (state, action) => {
       state.actionsLoading = false;
       state.dataForEdit = action.payload.dataForEdit;
       state.error = null;
@@ -80,7 +80,7 @@ export const FinalSettlementSlice = createSlice({
    
     },
 
-    SeparationDeleted: (state, action) => {
+    FinalSettlementDeleted: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
 
@@ -95,7 +95,7 @@ export const FinalSettlementSlice = createSlice({
     },
 
 
-    separationCreated: (state, action) => {
+    finalSettlementCreated: (state, action) => {
       state.actionsLoading = false;
       state.error = null;
 
@@ -103,7 +103,7 @@ export const FinalSettlementSlice = createSlice({
       state.entities.unshift(action.payload);
     },
 
-    separationUpdated: (state, action) => {
+    finalSettlementUpdated: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
    

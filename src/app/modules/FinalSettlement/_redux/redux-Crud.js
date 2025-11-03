@@ -3,7 +3,7 @@ import axios from "axios";
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
 //Create user
-export function createSeparation(body) {
+export function createFinalSettlement(body) {
 
   return axios.post(`${USERS_URL}/final_settlement/create-final-settlement`, body);
   
@@ -11,7 +11,7 @@ export function createSeparation(body) {
 
 
 // Read
-export function getAllSeparation(body) {
+export function getAllFinalSettlement(body) {
 
   return axios.post(`${USERS_URL}/final_settlement/read-all-final-settlement`, body);
 }
@@ -23,31 +23,28 @@ export function getsEmpBySeparationFlag(body) {
   return axios.post(`${USERS_URL}/final_settlement/read-final-settlement-byflag`, body);
 }
 
-export function getSeparationById(id) {
+export function getFinalSettlementById(id) {
 
   return axios.get(`${USERS_URL}/final_settlement/read-final-settlement/${id}`);
 }
 
 //Update
-export function updateSeparation(body) {
+export function updateFinalSettlement(body) {
    
   return axios.put(`${USERS_URL}/final_settlement/update-final-settlement`, body);
 }
 
 //Delete
-export function deleteSeparation(id) {
+export function deleteFinalSettlement(id) {
 
   return axios.delete(`${USERS_URL}/final_settlement/delete-final-settlement/${id}`);
 }
 
 // separated
-export function separateById(body) {
+export function finalSettlementById(body) {
 
   return axios.put(`${USERS_URL}/final_settlement/calculate-final-settlement/`,body);
 }
 
 
-export function uploadFile(body) {
-  return axios.post(`${USERS_URL}/file-upload`, body);
-}
 
