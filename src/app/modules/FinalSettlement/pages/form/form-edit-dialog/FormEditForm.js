@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import {
 
   fetchAllDeductionList,
+
   fetchAllEarningList,
   getAllLoanType
 
@@ -23,8 +24,10 @@ import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { Input, TextArea } from "../../../../../../_metronic/_partials/controls";
 import ViewLoans from "./ViewLoans";
-import ViewSeparate from "./ViewSeparate";
-import { separateById } from "../../../_redux/redux-Actions";
+;
+import { finalSettlementById } from "../../../_redux/redux-Actions";
+import { fetchAllEarning, fetchSeparatedEmployeeById } from "../../../../Dashboard/_redux/dashboardActions";
+import SeparatedEmpProfile from "../../../../../utils/common-modules/SeparatedEmpProfile";
 
 
 export const getFinal_SettlementEditSchema = (formData) => {
@@ -180,6 +183,10 @@ export function FormEditForm({
       dispatch(fetchAllDeductionList(2, "", formData.employeeId));
 
       dispatch(getAllLoanType({ subsidiaryId: formData?.subsidiaryId }));
+      dispatch(fetchAllEarning());
+      // dispatch(fetchSeparatedEmployeeById(formData?.employeeId));
+
+
     }
 
 
@@ -323,7 +330,7 @@ export function FormEditForm({
             </Modal.Header>
             <Modal.Body>
               <span>Are you sure you want to finalize and save the salary?
-Once finalized, this transaction will no longer be editable.</span>
+                Once finalized, this transaction will no longer be editable.</span>
             </Modal.Body>
             <Modal.Footer>
               <div>
@@ -340,7 +347,7 @@ Once finalized, this transaction will no longer be editable.</span>
                 <> </>
                 <button
                   type="button"
-                     onClick={() => {
+                  onClick={() => {
                     setFieldValue("settlementFinalized", true);
                     handleSubmit();
                     setFinalizeModal(false)
@@ -383,8 +390,8 @@ Once finalized, this transaction will no longer be editable.</span>
                 <button
                   type="button"
                   onClick={() => {
-                 
-                    dispatch(separateById({ "employeeId": values.employeeId, "paidDays": values.paidDays || 0 }))
+
+                    dispatch(finalSettlementById({ "employeeId": values.employeeId, "paidDays": values.paidDays || 0 }))
 
                     setConfirmationModal(false);
                   }}
@@ -406,7 +413,7 @@ Once finalized, this transaction will no longer be editable.</span>
               </div>
             )}
             <Form className="form form-label-right" autoComplete="off">
-              <fieldset disabled={isdataForRead}>
+              <fieldset >
 
 
 
@@ -418,7 +425,7 @@ Once finalized, this transaction will no longer be editable.</span>
                       name="employeeId"
                       className={!values.employeeId ? 'form-control is-invalid' : 'form-control'}
                       placeholder=""
-                      isDisabled={formData.Id}
+                      isDisabled={formData.Id || isdataForRead}
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
@@ -467,7 +474,7 @@ Once finalized, this transaction will no longer be editable.</span>
                   </div>
 
                   {/* Buttons */}
-                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6">
+                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6 " style={{ pointerEvents: 'auto', opacity: 1 }}>
                     {panelMode ? (
                       <button
                         type="button"
@@ -481,7 +488,10 @@ Once finalized, this transaction will no longer be editable.</span>
                       <button
                         type="button"
                         className="btn btn-primary d-flex align-items-center gap-2"
-                        onClick={() => setPanelMode(!panelMode)}
+                        onClick={() => {
+                          setPanelMode(!panelMode)
+                          setSeparatePanel(false)
+                        }}
                         disabled={!values?.employeeId}
                       >
                         <Eye className="w-4 h-4 text-white" />
@@ -502,8 +512,12 @@ Once finalized, this transaction will no longer be editable.</span>
                       <button
                         type="button"
                         className="btn btn-primary d-flex align-items-center gap-2"
-                        onClick={() => setSeparatePanel(!separatePanel)}
-                        disabled={!values?.employeeId || true}
+                        onClick={() => {
+                          setSeparatePanel(!separatePanel)
+                          setPanelMode(false)
+
+                        }}
+                        disabled={!values?.employeeId}
                       >
                         <Eye className="w-4 h-4 text-white" />
                         View Separate Details
@@ -511,7 +525,14 @@ Once finalized, this transaction will no longer be editable.</span>
                     )}
                   </div>
                 </div>
-
+                <EmployeeProfile
+                  employeeId={values?.employeeId || formData?.employeeId}
+                  panelMode={panelMode}
+                />
+                <SeparatedEmpProfile
+                  employeeId={values?.employeeId || formData?.employeeId}
+                  panelMode={separatePanel}
+                />
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
                   <div className="col-span-2 flex items-end justify-start gap-3 mt-6 ">
@@ -523,7 +544,7 @@ Once finalized, this transaction will no longer be editable.</span>
                         <button
                           type="button"
                           className="btn btn-primary btn-elevate"
-                          disabled={!values.employeeId}
+                          disabled={!values.employeeId || isdataForRead}
                           onClick={() => {
                             setConfirmationModal(true);
                           }
@@ -544,6 +565,7 @@ Once finalized, this transaction will no longer be editable.</span>
                           name="paidDays"
                           component={Input}
                           placeholder="Enter paid days"
+                          disabled={ isdataForRead}
                           label={
                             <span>
                               Paid Days
@@ -573,14 +595,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                 </div>
 
-                <EmployeeProfile
-                  employeeId={values?.employeeId || formData?.employeeId}
-                  panelMode={panelMode}
-                />
-                {/* <ViewSeparate
-                  employeeId={values?.employeeId || formData?.employeeId}
-                  panelMode={separatePanel}
-                /> */}
+
 
 
 
@@ -605,7 +620,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                           {/* {!isdataForRead && values?.earning_list.length < 31 && ( */}
                           <button
-                            disabled={!values.employeeId}
+                            disabled={!values.employeeId ||   isdataForRead}
                             type="button"
                             className="btn btn-primary btn-elevate text-right"
                             onClick={() => {
@@ -647,58 +662,13 @@ Once finalized, this transaction will no longer be editable.</span>
                                     {/* Row Starts */}
 
 
-                                    {/* 
-                                    <td>
-
-
-
-
-                                      <SearchSelect
-                                        name={`earning_list[${index}].earning_deduction_id`}
-
-
-                                        value={
-                                          dashboard?.allEarnings
-                                            ?.filter((option) => option.value === values.earning_list[index].earning_deduction_id)
-                                            ?.map((option) => ({
-                                              label: option.label,
-                                              value: option.value,
-                                            }))[0] || null
-                                        }
-
-                                        onChange={(selectedOption) => {
-                                          const selectedValue = selectedOption ? selectedOption.value : "";
-                                          setFieldValue(`earning_list[${index}].earning_deduction_id`, selectedValue);
-                                        }}
-
-                                        options={
-                                          dashboard?.allEarnings?.map((option) => ({
-                                            label: option.label, 
-                                            value: option.value,  
-                                          })) || []
-                                        }
-
-                                      />
-
-
-
-                                  
-                                      {errors?.earning_list?.[index]?.earning_deduction_id && touched?.earning_list?.[index]?.earning_deduction_id && (
-                                        <div className="invalid-feedback">
-                                          {errors.earning_list[index].earning_deduction_id}
-                                        </div>
-                                      )}
-                                    </td> */}
-
-
-
-
 
                                     <td>
                                       <SearchSelect
                                         name={`earning_list[${index}].earning_deduction_id`}
+                                        isDisabled={  isdataForRead}
                                         value={
-                                          dashboard?.allEarnings
+                                          dashboard?.allEarningList
                                             ?.filter(
                                               (option) => option.value === values.earning_list[index].earning_deduction_id
                                             )
@@ -712,7 +682,7 @@ Once finalized, this transaction will no longer be editable.</span>
                                           setFieldValue(`earning_list[${index}].earning_deduction_id`, selectedValue);
                                         }}
                                         options={
-                                          dashboard?.allEarnings?.map((option) => {
+                                          dashboard?.allEarningList?.map((option) => {
                                             // check if already selected in any other row
                                             const isSelectedInAnotherRow = values.earning_list.some(
                                               (item, i) =>
@@ -742,7 +712,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                                     <td>
                                       <Field
-
+ 
                                         name={`earning_list[${index}].days_hours`}
                                         disabled
                                         className={
@@ -915,7 +885,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                           {/* {!isdataForRead && values?.deduction_list.length < 31 && ( */}
                           <button
-                            disabled={!values.employeeId}
+                            disabled={!values.employeeId ||    isdataForRead}
                             type="button"
                             className="btn btn-primary btn-elevate text-right"
                             onClick={() => {
@@ -954,58 +924,13 @@ Once finalized, this transaction will no longer be editable.</span>
                               <tbody>
                                 {values?.deduction_list?.map((row, index) => (
                                   <tr key={index}>
-                                    {/* Row Starts */}
-
-
-
-                                    {/* <td>
-
-
-
-
-                                      <SearchSelect
-                                        name={`deduction_list[${index}].earning_deduction_id`}
-
-
-                                        value={
-                                          dashboard?.allDeductions
-                                            ?.filter((option) => option.value === values.deduction_list[index].earning_deduction_id)
-                                            ?.map((option) => ({
-                                              label: option.label, //  onlyLabel will be displayed
-                                              value: option.value,
-                                            }))[0] || null
-                                        }
-
-                                        onChange={(selectedOption) => {
-                                          const selectedValue = selectedOption ? selectedOption.value : "";
-                                          setFieldValue(`deduction_list[${index}].earning_deduction_id`, selectedValue);
-                                        }}
-
-                                        options={
-                                          dashboard?.allDeductions?.map((option) => ({
-                                            label: option.label, // show only this field as label
-                                            value: option.value,     // keep value for Formik binding
-                                          })) || []
-                                        }
-
-                                      />
-
-
-
-                                 
-                                      {errors?.deduction_list?.[index]?.earning_deduction_id && touched?.deduction_list?.[index]?.earning_deduction_id && (
-                                        <div className="invalid-feedback">
-                                          {errors.deduction_list[index].earning_deduction_id}
-                                        </div>
-                                      )}
-                                    </td> */}
-
-
+                               
 
 
                                     <td>
                                       <SearchSelect
                                         name={`deduction_list[${index}].earning_deduction_id`}
+                                        isDisabled={   isdataForRead}
                                         value={
                                           dashboard?.allDeductions
                                             ?.filter(
@@ -1202,6 +1127,7 @@ Once finalized, this transaction will no longer be editable.</span>
                     <div className="">
                       <Field
                         name="otherPayment"
+                        disabled={isdataForRead}
                         component={Input}
                         placeholder="Enter other payment"
                         label={
@@ -1228,6 +1154,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                     <div className="grid md:col-span-2">
                       <Field
+                        disabled={isdataForRead}
                         name="otherPaymentRemarks"
                         component={Input}
                         placeholder="Enter remarks"
@@ -1246,6 +1173,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                     <div className="">
                       <Field
+                        disabled={isdataForRead}
                         name="otherDeduction"
                         component={Input}
                         placeholder="Enter other deduction"
@@ -1273,6 +1201,7 @@ Once finalized, this transaction will no longer be editable.</span>
 
                     <div className="grid md:col-span-2">
                       <Field
+                        disabled={isdataForRead}
                         name="oherDeductionRemarks"
                         component={Input}
                         placeholder="Enter remarks"
@@ -1588,13 +1517,8 @@ Once finalized, this transaction will no longer be editable.</span>
                         onClick={() => {
                           handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
                         }}
-className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25px] w-fit bg-red-500 text-white border-none rounded"
-                        // style={{
-                        //   padding: "4px 10px",
-                        //   lineHeight: "1",
-                        //   height: "25px",
-                        //   width: "fit-content",
-                        // }}
+                        className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25px] w-fit bg-red-500 text-white border-none rounded"
+                     
                       >
                         Calculate
                         {loading && (
@@ -1619,23 +1543,7 @@ className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25
                   </h6>
 
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-                    {/* <div className="">
-                      <Field
-                        name="exitClearence"
-                        component={Input}
-                        placeholder="Select exit clearance"
-                        label={
-                          <span>
-                            Exit Clearance
-                          </span>
-                        }
-
-                        autoComplete="off"
-                        type="text"
-
-                      />
-
-                    </div> */}
+          
 
 
                     <div className="">
@@ -1666,6 +1574,7 @@ className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25
                     <div className="grid md:col-span-5">
                       <Field
                         name="hrRemarks"
+                          disabled={isdataForRead}
                         component={TextArea}
                         placeholder="Enter remarks"
                         label={
@@ -1717,19 +1626,7 @@ className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25
               <>
                 {toBeCalculated ? (
                   <></>
-                  // <button
-                  //   type="button"
-
-                  //   onClick={() => {
-                  //     handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
-                  //   }}
-                  //   className="btn btn-primary btn-elevate"
-                  // >
-                  //   Calculate
-                  //   {loading && (
-                  //     <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  //   )}
-                  // </button>
+        
 
                 ) : (
                   <>
@@ -1737,9 +1634,9 @@ className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25
 
                     <button
                       type="button"
-                      disabled={!values.exitClearence || values.settlementFinalized || values.netFinalSettlementAmount < 0}
+                      disabled={!values.exitClearence ||   isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0}
                       onClick={() => {
-                         setFinalizeModal(true)
+                        setFinalizeModal(true)
                       }}
                       className="btn btn-primary btn-elevate"
                     >
@@ -1752,7 +1649,7 @@ className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25
 
                     <button
                       type="submit"
-                      disabled={values.settlementFinalized}
+                      disabled={values.settlementFinalized ||   isdataForRead}
 
                       onClick={() => {
                         handleSubmit();

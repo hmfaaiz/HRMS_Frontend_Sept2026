@@ -114,21 +114,21 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
 
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
-  {SECTIONS[0].fields.map((field, idx) => {
-    const fieldValue = data[field.value];
+                          {SECTIONS[0].fields.map((field, idx) => {
+                            const fieldValue = data[field.value];
 
-    if (!fieldValue) return null; // agar empty/null hai to skip kar do
+                            if (!fieldValue) return null; // agar empty/null hai to skip kar do
 
-    return (
-      <React.Fragment key={idx}>
-        <div className="font-medium">{field.name}</div>
-        <div>
-          {field.isDate ? formatDates(fieldValue) : fieldValue}
-        </div>
-      </React.Fragment>
-    );
-  })}
-</div>
+                            return (
+                              <React.Fragment key={idx}>
+                                <div className="font-medium">{field.name}</div>
+                                <div>
+                                  {field.isDate ? formatDates(fieldValue) : fieldValue}
+                                </div>
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
 
                         {/* <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
                           <React.Fragment>
@@ -148,20 +148,20 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
 
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
-  {data.reportToName && (
-    <React.Fragment>
-      <div className="font-medium min-w-[180px]">Reporting To:</div>
-      <div>{data.reportToName}</div>
-    </React.Fragment>
-  )}
+                          {data.reportToName && (
+                            <React.Fragment>
+                              <div className="font-medium min-w-[180px]">Reporting To:</div>
+                              <div>{data.reportToName}</div>
+                            </React.Fragment>
+                          )}
 
-  {data?.payrollName && (
-    <React.Fragment>
-      <div className="font-medium">Payroll Group:</div>
-      <div>{data.payrollName}</div>
-    </React.Fragment>
-  )}
-</div>
+                          {data?.payrollName && (
+                            <React.Fragment>
+                              <div className="font-medium">Payroll Group:</div>
+                              <div>{data.payrollName}</div>
+                            </React.Fragment>
+                          )}
+                        </div>
 
 
                       </Col>
@@ -188,24 +188,24 @@ const EmployeeProfile = ({ employeeId, panelMode }) => {
                       </Col> */}
 
                       <Col md={3} className=' lg:ml-36 '>
-  <h6 className="font-bold mb-0 text-primary my-2 ">
-    {/* Personal Information */}&nbsp;
-  </h6>
-  <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
-    {SECTIONS[1].fields.map((field, idx) => (
-      data[field.value] && (   // sirf tab render hoga jab data ho
-        <React.Fragment key={idx}>
-          <div className="font-medium">{field.name}</div>
-          <div className=''>
-            {field.isDate
-              ? formatDates(data[field.value])
-              : data[field.value]}
-          </div>
-        </React.Fragment>
-      )
-    ))}
-  </div>
-</Col>
+                        <h6 className="font-bold mb-0 text-primary my-2 ">
+                          {/* Personal Information */}&nbsp;
+                        </h6>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+                          {SECTIONS[1].fields.map((field, idx) => (
+                            data[field.value] && (   // sirf tab render hoga jab data ho
+                              <React.Fragment key={idx}>
+                                <div className="font-medium">{field.name}</div>
+                                <div className=''>
+                                  {field.isDate
+                                    ? formatDates(data[field.value])
+                                    : data[field.value]}
+                                </div>
+                              </React.Fragment>
+                            )
+                          ))}
+                        </div>
+                      </Col>
 
 
                       {/* Profile Image */}

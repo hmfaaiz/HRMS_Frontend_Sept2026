@@ -64,7 +64,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchSeparationById(id));
+    dispatch(actions.fetchFinalSettlementById(id));
 
   }, [id, dispatch]);
 
@@ -81,8 +81,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
 
-      dispatch(actions.createSeparation(formData, disbaleLoading, onHide, formUIProps.queryParams));
-      dispatch(actions.fetchSeparation(formUIProps.queryParams));
+      dispatch(actions.createFinalSettlement(formData, disbaleLoading, onHide, formUIProps.queryParams));
+      dispatch(actions.fetchFinalSettlement(formUIProps.queryParams));
 
 
 
@@ -125,9 +125,9 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
 
 
 
-      await dispatch(actions.updateSeparation(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.updateFinalSettlement(formUpdatedFields, disbaleLoading, onHide));
 
-      await dispatch(actions.fetchSeparation(usersUIProps.queryParams));
+      await dispatch(actions.fetchFinalSettlement(usersUIProps.queryParams));
     }
   };
 

@@ -188,3 +188,11 @@ export const getAllAppraisalPeriod = async (body) => {
 };export const getAllApprovedResignedEmp = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-approved-resigned-employee`,body);
 };
+
+export const getAllEarning = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-earning`);
+};
+
+export const getSeparatedEmployeeById = async (id) => {
+  return await axios.get(`${USERS_URL}/settings/read-separated-employeeById/${id}`);
+};

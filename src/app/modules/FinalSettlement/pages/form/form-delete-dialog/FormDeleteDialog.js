@@ -42,14 +42,14 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteSeparation = () => {
+  const deleteFinalSettlement = () => {
     // server request for deleting customer by id
 
     enableLoading();
-    dispatch(actions.deleteSeparation(id)).then(() => {
+    dispatch(actions.deleteFinalSettlement(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchSeparation(usersUIProps.queryParams));
+      dispatch(actions.fetchFinalSettlement(usersUIProps.queryParams));
    
       disableLoading();
     });
@@ -85,7 +85,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteSeparation}
+            onClick={deleteFinalSettlement}
             className="btn btn-primary btn-elevate"
           >
             Delete Record

@@ -50,7 +50,7 @@ export function FormDynamicDialogModal({ id, show, onHide, onConfirm, title, mes
         dispatch(actions[actionName](id)).then(() => {
             onHide();
             // refresh list after deletion
-            dispatch(actions.fetchSeparation(usersUIProps.queryParams));
+            dispatch(actions.fetchFinalSettlement(usersUIProps.queryParams));
 
             disableLoading();
         });

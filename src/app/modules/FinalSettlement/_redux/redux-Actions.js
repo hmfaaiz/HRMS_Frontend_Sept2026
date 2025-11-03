@@ -6,15 +6,15 @@ import { toast } from "react-toastify";
 const { actions } = FinalSettlementSlice;
 
 
-export const fetchSeparation = (queryparm) => async (dispatch) => {
+export const fetchFinalSettlement = (queryparm) => async (dispatch) => {
 
 
-  return requestFromServer.getAllSeparation(queryparm)
+  return requestFromServer.getAllFinalSettlement(queryparm)
 
     .then((response) => {
 
 
-      dispatch(actions.separationFetched(response));
+      dispatch(actions.finalSettlementFetched(response));
     })
     .catch((error) => {
 
@@ -23,20 +23,20 @@ export const fetchSeparation = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchSeparationById = (id) => (dispatch) => {
+export const fetchFinalSettlementById = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.SeparationFetchedForEdit({ dataForEdit: undefined }));
+    return dispatch(actions.FinalSettlementFetchedForEdit({ dataForEdit: undefined }));
   }
 
   return requestFromServer
-    .getSeparationById(id)
+    .getFinalSettlementById(id)
     .then((response) => {
       const entities = response.data?.data;
 
 
-      dispatch(actions.SeparationFetchedForEdit({ dataForEdit: entities }));
+      dispatch(actions.FinalSettlementFetchedForEdit({ dataForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -67,10 +67,10 @@ export const fetchEmpBySeparationFlag = (body) => (dispatch) => {
 export const deleteFinalSettlement = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteSeparation(id)
+    .deleteFinalSettlement(id)
     .then((response) => {
 
-      dispatch(actions.SeparationDeleted(id));
+      dispatch(actions.FinalSettlementDeleted(id));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -87,15 +87,15 @@ export const deleteFinalSettlement = (id) => (dispatch) => {
     });
 };
 
-export const separateById = (body) => (dispatch) => {
+export const finalSettlementById = (body) => (dispatch) => {
 
   return requestFromServer
-    .separateById(body)
+    .finalSettlementById(body)
     .then((response) => {
         const entities = response.data?.data;
 
 
-      dispatch(actions.SeparationFetchedForEdit({ dataForEdit: entities }));
+      dispatch(actions.FinalSettlementFetchedForEdit({ dataForEdit: entities }));
  
       toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
@@ -118,19 +118,19 @@ export const separateById = (body) => (dispatch) => {
 };
 
 
-export const createSeparation = (separationForCreation, disbaleLoading, onHide, props) => (
+export const createFinalSettlement = (finalSettlementForCreation, disbaleLoading, onHide, props) => (
   dispatch
 ) => {
 
 
   return requestFromServer
-    .createSeparation(separationForCreation)
+    .createFinalSettlement(finalSettlementForCreation)
     .then((res) => {
 
       const user = res.data?.data;
 
 
-      dispatch(actions.separationCreated(user));
+      dispatch(actions.finalSettlementCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
@@ -141,7 +141,7 @@ export const createSeparation = (separationForCreation, disbaleLoading, onHide, 
         draggable: true,
         progress: undefined,
       });
-      dispatch(fetchSeparation(props));
+      dispatch(fetchFinalSettlement(props));
       onHide();
     })
     .catch((error) => {
@@ -160,14 +160,14 @@ export const createSeparation = (separationForCreation, disbaleLoading, onHide, 
     });
 };
 
-export const updateSeparation = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateFinalSettlement = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateSeparation(user)
+    .updateFinalSettlement(user)
     .then((response) => {
 
       const updatedSeparation = response?.config?.data; // response.data?.data;
 
-      dispatch(actions.separationUpdated({ updatedSeparation }));
+      dispatch(actions.finalSettlementUpdated({ updatedSeparation }));
 
       disbaleLoading();
       onHide();
@@ -201,28 +201,5 @@ export const updateSeparation = (user, disbaleLoading, onHide) => (dispatch) => 
 };
 
 
-
-export const uploadFile = async (file) => {
-  const formData = new FormData()
-  formData.append('file', file)
-  return await requestFromServer.uploadFile(formData)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-
-      toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-    });
-
-};
 
 

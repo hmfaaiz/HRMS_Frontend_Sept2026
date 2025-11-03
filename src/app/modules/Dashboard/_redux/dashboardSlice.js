@@ -81,16 +81,18 @@ const initialDashboardState = {
   summaryDetailData: null,
   allPayrollAccountList: [],
   announcement: [],
-  allExitTypeList:[],
-  allExitReasonList:[],
-  currentAtt : null,
-  getAllUserList:[],
-  getAllAuditTablesNameList:[],
-  fiscalyearBySubList:[],
-  appraisalPeriodBySubList:[],
-  departmentBySubIdsList:[],
-  appraisalPeriodList:[],
-  approvedResignedEmpList:[],
+  allExitTypeList: [],
+  allExitReasonList: [],
+  currentAtt: null,
+  getAllUserList: [],
+  getAllAuditTablesNameList: [],
+  fiscalyearBySubList: [],
+  appraisalPeriodBySubList: [],
+  departmentBySubIdsList: [],
+  appraisalPeriodList: [],
+  approvedResignedEmpList: [],
+  allEarningList: [],
+  separatedEmployee: null,
 };
 
 export const callTypes = {
@@ -347,32 +349,41 @@ export const dashboardSlice = createSlice({
     },
     CurrentAttFetch: (state, action) => {
       state.currentAtt = action.payload;
-    }, 
-     AllUserFetch: (state, action) => {
+    },
+    AllUserFetch: (state, action) => {
       state.getAllUserList = action.payload;
     },
-      AllAuditTablesNameFetch: (state, action) => {
+    AllAuditTablesNameFetch: (state, action) => {
       state.getAllAuditTablesNameList = action.payload;
     },
 
-      AllFiscalYearBySubListFetch: (state, action) => {
+    AllFiscalYearBySubListFetch: (state, action) => {
       state.fiscalyearBySubList = action.payload;
-    },   
-    
+    },
+
     AllDepartmentBysSubIdsListFetch: (state, action) => {
       state.departmentBySubIdsList = action.payload;
-    },  
+    },
     AllAppraisalPeriodListFetch: (state, action) => {
       state.appraisalPeriodList = action.payload;
     },
-    
-      AllAppraisalPeriodBySubListFetch: (state, action) => {
+
+    AllAppraisalPeriodBySubListFetch: (state, action) => {
       state.appraisalPeriodBySubList = action.payload;
-    }, 
-      
+    },
+
     AllApprovedResignedEmpListFetch: (state, action) => {
       state.approvedResignedEmpList = action.payload;
-    }, 
+    },
+
+    AllEarningFetch: (state, action) => {
+      state.allEarningList = action.payload;
+    },
+
+    SeparatedEmployeeFetch: (state, action) => {
+      state.separatedEmployee = action.payload;
+    },
+
 
   },
 });

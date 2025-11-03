@@ -10,7 +10,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
   const { dataForEdit, actionsLoading } = useSelector(
     
     (state) => ({
-      dataForEdit: state.separation.dataForEdit,
+      dataForEdit: state.final_settlement.dataForEdit,
       actionsLoading: state.users.actionsLoading,
     }),
     shallowEqual
@@ -31,7 +31,7 @@ export function FormEditDialogHeader({ id, isdataForRead }) {
       {actionsLoading && <ModalProgressBar />}
       {/* <Modal.Header >
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isdataForRead ? title : "View Separation"}
+          {!isdataForRead ? title : "View Final Settlement"}
         </Modal.Title>
       </Modal.Header> */}
     </>
