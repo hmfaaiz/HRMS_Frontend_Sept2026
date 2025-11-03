@@ -65,6 +65,7 @@ export function FormFIlter({ listLoading, user }) {
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllCountry());
     dispatch(fetchAllCity());
+    dispatch(fetchAllFormsMenu(408, "allApplicationStatusList"));
 
   }, [dispatch]);
 
@@ -142,7 +143,7 @@ export function FormFIlter({ listLoading, user }) {
                 </div>
               </div>
 
-          
+
 
               <div className="">
                 <div>
@@ -238,7 +239,49 @@ export function FormFIlter({ listLoading, user }) {
 
 
 
+              <div className="">
+                <div>
+                  <SearchSelect
+                    name="applicantStatusId"
+                    label={
+                      <span>
+                        {" "}
+                        Applicant Status
 
+                      </span>
+                    }
+                    value={
+                      (dashboard?.allApplicationStatusList || []).find(
+                        (item) => item.value === formUIProps?.queryParams?.applicantStatusId
+                      ) || { label: "All", value: "" }
+                    }
+
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...formUIProps.queryParams,
+                        applicantStatusId: e.value,
+                        pageNumber: 1,
+                      };
+
+
+                      formUIProps.setQueryParams(updatedQueryParams);
+
+                      dispatch(fetchApplicantProfile(formUIProps.queryParams));
+
+
+                    }}
+
+
+                    options={[
+                      { label: "All", value: "" },
+                      ...(Array.isArray(dashboard?.allApplicationStatusList)
+                        ? dashboard.allApplicationStatusList
+                        : []),
+                    ]}
+                  />
+                </div>
+              </div>
 
               <div className="">
                 <label> <span>

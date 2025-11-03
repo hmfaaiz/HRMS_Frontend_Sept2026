@@ -76,12 +76,12 @@ export function FormCard() {
     //     </CardBody>
     //   </Card>
     <TCard name={CurrentModuleName()}>
-      <div className="flex justify-between  items-center flex-wrap gap-2">
-      <div>
-  <FormFIlter />
-      </div>
-      
-        <div className="flex items-center gap-2 sm:justify-end">
+      <div className="grid md:grid-cols-7 justify-between  items-center gap-2 ">
+        <div className="grid md:col-span-5"> 
+          <FormFIlter />
+        </div>
+
+        <div className="grid md:col-span-2 items-center gap-2 md:justify-end ">
           {/* <CardHeaderToolbar> */}
           {accessUser && (
             <>
@@ -90,7 +90,7 @@ export function FormCard() {
                 className="btn btn-primary"
                 onClick={FormUIProps.newFormButtonClick}
               >
-           
+
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                 Add
               </button>
