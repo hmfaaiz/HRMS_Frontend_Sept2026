@@ -93,6 +93,7 @@ const initialDashboardState = {
   approvedResignedEmpList: [],
   allEarningList: [],
   separatedEmployee: null,
+  salaryRoundingPolicy: [],
 };
 
 export const callTypes = {
@@ -382,6 +383,11 @@ export const dashboardSlice = createSlice({
 
     SeparatedEmployeeFetch: (state, action) => {
       state.separatedEmployee = action.payload;
+    },
+
+    SalaryRoundingFetch: (state, action) => {
+      state.salaryRoundingPolicy = action.payload;
+   
     },
 
 
