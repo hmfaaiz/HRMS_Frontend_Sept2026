@@ -431,7 +431,7 @@ export function FormEditForm({
                     {(formData?.resignationAttachment ||
                       values?.resignationAttachment) && (
                       <div className="mt-2">
-                        <strong>Existing File: </strong>
+                        <label>Existing File: </label>
                         <a
                           href={
                             typeof (
@@ -449,7 +449,7 @@ export function FormEditForm({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 underline"
+                          className="text-blue-600 underline  text-primary text-sm"
                         >
                           {typeof (
                             values?.resignationAttachment ||

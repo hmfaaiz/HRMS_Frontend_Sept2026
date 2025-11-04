@@ -2287,11 +2287,11 @@ export function FormEditForm({
                     {/* Show existing file if any */}
                     {formData.file && formData.file === formData.file && (
                       <div className="mt-2">
-                        <strong>Existing File: </strong>
+                       <label>Existing File:</label>
                         <a
                           href={getUploadUrl(formData.file)}
                           target="_blank"
-                          className="text-blue-600 underline"
+                          className="text-blue-600 underline  text-primary text-sm"
                         >
                           {getFileName(formData.file)}
                         </a>

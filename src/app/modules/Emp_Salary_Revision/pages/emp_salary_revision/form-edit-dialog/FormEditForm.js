@@ -1008,6 +1008,9 @@ export function FormEditForm({
       dispatch(fetchAllDesignationByGradeId(user?.Employee?.gradeId, "allDesignationByGrade"))
     }
   }, [user?.Employee?.gradeId])
+   const [showOnlyChanged, setShowOnlyChanged] = useState(false);
+
+  const normalize = (val) => val === null || val === undefined || val === "" ? null : String(val).trim();
 
   return (
     <>
@@ -1100,145 +1103,268 @@ export function FormEditForm({
               </div>)}
 
               {comparisonModal && (
-                <CustomModal
-                  show={comparisonModal}
-                  onClose={handlePolicyModalClose}
-                  title="Salary Comparison"
-                  className="max-w-7xl"
-                >
+                // <CustomModal
+                //   show={comparisonModal}
+                //   onClose={handlePolicyModalClose}
+                //   title="Salary Comparison"
+                //   className="max-w-7xl"
+                // >
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    {comparisonFields.map((field, index) => {
-                      let previousValue = previousSalaryComparison?.[field.key];
-                      let updatedValue = previousSalaryComparison?.[field.updatedKey];
+                //   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                //     {comparisonFields.map((field, index) => {
+                //       let previousValue = previousSalaryComparison?.[field.key];
+                //       let updatedValue = previousSalaryComparison?.[field.updatedKey];
 
-                      console.log("Prev11111", field.key, previousValue)
-                      console.log("Updated1111", updatedValue)
-                      if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
-                      if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
+                //       console.log("Prev11111", field.key, previousValue)
+                //       console.log("Updated1111", updatedValue)
+                //       if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
+                //       if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
 
-                      if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
-                      if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
+                //       if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
+                //       if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
 
-                      if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
-                      if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
+                //       if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
+                //       if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
 
-                      if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
-                      if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
-
-
+                //       if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
+                //       if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
 
 
-                      if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
-                      if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
 
 
-                      if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
-                      if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
-
-                      if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
-                      if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
-                      // const isDifferent = previousValue !== updatedValue;
-                      const normalize = (val) =>
-                        val === null || val === undefined || val === "" ? null : String(val).trim();
-
-                      const isDifferent = normalize(previousValue) !== normalize(updatedValue);
-
-                      return (
-                        <div
-                          key={index}
-                          // className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
-                          className={`p-4 border border-gray-200 rounded-2xl shadow-sm ${isDifferent ? "bg-yellow-100" : "bg-white"
-                            }`}
-                        >
-                          <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
-                          <p className="text-gray-700 text-sm">
-                            <span className="font-medium">Previous:</span>{" "}
-                            {previousValue === true
-                              ? "Yes"
-                              : previousValue === false
-                                ? "No"
-                                : previousValue ?? "—"}
-                          </p>
-                          <p className="text-gray-700 text-sm">
-                            <span className="font-medium">Updated:</span>{" "}
-                            {updatedValue === true
-                              ? "Yes"
-                              : updatedValue === false
-                                ? "No"
-                                : updatedValue ?? "—"}
-                          </p>
-                        </div>
-                      );
-
-                    })}
-                  </div>
+                //       if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
+                //       if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
 
 
-                  <div className="space-y-8">
+                //       if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
+                //       if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
 
-                    <div>
-                      <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
-                      <table className="w-full border border-gray-200 text-sm">
-                        <thead className="border-gray-200 shadow-sm bg-white">
-                          <tr>
-                            <th className="border px-3 py-2 text-left">Earning Name</th>
-                            <th className="border px-3 py-2 text-left">Calculation Type</th>
-                            <th className="border px-3 py-2 text-left">Factor Value</th>
-                            <th className="border px-3 py-2 text-left">Previous Amount</th>
-                            <th className="border px-3 py-2 text-left">Updated Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
-                            (item) => item.transactionType === "Earning"
-                          ).map((item, i) => (
-                            <tr key={i}>
-                              <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
-                              <td className="border px-3 py-2">{item?.calculation_type}</td>
-                              <td className="border px-3 py-2">{item?.factorValue}</td>
-                              <td className="border px-3 py-2">{item?.amount}</td>
-                              <td className="border px-3 py-2">{item?.updatedAmount}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                //       if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
+                //       if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
+                //       // const isDifferent = previousValue !== updatedValue;
+                //       const normalize = (val) =>
+                //         val === null || val === undefined || val === "" ? null : String(val).trim();
+
+                //       const isDifferent = normalize(previousValue) !== normalize(updatedValue);
+
+                //       return (
+                //         <div
+                //           key={index}
+                //           // className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
+                //           className={`p-4 border border-gray-200 rounded-2xl shadow-sm ${isDifferent ? "bg-yellow-100" : "bg-white"
+                //             }`}
+                //         >
+                //           <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
+                //           <p className="text-gray-700 text-sm">
+                //             <span className="font-medium">Previous:</span>{" "}
+                //             {previousValue === true
+                //               ? "Yes"
+                //               : previousValue === false
+                //                 ? "No"
+                //                 : previousValue ?? "—"}
+                //           </p>
+                //           <p className="text-gray-700 text-sm">
+                //             <span className="font-medium">Updated:</span>{" "}
+                //             {updatedValue === true
+                //               ? "Yes"
+                //               : updatedValue === false
+                //                 ? "No"
+                //                 : updatedValue ?? "—"}
+                //           </p>
+                //         </div>
+                //       );
+
+                //     })}
+                //   </div>
 
 
-                    <div>
-                      <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
-                      <table className="w-full border border-gray-200 text-sm">
-                        <thead className="border-gray-200 shadow-sm bg-white">
-                          <tr>
-                            <th className="border px-3 py-2 text-left">Deduction Name</th>
-                            <th className="border px-3 py-2 text-left">Calculation Type</th>
-                            <th className="border px-3 py-2 text-left">Factor Value</th>
-                            <th className="border px-3 py-2 text-left">Previous Amount</th>
-                            <th className="border px-3 py-2 text-left">Updated Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
-                            (item) => item.transactionType === "Deduction"
-                          ).map((item, i) => (
-                            <tr key={i}>
-                              <td className="border px-3 py-2">
-                                {(dashboard?.allDeductions || [])
-                                  .filter((x) => x.value === item.earning_deduction_id)
-                                  .map((x) => <span key={x.value}>{x.label}</span>)}
-                              </td>
-                              <td className="border px-3 py-2">{item.calculation_type}</td>
-                              <td className="border px-3 py-2">{item.factorValue}</td>
-                              <td className="border px-3 py-2">{item.amount}</td>
-                              <td className="border px-3 py-2">{item.updatedAmount}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </CustomModal>
+                //   <div className="space-y-8">
+
+                //     <div>
+                //       <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
+                //       <table className="w-full border border-gray-200 text-sm">
+                //         <thead className="border-gray-200 shadow-sm bg-white">
+                //           <tr>
+                //             <th className="border px-3 py-2 text-left">Earning Name</th>
+                //             <th className="border px-3 py-2 text-left">Calculation Type</th>
+                //             <th className="border px-3 py-2 text-left">Factor Value</th>
+                //             <th className="border px-3 py-2 text-left">Previous Amount</th>
+                //             <th className="border px-3 py-2 text-left">Updated Amount</th>
+                //           </tr>
+                //         </thead>
+                //         <tbody>
+                //           {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+                //             (item) => item.transactionType === "Earning"
+                //           ).map((item, i) => (
+                //             <tr key={i}>
+                //               <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
+                //               <td className="border px-3 py-2">{item?.calculation_type}</td>
+                //               <td className="border px-3 py-2">{item?.factorValue}</td>
+                //               <td className="border px-3 py-2">{item?.amount}</td>
+                //               <td className="border px-3 py-2">{item?.updatedAmount}</td>
+                //             </tr>
+                //           ))}
+                //         </tbody>
+                //       </table>
+                //     </div>
+
+
+                //     <div>
+                //       <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
+                //       <table className="w-full border border-gray-200 text-sm">
+                //         <thead className="border-gray-200 shadow-sm bg-white">
+                //           <tr>
+                //             <th className="border px-3 py-2 text-left">Deduction Name</th>
+                //             <th className="border px-3 py-2 text-left">Calculation Type</th>
+                //             <th className="border px-3 py-2 text-left">Factor Value</th>
+                //             <th className="border px-3 py-2 text-left">Previous Amount</th>
+                //             <th className="border px-3 py-2 text-left">Updated Amount</th>
+                //           </tr>
+                //         </thead>
+                //         <tbody>
+                //           {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
+                //             (item) => item.transactionType === "Deduction"
+                //           ).map((item, i) => (
+                //             <tr key={i}>
+                //               <td className="border px-3 py-2">
+                //                 {(dashboard?.allDeductions || [])
+                //                   .filter((x) => x.value === item.earning_deduction_id)
+                //                   .map((x) => <span key={x.value}>{x.label}</span>)}
+                //               </td>
+                //               <td className="border px-3 py-2">{item.calculation_type}</td>
+                //               <td className="border px-3 py-2">{item.factorValue}</td>
+                //               <td className="border px-3 py-2">{item.amount}</td>
+                //               <td className="border px-3 py-2">{item.updatedAmount}</td>
+                //             </tr>
+                //           ))}
+                //         </tbody>
+                //       </table>
+                //     </div>
+                //   </div>
+                // </CustomModal>
+              
+              <CustomModal
+      show={comparisonModal}
+      onClose={handlePolicyModalClose}
+      title="Salary Comparison"
+      className="max-w-7xl"
+    >
+      {/* Filter toggle */}
+      <div className="mb-4 flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="showChanged"
+          checked={showOnlyChanged}
+          onChange={() => setShowOnlyChanged(!showOnlyChanged)}
+          className="form-checkbox h-4 w-4"
+        />
+        <label htmlFor="showChanged" className="text-sm font-medium">Show Highlighted fields only.</label>
+      </div>
+
+      {/* Fields comparison */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {comparisonFields
+          .map((field, index) => {
+            let previousValue = previousSalaryComparison?.[field.key];
+            let updatedValue = previousSalaryComparison?.[field.updatedKey];
+
+            // Handle special cases for relational fields
+            if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
+            if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
+            if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
+            if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
+            if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
+            if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
+            if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
+            if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
+            if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
+            if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
+            if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
+            if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
+            if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
+            if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
+
+            const isDifferent = normalize(previousValue) !== normalize(updatedValue);
+
+            return (!showOnlyChanged || isDifferent) && (
+              <div
+                key={index}
+                className={`p-4 border border-gray-200 rounded-2xl shadow-sm ${isDifferent ? "bg-yellow-100" : "bg-white"}`}
+              >
+                <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
+                <p className="text-gray-700 text-sm">
+                  <span className="font-medium">Previous:</span> {previousValue === true ? "Yes" : previousValue === false ? "No" : previousValue ?? "—"}
+                </p>
+                <p className="text-gray-700 text-sm">
+                  <span className="font-medium">Updated:</span> {updatedValue === true ? "Yes" : updatedValue === false ? "No" : updatedValue ?? "—"}
+                </p>
+              </div>
+            );
+          })}
+      </div>
+
+      {/* Earnings & Deductions sections (same as your current code) */}
+      <div className="space-y-8">
+        {/* Earnings */}
+        <div>
+          <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
+          <table className="w-full border border-gray-200 text-sm">
+            <thead className="border-gray-200 shadow-sm bg-white">
+              <tr>
+                <th className="border px-3 py-2 text-left">Earning Name</th>
+                <th className="border px-3 py-2 text-left">Calculation Type</th>
+                <th className="border px-3 py-2 text-left">Factor Value</th>
+                <th className="border px-3 py-2 text-left">Previous Amount</th>
+                <th className="border px-3 py-2 text-left">Updated Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(item => item.transactionType === "Earning").map((item, i) => (
+                <tr key={i}>
+                  <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
+                  <td className="border px-3 py-2">{item?.calculation_type}</td>
+                  <td className="border px-3 py-2">{item?.factorValue}</td>
+                  <td className="border px-3 py-2">{item?.amount}</td>
+                  <td className="border px-3 py-2">{item?.updatedAmount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Deductions */}
+        <div>
+          <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
+          <table className="w-full border border-gray-200 text-sm">
+            <thead className="border-gray-200 shadow-sm bg-white">
+              <tr>
+                <th className="border px-3 py-2 text-left">Deduction Name</th>
+                <th className="border px-3 py-2 text-left">Calculation Type</th>
+                <th className="border px-3 py-2 text-left">Factor Value</th>
+                <th className="border px-3 py-2 text-left">Previous Amount</th>
+                <th className="border px-3 py-2 text-left">Updated Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(item => item.transactionType === "Deduction").map((item, i) => (
+                <tr key={i}>
+                  <td className="border px-3 py-2">
+                    {(dashboard?.allDeductions || []).filter(x => x.value === item.earning_deduction_id).map(x => <span key={x.value}>{x.label}</span>)}
+                  </td>
+                  <td className="border px-3 py-2">{item.calculation_type}</td>
+                  <td className="border px-3 py-2">{item.factorValue}</td>
+                  <td className="border px-3 py-2">{item.amount}</td>
+                  <td className="border px-3 py-2">{item.updatedAmount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </CustomModal>
+  
+              
+              
               )}
 
               <fieldset disabled={dataForRead}>
