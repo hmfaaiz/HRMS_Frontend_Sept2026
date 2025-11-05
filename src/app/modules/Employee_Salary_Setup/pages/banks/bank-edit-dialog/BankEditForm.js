@@ -624,7 +624,7 @@ export function BankEditForm({
     );
   };
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
-    console.log("totalAllowance66666")
+
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
     let grossSalaryInput = values.grossSalary;
@@ -680,7 +680,7 @@ export function BankEditForm({
 
       //   if ((totalAllowance + totalBasicWithFactorVal) !== values.grossSalary) {
       //     const diff = values.grossSalary - (totalAllowance + totalBasicWithFactorVal);
-      //     console.log("diff1111", diff)
+      //     
       //     setFieldValue("basicSalary", totalBasicWithFactorVal + diff);
       //   }
       // }
@@ -705,7 +705,7 @@ export function BankEditForm({
         // Use small epsilon to avoid floating-point issues
         if ((sumTotal) !== grossSalaryNum) {
           const diff = grossSalaryNum - sumTotal;
-          console.log("diff1111", diff);
+
           setFieldValue("basicSalary", totalBasicNum + diff);
         }
       }
@@ -752,23 +752,23 @@ export function BankEditForm({
         // const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
         //   return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
         // }, 0);
-      const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
-  console.log("Checking item:", item);
-  if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
-    return sum + Number(item.amount);
-  }
-  return sum;
-}, 0);
+        const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
 
-console.log("totalAllowance111", totalAllowance);
+          if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+            return sum + Number(item.amount);
+          }
+          return sum;
+        }, 0);
+
+
         const totalAllowanceNum = Number(totalAllowance);
         const basicSalaryNum = Number(values.basicSalary);
         const basicSalaryNumberNum = Number(basicSalaryNumber);
 
         if ((totalAllowanceNum + basicSalaryNum) != basicSalaryNumberNum) {
-          const diff =basicSalaryNumberNum - (totalAllowanceNum + basicSalaryNum);
-          console.log("diff111grosss", diff,totalAllowanceNum,basicSalaryNum,basicSalaryNumberNum)
-         setFieldValue("basicSalary", Number(values.basicSalary) + Number(diff));
+          const diff = basicSalaryNumberNum - (totalAllowanceNum + basicSalaryNum);
+
+          setFieldValue("basicSalary", Number(values.basicSalary) + Number(diff));
         }
       }
     } else {
@@ -825,7 +825,7 @@ console.log("totalAllowance111", totalAllowance);
   //   if (!roundingPolicyAmount) {
   //     if (totalAllowance + values.basicSalary !== values.grossSalary) {
   //       const diff = values.grossSalary - (totalAllowance + values.basicSalary);
-  //       console.log("diff1111", diff)
+  //       
   //       // setFieldValue("basicSalary", values.basicSalary + diff);
   //     }
   //   }

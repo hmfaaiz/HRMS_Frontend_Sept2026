@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { Input, TextArea } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import { FetchAllSalaryRoundingByFilters } from "../../../../Dashboard/_redux/dashboardActions";
 import {
   fetchAllFormsMenu,
   fetchAllActiveEmployees,
@@ -276,6 +277,8 @@ export function FormEditForm({
   const [dateOfJoining, setDateOfJoining] = useState();
   const [localizationId, setLocalizationId] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
+  const [salaryRoundingSubsidiaryId, setSalarySubsidiaryId] = useState();
+   const [roundingPolicyAmount, setRoundingPolicyAmount] = useState();
   // const [revisedDate, setRevisedDate] = useState(null);
 
   useEffect(() => {
@@ -319,6 +322,7 @@ export function FormEditForm({
           "allPayrollConfigApproverPermissionList"
         )
       );
+      dispatch(FetchAllSalaryRoundingByFilters())
     }
   }, [dispatch]);
 
@@ -393,6 +397,7 @@ export function FormEditForm({
     dispatch(fetchAllEarningList(1, "", employeeId, true));
     dispatch(fetchAllDeductionList(2, "", employeeId));
     dispatch(fetchAllActiveEmployeesSalaryForDDL(employeeId));
+    dispatch(FetchAllSalaryRoundingByFilters())
     setEmployeeDefault(
       dashboard.allEmployeesSalaryDDL &&
       dashboard.allEmployeesSalaryDDL.filter((item) => {
@@ -719,8 +724,14 @@ export function FormEditForm({
           return grossSalaryInput; // Return the updated grossSalaryInput
         })
       );
-      const totalBasicWithFactorVal =
+      let totalBasicWithFactorVal =
         (Number(grossSalaryInput) * Number(basicSalaryInputFactor)) / 100;
+
+        if (!roundingPolicyAmount) {
+        totalBasicWithFactorVal = Math.round(totalBasicWithFactorVal)
+
+      }
+
 
       setFieldValue("basicSalary", totalBasicWithFactorVal);
       setBasicSalary(totalBasicWithFactorVal);
@@ -730,12 +741,42 @@ export function FormEditForm({
         setDefaultMapEarningDeductionList([
           ...defMapEarningDeductionList.map((x) => {
             if (x.calculation_type == "% Of Gross") {
-              x.updatedAmount = (grossSalaryInput * x.factorValue) / 100;
+              // x.updatedAmount = (grossSalaryInput * x.factorValue) / 100;
+                x.updatedAmount = parseFloat(((grossSalaryInput * x.factorValue) / 100).toFixed(2));
+              if (!roundingPolicyAmount) {
+                x.updatedAmount = Math.round(x.updatedAmount); // nearest integer tak round
+              }
 
             }
             return x;
           }),
         ]);
+      }
+
+      
+      if (!roundingPolicyAmount) {
+        // const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+        //   return item.transactionType === "Earning" && item.isPartOfGrossSalary==false ? sum + Number(item.amount) : sum;
+        // }, 0);
+
+        const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+          if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+            return sum + Number(item.updatedAmount);
+          }
+          return sum;
+        }, 0);
+
+        const grossSalaryNum = Number(values.grossSalary) || 0;
+        const totalBasicNum = Number(totalBasicWithFactorVal) || 0;
+
+        const sumTotal = totalAllowance + totalBasicNum;
+
+        // Use small epsilon to avoid floating-point issues
+        if ((sumTotal) !== grossSalaryNum) {
+          const diff = grossSalaryNum - sumTotal;
+
+          setFieldValue("basicSalary", totalBasicNum + diff);
+        }
       }
     } else if (currentSalaryMethod == "Basic to Gross") {
       let basicSalaryNumber = Number(basicSalaryInput);
@@ -744,7 +785,12 @@ export function FormEditForm({
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == "% Of Basic") {
-            x.updatedAmount = (originalSalaryNumber * x.factorValue) / 100;
+            // x.updatedAmount = (originalSalaryNumber * x.factorValue) / 100;
+             x.updatedAmount = parseFloat(((originalSalaryNumber * x.factorValue) / 100).toFixed(2));
+            if (!roundingPolicyAmount) {
+              x.updatedAmount = Math.round(x.updatedAmount); // nearest integer tak round
+
+            }
 
             if (x.isPartOfGrossSalary) {
               basicSalaryNumber += x.updatedAmount;
@@ -770,6 +816,28 @@ export function FormEditForm({
       setFieldValue("grossSalary", basicSalaryNumber);
       setGrossSalary(basicSalaryNumber);
       setGrossSalaryDB(basicSalaryNumber);
+
+      if (!roundingPolicyAmount) {
+  
+        const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+
+          if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+            return sum + Number(item.updatedAmount);
+          }
+          return sum;
+        }, 0);
+
+
+        const totalAllowanceNum = Number(totalAllowance);
+        const basicSalaryNum = Number(values.basicSalary);
+        const basicSalaryNumberNum = Number(basicSalaryNumber);
+
+        if ((totalAllowanceNum + basicSalaryNum) != basicSalaryNumberNum) {
+          const diff = basicSalaryNumberNum - (totalAllowanceNum + basicSalaryNum);
+
+          setFieldValue("basicSalary", Number(values.basicSalary) + Number(diff));
+        }
+      }
     } else {
       let basicSalaryNumber = Number(basicSalaryInput);
       let gross = 0;
@@ -1008,9 +1076,20 @@ export function FormEditForm({
       dispatch(fetchAllDesignationByGradeId(user?.Employee?.gradeId, "allDesignationByGrade"))
     }
   }, [user?.Employee?.gradeId])
-   const [showOnlyChanged, setShowOnlyChanged] = useState(false);
+  const [showOnlyChanged, setShowOnlyChanged] = useState(false);
 
   const normalize = (val) => val === null || val === undefined || val === "" ? null : String(val).trim();
+
+  useEffect(() => {
+    const filtered = dashboard.salaryRoundingPolicy?.filter(
+      (i) =>
+        i.subsidiaryId === (salaryRoundingSubsidiaryId || user?.subsidiaryId)
+    ) || [];
+
+    setRoundingPolicyAmount(filtered[0]?.amount);
+
+  }, [dashboard.salaryRoundingPolicy, user?.subsidiaryId, salaryRoundingSubsidiaryId]);
+
 
   return (
     <>
@@ -1242,129 +1321,129 @@ export function FormEditForm({
                 //     </div>
                 //   </div>
                 // </CustomModal>
-              
-              <CustomModal
-      show={comparisonModal}
-      onClose={handlePolicyModalClose}
-      title="Salary Comparison"
-      className="max-w-7xl"
-    >
-      {/* Filter toggle */}
-      <div className="mb-4 flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="showChanged"
-          checked={showOnlyChanged}
-          onChange={() => setShowOnlyChanged(!showOnlyChanged)}
-          className="form-checkbox h-4 w-4"
-        />
-        <label htmlFor="showChanged" className="text-sm font-medium">Show Highlighted fields only.</label>
-      </div>
 
-      {/* Fields comparison */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        {comparisonFields
-          .map((field, index) => {
-            let previousValue = previousSalaryComparison?.[field.key];
-            let updatedValue = previousSalaryComparison?.[field.updatedKey];
+                <CustomModal
+                  show={comparisonModal}
+                  onClose={handlePolicyModalClose}
+                  title="Salary Comparison"
+                  className="max-w-7xl"
+                >
+                  {/* Filter toggle */}
+                  <div className="mb-4 flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="showChanged"
+                      checked={showOnlyChanged}
+                      onChange={() => setShowOnlyChanged(!showOnlyChanged)}
+                      className="form-checkbox h-4 w-4"
+                    />
+                    <label htmlFor="showChanged" className="text-sm font-medium">Show Highlighted fields only.</label>
+                  </div>
 
-            // Handle special cases for relational fields
-            if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
-            if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
-            if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
-            if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
-            if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
-            if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
-            if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
-            if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
-            if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
-            if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
-            if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
-            if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
-            if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
-            if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
+                  {/* Fields comparison */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    {comparisonFields
+                      .map((field, index) => {
+                        let previousValue = previousSalaryComparison?.[field.key];
+                        let updatedValue = previousSalaryComparison?.[field.updatedKey];
 
-            const isDifferent = normalize(previousValue) !== normalize(updatedValue);
+                        // Handle special cases for relational fields
+                        if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
+                        if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
+                        if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
+                        if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
+                        if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
+                        if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
+                        if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
+                        if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
+                        if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
+                        if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
+                        if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
+                        if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
+                        if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
+                        if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
 
-            return (!showOnlyChanged || isDifferent) && (
-              <div
-                key={index}
-                className={`p-4 border border-gray-200 rounded-2xl shadow-sm ${isDifferent ? "bg-yellow-100" : "bg-white"}`}
-              >
-                <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
-                <p className="text-gray-700 text-sm">
-                  <span className="font-medium">Previous:</span> {previousValue === true ? "Yes" : previousValue === false ? "No" : previousValue ?? "—"}
-                </p>
-                <p className="text-gray-700 text-sm">
-                  <span className="font-medium">Updated:</span> {updatedValue === true ? "Yes" : updatedValue === false ? "No" : updatedValue ?? "—"}
-                </p>
-              </div>
-            );
-          })}
-      </div>
+                        const isDifferent = normalize(previousValue) !== normalize(updatedValue);
 
-      {/* Earnings & Deductions sections (same as your current code) */}
-      <div className="space-y-8">
-        {/* Earnings */}
-        <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
-          <table className="w-full border border-gray-200 text-sm">
-            <thead className="border-gray-200 shadow-sm bg-white">
-              <tr>
-                <th className="border px-3 py-2 text-left">Earning Name</th>
-                <th className="border px-3 py-2 text-left">Calculation Type</th>
-                <th className="border px-3 py-2 text-left">Factor Value</th>
-                <th className="border px-3 py-2 text-left">Previous Amount</th>
-                <th className="border px-3 py-2 text-left">Updated Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(item => item.transactionType === "Earning").map((item, i) => (
-                <tr key={i}>
-                  <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
-                  <td className="border px-3 py-2">{item?.calculation_type}</td>
-                  <td className="border px-3 py-2">{item?.factorValue}</td>
-                  <td className="border px-3 py-2">{item?.amount}</td>
-                  <td className="border px-3 py-2">{item?.updatedAmount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                        return (!showOnlyChanged || isDifferent) && (
+                          <div
+                            key={index}
+                            className={`p-4 border border-gray-200 rounded-2xl shadow-sm ${isDifferent ? "bg-yellow-100" : "bg-white"}`}
+                          >
+                            <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
+                            <p className="text-gray-700 text-sm">
+                              <span className="font-medium">Previous:</span> {previousValue === true ? "Yes" : previousValue === false ? "No" : previousValue ?? "—"}
+                            </p>
+                            <p className="text-gray-700 text-sm">
+                              <span className="font-medium">Updated:</span> {updatedValue === true ? "Yes" : updatedValue === false ? "No" : updatedValue ?? "—"}
+                            </p>
+                          </div>
+                        );
+                      })}
+                  </div>
 
-        {/* Deductions */}
-        <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
-          <table className="w-full border border-gray-200 text-sm">
-            <thead className="border-gray-200 shadow-sm bg-white">
-              <tr>
-                <th className="border px-3 py-2 text-left">Deduction Name</th>
-                <th className="border px-3 py-2 text-left">Calculation Type</th>
-                <th className="border px-3 py-2 text-left">Factor Value</th>
-                <th className="border px-3 py-2 text-left">Previous Amount</th>
-                <th className="border px-3 py-2 text-left">Updated Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(item => item.transactionType === "Deduction").map((item, i) => (
-                <tr key={i}>
-                  <td className="border px-3 py-2">
-                    {(dashboard?.allDeductions || []).filter(x => x.value === item.earning_deduction_id).map(x => <span key={x.value}>{x.label}</span>)}
-                  </td>
-                  <td className="border px-3 py-2">{item.calculation_type}</td>
-                  <td className="border px-3 py-2">{item.factorValue}</td>
-                  <td className="border px-3 py-2">{item.amount}</td>
-                  <td className="border px-3 py-2">{item.updatedAmount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </CustomModal>
-  
-              
-              
+                  {/* Earnings & Deductions sections (same as your current code) */}
+                  <div className="space-y-8">
+                    {/* Earnings */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
+                      <table className="w-full border border-gray-200 text-sm">
+                        <thead className="border-gray-200 shadow-sm bg-white">
+                          <tr>
+                            <th className="border px-3 py-2 text-left">Earning Name</th>
+                            <th className="border px-3 py-2 text-left">Calculation Type</th>
+                            <th className="border px-3 py-2 text-left">Factor Value</th>
+                            <th className="border px-3 py-2 text-left">Previous Amount</th>
+                            <th className="border px-3 py-2 text-left">Updated Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(item => item.transactionType === "Earning").map((item, i) => (
+                            <tr key={i}>
+                              <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
+                              <td className="border px-3 py-2">{item?.calculation_type}</td>
+                              <td className="border px-3 py-2">{item?.factorValue}</td>
+                              <td className="border px-3 py-2">{item?.amount}</td>
+                              <td className="border px-3 py-2">{item?.updatedAmount}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Deductions */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
+                      <table className="w-full border border-gray-200 text-sm">
+                        <thead className="border-gray-200 shadow-sm bg-white">
+                          <tr>
+                            <th className="border px-3 py-2 text-left">Deduction Name</th>
+                            <th className="border px-3 py-2 text-left">Calculation Type</th>
+                            <th className="border px-3 py-2 text-left">Factor Value</th>
+                            <th className="border px-3 py-2 text-left">Previous Amount</th>
+                            <th className="border px-3 py-2 text-left">Updated Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(item => item.transactionType === "Deduction").map((item, i) => (
+                            <tr key={i}>
+                              <td className="border px-3 py-2">
+                                {(dashboard?.allDeductions || []).filter(x => x.value === item.earning_deduction_id).map(x => <span key={x.value}>{x.label}</span>)}
+                              </td>
+                              <td className="border px-3 py-2">{item.calculation_type}</td>
+                              <td className="border px-3 py-2">{item.factorValue}</td>
+                              <td className="border px-3 py-2">{item.amount}</td>
+                              <td className="border px-3 py-2">{item.updatedAmount}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </CustomModal>
+
+
+
               )}
 
               <fieldset disabled={dataForRead}>
