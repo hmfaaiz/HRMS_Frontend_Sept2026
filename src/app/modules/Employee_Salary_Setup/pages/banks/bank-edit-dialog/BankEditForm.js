@@ -30,6 +30,7 @@ import { KeyboardArrowDown, Tune } from "@material-ui/icons";
 import { AmountInput } from "../../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { CirclePlus, Eye, Trash2, XCircle, CloudCog } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { FetchAllSalaryRoundingByFilters } from "../../../../Dashboard/_redux/dashboardActions";
 
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
@@ -59,7 +60,7 @@ const formValidation = Yup.object().shape({
     }),
 
   pf_accNo: Yup.string()
-  .nullable()
+    .nullable()
     .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("pf_member", {
       is: true, // Condition to check if pf_member is true
@@ -261,7 +262,8 @@ export function BankEditForm({
   const [salaryApproverPermission, setSalaryApproverPermission] = useState(
     false
   );
-
+  const [roundingPolicyAmount, setRoundingPolicyAmount] = useState();
+  const [salaryRoundingSubsidiaryId, setSalarySubsidiaryId] = useState();
   useEffect(() => {
     if (!user.Id) {
       dispatch(fetchAllActiveEmployees());
@@ -279,8 +281,12 @@ export function BankEditForm({
         fetchPayrollConfigApproverPermission(
           "allPayrollConfigApproverPermissionList"
         )
+
       );
+      dispatch(FetchAllSalaryRoundingByFilters())
+
     }
+
   }, [dispatch]);
 
   //===== Date Of End Date
@@ -461,6 +467,7 @@ export function BankEditForm({
       setDateOfJoining(response?.data?.data[0]?.dateOfJoining || "");
       setDateOfBirth(response?.data?.data[0]?.dateOfBirth || "");
       setLocalizationId(response?.data?.data[0]?.localizationId || "");
+      setSalarySubsidiaryId(response?.data?.data[0]?.subsidiaryId || "");
 
 
       if (response.data?.data?.[0]?.salaryMethod) {
@@ -617,6 +624,7 @@ export function BankEditForm({
     );
   };
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
+
     const basicSalaryInputFactor =
       el.target.form.elements["basicSalaryFactor"].value;
     let grossSalaryInput = values.grossSalary;
@@ -637,8 +645,13 @@ export function BankEditForm({
           return grossSalaryInput; // Return the updated grossSalaryInput
         })
       );
-      const totalBasicWithFactorVal =
+      let totalBasicWithFactorVal =
         (Number(grossSalaryInput) * Number(basicSalaryInputFactor)) / 100;
+
+      if (!roundingPolicyAmount) {
+        totalBasicWithFactorVal = Math.round(totalBasicWithFactorVal)
+
+      }
 
       setFieldValue("basicSalary", totalBasicWithFactorVal);
       setBasicSalary(totalBasicWithFactorVal);
@@ -648,12 +661,55 @@ export function BankEditForm({
         setDefaultMapEarningDeductionList([
           ...defMapEarningDeductionList.map((x) => {
             if (x.calculation_type == "% Of Gross") {
-              x.amount = (grossSalaryInput * x.factorValue) / 100;
+              // x.amount = (grossSalaryInput * x.factorValue) / 100;
+              x.amount = parseFloat(((grossSalaryInput * x.factorValue) / 100).toFixed(2));
+              if (!roundingPolicyAmount) {
+                x.amount = Math.round(x.amount); // nearest integer tak round
+              }
             }
             return x;
           }),
         ]);
       }
+
+
+      // if (!roundingPolicyAmount) {
+      //   const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+      //     return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
+      //   }, 0);
+
+      //   if ((totalAllowance + totalBasicWithFactorVal) !== values.grossSalary) {
+      //     const diff = values.grossSalary - (totalAllowance + totalBasicWithFactorVal);
+      //     
+      //     setFieldValue("basicSalary", totalBasicWithFactorVal + diff);
+      //   }
+      // }
+
+      if (!roundingPolicyAmount) {
+        // const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+        //   return item.transactionType === "Earning" && item.isPartOfGrossSalary==false ? sum + Number(item.amount) : sum;
+        // }, 0);
+
+        const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+          if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+            return sum + Number(item.amount);
+          }
+          return sum;
+        }, 0);
+
+        const grossSalaryNum = Number(values.grossSalary) || 0;
+        const totalBasicNum = Number(totalBasicWithFactorVal) || 0;
+
+        const sumTotal = totalAllowance + totalBasicNum;
+
+        // Use small epsilon to avoid floating-point issues
+        if ((sumTotal) !== grossSalaryNum) {
+          const diff = grossSalaryNum - sumTotal;
+
+          setFieldValue("basicSalary", totalBasicNum + diff);
+        }
+      }
+
     } else if (currentSalaryMethod == "Basic to Gross") {
       let basicSalaryNumber = Number(basicSalaryInput);
       let originalSalaryNumber = Number(basicSalaryInput);
@@ -661,7 +717,12 @@ export function BankEditForm({
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == "% Of Basic") {
-            x.amount = (originalSalaryNumber * x.factorValue) / 100;
+            // x.amount = (originalSalaryNumber * x.factorValue) / 100;
+            x.amount = parseFloat(((originalSalaryNumber * x.factorValue) / 100).toFixed(2));
+            if (!roundingPolicyAmount) {
+              x.amount = Math.round(x.amount); // nearest integer tak round
+
+            }
             if (x.isPartOfGrossSalary) {
               basicSalaryNumber += x.amount;
             }
@@ -686,6 +747,30 @@ export function BankEditForm({
       setFieldValue("grossSalary", basicSalaryNumber);
       setGrossSalary(basicSalaryNumber);
       setGrossSalaryDB(basicSalaryNumber);
+
+      if (!roundingPolicyAmount) {
+        // const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+        //   return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
+        // }, 0);
+        const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+
+          if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+            return sum + Number(item.amount);
+          }
+          return sum;
+        }, 0);
+
+
+        const totalAllowanceNum = Number(totalAllowance);
+        const basicSalaryNum = Number(values.basicSalary);
+        const basicSalaryNumberNum = Number(basicSalaryNumber);
+
+        if ((totalAllowanceNum + basicSalaryNum) != basicSalaryNumberNum) {
+          const diff = basicSalaryNumberNum - (totalAllowanceNum + basicSalaryNum);
+
+          setFieldValue("basicSalary", Number(values.basicSalary) + Number(diff));
+        }
+      }
     } else {
       let basicSalaryNumber = Number(basicSalaryInput);
       let gross = 0;
@@ -706,6 +791,8 @@ export function BankEditForm({
       setGrossSalary(gross + basicSalaryNumber);
       setGrossSalaryDB(gross + basicSalaryNumber);
     }
+
+
   };
 
   // const totalAllowance = defMapEarningDeductionList?.reduce((prev, curr) => {
@@ -733,6 +820,16 @@ export function BankEditForm({
         ? prev + Number(curr.amount)
         : prev;
     }, 0) || 0;
+
+  // useEffect(() => {
+  //   if (!roundingPolicyAmount) {
+  //     if (totalAllowance + values.basicSalary !== values.grossSalary) {
+  //       const diff = values.grossSalary - (totalAllowance + values.basicSalary);
+  //       
+  //       // setFieldValue("basicSalary", values.basicSalary + diff);
+  //     }
+  //   }
+  // }, [totalAllowance])
 
   const validate = () => {
     const newErrors = {};
@@ -820,6 +917,15 @@ export function BankEditForm({
       setSalaryApproverPermission(isRoleSalaryApprover);
     }
   }, [user.subsidiaryId]);
+  useEffect(() => {
+    const filtered = dashboard.salaryRoundingPolicy?.filter(
+      (i) =>
+        i.subsidiaryId === (salaryRoundingSubsidiaryId || user?.subsidiaryId)
+    ) || [];
+
+    setRoundingPolicyAmount(filtered[0]?.amount);
+
+  }, [dashboard.salaryRoundingPolicy, user?.subsidiaryId, salaryRoundingSubsidiaryId]);
 
 
 
@@ -874,7 +980,7 @@ export function BankEditForm({
           formik,
         }) => (
           <>
-            {console.log("aaaa1111", errors)}
+
             <Modal.Body className="overlay overlay-block cursor-default">
               {actionsLoading && (
                 <div className="overlay-layer bg-transparent">
@@ -905,6 +1011,7 @@ export function BankEditForm({
                             dispatch(fetchAllEarningList(1, "", e.value, true));
                             dispatch(fetchAllDeductionList(2, "", e.value));
                             //  dispatch(fetchAllActiveEmployees(e.value));
+                            dispatch(FetchAllSalaryRoundingByFilters())
                           }}
                           value={
                             (user.employeeId &&
@@ -1838,6 +1945,10 @@ export function BankEditForm({
                           setFieldValue("emp_bank_accNo", "");
                           setDefaultBanks("")
 
+
+
+
+
                         }}
                         value={defPaymentModeList || null}
                         error={errors.payment_mode_Id}
@@ -2353,45 +2464,45 @@ export function BankEditForm({
                           }}
                           className="text-black mt-1 justify-start items-center grid md:grid-cols-2"
                         >
-                      
-                            <div className="flex  items-center col-span-1">
-                              <input
-                                type="checkbox"
-                                className="p-0 m-0 mr-1 "
-                                name="pf_member"
-                                disabled={isUserForRead}
-                                onChange={(e) => {
-                                  setFieldValue("pf_member", e.target.checked);
-                                  setFieldValue("profit_member",0);
-                                    setFieldValue("pf_reg_date", null);
-                                    setFieldValue("pf_accNo", "");
-                                    setProvidentFundDate("");
-                                }}
-                                onBlur={handleBlur}
-                                value={values.pf_member}
-                                checked={values.pf_member}
-                              />{" "}
-                              PF Member
 
-                            </div>
+                          <div className="flex  items-center col-span-1">
+                            <input
+                              type="checkbox"
+                              className="p-0 m-0 mr-1 "
+                              name="pf_member"
+                              disabled={isUserForRead}
+                              onChange={(e) => {
+                                setFieldValue("pf_member", e.target.checked);
+                                setFieldValue("profit_member", 0);
+                                setFieldValue("pf_reg_date", null);
+                                setFieldValue("pf_accNo", "");
+                                setProvidentFundDate("");
+                              }}
+                              onBlur={handleBlur}
+                              value={values.pf_member}
+                              checked={values.pf_member}
+                            />{" "}
+                            PF Member
 
-                            <div className="flex  items-center col-span-1">
-                              <input
-                                type="checkbox"
-                                className="p-0 m-0 mr-1 "
-                                name="profit_member"
-                                disabled={isUserForRead}
-                                onChange={(e) => {
-                                  setFieldValue("profit_member", e.target.checked);
-                                }}
-                                onBlur={handleBlur}
-                                value={values.profit_member}
-                                checked={values.profit_member}
-                              />{" "}
-                              Profit Member
-                            </div>
+                          </div>
 
-                         
+                          <div className="flex  items-center col-span-1">
+                            <input
+                              type="checkbox"
+                              className="p-0 m-0 mr-1 "
+                              name="profit_member"
+                              disabled={isUserForRead}
+                              onChange={(e) => {
+                                setFieldValue("profit_member", e.target.checked);
+                              }}
+                              onBlur={handleBlur}
+                              value={values.profit_member}
+                              checked={values.profit_member}
+                            />{" "}
+                            Profit Member
+                          </div>
+
+
 
 
                         </div>

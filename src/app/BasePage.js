@@ -353,6 +353,9 @@ const ResignationWorkflowAdmin = lazy(()=>
  import("./modules/ResignationWorkflowAdmin/page/index")
 )
 
+const FinalSettlement = lazy(()=>
+ import("./modules/FinalSettlement/pages/index")
+)
 const GeoLocation = lazy(()=>
 import("./modules/GeoLocation/pages/index"))
 
@@ -494,6 +497,7 @@ const ROUTES = {
   designation_dep_map_for_exit_clearance: DesignationDepMapforExitClearance,
   exit_clearance: ExitClearance,
   resignation_workflow : ResignationWorkflowAdmin,
+  final_settlement : FinalSettlement,
   geo_location : GeoLocation,
   app_user : AttAppUser,
 };

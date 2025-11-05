@@ -560,3 +560,51 @@ export const fetchEmpDeviceId= (employeeId) => async (dispatch) => {
     });
 };
 
+
+export const fetchAllEarning = (
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllEarning()
+    .then((response) => {
+       const entities = Array.isArray(response?.data?.data)
+      ? response.data.data
+      : [];
+
+      dispatch(actions.AllEarningFetch(entities));
+    })
+    .catch((error) => {
+      
+      toast.error("Something went wrong");
+    });
+};
+
+export const fetchSeparatedEmployeeById = (Id
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getSeparatedEmployeeById(Id)
+    .then((response) => {
+
+      dispatch(actions.SeparatedEmployeeFetch(response.data));
+    })
+    .catch((error) => {
+      
+      toast.error("Something went wrong");
+    });
+};
+
+export const FetchAllSalaryRoundingByFilters = (
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllSalaryRoundingByFilters()
+    .then((response) => {
+
+      dispatch(actions.SalaryRoundingFetch(response?.data?.data));
+    })
+    .catch((error) => {
+  
+      toast.error("Something went wrong");
+    });
+};

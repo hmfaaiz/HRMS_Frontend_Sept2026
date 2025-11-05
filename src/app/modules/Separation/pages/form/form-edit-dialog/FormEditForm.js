@@ -204,7 +204,7 @@ export function FormEditForm({
     { value: 1, label: "Policy # 01" },
     { value: 2, label: "Policy # 02" },
     { value: 3, label: "Policy # 03" },
-    { value: 4, label: "Policy # 04" },
+  
   ];
 
   const allNoticePeriodType = [
@@ -371,20 +371,10 @@ export function FormEditForm({
                     </div>
 
                     {/* Policy #03 */}
+              
                     <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
                       <h3 className="text-lg font-semibold text-primary mb-2">
-                        Policy # 03 [Process Salary in Two Phases]
-                      </h3>
-                      <p className="text-gray-700 text-sm">
-                        From 'Starting Date of Current Payroll Month' till 'Resignation Date' as Normal Salary.
-                        Remaining Working days in FINAL SETTLEMENT
-                      </p>
-                    </div>
-
-                    {/* Policy #04 */}
-                    <div className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white">
-                      <h3 className="text-lg font-semibold text-primary mb-2">
-                        Policy # 04 [Separated Employees]
+                        Policy # 03 [Separated Employees]
                       </h3>
                       <p className="text-gray-700 text-sm">
                         These records are generated for Regular Payroll Process.
@@ -1136,26 +1126,12 @@ export function FormEditForm({
                     )}
 
 
-                    {/* </label> */}
-
-                    {/* Show existing file if any */}
-                    {/* {formData?.resignationAttachment || values?.resignationAttachment && (
-                      <div className="mt-2">
-                        <strong>Existing File: </strong>
-                        <a
-                          href={getUploadUrl(formData?.resignationAttachment ||  values?.resignationAttachment)}
-                          target="_blank"
-                          className="text-blue-600 underline"
-                        >
-                          {getFileName(formData?.resignationAttachment ||  values?.resignationAttachment)}
-                        </a>
-                      </div>
-                    )} */}
-
+            
 
                     {(formData?.resignationAttachment || values?.resignationAttachment) && (
                       <div className="mt-2">
-                        <strong>Existing File: </strong>
+                        <label>Existing File:</label>
+                     
                         <a
                           href={
                             typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
@@ -1164,7 +1140,7 @@ export function FormEditForm({
                           }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 underline"
+                          className="text-blue-600 underline text-primary text-sm"
                         >
                           {typeof (values?.resignationAttachment || formData?.resignationAttachment) === "string"
                             ? getFileName(values?.resignationAttachment || formData?.resignationAttachment)

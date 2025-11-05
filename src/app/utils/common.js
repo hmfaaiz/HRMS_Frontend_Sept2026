@@ -153,7 +153,7 @@ export const amountFormat = (val, isDecimal = false) => {
 
 export const amountFormatWithoutRounding = (val) => {
   if (val == null || isNaN(val)) return "0";
-  
+
   const parts = val.toString().split(".");
   const integerPart = Number(parts[0]).toLocaleString("en-US");
   return parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
@@ -163,30 +163,68 @@ export const amountFormatWithoutRounding = (val) => {
 
 export const formatTime = (value) => {
   if (!value) return "";
- 
+
   const cleaned = value.replace(/\D/g, "").slice(0, 4);
   if (cleaned.length <= 2) return cleaned;
- 
+
   return `${cleaned.slice(0, 2)}:${cleaned.slice(2)}`;
 };
 
 export const setDefaultSubsidiary = (value, allSubsidiaryList, defaultValue, callback) => {
   if (!Array.isArray(allSubsidiaryList)) return null;
   let result;
-  
+
   if (value) {
     result = allSubsidiaryList.find((el) => el?.value === value) || null;
   } else {
     result = allSubsidiaryList.find((el) => el?.value === defaultValue) || null;
   }
-  
+
   // Use setTimeout to defer the callback execution until after rendering
   if (typeof callback === 'function' && !value) {
     setTimeout(() => {
       callback(result);
     }, 50);
   }
-  
+
   return result;
 };
 
+export const calculateServicePeriod = (start, end) => {
+  if (!start || !end) return "";
+console.log("calculateServicePeriod1111")
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  let years = endDate.getFullYear() - startDate.getFullYear();
+  let months = endDate.getMonth() - startDate.getMonth();
+  let days = endDate.getDate() - startDate.getDate();
+
+  if (days < 0) {
+    months -= 1;
+    const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+    days += prevMonthDays;
+  }
+
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  //  Inclusive calculation
+  days += 1;
+
+
+  const maxDaysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+  if (days > maxDaysInMonth) {
+    days -= maxDaysInMonth;
+    months += 1;
+
+    if (months >= 12) {
+      months -= 12;
+      years += 1;
+    }
+  }
+console.log("aaaaaaa1",`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
+  return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
+};

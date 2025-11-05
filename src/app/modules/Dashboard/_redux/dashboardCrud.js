@@ -196,3 +196,14 @@ export const getAllGeoLocationBySubsidiary = async (body) => {
 export const getDeviceIdByEmpId = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-device-by-empId`,body);
 };
+export const getAllEarning = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-earning`);
+};
+
+export const getSeparatedEmployeeById = async (id) => {
+  return await axios.get(`${USERS_URL}/settings/read-separated-employeeById/${id}`);
+};
+
+export const getAllSalaryRoundingByFilters = async (body) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-rounding-policy`);
+};
