@@ -661,8 +661,8 @@ export function BankEditForm({
         setDefaultMapEarningDeductionList([
           ...defMapEarningDeductionList.map((x) => {
             if (x.calculation_type == "% Of Gross") {
-              x.amount = (grossSalaryInput * x.factorValue) / 100;
-
+              // x.amount = (grossSalaryInput * x.factorValue) / 100;
+              x.amount = parseFloat(((grossSalaryInput * x.factorValue) / 100).toFixed(2));
               if (!roundingPolicyAmount) {
                 x.amount = Math.round(x.amount); // nearest integer tak round
               }
@@ -686,8 +686,15 @@ export function BankEditForm({
       // }
 
       if (!roundingPolicyAmount) {
+        // const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+        //   return item.transactionType === "Earning" && item.isPartOfGrossSalary==false ? sum + Number(item.amount) : sum;
+        // }, 0);
+
         const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
-          return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
+          if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+            return sum + Number(item.amount);
+          }
+          return sum;
         }, 0);
 
         const grossSalaryNum = Number(values.grossSalary) || 0;
@@ -696,7 +703,7 @@ export function BankEditForm({
         const sumTotal = totalAllowance + totalBasicNum;
 
         // Use small epsilon to avoid floating-point issues
-         if ((sumTotal) !== grossSalaryNum) {
+        if ((sumTotal) !== grossSalaryNum) {
           const diff = grossSalaryNum - sumTotal;
           console.log("diff1111", diff);
           setFieldValue("basicSalary", totalBasicNum + diff);
@@ -710,7 +717,8 @@ export function BankEditForm({
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList.map((x) => {
           if (x.calculation_type == "% Of Basic") {
-            x.amount = (originalSalaryNumber * x.factorValue) / 100;
+            // x.amount = (originalSalaryNumber * x.factorValue) / 100;
+            x.amount = parseFloat(((originalSalaryNumber * x.factorValue) / 100).toFixed(2));
             if (!roundingPolicyAmount) {
               x.amount = Math.round(x.amount); // nearest integer tak round
 
@@ -741,17 +749,26 @@ export function BankEditForm({
       setGrossSalaryDB(basicSalaryNumber);
 
       if (!roundingPolicyAmount) {
-        const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
-          return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
-        }, 0);
+        // const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+        //   return item.transactionType === "Earning" ? sum + Number(item.amount) : sum;
+        // }, 0);
+      const totalAllowance = defMapEarningDeductionList?.reduce((sum, item) => {
+  console.log("Checking item:", item);
+  if (item.transactionType === "Earning" && item.isPartOfGrossSalary == 1) {
+    return sum + Number(item.amount);
+  }
+  return sum;
+}, 0);
+
+console.log("totalAllowance111", totalAllowance);
         const totalAllowanceNum = Number(totalAllowance);
         const basicSalaryNum = Number(values.basicSalary);
         const basicSalaryNumberNum = Number(basicSalaryNumber);
 
         if ((totalAllowanceNum + basicSalaryNum) != basicSalaryNumberNum) {
-          const diff = values.grossSalary - (totalAllowanceNum + basicSalaryNum);
-          console.log("diff111grosss", diff)
-          setFieldValue("basicSalary", values.basicSalary + diff);
+          const diff =basicSalaryNumberNum - (totalAllowanceNum + basicSalaryNum);
+          console.log("diff111grosss", diff,totalAllowanceNum,basicSalaryNum,basicSalaryNumberNum)
+         setFieldValue("basicSalary", Number(values.basicSalary) + Number(diff));
         }
       }
     } else {
