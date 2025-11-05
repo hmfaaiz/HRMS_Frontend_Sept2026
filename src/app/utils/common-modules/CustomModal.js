@@ -1,8 +1,11 @@
 // CustomModal.js
 import React from "react";
 import { Modal } from "react-bootstrap";
-export const CustomModal = ({ show, onClose, title, children }) => {
+export const CustomModal = ({ show, onClose, title, children ,className = ""}) => {
   if (!show) return null;
+  const modalClass = className
+    ? `relative bg-white rounded-2xl shadow-lg w-full ${className} mx-4 flex flex-col max-h-[90vh]`
+    : `relative bg-white rounded-2xl shadow-lg w-full max-w-2xl mx-4 flex flex-col max-h-[90vh]`;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
@@ -13,7 +16,7 @@ export const CustomModal = ({ show, onClose, title, children }) => {
       ></div>
 
       {/* Modal Box */}
-      <div className="relative bg-white rounded-2xl shadow-lg w-full max-w-2xl mx-4 flex flex-col max-h-[90vh]">
+     <div className={modalClass}>
         {/* Header */}
         <div className="flex justify-between items-center border-b p-4 sticky top-0 bg-white rounded-t-2xl z-10">
           <h2 className="text-lg font-semibold text-gray-800">{title}</h2>

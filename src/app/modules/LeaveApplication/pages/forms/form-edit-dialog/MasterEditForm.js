@@ -11,7 +11,7 @@ import {
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { useSelector, shallowEqual } from "react-redux";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
-import { formatDates, getDateDiffInDays } from "../../../../../utils/common";
+import { formatDates, getDateDiffInDays, getFileName, getUploadUrl } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
@@ -368,7 +368,7 @@ export function MasterEditForm({
                   {/* Third Row Start */}
 
                   {/* File Field Start */}
-                  <div className="col-span-1">
+                  {/* <div className="col-span-1">
                     <FileUpload
                       label={"Attachment"}
                       name="file"
@@ -381,6 +381,56 @@ export function MasterEditForm({
                       inputFile={inputFile}
                       accept={".jpeg,.jpg,.png,.pdf,.doc,.docx"}
                     />
+                  </div> */}
+
+                  
+                  <div className="col-span-1">
+
+                    <FileUpload
+                      label={
+                        <>
+                          Attachment
+                        </>
+                      }
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
+
+
+                    />
+               
+
+
+            
+
+                    {(user?.file || values?.file) && (
+                      <div className="mt-2">
+                        <label>Existing File:</label>
+                     
+                        <a
+                          href={
+                            typeof (values?.file || user?.file) === "string"
+                              ? getUploadUrl(values?.file || user?.file)
+                              : URL.createObjectURL(values?.file || user?.file)
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
+                        >
+                          {typeof (values?.file || user?.file) === "string"
+                            ? getFileName(values?.file || user?.file)
+                            : (values?.file)?.name || user?.file}
+                        </a>
+                      </div>
+                    )}
+
                   </div>
                 </div>
                 {/* Third Row End */}

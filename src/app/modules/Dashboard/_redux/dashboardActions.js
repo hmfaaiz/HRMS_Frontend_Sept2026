@@ -569,3 +569,18 @@ export const fetchSeparatedEmployeeById = (Id
       toast.error("Something went wrong");
     });
 };
+
+export const FetchAllSalaryRoundingByFilters = (
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllSalaryRoundingByFilters()
+    .then((response) => {
+
+      dispatch(actions.SalaryRoundingFetch(response?.data?.data));
+    })
+    .catch((error) => {
+  
+      toast.error("Something went wrong");
+    });
+};

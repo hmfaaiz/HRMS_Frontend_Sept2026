@@ -396,11 +396,11 @@ export function MasterEditForm({
                     {/* Show existing file if any */}
                     {values.fileName && values.file === values.fileName && (
                       <div className="mt-2">
-                        <strong>Existing File: </strong>
+                        <label>Existing File: </label>
                         <a
                           href={getUploadUrl(values.fileName)}
                           target="_blank"
-                          className="text-blue-600 underline"
+                          className="text-blue-600 underline  text-primary text-sm"
                         >
                           {getFileName(values.fileName)}
                         </a>

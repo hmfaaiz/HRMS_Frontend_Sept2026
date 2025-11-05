@@ -196,3 +196,7 @@ export const getAllEarning = async () => {
 export const getSeparatedEmployeeById = async (id) => {
   return await axios.get(`${USERS_URL}/settings/read-separated-employeeById/${id}`);
 };
+
+export const getAllSalaryRoundingByFilters = async (body) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-rounding-policy`);
+};
