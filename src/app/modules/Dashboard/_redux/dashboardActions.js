@@ -536,3 +536,27 @@ export const fetchAllApprovedResignedEmp= () => async (dispatch) => {
     });
 };
 
+export const fetchGeoLocationBySubsidiary= (subsidiaryId) => async (dispatch) => {
+  return await requestFromServer
+    .getAllGeoLocationBySubsidiary({subsidiaryId})
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllGeoLocationFetchedFetch(entities));
+    })
+    .catch((error) => {
+      console.log("Something went wrong" , error);
+    });
+};
+
+export const fetchEmpDeviceId= (employeeId) => async (dispatch) => {
+  return await requestFromServer
+    .getDeviceIdByEmpId({employeeId})
+    .then((response) => {
+      const entities = [...response.data?.data];
+      return entities
+    })
+    .catch((error) => {
+      console.log("Something went wrong" , error);
+    });
+};
+

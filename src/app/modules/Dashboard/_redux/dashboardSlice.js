@@ -91,6 +91,7 @@ const initialDashboardState = {
   departmentBySubIdsList:[],
   appraisalPeriodList:[],
   approvedResignedEmpList:[],
+  geoLocation : [],
 };
 
 export const callTypes = {
@@ -372,6 +373,9 @@ export const dashboardSlice = createSlice({
       
     AllApprovedResignedEmpListFetch: (state, action) => {
       state.approvedResignedEmpList = action.payload;
+    }, 
+    AllGeoLocationFetchedFetch: (state, action) => {
+      state.geoLocation = action.payload;
     }, 
 
   },

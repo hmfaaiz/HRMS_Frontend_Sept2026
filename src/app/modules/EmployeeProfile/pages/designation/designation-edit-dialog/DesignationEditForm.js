@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
+  Checkbox,
   Input,
   MaskInput,
   Select,
@@ -38,6 +39,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
 import { CirclePlus, Trash2, Upload } from "lucide-react";
 import { format } from "date-fns";
+import { fetchEmpDeviceId, fetchGeoLocationBySubsidiary } from "../../../../Dashboard/_redux/dashboardActions";
 
 export const USERS_URL = process.env.REACT_APP_API_URL;
 const currentDate = new Date();
@@ -330,6 +332,18 @@ const profileValidation = (localizationId) =>
       .nullable()
       .oneOf([true, false], "Required*"), // Ensures the value is either true or false
     // .required('Required*'),
+    allowedAnywhere: Yup.boolean()
+      .nullable()
+      .oneOf([true, false], "Required*"), // Ensures the value is either true or false
+
+      geoLocationIds: Yup.array()
+   .nullable()
+   .when("allowedAnywhere", {
+    is: false, // when not allowed anywhere
+    then: (schema) =>
+      schema.min(1, "At least one location selection is required"),
+    otherwise: (schema) => schema.notRequired().nullable(),
+   }),
 
     additional_summary: Yup.string()
       .nullable()
@@ -553,6 +567,7 @@ export function DesignationEditForm({
   const [imgAlreadySet, setImgAlreadySet] = useState(false);
   const [allEmpTypes, setAllEmpTypes] = useState([]);
   const [maxProbationPolicyInMonth, setMaxProbationPolicyInMonth] = useState("");
+  const [deviceId, setDeviceId] = useState("");
   const scrollRef = useRef(null);
 
 
@@ -1145,11 +1160,19 @@ export function DesignationEditForm({
         console.error("Error fetching data:", error);
       }
     };
+
+    const fetchDeviceId = async () => {
+      const deviceId = await dispatch(fetchEmpDeviceId(id))
+      setDeviceId(deviceId)
+    }
     fetchIncidentData();
     fetchSkillsData();
     fetchAcademicData();
     fetchWorkExperienceData();
     fetchContactData();
+    fetchDeviceId();
+   
+
   }, [id]);
 
   // For Add Employee Contact States
@@ -1948,6 +1971,9 @@ export function DesignationEditForm({
 
   useEffect(() => {
     fetchDepartment(user?.subsidiaryId);
+    if(user?.subsidiaryId){
+      dispatch(fetchGeoLocationBySubsidiary(user?.subsidiaryId));
+    }
   }, [user?.subsidiaryId]);
 
   const doBnotify = () => {
@@ -2072,6 +2098,7 @@ export function DesignationEditForm({
           professional_summary: user?.professional_summary || "",
           email_official: user?.email_official || "",
           email_personal: user?.email_personal || "",
+          geoLocationIds : user?.geoLocationIds == null ? [] : user?.geoLocationIds,
 
 
         }}
@@ -2258,6 +2285,7 @@ export function DesignationEditForm({
                             //handlePaymenModeChanged(e)
                             fetchDepartment(e.value);
                             setFieldValue("defaultShiftId", null);
+                            dispatch(fetchGeoLocationBySubsidiary(e.value))
                           }}
                           value={defSubsidiary || null}
                           error={errors.subsidiaryId}
@@ -3488,6 +3516,110 @@ export function DesignationEditForm({
 
                     )}
                   </div>
+                </div>
+                <hr />
+                <h6 className="font-bold mb-0 text-primary mt-2">
+                  Geo Location Configuration (for Attendance App)
+                </h6>
+                <div className="grid grid-cols-7 gap-x-3">
+                <div className="col-span-5">
+                <span className="text-black">
+                  Location
+                  {!values?.allowedAnywhere ? (
+                    <span style={{ color: "red" }}>*</span>
+                  ) : null}
+                </span>
+                <div className="grid grid-cols-6 gap-x-2">
+                  {dashboard?.geoLocation?.map((el, ind) => {
+                    // Always normalize to array
+                    const selectedIds =
+                      typeof values?.geoLocationIds === "string"
+                        ? JSON.parse(values.geoLocationIds)
+                        : values?.geoLocationIds || [];
+
+                    const isChecked = selectedIds.includes(el?.value);
+
+                    return (
+                    <Checkbox
+                      key={ind}
+                      children={el?.label}
+                      isSelected={(() => {
+                        const cur = typeof values?.geoLocationIds === "string"
+                          ? JSON.parse(values.geoLocationIds || "[]")
+                          : values?.geoLocationIds || [];
+                        return cur.includes(el?.value);
+                      })()}
+                      onChange={(payload) => {
+                        const checked =
+                          typeof payload === "boolean"
+                            ? payload
+                            : payload?.target?.checked ?? false;
+
+                        const current =
+                          typeof values?.geoLocationIds === "string"
+                            ? JSON.parse(values.geoLocationIds || "[]")
+                            : values?.geoLocationIds || [];
+
+                        // Ensure consistent value type (if el.value is number/string)
+                        const val = el?.value;
+
+                        let updated;
+                        if (checked) {
+                          // add if not present
+                          updated = current.includes(val) ? [...current] : [...current, val];
+                        } else {
+                          // remove
+                          updated = current.filter((id) => id !== val);
+                        }
+
+                        setFieldValue("geoLocationIds", updated);
+
+                      }}
+                      disabled={!values?.subsidiaryId || isUserForRead || values?.allowedAnywhere}
+                    />
+
+                    );
+                  })}
+                </div>
+                  {errors?.geoLocationIds && (
+                  <div className="invalid-feedback">{errors.geoLocationIds}</div>
+                )}
+              </div>
+
+              <div>
+                <div title="Attendance can be marked from the app irrespective of the employee’s current GPS coordinates." className="flex items-center gap-1">
+                  <input
+                    name="allowedAnywhere"
+                    type="checkbox"
+                    onChange={() => {
+                      const newValue = !values?.allowedAnywhere;
+
+                      setFieldValue("allowedAnywhere", newValue);
+
+                      // If checked, clear geolocation
+                      if (newValue) {
+                        setFieldValue("geoLocationIds", []);
+                      }
+                    }}
+                    onBlur={handleBlur}
+                    checked={values.allowedAnywhere}
+                  />
+                  <label>Mark Attendance from anywhere</label>
+                  <ErrorMessage
+                    className="form-feedBack"
+                    name="allowedAnywhere"
+                    component="div"
+                  />
+                </div>
+              </div>
+
+                       <div>
+                      <span className="text-black">
+                              
+                              Device Id : <span className="font-bold" >{deviceId}</span>
+                               
+                            </span>
+                    </div>
                 </div>
                 <hr />
                 <div>

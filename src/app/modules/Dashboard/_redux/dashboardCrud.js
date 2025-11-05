@@ -188,3 +188,11 @@ export const getAllAppraisalPeriod = async (body) => {
 };export const getAllApprovedResignedEmp = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-approved-resigned-employee`,body);
 };
+
+export const getAllGeoLocationBySubsidiary = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-geo-location-by-subsidiary`,body);
+};
+
+export const getDeviceIdByEmpId = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-device-by-empId`,body);
+};

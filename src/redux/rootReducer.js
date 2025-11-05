@@ -143,6 +143,7 @@ import { DesignationDepMapforExitClearanceSlice } from "../app/modules/Designati
 import { ExitClearanceSlice } from "../app/modules/Separate_Exit_Clearance/_redux/redux-Slice";
 import { ResignationWorkflowAdminSlice } from "../app/modules/ResignationWorkflowAdmin/redux/formSlice";
 import { GeoLocationSlice } from "../app/modules/GeoLocation/_redux/redux-Slice";
+import { attAppUserSlice } from "../app/modules/Attendance_App_User/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -283,6 +284,7 @@ export const rootReducer = combineReducers({
   exit_clearance : ExitClearanceSlice.reducer,
   resignation_workflow_admin : ResignationWorkflowAdminSlice.reducer,
   geo_location : GeoLocationSlice.reducer,
+  att_app_user : attAppUserSlice.reducer,
 });
 
 export function* rootSaga() {

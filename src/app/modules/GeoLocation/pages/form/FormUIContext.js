@@ -29,6 +29,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const initUser = {
     Id: null,
     subsidiaryId: null,
+    autoTracking: false,
+    autoAttendance: false,
     geoLocations: [],
   };
 
