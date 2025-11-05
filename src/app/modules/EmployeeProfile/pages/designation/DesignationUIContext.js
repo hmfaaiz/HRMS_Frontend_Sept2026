@@ -95,6 +95,8 @@ export function DesignationUIProvider({ DesignationUIEvents, children }) {
     hod:0,
     dateOfRetirementOptional:"",
     by_pass_blacklist_check:"",
+    geoLocationIds : [],
+    allowedAnywhere : false,
   };
 
  

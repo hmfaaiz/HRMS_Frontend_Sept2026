@@ -241,6 +241,9 @@ export function DesignationEditDialog({
         deligationId: user?.deligationId,
         relation_name: user?.relation_name,
         hod: user?.hod,
+        geoLocationIds : user?.geoLocationIds,
+        allowedAnywhere : user?.allowedAnywhere,
+    
       };
 
       await dispatch(
