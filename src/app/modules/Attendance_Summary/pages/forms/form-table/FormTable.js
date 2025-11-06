@@ -37,7 +37,7 @@ export function FormTable() {
   }, shallowEqual);
 
   const { totalCount, entities, listLoading } = currentState;
-  console.log("entities11111", entities)
+
 
   const dispatch = useDispatch();
 

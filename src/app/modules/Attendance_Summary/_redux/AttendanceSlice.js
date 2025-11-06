@@ -182,7 +182,7 @@ export const AttendanceSummarySlice = createSlice({
 
         },
         AttendanceFetched: (state, action) => {
-            console.log("action.payload.data?1111",action.payload.data.data.rows)
+    
             const entities = action.payload.data?.data.rows;
             const totalResult = action.payload.data?.data.totalResults;
             state.listLoading = false;
@@ -197,10 +197,7 @@ export const AttendanceSummarySlice = createSlice({
                 // Commented out due to date shifting to the next day because of timezone conversion issue
                 entities.attDateIn = new Date(entities.attDateIn);
                 entities.attDateOut = new Date(entities.attDateOut)
-                //    console.log("fetching upcoming date ",entities.attDateIn)
-                //     entities.attDateIn=format(new Date(entities.attDateIn.split("T")[0]), 'dd/MMM/yyyy')
-                //     console.log("fetching entities.attDateIn date ",entities.attDateIn)
-                //     entities.attDateOut=format(new Date(entities.attDateOut.split("T")[0]), 'dd/MMM/yyyy')
+             
 
 
 

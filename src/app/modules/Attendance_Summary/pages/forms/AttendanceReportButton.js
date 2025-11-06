@@ -20,10 +20,9 @@ const ReportButton = (values) => {
     };
   }, [formUIContext]);
 
-    const formattedFilterValues = {
+  const formattedFilterValues = {
     ...filterValues,
-    from: filterValues.from ? formatDates(filterValues.from, "dd-MMM-yyyy") : null,
-    to: filterValues.to ? formatDates(filterValues.to, "dd-MMM-yyyy") : null,
+
   };
 
   const {
@@ -71,7 +70,7 @@ const ReportButton = (values) => {
       ...FormUIProps.queryParams,
       filter: {
         ...FormUIProps.queryParams.filter,
-        ...filterValues, 
+        ...filterValues,
       },
       csv: false,
       excel: false,
@@ -100,8 +99,9 @@ const ReportButton = (values) => {
             processLoading ||
             consolidatedLoading ||
             empWiseLoading ||
-            !filterValues.from ||
-            !filterValues.to
+            !filterValues.payroll_monthId ||
+            !filterValues.subsidiaryId
+
           }
           onClick={() => print("pdf2")}
         >
@@ -121,42 +121,7 @@ const ReportButton = (values) => {
           )}
         </button>
       </OverlayTrigger>
-      {/* <OverlayTrigger
-        overlay={<Tooltip id="products-edit-tooltip">Export CSV</Tooltip>}
-      >
-        <button
-          type="button"
-          className="border-none bg-transparent"
-          disabled={
-            csvLoading ||
-            excelLoading ||
-            pdfLoading ||
-            pdf2Loading ||
-            listLoading ||
-            processLoading ||
-            consolidatedLoading ||
-            empWiseLoading ||
-            !filterValues.from ||
-            !filterValues.to
-          }
-          onClick={() => print("csv")}
-        >
-          <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
 
-          {csvLoading && (
-            <span
-              className="spinner spinner-black"
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "45%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 2,
-              }}
-            ></span>
-          )}
-        </button>
-      </OverlayTrigger> */}
 
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Export Excel</Tooltip>}
@@ -172,8 +137,8 @@ const ReportButton = (values) => {
             processLoading ||
             consolidatedLoading ||
             empWiseLoading ||
-            !filterValues.from ||
-            !filterValues.to
+            !filterValues.payroll_monthId ||
+            !filterValues.subsidiaryId
           }
           onClick={() => print("excel")}
         >

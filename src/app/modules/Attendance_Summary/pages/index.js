@@ -4,7 +4,7 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { AttendanceViewPage } from "./forms/AttendanceViewPage";
 
 export default function AttendanceSummaryManagement() {
-  console.log("attendance_summary1111")
+
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>

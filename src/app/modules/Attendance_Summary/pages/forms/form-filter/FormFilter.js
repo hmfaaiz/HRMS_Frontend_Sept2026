@@ -32,10 +32,7 @@ import { formatDates } from "../../../../../utils/common";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-  to: Yup.date().nullable()
-    .required(VALIDATION_MESSAGES.required)
-    .min(Yup.ref("from"), "'To Date' should not be less than 'From Date'."),
+ 
 });
 
 //Prepare new Filter
@@ -97,7 +94,7 @@ export function FormFilter({
     return new Map(allPayrollMonthYearList?.map((item) => [item.value, item]));
   }, [allPayrollMonthYearList]);
 
-  console.log("allPayrollMonthYearList111", allPayrollMonthYearList)
+
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
 
@@ -121,15 +118,7 @@ export function FormFilter({
     dispatch(fetchAttendance(newQueryParams));
   };
 
-  const runAllProcess = (values) => {
-    const formattedValues = {
-      ...values,
-      from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
-      to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
-    };
 
-    dispatch(runProcess(formattedValues));
-  };
 
   useEffect(() => {
     if (allSubsidiaryList && allSubsidiaryList.length > 0) {
@@ -145,32 +134,18 @@ export function FormFilter({
   }, [allSubsidiaryList]);
 
   const getLabels = (values) => {
+
     return {
       departmentLabel: allDeptMap?.get(values.departmentId || "")?.label,
+      employeeLabel: allEmployeesMap?.get(values.employeeId || "")?.label,
+      payrollMonthLabel: allPayrollMonthYearMap?.get(values.payroll_monthId || "")?.label,
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
-      reportToaLabel: allEmployeesMap?.get(values.reportTo || "")?.label,
-      gradeLabel: allGradeMap?.get(values.gradeId || "")?.label,
+     
       designationLabel: allDesignationsMap?.get(values.designationId || "")
         ?.label,
       locationLabel: allLocationMap?.get(values.locationId || "")?.label,
     };
   };
-  const generateReport = (values, group_by_emp) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      fetchAttendanceSheetConsolidated(
-        newQueryParams,
-        document,
-        labels,
-        group_by_emp
-      )
-    );
-  };
-  const handleCheck = (e, setFieldValue) => {
-    setFieldValue("markAttendancewithshift", e.target.checked);
-  };
-
 
 
 
@@ -183,18 +158,14 @@ export function FormFilter({
         initialValues={{
           ...initialFilter.filter,
           attendanceType: 1,
-          // subsidiaryId:
-          //   initialFilter.filter?.subsidiaryId ||
-          //   (allSubsidiaryList && allSubsidiaryList.length > 0
-          //     ? allSubsidiaryList[0].value
-          //     : ""), // Set default subsidiaryId if it's not provided
+
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
           const payload = {
             ...values,
-            from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
-            to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+            labels : getLabels(values)
+           
           };
 
           applyFilter(payload);
@@ -208,41 +179,14 @@ export function FormFilter({
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-x-3 gap-y-1">
                   {/* Subsidiary Field Start */}
                   <div>
-                    {/* <Field
-                      component={SearchSelect}
-                      name="subsidiaryId"
-                      onBlur={handleBlur}
-                      onChange={(e) => {
-                        const value =
-                          e.value == "Select" ? "" : Number(e.value);
-                        setFieldValue("subsidiaryId", value);
-                        dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                        dispatch(fetchAllDept(value));
-                        setFieldValue("employeeId", "");
-                        setFieldValue("departmentId", "");
-                      }}
-                      label={
-                        <span>
-                          {" "}
-                          Subsidiary<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      value={
-                        allSubsidiaryMap?.get(values?.subsidiaryId || "") || ""
-                      }
-                      autoComplete="off"
-                      options={allSubsidiaryList}
-                    /> */}
+            
                     <SubsidiarySelect
                       name="subsidiaryId"
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value = Number(e?.value);
                         setFieldValue("subsidiaryId", value);
-                        if (e?.payrollMonth) {
-                          setFieldValue("from", new Date(e?.payrollMonth?.startDate))
-                          setFieldValue("to", new Date(e?.payrollMonth?.endDate))
-                        }
+                   
                         dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                         dispatch(fetchAllDept(value));
                         setFieldValue("employeeId", "");
@@ -260,10 +204,7 @@ export function FormFilter({
                       initializeSubsidiary={(e) => {
                         const value = Number(e?.value);
                         setFieldValue("subsidiaryId", value);
-                        if (e?.payrollMonth) {
-                          setFieldValue("from", new Date(e?.payrollMonth?.startDate))
-                          setFieldValue("to", new Date(e?.payrollMonth?.endDate))
-                        }
+                   
                         dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                         dispatch(fetchAllDept(value));
                         setFieldValue("employeeId", "");
@@ -300,68 +241,7 @@ export function FormFilter({
                       ]}
                     />
                   </div>
-                  {/* Deparment Field End */}
-
-                  {/* Active payroll month */}
-
-                  {/* Report To Field Start */}
-                  {/* <div>
-                    <Field
-                      name="reportTo"
-                      component={SearchSelect}
-                      onBlur={handleBlur}
-                      onChange={(e) => {
-                        const value =
-                          // e.value == "All" ? "" : Number(e.value);
-                          e.value == "All" ? "" :e.value;
-                        setFieldValue("reportTo", value);
-                      }}
-                      label={<span> Report To</span>}
-                      // value={allEmployeesMap?.get(values?.reportTo || "") || ""}
-                       value={
-                        values.reportTo === ""
-                          ? { label: "All", value: "" }
-                          : allEmployeesMap?.get(values.reportTo) || ""
-                      }
-                      autoComplete="off"
-                      // options={allEmployees}
-                      options={[
-                        { label: "All", value: "" },
-                        ...(Array.isArray(allEmployees) ? allEmployees : []),
-                      ]}
-                    />
-                  </div> */}
-                  {/* Report To Field End */}
-
-                  {/* Grade Field Start */}
-                  {/* <div>
-                    <Field
-                      name="gradeId"
-                      component={SearchSelect}
-                      onBlur={handleBlur}
-                      onChange={(e) => {
-                        const value =
-                          e.value == "All" ? "" : e.value;
-                        setFieldValue("gradeId", value);
-                      }}
-                      label={<span> Grade</span>}
-                      // value={allGradeMap?.get(values?.gradeId || "") || ""}
-                        value={
-                        values.gradeId === ""
-                          ? { label: "All", value: "" }
-                          : allGradeMap?.get(values.gradeId) || ""
-                      }
-                      autoComplete="off"
-                      // options={allEmployeeGradeList}
-                      options={[
-                        { label: "All", value: "" },
-                        ...(Array.isArray(allEmployeeGradeList)
-                          ? allEmployeeGradeList
-                          : []),
-                      ]}
-                    />
-                  </div> */}
-                  {/* Grade Field End */}
+         
 
                   {/* Designation Field Start */}
                   <div>
@@ -493,48 +373,8 @@ export function FormFilter({
                   </div>
                   {/* Attendance Type Field End */}
 
-                  {/* Date from Field Start */}
-                  {/* <div>
-                    <Field
-                      name="from"
-                      component={DatePickerField}
-                      dateFormat="dd-MMM-yyyy"
-                      className="form-control"
-                      label={
-                        <span>
-                          {" "}
-                          Date From<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      onChange={(date) => {
-                        setFieldValue("from", date);
-                        setFieldValue("to", date);
-                      }}
-                      autoComplete="off"
-                    />
-                  </div> */}
-                  {/* Date from Field End */}
-
-                  {/* Date to Field Start */}
-                  {/* <div>
-                    <Field
-                      name="to"
-                      component={DatePickerField}
-                      onBlur={handleBlur}
-                      className="form-control"
-                      dateFormat="dd-MMM-yyyy"
-                      label={
-                        <span>
-                          {" "}
-                          Date To<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      onChange={(date) => {
-                        setFieldValue("to", date);
-                      }}
-                      autoComplete="off"
-                    />
-                  </div> */}
+              
+                  
 
 
                   <div>
@@ -559,28 +399,6 @@ export function FormFilter({
                   </div>
 
 
-                  {/* Date to Field End */}
-                  {/* <div className="d-flex flex-column align-items-start text-xs mt-3">
-                    {values?.subsidiaryId
-                      ? (() => {
-                        const selectedSubsidiary = allSubsidiaryMap?.get(
-                          values?.subsidiaryId
-                        );
-                        return (
-                          <>
-                            <div>
-                              <b>Active Fiscal Year -</b>{" "}
-                              {selectedSubsidiary?.fiscalYearLabel}
-                            </div>
-                            <div>
-                              <b>Active Payroll Month -</b>{" "}
-                              {selectedSubsidiary?.payrollMonthLabel}
-                            </div>
-                          </>
-                        );
-                      })()
-                      : null}
-                  </div> */}
                 </div>
                 {(!values.payroll_monthId ) && (
                   <div className="invalid-feedback">Payroll Month is required.</div>
@@ -588,92 +406,10 @@ export function FormFilter({
               </fieldset>
             </Form>
 
-            {/* <div className="d-flex justify-content-end mt-5">
-              <button
-                className=" btn btn-primary btn-elevate"
-          
-
-                onClick={() => {
-              
-                  const formattedValues = {
-                    ...values,
-                    from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
-                    to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
-                  };
-                  generateReport(formattedValues, true);
-                }}
-                disabled={
-                  loading ||
-                  processLoading ||
-                  consolidatedLoading ||
-                  empWiseLoading ||
-                  !values.from ||
-                  !values.to ||
-                  pdf2Loading ||
-                  csvLoading ||
-                  excelLoading
-                }
-              >
-                Attendance Sheet (Employee Wise)
-                <Download className="w-4 h-4 ml-2  text-white cursor-pointer" />
-             
-                {empWiseLoading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
-
-              <button
-                className="ml-3 btn btn-primary btn-elevate"
-                //fetchAttendanceSheetConsolidated
-
-                onClick={() => {
-                  // setFieldValue("group_by_emp",false)
-                  const formattedValues = {
-                    ...values,
-                    from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
-                    to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
-                  };
-                  generateReport(formattedValues, false);
-                }}
-                disabled={
-                  loading ||
-                  processLoading ||
-                  consolidatedLoading ||
-                  empWiseLoading ||
-                  !values.from ||
-                  !values.to ||
-                  pdf2Loading ||
-                  csvLoading ||
-                  excelLoading
-                }
-              >
-                Attendance Sheet (Date Wise)
-                <Download className="w-4 h-4 ml-2  text-white cursor-pointer" />
-                {consolidatedLoading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button>
-            </div> */}
+         
             <Modal.Footer>
               <div className="d-flex flex-column">
-                {/* <div className="">
-                  {values.attendanceType == 1 && (
-                    <div className="">
-                      <input
-                        type="checkbox"
-                        id="markAttendancewithshift"
-                        checked={values.markAttendancewithshift}
-                        onChange={(e) => handleCheck(e, setFieldValue)}
-                      />
-                      <label
-                        className="ml-2 mb-3"
-                        htmlFor="markAttendancewithshift"
-                      >
-                        Use shift timings if attendance not recorded
-                      </label>
-                    </div>
-                  )}
-                </div> */}
+         
 
                 <div className="flex justify-end items-center gap-2">
                   <button
@@ -698,7 +434,9 @@ export function FormFilter({
                       processLoading ||
                       consolidatedLoading ||
                       empWiseLoading ||
-                      !values.payroll_monthId
+                      !values.payroll_monthId ||
+                      !values.subsidiaryId 
+
                     }
                     className="btn btn-primary btn-elevate"
                   >
@@ -710,7 +448,10 @@ export function FormFilter({
 
 
 
-                  <ReportButton values={values} />
+                  <ReportButton values={{ ...values,
+            labels : getLabels(values)}} />
+
+
                 </div>
               </div>
             </Modal.Footer>
