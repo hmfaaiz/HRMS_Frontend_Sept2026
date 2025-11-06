@@ -18,6 +18,7 @@ import DefaultArea from "../admin_portal_comp/Views/DefaultArea";
 import BigTableModal from "../admin_portal_comp/ExpandViews/BigTableModal";
 import SmallTableModal from "../admin_portal_comp/ExpandViews/SmallTableModal";
 import StatsCardModal from "../admin_portal_comp/ExpandViews/StatsCardModal";
+import SeparationArea from "../admin_portal_comp/Views/SeparationArea";
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
@@ -194,6 +195,21 @@ export const AdminPortal = () => {
             />
           ) : activeTab === "payroll" ? (
             <PayrollArea
+              allSubsidiaryList={allSubsidiaryList}
+              allLocationChildMenus={allLocationChildMenus}
+              summaryFilter={summaryFilter}
+              allParentDept={allParentDept}
+              setSummaryFilter={setSummaryFilter}
+              allEmployeegradeList={allEmployeegradeList}
+              allDashboardAlerts={allDashboardAlerts}
+              summaryData={summaryData}
+              setBigTableModalData={setBigTableModalData}
+              setSmallTableModalData={setSmallTableModalData}
+              setSummaryModalHeading={setSummaryModalHeading}
+              holidayList={holidayList}
+            />
+          ) : activeTab === "separation" ? (
+            <SeparationArea
               allSubsidiaryList={allSubsidiaryList}
               allLocationChildMenus={allLocationChildMenus}
               summaryFilter={summaryFilter}
