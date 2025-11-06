@@ -362,6 +362,8 @@ import("./modules/GeoLocation/pages/index"))
 const AttendanceSummary = lazy(()=>
 import("./modules/Attendance_Summary/pages/index"))
 
+const AttAppUser = lazy(()=>
+import("./modules/Attendance_App_User/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -501,6 +503,7 @@ const ROUTES = {
   final_settlement : FinalSettlement,
   geo_location : GeoLocation,
   attendance_summary : AttendanceSummary,
+  app_user : AttAppUser,
 };
 
 export default function BasePage() {

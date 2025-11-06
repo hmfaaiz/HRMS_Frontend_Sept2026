@@ -145,6 +145,7 @@ import { ResignationWorkflowAdminSlice } from "../app/modules/ResignationWorkflo
 import { FinalSettlementSlice } from "../app/modules/FinalSettlement/_redux/redux-Slice";
 import { GeoLocationSlice } from "../app/modules/GeoLocation/_redux/redux-Slice";
 import { AttendanceSummarySlice } from "../app/modules/Attendance_Summary/_redux/AttendanceSlice";
+import { attAppUserSlice } from "../app/modules/Attendance_App_User/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -287,6 +288,7 @@ export const rootReducer = combineReducers({
   final_settlement : FinalSettlementSlice.reducer,
   geo_location : GeoLocationSlice.reducer,
   attendance_summary : AttendanceSummarySlice.reducer,
+  att_app_user : attAppUserSlice.reducer,
 });
 
 export function* rootSaga() {

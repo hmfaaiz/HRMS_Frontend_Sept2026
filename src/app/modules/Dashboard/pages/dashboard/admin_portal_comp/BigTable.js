@@ -54,14 +54,16 @@ export function BigTable({ data, setBigTableModalData }) {
           // For date formatting
           if (isDate && typeof cell === "string") {
             return (
-              <div>{cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}</div>
+              <div title={cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}>
+                {cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}
+              </div>
             );
           }
 
           // For amount formatting
           if (isAmount) {
             return (
-              <div>
+              <div title={cell}>
                 {cell || "0"}
                 {/* {Number(cell).toLocaleString("en-US", {
                   minimumFractionDigits: 1,
@@ -72,7 +74,11 @@ export function BigTable({ data, setBigTableModalData }) {
           }
 
           // For all other text fields
-          return <div>{cell || ""}</div>;
+          return (
+            <div className={cell?.length > 25 ? "truncate w-36" : "truncate"} title={cell}>
+              {cell || ""}
+            </div>
+          );
         },
       };
     }
@@ -95,22 +101,20 @@ export function BigTable({ data, setBigTableModalData }) {
       <div className="flex justify-between">
         <h6 className="font-bold mb-0 text-primary">{getHeading()}</h6>
 
-        {
-          data?.data.length > 0 ?
-            <lable
-              className={`text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`}
-              onClick={() => setBigTableModalData(data)}
-            >
-              View All
-            </lable> :
-            <lable
-              className={
-                `text-gray-500 cursor-not-allowed font-medium text-xs`
-              }
-            >
-              View All
-            </lable>
-        }
+        {data?.data.length > 0 ? (
+          <lable
+            className={`text-black cursor-pointer font-medium underline text-xs hover:text-tprimary`}
+            onClick={() => setBigTableModalData(data)}
+          >
+            View All
+          </lable>
+        ) : (
+          <lable
+            className={`text-gray-500 cursor-not-allowed font-medium text-xs`}
+          >
+            View All
+          </lable>
+        )}
       </div>
       <div
         className={
@@ -131,10 +135,10 @@ export function BigTable({ data, setBigTableModalData }) {
             pagination={
               data?.data?.length > 5
                 ? paginationFactory({
-                  sizePerPage: 5,
-                  hideSizePerPage: true,
-                  showTotal: true,
-                })
+                    sizePerPage: 5,
+                    hideSizePerPage: true,
+                    showTotal: true,
+                  })
                 : undefined
             }
           >

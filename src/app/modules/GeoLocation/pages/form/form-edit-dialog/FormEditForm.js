@@ -10,7 +10,10 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CirclePlus, Trash2 } from "lucide-react";
-import { Input } from "../../../../../../_metronic/_partials/controls";
+import {
+  Checkbox,
+  Input,
+} from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 
@@ -76,7 +79,11 @@ export function FormEditForm({
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={user}
+      initialValues={{
+        ...user,
+        autoAttendance: user?.autoAttendance ?? false,
+        autoTracking: user?.autoTracking ?? false,
+      }}
       validationSchema={validationSchema}
       onSubmit={(values) => {
         enableLoading();
@@ -113,22 +120,30 @@ export function FormEditForm({
                       }
                       isDisabled={isUserForRead}
                       onChange={(e) => {
-                        if (e?.value) {
-                          const selectedSubsidiaryId = e.value;
-                          setFieldValue("subsidiaryId", selectedSubsidiaryId);
+                        const selectedSubsidiaryId = e.value;
+                        setFieldValue("subsidiaryId", selectedSubsidiaryId);
 
-                          const existingRecord = entities?.find(
-                            (ent) => ent.subsidiaryId === selectedSubsidiaryId
+                        const existingRecord = entities?.find(
+                          (ent) => ent.subsidiaryId === selectedSubsidiaryId
+                        );
+
+                        if (existingRecord) {
+                          setFieldValue(
+                            "geoLocations",
+                            existingRecord.geoLocations
                           );
-
-                          if (existingRecord) {
-                            setFieldValue(
-                              "geoLocations",
-                              existingRecord.geoLocations || []
-                            );
-                          } else {
-                            setFieldValue("geoLocations", []);
-                          }
+                          setFieldValue(
+                            "autoAttendance",
+                            existingRecord.autoAttendance ?? false
+                          );
+                          setFieldValue(
+                            "autoTracking",
+                            existingRecord.autoTracking ?? false
+                          );
+                        } else {
+                          setFieldValue("geoLocations", []);
+                          setFieldValue("autoAttendance", false);
+                          setFieldValue("autoTracking", false);
                         }
                       }}
                       value={
@@ -139,6 +154,32 @@ export function FormEditForm({
                       options={dashboard?.allSubsidiaryList}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
+                    />
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-x-3 gap-y-1 mt-2">
+                  <div>
+                    <Checkbox
+                      isSelected={values?.autoAttendance}
+                      children={
+                        "Create timestamp automatically every 30 minutes"
+                      }
+                      disabled={isUserForRead || actionsLoading}
+                      onChange={() =>
+                        setFieldValue("autoAttendance", !values?.autoAttendance)
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Checkbox
+                      isSelected={values?.autoTracking}
+                      children={
+                        "Mark Attendance automatically when Attendance App changes the Status (In Range or Out of Range)"
+                      }
+                      disabled={isUserForRead || actionsLoading}
+                      onChange={() =>
+                        setFieldValue("autoTracking", !values?.autoTracking)
+                      }
                     />
                   </div>
                 </div>
@@ -163,6 +204,7 @@ export function FormEditForm({
                               latitude: "",
                               longitude: "",
                               geoFencing: "",
+                              isDelete: true,
                             })
                           }
                         >
@@ -331,11 +373,19 @@ export function FormEditForm({
 
                                     {/* Action */}
                                     <td className="text-right">
-                                      {!isUserForRead && (
-                                        <span id={i} onClick={() => remove(i)}>
-                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                        </span>
-                                      )}
+                                      {!isUserForRead &&
+                                        (values.geoLocations?.[i]?.isDelete ? (
+                                          <span
+                                            id={i}
+                                            onClick={() => remove(i)}
+                                          >
+                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                          </span>
+                                        ) : (
+                                          <span id={i} title="Reocrd in Use">
+                                            <Trash2 className="w-4 h-4 text-gray-500 cursor-pointer" />
+                                          </span>
+                                        ))}
                                     </td>
                                   </tr>
                                 ))}
