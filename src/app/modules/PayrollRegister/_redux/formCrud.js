@@ -86,3 +86,10 @@ export async function previewRegisterPdf(body) {
 export async function previewPayslipPdf(body) {
   return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll/preview-payslip-pdf`,body);
 }
+
+
+export async function generateDubaiBankAdvice(body) {
+  return axios.post(`${USERS_URL}/payroll_register/read-all-dubai-bank-advice-csv`, body,{
+    responseType:'arraybuffer'
+  });
+}
