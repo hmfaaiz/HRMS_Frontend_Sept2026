@@ -70,6 +70,7 @@ function PatternListForm({
                     // isClearanceProvided: 0,
                     sno: "",
                     clearanceDate: "",
+                    isEmailSend : false,
                   })
                 }
               >
