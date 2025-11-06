@@ -359,6 +359,10 @@ const FinalSettlement = lazy(()=>
 const GeoLocation = lazy(()=>
 import("./modules/GeoLocation/pages/index"))
 
+const AttendanceSummary = lazy(()=>
+import("./modules/Attendance_Summary/pages/index"))
+
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -496,6 +500,7 @@ const ROUTES = {
   resignation_workflow : ResignationWorkflowAdmin,
   final_settlement : FinalSettlement,
   geo_location : GeoLocation,
+  attendance_summary : AttendanceSummary,
 };
 
 export default function BasePage() {
