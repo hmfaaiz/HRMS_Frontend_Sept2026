@@ -359,6 +359,9 @@ const FinalSettlement = lazy(()=>
 const GeoLocation = lazy(()=>
 import("./modules/GeoLocation/pages/index"))
 
+const AttendanceSummary = lazy(()=>
+import("./modules/Attendance_Summary/pages/index"))
+
 const AttAppUser = lazy(()=>
 import("./modules/Attendance_App_User/pages/index"))
 
@@ -499,6 +502,7 @@ const ROUTES = {
   resignation_workflow : ResignationWorkflowAdmin,
   final_settlement : FinalSettlement,
   geo_location : GeoLocation,
+  attendance_summary : AttendanceSummary,
   app_user : AttAppUser,
 };
 

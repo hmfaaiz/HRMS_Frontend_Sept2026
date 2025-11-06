@@ -260,8 +260,20 @@ export function DashboardSummaryHeader() {
 
                                 {/* <div><Calendar className="w-3 h-3 " /></div> */}
 
-                                <label className="text-gray-500">Expiry:</label>
-                                <label className="text-gray-500">{job.expiryDate} | </label>
+                                {/* <label className="text-gray-500">Expiry:</label> */}
+                                <label
+                                    className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"
+                                        }`}
+                                >
+                                   Expiry:
+                                </label>
+                                {/* <label className="text-gray-500">{job.expiryDate} | </label> */}
+                                <label
+                                    className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"
+                                        }`}
+                                >
+                                    {job.expiryDate} |
+                                </label>
 
                             </div>
 
