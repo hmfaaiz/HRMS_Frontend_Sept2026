@@ -174,7 +174,7 @@ export function FormEditForm({
                     <Checkbox
                       isSelected={values?.autoTracking}
                       children={
-                        "Mark attendance automatically when status changes"
+                        "Mark Attendance automatically when Attendance App changes the Status (In Range or Out of Range)"
                       }
                       disabled={isUserForRead || actionsLoading}
                       onChange={() =>
@@ -204,6 +204,7 @@ export function FormEditForm({
                               latitude: "",
                               longitude: "",
                               geoFencing: "",
+                              isDelete: true,
                             })
                           }
                         >
@@ -372,11 +373,19 @@ export function FormEditForm({
 
                                     {/* Action */}
                                     <td className="text-right">
-                                      {!isUserForRead && (
-                                        <span id={i} onClick={() => remove(i)}>
-                                          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-                                        </span>
-                                      )}
+                                      {!isUserForRead &&
+                                        (values.geoLocations?.[i]?.isDelete ? (
+                                          <span
+                                            id={i}
+                                            onClick={() => remove(i)}
+                                          >
+                                            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+                                          </span>
+                                        ) : (
+                                          <span id={i} title="Reocrd in Use">
+                                            <Trash2 className="w-4 h-4 text-gray-500 cursor-pointer" />
+                                          </span>
+                                        ))}
                                     </td>
                                   </tr>
                                 ))}
