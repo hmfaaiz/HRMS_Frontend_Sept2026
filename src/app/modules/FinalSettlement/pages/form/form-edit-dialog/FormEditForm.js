@@ -168,6 +168,7 @@ export function FormEditForm({
 
   const [departmentId, setDepartmentId] = useState("");
   const [dateOfJoining, setDateOfJoining] = useState("");
+  const [payrollMonthEligibility, setPayrollMonthEligibility] = useState("");
 
 
   const [loanPanel, setLoanPanel] = useState(false);
@@ -237,6 +238,7 @@ export function FormEditForm({
       if (selectedEmp) {
         setDepartmentId(selectedEmp?.departmentId)
         setDateOfJoining(selectedEmp?.dateOfJoining);
+        setPayrollMonthEligibility(selectedEmp?.payrollMonthEligibility);
 
 
 
@@ -439,6 +441,7 @@ export function FormEditForm({
                         if (selectedEmp) {
                           setDepartmentId(selectedEmp?.departmentId);
                           setDateOfJoining(selectedEmp?.dateOfJoining);
+                          setPayrollMonthEligibility(selectedEmp?.payrollMonthEligibility);
                         }
                       }}
                       label={
@@ -474,7 +477,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Buttons */}
-                  <div className="col-span-3 flex items-end justify-start gap-3 mt-6 " style={{ pointerEvents: 'auto', opacity: 1 }}>
+                  <div className="col-span-5 flex items-end justify-start gap-3 mt-6 " style={{ pointerEvents: 'auto', opacity: 1 }}>
                     {panelMode ? (
                       <button
                         type="button"
@@ -523,7 +526,15 @@ export function FormEditForm({
                         View Separate Details
                       </button>
                     )}
+
+                    {payrollMonthEligibility === false &&
+                      <span>
+                        Last Working Date of Employee does not falls in any Payroll Month.
+                        Kindly create Payroll Month first and then proceed with Final Settlement.
+                      </span>
+                    }
                   </div>
+
                 </div>
                 <EmployeeProfile
                   employeeId={values?.employeeId || formData?.employeeId}
@@ -544,7 +555,7 @@ export function FormEditForm({
                         <button
                           type="button"
                           className="btn btn-primary btn-elevate"
-                          disabled={!values.employeeId || isdataForRead}
+                          disabled={!values.employeeId || isdataForRead || !payrollMonthEligibility}
                           onClick={() => {
                             setConfirmationModal(true);
                           }
@@ -565,7 +576,7 @@ export function FormEditForm({
                           name="paidDays"
                           component={Input}
                           placeholder="Enter paid days"
-                          disabled={ isdataForRead}
+                          disabled={isdataForRead}
                           label={
                             <span>
                               Paid Days
@@ -620,7 +631,7 @@ export function FormEditForm({
 
                           {/* {!isdataForRead && values?.earning_list.length < 31 && ( */}
                           <button
-                            disabled={!values.employeeId ||   isdataForRead}
+                            disabled={!values.employeeId || isdataForRead}
                             type="button"
                             className="btn btn-primary btn-elevate text-right"
                             onClick={() => {
@@ -666,7 +677,7 @@ export function FormEditForm({
                                     <td>
                                       <SearchSelect
                                         name={`earning_list[${index}].earning_deduction_id`}
-                                        isDisabled={  isdataForRead}
+                                        isDisabled={isdataForRead}
                                         value={
                                           dashboard?.allEarningList
                                             ?.filter(
@@ -712,7 +723,7 @@ export function FormEditForm({
 
                                     <td>
                                       <Field
- 
+
                                         name={`earning_list[${index}].days_hours`}
                                         disabled
                                         className={
@@ -885,7 +896,7 @@ export function FormEditForm({
 
                           {/* {!isdataForRead && values?.deduction_list.length < 31 && ( */}
                           <button
-                            disabled={!values.employeeId ||    isdataForRead}
+                            disabled={!values.employeeId || isdataForRead}
                             type="button"
                             className="btn btn-primary btn-elevate text-right"
                             onClick={() => {
@@ -924,13 +935,13 @@ export function FormEditForm({
                               <tbody>
                                 {values?.deduction_list?.map((row, index) => (
                                   <tr key={index}>
-                               
+
 
 
                                     <td>
                                       <SearchSelect
                                         name={`deduction_list[${index}].earning_deduction_id`}
-                                        isDisabled={   isdataForRead}
+                                        isDisabled={isdataForRead}
                                         value={
                                           dashboard?.allDeductions
                                             ?.filter(
@@ -1513,12 +1524,13 @@ export function FormEditForm({
                     {toBeCalculated ? (
                       <button
                         type="button"
+                        disabled={!payrollMonthEligibility}
 
                         onClick={() => {
                           handleCalculate(setFieldValue, values, values.earning_list, values.deduction_list, values.otherPayment, values.otherDeduction)
                         }}
                         className="mt-6 flex items-center justify-center gap-2 px-2.5 py-1 text-sm h-[25px] w-fit bg-red-500 text-white border-none rounded"
-                     
+
                       >
                         Calculate
                         {loading && (
@@ -1543,7 +1555,7 @@ export function FormEditForm({
                   </h6>
 
                   <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
-          
+
 
 
                     <div className="">
@@ -1574,7 +1586,7 @@ export function FormEditForm({
                     <div className="grid md:col-span-5">
                       <Field
                         name="hrRemarks"
-                          disabled={isdataForRead}
+                        disabled={isdataForRead}
                         component={TextArea}
                         placeholder="Enter remarks"
                         label={
@@ -1626,7 +1638,7 @@ export function FormEditForm({
               <>
                 {toBeCalculated ? (
                   <></>
-        
+
 
                 ) : (
                   <>
@@ -1634,7 +1646,7 @@ export function FormEditForm({
 
                     <button
                       type="button"
-                      disabled={!values.exitClearence ||   isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0}
+                      disabled={!values.exitClearence || isdataForRead || values.settlementFinalized || values.netFinalSettlementAmount < 0 || !payrollMonthEligibility}
                       onClick={() => {
                         setFinalizeModal(true)
                       }}
@@ -1649,7 +1661,7 @@ export function FormEditForm({
 
                     <button
                       type="submit"
-                      disabled={values.settlementFinalized ||   isdataForRead}
+                      disabled={values.settlementFinalized || isdataForRead || !payrollMonthEligibility}
 
                       onClick={() => {
                         handleSubmit();
