@@ -14,7 +14,7 @@ const SeparatedEmpProfile = ({ employeeId, panelMode }) => {
         if (employeeId) {
             getSeparatedEmployeeById(employeeId)
                 .then((res) => {
-                    if (res?.data?.data) setData(res.data.data);
+                    if (res?.data?.data) setData(res.data?.data);
                 })
                 .catch(() => setData({}));
         } else setData({});
@@ -63,16 +63,16 @@ const SeparatedEmpProfile = ({ employeeId, panelMode }) => {
                                     <h6 className="font-bold mb-2">Leaving Reasons</h6>
                                     <Row className="mb-2 text-sm">
                                         <Col md={3} className="font-medium bold">Exit Type</Col>
-                                        <Col md={3}>{data.ExitType.formName || 'N/A'}</Col>
+                                        <Col md={3}>{data?.ExitType?.formName || 'N/A'}</Col>
                                         <Col md={3} className="font-medium bold">Exit Remarks</Col>
-                                        <Col md={3} >{data.exitRemark || 'N/A'}</Col>
+                                        <Col md={3} >{data?.exitRemark || 'N/A'}</Col>
 
                                     </Row>
                                     <Row>
 
 
                                         <Col md={3} className="font-medium">Exit Reason</Col>
-                                        <Col md={3}>{data.ExitReason.exitReason || 'N/A'}</Col>
+                                        <Col md={3}>{data?.ExitReason.exitReason || 'N/A'}</Col>
                                     </Row>
                                 </div>
 
@@ -81,29 +81,29 @@ const SeparatedEmpProfile = ({ employeeId, panelMode }) => {
                                     <h6 className="font-bold mb-2">Resignation & Notice Period Info</h6>
                                     <Row className="mb-2 text-sm">
                                         <Col md={3} className="font-medium">Accepted By</Col>
-                                        <Col md={3} >{data.AcceptedEmployee.fullName || 'N/A'}</Col>
+                                        <Col md={3} >{data?.AcceptedEmployee?.fullName || 'N/A'}</Col>
                                         <Col md={3} className="font-medium">Date of Resignation Acceptance</Col>
-                                        <Col md={3} >{data.resignationAcceptanceDate ? formatDates(data.resignationAcceptanceDate) : 'N/A'}</Col>
+                                        <Col md={3} >{data?.resignationAcceptanceDate ? formatDates(data?.resignationAcceptanceDate) : 'N/A'}</Col>
                                     </Row>
                                     <Row className="mb-2 text-sm">
                                         <Col md={3} className="font-medium">Remarks</Col>
-                                        <Col md={3} >{data.acceptanceRemarks || 'N/A'}</Col>
+                                        <Col md={3} >{data?.acceptanceRemarks || 'N/A'}</Col>
                                         <Col md={3} className="font-medium">Final Settlement Policy</Col>
-                                        <Col md={3} >{data.finalSettlementPolicy || 'N/A'}</Col>
+                                        <Col md={3} >{data?.finalSettlementPolicy || 'N/A'}</Col>
                                     </Row>
                                     <Row className="mb-2 text-sm">
                                         <Col md={3} className="font-medium">Resignation Submission Date</Col>
-                                        <Col md={3} >{data.resignationDate ? formatDates(data.resignationDate) : 'N/A'}</Col>
+                                        <Col md={3} >{data?.resignationDate ? formatDates(data?.resignationDate) : 'N/A'}</Col>
                                         <Col md={3} className="font-medium">Last Working Date</Col>
-                                        <Col md={3} >{data.lastWorkingDate ? formatDates(data.lastWorkingDate) : 'N/A'}</Col>
+                                        <Col md={3} >{data?.lastWorkingDate ? formatDates(data?.lastWorkingDate) : 'N/A'}</Col>
                                     </Row>
                                     <Row className="mb-2 text-sm">
                                         <Col md={3} className="font-medium">Total Service Period</Col>
-                                        <Col md={3} >  {data?.Employee?.dateOfJoining && data.lastWorkingDate
-                                            ? calculateServicePeriod(data?.Employee?.dateOfJoining, data.lastWorkingDate)
+                                        <Col md={3} >  {data?.Employee?.dateOfJoining && data?.lastWorkingDate
+                                            ? calculateServicePeriod(data?.Employee?.dateOfJoining, data?.lastWorkingDate)
                                             : 'N/A'}</Col>
                                         <Col md={3} className="font-medium">Notice Period Days</Col>
-                                        <Col md={3} >{data.noticePeriodDays || 'N/A'}</Col>
+                                        <Col md={3} >{data?.noticePeriodDays || 'N/A'}</Col>
                                     </Row>
                                 </div>
                             </>

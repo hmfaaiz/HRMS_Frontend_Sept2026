@@ -152,6 +152,14 @@ export function FormFilter({
     );
   };
 
+  const generateDubaiBankAdviceCSV = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.generateDubaiBankAdviceCSV(newQueryParams.filter, document, labels)
+    );
+  };
+
   const getJVExcel = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
@@ -537,7 +545,7 @@ export function FormFilter({
                     Bank Payment Advice
                   </h6>
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-                    <div className="col-start-4 col-end-5 flex justify-end ">
+                    <div className="col-start-3 col-end-5 flex justify-end gap-2">
                       <button
                         onClick={() => {
                           getBankAdvice(values);
@@ -550,6 +558,28 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate"
                       >
                         Generate Payment Advice
+                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
+                        {/* <SVG
+                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
+                          /> */}
+                        <Download className="w-4 h-4 ml-2" />
+                        {/* </span> */}
+                        {adviceLoading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+                        <button
+                        onClick={() => {
+                          generateDubaiBankAdviceCSV(values);
+                        }}
+                        disabled={
+                          adviceLoading ||
+                          !values.subsidiaryId ||
+                          !values.monthId
+                        }
+                        className="btn btn-primary btn-elevate"
+                      >
+                         SIF
                         {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                         {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
