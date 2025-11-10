@@ -413,7 +413,7 @@ const ChartData = ({ data }) => {
                   style={{
                     color: departmentData.datasets[0].backgroundColor[idx],
                   }}
-                  className="text-black m-0 p-0 col-span-4 truncate"
+                  className="text-black m-0 p-0 col-span-3 truncate"
                   title={e?.label}
                 >
                   {e?.label}
@@ -422,7 +422,7 @@ const ChartData = ({ data }) => {
                   style={{
                     color: departmentData.datasets[0].backgroundColor[idx],
                   }}
-                  className="font-extrabold m-0"
+                  className="font-extrabold m-0 col-span-2 text-right"
                 >
                   {e?.total || 0}
                 </p>
