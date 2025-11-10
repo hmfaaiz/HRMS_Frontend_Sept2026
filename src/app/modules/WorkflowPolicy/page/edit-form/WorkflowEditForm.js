@@ -179,16 +179,7 @@ const validationSchema = Yup.object().shape({
       }
     ),
   }),
-  emailTime: Yup.string()
-    .matches(
-      /^(?:[01]\d|2[0-3])[0-5]\d$/,
-      "Time must be in HHMM format and valid 24-hour format"
-    )
-    .when("emailPendingToApprovers", {
-      is: true,
-      then: Yup.string().required("Time is required"),
-    })
-    .nullable(),
+  emailTime: Yup.string().nullable(),
 });
 
 const WorkflowEditForm = ({
@@ -524,7 +515,7 @@ const WorkflowEditForm = ({
                       component="div"
                     />
                   </div>
-                  <div className="col-span-12 lg:col-span-3">
+                  {/* <div className="col-span-12 lg:col-span-3">
                     <h6 className="font-bold mb-0 text-primary">Time</h6>
                     <Field
                       name="emailTime"
@@ -536,7 +527,7 @@ const WorkflowEditForm = ({
                       autoComplete="off"
                       // maxLength={4}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </fieldset>
             </Form>
