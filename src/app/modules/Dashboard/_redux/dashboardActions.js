@@ -608,3 +608,19 @@ export const FetchAllSalaryRoundingByFilters = (
       toast.error("Something went wrong");
     });
 };
+
+
+export const FetchProfileDetailInfo = (id
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getProfileDetailInfo(id)
+    .then((response) => {
+
+      dispatch(actions.ProfileDetailInfoFetch(response?.data?.data));
+    })
+    .catch((error) => {
+  
+      toast.error("Something went wrong");
+    });
+};
