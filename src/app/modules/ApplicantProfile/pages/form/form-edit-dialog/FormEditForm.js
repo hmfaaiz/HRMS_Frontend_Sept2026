@@ -1653,7 +1653,7 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-4 gap-x-3 ">
                     <div className="">
                       <label>
-                        Date of Birth <span style={{ color: "red" }}>*</span>
+                        Date of Birth<span style={{ color: "red" }}>*</span>
                       </label>
                       <DatePicker
                         className="form-control"
