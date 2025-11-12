@@ -53,6 +53,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
    
       disableLoading();
     });
+     dispatch(actions.fetchSeparation(formUIProps.queryParams));
   };
 
   return (
