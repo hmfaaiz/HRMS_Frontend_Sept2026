@@ -88,7 +88,6 @@ export function FormCard() {
         {/* FormEditDialog Ends */}
 
         <br />
-        {/* <hr /> */}
         <FormTable />
       </TCard>
     // </>
