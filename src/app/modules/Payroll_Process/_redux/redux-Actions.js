@@ -280,6 +280,45 @@ export const createPayrollStop_Loan = (data,setSelectedLoans,disbaleLoading,onHi
     });
 };
 
+export const generatePayslip = (filter, setLoading) => async (dispatch) => {
+  return requestFromServer.generatePayslip({ ...filter })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Important: Set loading to false when done
+      setLoading(false);
+      
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'payslip.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.pdfFetched({}));
+      document.body.removeChild(link);
+      
+      // Clean up
+      URL.revokeObjectURL(pdfUrl);
+    })
+    .catch((error) => {
+      // Important: Set loading to false even on error
+      setLoading(false);
+      
+      error.clientMessage = "Can't generate Payslip";
+      const decodedData = new TextDecoder().decode(error.response.data);
+      const jsonData = JSON.parse(decodedData);
+      dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+      toast.error(error?.response?.status == 400 ? 'Please provide Subsidiary and Month' : jsonData.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        progress: undefined,
+      });
+    });
+};
 export const clearReduxData = () => async (dispatch) => {
   dispatch(actions.checkPayroll_EmployeesByIdsFetched(null));
   dispatch(actions.payrollGroupDetailsFetched(null));

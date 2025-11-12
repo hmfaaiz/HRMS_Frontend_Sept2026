@@ -62,3 +62,9 @@ export function createPayroll_Stop_Loan(body) {
  
   return axios.post(`${USERS_URL}/payroll_process/create-payroll-stop-loan`, body);
 }
+
+export async function generatePayslip(body) {
+  return axios.post(`${USERS_URL}/payroll_process/generate-payslip-pdf`, body,{
+    responseType:'arraybuffer'
+  });
+}

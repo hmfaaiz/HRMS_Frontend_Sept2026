@@ -73,10 +73,18 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
     formUIProps.setIds("");
 
     if (!data.Id && data) {
-      
         await dispatch(
           actions.createPayrollProcess(data, disbaleLoading, resetForm)
-        );
+        ).then(async ()=>{
+                let values = {
+                  SubsidiaryId: data?.subsidiaryId,
+                  PayrollGroupId: data?.payroll_groupId,
+                  MonthId: data?.payroll_monthId,
+                  revert : false,
+                  finalize : false,
+                };
+                await dispatch(actions.checkPayroll_EmployeesByIds({ data : values }));
+        });
         // await dispatch(actions.fetchPayrollProcess(formUIProps));
       }
      else {
