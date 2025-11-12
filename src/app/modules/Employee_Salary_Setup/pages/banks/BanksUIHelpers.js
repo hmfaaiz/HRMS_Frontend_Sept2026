@@ -36,5 +36,9 @@ export const initialFilter = {
 
     sortOrder: "asc",
     pageSize: 5,
-    pageNumber: 1
+    pageNumber: 1,
+    subsidiaryId:"",
+    departmentId:"",
+    employeeTypeId:"",
+    designationId:"",
 }

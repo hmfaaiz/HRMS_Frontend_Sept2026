@@ -12,9 +12,13 @@ import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import DatePicker from "react-datepicker";
 import {
   fetchAllCity,
+  fetchAllDept,
+  fetchAllFormsMenu,
   fetchAllSubCenter,
+  fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
+import { fetchUsers } from "../../../_redux/bankActions";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const API_URL = process.env.REACT_APP_API_URL;
@@ -49,7 +53,7 @@ export function BanksFilter({
   const [defCity, setDefaultCity] = useState({});
   const dispatch = useDispatch();
   const banksUIContext = useBanksUIContext();
-
+  const { dashboard } = useSelector((state) => state);
   const banksUIProps = useMemo(() => {
     return {
       queryParams: banksUIContext.queryParams,
@@ -66,7 +70,13 @@ export function BanksFilter({
       banksUIProps.setQueryParams(newQueryParams);
     }
   };
-
+  useEffect(() => {
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllDept());
+    dispatch(fetchAllFormsMenu(158, "allDesignations"));
+    dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
+    dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
+  }, [dispatch]);
   return (
     <>
       <Formik
@@ -87,31 +97,195 @@ export function BanksFilter({
           touched,
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            {/* <div className="col-12 col-md-12">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="searchText"
-                  placeholder="Search"
-                  onBlur={handleBlur}
-                  value={values.searchText}
-                  onChange={(e) => {
-                    setFieldValue("searchText", e.target.value.trim())
-                    handleSubmit()
-                  }}
-                />
-                <small className="form-text text-muted">
-                  <b>Search</b> in all fields
-                </small>
-              </div> */}
+            <div className="grid md:grid-cols-7 gap-3 mb-2 ">
 
-            <InputSearch
-              values={values}
-              fieldName="searchText"
-              setFieldValue={setFieldValue}
-              handleBlur={handleBlur}
-              handleSubmit={handleSubmit}
-            />
+
+
+
+              <div className="">
+                <div>
+                  <SearchSelect
+                    name="subsidiaryId"
+                    label={
+                      <span>
+                        {" "}
+                        Subsidiary
+
+                      </span>
+                    }
+                    value={
+                      (dashboard?.allSubsidiaryList || []).find(
+                        (item) => item.value === banksUIProps?.queryParams?.subsidiaryId
+                      ) || { label: "All", value: "" }
+                    }
+
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...banksUIProps.queryParams,
+                        subsidiaryId: e.value,
+                        pageNumber: 1,
+                      };
+
+
+                      banksUIProps.setQueryParams(updatedQueryParams);
+
+                      dispatch(fetchUsers(banksUIProps.queryParams));
+
+                      dispatch(fetchAllDept(e.value));
+                    }}
+
+                    // options={dashboard.allSubsidiaryList}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(Array.isArray(dashboard?.allSubsidiaryList)
+                        ? dashboard.allSubsidiaryList
+                        : []),
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="">
+                <div>
+                  <SearchSelect
+                    name="departmentId"
+                    label={
+                      <span>
+                        {" "}
+                        Department
+
+                      </span>
+                    }
+
+                    value={
+                      (dashboard?.allDept || []).find(
+                        (item) => item.value === banksUIProps?.queryParams?.departmentId
+                      ) || { label: "All", value: "" }
+                    }
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...banksUIProps.queryParams,
+                        departmentId: e.value,
+                        pageNumber: 1,
+                      };
+
+
+                      banksUIProps.setQueryParams(updatedQueryParams);
+
+
+                      dispatch(fetchUsers(banksUIProps.queryParams));
+                    }}
+
+                    // options={dashboard.allDept}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(Array.isArray(dashboard?.allDept)
+                        ? dashboard?.allDept
+                        : []),
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="">
+                <div>
+                  <SearchSelect
+                    name="employeeTypeId"
+                    label={
+                      <span>
+                        {" "}
+                        Designation
+
+                      </span>
+                    }
+
+
+                    value={
+                      (dashboard?.allDesignations || []).find(
+                        (item) => item.value === banksUIProps?.queryParams?.designationId
+                      ) || { label: "All", value: "" }
+                    }
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...banksUIProps.queryParams,
+                        designationId: e.value,
+                        pageNumber: 1,
+                      };
+
+
+                      banksUIProps.setQueryParams(updatedQueryParams);
+
+
+                      dispatch(fetchUsers(banksUIProps.queryParams));
+                    }}
+
+                    // options={dashboard?.allDesignations}
+                    options={[
+                      { label: "All", value: "" },
+                      ...(Array.isArray(dashboard?.allDesignations)
+                        ? dashboard?.allDesignations
+                        : []),
+                    ]}
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div>
+                  <SearchSelect
+                    name="employeeTypeId"
+                    label={
+                      <span>
+                        {" "}
+                        Employee Type
+
+                      </span>
+                    }
+
+
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...banksUIProps.queryParams,
+                        employeeTypeId: e.value,
+                        pageNumber: 1,
+                      };
+
+
+                      banksUIProps.setQueryParams(updatedQueryParams);
+
+
+                      dispatch(fetchUsers(banksUIProps.queryParams));
+                    }}
+
+                    options={[
+                      { label: "All", value: "" },
+                      ...(dashboard?.allEmpTypeDynamicChildMenus || []),
+                      ...(dashboard?.allEmpTypeChildMenus || []),
+                    ]}
+
+
+                  />
+                </div>
+              </div>
+
+
+              <div className="">
+                <label> <span>
+                  {" "}
+                  Search
+
+                </span></label>
+                <InputSearch
+                  values={values}
+                  fieldName="searchText"
+                  setFieldValue={setFieldValue}
+                  handleBlur={handleBlur}
+                  handleSubmit={handleSubmit}
+                />
+              </div>
+            </div>
           </form>
         )}
       </Formik>

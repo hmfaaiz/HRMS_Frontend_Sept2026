@@ -1653,12 +1653,13 @@ export function FormEditForm({
                   <div className="grid lg:grid-cols-4 gap-x-3 ">
                     <div className="">
                       <label>
-                        Date of Birth <span style={{ color: "red" }}>*</span>
+                        Date of Birth<span style={{ color: "red" }}>*</span>
                       </label>
-                      <Field
+                      <DatePicker
                         className="form-control"
                         placeholder="Date Of Birth"
-                        component={DatePickerField}
+                        // component={DatePickerField}
+                        onBlur={() => setFieldTouched("dateOfBirth", true)}
                         selected={
                           values?.dateOfBirth
                             ? new Date(values.dateOfBirth)
@@ -1671,14 +1672,15 @@ export function FormEditForm({
                         dateFormat="dd-MMM-yyyy"
                         name="dateOfBirth"
                         autoComplete="off"
+                        showYearDropdown
                         maxDate={new Date()}
                       />
 
-                      {/* {touched.dateOfBirth && errors.dateOfBirth && (
+                      {touched.dateOfBirth && errors.dateOfBirth && (
                         <div className="invalid-feedback d-block">
                           {errors.dateOfBirth}
                         </div>
-                      )} */}
+                      )}
                     </div>
 
                     <div className="">
