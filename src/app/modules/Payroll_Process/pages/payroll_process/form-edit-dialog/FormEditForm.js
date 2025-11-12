@@ -26,6 +26,7 @@ import {
 import { payroll_processSlice, callTypes } from "../../../_redux/redux-Slice";
 import { toast } from "react-toastify";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { NegativeSalaryEmpTable } from "../form-table/NegativeSalaryEmpTable";
 // const { actions } = payroll_processSlice;
 // percentage: Yup.string().required("Required*"),
 const payroll_processEditSchema = Yup.object().shape({
@@ -84,6 +85,7 @@ export function FormEditForm({
     }
   }, [dispatch, user.Id]);
 
+
   const { currentState, userAccess, auth } = useSelector((state) => {
     return {
       currentState: state.payroll_process,
@@ -97,6 +99,13 @@ export function FormEditForm({
     checkPayroll_EmployeesExist,
     resultAfterPayrollProcess,
   } = currentState;
+
+  
+  useEffect(()=>{
+   if(resultAfterPayrollProcess?.negSalaryEmp?.length > 0){
+    setIsAfterResult(false);
+    }
+  },[resultAfterPayrollProcess?.negSalaryEmp?.length])
 
   const payrollGroupDetails = async (
     subsidiaryId,
@@ -293,6 +302,7 @@ export function FormEditForm({
   };
 
   return (
+    <>
     <Formik
       enableReinitialize={true}
       initialValues={user}
@@ -359,7 +369,7 @@ export function FormEditForm({
                                     handleCheckboxChange(option.Id)
                                   }
                                 />
-                                <label className=""> {option.fullName} </label>
+                                <label className="">{option?.employeeCode} - {option.fullName} </label>
                               </div>
                             )
                           )}
@@ -442,8 +452,10 @@ export function FormEditForm({
                                     })
                                   }
                                 />
+                                {console.log("option?.Employee_loan_request" , option?.Employee_loan_request)}
                                 <label className="">
                                   {`${option?.Employee_loan_request?.Employee
+                                    ?.employeeCode || ""} - ${option?.Employee_loan_request?.Employee
                                     ?.fullName || ""} - ${option
                                     ?.Employee_loan_request?.LoanType?.name ||
                                     ""} (${option?.amount_received || ""})`}
@@ -969,10 +981,10 @@ export function FormEditForm({
                 className="btn btn-primary btn-elevate"
                 disabled={
                   loading ||
-                  resultAfterPayrollProcess ||
+                  resultAfterPayrollProcess?.negSalaryEmp?.length == 0 ||
                   !currentState?.payroll_group_details
-                    ?.slary_setup_not_created > 0 ||
-                  !checkPayroll_EmployeesExist?.execute
+                    ?.slary_setup_not_created > 0 
+                    || !checkPayroll_EmployeesExist?.execute
                 }
               >
                 Execute
@@ -983,8 +995,10 @@ export function FormEditForm({
             }
             {/* )} */}
           </Modal.Footer>
+          <NegativeSalaryEmpTable monthId={values.payroll_monthId} monthLabel={dashboard?.allPayrollMonthYearList?.find((e)=> e?.value == values.payroll_monthId)?.label} />
         </>
       )}
     </Formik>
+    </>
   );
 }
