@@ -87,11 +87,11 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "300px",
       },
       formatter: (cell) => {
         if (!cell) return "";
-        return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
     },
 

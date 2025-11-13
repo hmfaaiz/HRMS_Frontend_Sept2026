@@ -28,3 +28,7 @@ export function saveEmployeeAttendanceSheetData(body) {
 export function saveEmployeeDynasoftAttendanceSheetData(body) {
     return axios.post(`${USERS_URL}/upload/save-dynasoft-employee-attendance`, body);
 }
+
+export function saveEmployeeProfileData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-profile-data`, body);
+}
