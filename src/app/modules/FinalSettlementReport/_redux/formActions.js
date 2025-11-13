@@ -85,7 +85,7 @@ export const generateRegisterPdf = (filter, document, labels = {}) => async (dis
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'payroll_register.pdf');
+      link.setAttribute('download', 'fs_payable_report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.registerFetched({}));

@@ -21,7 +21,7 @@ import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
 import SVG from "react-inlinesvg";
 import { Download } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-
+import { FetchAllApprovedFSEmp, fetchAllDepartmentBySubsidiaryIds } from "../../../../Dashboard/_redux/dashboardActions";
 //Validation for date fields
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.date().required(VALIDATION_MESSAGES.required),
@@ -50,19 +50,19 @@ export function FormFilter({
 
   //Get All dropdown data from state
   const {
-    allEmployees,
+    allFSApprovedEmp,
     allSubsidiaryList,
     allEmployeeGradeList,
     allDept,
     allLocationChildMenus,
     allDesignations,
-    allPayrollMonthYearList,
+    allPayrollMonthYearList,departmentBySubIdsList
   } = useSelector((state) => state.dashboard);
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
-  const allEmployeesMap = useMemo(() => {
-    return new Map(allEmployees?.map((item) => [item.value, item]));
-  }, [allEmployees]);
+  const allFSApprovedEmpMap = useMemo(() => {
+    return new Map(allFSApprovedEmp?.map((item) => [item.value, item]));
+  }, [allFSApprovedEmp]);
 
   const allSubsidiaryMap = useMemo(() => {
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
@@ -73,8 +73,8 @@ export function FormFilter({
   }, [allEmployeeGradeList]);
 
   const allDeptMap = useMemo(() => {
-    return new Map(allDept?.map((item) => [item.value, item]));
-  }, [allDept]);
+    return new Map(departmentBySubIdsList?.map((item) => [item.value, item]));
+  }, [departmentBySubIdsList]);
 
   const allLocationMap = useMemo(() => {
     return new Map(allLocationChildMenus?.map((item) => [item.value, item]));
@@ -191,6 +191,7 @@ export function FormFilter({
         "allPayrollConfigApproverPermissionList"
       )
     );
+
   }, []);
 
   const checkPermission = (value) => {
@@ -273,41 +274,7 @@ export function FormFilter({
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="">
-                      {/* <Field
-                        component={SearchSelect}
-                        name="subsidiaryId"
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-                          dispatch(
-                            fetchAllPayrollMonthYearList(
-                              { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
-                          );
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          setFieldValue("employeeId", "");
-                          setFieldValue("monthId", "");
-                          checkPermission(value);
-                        }}
-                        label={
-                          <span>
-                            {" "}
-                            Subsidiary<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        error={errors.subsidiaryId}
-                        touched={touched.subsidiaryId}
-                        value={
-                          allSubsidiaryMap?.get(values?.subsidiaryId || "") ||
-                          ""
-                        }
-                        // value={allSubsidiaryMap?.get(values?.subsidiaryId ||  (allSubsidiaryList && allSubsidiaryList[0]?.value)) || ''}
-                        autoComplete="off"
-                        options={allSubsidiaryList}
-                      /> */}
+                     
                       <SubsidiarySelect
                         name="subsidiaryId"
                         onBlur={handleBlur}
@@ -316,19 +283,12 @@ export function FormFilter({
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                           if(e?.payrollMonth){
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
-                          dispatch(
-                            fetchAllPayrollMonthYearList(
-                              { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
-                          );
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                         
+                          dispatch(FetchAllApprovedFSEmp({subsidiaryId:value,departmentId:values?.departmentId}));
                           setFieldValue("employeeId", "");
-                          // setFieldValue("monthId", "");
-                          checkPermission(value);
+                          setFieldValue("departmentId", "");
+                          dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
+                       
                         }}
                         label={
                           <span>
@@ -343,19 +303,10 @@ export function FormFilter({
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                           if(e?.payrollMonth){
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
-                          dispatch(
-                            fetchAllPayrollMonthYearList(
-                              { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
-                          );
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                          
+                          dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
                           setFieldValue("employeeId", "");
-                          // setFieldValue("monthId", "");
-                          checkPermission(value);
+                       
                         }}
                       />
                     </div>
@@ -370,13 +321,15 @@ export function FormFilter({
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("departmentId", value);
+                            setFieldValue("employeeId", "");
+                          dispatch(FetchAllApprovedFSEmp({subsidiaryId:values?.subsidiaryId,departmentId:value}));
                         }}
                         label={<span> Department</span>}
                         value={
                           allDeptMap?.get(values?.departmentId || "") || ""
                         }
                         autoComplete="off"
-                        options={allDept}
+                        options={departmentBySubIdsList}
                       />
                     </div>
 
@@ -390,14 +343,14 @@ export function FormFilter({
                               e.value == "Select" ? "" : Number(e.value);
                             setFieldValue("employeeId", value);
                           }}
-                          label={<span> Employee</span>}
+                          label={<span> Employee <span style={{ color: "red" }}>*</span></span>}
                           error={errors.employeeId}
                           touched={touched.employeeId}
                           value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
+                            allFSApprovedEmpMap?.get(values?.employeeId || "") || ""
                           }
                           autoComplete="off"
-                          options={allEmployees}
+                          options={allFSApprovedEmp}
                         />
                       </div>
          
@@ -411,22 +364,7 @@ export function FormFilter({
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                
-                    {/* <div className="md:col-start-1 md:col-end-2">
-                      <Field
-                        name="groupBy"
-                        component={Select}
-                        placeholder=""
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setFieldValue("groupBy", value);
-                        }}
-                        label={<span> Group By</span>}
-                        value={values.groupBy}
-                        autoComplete="off"
-                        children={CustomDropdown({ data: groupByOptions })}
-                      />
-                    </div> */}
-                
+     
 
                     <div className="md:col-start-3 md:col-end-5 flex justify-end ">
                  
@@ -435,12 +373,10 @@ export function FormFilter({
                           getPdf(values);
                         }}
                         disabled={
-                          registerLoading ||
-                          registerPreviewLoading ||
-                          payslipPreviewLoading ||
+                         
                           pdfLoading ||
-                          !values.subsidiaryId ||
-                          !values.monthId
+                          !values.subsidiaryId || !values.employeeId
+                        
                         }
                         type="button"
                         className="btn btn-primary btn-elevate h-9 mt-4"
@@ -546,10 +482,10 @@ export function FormFilter({
                           error={errors.employeeId}
                           touched={touched.employeeId}
                           value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
+                            allFSApprovedEmp?.get(values?.employeeId || "") || ""
                           }
                           autoComplete="off"
-                          options={allEmployees}
+                          options={allFSApprovedEmp}
                         />
                       </div>
                    
