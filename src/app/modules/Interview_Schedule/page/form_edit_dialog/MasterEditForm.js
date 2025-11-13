@@ -63,8 +63,8 @@ const InterviewerRow = ({
       <td>
         <SearchSelect
           name={`interviewers[${index}].employeeId`}
-          className="form-control"
-          style={{ width: "200px", zIndex: 9999 }}
+          className="form-control min-w-44"
+          style={{ zIndex: 9999 }}
           isDisabled={isUserForRead}
           value={
             dashboard?.allEmployees?.find(
@@ -96,11 +96,12 @@ const InterviewerRow = ({
             </div>
           )}
       </td>
+      <td>{empDetail?.firstName || ""} {empDetail?.middleName || ""} {empDetail?.lastName || ""}</td>
       <td>{empDetail?.department?.deptName || ""}</td>
       <td>{empDetail?.designation?.formName || ""}</td>
       <td>{empDetail?.grade?.formName || ""}</td>
-      <td>{empDetail?.employeeType?.formName || ""}</td>
-      <td>{empDetail?.subsidiary?.name || ""}</td>
+      {/* <td>{empDetail?.employeeType?.formName || ""}</td> */}
+      {/* <td>{empDetail?.subsidiary?.name || ""}</td> */}
       <td>{empDetail?.location?.formName || ""}</td>
       <td className="text-right">
         <button className="bg-transparent border-none"
@@ -315,11 +316,12 @@ export default function MasterEditForm({
                                   <tr className="custom-table-header">
 
                                     <td className="">Interviewer</td>
+                                    <td className="">Name</td>
                                     <td className="">Department</td>
                                     <td className="">Designation</td>
                                     <td className="">Grade</td>
-                                    <td className="">Employee Type</td>
-                                    <td className="">Subsidiary</td>
+                                    {/* <td className="">Employee Type</td> */}
+                                    {/* <td className="">Subsidiary</td> */}
                                     <td className="">Location</td>
                                     <td className="">Action</td>
                                   </tr>
