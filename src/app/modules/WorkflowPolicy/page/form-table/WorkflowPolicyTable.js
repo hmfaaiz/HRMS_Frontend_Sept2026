@@ -77,20 +77,20 @@ export function WorkflowPolicyTable() {
         minWidth: "160px",
       },
     },
-    {
-      dataField: "defaultApprover",
-      text: "Default Approver",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-      },
-      formatter: (cell) => {
-        // Concatenate firstName and lastName
-        return cell ? `${cell.firstName} ${cell.lastName}` : "";
-      },
-    },
+    // {
+    //   dataField: "defaultApprover",
+    //   text: "Default Approver",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //   },
+    //   formatter: (cell) => {
+    //     // Concatenate firstName and lastName
+    //     return cell ? `${cell.firstName} ${cell.lastName}` : "";
+    //   },
+    // },
     {
       dataField: "action",
       text: "Actions",

@@ -144,7 +144,6 @@ export const saveLoanData = (formData, setLoading, clearForm) => async (
     });
 };
 
-
 export const saveEmployeeAttendanceSheetData = (
   formData,
   setLoading,
@@ -187,7 +186,6 @@ export const saveEmployeeAttendanceSheetData = (
       );
     });
 };
-
 
 export const saveEmployeeDynasoftAttendanceSheetData = (
   formData,
@@ -232,3 +230,37 @@ export const saveEmployeeDynasoftAttendanceSheetData = (
     });
 };
 
+export const saveEmpoloyeeProfileData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeeProfileData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("Profiles Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

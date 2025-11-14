@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Accordion, Button, Card, Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -18,6 +18,7 @@ const formValidation = Yup.object().shape({
 export function EmployeeProfileSection({ downloadExcel, dispatch }) {
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   const onClick = (e) => {
     e.preventDefault();
@@ -30,7 +31,24 @@ export function EmployeeProfileSection({ downloadExcel, dispatch }) {
         enableReinitialize={true}
         initialValues={{ file: null }}
         validationSchema={formValidation}
-        onSubmit={(values) => {}}
+        onSubmit={(values, { resetForm }) => {
+          if (values.file) {
+            const formData = new FormData();
+            formData.append("file", values.file);
+            setLoading(true);
+
+            const clearForm = () => {
+              resetForm();
+              if (inputFile?.current) {
+                inputFile.current.value = "";
+              }
+            };
+
+            dispatch(
+              actions.saveEmpoloyeeProfileData(formData, setLoading, clearForm)
+            );
+          }
+        }}
       >
         {({
           handleSubmit,
@@ -62,6 +80,7 @@ export function EmployeeProfileSection({ downloadExcel, dispatch }) {
                       const file = event.currentTarget.files[0];
                       setFieldValue("file", file);
                     }}
+                    disabled={loading}
                     fileName={values?.file?.name}
                     inputFile={inputFile}
                     accept=".xlsx,.xls"
@@ -71,11 +90,11 @@ export function EmployeeProfileSection({ downloadExcel, dispatch }) {
 
                 <button
                   type="submit"
-                  disabled={false}
+                  disabled={loading}
                   className="btn btn-primary btn-elevate"
                 >
                   Save
-                  {false && (
+                  {loading && (
                     <span className="ml-3 mr-3 spinner spinner-white"></span>
                   )}
                 </button>
