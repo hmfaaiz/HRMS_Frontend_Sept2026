@@ -912,6 +912,7 @@ export function FormEditForm({
                           value={values.all_report_to}
                           checked={values.all_report_to}
                           label="Show All"
+                          disabled={values?.isFromPortal}
                         />
                         <label>Show All</label>
                         <ErrorMessage
@@ -922,7 +923,7 @@ export function FormEditForm({
                       </div>
                       <SearchSelect
                         name="acceptedEmployeeId"
-                        isDisabled={isdataForRead || !values.employeeId}
+                        isDisabled={isdataForRead || !values.employeeId || values?.isFromPortal}
                         // onBlur={() => {
                         //   handleBlur({ target: { name: "countryId" } });
                         // }}
@@ -969,7 +970,7 @@ export function FormEditForm({
                         className="form-control"
                         placeholder="Date of Resignation Acceptance"
                         component={DatePickerField}
-                        disabled={!values.employeeId}
+                        disabled={!values.employeeId || values?.isFromPortal}
                         selected={
                           values?.resignationAcceptanceDate
                             ? new Date(values.resignationAcceptanceDate)
