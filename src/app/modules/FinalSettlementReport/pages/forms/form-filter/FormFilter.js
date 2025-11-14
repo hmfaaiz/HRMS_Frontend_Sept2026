@@ -305,6 +305,7 @@ export function FormFilter({
                           setFieldValue("subsidiaryId", value);
                           
                           dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
+                          dispatch(FetchAllApprovedFSEmp({subsidiaryId:value,departmentId:values?.departmentId}));
                           setFieldValue("employeeId", "");
                        
                         }}
@@ -316,6 +317,7 @@ export function FormFilter({
                       <Field
                         name="departmentId"
                         component={SearchSelect}
+                        isDisabled={!values.subsidiaryId}
                         onBlur={handleBlur}
                         onChange={(e) => {
                           const value =
@@ -337,6 +339,7 @@ export function FormFilter({
                         <Field
                           name="employeeId"
                           component={SearchSelect}
+                          isDisabled={!values.subsidiaryId}
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
