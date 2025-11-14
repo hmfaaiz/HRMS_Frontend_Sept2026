@@ -14,10 +14,9 @@ import {
   fetchAllPayrollMonthYearList,
   fetchPayrollConfigApproverPermission,
 } from "../../../../../../_metronic/redux/dashboardActions";
-import { Select } from "../../../../../../_metronic/_partials/controls";
-import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+
 import { useHistory } from "react-router-dom";
-import { toAbsoluteUrl } from "../../../../../../_metronic/_helpers";
+
 import SVG from "react-inlinesvg";
 import { Download } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
@@ -56,7 +55,7 @@ export function FormFilter({
     allDept,
     allLocationChildMenus,
     allDesignations,
-    allPayrollMonthYearList,departmentBySubIdsList
+    allPayrollMonthYearList, departmentBySubIdsList
   } = useSelector((state) => state.dashboard);
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
@@ -121,13 +120,6 @@ export function FormFilter({
     };
   };
 
-  //Trugger request to download PDF of data according to filters
-  const getPayslip = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(actions.generatePayslip(newQueryParams.filter, document, labels));
-  };
-
   const getPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
@@ -136,55 +128,17 @@ export function FormFilter({
     );
   };
 
-  const getExcel = (values) => {
+
+  const getIncomeTaxCompPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
     dispatch(
-      actions.generateRegisterExcel(newQueryParams.filter, document, labels)
+      actions.generateIncomeTaxComputationReport(newQueryParams.filter, document, labels)
     );
   };
 
-  const getBankAdvice = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateBankAdvice(newQueryParams.filter, document, labels)
-    );
-  };
 
-  const generateDubaiBankAdviceCSV = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateDubaiBankAdviceCSV(newQueryParams.filter, document, labels)
-    );
-  };
 
-  const getJVExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateRegisterJVExcel(newQueryParams.filter, document, labels)
-    );
-  };
-
-  const getJVCreditExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateRegisterJVCreditExcel(
-        newQueryParams.filter,
-        document,
-        labels
-      )
-    );
-  };
-
-  const [
-    payrollPayableAccountApproverPermission,
-    setPayrollPayableAccountApproverPermission,
-  ] = useState(false);
-  const { dashboard } = useSelector((state) => state);
   useEffect(() => {
     dispatch(
       fetchPayrollConfigApproverPermission(
@@ -194,63 +148,20 @@ export function FormFilter({
 
   }, []);
 
-  const checkPermission = (value) => {
-    const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
-      (entity) => entity.subsidiaryId === Number(value)
-    );
 
-    if (filteredPermission?.length > 0) {
-      const permission = filteredPermission[0];
-      setPayrollPayableAccountApproverPermission(
-        Boolean(permission?.payroll_payable_accountId)
-      );
-    }
-  };
 
-  useEffect(() => {
-    // Extract subsidiaryId logic
-    const subsidiaryId =
-      allSubsidiaryList && allSubsidiaryList.length > 0
-        ? allSubsidiaryList[0].value
-        : null;
 
-    // Dispatch actions
-    dispatch(
-      fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList")
-    );
-    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
-    checkPermission(subsidiaryId);
-  }, [allSubsidiaryList]);
 
-  //preview
-  const previewRegisterPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.fetchPreviewRegisterPdf(newQueryParams.filter, document, labels)
-    );
-  };
 
-  const previewPayslipPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.fetchPreviewPayslipPdf(newQueryParams.filter, document, labels)
-    );
-  };
 
   return (
     <>
       <Formik
         enableReinitialize={true}
-        // initialValues={initialFilter.filter}
+
         initialValues={{
           ...initialFilter.filter,
-          // subsidiaryId:
-          //   initialFilter.filter?.subsidiaryId ||
-          //   (allSubsidiaryList && allSubsidiaryList.length > 0
-          //     ? allSubsidiaryList[0].value
-          //     : ""), // Set default subsidiaryId if it's not provided
+
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -274,21 +185,21 @@ export function FormFilter({
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     {/* Subsidiary Field Start */}
                     <div className="">
-                     
+
                       <SubsidiarySelect
                         name="subsidiaryId"
                         onBlur={handleBlur}
                         onChange={(e) => {
-                          console.log("obeeeeject" , e)
+                          console.log("obeeeeject", e)
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                         
-                          dispatch(FetchAllApprovedFSEmp({subsidiaryId:value,departmentId:values?.departmentId}));
+
+                          dispatch(FetchAllApprovedFSEmp({ subsidiaryId: value, departmentId: values?.departmentId }));
                           setFieldValue("employeeId", "");
                           setFieldValue("departmentId", "");
                           dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
-                       
+
                         }}
                         label={
                           <span>
@@ -303,16 +214,16 @@ export function FormFilter({
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
-                          
+
                           dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
-                          dispatch(FetchAllApprovedFSEmp({subsidiaryId:value,departmentId:values?.departmentId}));
+                          dispatch(FetchAllApprovedFSEmp({ subsidiaryId: value, departmentId: values?.departmentId }));
                           setFieldValue("employeeId", "");
-                       
+
                         }}
                       />
                     </div>
 
-                   
+
                     <div className="">
                       <Field
                         name="departmentId"
@@ -323,8 +234,8 @@ export function FormFilter({
                           const value =
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("departmentId", value);
-                            setFieldValue("employeeId", "");
-                          dispatch(FetchAllApprovedFSEmp({subsidiaryId:values?.subsidiaryId,departmentId:value}));
+                          setFieldValue("employeeId", "");
+                          dispatch(FetchAllApprovedFSEmp({ subsidiaryId: values?.subsidiaryId, departmentId: value }));
                         }}
                         label={<span> Department</span>}
                         value={
@@ -335,28 +246,28 @@ export function FormFilter({
                       />
                     </div>
 
-                       <div className="">
-                        <Field
-                          name="employeeId"
-                          component={SearchSelect}
-                          isDisabled={!values.subsidiaryId}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("employeeId", value);
-                          }}
-                          label={<span> Employee <span style={{ color: "red" }}>*</span></span>}
-                          error={errors.employeeId}
-                          touched={touched.employeeId}
-                          value={
-                            allFSApprovedEmpMap?.get(values?.employeeId || "") || ""
-                          }
-                          autoComplete="off"
-                          options={allFSApprovedEmp}
-                        />
-                      </div>
-         
+                    <div className="">
+                      <Field
+                        name="employeeId"
+                        component={SearchSelect}
+                        isDisabled={!values.subsidiaryId}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.value == "Select" ? "" : Number(e.value);
+                          setFieldValue("employeeId", value);
+                        }}
+                        label={<span> Employee <span style={{ color: "red" }}>*</span></span>}
+                        error={errors.employeeId}
+                        touched={touched.employeeId}
+                        value={
+                          allFSApprovedEmpMap?.get(values?.employeeId || "") || ""
+                        }
+                        autoComplete="off"
+                        options={allFSApprovedEmp}
+                      />
+                    </div>
+
                   </div>
 
                   <hr></hr>
@@ -366,307 +277,77 @@ export function FormFilter({
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-               
-     
+
+
 
                     <div className="md:col-start-3 md:col-end-5 flex justify-end ">
-                 
+
                       <button
                         onClick={() => {
                           getPdf(values);
                         }}
                         disabled={
-                         
+
                           pdfLoading ||
                           !values.subsidiaryId || !values.employeeId
-                        
+
                         }
                         type="button"
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
-                        Payable Report
-                
+                        Payable Slip
+
                         <Download className="w-4 h-4 ml-2" />
-                 
+
                         {registerLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
 
-                      {/* <button
-                        onClick={() => {
-                          getExcel(values);
-                        }}
-                        disabled={
-                          registerExcelLoading ||
-                          payslipPreviewLoading ||
-                          !values.subsidiaryId ||
-                          !values.monthId
-                        }
-                        type="button"
-                        className="btn btn-primary btn-elevate h-9 mt-4 ml-1"
-                      >
-                        Generate Register (Excel)
-                
-                        <Download className="w-4 h-4 ml-2" />
-                   
-                        {registerExcelLoading && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button> */}
+
                     </div>
                   </div>
 
                   <hr></hr>
 
-                  {/* <h6 className="font-bold mb-0 text-primary my-2">
-                    Bank Payment Advice
+
+                  <h6 className="font-bold mb-0 text-primary ">
+                      Income Tax Computation Slip
                   </h6>
+
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
-                    <div className="col-start-3 col-end-5 flex justify-end gap-2">
+
+
+
+                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
                       <button
                         onClick={() => {
-                          getBankAdvice(values);
+                          getIncomeTaxCompPdf(values);
                         }}
                         disabled={
-                          adviceLoading ||
-                          !values.subsidiaryId ||
-                          !values.monthId
+
+                          pdfLoading ||
+                          !values.subsidiaryId || !values.employeeId
+
                         }
-                        className="btn btn-primary btn-elevate"
+                        type="button"
+                        className="btn btn-primary btn-elevate h-9 mt-4"
                       >
-                        Generate Payment Advice
-                     
+                        Income Tax Computation Slip
+
                         <Download className="w-4 h-4 ml-2" />
-                     
-                        {adviceLoading && (
+
+                        {registerLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
-                        <button
-                        onClick={() => {
-                          generateDubaiBankAdviceCSV(values);
-                        }}
-                        disabled={
-                          adviceLoading ||
-                          !values.subsidiaryId ||
-                          !values.monthId
-                        }
-                        className="btn btn-primary btn-elevate"
-                      >
-                         SIF
-                  
-                        <Download className="w-4 h-4 ml-2" />
-                   
-                        {adviceLoading && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
-                      </button>
+
+
                     </div>
-                  </div> */}
+                  </div>
 
-                  {/* <hr></hr> */}
 
-                  {/* <div>
-                    <h6 className="font-bold mb-0 text-primary">Payslip</h6>
-                    <div className="grid md:grid-cols-4 gap-x-3">
-             
-                      <div className="">
-                        <Field
-                          name="employeeId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("employeeId", value);
-                          }}
-                          label={<span> Employee</span>}
-                          error={errors.employeeId}
-                          touched={touched.employeeId}
-                          value={
-                            allFSApprovedEmp?.get(values?.employeeId || "") || ""
-                          }
-                          autoComplete="off"
-                          options={allFSApprovedEmp}
-                        />
-                      </div>
-                   
-
-                      <div className="col-start-4 col-end-5 flex justify-end ">
-                        <button
-                          onClick={() => {
-                            previewPayslipPdf(values);
-
-                            window.open(
-                              "/payroll_register/preview-payslip-pdf"
-                            );
-                          }}
-                          disabled={
-                            pdfLoading ||
-                            !values.subsidiaryId ||
-                            !values.monthId ||
-                            payslipPreviewLoading ||
-                            registerLoading ||
-                            registerPreviewLoading
-                          }
-                          type="button"
-                          className="btn btn-primary btn-elevate h-9 mr-1 mt-4"
-                        >
-                          Preview
-                          {payslipPreviewLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            getPayslip(values);
-                          }}
-                          disabled={
-                            pdfLoading ||
-                            !values.subsidiaryId ||
-                            !values.monthId ||
-                            payslipPreviewLoading ||
-                            registerLoading ||
-                            registerPreviewLoading
-                          }
-                          className="btn btn-primary btn-elevate h-9 mt-4"
-                        >
-                          Generate Payslip
-                         
-                          <Download className="w-4 h-4 ml-2" />
-                        
-                          {pdfLoading && (
-                            <span className="ml-3 mr-3 spinner spinner-white"></span>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div> */}
-
-                  {/* <hr></hr>
-                  {payrollPayableAccountApproverPermission && (
-                    <div>
-                      <h6 className="font-bold mb-0 text-primary my-2">
-                        Payroll Expense Report
-                      </h6>
-                      <div className="grid md:grid-cols-5 gap-x-3 mb-2">
-                      
-
-                        <div className="col-span-1 flex items-start">
-                          <label className="flex items-center space-x-1">
-                            <input
-                              className="bg-slate-500"
-                              name="groupByEmployee"
-                              type="checkbox"
-                              onChange={() => {
-                                setFieldValue(
-                                  "groupByEmployee",
-                                  !values?.groupByEmployee
-                                );
-                                setFieldValue("groupByDepartment", null);
-                                setFieldValue("groupByLocation", null);
-                              }}
-                              onBlur={handleBlur}
-                              value={values.groupByEmployee}
-                              checked={values.groupByEmployee}
-                            />
-                            <span>Group By Employee</span>
-                          </label>
-                        </div>
-
-                       
-
-                        <div className="col-span-1">
-                          <label className="flex items-center">
-                            <input
-                              className="mr-1"
-                              name="groupByDepartment"
-                              type="checkbox"
-                              disabled={values.groupByEmployee}
-                              onChange={() =>
-                                setFieldValue(
-                                  "groupByDepartment",
-                                  !values?.groupByDepartment
-                                )
-                              }
-                              onBlur={handleBlur}
-                              value={values.groupByDepartment}
-                              checked={values.groupByDepartment}
-                            />
-                            <span>Group By Department</span>
-                          </label>
-                        </div>
-
-                       
-
-                        <div className="col-span-1">
-                          <label className="flex items-center">
-                            <input
-                              className="mr-1"
-                              name="groupByLocation"
-                              type="checkbox"
-                              disabled={values.groupByEmployee}
-                              onChange={() =>
-                                setFieldValue(
-                                  "groupByLocation",
-                                  !values?.groupByLocation
-                                )
-                              }
-                              onBlur={handleBlur}
-                              checked={values.groupByLocation}
-                            />
-                            <span>Group By Location</span>
-                          </label>
-                        </div>
-
-                        <div className="col-span-2 flex justify-end">
-                          <button
-                            onClick={() => {
-                              getJVExcel(values);
-                            }}
-                            disabled={
-                              registerExcelLoading ||
-                              !values.subsidiaryId ||
-                              !values.monthId
-                            }
-                            type="button"
-                            className="btn btn-primary btn-elevate mt-3 h-9 mr-1"
-                          >
-                            Payroll Expense Report
-                          
-                            <Download className="w-4 h-4 ml-2" />
-                       
-                            {registerExcelLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              getJVCreditExcel(values);
-                            }}
-                            disabled={
-                              registerExcelLoading ||
-                              !values.subsidiaryId ||
-                              !values.monthId
-                            }
-                            type="button"
-                            className="btn btn-primary btn-elevate mt-3 h-9"
-                          >
-                            Payroll Disbursement Report
-                          
-                            <Download className="w-4 h-4 ml-2" />
-                           
-                            {registerExcelLoading && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )} */}
                 </fieldset>
               </Form>
             </Modal.Body>
@@ -682,17 +363,7 @@ export function FormFilter({
                 Cancel
               </button>
 
-              {/* <button
-                type="submit"
-                onClick={() => handleSubmit()}
-                disabled={loading}
-                className="btn btn-success btn-elevate"
-              >
-                Filter Record
-                {loading && (
-                  <span className="ml-3 mr-3 spinner spinner-white"></span>
-                )}
-              </button> */}
+
             </Modal.Footer>
           </>
         )}
