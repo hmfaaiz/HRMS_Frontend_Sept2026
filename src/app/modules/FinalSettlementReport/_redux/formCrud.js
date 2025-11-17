@@ -32,3 +32,10 @@ export async function getProvidentFundPdf(body) {
   });
 }
 
+
+export async function getAcknowledgmentLetterPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-acknowledgment-letter`, body,{
+    responseType:'arraybuffer'
+  });
+}
+

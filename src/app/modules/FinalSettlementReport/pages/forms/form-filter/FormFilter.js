@@ -38,11 +38,11 @@ export function FormFilter({
   loading,
   dispatch,
   pdfLoading,
-  registerLoading,
-  adviceLoading,
-  registerExcelLoading,
-  registerPreviewLoading,
-  payslipPreviewLoading,
+  payableSlip,
+  incomeTaxComputationSlip,
+  gratuitySlip,
+  providentFundSlip,acknowledgementLetter
+
 }) {
   const history = useHistory();
   const FormUIContext = useFormUIContext();
@@ -51,11 +51,7 @@ export function FormFilter({
   const {
     allFSApprovedEmp,
     allSubsidiaryList,
-    allEmployeeGradeList,
-    allDept,
-    allLocationChildMenus,
-    allDesignations,
-    allPayrollMonthYearList, departmentBySubIdsList
+    departmentBySubIdsList
   } = useSelector((state) => state.dashboard);
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
@@ -67,30 +63,11 @@ export function FormFilter({
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
   }, [allSubsidiaryList]);
 
-  const allGradeMap = useMemo(() => {
-    return new Map(allEmployeeGradeList?.map((item) => [item.value, item]));
-  }, [allEmployeeGradeList]);
 
   const allDeptMap = useMemo(() => {
     return new Map(departmentBySubIdsList?.map((item) => [item.value, item]));
   }, [departmentBySubIdsList]);
 
-  const allLocationMap = useMemo(() => {
-    return new Map(allLocationChildMenus?.map((item) => [item.value, item]));
-  }, [allLocationChildMenus]);
-
-  const allDesignationsMap = useMemo(() => {
-    return new Map(allDesignations?.map((item) => [item.value, item]));
-  }, [allDesignations]);
-
-  const allPayrollMonthMap = useMemo(() => {
-    return new Map(allPayrollMonthYearList?.map((item) => [item.value, item]));
-  }, [allPayrollMonthYearList]);
-
-  const allGroupByMap = useMemo(() => {
-    return new Map(groupByOptions?.map((item) => [item.value, item]));
-  }, [groupByOptions]);
-  //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (End)
 
   //Fetch Params from Context
   const formUIProps = useMemo(() => {
@@ -110,30 +87,22 @@ export function FormFilter({
     }
   };
 
-  //Get Labels of Dropdown to Display in PDF
-  const getLabels = (values) => {
-    return {
-      monthLabel: allPayrollMonthMap?.get(values.monthId || "")?.label,
-      subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
-      groupWiseLabel: allGroupByMap?.get(values.groupBy || "")?.label,
-      departmentLabel: allDeptMap?.get(values.departmentId || "")?.label,
-    };
-  };
+
 
   const getPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
+
     dispatch(
-      actions.generateRegisterPdf(newQueryParams.filter, document, labels)
+      actions.generateRegisterPdf(newQueryParams.filter, document)
     );
   };
 
 
   const getIncomeTaxCompPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
+
     dispatch(
-      actions.generateIncomeTaxComputationReport(newQueryParams.filter, document, labels)
+      actions.generateIncomeTaxComputationReport(newQueryParams.filter, document)
     );
   };
 
@@ -141,18 +110,27 @@ export function FormFilter({
 
   const getGratuityPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
+
     dispatch(
-      actions.generateGratuityReport(newQueryParams.filter, document, labels)
+      actions.generateGratuityReport(newQueryParams.filter, document)
     );
   };
 
 
   const getProvidentFundPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
+
     dispatch(
-      actions.getProvidentFundReport(newQueryParams.filter, document, labels)
+      actions.getProvidentFundReport(newQueryParams.filter, document)
+    );
+  };
+
+
+  const getAcknowledgmentLetterPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+
+    dispatch(
+      actions.getAcknowledgmentLetter(newQueryParams.filter, document)
     );
   };
 
@@ -318,7 +296,7 @@ export function FormFilter({
 
                         <Download className="w-4 h-4 ml-2" />
 
-                        {registerLoading && (
+                        {payableSlip && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
@@ -357,7 +335,7 @@ export function FormFilter({
 
                         <Download className="w-4 h-4 ml-2" />
 
-                        {registerLoading && (
+                        {incomeTaxComputationSlip && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
@@ -397,7 +375,7 @@ export function FormFilter({
 
                         <Download className="w-4 h-4 ml-2" />
 
-                        {registerLoading && (
+                        {gratuitySlip && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
@@ -435,7 +413,46 @@ export function FormFilter({
 
                         <Download className="w-4 h-4 ml-2" />
 
-                        {registerLoading && (
+                        {providentFundSlip && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+
+
+                    </div>
+                  </div>
+
+                  <hr></hr>
+
+
+                  <h6 className="font-bold mb-0 text-primary ">
+                   Acknowledgment Letter
+                  </h6>
+
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                      <button
+                        onClick={() => {
+                          getAcknowledgmentLetterPdf(values);
+                        }}
+                        disabled={
+
+                          pdfLoading ||
+                          !values.subsidiaryId || !values.employeeId
+
+                        }
+                        type="button"
+                        className="btn btn-primary btn-elevate h-9 mt-4"
+                      >
+                        Generate  Acknowledgment Letter
+
+                        <Download className="w-4 h-4 ml-2" />
+
+                        {acknowledgementLetter && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
                       </button>
