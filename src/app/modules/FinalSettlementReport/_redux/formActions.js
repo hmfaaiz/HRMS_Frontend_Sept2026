@@ -77,3 +77,68 @@ export const generateIncomeTaxComputationReport = (filter, document, labels = {}
     });
 };
 
+
+export const generateGratuityReport = (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.register }));
+  return requestFromServer.generateGratuityPdf({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'fs_gratuity_report.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.registerFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      const decodedData = new TextDecoder().decode(error.response.data);
+      const jsonData = JSON.parse(decodedData);
+      error.clientMessage = "Can't generate Report";
+      dispatch(actions.catchError({ error, callType: callTypes.register }));
+      toast.error(error?.response?.status == 400 ? 'Please provide Employee' : jsonData?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+
+export const getProvidentFundReport = (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.register }));
+  return requestFromServer.getProvidentFundPdf({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'fs_providentfund_report.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.registerFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      const decodedData = new TextDecoder().decode(error.response.data);
+      const jsonData = JSON.parse(decodedData);
+      error.clientMessage = "Can't generate Report";
+      dispatch(actions.catchError({ error, callType: callTypes.register }));
+      toast.error(error?.response?.status == 400 ? 'Please provide Employee' : jsonData?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+

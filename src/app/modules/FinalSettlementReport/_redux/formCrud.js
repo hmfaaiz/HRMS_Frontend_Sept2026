@@ -17,3 +17,18 @@ export async function generateIncomeTaxComputationPdf(body) {
   });
 }
 
+
+export async function generateGratuityPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-gratuity-report`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
+
+
+export async function getProvidentFundPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-providentfund-report`, body,{
+    responseType:'arraybuffer'
+  });
+}
+

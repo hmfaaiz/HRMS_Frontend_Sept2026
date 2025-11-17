@@ -139,6 +139,25 @@ export function FormFilter({
 
 
 
+  const getGratuityPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.generateGratuityReport(newQueryParams.filter, document, labels)
+    );
+  };
+
+
+  const getProvidentFundPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.getProvidentFundReport(newQueryParams.filter, document, labels)
+    );
+  };
+
+
+
   useEffect(() => {
     dispatch(
       fetchPayrollConfigApproverPermission(
@@ -312,7 +331,7 @@ export function FormFilter({
 
 
                   <h6 className="font-bold mb-0 text-primary ">
-                      Income Tax Computation Slip
+                    Income Tax Computation Slip
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
@@ -335,6 +354,84 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
                         Income Tax Computation Slip
+
+                        <Download className="w-4 h-4 ml-2" />
+
+                        {registerLoading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+
+
+                    </div>
+                  </div>
+
+
+                  <hr></hr>
+
+
+                  <h6 className="font-bold mb-0 text-primary ">
+                    Gratuity Slip
+                  </h6>
+
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                      <button
+                        onClick={() => {
+                          getGratuityPdf(values);
+                        }}
+                        disabled={
+
+                          pdfLoading ||
+                          !values.subsidiaryId || !values.employeeId
+
+                        }
+                        type="button"
+                        className="btn btn-primary btn-elevate h-9 mt-4"
+                      >
+                        Gratuity Slip
+
+                        <Download className="w-4 h-4 ml-2" />
+
+                        {registerLoading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
+
+
+                    </div>
+                  </div>
+                  <hr></hr>
+
+
+                  <h6 className="font-bold mb-0 text-primary ">
+                    Provident Fund Slip
+                  </h6>
+
+                  <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+                    <div className="md:col-start-3 md:col-end-5 flex justify-end ">
+
+                      <button
+                        onClick={() => {
+                          getProvidentFundPdf(values);
+                        }}
+                        disabled={
+
+                          pdfLoading ||
+                          !values.subsidiaryId || !values.employeeId
+
+                        }
+                        type="button"
+                        className="btn btn-primary btn-elevate h-9 mt-4"
+                      >
+                        Provident Fund Slip
 
                         <Download className="w-4 h-4 ml-2" />
 
