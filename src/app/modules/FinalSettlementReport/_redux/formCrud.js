@@ -2,94 +2,40 @@ import axios from "axios";
 
 export const USERS_URL = process.env.REACT_APP_API_URL;
 
-/**
- * 
- * Get All Payroll Register Data Paginated
- * 
- * @param {Object} body 
- * @returns res
- */
-export async function getAllPayrollRegisterSetup(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll`, body);
-}
 
-/**
- * 
- * Generate Payslip PDf
- * 
- * @param {Object} body 
- * @returns res
- */
-export async function generatePayslip(body) {
-  return axios.post(`${USERS_URL}/payroll_register/generate-payslip-pdf`, body,{
-    responseType:'arraybuffer'
-  });
-}
-
-/**
- * 
- * Generate payroll register PDf
- * 
- * @param {Object} body 
- * @returns res
- */
 export async function generatePdf(body) {
   return axios.post(`${USERS_URL}/final_settlement_report/read-all-final-settlement-report`, body,{
     responseType:'arraybuffer'
   });
 }
 
-/**
- * 
- * Generate payroll register Excel
- * 
- * @param {Object} body 
- * @returns res
- */
-export async function generateExcel(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-excel`, body,{
-    responseType:'arraybuffer'
-  });
-}
 
-/**
- * 
- * Generate payroll register Excel
- * 
- * @param {Object} body 
- * @returns res
- */
-export async function generateBankAdvice(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-bank-advice-excel`, body,{
-    responseType:'arraybuffer'
-  });
-}
 
-export async function generateJVExcel(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-jv-excel`, body,{
+export async function generateIncomeTaxComputationPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-income-tax-computation-report`, body,{
     responseType:'arraybuffer'
   });
 }
 
 
-export async function generateJVCreditExcel(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll-jv-credit-excel`, body,{
+export async function generateGratuityPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-gratuity-report`, body,{
     responseType:'arraybuffer'
   });
 }
 
 
-export async function previewRegisterPdf(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll/preview-registered-payroll-pdf`,body);
-}
 
-export async function previewPayslipPdf(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-registered-payroll/preview-payslip-pdf`,body);
-}
-
-
-export async function generateDubaiBankAdvice(body) {
-  return axios.post(`${USERS_URL}/payroll_register/read-all-dubai-bank-advice-csv`, body,{
+export async function getProvidentFundPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-providentfund-report`, body,{
     responseType:'arraybuffer'
   });
 }
+
+
+export async function getAcknowledgmentLetterPdf(body) {
+  return axios.post(`${USERS_URL}/final_settlement_report/read-acknowledgment-letter`, body,{
+    responseType:'arraybuffer'
+  });
+}
+

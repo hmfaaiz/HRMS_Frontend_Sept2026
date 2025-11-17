@@ -3,42 +3,29 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     listLoading: false,
     actionsLoading: null,
-    totalCount: 0,
-    entities: null,
-    roles: null,
-    centers: null,
-    userStatusTypes: null,
-    userForEdit: undefined,
+
     lastError: null,
-    userForRead: false,
+
     pdfLoading: false,
-    registerGDExcelLoading:false,
-    registerExcelLoading:false,
-
-    //preview register pdf
-    previewRegisterPdData:[],
-    previewRegisterPdftotalCount:0,
-
-
-    //preview payslip
-    previewPayslipPdfData:[],
-    previewPayslipPdftotalCount:0,
+    payableSlip: false,
+    incomeTaxComputationSlip: false,
+    gratuitySlip: false,
+    providentFundSlip: false,
+    acknowledgementLetter: false,
 
 
-    registerPreviewLoading:false,
-    payslipPreviewLoading:false,
 };
 
 export const callTypes = {
     list: "list",
     action: "action",
     pdf: "pdf",
-    register: 'register',
-    registerExcel: 'registerExcel',
-    bankAdvice: 'advice',
-    registerGDExcel: 'registerGDExcel',
-    registerPreview:"registerPreview",
-    payslipPreview:"payslipPreview",
+    payableSlip: "payableSlip",
+    incomeTaxComputationSlip: "incomeTaxComputationSlip",
+    gratuitySlip: "gratuitySlip",
+    providentFundSlip: "providentFundSlip",
+    acknowledgementLetter: "acknowledgementLetter",
+
 };
 
 export const FinalSettlementReportSlice = createSlice({
@@ -47,64 +34,57 @@ export const FinalSettlementReportSlice = createSlice({
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
+            state.pdfLoading = false;
+
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
-            } 
-            else if(action.payload.callType === callTypes.pdf){
+            }
+            else if (action.payload.callType === callTypes.pdf) {
                 state.pdfLoading = false;
             }
-            else if(action.payload.callType === callTypes.register){
-                state.registerLoading = false;
+            else if (action.payload.callType === callTypes.payableSlip) {
+                state.payableSlip = false;
             }
-            else if(action.payload.callType === callTypes.bankAdvice){
-                state.adviceLoading = false;
+            else if (action.payload.callType === callTypes.incomeTaxComputationSlip) {
+                state.incomeTaxComputationSlip = false;
             }
-            else if(action.payload.callType === callTypes.registerExcel){
-                state.registerExcelLoading = false;
+            else if (action.payload.callType === callTypes.gratuitySlip) {
+                state.gratuitySlip = false;
             }
-            else if(action.payload.callType === callTypes.registerGDExcel){
-                state.registerGDExcelLoading = false;
+            else if (action.payload.callType === callTypes.providentFundSlip) {
+                state.providentFundSlip = false;
+            }
+            else if (action.payload.callType === callTypes.acknowledgementLetter) {
+                state.acknowledgementLetter = false;
             }
 
-         
-            else if(action.payload.callType === callTypes.registerPreview){
-                state.registerPreviewLoading = false;
-            }
-     
-            
-         
-            else if(action.payload.callType === callTypes.payslipPreview){
-                state.payslipPreviewLoading = false;
-            }
             else {
                 state.actionsLoading = false;
             }
         },
         startCall: (state, action) => {
             state.error = null;
+            state.pdfLoading = true;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = true;
-            } 
-            else if(action.payload.callType === callTypes.pdf){
+            }
+            else if (action.payload.callType === callTypes.pdf) {
                 state.pdfLoading = true;
             }
-            else if(action.payload.callType === callTypes.register){
-                state.registerLoading = true;
+            else if (action.payload.callType === callTypes.payableSlip) {
+                state.payableSlip = true;
             }
-            else if(action.payload.callType === callTypes.registerExcel){
-                state.registerExcelLoading = true;
+            else if (action.payload.callType === callTypes.incomeTaxComputationSlip) {
+                state.incomeTaxComputationSlip = true;
             }
-            else if(action.payload.callType === callTypes.registerGDExcel){
-                state.registerGDExcelLoading = true;
+            else if (action.payload.callType === callTypes.gratuitySlip) {
+                state.gratuitySlip = true;
             }
-            else if(action.payload.callType === callTypes.bankAdvice){
-                state.adviceLoading = true;
-            }
-            else if(action.payload.callType === callTypes.registerPreview){
-                state.registerPreviewLoading = true;
-            }
-            else if(action.payload.callType === callTypes.payslipPreview){
-                state.payslipPreviewLoading = true;
+            else if (action.payload.callType === callTypes.providentFundSlip) {
+                state.providentFundSlip = true;
+            } 
+            else if (action.payload.callType === callTypes.acknowledgementLetter) {
+                state.acknowledgementLetter = true;
             }
             else {
                 state.actionsLoading = true;
@@ -113,56 +93,20 @@ export const FinalSettlementReportSlice = createSlice({
         pdfFetched: (state, action) => {
             state.pdfLoading = false;
         },
-        registerFetched: (state, action) => {
-            state.registerLoading = false;
+        payableSlipFetched: (state, action) => {
+            state.payableSlip = false;
         },
-        registerExcelFetched: (state, action) => {
-            state.registerExcelLoading = false;
+        incomeTaxComputationSlipetched: (state, action) => {
+            state.incomeTaxComputationSlip = false;
         },
-        registerGDExcelFetched: (state, action) => {
-            state.registerGDExcelLoading = false;
+        gratuitySlipFetched: (state, action) => {
+            state.gratuitySlip = false;
         },
-        adviceFetched: (state, action) => {
-            state.adviceLoading = false;
+        providentFundSlipFetched: (state, action) => {
+            state.providentFundSlip = false;
         },
-        
-       
-        FinalSettlementReportFetched: (state, action) => {
-            const entities = action.payload.data?.data.rows;
-            const totalResult = action.payload.data?.data.totalResults;
-            state.listLoading = false;
-            state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
-            
+         acknowledgementLetterFetched: (state, action) => {
+            state.acknowledgementLetter = false;
         },
-
-        previewRegisterPdfFetched: (state, action) => {
-            
-            const previewRegisterPdData = action.payload.data?.data;
-            const totalResult = action.payload.data?.data.totalResults;
-            state.listLoading = false;
-            state.error = null;
-            state.previewRegisterPdData = previewRegisterPdData;
-            state.previewRegisterPdftotalCount = totalResult;
-
-            localStorage.setItem('previewRegisterPdf', JSON.stringify(previewRegisterPdData));
-            state.registerPreviewLoading = false;
-        },
-
-
-        
-        previewPayslipPdfFetched: (state, action) => {
-            
-            const previewPayslipPdfData = action.payload.data?.data;
-            const totalResult = action.payload.data?.data.totalResults;
-            state.listLoading = false;
-            state.error = null;
-            state.previewPayslipPdfData = previewPayslipPdfData;
-            state.previewPayslipPdftotalCount = totalResult;
-
-            localStorage.setItem('previewPayslipPdf', JSON.stringify(previewPayslipPdfData));
-            state.payslipPreviewLoading = false;
-        }
     },
 });
