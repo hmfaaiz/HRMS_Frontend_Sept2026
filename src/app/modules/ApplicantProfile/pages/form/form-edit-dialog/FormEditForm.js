@@ -52,13 +52,13 @@ export const getApplicantProfileEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
       firstName: Yup.string().nullable()
-      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
-      .required(VALIDATION_MESSAGES.required),
+        .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+        .required(VALIDATION_MESSAGES.required),
       lastName: Yup.string().nullable()
-      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
-      .required(VALIDATION_MESSAGES.required),
+        .matches(/^[A-Za-z\s]*$/, "Only letters are allowed")
+        .required(VALIDATION_MESSAGES.required),
       middleName: Yup.string().nullable()
-      .matches(/^[A-Za-z\s]*$/, "Only letters are allowed"),
+        .matches(/^[A-Za-z\s]*$/, "Only letters are allowed"),
       // .required(VALIDATION_MESSAGES.required),
       applicantStatusId: Yup.number()
         .nullable()
@@ -93,23 +93,23 @@ export const getApplicantProfileEditSchema = (formData) => {
 
       //address
       additional_summary: Yup.string()
-      .nullable()
-      .required(VALIDATION_MESSAGES.required),
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
 
       phone_official: Yup.string()
         .nullable() // Allows null values
-       
+
         .matches(/^[0-9]*$/, "Must contain only digits")
-         .max(15, "Must be at most 15 characters long")
+        .max(15, "Must be at most 15 characters long")
         .notRequired(), // Make it optional if you want
 
       phone_cell: Yup.string()
         .nullable() // Allows null values
-        
+
         .matches(/^[0-9]*$/, "Must contain only digits")
-         .max(15, "Must be at most 15 characters long")
+        .max(15, "Must be at most 15 characters long")
         .notRequired(), // Make it optional if you want
-        
+
 
       email_personal: Yup.string()
         .nullable() // Allows null values
@@ -142,7 +142,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "is-greater",
           'Expected salary range "To" must be greater than "From"',
-          function(value) {
+          function (value) {
             const { expectedSalaryRangeFrom } = this.parent;
             return value > expectedSalaryRangeFrom;
           }
@@ -239,7 +239,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "unique-skill",
           "Duplicate skill names are not allowed.",
-          function(skills) {
+          function (skills) {
             if (!Array.isArray(skills)) return true; // ✅ safely skip if not an array
 
             const skillNames = skills.map((s) => s.skill?.trim().toLowerCase());
@@ -281,7 +281,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "no-overlapping-dates",
           "Work experience dates must not overlap.",
-          function(entries) {
+          function (entries) {
             if (!entries || entries.length <= 1) return true;
 
             // Filter out invalid dates
@@ -348,7 +348,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "no-overlapping-academic-dates",
           "Academic date ranges must not overlap.",
-          function(entries) {
+          function (entries) {
             if (!entries || entries.length <= 1) return true;
 
             // Filter out entries without valid dates
@@ -394,7 +394,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "unique-jobVacancyId",
           "Each Job Vacancy must be unique.",
-          function(vacancies) {
+          function (vacancies) {
             if (!vacancies) return true;
 
             const jobVacancyIds = vacancies.map((v) => v.jobVacancyId);
@@ -415,7 +415,7 @@ export const getApplicantProfileEditSchema = (formData) => {
         .test(
           "only-one-activeCV",
           "Only one Active Vacancy can be selected.",
-          function(vacancies) {
+          function (vacancies) {
             if (!vacancies) return true;
             const activeCount = vacancies.filter((v) => v.activeCV === true)
               .length;
@@ -433,7 +433,7 @@ export const getApplicantProfileEditSchema = (formData) => {
     .test(
       "check-marital-status",
       "Invalid marital status for selected title",
-      function(value) {
+      function (value) {
         // if (title === 'Mrs.' && maritalStatus === '261') {
         const { title, maritalStatus, gender } = value;
 
@@ -787,7 +787,7 @@ export function FormEditForm({
                           type="text"
                           minLength={6}
                           maxLength={6}
-                          // error={ errors.applicantCode}
+                        // error={ errors.applicantCode}
                         />
                       </div>
 
@@ -1092,7 +1092,7 @@ export function FormEditForm({
                               applicationDate: "",
                               applicationStatusId: "",
                               statusDate: "",
-                              appointmentTypeId: "", // ✅ fix this key name
+                              appointmentTypeId: "", //  fix this key name
                             })
                           }
                         >
@@ -1110,6 +1110,7 @@ export function FormEditForm({
                               <th className=""> Status Date</th>
 
                               <th className="">Appointment Type</th>
+                              <th className="">Signed File</th>
                               <th className="">Active Vacancy</th>
                               <th className="text-right">Action</th>
                             </tr>
@@ -1133,7 +1134,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                                index
+                                              index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1154,7 +1155,7 @@ export function FormEditForm({
                                           //   );
                                           //   const result = await printSkills(formData, values.details_applicant_vacancy);
 
-                                          //   // ✅ Make sure result exists before setting
+                                          //   
                                           //   if (result?.details_applicant_skills) {
                                           //     setFieldValue("details_applicant_skills", result.details_applicant_skills);
                                           //   }
@@ -1173,9 +1174,9 @@ export function FormEditForm({
                                               (item, i) =>
                                                 i === index
                                                   ? {
-                                                      ...item,
-                                                      jobVacancyId: e?.value,
-                                                    }
+                                                    ...item,
+                                                    jobVacancyId: e?.value,
+                                                  }
                                                   : item
                                             );
 
@@ -1198,10 +1199,10 @@ export function FormEditForm({
                                             dashboard?.allJobVacancyList
                                               ?.filter(
                                                 (x) =>
-                                                  x?.jobPostingStatus === 1 && // ✅ Only include items where jobPostingStatus === 1
+                                                  x?.jobPostingStatus === 1 && //  Only include items where jobPostingStatus === 1
                                                   (!values?.subsidiaryId ||
                                                     x?.subsidiaryId ===
-                                                      values?.subsidiaryId) // ✅ Optional filter by subsidiaryId
+                                                    values?.subsidiaryId) //  Optional filter by subsidiaryId
                                               )
                                               .map((x) => ({
                                                 label: x.label,
@@ -1239,16 +1240,17 @@ export function FormEditForm({
                                         <DatePicker
                                           className="form-control"
                                           // component={DatePickerField}
+
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
                                               index
                                             ]?.applicationDate
                                               ? new Date(
-                                                  values.details_applicant_vacancy[
-                                                    index
-                                                  ].applicationDate
-                                                )
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ].applicationDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -1264,10 +1266,10 @@ export function FormEditForm({
                                           dateFormat="dd-MMM-yyyy"
                                           name={`details_applicant_vacancy[${index}].applicationDate`}
                                           disabled={
-                                            isdataForRead ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.activeCV ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                                index
+                                              index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1299,11 +1301,11 @@ export function FormEditForm({
                                           name={`details_applicant_vacancy[${index}].applicationStatusId`}
                                           className="form-control"
                                           style={{ width: "130px" }}
-                                          isDisabled={
+                                          isDisabled={values.details_applicant_vacancy?.[index]?.activeCV ||
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                                index
+                                              index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1361,6 +1363,7 @@ export function FormEditForm({
                                       <td>
                                         <DatePicker
                                           className="form-control"
+
                                           // component={DatePickerField}
                                           placeholderText="Select Date"
                                           selected={
@@ -1368,10 +1371,10 @@ export function FormEditForm({
                                               index
                                             ]?.statusDate
                                               ? new Date(
-                                                  values.details_applicant_vacancy[
-                                                    index
-                                                  ].statusDate
-                                                )
+                                                values.details_applicant_vacancy[
+                                                  index
+                                                ].statusDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -1387,7 +1390,7 @@ export function FormEditForm({
                                           dateFormat="dd-MMM-yyyy"
                                           name={`details_applicant_vacancy[${index}].statusDate`}
                                           autoComplete="off"
-                                          disabled={isdataForRead || true}
+                                          disabled={true}
                                           maxDate={new Date()} // optional: restrict future dates
                                           showPopperArrow={false}
                                         />
@@ -1419,7 +1422,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                                index
+                                              index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1463,6 +1466,20 @@ export function FormEditForm({
                                               }
                                             </div>
                                           )}
+                                      </td >
+                                      <td>
+                                        {/* Check if the file URL/path exists before rendering the link */}
+                                        {values.details_applicant_vacancy[index].acceptFile ? (
+                                          <a
+                                            href={getUploadUrl(values.details_applicant_vacancy[index].acceptFile)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            View File
+                                          </a>
+                                        ) : (
+                                          <span>No File</span> // Or render nothing, or another placeholder
+                                        )}
                                       </td>
 
                                       <td>
@@ -1473,7 +1490,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                                index
+                                              index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1519,7 +1536,7 @@ export function FormEditForm({
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
-                                                index
+                                              index
                                               ]
                                             )?.jobPostingStatus == 3
                                           }
@@ -1708,7 +1725,7 @@ export function FormEditForm({
                         label={
                           <span>
                             {" "}
-                           ID Card No.<span style={{ color: "red" }}>*</span>
+                            ID Card No.<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         autoComplete="off"
@@ -2289,7 +2306,7 @@ export function FormEditForm({
                     {/* Show existing file if any */}
                     {formData.file && formData.file === formData.file && (
                       <div className="mt-2">
-                       <label>Existing File:</label>
+                        <label>Existing File:</label>
                         <a
                           href={getUploadUrl(formData.file)}
                           target="_blank"
@@ -2569,10 +2586,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                  values.details_applicant_work_experience[
-                                                    index
-                                                  ].startDate
-                                                )
+                                                values.details_applicant_work_experience[
+                                                  index
+                                                ].startDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -2629,10 +2646,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                  values.details_applicant_work_experience[
-                                                    index
-                                                  ].endDate
-                                                )
+                                                values.details_applicant_work_experience[
+                                                  index
+                                                ].endDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3018,10 +3035,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                  values.details_applicant_academic_info[
-                                                    index
-                                                  ].startDate
-                                                )
+                                                values.details_applicant_academic_info[
+                                                  index
+                                                ].startDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3078,10 +3095,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                  values.details_applicant_academic_info[
-                                                    index
-                                                  ].endDate
-                                                )
+                                                values.details_applicant_academic_info[
+                                                  index
+                                                ].endDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3334,10 +3351,10 @@ export function FormEditForm({
                                               index
                                             ]?.startDate
                                               ? new Date(
-                                                  values.details_applicant_skills[
-                                                    index
-                                                  ].startDate
-                                                )
+                                                values.details_applicant_skills[
+                                                  index
+                                                ].startDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {
@@ -3390,10 +3407,10 @@ export function FormEditForm({
                                               index
                                             ]?.endDate
                                               ? new Date(
-                                                  values.details_applicant_skills[
-                                                    index
-                                                  ].endDate
-                                                )
+                                                values.details_applicant_skills[
+                                                  index
+                                                ].endDate
+                                              )
                                               : null
                                           }
                                           onChange={(date) => {

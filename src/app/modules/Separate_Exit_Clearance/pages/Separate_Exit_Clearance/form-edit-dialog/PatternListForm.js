@@ -70,7 +70,8 @@ function PatternListForm({
                     // isClearanceProvided: 0,
                     sno: "",
                     clearanceDate: "",
-                    isEmailSend : false,
+                    remarks: "",
+                    isEmailSend: false,
                   })
                 }
               >
@@ -85,11 +86,12 @@ function PatternListForm({
                   <thead>
                     <tr className="custom-table-header">
                       <td className="w-[5px]">S.No.</td>
-                      <td className="w-[200px]">Department</td>
-                      <td className="w-[200px]">Employee</td>
-                      <td className="w-[200px]">Designation</td>
-                      <td className="w-[200px]">Clearance Provided</td>
+                      <td className="w-[150px]">Department</td>
+                      <td className="w-[180px]">Employee</td>
+                      <td className="w-[150px]">Designation</td>
+                      <td className="w-[30px]">Clearance Provided</td>
                       <td className="w-[100px]">Clearance Date</td>
+                      <td className="w-[350px]">Remarks</td>
                       <td className="text-right">Action</td>
                     </tr>
                   </thead>
@@ -104,7 +106,7 @@ function PatternListForm({
                             value={index + 1}
                             type="number"
                             className="form-control"
-                            style={{ width: "100px" }}
+                            style={{ width: "20px" }}
 
                             disabled
                           />
@@ -320,6 +322,33 @@ function PatternListForm({
 
                           {errors.list?.[index]?.clearanceDate && (
                             <div className="text-danger">{errors.list[index].clearanceDate}</div>
+                          )}
+                        </td>
+
+                        <td>
+                          <Field
+                            name={`list[${index}].remarks`}
+                            className={
+                              errors.list?.[index]?.remarks && touched.list?.[index]?.remarks
+                                ? "form-control is-invalid"
+                                : "form-control"
+                            }
+                       
+                        
+                           
+                            onChange={(e) => {
+                    
+                          
+                              setFieldValue(`list[${index}].remarks`, e.target.value);
+                            }}
+                            placeholder="Enter remarks"
+                          />
+
+                          {/* Error message */}
+                          {errors?.list?.[index]?.remarks && (
+                            <div className="invalid-feedback">
+                              {errors.list[index].remarks}
+                            </div>
                           )}
                         </td>
 

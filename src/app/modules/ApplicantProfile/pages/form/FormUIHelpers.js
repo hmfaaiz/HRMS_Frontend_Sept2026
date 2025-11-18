@@ -43,5 +43,5 @@ export const initialFilter = {
   countryId:"",
   currentDesignation:"",
   cityId:"",
-  departmentId:"",applicantStatusId:""
+  departmentId:"",applicantStatusId:"",isProfileCreated:1
 }

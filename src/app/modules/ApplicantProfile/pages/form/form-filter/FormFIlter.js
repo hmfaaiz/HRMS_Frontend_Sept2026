@@ -73,6 +73,12 @@ export function FormFIlter({ listLoading, user }) {
 
     return dashboard?.allCity?.filter((city) => city.code == countryId) || [];
   };
+
+
+    const profileCreatedOptions = [
+    { value: 1, label: "Yes" },
+    { value: 2, label: "No" },
+  ];
   return (
     <>
       <Formik
@@ -282,6 +288,51 @@ export function FormFIlter({ listLoading, user }) {
                   />
                 </div>
               </div>
+
+                <div className="">
+                <div>
+                  <SearchSelect
+                    name="applicantStatusId"
+                    label={
+                      <span>
+                        {" "}
+                        Profile Created
+
+                      </span>
+                    }
+                    value={
+                      (profileCreatedOptions || []).find(
+                        (item) => item.value === formUIProps?.queryParams?.isProfileCreated
+                      ) || { label: "All", value: "" }
+                    }
+
+                    onChange={(e) => {
+
+                      const updatedQueryParams = {
+                        ...formUIProps.queryParams,
+                        isProfileCreated: e.value,
+                        pageNumber: 1,
+                      };
+
+
+                      formUIProps.setQueryParams(updatedQueryParams);
+
+                      dispatch(fetchApplicantProfile(formUIProps.queryParams));
+
+
+                    }}
+
+
+                    options={[
+                      { label: "All", value: "" },
+                      ...(Array.isArray(profileCreatedOptions)
+                        ? profileCreatedOptions
+                        : []),
+                    ]}
+                  />
+                </div>
+              </div>
+
 
               <div className="">
                 <label> <span>
