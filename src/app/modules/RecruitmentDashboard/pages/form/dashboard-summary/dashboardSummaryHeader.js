@@ -246,28 +246,34 @@ export function DashboardSummaryHeader() {
                                 </h6>
                             </div>
 
-                            <div className="flex gap-x-1 items-center  ">
+                            {/* <div className="flex gap-x-1 items-center  ">
 
-                                {/* <div><Calendar className="w-3 h-3" /></div> */}
-                                {/* <label> <MoveRight className="w-4 h-4" /> </label> */}
+                   
                                 <label className="text-gray-500">Posted:</label>
                                 <label className="text-gray-500">{job.postedDate} | </label>
 
+                            </div> */}
+
+                            <div className="flex gap-x-1 items-center">
+                                {job.postedDate && (
+                                    <>
+                                        <label className="text-gray-500">Posted:</label>
+                                        <label className="text-gray-500">{job.postedDate} | </label>
+                                    </>
+                                )}
                             </div>
 
 
-                            <div className="flex gap-x-1 items-center">
 
-                                {/* <div><Calendar className="w-3 h-3 " /></div> */}
+                            {/* <div className="flex gap-x-1 items-center">
 
-                                {/* <label className="text-gray-500">Expiry:</label> */}
                                 <label
                                     className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"
                                         }`}
                                 >
-                                   Expiry:
+                                    Expiry:
                                 </label>
-                                {/* <label className="text-gray-500">{job.expiryDate} | </label> */}
+                              
                                 <label
                                     className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"
                                         }`}
@@ -275,7 +281,25 @@ export function DashboardSummaryHeader() {
                                     {job.expiryDate} |
                                 </label>
 
-                            </div>
+                            </div> */}
+
+                            <div className="flex gap-x-1 items-center">
+  {job.expiryDate && (
+    <>
+      <label
+        className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"}`}
+      >
+        Expiry:
+      </label>
+      <label
+        className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"}`}
+      >
+        {job.expiryDate} |
+      </label>
+    </>
+  )}
+</div>
+
 
 
                             <div className="flex gap-x-1 items-center ">
