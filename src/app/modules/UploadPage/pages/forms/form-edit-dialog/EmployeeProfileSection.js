@@ -80,7 +80,7 @@ export function EmployeeProfileSection({ downloadExcel, dispatch }) {
                       const file = event.currentTarget.files[0];
                       setFieldValue("file", file);
                     }}
-                    disabled={loading}
+                    isEdit={loading}
                     fileName={values?.file?.name}
                     inputFile={inputFile}
                     accept=".xlsx,.xls"

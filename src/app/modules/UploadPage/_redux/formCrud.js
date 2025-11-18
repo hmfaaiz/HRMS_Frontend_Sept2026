@@ -32,3 +32,7 @@ export function saveEmployeeDynasoftAttendanceSheetData(body) {
 export function saveEmployeeProfileData(body) {
     return axios.post(`${USERS_URL}/upload/save-employee-profile-data`, body);
 }
+
+export function saveEmployeeSalaryData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-salary-data`, body);
+}
