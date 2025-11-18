@@ -20,34 +20,6 @@ import { CircleMinus, CirclePlus } from "lucide-react";
 import { AmountInput } from "../../../../../_metronic/_partials/controls/forms/AmountInput";
 import { formatDates } from "../../../../utils/common";
 
-const validationSchema = Yup.object().shape({
-  applicationStatusId: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-  hr_remarks: Yup.string().required(VALIDATION_MESSAGES.required),
-  locationId: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-  monthlySalary: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-  appointmentTypeId: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-  jobPreferencesId: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-  dateOfJoining: Yup.string()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-  probationPeriod: Yup.number()
-    .nullable()
-    .oneOf(
-      [1, 2, 3, 4, 5, 6],
-      "Probation period must be between 1 to 6 months"
-    ),
-});
-
 export default function HRRecomendation() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -104,6 +76,75 @@ export default function HRRecomendation() {
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // For Location
   }, [dispatch]);
 
+  const finalizeForHiringValue = applicantStatusList?.find(
+    (s) => s.label === "Finalized for Hiring"
+  )?.value;
+
+  console.log(
+    "finalizeForHiringValuefinalizeForHiringValue",
+    finalizeForHiringValue
+  );
+  const validationSchema = Yup.object().shape({
+    applicationStatusId: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+
+    hr_remarks: Yup.string().required(VALIDATION_MESSAGES.required),
+
+    locationId: Yup.string()
+      .nullable()
+      .when("applicationStatusId", {
+        is: (val) => val == finalizeForHiringValue,
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
+        otherwise: Yup.string().nullable(),
+      }),
+
+    monthlySalary: Yup.string()
+      .nullable()
+      .when("applicationStatusId", {
+        is: (val) => val == finalizeForHiringValue,
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
+        otherwise: Yup.string().nullable(),
+      }),
+
+    appointmentTypeId: Yup.string()
+      .nullable()
+      .when("applicationStatusId", {
+        is: (val) => val == finalizeForHiringValue,
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
+        otherwise: Yup.string().nullable(),
+      }),
+
+    jobPreferencesId: Yup.string()
+      .nullable()
+      .when("applicationStatusId", {
+        is: (val) => val == finalizeForHiringValue,
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
+        otherwise: Yup.string().nullable(),
+      }),
+
+    dateOfJoining: Yup.string()
+      .nullable()
+      .when("applicationStatusId", {
+        is: (val) => val == finalizeForHiringValue,
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
+        otherwise: Yup.string().nullable(),
+      }),
+
+    probationPeriod: Yup.number()
+      .nullable()
+      .when("applicationStatusId", {
+        is: (val) => val == finalizeForHiringValue,
+        then: Yup.number()
+          .required("Probation period is required")
+          .oneOf(
+            [1, 2, 3, 4, 5, 6],
+            "Probation period must be between 1 to 6 months"
+          ),
+        otherwise: Yup.number().nullable(),
+      }),
+  });
+
   return (
     <div>
       <div className="">
@@ -136,14 +177,12 @@ export default function HRRecomendation() {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => {
-                       const payload = {
-                  ...values,
-                  dateOfJoining: values.dateOfJoining
-                    ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
-                    : null,
-
-                    }
-
+                      const payload = {
+                        ...values,
+                        dateOfJoining: values.dateOfJoining
+                          ? formatDates(values.dateOfJoining, "dd-MMM-yyyy")
+                          : null,
+                      };
 
                       handleSubmitHRRecommendation(payload);
                     }}
@@ -153,7 +192,8 @@ export default function HRRecomendation() {
                       errors,
                       touched,
                       values,
-                      setFieldValue,setFieldTouched,
+                      setFieldValue,
+                      setFieldTouched,
                     }) => (
                       <>
                         <Modal.Body className="overlay overlay-block cursor-default">
@@ -193,7 +233,12 @@ export default function HRRecomendation() {
                                     label={
                                       <span>
                                         Location{" "}
-                                        <span style={{ color: "red" }}>*</span>
+                                        {finalizeForHiringValue ==
+                                          values.applicationStatusId && (
+                                          <span style={{ color: "red" }}>
+                                            *
+                                          </span>
+                                        )}
                                       </span>
                                     }
                                     onChange={(e) => {
@@ -234,35 +279,44 @@ export default function HRRecomendation() {
                                     // }}
                                   />
                                 </div> */}
-                                     <div className="">
-                                                    <AmountInput
-                                                      field={{
-                                                        name: `monthlySalary`,
-                                                        value: values?.monthlySalary,
-                                                      }}
-                                                      form={{
-                                                        touched,
-                                                        errors,
-                                                        setFieldValue,
-                                                        setFieldTouched,
-                                                      }}
-                                                 
-                                                      placeholder="Enter salary"
-                                                      label={
-                                                        <span>
-                                                           Monthly Salary
-                                                          <span style={{ color: "red" }}>*</span>
-                                                        </span>
-                                                      }
-                                                    />
-                                                  </div>
+                                <div className="">
+                                  <AmountInput
+                                    field={{
+                                      name: `monthlySalary`,
+                                      value: values?.monthlySalary,
+                                    }}
+                                    form={{
+                                      touched,
+                                      errors,
+                                      setFieldValue,
+                                      setFieldTouched,
+                                    }}
+                                    placeholder="Enter salary"
+                                    label={
+                                      <span>
+                                        Monthly Salary
+                                        {finalizeForHiringValue ==
+                                          values.applicationStatusId && (
+                                          <span style={{ color: "red" }}>
+                                            *
+                                          </span>
+                                        )}
+                                      </span>
+                                    }
+                                  />
+                                </div>
                                 <div className="">
                                   <SearchSelect
                                     name="appointmentTypeId"
                                     label={
                                       <span>
                                         Appointment Type{" "}
-                                        <span style={{ color: "red" }}>*</span>
+                                        {finalizeForHiringValue ==
+                                          values.applicationStatusId && (
+                                          <span style={{ color: "red" }}>
+                                            *
+                                          </span>
+                                        )}
                                       </span>
                                     }
                                     onChange={(e) => {
@@ -292,7 +346,12 @@ export default function HRRecomendation() {
                                     label={
                                       <span>
                                         Job Preferences{" "}
-                                        <span style={{ color: "red" }}>*</span>
+                                        {finalizeForHiringValue ==
+                                          values.applicationStatusId && (
+                                          <span style={{ color: "red" }}>
+                                            *
+                                          </span>
+                                        )}
                                       </span>
                                     }
                                     onChange={(e) => {
@@ -318,7 +377,10 @@ export default function HRRecomendation() {
                                   <label>
                                     <span>
                                       Date of Joining{" "}
-                                      <span style={{ color: "red" }}>*</span>
+                                      {finalizeForHiringValue ==
+                                        values.applicationStatusId && (
+                                        <span style={{ color: "red" }}>*</span>
+                                      )}
                                     </span>
                                   </label>
                                   <Field
@@ -337,7 +399,11 @@ export default function HRRecomendation() {
 
                                 <div className="">
                                   <label>
-                                    <span>Probation Period</span>
+                                    Probation Period{" "}
+                                    {finalizeForHiringValue ===
+                                      values.applicationStatusId && (
+                                      <span style={{ color: "red" }}>*</span>
+                                    )}
                                   </label>
                                   <Field
                                     name="probationPeriod"
