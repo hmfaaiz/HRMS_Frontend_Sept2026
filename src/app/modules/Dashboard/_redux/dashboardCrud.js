@@ -211,3 +211,7 @@ export const getAllSalaryRoundingByFilters = async (body) => {
 export const getProfileDetailInfo = async (id) => {
   return await axios.get(`${USERS_URL}/settings/read-profile-detail-info/${id}`);
 };
+
+export const getAllApprovedFSEmp = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-approved-fs-employee/`,body);
+};

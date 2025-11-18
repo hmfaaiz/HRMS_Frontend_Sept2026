@@ -96,6 +96,7 @@ const initialDashboardState = {
   salaryRoundingPolicy: [],
   geoLocation : [],
   profileDetailInfo : [],
+  allFSApprovedEmp : [],
 };
 
 export const callTypes = {
@@ -398,6 +399,11 @@ export const dashboardSlice = createSlice({
 
     ProfileDetailInfoFetch: (state, action) => {
       state.profileDetailInfo = action.payload;
+   
+    },
+
+    FSApprovedEmpFetch: (state, action) => {
+      state.allFSApprovedEmp  = action.payload;
    
     },
 

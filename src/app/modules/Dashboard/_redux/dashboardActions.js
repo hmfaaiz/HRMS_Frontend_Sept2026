@@ -624,3 +624,18 @@ export const FetchProfileDetailInfo = (id
       toast.error("Something went wrong");
     });
 };
+
+export const FetchAllApprovedFSEmp = (body
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllApprovedFSEmp(body)
+    .then((response) => {
+
+      dispatch(actions.FSApprovedEmpFetch(response?.data?.data));
+    })
+    .catch((error) => {
+  
+      toast.error("Something went wrong");
+    });
+};
