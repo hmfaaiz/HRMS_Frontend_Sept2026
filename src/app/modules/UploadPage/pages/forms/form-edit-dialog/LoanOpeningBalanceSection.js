@@ -178,6 +178,7 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
                     const file = event.currentTarget.files[0];
                     setFieldValue("file", file);
                   }}
+                  isEdit={loading}
                   fileName={values?.file?.name}
                   inputFile={inputFile}
                   accept=".xlsx,.xls"
@@ -187,11 +188,11 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
 
               <button
                 type="submit"
-                disabled={false}
+                disabled={loading}
                 className="btn btn-primary btn-elevate"
               >
                 Save
-                {false && (
+                {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>

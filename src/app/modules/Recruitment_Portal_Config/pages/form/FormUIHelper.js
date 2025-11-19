@@ -22,7 +22,7 @@ export const initialVal = {
     title: true,
     firstName: true,
     middleName: false,
-    lastName: false,
+    lastName: true,
     dateOfBirth: false,
     nic_no: false,
     passportNo: false,
