@@ -143,6 +143,8 @@ export function FormEditForm({
   const [servicePeriod, setGetServicePeriod] = useState("");
   const [policyMode, setPolicyMode] = useState("");
   const [separateMode, setSeparateMode] = useState("");
+  const [empPayrollInfo, setEmpPayrollInfo] = useState("");
+  const [empSalInfo, setSalInfo] = useState("");
 
 
 
@@ -548,6 +550,17 @@ export function FormEditForm({
                       onChange={(e) => {
                         const value = e.value === "Select" ? null : Number(e.value);
                         setFieldValue("employeeId", value);
+                        setEmpPayrollInfo(
+    !e?.approvedForPayroll
+      ? "Note: Employee is not approved for payroll, so this employee will not be part of Final Settlement Process"
+      : "" // agar approved ho to blank
+  );
+
+  setSalInfo(
+    !(e?.hasSalary?.approved)
+      ? "Note: Salary Setup is not defined for selected employee, so this employee will not be part of Final Settlement Process"
+      : "" // agar salary approved ho to blank
+  );
 
 
                         const selectedEmp = activeEmployeeList?.find(
@@ -621,8 +634,10 @@ export function FormEditForm({
                 />
 
 
-
-
+<div>
+  <label className="form-feedBack">{empPayrollInfo && <p>{empPayrollInfo}</p>}</label>
+ <label className="form-feedBack"> {empSalInfo && <p>{empSalInfo}</p>}</label>
+</div>
 
                 <hr></hr>
                 {/* Personal Information */}

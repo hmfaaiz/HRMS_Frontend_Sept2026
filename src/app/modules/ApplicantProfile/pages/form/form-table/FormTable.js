@@ -109,20 +109,20 @@ export function FormTable() {
         minWidth: "150px",
       },
     },
-    {
-      dataField: "additional_summary",
-      text: "Address",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
-      }
-    },
+    // {
+    //   dataField: "additional_summary",
+    //   text: "Address",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "30px",
+    //   },
+    //   formatter: (cell) => {
+    //     if (!cell) return "";
+    //     return cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+    //   }
+    // },
 
 
 
@@ -178,7 +178,40 @@ export function FormTable() {
 
 
     {
-      dataField: "Job Completion",
+      dataField: "detailsApplicantVacancy.JobVacancy.JobName",
+      text: "Job Applied",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+    },
+
+    {
+      dataField: "detailsApplicantVacancy.applicationDate",
+      text: "Application Date ",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+    },
+
+    {
+      dataField: "detailsApplicantVacancy.ApplicationStatus.formName",
+      text: "Applicant Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+    },
+
+    {
+      dataField: "",
       text: "Job Completion",
       isDummyField: true,
       formatter: ActionsColumnFormatter,
