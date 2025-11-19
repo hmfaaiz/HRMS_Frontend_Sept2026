@@ -75,6 +75,7 @@ const jobVacancyEditSchema = Yup.object().shape({
   workExpTo: Yup.number()
   .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
+    .max(60, "Experience (to) should not be greater than 60.")
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
       Yup.ref("workExpFrom"),
@@ -344,6 +345,7 @@ export function FormEditForm({
                           <input
                             name="isReplacement"
                             type="checkbox"
+                            disabled={values.hiringReasonId === 427 ? false : true}
                             // onChange={handleChange}
                             onChange={() =>
                               setFieldValue(
@@ -365,7 +367,7 @@ export function FormEditForm({
                         </div>
                         <SearchSelect
                           name="replacementEmpId"
-                          isDisabled={isdataForRead || !values.isReplacement}
+                          isDisabled={isdataForRead || !values.isReplacement || Number(values.hiringReasonId) !== 427}
 
                           onChange={(e) => {
                             setFieldValue("replacementEmpId", e.value || null);
@@ -393,7 +395,7 @@ export function FormEditForm({
                           <div className="">
                                                                 <label>
                                                                   <span>
-                                                                    Work Experience From
+                                                                    Work Experience From (No. of Years)
                                                                     <span style={{ color: "red" }}>*</span>
                                                                   </span>
                                                                 </label>
@@ -411,7 +413,7 @@ export function FormEditForm({
                                                               <div className="">
                                                                 <label>
                                                                   <span>
-                                                                    Work Experience To
+                                                                    Work Experience To  (No. of Years)
                                                                     <span style={{ color: "red" }}>*</span>
                                                                   </span>
                                                                 </label>

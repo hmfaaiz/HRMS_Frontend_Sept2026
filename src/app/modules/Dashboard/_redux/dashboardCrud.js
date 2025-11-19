@@ -215,3 +215,7 @@ export const getProfileDetailInfo = async (id) => {
 export const getAllApprovedFSEmp = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-approved-fs-employee/`,body);
 };
+
+export const getAllTaxYearSetup = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-tax-year-setup/`);
+};
