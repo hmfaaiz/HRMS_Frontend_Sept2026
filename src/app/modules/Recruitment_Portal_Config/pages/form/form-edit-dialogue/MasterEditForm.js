@@ -62,7 +62,7 @@ const applicantProfileMandatoryField = [
   },
   {
     label: "Last Name",
-    disabled: false,
+    disabled: true,
     name: "lastName",
   },
   {

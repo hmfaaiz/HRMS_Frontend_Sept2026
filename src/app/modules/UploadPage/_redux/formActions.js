@@ -300,3 +300,146 @@ export const saveEmpoloyeeSalaryData = (
       });
     });
 };
+
+
+export const saveEmpoloyeeSocialSecurityData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeeSocialSecruityData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("Social Security Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+export const saveEmpoloyeeEOBIData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeeEOBIData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("EOBI Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+export const saveEmpoloyeeGratuityData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeeGratuityData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("Gratuity Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const saveEmpoloyeePFData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeePFData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("PF Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
