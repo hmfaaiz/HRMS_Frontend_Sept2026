@@ -1131,7 +1131,7 @@ export function FormEditForm({
                                             zIndex: 9999,
                                           }}
                                           isDisabled={
-                                            isdataForRead ||
+                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1266,7 +1266,7 @@ export function FormEditForm({
                                           dateFormat="dd-MMM-yyyy"
                                           name={`details_applicant_vacancy[${index}].applicationDate`}
                                           disabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.activeCV ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.activeCV ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1301,7 +1301,7 @@ export function FormEditForm({
                                           name={`details_applicant_vacancy[${index}].applicationStatusId`}
                                           className="form-control"
                                           style={{ width: "130px" }}
-                                          isDisabled={values.details_applicant_vacancy?.[index]?.activeCV ||
+                                          isDisabled={values.details_applicant_vacancy?.[index]?.activeCV ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
@@ -1365,6 +1365,7 @@ export function FormEditForm({
                                           className="form-control"
 
                                           // component={DatePickerField}
+                                      
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -1419,7 +1420,7 @@ export function FormEditForm({
                                           className="form-control"
                                           style={{ width: "130px" }}
                                           isDisabled={
-                                            isdataForRead ||
+                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1487,7 +1488,7 @@ export function FormEditForm({
                                           name={`details_applicant_vacancy[${index}].activeCV`}
                                           type="checkbox"
                                           disabled={
-                                            isdataForRead ||
+                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1533,7 +1534,7 @@ export function FormEditForm({
                                       <td className="text-right">
                                         <button
                                           disabled={
-                                            isdataForRead ||
+                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
