@@ -265,7 +265,6 @@ export const saveEmpoloyeeProfileData = (
     });
 };
 
-
 export const saveEmpoloyeeSalaryData = (
   formData,
   setLoading,
@@ -300,7 +299,6 @@ export const saveEmpoloyeeSalaryData = (
       });
     });
 };
-
 
 export const saveEmpoloyeeSocialSecurityData = (
   formData,
@@ -337,7 +335,6 @@ export const saveEmpoloyeeSocialSecurityData = (
     });
 };
 
-
 export const saveEmpoloyeeEOBIData = (
   formData,
   setLoading,
@@ -372,7 +369,6 @@ export const saveEmpoloyeeEOBIData = (
       });
     });
 };
-
 
 export const saveEmpoloyeeGratuityData = (
   formData,
@@ -409,17 +405,50 @@ export const saveEmpoloyeeGratuityData = (
     });
 };
 
-export const saveEmpoloyeePFData = (
-  formData,
-  setLoading,
-  clearForm
-) => async (dispatch) => {
+export const saveEmpoloyeePFData = (formData, setLoading, clearForm) => async (
+  dispatch
+) => {
   return requestFromServer
     .saveEmployeePFData(formData)
     .then((response) => {
       setLoading(false);
       clearForm();
       toast.success("PF Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const saveEmpoloyeeIncomeTaxData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeeIncomeTaxData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("IncomeTax Uploaded Successfully", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
