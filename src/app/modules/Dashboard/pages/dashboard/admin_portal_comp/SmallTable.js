@@ -9,7 +9,9 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
       if (PeriodType[data?.PeriodType]) {
         return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
       } else {
-        return `${data.dashlet_name} In Next ${data?.days} Days`;
+        return `${data.dashlet_name} In ${
+          data?.sequenceStatus == "0" ? "Next" : "Last"
+        } ${data?.days} Days`;
       }
     } else {
       return data?.dashlet_name;
@@ -48,10 +50,11 @@ const SingleCard = ({ data, setSmallTableModalData }) => {
               </div>
               <div className={`text-sm font-semibold m-0 ${theme}`}>
                 <span>
-                  {person?.main_value
+                  {
+                    person?.main_value
                     // ? format(new Date(person?.main_value), "dd-MMM-yyyy")
                     // : ""
-                    }
+                  }
                 </span>
               </div>
             </div>
