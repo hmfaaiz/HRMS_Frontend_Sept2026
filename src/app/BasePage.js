@@ -370,6 +370,9 @@ import("./modules/FinalSettlementReport/pages/index"))
 const PayrollIncomeTaxReport = lazy(()=>
 import("./modules/PayrollIncomeTaxReport/pages/index"))
 
+const PayrollGratuityReport = lazy(()=>
+import("./modules/PayrollGratuityReport/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -511,6 +514,7 @@ const ROUTES = {
   app_user : AttAppUser,
   final_settlement_report : FInalSettlementReport,
   income_tax_report : PayrollIncomeTaxReport,
+  gratuity_report : PayrollGratuityReport,
 };
 
 export default function BasePage() {
