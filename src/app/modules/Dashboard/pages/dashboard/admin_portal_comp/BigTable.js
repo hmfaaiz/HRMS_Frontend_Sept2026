@@ -75,7 +75,10 @@ export function BigTable({ data, setBigTableModalData }) {
 
           // For all other text fields
           return (
-            <div className={cell?.length > 25 ? "truncate w-36" : "truncate"} title={cell}>
+            <div
+              className={cell?.length > 25 ? "truncate w-36" : "truncate"}
+              title={cell}
+            >
               {cell || ""}
             </div>
           );
@@ -89,7 +92,9 @@ export function BigTable({ data, setBigTableModalData }) {
       if (PeriodType[data?.PeriodType]) {
         return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
       } else {
-        return `${data.dashlet_name} In Next ${data?.days} Days`;
+        return `${data.dashlet_name} In ${
+          data?.sequenceStatus == "0" ? "Next" : "Last"
+        } ${data?.days} Days`;
       }
     } else {
       return data?.dashlet_name;
