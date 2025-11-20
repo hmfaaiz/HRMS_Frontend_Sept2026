@@ -51,3 +51,7 @@ export function saveEmployeeGratuityData(body) {
 export function saveEmployeePFData(body) {
     return axios.post(`${USERS_URL}/upload/save-employee-pf-data`, body);
 }
+
+export function saveEmployeeIncomeTaxData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-incometax-data`, body);
+}
