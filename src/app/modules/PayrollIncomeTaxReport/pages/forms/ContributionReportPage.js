@@ -20,10 +20,12 @@ import { FetchAllTaxYearSetup } from "../../../Dashboard/_redux/dashboardActions
 export function ContributionReportPage() {
   const dispatch = useDispatch();
     const [activeKey, setActiveKey] = useState("0");
-  const { dashboard, listLoading, pdfLoading } = useSelector((state) => ({
+  const { dashboard, listLoading, pdfLoading,monththPdf,pdf } = useSelector((state) => ({
     dashboard: state.dashboard,
-    listLoading: state.contribution_report.listLoading,
-    pdfLoading: state.contribution_report.pdfLoading,
+    listLoading: state.income_tax_report.listLoading,
+    pdfLoading: state.income_tax_report.pdfLoading,
+    monththPdf: state.income_tax_report.monththPdf,
+    pdf: state.income_tax_report.pdf,
   }));
 
   //Get all Dropdown data from server on page load and set it in state
@@ -93,6 +95,8 @@ export function ContributionReportPage() {
           <FormFilter
             loading={listLoading}
             pdfLoading={pdfLoading}
+            pdf={pdf}
+            monththPdf={monththPdf}
             dispatch={dispatch}
           />
               </>

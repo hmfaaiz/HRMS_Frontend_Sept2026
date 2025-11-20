@@ -42,7 +42,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams;
 };
 
-export function FormFilter({ loading, dispatch, pdfLoading }) {
+export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
   const FormUIContext = useFormUIContext();
 
   //Get All dropdown data from state
@@ -124,20 +124,20 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     };
   };
 
-  //Trugger request to download PDF of data according to filters
-  const getPFPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(actions.fetchAllPFContributionSummaryForPdf(newQueryParams.filter, document, labels));
-  };
-
-
 
 
   const getEOBIPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
     dispatch(actions.fetchAllEOBIContributionSummaryForPdf(newQueryParams.filter, document, labels));
+  };
+
+
+
+  const getPayrollMonthWisePdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchAllIncomeTaxReportByMonthForPdf(newQueryParams.filter, document, labels));
   };
 
   useEffect(() => {
@@ -155,11 +155,11 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
   ]
 
   const taxYearOptions = useMemo(() => {
-  return [
-    { label: "Select", value: "" },
-    ...(allTaxYearSetupList || []), // array of tax year objects
-  ];
-}, [allTaxYearSetupList]);
+    return [
+      { label: "Select", value: "" },
+      ...(allTaxYearSetupList || []), // array of tax year objects
+    ];
+  }, [allTaxYearSetupList]);
   return (
     <>
       <Formik
@@ -392,7 +392,17 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           ]}
                         />
                       </div>
+                    </div>
 
+                    <hr></hr>
+                    <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
+                      <div>
+
+                    
+                      
+                      <h6 className="font-bold mb-0 text-primary">
+                        Income Tax Computation Report
+                      </h6>
                       <div className="col-span-1">
                         <Field
                           name="taxYearSetupId"
@@ -409,9 +419,9 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                         />
                       </div>
 
+  </div>
 
-
-                      <div className="col-span-2">
+                      <div className="col-span-4 ">
 
 
                         <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
@@ -422,7 +432,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                                 getEOBIPdf(values);
                               }
                             }}
-                            disabled={pdfLoading || !values.taxYearSetupId}
+                            disabled={pdfLoading || !values.taxYearSetupId || !values.subsidiaryId}
                             className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
@@ -432,7 +442,9 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             Income Tax
 
                             <Download className="w-4 h-4 ml-2" />
-
+ {pdf && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
                           </button>
 
                         </div>
@@ -444,32 +456,38 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                     <hr></hr>
                     <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
 
+                      <div>
 
 
+                        <h6 className="font-bold mb-0 text-primary">
+                          Monthly Income Tax Detail
+                        </h6>
 
-                      {/* Date from Field Start */}
-                      <div className="">
-                        <Field
-                          name="monthId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value =
-                              e.value == "--Select--" ? "" : Number(e.value);
-                            setFieldValue("monthId", value);
-                          }}
-                          label={
-                            <span>
-                              {" "}
-                              Payroll Month<span style={{ color: "red" }}>*</span>
-                            </span>
-                          }
-                          value={
-                            allPayrollMonthMap?.get(values?.monthId || "") || ""
-                          }
-                          autoComplete="off"
-                          options={allPayrollMonthYearList}
-                        />
+                        {/* Date from Field Start */}
+                        <div className="">
+                          <Field
+                            name="monthId"
+                            component={SearchSelect}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const value =
+                                e.value == "--Select--" ? "" : Number(e.value);
+                              setFieldValue("monthId", value);
+                            }}
+                            label={
+                              <span>
+                                {" "}
+                                Payroll Month<span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                            value={
+                              allPayrollMonthMap?.get(values?.monthId || "") || ""
+                            }
+                            autoComplete="off"
+                            options={allPayrollMonthYearList}
+                          />
+                        </div>
+
                       </div>
 
                       <div className="col-span-4 ">
@@ -478,7 +496,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             onClick={() => {
                               if (!pdfLoading) {
                                 if (values.monthId) {
-                                  getEOBIPdf(values);
+                                  getPayrollMonthWisePdf(values);
                                 } else {
                                   toast(
                                     "Payroll month is required!"
@@ -487,7 +505,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                               }
                             }}
-                            disabled={pdfLoading}
+                            disabled={pdfLoading || !values.monthId || !values.subsidiaryId}
                             className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
@@ -497,6 +515,9 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             Income Tax Detail
 
                             <Download className="w-4 h-4 ml-2" />
+                              {monththPdf && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
 
                           </button>
 

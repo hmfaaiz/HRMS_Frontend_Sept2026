@@ -9,15 +9,9 @@ export async function getAllEOBIContributionSummaryForPdf(body) {
   });
 }
 
-export async function getAllSocialSecurityContributionSummaryForPdf(body) {
-  return axios.post(`${USERS_URL}/contribution_report/read-all-social-security-contribution-summary-pdf-data`, body,{
-    responseType:'arraybuffer'
-  });
-}
 
-
-export async function getAllPFContributionSummaryForPdf(body) {
-  return axios.post(`${USERS_URL}/contribution_report/read-all-pf-contribution-summary-pdf-data`, body,{
+export async function getAllIncomeTaxReportByMonthForPdf(body) {
+  return axios.post(`${USERS_URL}/income_tax_report/read-all-income-tax-report-by-month`, body,{
     responseType:'arraybuffer'
   });
 }

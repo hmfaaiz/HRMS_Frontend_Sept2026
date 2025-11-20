@@ -11,13 +11,18 @@ const initialState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
-    pdfLoading: false
+    pdfLoading: false,
+    pdf:false,
+    monththPdf:false
+
 };
 
 export const callTypes = {
     list: "list",
     action: "action",
-    pdf: "pdf"
+    pdf: "pdf",
+    pdfLoading:"pdfLoading",
+    monththPdf:"monththPdf"
 };
 
 export const PayrollIncomeTaxReportSlice = createSlice({
@@ -26,12 +31,14 @@ export const PayrollIncomeTaxReportSlice = createSlice({
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
+            state.monththPdf=false;
+            state.pdf=false;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
             } 
             else if(action.payload.callType === callTypes.pdf){
                 state.pdfLoading = false;
-            }
+            }   
             else {
                 state.actionsLoading = false;
             }
@@ -43,13 +50,31 @@ export const PayrollIncomeTaxReportSlice = createSlice({
             } 
             else if(action.payload.callType === callTypes.pdf){
                 state.pdfLoading = true;
-            } else {
+                state.pdf = true;
+                state.monththPdf = false;
+            } 
+            
+            else if(action.payload.callType === callTypes.monththPdf){
+                state.pdfLoading = true;
+                state.pdf = false;
+                state.monththPdf = true;
+            }
+             else {
                 state.actionsLoading = true;
             }
         },
         pdfFetched: (state, action) => {
+            state.pdf = false;
+        }, 
+        
+        monththPdfFetched: (state, action) => {
+            state.monththPdf = false;
+        }, 
+        
+        pdfLoadingFetched: (state, action) => {
             state.pdfLoading = false;
-        },
+        }, 
+        
        
     },
 });
