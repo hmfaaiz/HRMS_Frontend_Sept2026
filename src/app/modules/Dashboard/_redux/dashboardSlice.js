@@ -97,6 +97,7 @@ const initialDashboardState = {
   geoLocation : [],
   profileDetailInfo : [],
   allFSApprovedEmp : [],
+  allTaxYearSetupList : [],
 };
 
 export const callTypes = {
@@ -404,6 +405,11 @@ export const dashboardSlice = createSlice({
 
     FSApprovedEmpFetch: (state, action) => {
       state.allFSApprovedEmp  = action.payload;
+   
+    },
+
+    TaxYearSetupFetch: (state, action) => {
+      state.allTaxYearSetupList  = action.payload;
    
     },
 
