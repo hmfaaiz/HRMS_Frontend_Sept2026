@@ -264,7 +264,7 @@ export function FormFIlter({ listLoading, user }) {
                     onBlur={handleBlur}
                     value={values.searchText}
                     onChange={(e) => {
-                      setFieldValue("searchText", e.target.value.trim());
+                      setFieldValue("searchText", e.target.value);
                       handleSubmit();
                     }}
                   />

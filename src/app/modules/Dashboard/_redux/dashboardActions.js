@@ -639,3 +639,18 @@ export const FetchAllApprovedFSEmp = (body
       toast.error("Something went wrong");
     });
 };
+
+export const FetchAllTaxYearSetup = (
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllTaxYearSetup()
+    .then((response) => {
+
+      dispatch(actions.TaxYearSetupFetch(response?.data?.data));
+    })
+    .catch((error) => {
+  
+      toast.error("Something went wrong");
+    });
+};

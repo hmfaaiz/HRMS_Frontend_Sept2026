@@ -367,6 +367,8 @@ import("./modules/Attendance_App_User/pages/index"))
 
 const FInalSettlementReport = lazy(()=>
 import("./modules/FinalSettlementReport/pages/index"))
+const PayrollIncomeTaxReport = lazy(()=>
+import("./modules/PayrollIncomeTaxReport/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -508,6 +510,7 @@ const ROUTES = {
   attendance_summary : AttendanceSummary,
   app_user : AttAppUser,
   final_settlement_report : FInalSettlementReport,
+  income_tax_report : PayrollIncomeTaxReport,
 };
 
 export default function BasePage() {
@@ -516,7 +519,7 @@ export default function BasePage() {
 
   const auth = useSelector(({ auth }) => auth, shallowEqual);
   const UserAccess = auth?.userAccess;
-
+console.log("UserAccess in BasePage: ", UserAccess);
   const SettingsAccess = auth?.userAccess?.Settings;
   // );
   return (
