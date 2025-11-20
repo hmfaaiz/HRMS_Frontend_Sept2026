@@ -20,6 +20,7 @@ import { EmployeeSocialSecuritySection } from "../form-edit-dialog/EmployeeSocia
 import { EmployeeEOBISection } from "../form-edit-dialog/EmployeeEOBISection";
 import { EmployeeGratuitySection } from "../form-edit-dialog/EmployeeGratuitySection";
 import { EmployeePFSection } from "../form-edit-dialog/EmployeePFSection";
+import { EmployeeRosterSection } from "../form-edit-dialog/EmployeeRosterSection";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -159,6 +160,11 @@ export function FormCard() {
         />
         {/* Employee PF Contribution opening */}
         <EmployeePFSection downloadExcel={downloadExcel} dispatch={dispatch} />
+        {/* Employee Roster */}
+        <EmployeeRosterSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
       </div>
     </>
     // </>
