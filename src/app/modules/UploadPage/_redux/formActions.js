@@ -472,3 +472,38 @@ export const saveEmpoloyeeIncomeTaxData = (
       });
     });
 };
+
+export const saveEmpoloyeeRosterData = (
+  formData,
+  setLoading,
+  clearForm
+) => async (dispatch) => {
+  return requestFromServer
+    .saveEmployeeRosterData(formData)
+    .then((response) => {
+      setLoading(false);
+      clearForm();
+      toast.success("Roster Uploaded Successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      error.clientMessage = "Some Error Occured. Try again later";
+      toast.error(error?.response?.data?.message || error?.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

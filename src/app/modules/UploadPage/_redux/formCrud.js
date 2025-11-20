@@ -55,3 +55,7 @@ export function saveEmployeePFData(body) {
 export function saveEmployeeIncomeTaxData(body) {
     return axios.post(`${USERS_URL}/upload/save-employee-incometax-data`, body);
 }
+
+export function saveEmployeeRosterData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-roster-data`, body);
+}
