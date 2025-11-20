@@ -48,7 +48,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
   locationId: Yup.string()
-  .nullable().required(VALIDATION_MESSAGES.required),
+    .nullable().required(VALIDATION_MESSAGES.required),
   jobPreferenceId: Yup.number()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -58,7 +58,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
   hiringReasonId: Yup.string()
-  .nullable().required(VALIDATION_MESSAGES.required),
+    .nullable().required(VALIDATION_MESSAGES.required),
 
   desireDateOfApp: Yup.date()
     .nullable()
@@ -67,13 +67,13 @@ const jobVacancyEditSchema = Yup.object().shape({
 
 
   workExpFrom: Yup.number()
-  .nullable()
+    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
 
     .required(VALIDATION_MESSAGES.required),
 
   workExpTo: Yup.number()
-  .nullable()
+    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
     .max(60, "Experience (to) should not be greater than 60.")
     .required(VALIDATION_MESSAGES.required)
@@ -85,8 +85,8 @@ const jobVacancyEditSchema = Yup.object().shape({
 
 
   preferredQualificationId: Yup.number()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
 
   salaryRangeFrom: Yup.number()
@@ -325,6 +325,10 @@ export function FormEditForm({
                           isDisabled={isdataForRead}
                           onChange={(e) => {
                             setFieldValue("hiringReasonId", e.value || null);
+                             setFieldValue(
+                                "isReplacement",
+                                false
+                              )
                           }}
                           value={
                             dashboard?.allHiringReasonList?.find(
@@ -392,41 +396,41 @@ export function FormEditForm({
                         />
                       </div>
 
-                          <div className="">
-                                                                <label>
-                                                                  <span>
-                                                                    Work Experience From (No. of Years)
-                                                                    <span style={{ color: "red" }}>*</span>
-                                                                  </span>
-                                                                </label>
-                                                                <Field
-                                                                  name="workExpFrom"
-                                                                  component={Input}
-                                                                  placeholder="Enter work experience (from)"
-                                                                  type="number"
-                                                                  onInput={(e) => {
-                                                                    e.target.value = amountLimitDynamic(e.target.value, 2);
-                                                                  }}
-                                                                />
-                                                              </div>
-                                            
-                                                              <div className="">
-                                                                <label>
-                                                                  <span>
-                                                                    Work Experience To  (No. of Years)
-                                                                    <span style={{ color: "red" }}>*</span>
-                                                                  </span>
-                                                                </label>
-                                                                <Field
-                                                                  name="workExpTo"
-                                                                  component={Input}
-                                                                  placeholder="Enter work experience (to)"
-                                                                  type="number"
-                                                                  onInput={(e) => {
-                                                                    e.target.value = amountLimitDynamic(e.target.value, 2);
-                                                                  }}
-                                                                />
-                                                              </div>
+                      <div className="">
+                        <label>
+                          <span>
+                            Work Experience From (No. of Years)
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="workExpFrom"
+                          component={Input}
+                          placeholder="Enter work experience (from)"
+                          type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(e.target.value, 2);
+                          }}
+                        />
+                      </div>
+
+                      <div className="">
+                        <label>
+                          <span>
+                            Work Experience To  (No. of Years)
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        </label>
+                        <Field
+                          name="workExpTo"
+                          component={Input}
+                          placeholder="Enter work experience (to)"
+                          type="number"
+                          onInput={(e) => {
+                            e.target.value = amountLimitDynamic(e.target.value, 2);
+                          }}
+                        />
+                      </div>
 
                     </div>
 
@@ -538,7 +542,12 @@ export function FormEditForm({
                           minDate={
                             values?.jobPostingDateFrom
                               ? new Date(values.jobPostingDateFrom)
-                              : new Date()
+                              // : new Date()
+                              : (() => {
+                                const tomorrow = new Date();
+                                tomorrow.setDate(tomorrow.getDate() + 1); // current date + 1 day
+                                return tomorrow;
+                              })()
                           }
 
                         />
@@ -591,7 +600,7 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("jobSummary", e);
                       }}
-                   
+
 
                     />
                   </div>
