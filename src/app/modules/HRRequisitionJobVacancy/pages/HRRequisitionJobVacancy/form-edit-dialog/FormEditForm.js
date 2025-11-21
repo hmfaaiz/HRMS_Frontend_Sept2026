@@ -82,6 +82,7 @@ const jobVacancyEditSchema = Yup.object().shape({
   workExpTo: Yup.number()
    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
+    .max(60, "Experience (to) should not be greater than 60.")
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
       Yup.ref("workExpFrom"),
