@@ -497,7 +497,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                       <div>
 
                         <h6 className="font-bold mb-0 text-primary">
-                          Contribution Report
+                          Computation Report
                         </h6>
 
                       </div>
