@@ -36,3 +36,26 @@ export function saveEmployeeProfileData(body) {
 export function saveEmployeeSalaryData(body) {
     return axios.post(`${USERS_URL}/upload/save-employee-salary-data`, body);
 }
+
+export function saveEmployeeSocialSecruityData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-social-security-data`, body);
+}
+
+export function saveEmployeeEOBIData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-eobi-data`, body);
+}
+export function saveEmployeeGratuityData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-gratuity-data`, body);
+}
+
+export function saveEmployeePFData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-pf-data`, body);
+}
+
+export function saveEmployeeIncomeTaxData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-incometax-data`, body);
+}
+
+export function saveEmployeeRosterData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-roster-data`, body);
+}

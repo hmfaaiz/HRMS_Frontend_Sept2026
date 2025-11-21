@@ -7,7 +7,7 @@ import {
   Legend,
   PointElement,
   LineElement,
-  Filler
+  Filler,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import { PeriodType } from "../EmpUIHelper";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(ChartDataLabels);
-ChartJS.register(PointElement, LineElement , Filler);
+ChartJS.register(PointElement, LineElement, Filler);
 
 // Optimized, non-repeating color palette
 const colorPalette = [
@@ -30,7 +30,6 @@ const colorPalette = [
   "#5bc0de",
   "#5cb85c",
 ];
-
 
 // const getOptions = (chartType, chartId) => {
 //   const showGrid =
@@ -303,7 +302,9 @@ const ChartData = ({ data }) => {
       if (PeriodType[data?.PeriodType]) {
         return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
       } else {
-        return `${data.dashlet_name} In Next ${data?.days} Days`;
+        return `${data.dashlet_name} In ${
+          data?.sequenceStatus == "0" ? "Next" : "Last"
+        } ${data?.days} Days`;
       }
     } else {
       return data?.dashlet_name;
@@ -341,7 +342,9 @@ const ChartData = ({ data }) => {
         <div
           style={{
             width:
-              chartType === "pie" || chartType === "doughnut" ? "180px" : "100%",
+              chartType === "pie" || chartType === "doughnut"
+                ? "180px"
+                : "100%",
             height:
               chartType === "pie" || chartType === "doughnut"
                 ? "180px"
@@ -352,7 +355,9 @@ const ChartData = ({ data }) => {
               chartType !== "pie" || chartType !== "doughnut" ? "end" : "",
             position: "relative",
             margin:
-              chartType === "pie" || chartType === "doughnut" ? "0px auto" : "0px",
+              chartType === "pie" || chartType === "doughnut"
+                ? "0px auto"
+                : "0px",
           }}
           className="mb-2"
         >
