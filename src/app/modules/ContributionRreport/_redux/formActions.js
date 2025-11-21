@@ -95,3 +95,100 @@ export const fetchAllPFContributionSummaryForPdf = (filter, document, labels = {
       });
     });
 };
+
+
+
+
+export const fetchAllProvidentFundComputationReportForPdf= (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.pdf }));
+  return requestFromServer.getAllProvidentFundComputationReportForPdf({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'contribution_provident_fund_report.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.pdfFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't generate PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+      toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+export const fetchAllEOBIComputationReportForPdf= (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.pdf }));
+  return requestFromServer.getAllEOBIComputationReportForPdf({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'contribution_eobi_computation_report.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.pdfFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't generate PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+      toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+export const fetchAllSocialSecurityReportForPdf= (filter, document, labels = {}) => async (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.pdf }));
+  return requestFromServer.getAllSocialSecurityReportForPdf({ ...filter, labels })
+    .then((res) => {
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Trigger file download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'contribution_social_security_computation_report.pdf');
+      document.body.appendChild(link);
+      link.click();
+      dispatch(actions.pdfFetched({}));
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't generate PDF";
+      dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+      toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};

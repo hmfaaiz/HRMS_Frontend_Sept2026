@@ -462,6 +462,10 @@ export function FormEditForm({
                           isDisabled={isdataForRead}
                           onChange={(e) => {
                             setFieldValue("hiringReasonId", e.value || null);
+                             setFieldValue(
+                                "isReplacement",
+                                false
+                              )
                           }}
                           value={
                             dashboard?.allHiringReasonList?.find(
@@ -482,6 +486,7 @@ export function FormEditForm({
                           <input
                             name="isReplacement"
                             type="checkbox"
+                             disabled={values.hiringReasonId === 427 ? false : true}
                             // onChange={handleChange}
                             onChange={() =>
                               setFieldValue(
@@ -503,7 +508,8 @@ export function FormEditForm({
                         </div>
                         <SearchSelect
                           name="replacementEmpId"
-                          isDisabled={isdataForRead || !values.isReplacement}
+                          // isDisabled={isdataForRead || !values.isReplacement}
+                            isDisabled={isdataForRead || !values.isReplacement || Number(values.hiringReasonId) !== 427}
 
                           onChange={(e) => {
                             setFieldValue("replacementEmpId", e.value || null);
@@ -532,7 +538,7 @@ export function FormEditForm({
                        <div className="">
                                           <label>
                                             <span>
-                                              Work Experience From
+                                              Work Experience From (No. of Years)
                                               <span style={{ color: "red" }}>*</span>
                                             </span>
                                           </label>
@@ -550,7 +556,7 @@ export function FormEditForm({
                                         <div className="">
                                           <label>
                                             <span>
-                                              Work Experience To
+                                              Work Experience To  (No. of Years)
                                               <span style={{ color: "red" }}>*</span>
                                             </span>
                                           </label>
@@ -672,10 +678,20 @@ export function FormEditForm({
                           dateFormat="dd-MMM-yyyy"
                           name="desireDateOfApp"
                           autoComplete="off"
-                          minDate={
-                            values?.jobPostingDateFrom
-                              ? new Date(values.jobPostingDateFrom)
-                              : new Date()
+                          // minDate={
+                          //   values?.jobPostingDateFrom
+                          //     ? new Date(values.jobPostingDateFrom)
+                          //     : new Date()
+                          // }
+
+                           minDate={
+                            (() => {
+                              const baseDate = values?.jobPostingDateFrom
+                                ? new Date(values.jobPostingDateFrom)
+                                : new Date();
+                              baseDate.setDate(baseDate.getDate() + 1); // add 1 day
+                              return baseDate;
+                            })()
                           }
 
                         />

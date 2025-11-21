@@ -52,7 +52,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     allEmployeeGradeList,
     allDept,
     allLocationChildMenus,
-    allDesignations,allPayrollMonthYearList,
+    allDesignations, allPayrollMonthYearList,
   } = useSelector((state) => state.dashboard);
 
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
@@ -148,6 +148,28 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     }
   }, [allSubsidiaryList]);
 
+
+  
+  const getProvidentFundComputationPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchAllProvidentFundComputationReportForPdf(newQueryParams.filter, document, labels));
+  };
+
+  
+  const getEOBIComputationPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchAllEOBIComputationReportForPdf(newQueryParams.filter, document, labels));
+  };
+  
+  const getSocialSecurityReportForPdf = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchAllSocialSecurityReportForPdf(newQueryParams.filter, document, labels));
+  };
+
+
   const employeeTypeOptions = [
     { value: null, label: "All" },
     { value: 0, label: "Inactive", },
@@ -196,12 +218,12 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             dispatch(fetchAllDept(value));
                             setFieldValue("employeeId", "");
                             setFieldValue("departmentId", "");
-                           dispatch(
-                                  fetchAllPayrollMonthYearList(
-                                    { subsidiaryId: value, employeeId: null },
-                                    "allPayrollMonthYearList"
-                                  )
-                                );
+                            dispatch(
+                              fetchAllPayrollMonthYearList(
+                                { subsidiaryId: value, employeeId: null },
+                                "allPayrollMonthYearList"
+                              )
+                            );
 
                           }}
                           // error={errors?.subsidiaryId}
@@ -217,12 +239,12 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
                             console.log("fetchAllPayrollMonthYearList1111")
-                             dispatch(
-                                  fetchAllPayrollMonthYearList(
-                                    { subsidiaryId: value, employeeId: null },
-                                   "allPayrollMonthYearList"
-                                  )
-                                );
+                            dispatch(
+                              fetchAllPayrollMonthYearList(
+                                { subsidiaryId: value, employeeId: null },
+                                "allPayrollMonthYearList"
+                              )
+                            );
                           }}
                         />
                       </div>
@@ -385,8 +407,20 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           ]}
                         />
                       </div>
-                      {/* Employee Field End */}
-                      <div className="col-span-3">
+                   
+                    </div>
+
+
+                    <hr></hr>
+                    <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
+                      <div>
+
+                        <h6 className="font-bold mb-0 text-primary">
+                          Summary Report
+                        </h6>
+
+                      </div>
+                      <div className="col-span-4">
 
 
                         <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
@@ -408,10 +442,10 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                             <Download className="w-4 h-4 ml-2" />
 
-                          </button>  
-                           <button
-                           
-                             onClick={() => {
+                          </button>
+                          <button
+
+                            onClick={() => {
                               if (!pdfLoading) {
                                 delete values.monthId
                                 getSocialSecurityPdf(values);
@@ -449,54 +483,145 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           </button>
                         </div>
                       </div>
+
+
+
+
+
                     </div>
 
+
+
+  <hr></hr>
+                    <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
+                      <div>
+
+                        <h6 className="font-bold mb-0 text-primary">
+                          Contribution Report
+                        </h6>
+
+                      </div>
+                      <div className="col-span-4">
+
+
+                        <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
+                          <button
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                delete values.monthId
+                                getProvidentFundComputationPdf(values);
+                              }
+                            }}
+                            disabled={pdfLoading}
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                            Provident Fund Computation Report
+
+                            <Download className="w-4 h-4 ml-2" />
+
+                          </button>
+                          <button
+
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                delete values.monthId
+                                getEOBIComputationPdf(values);
+                              }
+                            }}
+                            disabled={pdfLoading}
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                           EOBI Computation Report
+
+                            <Download className="w-4 h-4 ml-2" />
+
+                          </button>   <button
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                delete values.monthId
+                                getSocialSecurityReportForPdf(values);
+                              }
+                            }}
+                            disabled={pdfLoading}
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                           Social Security Computation Report
+
+                            <Download className="w-4 h-4 ml-2" />
+
+                          </button>
+                        </div>
+                      </div>
+
+
+
+
+
+                    </div>
 
 
                     <hr></hr>
                     <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
 
+ <div>
 
+                        <h6 className="font-bold mb-0 text-primary">
+                          Monthly Contribution Detail Report
+                        </h6>
+
+                    
 
 
                       {/* Date from Field Start */}
                       <div className="">
-                                    <Field
-                                      name="monthId"
-                                      component={SearchSelect}
-                                      onBlur={handleBlur}
-                                      onChange={(e) => {
-                                        const value =
-                                          e.value == "--Select--" ? "" : Number(e.value);
-                                        setFieldValue("monthId", value);
-                                      }}
-                                      label={
-                                        <span>
-                                          {" "}
-                                          Payroll Month<span style={{ color: "red" }}>*</span>
-                                        </span>
-                                      }
-                                      value={
-                                        allPayrollMonthMap?.get(values?.monthId || "") || ""
-                                      }
-                                      autoComplete="off"
-                                      options={allPayrollMonthYearList}
-                                    />
-                                  </div>
-
-                      <div className="col-span-4 ">
+                        <Field
+                          name="monthId"
+                          component={SearchSelect}
+                          onBlur={handleBlur}
+                          onChange={(e) => {
+                            const value =
+                              e.value == "--Select--" ? "" : Number(e.value);
+                            setFieldValue("monthId", value);
+                          }}
+                          label={
+                            <span>
+                              {" "}
+                              Payroll Month<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
+                          value={
+                            allPayrollMonthMap?.get(values?.monthId || "") || ""
+                          }
+                          autoComplete="off"
+                          options={allPayrollMonthYearList}
+                        />
+                      </div>
+  </div>
+                      <div className="col-span-5 ">
                         <div className="flex items-center gap-2  p-1 rounded-sm justify-end ">
                           <button
                             onClick={() => {
                               if (!pdfLoading) {
-                                if(values.monthId){
-                                    getEOBIPdf(values);
-                                }else{
-                                   toast(
-                                        "Payroll month is required!"
-                                      );
+                                if (values.monthId) {
+                                  getEOBIPdf(values);
+                                } else {
+                                  toast(
+                                    "Payroll month is required!"
+                                  );
                                 }
-                             
+
                               }
                             }}
                             disabled={pdfLoading}
@@ -518,15 +643,15 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               // }
 
 
-                               if (!pdfLoading) {
-                                if(values.monthId){
-                                    getSocialSecurityPdf(values);
-                                }else{
-                                   toast(
-                                        "Payroll month is required!"
-                                      );
+                              if (!pdfLoading) {
+                                if (values.monthId) {
+                                  getSocialSecurityPdf(values);
+                                } else {
+                                  toast(
+                                    "Payroll month is required!"
+                                  );
                                 }
-                             
+
                               }
                             }}
                             disabled={pdfLoading}
@@ -545,17 +670,17 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                           <button
                             onClick={() => {
-                            
 
-                               if (!pdfLoading) {
-                                if(values.monthId){
-                                    getPFPdf(values);
-                                }else{
-                                   toast(
-                                        "Payroll month is required!"
-                                      );
+
+                              if (!pdfLoading) {
+                                if (values.monthId) {
+                                  getPFPdf(values);
+                                } else {
+                                  toast(
+                                    "Payroll month is required!"
+                                  );
                                 }
-                             
+
                               }
                             }}
                             disabled={pdfLoading}

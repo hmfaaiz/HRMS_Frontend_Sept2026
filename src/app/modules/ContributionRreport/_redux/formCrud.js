@@ -21,3 +21,25 @@ export async function getAllPFContributionSummaryForPdf(body) {
     responseType:'arraybuffer'
   });
 }
+
+
+
+export async function getAllProvidentFundComputationReportForPdf(body) {
+  return axios.post(`${USERS_URL}/contribution_report/read-all-providentfund-computation-report-pdf-data`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
+
+export async function getAllEOBIComputationReportForPdf(body) {
+  return axios.post(`${USERS_URL}/contribution_report/read-all-eobi-computation-report-pdf-data`, body,{
+    responseType:'arraybuffer'
+  });
+}
+
+
+export async function getAllSocialSecurityReportForPdf(body) {
+  return axios.post(`${USERS_URL}/contribution_report/read-all-social-security-computation-pdf-data`, body,{
+    responseType:'arraybuffer'
+  });
+}
