@@ -149,6 +149,7 @@ import { attAppUserSlice } from "../app/modules/Attendance_App_User/_redux/redux
 import { FinalSettlementReportSlice } from "../app/modules/FinalSettlementReport/_redux/FinalSettlementReportSlice";
 import { PayrollIncomeTaxReportSlice } from "../app/modules/PayrollIncomeTaxReport/_redux/PayrollIncomeTaxReportSlice";
 import { PayrollGratuityReportSlice } from "../app/modules/PayrollGratuityReport/_redux/formSlice";
+import { PayrollOvertimeSlice } from "../app/modules/PayrollOverTimeReport/_redux/formSlice"
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -295,6 +296,7 @@ export const rootReducer = combineReducers({
   final_settlement_report : FinalSettlementReportSlice.reducer,
   income_tax_report : PayrollIncomeTaxReportSlice.reducer,
   gratuity_report : PayrollGratuityReportSlice.reducer,
+  overtime_report : PayrollOvertimeSlice.reducer,
 });
 
 export function* rootSaga() {

@@ -373,6 +373,10 @@ import("./modules/PayrollIncomeTaxReport/pages/index"))
 const PayrollGratuityReport = lazy(()=>
 import("./modules/PayrollGratuityReport/pages/index"))
 
+
+const PayrollOvertimeReport = lazy(()=>
+import("./modules/PayrollOverTimeReport/pages/index"));
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -515,6 +519,7 @@ const ROUTES = {
   final_settlement_report : FInalSettlementReport,
   income_tax_report : PayrollIncomeTaxReport,
   gratuity_report : PayrollGratuityReport,
+  overtime_report : PayrollOvertimeReport,
 };
 
 export default function BasePage() {
