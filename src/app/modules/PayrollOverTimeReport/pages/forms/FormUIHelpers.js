@@ -19,7 +19,7 @@ export const initialFilter = {
     locationId: "",
     employeeType: 1,
     employeeId: "",
-    taxYearSetupId: "",
+    fiscalYearSetupId: "",
 
   },
   sortOrder: "asc",

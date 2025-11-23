@@ -24,6 +24,7 @@ import {
 import { Download, } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { toast } from "react-toastify";
+import { fetchAllFiscalYearDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -44,7 +45,7 @@ const prepareFilter = (queryParams, values) => {
 
 export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
   const FormUIContext = useFormUIContext();
-
+console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
   //Get All dropdown data from state
   const {
     allEmployees,
@@ -52,17 +53,18 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
     allEmployeeGradeList,
     allDept,
     allLocationChildMenus,
-    allDesignations, allPayrollMonthYearList, allTaxYearSetupList
+    allDesignations, allPayrollMonthYearList,fiscalyearBySubList
   } = useSelector((state) => state.dashboard);
-  console.log("allTaxYearSetupList11", allTaxYearSetupList)
+
+  //fetchAllFiscalYearDataBySubsidiaryId
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
   const allEmployeesMap = useMemo(() => {
     return new Map(allEmployees?.map((item) => [item.value, item]));
   }, [allEmployees]);
 
   const allTaxYearSetupMap = useMemo(() => {
-    return new Map(allTaxYearSetupList?.map((item) => [item.value, item]));
-  }, [allTaxYearSetupList]);
+    return new Map(fiscalyearBySubList?.map((item) => [item.value, item]));
+  }, [fiscalyearBySubList]);
 
   const allSubsidiaryMap = useMemo(() => {
     return new Map(allSubsidiaryList?.map((item) => [item.value, item]));
@@ -126,10 +128,10 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
 
 
 
-  const getEOBIPdf = (values) => {
+  const getOvertimeReportPdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
-    dispatch(actions.fetchAllEOBIContributionSummaryForPdf(newQueryParams.filter, document, labels));
+    dispatch(actions.fetchAllOvertimeReportForPdf(newQueryParams.filter, document, labels));
   };
 
 
@@ -137,7 +139,7 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
   const getPayrollMonthWisePdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
-    dispatch(actions.fetchAllIncomeTaxReportByMonthForPdf(newQueryParams.filter, document, labels));
+    dispatch(actions.fetchAllOvertimeReportByMonthForPdf(newQueryParams.filter, document, labels));
   };
 
   useEffect(() => {
@@ -157,9 +159,9 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
   const taxYearOptions = useMemo(() => {
     return [
       { label: "Select", value: "" },
-      ...(allTaxYearSetupList || []), // array of tax year objects
+      ...(fiscalyearBySubList || []), // array of tax year objects
     ];
-  }, [allTaxYearSetupList]);
+  }, [fiscalyearBySubList]);
   return (
     <>
       <Formik
@@ -209,6 +211,7 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                                 "allPayrollMonthYearList"
                               )
                             );
+                            dispatch(fetchAllFiscalYearDataBySubsidiaryId(value));
 
                           }}
                           // error={errors?.subsidiaryId}
@@ -230,6 +233,8 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                                 "allPayrollMonthYearList"
                               )
                             );
+                             dispatch(fetchAllFiscalYearDataBySubsidiaryId(value));
+
                           }}
                         />
                       </div>
@@ -401,19 +406,19 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                     
                       
                       <h6 className="font-bold mb-0 text-primary">
-                        Income Tax Computation Report
+                        Overtime Report By Fiscal Year
                       </h6>
                       <div className="col-span-1">
                         <Field
-                          name="taxYearSetupId"
+                          name="fiscalYearSetupId"
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value = e.value === "Select" ? "" : Number(e.value);
-                            setFieldValue("taxYearSetupId", value);
+                            setFieldValue("fiscalYearSetupId", value);
                           }}
-                          label={<span>Tax Year Setup<span style={{ color: "red" }}>*</span></span>}
-                          value={allTaxYearSetupMap?.get(values?.taxYearSetupId) || ""}
+                          label={<span>Fiscal Year<span style={{ color: "red" }}>*</span></span>}
+                          value={allTaxYearSetupMap?.get(values?.fiscalYearSetupId) || ""}
                           autoComplete="off"
                           options={taxYearOptions}
                         />
@@ -429,17 +434,17 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                             onClick={() => {
                               if (!pdfLoading) {
                                 delete values.monthId
-                                getEOBIPdf(values);
+                                getOvertimeReportPdf(values);
                               }
                             }}
-                            disabled={pdfLoading || !values.taxYearSetupId || !values.subsidiaryId}
+                            disabled={pdfLoading || !values.fiscalYearSetupId || !values.subsidiaryId}
                             className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
 
                           >
-                            Income Tax
+                            Overtime Report
 
                             <Download className="w-4 h-4 ml-2" />
  {pdf && (
@@ -460,7 +465,7 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
 
 
                         <h6 className="font-bold mb-0 text-primary">
-                          Monthly Income Tax Detail
+                          Monthly Overtime Detail
                         </h6>
 
                         {/* Date from Field Start */}
@@ -512,7 +517,7 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                             type="button"
 
                           >
-                            Income Tax Detail
+                            Overtime Detail
 
                             <Download className="w-4 h-4 ml-2" />
                               {monththPdf && (
