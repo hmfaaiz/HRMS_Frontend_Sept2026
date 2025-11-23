@@ -14,8 +14,6 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
-import { getAllTaxYearSetup } from "../../../Dashboard/_redux/dashboardCrud";
-import { FetchAllTaxYearSetup } from "../../../Dashboard/_redux/dashboardActions";
 
 export function ReportPage() {
   const dispatch = useDispatch();
@@ -48,7 +46,7 @@ export function ReportPage() {
       !dashboard?.allLocationChildMenus?.length
     )
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
-    dispatch(FetchAllTaxYearSetup());
+
   }, [dispatch]);
 
   return (

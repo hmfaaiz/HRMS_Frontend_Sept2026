@@ -641,10 +641,10 @@ export const FetchAllApprovedFSEmp = (body
 };
 
 export const FetchAllTaxYearSetup = (
-
+subsidiaryId
 ) => async (dispatch) => {
   return await requestFromServer
-    .getAllTaxYearSetup()
+    .getAllTaxYearSetup(subsidiaryId)
     .then((response) => {
 
       dispatch(actions.TaxYearSetupFetch(response?.data?.data));
