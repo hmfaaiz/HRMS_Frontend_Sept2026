@@ -158,7 +158,7 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
 
   const taxYearOptions = useMemo(() => {
     return [
-      { label: "Select", value: "" },
+      { label: "All", value: "" },
       ...(fiscalyearBySubList || []), // array of tax year objects
     ];
   }, [fiscalyearBySubList]);
@@ -199,7 +199,7 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("subsidiaryId", value);
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
@@ -219,7 +219,7 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           currentValue={values?.subsidiaryId}
                           initializeSubsidiary={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("subsidiaryId", value);
 
                             setFieldValue("departmentId", "");
@@ -248,17 +248,17 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("departmentId", value);
                           }}
                           label={<span> Department</span>}
                           value={
-                            allDeptMap?.get(values?.departmentId || "") || ""
+                            allDeptMap?.get(values?.departmentId || "") ||  { label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allDept}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDept) ? allDept : []),
                           ]}
                         />
@@ -275,15 +275,15 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("gradeId", value);
                           }}
                           label={<span> Grade</span>}
-                          value={allGradeMap?.get(values?.gradeId || "") || ""}
+                          value={allGradeMap?.get(values?.gradeId || "") || { label: "All", value: "" }}
                           autoComplete="off"
                           // options={allEmployeeGradeList}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployeeGradeList)
                               ? allEmployeeGradeList
                               : []),
@@ -300,19 +300,19 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("designationId", value);
                           }}
                           label={<span> Designation</span>}
                           value={
                             allDesignationsMap?.get(
                               values?.designationId || ""
-                            ) || ""
+                            ) || { label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allDesignations}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDesignations)
                               ? allDesignations
                               : []),
@@ -329,17 +329,17 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("locationId", value);
                           }}
                           label={<span> Location</span>}
                           value={
-                            allLocationMap?.get(values?.locationId || "") || ""
+                            allLocationMap?.get(values?.locationId || "") ||{ label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allLocationChildMenus}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allLocationChildMenus)
                               ? allLocationChildMenus
                               : []),
@@ -382,17 +382,17 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("employeeId", value);
                           }}
                           label={<span> Employee</span>}
                           value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
+                            allEmployeesMap?.get(values?.employeeId || "") || { label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allEmployees}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployees) ? allEmployees : []),
                           ]}
                         />
@@ -414,7 +414,7 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value = e.value === "Select" ? "" : Number(e.value);
+                            const value = e.value === "All" ? "" : Number(e.value);
                             setFieldValue("fiscalYearSetupId", value);
                           }}
                           label={<span>Fiscal Year<span style={{ color: "red" }}>*</span></span>}
