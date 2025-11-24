@@ -22,7 +22,7 @@ export function AmountInput({
   ...props
 }) {
   const fieldName = field.name;
-  const inputClass = getFieldCSSClasses(touched[fieldName], errors[fieldName]);
+  const inputClass = getFieldCSSClasses(touched?.[fieldName], errors?.[fieldName]);
 
   useEffect(() => {
     if (value !== undefined && value !== field.value) {

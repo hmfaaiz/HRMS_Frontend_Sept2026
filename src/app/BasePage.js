@@ -369,6 +369,8 @@ const FInalSettlementReport = lazy(()=>
 import("./modules/FinalSettlementReport/pages/index"))
 const PayrollIncomeTaxReport = lazy(()=>
 import("./modules/PayrollIncomeTaxReport/pages/index"))
+const OneTimeAllowanceModule = lazy(()=>
+import("./modules/One_Time_Allowances/pages/index"))
 
 const PayrollGratuityReport = lazy(()=>
 import("./modules/PayrollGratuityReport/pages/index"))
@@ -518,6 +520,7 @@ const ROUTES = {
   app_user : AttAppUser,
   final_settlement_report : FInalSettlementReport,
   income_tax_report : PayrollIncomeTaxReport,
+  onetime_allowance : OneTimeAllowanceModule,
   gratuity_report : PayrollGratuityReport,
   overtime_report : PayrollOvertimeReport,
 };

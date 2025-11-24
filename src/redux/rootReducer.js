@@ -148,6 +148,7 @@ import { AttendanceSummarySlice } from "../app/modules/Attendance_Summary/_redux
 import { attAppUserSlice } from "../app/modules/Attendance_App_User/_redux/redux-Slice";
 import { FinalSettlementReportSlice } from "../app/modules/FinalSettlementReport/_redux/FinalSettlementReportSlice";
 import { PayrollIncomeTaxReportSlice } from "../app/modules/PayrollIncomeTaxReport/_redux/PayrollIncomeTaxReportSlice";
+import {oneTimeAllowanceSlice} from "../app/modules/One_Time_Allowances/_redux/fromSlice";
 import { PayrollGratuityReportSlice } from "../app/modules/PayrollGratuityReport/_redux/formSlice";
 import { PayrollOvertimeSlice } from "../app/modules/PayrollOverTimeReport/_redux/formSlice"
 
@@ -295,6 +296,7 @@ export const rootReducer = combineReducers({
   att_app_user : attAppUserSlice.reducer,
   final_settlement_report : FinalSettlementReportSlice.reducer,
   income_tax_report : PayrollIncomeTaxReportSlice.reducer,
+  onetime_allowance : oneTimeAllowanceSlice.reducer,
   gratuity_report : PayrollGratuityReportSlice.reducer,
   overtime_report : PayrollOvertimeSlice.reducer,
 });
