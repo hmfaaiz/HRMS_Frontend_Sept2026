@@ -41,7 +41,6 @@ export function FormFilter() {
 
   // queryParams, setQueryParams,
   const applyFilter = (values) => {
-    console.log("valuess", values);
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
       newQueryParams.pageNumber = 1;
@@ -93,7 +92,6 @@ export function FormFilter() {
         }}
         validationSchema={FilterSchema}
         onSubmit={(values) => {
-          console.log("valuesss", values);
           applyFilter(values);
         }}
       >
