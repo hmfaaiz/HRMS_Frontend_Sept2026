@@ -329,6 +329,7 @@ export function FormEditForm({
                                 "isReplacement",
                                 false
                               )
+                              setFieldValue("replacementEmpId",null)
                           }}
                           value={
                             dashboard?.allHiringReasonList?.find(
@@ -399,7 +400,7 @@ export function FormEditForm({
                       <div className="">
                         <label>
                           <span>
-                            Work Experience From (No. of Years)
+                            Work Exp. From (No. of Years)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         </label>
@@ -417,7 +418,7 @@ export function FormEditForm({
                       <div className="">
                         <label>
                           <span>
-                            Work Experience To  (No. of Years)
+                            Work Exp. To  (No. of Years)
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         </label>

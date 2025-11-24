@@ -24,6 +24,7 @@ import {
 import { Download, } from "lucide-react";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import { toast } from "react-toastify";
+import { FetchAllTaxYearSetup } from "../../../../Dashboard/_redux/dashboardActions";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
@@ -42,7 +43,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams;
 };
 
-export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
+export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
   const FormUIContext = useFormUIContext();
 
   //Get All dropdown data from state
@@ -54,7 +55,7 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
     allLocationChildMenus,
     allDesignations, allPayrollMonthYearList, allTaxYearSetupList
   } = useSelector((state) => state.dashboard);
-  console.log("allTaxYearSetupList11", allTaxYearSetupList)
+
   //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
   const allEmployeesMap = useMemo(() => {
     return new Map(allEmployees?.map((item) => [item.value, item]));
@@ -209,6 +210,7 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                                 "allPayrollMonthYearList"
                               )
                             );
+                                  dispatch(FetchAllTaxYearSetup(value));
 
                           }}
                           // error={errors?.subsidiaryId}
@@ -223,13 +225,14 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                             setFieldValue("employeeId", "");
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
-                            console.log("fetchAllPayrollMonthYearList1111")
+                          
                             dispatch(
                               fetchAllPayrollMonthYearList(
                                 { subsidiaryId: value, employeeId: null },
                                 "allPayrollMonthYearList"
                               )
                             );
+                              dispatch(FetchAllTaxYearSetup(value));
                           }}
                         />
                       </div>
@@ -398,28 +401,28 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                     <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
                       <div>
 
-                    
-                      
-                      <h6 className="font-bold mb-0 text-primary">
-                        Income Tax Computation Report
-                      </h6>
-                      <div className="col-span-1">
-                        <Field
-                          name="taxYearSetupId"
-                          component={SearchSelect}
-                          onBlur={handleBlur}
-                          onChange={(e) => {
-                            const value = e.value === "Select" ? "" : Number(e.value);
-                            setFieldValue("taxYearSetupId", value);
-                          }}
-                          label={<span>Tax Year Setup<span style={{ color: "red" }}>*</span></span>}
-                          value={allTaxYearSetupMap?.get(values?.taxYearSetupId) || ""}
-                          autoComplete="off"
-                          options={taxYearOptions}
-                        />
-                      </div>
 
-  </div>
+
+                        <h6 className="font-bold mb-0 text-primary">
+                          Income Tax Computation Report
+                        </h6>
+                        <div className="col-span-1">
+                          <Field
+                            name="taxYearSetupId"
+                            component={SearchSelect}
+                            onBlur={handleBlur}
+                            onChange={(e) => {
+                              const value = e.value === "Select" ? "" : Number(e.value);
+                              setFieldValue("taxYearSetupId", value);
+                            }}
+                            label={<span>Tax Year Setup<span style={{ color: "red" }}>*</span></span>}
+                            value={allTaxYearSetupMap?.get(values?.taxYearSetupId) || ""}
+                            autoComplete="off"
+                            options={taxYearOptions}
+                          />
+                        </div>
+
+                      </div>
 
                       <div className="col-span-4 ">
 
@@ -442,9 +445,9 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                             Income Tax
 
                             <Download className="w-4 h-4 ml-2" />
- {pdf && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
+                            {pdf && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
                           </button>
 
                         </div>
@@ -515,9 +518,9 @@ export function FormFilter({ loading, dispatch, pdfLoading,pdf,monththPdf }) {
                             Income Tax Detail
 
                             <Download className="w-4 h-4 ml-2" />
-                              {monththPdf && (
-                          <span className="ml-3 mr-3 spinner spinner-white"></span>
-                        )}
+                            {monththPdf && (
+                              <span className="ml-3 mr-3 spinner spinner-white"></span>
+                            )}
 
                           </button>
 

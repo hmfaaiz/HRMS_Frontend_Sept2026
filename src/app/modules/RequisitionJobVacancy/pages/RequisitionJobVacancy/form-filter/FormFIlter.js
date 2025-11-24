@@ -194,9 +194,9 @@ export function FormFIlter({ listLoading, user }) {
 
               {/* row 1 */}
 
-              <div className="grid grid-cols-8 gap-x-3 mt-2">
+              <div className="grid grid-cols-6 gap-x-3 mt-2">
 
-{/* 
+                {/* 
                 <div className="">
                   <SearchSelect
                     name="departmentId"
@@ -254,22 +254,39 @@ export function FormFIlter({ listLoading, user }) {
                 </div> */}
 
                 {/* Job Title */}
-                <div className="">
-                  <label>Job Title</label>
-                  <Field
-                    component={Input}
-                    name="searchText"
-                    placeholder="Enter job title"
-                    type="text"
-                    onBlur={handleBlur}
-                    value={values.searchText}
-                    onChange={(e) => {
-                      setFieldValue("searchText", e.target.value);
-                      handleSubmit();
-                    }}
-                  />
-                </div>
+                <div className="flex gap-2">
 
+
+                  <div className="">
+                    {/* <label>Job Title</label> */}
+                    <Field
+                      component={Input}
+                      label={"Job Title"}
+                      name="searchText"
+                      placeholder="Enter job title"
+                      type="text"
+                      onBlur={handleBlur}
+                      value={values.searchText}
+                      onChange={(e) => {
+                        setFieldValue("searchText", e.target.value);
+                        handleSubmit();
+                      }}
+                    />
+
+                  </div>
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleReset(); // Resets form
+                        applyFilter(initialFilterValues); // Clears filter state
+                      }}
+                      className="btn btn-light btn-elevate"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
 
                 {/* <div className="grid grid-cols-6 gap-x-3 mt-1"> */}
                 {/* Date From */}
@@ -365,7 +382,7 @@ export function FormFIlter({ listLoading, user }) {
                 {/* </div> */}
               </div>
               <Modal.Footer>
-                <button
+                {/* <button
                   type="button"
                   onClick={() => {
                     handleReset(); // Resets form
@@ -374,7 +391,7 @@ export function FormFIlter({ listLoading, user }) {
                   className="btn btn-light btn-elevate"
                 >
                   Cancel
-                </button>
+                </button> */}
               </Modal.Footer>
 
 

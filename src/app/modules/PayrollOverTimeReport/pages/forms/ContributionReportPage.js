@@ -14,18 +14,16 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
-import { getAllTaxYearSetup } from "../../../Dashboard/_redux/dashboardCrud";
-import { FetchAllTaxYearSetup } from "../../../Dashboard/_redux/dashboardActions";
 
 export function ContributionReportPage() {
   const dispatch = useDispatch();
     const [activeKey, setActiveKey] = useState("0");
   const { dashboard, listLoading, pdfLoading,monththPdf,pdf } = useSelector((state) => ({
     dashboard: state.dashboard,
-    listLoading: state.income_tax_report.listLoading,
-    pdfLoading: state.income_tax_report.pdfLoading,
-    monththPdf: state.income_tax_report.monththPdf,
-    pdf: state.income_tax_report.pdf,
+    listLoading: state.overtime_report.listLoading,
+    pdfLoading: state.overtime_report.pdfLoading,
+    monththPdf: state.overtime_report.monththPdf,
+    pdf: state.overtime_report.pdf,
   }));
 
   //Get all Dropdown data from server on page load and set it in state
@@ -47,7 +45,7 @@ export function ContributionReportPage() {
       !dashboard?.allLocationChildMenus?.length
     )
       dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
-      dispatch(FetchAllTaxYearSetup());
+      
   }, [dispatch]);
 
   return (
