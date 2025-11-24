@@ -205,7 +205,7 @@ console.log("ccccc",gratuityAccrualPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("subsidiaryId", value);
                             dispatch(fetchAllActiveEmployeesBySubsidiary(value));
                             dispatch(fetchAllDept(value));
@@ -224,7 +224,7 @@ console.log("ccccc",gratuityAccrualPdf)
                           currentValue={values?.subsidiaryId}
                           initializeSubsidiary={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("subsidiaryId", value);
 
                             setFieldValue("departmentId", "");
@@ -251,17 +251,17 @@ console.log("ccccc",gratuityAccrualPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("departmentId", value);
                           }}
                           label={<span> Department</span>}
                           value={
-                            allDeptMap?.get(values?.departmentId || "") || ""
+                            allDeptMap?.get(values?.departmentId || "") || { label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allDept}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDept) ? allDept : []),
                           ]}
                         />
@@ -278,15 +278,15 @@ console.log("ccccc",gratuityAccrualPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("gradeId", value);
                           }}
                           label={<span> Grade</span>}
-                          value={allGradeMap?.get(values?.gradeId || "") || ""}
+                          value={allGradeMap?.get(values?.gradeId || "") || { label: "All", value: "" }}
                           autoComplete="off"
                           // options={allEmployeeGradeList}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployeeGradeList)
                               ? allEmployeeGradeList
                               : []),
@@ -303,19 +303,19 @@ console.log("ccccc",gratuityAccrualPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("designationId", value);
                           }}
                           label={<span> Designation</span>}
                           value={
                             allDesignationsMap?.get(
                               values?.designationId || ""
-                            ) || ""
+                            ) ||{ label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allDesignations}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allDesignations)
                               ? allDesignations
                               : []),
@@ -332,17 +332,17 @@ console.log("ccccc",gratuityAccrualPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("locationId", value);
                           }}
                           label={<span> Location</span>}
                           value={
-                            allLocationMap?.get(values?.locationId || "") || ""
+                            allLocationMap?.get(values?.locationId || "") || { label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allLocationChildMenus}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allLocationChildMenus)
                               ? allLocationChildMenus
                               : []),
@@ -385,17 +385,17 @@ console.log("ccccc",gratuityAccrualPdf)
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
-                              e.value == "Select" ? "" : Number(e.value);
+                              e.value == "All" ? "" : Number(e.value);
                             setFieldValue("employeeId", value);
                           }}
                           label={<span> Employee</span>}
                           value={
-                            allEmployeesMap?.get(values?.employeeId || "") || ""
+                            allEmployeesMap?.get(values?.employeeId || "") || { label: "All", value: "" }
                           }
                           autoComplete="off"
                           // options={allEmployees}
                           options={[
-                            { label: "Select", value: "" },
+                            { label: "All", value: "" },
                             ...(Array.isArray(allEmployees) ? allEmployees : []),
                           ]}
                         />
