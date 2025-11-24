@@ -284,21 +284,21 @@ export function DashboardSummaryHeader() {
                             </div> */}
 
                             <div className="flex gap-x-1 items-center">
-  {job.expiryDate && (
-    <>
-      <label
-        className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"}`}
-      >
-        Expiry:
-      </label>
-      <label
-        className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"}`}
-      >
-        {job.expiryDate} |
-      </label>
-    </>
-  )}
-</div>
+                                {job.expiryDate && (
+                                    <>
+                                        <label
+                                            className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"}`}
+                                        >
+                                            Expiry:
+                                        </label>
+                                        <label
+                                            className={`${new Date(job.expiryDate) < new Date() ? "text-red-600 font-bold" : "text-gray-500"}`}
+                                        >
+                                            {job.expiryDate} |
+                                        </label>
+                                    </>
+                                )}
+                            </div>
 
 
 
@@ -345,6 +345,52 @@ export function DashboardSummaryHeader() {
 
                         </div>
 
+
+                        {/* Summary */}
+
+                             <div className=" flex gap-x-1 gap-y-1 ">
+                            <div className="">
+                                <h6 className="font-bold mb-0 text-primary my-2 ">
+                                  Summary
+                                </h6>
+                            </div>
+                        <div className="flex gap-x-1 items-center">
+                            {job.totalApplications != null && (  // <- checks for null or undefined only
+                                <>
+                                    <label className="text-gray-500">Total Applications:</label>
+                                    <label className="text-gray-500">{job.totalApplications} | </label>
+                                </>
+                            )}
+                        </div>
+
+                        <div className="flex gap-x-1 items-center">
+                            {job.activeApplicants != null && (
+                                <>
+                                    <label className="text-gray-500">Active Applicants:</label>
+                                    <label className="text-gray-500">{job.activeApplicants} | </label>
+                                </>
+                            )}
+                        </div>
+
+                        <div className="flex gap-x-1 items-center">
+                            {job.rejectedApplicants != null && (
+                                <>
+                                    <label className="text-gray-500">Rejected Applicants:</label>
+                                    <label className="text-gray-500">{job.rejectedApplicants} | </label>
+                                </>
+                            )}
+                        </div>
+
+                        <div className="flex gap-x-1 items-center">
+                            {job.applicantHired != null && (
+                                <>
+                                    <label className="text-gray-500">Applicant Hired:</label>
+                                    <label className="text-gray-500">{job.applicantHired} </label>
+                                </>
+                            )}
+                        </div>
+
+  </div>
                         {/* Job Info Row */}
 
 
