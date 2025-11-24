@@ -254,6 +254,7 @@ export function FormFIlter({ listLoading, user }) {
                 </div> */}
 
                 {/* Job Title */}
+                    <div className="flex gap-2">
                 <div className="">
                   <label>Job Title</label>
                   <Field
@@ -264,10 +265,23 @@ export function FormFIlter({ listLoading, user }) {
                     onBlur={handleBlur}
                     value={values.searchText}
                     onChange={(e) => {
-                      setFieldValue("searchText", e.target.value.trim());
+                      setFieldValue("searchText", e.target.value);
                       handleSubmit();
                     }}
                   />
+                </div>
+               <div className="mt-6">
+                    <button
+                  type="button"
+                  onClick={() => {
+                    handleReset(); // Resets form
+                    applyFilter(initialFilterValues); // Clears filter state
+                  }}
+                  className="btn btn-light btn-elevate"
+                >
+                  Cancel
+                </button>
+                </div>
                 </div>
 
 
@@ -365,7 +379,7 @@ export function FormFIlter({ listLoading, user }) {
                 {/* </div> */}
               </div>
               <Modal.Footer>
-                <button
+                {/* <button
                   type="button"
                   onClick={() => {
                     handleReset(); // Resets form
@@ -374,7 +388,7 @@ export function FormFIlter({ listLoading, user }) {
                   className="btn btn-light btn-elevate"
                 >
                   Cancel
-                </button>
+                </button> */}
               </Modal.Footer>
 
 

@@ -41,15 +41,15 @@ const jobVacancyEditSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   designationId: Yup.number()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
   jobTitle: Yup.string()
     .min(1, "Job title must be at least 1 characters")
     .max(100, "Job title must be at most 100 characters")
     .required(VALIDATION_MESSAGES.required),
   gradeId: Yup.number()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
   locationId: Yup.string().nullable().required(VALIDATION_MESSAGES.required),
   countryId: Yup.number().nullable(), // optional banane ke liye
 
@@ -106,7 +106,7 @@ const jobVacancyEditSchema = Yup.object().shape({
     ),
 
   reportToDesignationId: Yup.number()
-  .nullable()
+    .nullable()
     .required(VALIDATION_MESSAGES.required)
     .test(
       "not-same-as-designation",
@@ -117,11 +117,11 @@ const jobVacancyEditSchema = Yup.object().shape({
       }
     ),
   relationshipWithReportTo: Yup.string()
-  .nullable()
+    .nullable()
     .min(5, "Must be  5 characters")
     .required(VALIDATION_MESSAGES.required),
   noOfPosition: Yup.number()
-  .nullable()
+    .nullable()
     .required(VALIDATION_MESSAGES.required)
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .max(999, VALIDATION_MESSAGES.maxNineHundredNinetyNineValue),
@@ -131,8 +131,8 @@ const jobVacancyEditSchema = Yup.object().shape({
   // .nullable()
   // .required(VALIDATION_MESSAGES.required),
   priorityTypeId: Yup.number()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
 
   jobPeriodStart: Yup.date()
     .nullable()
@@ -218,14 +218,16 @@ const jobVacancyEditSchema = Yup.object().shape({
   preferredJobIndustryId: Yup.number().nullable(),
   // .required(VALIDATION_MESSAGES.required),
   workExpFrom: Yup.number()
-  .nullable()
+    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
+
 
     .required(VALIDATION_MESSAGES.required),
 
   workExpTo: Yup.number()
-  .nullable()
+    .nullable()
     .min(0, VALIDATION_MESSAGES.minZeroValue)
+    .max(60, "Experience (to) should not be greater than 60.")
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
       Yup.ref("workExpFrom"),
@@ -234,12 +236,12 @@ const jobVacancyEditSchema = Yup.object().shape({
   // workExpDetail: Yup.string().required(VALIDATION_MESSAGES.required),
   // additionalReq: Yup.string().required(VALIDATION_MESSAGES.required),
   salaryRangeFrom: Yup.number()
-  .nullable()
+    .nullable()
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .required(VALIDATION_MESSAGES.required),
 
   salaryRangeTo: Yup.number()
-  .nullable()
+    .nullable()
     .min(1, VALIDATION_MESSAGES.minOneValue)
     .required(VALIDATION_MESSAGES.required)
     .moreThan(
@@ -659,7 +661,7 @@ export function FormEditForm({
                           />
                         </div>
 
-                       
+
 
                         <div className="">
                           <SearchSelect
@@ -1041,9 +1043,13 @@ export function FormEditForm({
                           name="desireDateOfApp"
                           autoComplete="off"
                           minDate={
-                            values?.jobPostingDateFrom
-                              ? new Date(values.jobPostingDateFrom)
-                              : new Date()
+                            (() => {
+                              const baseDate = values?.jobPostingDateFrom
+                                ? new Date(values.jobPostingDateFrom)
+                                : new Date();
+                              baseDate.setDate(baseDate.getDate() + 1); // add 1 day
+                              return baseDate;
+                            })()
                           }
                         //  maxDate={values?.jobPeriodEnd ? new Date(values.jobPeriodEnd) : new Date()}
                         />
@@ -1365,7 +1371,7 @@ export function FormEditForm({
                       label={
                         <span>
                           Job Industry
-                       
+
                         </span>
                       }
                       isDisabled={isdataForRead}
@@ -1390,7 +1396,7 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       <span>
-                        Work Experience From
+                        Work Experience From (No. of Years)
                         <span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
@@ -1408,7 +1414,7 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       <span>
-                        Work Experience To
+                        Work Experience To (No. of Years)
                         <span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
