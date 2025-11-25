@@ -442,7 +442,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
                             type="button"
 
                           >
-                            Income Tax
+                            Income Tax Computation Report
+
 
                             <Download className="w-4 h-4 ml-2" />
                             {pdf && (
@@ -515,7 +516,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
                             type="button"
 
                           >
-                            Income Tax Detail
+                              Monthly Income Tax Detail
 
                             <Download className="w-4 h-4 ml-2" />
                             {monththPdf && (
