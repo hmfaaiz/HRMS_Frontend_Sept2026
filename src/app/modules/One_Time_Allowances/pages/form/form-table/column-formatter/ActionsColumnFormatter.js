@@ -22,7 +22,11 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
         >
-          <a title="" className="" onClick={() => openReadDialog(row.EmpId)}>
+          <a
+            title=""
+            className=""
+            onClick={() => openReadDialog(row?.employeeInfo?.Id)}
+          >
             <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -31,28 +35,26 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a title="" className="" onClick={() => openEditDialog(row.EmpId)}>
+          <a
+            title=""
+            className=""
+            onClick={() => openEditDialog(row?.employeeInfo?.Id)}
+          >
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}
       {isAccessForDelete && (
         <OverlayTrigger
-          overlay={
-            <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
-            </Tooltip>
-          }
+          overlay={<Tooltip id="products-edit-tooltip">Delete </Tooltip>}
         >
-          {row.isActive && (
-            <a
-              title=""
-              className=""
-              onClick={() => openDeleteDialog(row.EmpId)}
-            >
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          )}
+          <a
+            title=""
+            className=""
+            onClick={() => openDeleteDialog(row?.employeeInfo?.Id)}
+          >
+            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+          </a>
         </OverlayTrigger>
       )}
     </div>

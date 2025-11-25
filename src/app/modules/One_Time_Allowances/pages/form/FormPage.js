@@ -18,7 +18,7 @@ export function FormPage({ history }) {
     },
     openDeleteDialog: (id, status) => {
       history.push(
-        `/onetime_allowance/read-all-onetime-allowance/${id}/${status}/delete`
+        `/onetime_allowance/read-all-onetime-allowance/${id}/delete`
       );
     },
     openReadDialog: (id) => {
@@ -95,12 +95,11 @@ export function FormPage({ history }) {
       )}
 
       {isAccessForDelete && (
-        <Route path="/onetime_allowance/read-all-onetime-allowance/:id/:status/delete">
+        <Route path="/onetime_allowance/read-all-onetime-allowance/:id/delete">
           {({ history, match }) => (
             <BankDeleteDialog
               show={match != null}
               id={match && match.params.id}
-              status={match && match.params.status}
               onHide={() => {
                 history.push("/onetime_allowance/read-all-onetime-allowance");
               }}

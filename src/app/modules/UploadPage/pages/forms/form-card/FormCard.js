@@ -21,6 +21,7 @@ import { EmployeeEOBISection } from "../form-edit-dialog/EmployeeEOBISection";
 import { EmployeeGratuitySection } from "../form-edit-dialog/EmployeeGratuitySection";
 import { EmployeePFSection } from "../form-edit-dialog/EmployeePFSection";
 import { EmployeeRosterSection } from "../form-edit-dialog/EmployeeRosterSection";
+import { EmployeeOneTimeAllowancesSection } from "../form-edit-dialog/EmployeeOneTimeEarningDeduction";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -162,6 +163,11 @@ export function FormCard() {
         <EmployeePFSection downloadExcel={downloadExcel} dispatch={dispatch} />
         {/* Employee Roster */}
         <EmployeeRosterSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+        />
+        {/* Employee One time Earning Deduction */}
+        <EmployeeOneTimeAllowancesSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
         />
