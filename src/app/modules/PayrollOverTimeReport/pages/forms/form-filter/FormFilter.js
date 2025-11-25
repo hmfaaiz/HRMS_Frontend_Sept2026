@@ -517,7 +517,7 @@ console.log(" pdfLoading,pdf,monththPdf11111", pdfLoading,pdf,monththPdf)
                             type="button"
 
                           >
-                            Overtime Detail
+                            Overtime Detail Report
 
                             <Download className="w-4 h-4 ml-2" />
                               {monththPdf && (
