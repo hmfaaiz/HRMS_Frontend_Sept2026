@@ -59,3 +59,7 @@ export function saveEmployeeIncomeTaxData(body) {
 export function saveEmployeeRosterData(body) {
     return axios.post(`${USERS_URL}/upload/save-employee-roster-data`, body);
 }
+
+export function saveEmployeeOneTimeEarningDeductionData(body) {
+    return axios.post(`${USERS_URL}/upload/save-employee-onetime-allowance-data`, body);
+}

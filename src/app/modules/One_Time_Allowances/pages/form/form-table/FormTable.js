@@ -71,7 +71,7 @@ export function FormTable() {
   // Table columns
   const columns = [
     {
-      dataField: "Emp.employeeCode",
+      dataField: "employeeInfo.employeeCode",
       text: "Employee Code",
       sort: false,
       sortCaret: sortCaret,
@@ -81,7 +81,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Emp",
+      dataField: "employeeInfo",
       text: "Employee Name",
       sort: false,
       sortCaret: sortCaret,
@@ -95,7 +95,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Emp.grade.formName",
+      dataField: "employeeInfo.grade.formName",
       text: "Grade",
       sort: false,
       sortCaret: sortCaret,
@@ -105,7 +105,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Emp.designation.formName",
+      dataField: "employeeInfo.designation.formName",
       text: "Designation",
       sort: false,
       sortCaret: sortCaret,
@@ -115,7 +115,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Emp.department.deptName",
+      dataField: "employeeInfo.department.deptName",
       text: "Department",
       sort: false,
       sortCaret: sortCaret,
@@ -125,7 +125,7 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Emp.employeeStatus.formName",
+      dataField: "employeeInfo.employeeStatus.formName",
       text: "Employee Type",
       sort: false,
       sortCaret: sortCaret,
@@ -135,13 +135,47 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Emp.payrollGroup.formName",
+      dataField: "employeeInfo.payrollGroup.formName",
       text: "Payroll Group",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
         maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "allowances",
+      text: "Total Earnings",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      formatter: (cell) => {
+        return cell
+          .filter((el) => el?.TransactionType === "Earning")
+          .reduce((acc, cur) => acc + Number(cur?.Amount_OneTime || 0), 0);
+      },
+    },
+    {
+      dataField: "allowances",
+      text: "Total Deductions",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      formatter: (cell) => {
+        return cell
+          .filter((el) => el?.TransactionType === "Deduction")
+          .reduce((acc, cur) => acc + Number(cur?.Amount_OneTime || 0), 0);
       },
     },
     {
