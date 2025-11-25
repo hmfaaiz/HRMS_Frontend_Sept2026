@@ -270,7 +270,7 @@ export function FormFilter({
                   <hr></hr>
 
                   <h6 className="font-bold mb-0 text-primary ">
-                    Final Settlement Slip
+                    Payable Slip
                   </h6>
 
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
@@ -448,7 +448,7 @@ export function FormFilter({
                         type="button"
                         className="btn btn-primary btn-elevate h-9 mt-4"
                       >
-                        Generate  Acknowledgment Letter
+                        Final Settlement Acknowledgement
 
                         <Download className="w-4 h-4 ml-2" />
 
