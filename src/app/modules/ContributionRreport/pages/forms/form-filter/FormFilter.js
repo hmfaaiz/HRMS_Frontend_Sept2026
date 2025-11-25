@@ -432,7 +432,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -452,7 +452,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9   w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -470,7 +470,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9   w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -513,7 +513,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -533,7 +533,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -551,7 +551,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -625,7 +625,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -655,7 +655,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
@@ -684,7 +684,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
                               }`}
 
                             type="button"
