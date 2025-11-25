@@ -1,5 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Accordion, Button, Card, Modal } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Card,
+  Modal,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
@@ -7,14 +14,14 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import * as actions from "../../../_redux/formActions";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { Download } from "lucide-react";
+import { Download, Info } from "lucide-react";
 
 //Validation for Form
 const formValidation = Yup.object().shape({
   file: Yup.mixed().required(VALIDATION_MESSAGES.required),
 });
 
-export function LoanOpeningSection({ downloadExcel, dispatch }) {
+export function LoanOpeningSection({ downloadExcel, dispatch, setHelp }) {
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -159,7 +166,18 @@ export function LoanOpeningSection({ downloadExcel, dispatch }) {
         <div className="px-3 py-2 rounded-lg bg-white overflow-y-auto">
           <div className="flex justify-between">
             <h6 className="font-bold mb-0 text-primary my-2">
-              Employee Loan Balance
+              Employee Loan Balance{" "}
+              <OverlayTrigger
+                overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+              >
+                <a
+                  title=""
+                  className=""
+                  onClick={() => setHelp("loan_balance")}
+                >
+                  <Info className="w-4 h-4 text-black cursor-pointer mb-1 ml-1" />
+                </a>
+              </OverlayTrigger>
             </h6>
             <button className="btn bg-tsecondary" onClick={onClick}>
               Template{" "}
