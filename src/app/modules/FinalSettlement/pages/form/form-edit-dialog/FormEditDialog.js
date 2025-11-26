@@ -37,6 +37,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
       setemployeeId: FormUIContext.setemployeeId,
       setPanelMode: FormUIContext.setPanelMode,
       panelMode: FormUIContext.panelMode,
+      setAttSumPanelMode: FormUIContext.setAttSumPanelMode,
+      attSumPanelMode: FormUIContext.attSumPanelMode,
     };
   }, [FormUIContext]);
 
@@ -147,6 +149,8 @@ export function FormEditDialog({ id, show, onHide, dataForRead, status }) {
         setemployeeId={formUIProps.setemployeeId}
         setPanelMode={formUIProps.setPanelMode}
         panelMode={formUIProps.panelMode}
+        setAttSumPanelMode={formUIProps.setAttSumPanelMode}
+        attSumPanelMode={formUIProps.attSumPanelMode}
 
       />
       <ToastContainer

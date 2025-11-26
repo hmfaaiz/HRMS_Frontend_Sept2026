@@ -28,6 +28,7 @@ import ViewLoans from "./ViewLoans";
 import { finalSettlementById } from "../../../_redux/redux-Actions";
 import { fetchAllEarning, fetchSeparatedEmployeeById } from "../../../../Dashboard/_redux/dashboardActions";
 import SeparatedEmpProfile from "../../../../../utils/common-modules/SeparatedEmpProfile";
+import SeparatedAttendanceSummary from "../../../../../utils/common-modules/SeparatedAttendnaceSummary";
 
 
 export const getFinal_SettlementEditSchema = (formData) => {
@@ -160,7 +161,7 @@ export function FormEditForm({
   onHide,
   isdataForRead,
   enableLoading,
-  loading, disbaleLoading, setemployeeId, setPanelMode, panelMode
+  loading, disbaleLoading, setemployeeId, setPanelMode, panelMode, setAttSumPanelMode, attSumPanelMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -174,6 +175,7 @@ export function FormEditForm({
   const [loanPanel, setLoanPanel] = useState(false);
   const [separatePanel, setSeparatePanel] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState(false);
+  const [hitAttSummary, setHitAttSum] = useState(false);
   const [toBeCalculated, setToBeCalculated] = useState(false);
   const [finalizeModal, setFinalizeModal] = useState(false);
 
@@ -256,6 +258,8 @@ export function FormEditForm({
       setemployeeId: FormUIContext.setemployeeId,
       setPanelMode: FormUIContext.setPanelMode,
       panelMode: FormUIContext.panelMode,
+      setAttSumPanelMode: FormUIContext.setAttSumPanelMode,
+      attSumPanelMode: FormUIContext.attSumPanelMode,
     };
   }, [FormUIContext]);
 
@@ -396,6 +400,7 @@ export function FormEditForm({
                     dispatch(finalSettlementById({ "employeeId": values.employeeId, "paidDays": values.paidDays || 0 }))
 
                     setConfirmationModal(false);
+                      setHitAttSum(!hitAttSummary);
                   }}
                   className="btn btn-primary btn-elevate"
                 >
@@ -494,6 +499,7 @@ export function FormEditForm({
                         onClick={() => {
                           setPanelMode(!panelMode)
                           setSeparatePanel(false)
+                          setAttSumPanelMode(false)
                         }}
                         disabled={!values?.employeeId}
                       >
@@ -518,6 +524,7 @@ export function FormEditForm({
                         onClick={() => {
                           setSeparatePanel(!separatePanel)
                           setPanelMode(false)
+                          setAttSumPanelMode(false)
 
                         }}
                         disabled={!values?.employeeId}
@@ -527,6 +534,35 @@ export function FormEditForm({
                       </button>
                     )}
 
+
+                    {attSumPanelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() => setAttSumPanelMode(!attSumPanelMode)}
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() => {
+                          setAttSumPanelMode(!attSumPanelMode)
+                          setSeparatePanel(false)
+                          setPanelMode(false)
+                          
+
+                        }}
+                        disabled={!values?.employeeId}
+                      >
+                        <Eye className="w-4 h-4 text-white" />
+                        View Attendance Summary Details
+                      </button>
+                    )}
+
+
                     {payrollMonthEligibility === false &&
                       <span>
                         Last Working Date of Employee does not falls in any Payroll Month.
@@ -535,7 +571,11 @@ export function FormEditForm({
                     }
                   </div>
 
+
+
+
                 </div>
+            {    console.log("attSumPanelMode111",attSumPanelMode)}
                 <EmployeeProfile
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={panelMode}
@@ -543,6 +583,11 @@ export function FormEditForm({
                 <SeparatedEmpProfile
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={separatePanel}
+                />
+
+                <SeparatedAttendanceSummary
+                  employeeId={values?.employeeId || formData?.employeeId}
+                  panelMode={attSumPanelMode} hitAttSummary={hitAttSummary}
                 />
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
@@ -558,6 +603,7 @@ export function FormEditForm({
                           disabled={!values.employeeId || isdataForRead || !payrollMonthEligibility}
                           onClick={() => {
                             setConfirmationModal(true);
+                       
                           }
 
                           }
