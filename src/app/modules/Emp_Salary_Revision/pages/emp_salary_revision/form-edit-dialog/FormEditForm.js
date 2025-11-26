@@ -854,9 +854,15 @@ export function FormEditForm({
         })
       );
 
-      setFieldValue("grossSalary", gross + basicSalaryNumber);
-      setGrossSalary(gross + basicSalaryNumber);
-      setGrossSalaryDB(gross + basicSalaryNumber);
+
+       setFieldValue("grossSalary", gross + basicSalaryNumber + totalGross);
+      setGrossSalary(gross + basicSalaryNumber + totalGross);
+      setGrossSalaryDB(gross + basicSalaryNumber + totalGross);
+
+
+      // setFieldValue("grossSalary", gross + basicSalaryNumber);
+      // setGrossSalary(gross + basicSalaryNumber);
+      // setGrossSalaryDB(gross + basicSalaryNumber);
     }
   };
 
@@ -1131,10 +1137,19 @@ export function FormEditForm({
                 social_security_reg_date: values.social_security_reg_date
                   ? formatDates(values.social_security_reg_date, "dd-MMM-yyyy")
                   : null,
-                grossPackage:
-                  values.grossSalary > 0
+                // grossPackage:
+                //   values.grossSalary > 0
+                //     ? Number(values.grossSalary) + Number(totalGross)
+                //     : Number(defGrossSalary) + Number(totalGross),
+
+
+                 grossPackage: currentSalaryMethod
+                  ? (values.grossSalary > 0
                     ? Number(values.grossSalary) + Number(totalGross)
-                    : Number(defGrossSalary) + Number(totalGross),
+                    : Number(defGrossSalary) + Number(totalGross))
+                  : (values.grossSalary > 0
+                    ? Number(values.grossSalary)
+                    : Number(defGrossSalary))
               },
               earningDeductionList
             );
@@ -2940,10 +2955,19 @@ export function FormEditForm({
                       <AmountInput
                         field={{
                           name: `grossSalary`,
-                          value:
-                            values.grossSalary > 0
-                              ? Number(values.grossSalary) + Number(totalGross)
-                              : Number(defGrossSalary) + Number(totalGross),
+                          // value:
+                          //   values.grossSalary > 0
+                          //     ? Number(values.grossSalary) + Number(totalGross)
+                          //     : Number(defGrossSalary) + Number(totalGross),
+
+
+                              value: currentSalaryMethod
+                              ? (values.grossSalary > 0
+                                ? Number(values.grossSalary) + Number(totalGross)
+                                : Number(defGrossSalary) + Number(totalGross))
+                              : (values.grossSalary > 0
+                                ? Number(values.grossSalary)
+                                : Number(defGrossSalary)),
                           onBlur: () => { },
                           onChange: (e) => { },
                         }}
@@ -2955,11 +2979,11 @@ export function FormEditForm({
                         }}
                         label={"Gross Package"}
                         disabled={true}
-                        value={
-                          values.grossSalary > 0
-                            ? Number(values.grossSalary) + Number(totalGross)
-                            : Number(defGrossSalary) + Number(totalGross)
-                        }
+                        // value={
+                        //   values.grossSalary > 0
+                        //     ? Number(values.grossSalary) + Number(totalGross)
+                        //     : Number(defGrossSalary) + Number(totalGross)
+                        // }
                       />
                     </div>
 
@@ -2988,12 +3012,20 @@ export function FormEditForm({
                         allowNegative={true}
                         field={{
                           name: `netSalary`,
-                          value:
-                            values.grossSalary > 0
-                              ? Number(values.grossSalary) +
-                              Number(totalGross) -
-                              Number(totalDeduction)
-                              : Number(defGrossSalary) + Number(totalGross),
+                          // value:
+                          //   values.grossSalary > 0
+                          //     ? Number(values.grossSalary) +
+                          //     Number(totalGross) -
+                          //     Number(totalDeduction)
+                          //     : Number(defGrossSalary) + Number(totalGross),
+
+                                                      value: currentSalaryMethod
+                              ? (values.grossSalary > 0
+                                ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
+                                : Number(defGrossSalary) + Number(totalGross))
+                              : (values.grossSalary > 0
+                                ? Number(values.grossSalary) - Number(totalDeduction)
+                                : Number(defGrossSalary)),
                           onBlur: () => { },
                           onChange: (e) => { },
                         }}

@@ -772,6 +772,7 @@ export function BankEditForm({
         }
       }
     } else {
+     
       let basicSalaryNumber = Number(basicSalaryInput);
       let gross = 0;
       const result = await Promise.all(
@@ -787,9 +788,10 @@ export function BankEditForm({
         })
       );
 
-      setFieldValue("grossSalary", gross + basicSalaryNumber);
-      setGrossSalary(gross + basicSalaryNumber);
-      setGrossSalaryDB(gross + basicSalaryNumber);
+      setFieldValue("grossSalary", gross + basicSalaryNumber + totalGross);
+      setGrossSalary(gross + basicSalaryNumber + totalGross);
+      setGrossSalaryDB(gross + basicSalaryNumber + totalGross);
+
     }
 
 
@@ -958,10 +960,19 @@ export function BankEditForm({
                   ? formatDates(values.social_security_reg_date, "dd-MMM-yyyy")
                   : null,
                 basicFactor: defBasicSalaryFactor,
-                grossPackage:
-                  values.grossSalary > 0
+                // grossPackage:
+                //   values.grossSalary > 0
+                //     ? Number(values.grossSalary) + Number(totalGross)
+                //     : Number(defGrossSalary) + Number(totalGross),
+
+                grossPackage: currentSalaryMethod
+                  ? (values.grossSalary > 0
                     ? Number(values.grossSalary) + Number(totalGross)
-                    : Number(defGrossSalary) + Number(totalGross),
+                    : Number(defGrossSalary) + Number(totalGross))
+                  : (values.grossSalary > 0
+                    ? Number(values.grossSalary)
+                    : Number(defGrossSalary))
+
               },
               defMapEarningDeductionList
             );
@@ -1819,11 +1830,19 @@ export function BankEditForm({
                         <AmountInput
                           field={{
                             name: `grossSalary`,
-                            value:
-                              values.grossSalary > 0
-                                ? Number(values.grossSalary) +
-                                Number(totalGross)
-                                : Number(defGrossSalary) + Number(totalGross),
+                            // value:
+                            //   values.grossSalary > 0
+                            //     ? Number(values.grossSalary) +
+                            //     Number(totalGross)
+                            //     : Number(defGrossSalary) + Number(totalGross),
+
+                            value: currentSalaryMethod
+                              ? (values.grossSalary > 0
+                                ? Number(values.grossSalary) + Number(totalGross)
+                                : Number(defGrossSalary) + Number(totalGross))
+                              : (values.grossSalary > 0
+                                ? Number(values.grossSalary)
+                                : Number(defGrossSalary)),
                             onBlur: () => { },
                             onChange: (e) => { },
                           }}
@@ -1835,11 +1854,11 @@ export function BankEditForm({
                           }}
                           label={"Gross Package"}
                           disabled={true}
-                          value={
-                            values.grossSalary > 0
-                              ? Number(values.grossSalary) + Number(totalGross)
-                              : Number(defGrossSalary) + Number(totalGross)
-                          }
+                        // value={
+                        //   values.grossSalary > 0
+                        //     ? Number(values.grossSalary) + Number(totalGross)
+                        //     : Number(defGrossSalary) + Number(totalGross)
+                        // }
                         />
                       </div>
                     </div>
@@ -1890,12 +1909,20 @@ export function BankEditForm({
                           allowNegative={true}
                           field={{
                             name: `netSalary`,
-                            value:
-                              values.grossSalary > 0
-                                ? Number(values.grossSalary) +
-                                Number(totalGross) -
-                                Number(totalDeduction)
-                                : Number(defGrossSalary) + Number(totalGross),
+                            // value:
+                            //   values.grossSalary > 0
+                            //     ? Number(values.grossSalary) +
+                            //     Number(totalGross) -
+                            //     Number(totalDeduction)
+                            //     : Number(defGrossSalary) + Number(totalGross),
+
+                            value: currentSalaryMethod
+                              ? (values.grossSalary > 0
+                                ? Number(values.grossSalary) + Number(totalGross) - Number(totalDeduction)
+                                : Number(defGrossSalary) + Number(totalGross))
+                              : (values.grossSalary > 0
+                                ? Number(values.grossSalary) - Number(totalDeduction)
+                                : Number(defGrossSalary)),
                             onBlur: () => { },
                             onChange: (e) => { },
                           }}
