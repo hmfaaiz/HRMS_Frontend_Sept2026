@@ -8,14 +8,19 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import * as actions from "../../../_redux/formActions";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
-import { Download } from "lucide-react";
+import { Download, Info } from "lucide-react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 //Validation for Form
 const formValidation = Yup.object().shape({
   file: Yup.mixed().required(VALIDATION_MESSAGES.required),
 });
 
-export function EmployeeDynasoftAttendanceSection({ downloadExcel, dispatch }) {
+export function EmployeeDynasoftAttendanceSection({
+  downloadExcel,
+  dispatch,
+  setHelp,
+}) {
   const [loading, setLoading] = useState(false);
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
@@ -30,7 +35,6 @@ export function EmployeeDynasoftAttendanceSection({ downloadExcel, dispatch }) {
   };
 
   return (
-   
     <Formik
       enableReinitialize={true}
       initialValues={{ file: null }}
@@ -49,7 +53,11 @@ export function EmployeeDynasoftAttendanceSection({ downloadExcel, dispatch }) {
           };
 
           dispatch(
-            actions.saveEmployeeDynasoftAttendanceSheetData(formData, setLoading, clearForm)
+            actions.saveEmployeeDynasoftAttendanceSheetData(
+              formData,
+              setLoading,
+              clearForm
+            )
           );
         }
       }}
@@ -59,6 +67,17 @@ export function EmployeeDynasoftAttendanceSection({ downloadExcel, dispatch }) {
           <div className="flex justify-between">
             <h6 className="font-bold mb-0 text-primary my-2">
               Employee Attendance (Dynasoft)
+              <OverlayTrigger
+                overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+              >
+                <a
+                  title=""
+                  className=""
+                  onClick={() => setHelp("dynasoft_employee_attendance")}
+                >
+                  <Info className="w-4 h-4 text-black cursor-pointer mb-1 ml-1" />
+                </a>
+              </OverlayTrigger>
             </h6>
             <button className="btn bg-tsecondary" onClick={onClick}>
               Template{" "}

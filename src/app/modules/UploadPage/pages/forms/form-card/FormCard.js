@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardBody,
@@ -22,83 +22,19 @@ import { EmployeeGratuitySection } from "../form-edit-dialog/EmployeeGratuitySec
 import { EmployeePFSection } from "../form-edit-dialog/EmployeePFSection";
 import { EmployeeRosterSection } from "../form-edit-dialog/EmployeeRosterSection";
 import { EmployeeOneTimeAllowancesSection } from "../form-edit-dialog/EmployeeOneTimeEarningDeduction";
+import { FormHelpModel } from "../help-model/HelpModel";
+import { Title } from "chart.js";
+import { uploadInfo } from "../FormUIHelpers";
 
 export function FormCard() {
   const dispatch = useDispatch();
+  const [help, setHelp] = useState(null);
 
   const downloadExcel = (document, type, fileName) => {
     dispatch(actions.downloadTemplate(document, type, fileName));
   };
 
   return (
-    // <>
-    //   <Card>
-    //     {/* Card Starts */}
-
-    //     <CardBody>
-    //       <CardHeader title={CurrentModuleName()}></CardHeader>
-    //       <br />
-
-    //       {/* EmployeeProfileSection Starts */}
-    //       <EmployeeProfileSection
-    //         downloadExcel={downloadExcel}
-    //         dispatch={dispatch}
-    //       />
-    //       {/* EmployeeProfileSection Ends */}
-
-    //       <br />
-    //       <hr />
-
-    //       {/* EmployeeSalarySection Starts */}
-    //       <EmployeeSalarySection
-    //         downloadExcel={downloadExcel}
-    //         dispatch={dispatch}
-    //       />
-    //       {/* EmployeeSalarySection Ends */}
-
-    //       <br />
-    //       <hr />
-
-    //       {/* EmployeeLeaveSection Starts */}
-    //       <EmployeeLeaveSection
-    //         downloadExcel={downloadExcel}
-    //         dispatch={dispatch}
-    //       />
-    //       {/* EmployeeLeaveSection Ends */}
-
-    //       <br />
-    //       <hr />
-
-    //       {/* EmployeeAttendanceSection Starts */}
-    //       <EmployeeAttendanceSection
-    //         downloadExcel={downloadExcel}
-    //         dispatch={dispatch}
-    //       />
-    //       {/* EmployeeAttendanceSection Ends */}
-
-    //       <br />
-    //       <hr />
-
-    //       {/* LoanOpeningSection Starts */}
-    //       <LoanOpeningSection
-    //         downloadExcel={downloadExcel}
-    //         dispatch={dispatch}
-    //       />
-    //       {/* LoanOpeningSection Ends */}
-
-    //       <br />
-    //       <hr />
-
-    //       {/* IncomeTaxOpeningSection Starts */}
-    //       <IncomeTaxOpeningSection
-    //         downloadExcel={downloadExcel}
-    //         dispatch={dispatch}
-    //       />
-    //       {/* IncomeTaxOpeningSection Ends */}
-    //     </CardBody>
-
-    //     {/* Card Ends */}
-    //   </Card>
     <>
       <TCard isSecondChild={false} name={"Upload Data"}></TCard>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  xl:grid-cols-3 gap-x-3 gap-y-2 mt-2">
@@ -106,72 +42,102 @@ export function FormCard() {
         <EmployeeProfileSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* EmployeeProfileSection Ends */}
         {/* EmployeeSalarySection Starts */}
         <EmployeeSalarySection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* EmployeeSalarySection Ends */}
         {/* EmployeeLeaveSection Starts */}
         <EmployeeLeaveSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* EmployeeLeaveSection Ends */}
         {/* EmployeeAttendanceSection Starts */}
         <EmployeeAttendanceSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* EmployeeAttendanceSection Ends */}
-        {/* LoanOpeningSection Starts */}
-        <LoanOpeningSection downloadExcel={downloadExcel} dispatch={dispatch} />
-        {/* LoanOpeningSection Ends */}
-        {/* IncomeTaxOpeningSection Starts */}
-        <IncomeTaxOpeningSection
-          downloadExcel={downloadExcel}
-          dispatch={dispatch}
-        />
         {/* Emp Att New Version */}
         <EmployeeAttendanceManualSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* Employee Dynasoft Attendance*/}
         <EmployeeDynasoftAttendanceSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
+        {/* Employee Roster */}
+        <EmployeeRosterSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+          setHelp={setHelp}
+        />
+        {/* LoanOpeningSection Starts */}
+        <LoanOpeningSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+          setHelp={setHelp}
+        />
+        {/* LoanOpeningSection Ends */}
+        {/* IncomeTaxOpeningSection Starts */}
+        <IncomeTaxOpeningSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+          setHelp={setHelp}
+        />
+
         {/* Employee Social Security Contribution opening */}
         <EmployeeSocialSecuritySection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* Employee EOBI Contribution opening */}
         <EmployeeEOBISection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* Employee Gratuity Contribution opening */}
         <EmployeeGratuitySection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
         {/* Employee PF Contribution opening */}
-        <EmployeePFSection downloadExcel={downloadExcel} dispatch={dispatch} />
-        {/* Employee Roster */}
-        <EmployeeRosterSection
+        <EmployeePFSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
+
         {/* Employee One time Earning Deduction */}
         <EmployeeOneTimeAllowancesSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
+          setHelp={setHelp}
         />
       </div>
+      {help && (
+        <FormHelpModel
+          show={help}
+          onHide={() => setHelp(null)}
+          descrption={uploadInfo?.find((el) => el.name == help)?.description}
+          title={uploadInfo?.find((el) => el.name == help)?.title}
+        />
+      )}
     </>
     // </>
   );

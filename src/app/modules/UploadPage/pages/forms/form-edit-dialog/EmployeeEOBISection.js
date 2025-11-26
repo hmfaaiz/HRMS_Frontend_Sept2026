@@ -3,15 +3,16 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import * as actions from "../../../_redux/formActions";
-import { Download } from "lucide-react";
+import { Download, Info } from "lucide-react";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 //Validation for Form
 const formValidation = Yup.object().shape({
   file: Yup.mixed().required(VALIDATION_MESSAGES.required),
 });
 
-export function EmployeeEOBISection({ downloadExcel, dispatch }) {
+export function EmployeeEOBISection({ downloadExcel, dispatch , setHelp }) {
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,17 @@ export function EmployeeEOBISection({ downloadExcel, dispatch }) {
         <div className="px-3 py-2 rounded-lg bg-white overflow-y-auto">
           <div className="flex justify-between">
             <h6 className="font-bold mb-0 text-primary my-2">
-              Employee EOBI Contribution Opening
+              Employee EOBI Contribution Opening <OverlayTrigger
+                overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
+              >
+                <a
+                  title=""
+                  className=""
+                  onClick={() => setHelp("employee_eobi_contribution")}
+                >
+                  <Info className="w-4 h-4 text-black cursor-pointer mb-1 ml-1" />
+                </a>
+              </OverlayTrigger>
             </h6>
             <button className="btn bg-tsecondary" onClick={onClick}>
               Template{" "}

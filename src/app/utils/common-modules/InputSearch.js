@@ -12,7 +12,7 @@ export const InputSearch = ({
         <div className="position-relative">
             <input
                 type="text"
-                className="form-control min-w-72"
+                className="form-control"
                 name={fieldName}
                 placeholder="Search"
                 onBlur={handleBlur}
@@ -27,8 +27,8 @@ export const InputSearch = ({
                 <span
                     style={{
                         position: "absolute",
-                        right: "18px",
-                        top: "40%",
+                        right: "7px",
+                        top: "45%",
                         transform: "translateY(-50%)",
                         color: "#000000",
                     }}
