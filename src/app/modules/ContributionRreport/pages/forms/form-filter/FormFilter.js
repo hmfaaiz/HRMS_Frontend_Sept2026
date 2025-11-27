@@ -505,25 +505,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
 
                         <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
-                          <button
-                            onClick={() => {
-                              if (!pdfLoading) {
-                                delete values.monthId
-                                getProvidentFundComputationPdf(values);
-                              }
-                            }}
-                            disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
-                              }`}
-
-                            type="button"
-
-                          >
-                            Provident Fund Computation Report
-
-                            <Download className="w-4 h-4 ml-2" />
-
-                          </button>
+                         
                           <button
 
                             onClick={() => {
@@ -543,7 +525,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                             <Download className="w-4 h-4 ml-2" />
 
-                          </button>   <button
+                          </button>
+                             <button
                             onClick={() => {
                               if (!pdfLoading) {
                                 delete values.monthId
@@ -558,6 +541,26 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
 
                           >
                            Social Security Computation Report
+
+                            <Download className="w-4 h-4 ml-2" />
+
+                          </button>
+
+                           <button
+                            onClick={() => {
+                              if (!pdfLoading) {
+                                delete values.monthId
+                                getProvidentFundComputationPdf(values);
+                              }
+                            }}
+                            disabled={pdfLoading}
+                            className={`btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
+                              }`}
+
+                            type="button"
+
+                          >
+                            Provident Fund Computation Report
 
                             <Download className="w-4 h-4 ml-2" />
 

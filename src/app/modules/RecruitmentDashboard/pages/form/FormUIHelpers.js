@@ -16,7 +16,7 @@ export const sizePerPageList = [
 
 export const initialFilter = {
   filter: {
-    vacancyStatusId: null,
+    vacancyStatusId: 1,
     searchText: "",
     departmentId: null,
     designationId: null,

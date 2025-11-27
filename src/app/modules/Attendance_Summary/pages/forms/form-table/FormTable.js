@@ -120,7 +120,7 @@ export function FormTable() {
 
     {
       dataField: "PresentDays",
-      text: "Present Days",
+      text: "Paid Days",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -155,18 +155,18 @@ export function FormTable() {
       },
 
     },
-    {
-      dataField: "Holidays",
-      text: "Holidays",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "160px",
-        maxWidth: "160px",
-      },
+    // {
+    //   dataField: "Holidays",
+    //   text: "Holidays",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "160px",
+    //     maxWidth: "160px",
+    //   },
 
-    },
+    // },
 
     {
       dataField: "OTHours",
