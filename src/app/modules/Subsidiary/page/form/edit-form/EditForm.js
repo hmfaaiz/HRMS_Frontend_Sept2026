@@ -67,6 +67,14 @@ const formSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
+   incomeTaxTypeId: Yup.number()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required), 
+    
+    isSubordinateRequest: Yup.boolean()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
 
 
 });
@@ -123,6 +131,18 @@ export const EditForm = ({
     { value: 1, label: "Pakistan" },
     { value: 2, label: "United Arab Emirates" },
     { value: 2, label: "Saudi Arabia" },
+  ];
+
+    const incomeTaxOptions = [
+    { value: 1, label: "Current Month Salary" },
+    { value: 2, label: "Year to Date Salary + Remaining Month estimations" },
+ 
+  ];
+  
+  const subordinateRequestOptions = [
+    { value: true, label: "Yes" },
+    { value: false, label: "No" },
+ 
   ];
 
   return (
@@ -330,7 +350,82 @@ export const EditForm = ({
                     />
                   </div>
 
+                         <div className="col-span-1">
+                              <label>
+    Creating request on behalf of Subordinate <span style={{ color: "red" }}>*</span>
+  </label>
+                     <Select
+
+  name="isSubordinateRequest"
+  value={String(values.isSubordinateRequest)} // convert to string
+  onChange={(e) => setFieldValue("isSubordinateRequest", e.target.value)}
+  error={errors.isSubordinateRequest}
+  touched={touched.isSubordinateRequest}
+  onBlur={handleBlur}
+  autoComplete="off"
+>
+  <option value="">Select</option>
+  {subordinateRequestOptions.map((option) => (
+    <option key={option.value} value={String(option.value)}>
+      {option.label}
+    </option>
+  ))}
+</Select>
+
+                      {errors.isSubordinateRequest && touched.isSubordinateRequest && (
+                       <ErrorMessage
+                       className="invalid-feedback"
+                       name="isSubordinateRequest"
+                       component="div"
+                     />
+                        
+              
+                      )}
+                    </div> 
+                    
+
                        <div className="col-span-1">
+                      <Select
+                        label={
+                          <span>
+                            {" "}
+                            Policy for calculating Income Tax based on <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        name="incomeTaxTypeId"
+                     
+                        value={values.incomeTaxTypeId}
+                        onChange={(e) => {
+                          setFieldValue("incomeTaxTypeId", e.target.value);
+                        }}
+                        error={errors.incomeTaxTypeId}
+                        touched={touched.incomeTaxTypeId}
+                        onBlur={handleBlur}
+                   
+                        autoComplete="off"
+                      >
+                    <option value="">Select </option>
+                      {incomeTaxOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+
+
+                      ))}
+                      </Select>
+                      {errors.incomeTaxTypeId && touched.incomeTaxTypeId && (
+                       <ErrorMessage
+                       className="invalid-feedback"
+                       name="incomeTaxTypeId"
+                       component="div"
+                     />
+                        
+              
+                      )}
+                    </div> 
+                    
+                    
+                      <div className="col-span-1">
                       <Select
                         label={
                           <span>

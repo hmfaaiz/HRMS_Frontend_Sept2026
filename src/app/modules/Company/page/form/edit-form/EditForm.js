@@ -5,6 +5,7 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { Modal } from "react-bootstrap";
 import {
   Input,
+  Select,
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -103,6 +104,14 @@ export const EditForm = ({
       dispatch(fetchAllCity(data?.countryId));
     }
   }, [data?.countryId, dispatch]);
+
+
+    const namePolicytOptions = [
+    { value: 1, label: "Company Name" },
+    { value: 2, label: "Subsidiary Name " },
+ 
+  ];
+
   return (
     <Formik
       enableReinitialize={true}
@@ -425,6 +434,36 @@ export const EditForm = ({
                       </div>
                     )} */}
                   </div>
+
+                           <div className="col-span-1">
+                                       <Select
+                    label="Policy to show name on report"
+                    name="policyToShowNameOnReport"
+                    value={String(values.policyToShowNameOnReport)} // convert to string
+                    onChange={(e) => setFieldValue("policyToShowNameOnReport", e.target.value)}
+                    error={errors.policyToShowNameOnReport}
+                    touched={touched.policyToShowNameOnReport}
+                    onBlur={handleBlur}
+                    autoComplete="off"
+                  >
+                    <option value="">Select</option>
+                    {namePolicytOptions.map((option) => (
+                      <option key={option.value} value={String(option.value)}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Select>
+                  
+                                        {errors.policyToShowNameOnReport && touched.policyToShowNameOnReport && (
+                                         <ErrorMessage
+                                         className="invalid-feedback"
+                                         name="policyToShowNameOnReport"
+                                         component="div"
+                                       />
+                                          
+                                
+                                        )}
+                                      </div> 
 
                   <div className="text-black mt-1">
                     <label>
