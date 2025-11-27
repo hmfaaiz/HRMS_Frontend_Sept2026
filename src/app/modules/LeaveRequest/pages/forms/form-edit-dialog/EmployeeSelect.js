@@ -75,47 +75,47 @@ export function EmployeeSelect({
     dispatch(actions.fetchLeaveApplication(newQueryParams));
   };
 
-  useEffect(() => {
-    dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
-  }, [formUIProps?.currentLevel]);
+  // useEffect(() => {
+  //   dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
+  // }, [formUIProps?.currentLevel]);
 
-  useEffect(() => {
-    if (!formUIProps?.employeeId?.value && employeeList?.length > 0) {
-      formUIProps.setemployeeId(employeeList[0]);
-    }
-    if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
-      let findEmp = employeeList.find(
-        (e) => e?.value === user?.employeeIdMapping
-      );
-      formUIProps.setemployeeId(findEmp);
-    }
-  }, [employeeList, formUIProps?.employeeId]);
+  // useEffect(() => {
+  //   if (!formUIProps?.employeeId?.value && employeeList?.length > 0) {
+  //     formUIProps.setemployeeId(employeeList[0]);
+  //   }
+  //   if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
+  //     let findEmp = employeeList.find(
+  //       (e) => e?.value === user?.employeeIdMapping
+  //     );
+  //     formUIProps.setemployeeId(findEmp);
+  //   }
+  // }, [employeeList, formUIProps?.employeeId]);
 
-  useEffect(() => {
-    // Only proceed if we have an employeeId
-    if (!formUIProps?.employeeId?.value) return;
+  // useEffect(() => {
+  //   // Only proceed if we have an employeeId
+  //   if (!formUIProps?.employeeId?.value) return;
 
-    dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId?.value));
-    // Fetch payroll month if we don't have the data yet
-    if (!payrollData) {
-      dispatch(actions.getPayrollMonth(formUIProps?.employeeId?.value));
-      return;
-    }
-    // Only apply filter when we have all required data
-    if (payrollData?.startDate && payrollData?.endDate) {
-      // const values = {
-      //   ...initialFilter.filter,
-      //   employeeId: formUIProps.employeeId?.value,
-      //   from: payrollData.startDate,
-      //   to: payrollData.endDate,
-      // };
-      // applyFilter(values);
-      // dispatch(actions.fetchLeaveApplication(values));
-      dispatch(
-        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
-      );
-    }
-  }, [formUIProps.employeeId?.value, payrollData]); // Dependencies remain the same
+  //   dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId?.value));
+  //   // Fetch payroll month if we don't have the data yet
+  //   if (!payrollData) {
+  //     dispatch(actions.getPayrollMonth(formUIProps?.employeeId?.value));
+  //     return;
+  //   }
+  //   // Only apply filter when we have all required data
+  //   if (payrollData?.startDate && payrollData?.endDate) {
+  //     // const values = {
+  //     //   ...initialFilter.filter,
+  //     //   employeeId: formUIProps.employeeId?.value,
+  //     //   from: payrollData.startDate,
+  //     //   to: payrollData.endDate,
+  //     // };
+  //     // applyFilter(values);
+  //     // dispatch(actions.fetchLeaveApplication(values));
+  //     dispatch(
+  //       getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
+  //     );
+  //   }
+  // }, [formUIProps.employeeId?.value, payrollData]); // Dependencies remain the same
 
   return (
     <>

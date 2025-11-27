@@ -347,14 +347,14 @@ export function FormTable() {
                     </span>
                   )
                 )}
-                {!allowRequestOnThisLevel && (
+                {/* {!allowRequestOnThisLevel && (
                   <>
                     <span style={{ color: "red" }}>
                       Employee level request not permitted.
                     </span>
                     <br />
                   </>
-                )}
+                )} */}
                 <BootstrapTable
                   responsive
                   style={{ width: "100%", overflow: "auto" }}

@@ -23,7 +23,6 @@ export function FormEditDialog({
     return {
       setId: FormUIContext.setId,
       queryParamsLeaveApp: FormUIContext.queryParamsLeaveApp,
-      employeeId: FormUIContext.employeeId,
     };
   }, [FormUIContext]);
 
@@ -61,7 +60,7 @@ export function FormEditDialog({
               file: res.data.filename,
               authortiesList: empAuthorityList,
             },
-            formUIProps.employeeId?.value,
+            employeeId,
             disbaleLoading,
             resetForm
           )
@@ -69,7 +68,7 @@ export function FormEditDialog({
           dispatch(
             actions.fetchLeaveApplication(
               formUIProps.queryParamsLeaveApp,
-              formUIProps.employeeId?.value
+              employeeId
             )
           );
         });
@@ -78,7 +77,7 @@ export function FormEditDialog({
       dispatch(
         actions.saveRecord(
           { ...values, authortiesList: empAuthorityList },
-          formUIProps.employeeId?.value,
+          employeeId,
           disbaleLoading,
           resetForm
         )
@@ -86,7 +85,7 @@ export function FormEditDialog({
         dispatch(
           actions.fetchLeaveApplication(
             formUIProps.queryParamsLeaveApp,
-            formUIProps.employeeId?.value
+            employeeId
           )
         );
       });
@@ -99,18 +98,20 @@ export function FormEditDialog({
         <MasterEditForm
           submitForm={submitForm}
           user={userForEdit || initUser}
+          enableLoading={enableLoading}
+          initialValue={initUser}
+          loading={loading}
+          employeeId={employeeId}
+          isEdit={id ? true : false}
+          disbaleLoading={disbaleLoading}
+          setId={formUIProps.setId}
+          payrollData={payrollData}
           empAuthorityList={empAuthorityList}
           isPolicyExists={isPolicyExists}
-          enableLoading={enableLoading}
-          loading={loading}
-          employeeId={formUIProps?.employeeId}
           currentLevel={currentLevel}
-          isEdit={id ? true : false}
           isReaply={
             !id ? false : userForEdit?.request_status !== "R" ? true : false
           }
-          setId={formUIProps.setId}
-          payrollData={payrollData}
         />
       </div>
       {/* <ToastContainer

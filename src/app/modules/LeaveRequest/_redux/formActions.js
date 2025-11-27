@@ -107,7 +107,6 @@ export const fetchEditRecord = (id) => (dispatch) => {
 export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
   dispatch
 ) => {
-  
   if (employeeId) {
     if (!data.Id) {
       return requestFromServer
@@ -234,9 +233,11 @@ export const getEmployeeAuthorities = (empId) => (dispatch) => {
   return requestFromServer
     .getEmployeeAuthorties(empId, "399")
     .then((res) => {
-      const data = Array.isArray(res.data?.data?.data) ? res.data?.data?.data : [];
+      const data = Array.isArray(res.data?.data?.data)
+        ? res.data?.data?.data
+        : [];
       const isPolicyExists = res.data?.data?.isPolicyExists || false;
-      dispatch(actions.EmployeeAuthorityFetched({data, isPolicyExists}));
+      dispatch(actions.EmployeeAuthorityFetched({ data, isPolicyExists }));
     })
     .catch((error) => {
       error.clientMessage = "Can't Get Employee Authorities";
@@ -256,6 +257,43 @@ export const getSandwichPolicy = (subsidiaryId) => (dispatch) => {
       .catch((error) => {
         dispatch(actions.SandwichPolicyFetched({ sandwichPolicy: null }));
         error.clientMessage = "Can't Get Sandwich Policy";
+      });
+  }
+};
+
+export const getLeaveApplicationDetail = (
+  data,
+  employeeId,
+  disableLoading,
+  setLeaveLines
+) => (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getLeaveApplicationDetail({ ...data, employeeId })
+      .then((res) => {
+        const LeaveApplicationData = res.data?.data;
+        if (LeaveApplicationData) {
+          dispatch(
+            actions.LeaveApplicationFetchedForEdit({
+              userForEdit: LeaveApplicationData,
+            })
+          );
+          disableLoading();
+        }
+      })
+      .catch((error) => {
+        disableLoading();
+        setLeaveLines("leaveLines", []);
+        error.clientMessage = "Can't Extract Leave  Detail";
+        toast.error(error?.response?.data?.message || error.clientMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
   }
 };

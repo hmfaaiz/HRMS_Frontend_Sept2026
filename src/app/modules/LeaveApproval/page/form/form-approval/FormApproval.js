@@ -51,12 +51,19 @@ export const FormApproval = () => {
       );
     } catch (err) {
       setLoading(false);
+      formUIProps.setIds([]);
+      formUIProps.setLeaveData(null);
+      await dispatch(
+        actions.fetchLeaveApprovalApplication(
+          initialFilter,
+          user?.employeeIdMapping
+        )
+      );
     }
   };
 
   const handleRejectClick = (setFieldValue, handleSubmit, values) => {
     setFieldValue("request_status", "R");
-
     // Check if remarks are empty when rejecting
     if (!values.authorityRemarks || values.authorityRemarks.trim() === "") {
       toast.error("Remarks are required when rejecting a request");
@@ -90,54 +97,52 @@ export const FormApproval = () => {
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
           <>
-              <button
-                type="button"
-                onClick={() => {
-                  setFieldValue("request_status", "A");
-                  handleSubmit();
-                }}
-                disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                className="btn btn-success"
-              >
-                Approve
-              </button>
-              <button
-                type="button"
-                disabled={!(formUIProps?.Ids?.length > 0) || loading}
-                onClick={() =>
-                  handleRejectClick(setFieldValue, handleSubmit, values)
-                }
-                className="btn btn-danger mx-2"
-              >
-                Reject
-              </button>
-              <Form className="form form-label-right">
-                <fieldset
-                  disabled={formUIProps?.Ids?.length > 0 ? false : true}
-                >
-                  <div className="from-group row">
-                    <div className="col-12 col-md-12 mt-3">
-                      <Field
-                        name="authorityRemarks"
-                        component={TextArea}
-                        placeholder=""
-                        onChange={(e) => {
-                          setFieldValue("authorityRemarks", e.target.value);
-                        }}
-                        onBlur={handleBlur}
-                        label={
-                          <span>
-                            {" "}
-                            Remarks<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        value={values.authorityRemarks}
-                        autoComplete="off"
-                      />
-                    </div>
+            <button
+              type="button"
+              onClick={() => {
+                setFieldValue("request_status", "A");
+                handleSubmit();
+              }}
+              disabled={!(formUIProps?.Ids?.length > 0) || loading}
+              className="btn btn-success"
+            >
+              Approve
+            </button>
+            <button
+              type="button"
+              disabled={!(formUIProps?.Ids?.length > 0) || loading}
+              onClick={() =>
+                handleRejectClick(setFieldValue, handleSubmit, values)
+              }
+              className="btn btn-danger mx-2"
+            >
+              Reject
+            </button>
+            <Form className="form form-label-right">
+              <fieldset disabled={formUIProps?.Ids?.length > 0 ? false : true}>
+                <div className="from-group row">
+                  <div className="col-12 col-md-12 mt-3">
+                    <Field
+                      name="authorityRemarks"
+                      component={TextArea}
+                      placeholder=""
+                      onChange={(e) => {
+                        setFieldValue("authorityRemarks", e.target.value);
+                      }}
+                      onBlur={handleBlur}
+                      label={
+                        <span>
+                          {" "}
+                          Remarks<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      value={values.authorityRemarks}
+                      autoComplete="off"
+                    />
                   </div>
-                </fieldset>
-              </Form>
+                </div>
+              </fieldset>
+            </Form>
           </>
         )}
       </Formik>

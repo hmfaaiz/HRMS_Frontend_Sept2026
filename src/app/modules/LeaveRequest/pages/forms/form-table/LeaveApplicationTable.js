@@ -209,7 +209,7 @@ export function LeaveApplicationTable() {
         isAccessForEdit: false,
         isAccessForReApply: isAccessForReApply
           ? isAccessForReApply?.isAccess &&
-            user?.employeeIdMapping === FormUIProps?.employeeId?.value
+            user?.employeeIdMapping === FormUIProps?.employeeId
           : false,
       },
       classes: "text-left pr-0",

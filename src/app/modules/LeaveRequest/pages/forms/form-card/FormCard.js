@@ -40,78 +40,72 @@ export function FormCard() {
 
   //Get data from states
   const {
-    dashboard,
-    entities,
     empAuthorityList,
     isPolicyExists,
     payrollData,
     employeeList,
     leave,
+    user,
   } = useSelector(
     (state) => ({
-      dashboard: state.dashboard,
-      entities: state.leave_request.entities,
       leave: state?.auth?.userAccess["Leave"],
       payrollData: state.leave_request?.payrollData,
       empAuthorityList: state?.leave_request?.empAuthorityList,
       isPolicyExists: state?.leave_request?.isPolicyExists,
       employeeList: state?.dashboard?.employeeList,
+      user: state?.auth?.user,
     }),
     shallowEqual
   );
 
   useEffect(() => {
+    formUIProps.setemployeeId(user?.employeeIdMapping);
+  }, [user]);
+
+  useEffect(() => {
     if (location?.state) {
       let state = location?.state;
-      formUIProps.setCurrentLevel(state?.employeeId?.level);
+      // formUIProps.setCurrentLevel(state?.employeeId?.level);
+      formUIProps.setCurrentLevel(0);
       formUIProps.setemployeeId(state?.employeeId);
       setDateFromAtt(state?.leaveDate);
     }
-    if (
-      !formUIProps?.employeeId?.value &&
-      employeeList?.length > 0 &&
-      !location?.state
-    ) {
-      formUIProps.setemployeeId(employeeList[0]);
-    }
-  }, [employeeList, formUIProps?.employeeId, location]);
+  }, [location]);
 
   //Get data from server and set on state whenever employee Id is updated
   useEffect(() => {
-    if (formUIProps.employeeId?.value) {
+    if (formUIProps.employeeId) {
       dispatch(
         actions.fetchLeaveApplication(
           formUIProps.queryParamsLeaveApp,
-          formUIProps.employeeId.value
+          formUIProps.employeeId
         )
       );
 
-      if (!dashboard.allEmployees?.length) {
-        dispatch(fetchAllActiveEmployees());
-      }
+      // if (!dashboard.allEmployees?.length) {
+      //   dispatch(fetchAllActiveEmployees());
+      // }
     }
-  }, [formUIProps.employeeId?.value, formUIProps.queryParamsLeaveApp]);
+  }, [formUIProps.employeeId, formUIProps.queryParamsLeaveApp]);
 
   //Update Leave Balances whenever employee Id is changed or leave application table is updated
   //Also update dropdown of leave type when employee is selected
   useEffect(() => {
-    if (formUIProps.employeeId?.value) {
-      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId.value));
-      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId.value));
-      dispatch(
-        fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId.value)
-      );
-      dispatch(actions.getPayrollMonth(formUIProps.employeeId.value));
+    if (formUIProps.employeeId) {
+      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId));
+      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId));
+      dispatch(fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId));
+      dispatch(actions.getPayrollMonth(formUIProps.employeeId));
       dispatch(actions.getSandwichPolicy(formUIProps.employeeId.value));
     }
-  }, [formUIProps.employeeId?.value]);
-  useEffect(() => {
-    if (payrollData) {
-      dispatch(
-        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
-      );
-    }
-  }, [payrollData]);
+  }, [formUIProps.employeeId]);
+  // useEffect(() => {
+  //   if (payrollData) {
+  //     dispatch(
+  //       getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
+  //     );
+  //   }
+  // }, [payrollData]);
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -204,7 +198,7 @@ export function FormCard() {
         <FormEditDialog
           id={formUIProps.id}
           currentLevel={formUIProps?.currentLevel}
-          employeeId={formUIProps?.employeeId?.value}
+          employeeId={formUIProps?.employeeId}
           empAuthorityList={empAuthorityList}
           isPolicyExists={isPolicyExists}
           initUser={{

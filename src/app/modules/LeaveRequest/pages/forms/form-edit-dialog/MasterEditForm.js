@@ -9,7 +9,7 @@ import {
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import {
   formatDates,
@@ -18,6 +18,9 @@ import {
   getUploadUrl,
 } from "../../../../../utils/common";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import * as actions from "../../../_redux/formActions";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+import LeaveLinesTable from "../../../../LeaveApplication/pages/forms/form-edit-dialog/LeaveLinesTable";
 
 export function MasterEditForm({
   submitForm,
@@ -25,6 +28,7 @@ export function MasterEditForm({
   actionsLoading,
   isReaply,
   enableLoading,
+  disbaleLoading,
   loading,
   isEdit,
   setId,
@@ -33,9 +37,11 @@ export function MasterEditForm({
   empAuthorityList,
   isPolicyExists,
   currentLevel,
+  initialValue,
 }) {
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
+  const dispatch = useDispatch();
   const {
     allLeaveTypes,
     userAccess,
@@ -54,7 +60,7 @@ export function MasterEditForm({
   const accessUser = useMemo(
     () =>
       userAccess?.find((item) => item?.componentName === "CreateLeaveRequest"),
-    [userAccess, employeeId?.value]
+    [userAccess, employeeId]
   );
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
@@ -64,12 +70,16 @@ export function MasterEditForm({
   //If payroll month is available then form should not allow to add date for before payroll month end date.
   //else just normal validation for form
   const formValidation = useMemo(() => {
-    if (payrollData && payrollData.endDate) {
+    const startDate = payrollData?.startDate
+      ? new Date(payrollData.startDate)
+      : null;
+    const endDate = payrollData?.endDate ? new Date(payrollData.endDate) : null;
+    if ((payrollData && startDate, endDate)) {
       return Yup.object().shape({
         from: Yup.date()
           .required(VALIDATION_MESSAGES.required)
           .min(
-            payrollData.startDate,
+            startDate,
             `Date cannot be before ${formatDates(payrollData.startDate)}`
           ),
         to: Yup.date()
@@ -138,6 +148,34 @@ export function MasterEditForm({
     }
   }, [payrollData, leaveBalances, sandwichPolicy]);
 
+  const getLeaveLines = (values, errors , setFieldValue) => {
+    let valuesExists = values?.leaveType && values?.from && values?.to;
+    if (valuesExists && employeeId) {
+      const payload = {
+        ...values,
+        to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
+        from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+        days: values?.days
+          ? values?.days
+          : getDateDiffInDays(values?.from, values?.to),
+      };
+      dispatch(
+        actions.getLeaveApplicationDetail(payload, employeeId, disbaleLoading , setFieldValue)
+      );
+    }
+  };
+
+  const validateAndFetch = async (updatedValues, validateForm , setFieldValue) => {
+    const formErrors = await validateForm(updatedValues);
+
+    const isValid =
+      !formErrors?.leaveType && !formErrors?.from && !formErrors?.to;
+
+    if (isValid) {
+      getLeaveLines(updatedValues, formErrors , setFieldValue);
+    }
+  };
+
   return (
     <>
       {/* Formik Start */}
@@ -150,16 +188,15 @@ export function MasterEditForm({
           //This clearForm function is created to clear form as well as clear any uploaded file as well.
           //resetForm function doesn't clear file properly so we use this function
           const clearForm = () => {
-            resetForm();
             if (inputFile?.current) {
               inputFile.current.value = "";
             }
+            resetForm({ values: initialValue });
             setId("");
           };
 
           const payload = {
             ...values,
-
             from: values?.from ? formatDates(values.from, "dd-MMM-yyyy") : "", //should be null but in all places of portal "" are using that's why
             to: values?.to ? formatDates(values.to, "dd-MMM-yyyy") : "", //should be null but in all places of portal "" are using that's why
           };
@@ -175,6 +212,8 @@ export function MasterEditForm({
           handleChange,
           setFieldValue,
           handleReset,
+          setValues,
+          validateForm,
         }) => (
           <>
             {actionsLoading && (
@@ -201,10 +240,10 @@ export function MasterEditForm({
             {/* Form Start */}
             <Form className="form form-label-right">
               <fieldset
-                disabled={
-                  (empAuthorityList && empAuthorityList?.length === 0) ||
-                  employeeId?.level > 1
-                }
+              // disabled={
+              //   (empAuthorityList && empAuthorityList?.length === 0) ||
+              //   employeeId?.level > 1
+              // }
               >
                 {/* First Row Start */}
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
@@ -213,7 +252,7 @@ export function MasterEditForm({
                     <Field
                       name="leaveType"
                       component={Select}
-                      disabled={isReaply || !employeeId?.value}
+                      disabled={isReaply || !employeeId}
                       className={
                         errors?.leaveType && touched?.leaveType
                           ? "form-control is-invalid"
@@ -221,12 +260,17 @@ export function MasterEditForm({
                       }
                       placeholder=""
                       onBlur={handleBlur}
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const value =
                           e.target.value == "Select"
                             ? ""
                             : Number(e.target.value);
                         setFieldValue("leaveType", value);
+                        await validateAndFetch(
+                          { ...values, leaveType: value },
+                          validateForm,
+                          setFieldValue
+                        );
                       }}
                       label={
                         <span>
@@ -259,15 +303,25 @@ export function MasterEditForm({
                           Date From<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      onChange={(date) => {
+                      onChange={async (date) => {
                         setFieldValue("from", date);
                         setFieldValue(
                           "days",
                           getDateDiffInDays(date, values.to)
                         ); //Set difference in to from days in days key
+                        await validateAndFetch(
+                          { ...values, from: date },
+                          validateForm,
+                          setFieldValue
+                        );
                       }}
                       autoComplete="off"
                     />
+                    {errors["from"] && (
+                      <div style={{ color: "#F64E60", fontSize: "0.7rem" }}>
+                        {errors["from"]}
+                      </div>
+                    )}
                   </div>
                   {/* Date from Field End */}
 
@@ -284,15 +338,25 @@ export function MasterEditForm({
                           Date To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      onChange={(date) => {
+                      onChange={async (date) => {
                         setFieldValue("to", date);
                         setFieldValue(
                           "days",
                           getDateDiffInDays(values.from, date)
                         ); //Set difference in to from days in days key
+                        await validateAndFetch(
+                          { ...values, to: date },
+                          validateForm,
+                          setFieldValue
+                        );
                       }}
                       autoComplete="off"
                     />
+                    {errors["to"] && (
+                      <div style={{ color: "#F64E60", fontSize: "0.7rem" }}>
+                        {errors["to"]}
+                      </div>
+                    )}
                   </div>
                   {/* Date to Field End */}
                   {/* Days Field Start */}
@@ -364,18 +428,20 @@ export function MasterEditForm({
                   </div>
                   {/* Remarks Field End */}
                   <div className="col-span-1">
-                    <label
+                    {/* <label
                       htmlFor="file_input"
                       // className="block mb-2 text-xs font-normal text-gray-900"
                     >
                       Attachment
-                    </label>
+                    </label> */}
 
                     {/* Hidden input */}
-                    <input
-                      id="file_input"
+                    <FileUpload
+                      label={<>Attachment</>}
+                      id="file"
                       name="file"
                       type="file"
+                      isEdit={isEdit}
                       accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
                       ref={inputFile}
                       className="hidden"
@@ -385,43 +451,49 @@ export function MasterEditForm({
                       }}
                     />
 
-                    {/* Styled label as upload box */}
-                    <label
-                      htmlFor="file_input"
-                      className="form-control block w-full cursor-pointer"
-                    >
-                      {values.file ? values.file.name : "Upload"}
-                    </label>
-
-                    {/* Show existing file if any */}
-                    {values.fileName && values.file === values.fileName && (
+                    {(user?.file || values?.file) && (
                       <div className="mt-2">
-                        <label>Existing File: </label>
+                        <label>Existing File:</label>
+
                         <a
-                          href={getUploadUrl(values.fileName)}
+                          href={
+                            typeof (values?.file || user?.file) === "string"
+                              ? getUploadUrl(values?.file || user?.file)
+                              : URL.createObjectURL(values?.file || user?.file)
+                          }
                           target="_blank"
-                          className="text-blue-600 underline  text-primary text-sm"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
                         >
-                          {getFileName(values.fileName)}
+                          {typeof (values?.file || user?.file) === "string"
+                            ? getFileName(values?.file || user?.file)
+                            : values?.file?.name || user?.file}
                         </a>
                       </div>
                     )}
                   </div>
                 </div>
               </fieldset>
+              <LeaveLinesTable
+                values={values}
+                setFieldValue={setFieldValue}
+                isEdit={false}
+              />
             </Form>
             {/* Form End */}
 
             <Modal.Footer>
               {/* Cancel button Start */}
               <button
-                type="reset"
+                // type="reset"
+                disabled={loading}
                 onClick={() => {
                   setId("");
-                  handleReset();
-                  if (inputFile?.current) {
-                    inputFile.current.value = "";
-                  }
+                  // handleReset();
+                  // // if (inputFile?.current) {
+                  // //   inputFile.current.value = "";
+                  // // }
+                  setValues(initialValue);
                 }}
                 className="btn btn-light btn-elevate"
               >
@@ -430,10 +502,10 @@ export function MasterEditForm({
               {/* Cancel button End */}
 
               {/* Save button Start */}
-              {employeeId?.value && accessUser ? (
+              {employeeId && accessUser ? (
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || values?.leaveLines?.length == 0}
                   onClick={() => handleSubmit()}
                   className="btn btn-primary btn-elevate"
                 >

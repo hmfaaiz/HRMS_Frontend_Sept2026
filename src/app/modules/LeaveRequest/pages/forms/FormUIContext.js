@@ -40,6 +40,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     days: "",
     file: null,
     request_status: "P",
+    leaveLines: [],
   };
 
   //Set Id for Edit record
