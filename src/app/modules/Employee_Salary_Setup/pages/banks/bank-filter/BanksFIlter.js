@@ -97,7 +97,7 @@ export function BanksFilter({
           touched,
         }) => (
           <form onSubmit={handleSubmit} className="form form-label-right">
-            <div className="grid md:grid-cols-7 gap-3 mb-2 ">
+            <div className="grid md:grid-cols-5 gap-3 mb-2 ">
 
 
 

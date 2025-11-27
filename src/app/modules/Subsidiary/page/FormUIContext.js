@@ -40,6 +40,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     Logo: "",
     localizationId: null,
     isAttendanceLocation : false,
+    incomeTaxTypeId :null,
+    isSubordinateRequest :false,
   };
 
   const value = {

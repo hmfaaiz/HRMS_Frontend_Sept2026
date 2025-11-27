@@ -14,6 +14,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setIds] = useState([]);
   const [panelMode, setPanelMode] = useState(false);
+  const [attSumPanelMode, setAttSumPanelMode] = useState(false);
     const [employeeId, setemployeeId] = useState('');
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
@@ -67,6 +68,8 @@ const initUser = {
     employeeId,
     panelMode,
     setPanelMode,
+    attSumPanelMode,
+    setAttSumPanelMode,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,

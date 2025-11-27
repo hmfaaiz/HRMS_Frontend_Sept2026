@@ -219,3 +219,6 @@ export const getAllApprovedFSEmp = async (body) => {
 export const getAllTaxYearSetup = async (subsidiaryId) => {
   return await axios.get(`${USERS_URL}/settings/read-all-tax-year-setup/${subsidiaryId}`);
 };
+export const getSeparatedAttSummaryEmpById = async (id) => {
+  return await axios.get(`${USERS_URL}/settings/read-separated-att-summary/${id}`);
+};
