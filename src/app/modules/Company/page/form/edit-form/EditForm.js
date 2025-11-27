@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { Modal } from "react-bootstrap";
@@ -9,16 +9,21 @@ import {
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { amountLimitDynamic } from "../../../../../utils/common";
+import { amountLimitDynamic, getFileName, getUploadUrl } from "../../../../../utils/common";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
   fetchAllCity,
   fetchAllCountry,
+  uploadFile,
 } from "../../../../Dashboard/_redux/dashboardActions";
 import { fiscalMonthList, moduleList } from "../../FormUIHelper";
 import Axios from "axios";
 import { toast } from "react-toastify";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+
+
+
 
 const USERS_URL = process.env.REACT_APP_API_URL;
 const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -27,7 +32,7 @@ const formSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   companyLegalName: Yup.string()
-.nullable()
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
   companyCode: Yup.string().required(VALIDATION_MESSAGES.required),
   phone: Yup.string()
@@ -71,7 +76,7 @@ export const EditForm = ({
 }) => {
   const [companyLogo, setCompanyLogo] = useState("");
   const [file, setFile] = useState("");
-
+  const inputFile = useRef(null);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllFormsMenu(126, "allCurrency"));
@@ -106,15 +111,15 @@ export const EditForm = ({
   }, [data?.countryId, dispatch]);
 
 
-    const namePolicytOptions = [
+  const namePolicytOptions = [
     { value: 1, label: "Company Name" },
     { value: 2, label: "Subsidiary Name " },
- 
+
   ];
-    const workingHRSPolicytOptions = [
+  const workingHRSPolicytOptions = [
     { value: 1, label: "Based on First In & Last Out Policy " },
     { value: 2, label: "Multiple Ins & Multiple Outs policy" },
- 
+
   ];
 
   return (
@@ -139,14 +144,28 @@ export const EditForm = ({
         }
         enableLoading();
         if (file) {
-          let formData = new FormData();
-          await formData.append("image", file);
-          await Axios.post(`${USERS_URL}/company/image-upload`, formData).then(
-            (res) => {
-              setCompanyLogo(res.data.imageUrl);
-              handleSubmit({ ...values, Logo: res.data.imageUrl });
-            }
-          );
+          // let formData = new FormData();
+          // await formData.append("image", file);
+          // await Axios.post(`${USERS_URL}/company/image-upload`, formData).then(
+          //   (res) => {
+          //     setCompanyLogo(res.data.imageUrl);
+          //     handleSubmit({ ...values, Logo: res.data.imageUrl });
+          //   }
+          // );
+
+
+
+          try {
+
+            const uploadRes = await uploadFile(file);
+            setCompanyLogo(uploadRes.data.filename);
+            handleSubmit({ ...values, Logo: uploadRes.data.filename });
+          } catch (err) {
+            console.error("File upload failed:", err);
+            // Optionally return here or set a default file value
+          }
+
+
         } else {
           handleSubmit(values);
         }
@@ -217,7 +236,7 @@ export const EditForm = ({
                       MaxLength={40}
                       component={Input}
                       placeholder="Legal Name"
-                      label={<span> Legal Name</span>}
+                      label={<span> Legal Name <span style={{ color: "red" }}>*</span></span>}
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(
                           e.target.value,
@@ -406,7 +425,7 @@ export const EditForm = ({
                     </div>
                   </div> */}
 
-                  <div>
+                  {/* <div>
                     <label>Company Logo:</label>
                     <input
                       id="file_input"
@@ -415,8 +434,7 @@ export const EditForm = ({
                       name="myImage"
                       accept=".jpg, .jpeg, .png"
                       onChange={onImageChange}
-                      // disabled={isEdit}
-                      // ref={inputFile}
+                 
                     />
                     <label
                       htmlFor="file_input"
@@ -425,81 +443,119 @@ export const EditForm = ({
                       {companyLogo ? companyLogo : "Upload"}
                     </label>
 
-                    {/* Show existing file if any */}
-                    {/* {companyLogo && (
+             
+                  </div> */}
+
+
+
+                  <div className="col-span-1">
+
+                    <FileUpload
+                      label={
+                        <>
+                          Company Logo
+                        </>
+                      }
+                      id="file_input"
+                      name="file_input"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={onImageChange}
+
+
+                    />
+                    {errors.Logo && touched.Logo && (
+                      <div className="invalid-feedback">{errors.Logo}</div>
+                    )}
+
+
+
+
+                    {(data?.Logo || values?.Logo) && (
                       <div className="mt-2">
-                        <label>Existing File: {companyLogo}</label>
+                        <label>Existing File:</label>
+
                         <a
-                          href={getUploadUrl(companyLogo)}
+                          href={
+                            typeof (values?.Logo || data?.Logo) === "string"
+                              ? getUploadUrl(values?.Logo || data?.Logo)
+                              : URL.createObjectURL(values?.Logo || data?.Logo)
+                          }
                           target="_blank"
-                          className="text-blue-600 underline"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
                         >
-                          {getFileName(companyLogo)}
+                          {typeof (values?.Logo || data?.Logo) === "string"
+                            ? getFileName(values?.Logo || data?.Logo)
+                            : (values?.Logo)?.name || data?.Logo}
                         </a>
                       </div>
-                    )} */}
+                    )}
+
                   </div>
 
-                           <div className="col-span-1">
-                                       <Select
-                    label="Policy to show name on report"
-                    name="policyToShowNameOnReport"
-                    value={String(values.policyToShowNameOnReport)} // convert to string
-                    onChange={(e) => setFieldValue("policyToShowNameOnReport", e.target.value)}
-                    error={errors.policyToShowNameOnReport}
-                    touched={touched.policyToShowNameOnReport}
-                    onBlur={handleBlur}
-                    autoComplete="off"
-                  >
-                    <option value="">Select</option>
-                    {namePolicytOptions.map((option) => (
-                      <option key={option.value} value={String(option.value)}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
-                  
-                                        {errors.policyToShowNameOnReport && touched.policyToShowNameOnReport && (
-                                         <ErrorMessage
-                                         className="invalid-feedback"
-                                         name="policyToShowNameOnReport"
-                                         component="div"
-                                       />
-                                          
-                                
-                                        )}
-                                      </div> 
+                  <div className="col-span-1">
+                    <Select
+                      label="Policy to show name on report"
+                      name="policyToShowNameOnReport"
+                      value={String(values.policyToShowNameOnReport)} // convert to string
+                      onChange={(e) => setFieldValue("policyToShowNameOnReport", e.target.value)}
+                      error={errors.policyToShowNameOnReport}
+                      touched={touched.policyToShowNameOnReport}
+                      onBlur={handleBlur}
+                      autoComplete="off"
+                    >
+                      <option value="">Select</option>
+                      {namePolicytOptions.map((option) => (
+                        <option key={option.value} value={String(option.value)}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
+
+                    {errors.policyToShowNameOnReport && touched.policyToShowNameOnReport && (
+                      <ErrorMessage
+                        className="invalid-feedback"
+                        name="policyToShowNameOnReport"
+                        component="div"
+                      />
 
 
-                                            <div className="col-span-1">
-                                       <Select
-                    label="Policy for calculating working hours"
-                    name="policyForCalWorkingHours"
-                    value={String(values.policyForCalWorkingHours)} // convert to string
-                    onChange={(e) => setFieldValue("policyForCalWorkingHours", e.target.value)}
-                    error={errors.policyForCalWorkingHours}
-                    touched={touched.policyForCalWorkingHours}
-                    onBlur={handleBlur}
-                    autoComplete="off"
-                  >
-                    <option value="">Select</option>
-                    {workingHRSPolicytOptions.map((option) => (
-                      <option key={option.value} value={String(option.value)}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
-                  
-                                        {errors.policyForCalWorkingHours && touched.policyForCalWorkingHours && (
-                                         <ErrorMessage
-                                         className="invalid-feedback"
-                                         name="policyForCalWorkingHours"
-                                         component="div"
-                                       />
-                                          
-                                
-                                        )}
-                                      </div> 
+                    )}
+                  </div>
+
+
+                  <div className="col-span-1">
+                    <Select
+                      label="Policy for calculating working hours"
+                      name="policyForCalWorkingHours"
+                      value={String(values.policyForCalWorkingHours)} // convert to string
+                      onChange={(e) => setFieldValue("policyForCalWorkingHours", e.target.value)}
+                      error={errors.policyForCalWorkingHours}
+                      touched={touched.policyForCalWorkingHours}
+                      onBlur={handleBlur}
+                      autoComplete="off"
+                    >
+                      <option value="">Select</option>
+                      {workingHRSPolicytOptions.map((option) => (
+                        <option key={option.value} value={String(option.value)}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
+
+                    {errors.policyForCalWorkingHours && touched.policyForCalWorkingHours && (
+                      <ErrorMessage
+                        className="invalid-feedback"
+                        name="policyForCalWorkingHours"
+                        component="div"
+                      />
+
+
+                    )}
+                  </div>
 
                   <div className="text-black mt-1">
                     <label>

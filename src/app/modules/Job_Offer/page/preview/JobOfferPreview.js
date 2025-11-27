@@ -8,12 +8,12 @@ import { toAbsoluteUrl } from '../../../../../_metronic/_helpers';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Download, MailPlus } from 'lucide-react';
 import { amountFormat } from '../../../../utils/common';
-
+const UPLOAD_URL = process.env.REACT_APP_UPLOAD_URL;
 const JobOfferPreview = () => {
     const [data, setData] = useState(null);
 
-    const dispatch = useDispatch(); // ✅ move this up
-    const FormUIContext = useFormUIContext(); // ✅ move this up
+    const dispatch = useDispatch(); //
+    const FormUIContext = useFormUIContext(); //
     const [formUIProps2, setFormUIProps2] = useState(null);
     const { pdfGenerateLoading, emailSendLoading } = useSelector((state) => {
         return {
@@ -95,7 +95,7 @@ const JobOfferPreview = () => {
         hrName,
         hrDesignation, locationName
     } = data;
-
+    console.log("jobOfferLetter1111", `${UPLOAD_URL}/${companyLogo}`);
     return (
         <>
             <ToastContainer />
@@ -184,7 +184,7 @@ const JobOfferPreview = () => {
                         backgroundColor: 'white',
                         boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
                     }}>
-                        <div className="header" style={{
+                        {/* <div className="header" style={{
                             backgroundColor: 'white',
                             display: 'flex',
                             alignItems: 'center',
@@ -193,13 +193,36 @@ const JobOfferPreview = () => {
                             padding: '70px',
                             position: 'relative'
                         }}>
-                            <img src={companyLogo} alt="Company Logo" style={{
+                            <img src={`${UPLOAD_URL}/${companyLogo}`} alt="Company Logo" style={{
                                 position: 'absolute',
                                 left: 0,
                                 marginLeft: '45px',
                                 height: 'auto',
                                 width: '30%'
                             }} />
+
+                        
+                        </div> */}
+
+                        <div style={{
+                            width: "200px",
+                            maxWidth: "20%",
+                            height: "auto",
+                            backgroundColor: 'white',
+                            // boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                            // fontSize: '12px',
+                            padding: '45px',
+                        }}>
+                            <img
+                                src={`${UPLOAD_URL}/${companyLogo}`}
+                                alt="Company Logo"
+                                style={{
+                                    left: 0,
+                                    width: "100%",  // container ke andar adjust ho jaye
+                                    height: "auto",
+                                    display: "block"
+                                }}
+                            />
                         </div>
 
                         <h1 className="headerHeading" style={{ textAlign: 'center', textDecoration: 'underline', fontWeight: 'bold' }}>JOB OFFER</h1>

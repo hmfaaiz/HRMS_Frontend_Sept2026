@@ -85,3 +85,4 @@ export const deleteRecord = (id, disableLoading, onHide) => (dispatch) => {
       toast.error(SERVER_MESSAGES.deletedFail);
     });
 };
+

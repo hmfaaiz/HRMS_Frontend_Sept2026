@@ -21,3 +21,4 @@ export function updateCompany(body) {
 export function deleteCompany(id) {
   return axios.delete(`${USERS_URL}/company/delete-company/${id}`);
 }
+
