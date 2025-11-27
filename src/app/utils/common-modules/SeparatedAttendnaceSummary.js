@@ -3,42 +3,31 @@ import { Accordion, Card, Row, Col } from 'react-bootstrap';
 import './form.css';
 import { getSeparatedAttSummaryEmpById } from '../../modules/Dashboard/_redux/dashboardCrud';
 
-const SeparatedAttendanceSummary = ({ employeeId, panelMode,hitAttSummary }) => {
-    console.log("aaaa111",employeeId,hitAttSummary)
-    const [data, setData] = useState({});
-
-//     useEffect(() => {
-//         if (employeeId) {
-//             getSeparatedAttSummaryEmpById(employeeId)
-//                 .then((res) => {
-//                     if (res?.data?.data) setData(res.data?.data);
-//                 })
-//                 .catch(() => setData({}));
-//         } else setData({});
-//     }, [employeeId]);
-
-//     if (!panelMode) return null;
-// console.log("data11111",data)
+const SeparatedAttendanceSummary = ({ employeeId, panelMode,hitAttSummary,data }) => {
+    console.log("aaaa111",employeeId,hitAttSummary,data)
+    // const [data, setData] = useState(presentData || {});
 
 
-useEffect(() => {
-    if (employeeId) {
-        getSeparatedAttSummaryEmpById(employeeId)
-            .then((res) => {
-                const result = res?.data?.data;
+console.log("aaaa222",data)
 
-                // if false -> set empty object
-                if (!result || result === false) {
-                    setData({});
-                } else {
-                    setData( result);
-                }
-            })
-            .catch(() => setData({}));
-    } else {
-        setData({});
-    }
-}, [employeeId,hitAttSummary]);
+// useEffect(() => {
+//     if (employeeId) {
+//         getSeparatedAttSummaryEmpById(employeeId)
+//             .then((res) => {
+//                 const result = res?.data?.data;
+
+//                 // if false -> set empty object
+//                 if (!result || result === false) {
+//                     setData({});
+//                 } else {
+//                     setData( result);
+//                 }
+//             })
+//             .catch(() => setData({}));
+//     } else {
+//         setData({});
+//     }
+// }, [employeeId,hitAttSummary]);
   if (!panelMode) return null;
     return (
         <Accordion defaultActiveKey="0">

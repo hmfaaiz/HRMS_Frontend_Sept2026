@@ -44,6 +44,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     attendanceModule: false,
     payrollModule: false,
     policyToShowNameOnReport: "",
+    policyForCalWorkingHours: "",
   };
 
   const value = {

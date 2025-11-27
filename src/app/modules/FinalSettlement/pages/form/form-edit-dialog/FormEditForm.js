@@ -29,6 +29,7 @@ import { finalSettlementById } from "../../../_redux/redux-Actions";
 import { fetchAllEarning, fetchSeparatedEmployeeById } from "../../../../Dashboard/_redux/dashboardActions";
 import SeparatedEmpProfile from "../../../../../utils/common-modules/SeparatedEmpProfile";
 import SeparatedAttendanceSummary from "../../../../../utils/common-modules/SeparatedAttendnaceSummary";
+import { getSeparatedAttSummaryEmpById } from "../../../../Dashboard/_redux/dashboardCrud";
 
 
 export const getFinal_SettlementEditSchema = (formData) => {
@@ -178,6 +179,7 @@ export function FormEditForm({
   const [hitAttSummary, setHitAttSum] = useState(false);
   const [toBeCalculated, setToBeCalculated] = useState(false);
   const [finalizeModal, setFinalizeModal] = useState(false);
+  const [data, setData] = useState({});
 
   //drop down
   useEffect(() => {
@@ -298,8 +300,25 @@ export function FormEditForm({
     setFieldValue("netFinalSettlementAmount", netFinalSettlementAmount.toFixed(2));
     setToBeCalculated(false)
   };
+const callAttendanceSummaryDate=(employeeId) => {
+    if (employeeId) {
+        getSeparatedAttSummaryEmpById(employeeId)
+            .then((res) => {
+                const result = res?.data?.data;
 
-
+                // if false -> set empty object
+                if (!result || result === false) {
+                    setData({});
+                } else {
+                    setData( result);
+                }
+            })
+            .catch(() => setData({}));
+    } else {
+        setData({});
+    }
+};
+console.log("attSumPanelMode222",data)
   return (
     <Formik
       enableReinitialize={true}
@@ -439,6 +458,7 @@ export function FormEditForm({
                         setFieldValue("employeeId", value);
                         dispatch(fetchAllEarningList(1, "", e.value, true));
                         dispatch(fetchAllDeductionList(2, "", e.value));
+                         setAttSumPanelMode(false)
                         const selectedEmp = activeEmployeeList?.find(
                           (emp) => emp.value === value
                         );
@@ -549,6 +569,7 @@ export function FormEditForm({
                         type="button"
                         className="btn btn-primary d-flex align-items-center gap-2"
                         onClick={() => {
+                          callAttendanceSummaryDate(values?.employeeId);
                           setAttSumPanelMode(!attSumPanelMode)
                           setSeparatePanel(false)
                           setPanelMode(false)
@@ -588,6 +609,7 @@ export function FormEditForm({
                 <SeparatedAttendanceSummary
                   employeeId={values?.employeeId || formData?.employeeId}
                   panelMode={attSumPanelMode} hitAttSummary={hitAttSummary}
+                  data={data}
                 />
 
                 <div className="grid lg:grid-cols-6 gap-x-3 mt-1 mb-2">
@@ -603,6 +625,7 @@ export function FormEditForm({
                           disabled={!values.employeeId || isdataForRead || !payrollMonthEligibility}
                           onClick={() => {
                             setConfirmationModal(true);
+                            setAttSumPanelMode(false)
                        
                           }
 

@@ -111,6 +111,11 @@ export const EditForm = ({
     { value: 2, label: "Subsidiary Name " },
  
   ];
+    const workingHRSPolicytOptions = [
+    { value: 1, label: "Based on First In & Last Out Policy " },
+    { value: 2, label: "Multiple Ins & Multiple Outs policy" },
+ 
+  ];
 
   return (
     <Formik
@@ -458,6 +463,37 @@ export const EditForm = ({
                                          <ErrorMessage
                                          className="invalid-feedback"
                                          name="policyToShowNameOnReport"
+                                         component="div"
+                                       />
+                                          
+                                
+                                        )}
+                                      </div> 
+
+
+                                            <div className="col-span-1">
+                                       <Select
+                    label="Policy for calculating working hours"
+                    name="policyForCalWorkingHours"
+                    value={String(values.policyForCalWorkingHours)} // convert to string
+                    onChange={(e) => setFieldValue("policyForCalWorkingHours", e.target.value)}
+                    error={errors.policyForCalWorkingHours}
+                    touched={touched.policyForCalWorkingHours}
+                    onBlur={handleBlur}
+                    autoComplete="off"
+                  >
+                    <option value="">Select</option>
+                    {workingHRSPolicytOptions.map((option) => (
+                      <option key={option.value} value={String(option.value)}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Select>
+                  
+                                        {errors.policyForCalWorkingHours && touched.policyForCalWorkingHours && (
+                                         <ErrorMessage
+                                         className="invalid-feedback"
+                                         name="policyForCalWorkingHours"
                                          component="div"
                                        />
                                           
