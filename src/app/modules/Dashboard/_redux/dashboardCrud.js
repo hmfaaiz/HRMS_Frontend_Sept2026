@@ -222,3 +222,8 @@ export const getAllTaxYearSetup = async (subsidiaryId) => {
 export const getSeparatedAttSummaryEmpById = async (id) => {
   return await axios.get(`${USERS_URL}/settings/read-separated-att-summary/${id}`);
 };
+
+
+export function uploadFiles(body) {
+  return axios.post(`${USERS_URL}/file-upload`, body);
+}

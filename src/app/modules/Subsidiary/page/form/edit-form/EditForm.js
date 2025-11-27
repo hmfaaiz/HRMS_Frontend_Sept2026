@@ -1,15 +1,15 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { Modal } from "react-bootstrap";
 import {
   Input,
-  TextArea,Select,
+  TextArea, Select,
   Checkbox
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { amountLimitDynamic } from "../../../../../utils/common";
+import { amountLimitDynamic, getFileName, getUploadUrl } from "../../../../../utils/common";
 import {
   fetchAllComapnyData,
   fetchAllFormsMenu,
@@ -18,13 +18,15 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import {
   fetchAllCity,
   fetchAllCountry,
+  uploadFile,
 } from "../../../../Dashboard/_redux/dashboardActions";
 import Axios from "axios";
+import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
 const USERS_URL = process.env.REACT_APP_API_URL;
 const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
 const formSchema = Yup.object().shape({
-   name: Yup.string()
+  name: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   subsidiaryCode: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -60,18 +62,18 @@ const formSchema = Yup.object().shape({
     .nullable()
     .matches(/^\d+(\.\d+)?$/, VALIDATION_MESSAGES.validNumber),
 
-      localizationId: Yup.string()
-  .nullable()
-  .required(VALIDATION_MESSAGES.required),
-   isAttendanceLocation: Yup.boolean()
+  localizationId: Yup.string()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+  isAttendanceLocation: Yup.boolean()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
-   incomeTaxTypeId: Yup.number()
+  incomeTaxTypeId: Yup.number()
     .nullable()
-    .required(VALIDATION_MESSAGES.required), 
-    
-    isSubordinateRequest: Yup.boolean()
+    .required(VALIDATION_MESSAGES.required),
+
+  isSubordinateRequest: Yup.boolean()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
@@ -90,7 +92,7 @@ export const EditForm = ({
 }) => {
   const [subsidiaryLogo, setSubsidiaryLogo] = useState("");
   const [file, setFile] = useState("");
-
+ const inputFile = useRef(null);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllFormsMenu(126, "allCurrency"));
@@ -127,22 +129,22 @@ export const EditForm = ({
     }
   }, [data?.countryId, dispatch]);
 
-    const localizationOptions = [
+  const localizationOptions = [
     { value: 1, label: "Pakistan" },
     { value: 2, label: "United Arab Emirates" },
     { value: 2, label: "Saudi Arabia" },
   ];
 
-    const incomeTaxOptions = [
+  const incomeTaxOptions = [
     { value: 1, label: "Current Month Salary" },
     { value: 2, label: "Year to Date Salary + Remaining Month estimations" },
- 
+
   ];
-  
+
   const subordinateRequestOptions = [
     { value: true, label: "Yes" },
     { value: false, label: "No" },
- 
+
   ];
 
   return (
@@ -153,15 +155,26 @@ export const EditForm = ({
       onSubmit={async (values) => {
         enableLoading();
         if (file) {
-          let formData = new FormData();
-          await formData.append("image", file);
-          await Axios.post(
-            `${USERS_URL}/subsidiary/image-upload`,
-            formData
-          ).then((res) => {
-            setSubsidiaryLogo(res.data.imageUrl);
-            handleSubmit({ ...values, Logo: res.data.imageUrl });
-          });
+          // let formData = new FormData();
+          // await formData.append("image", file);
+          // await Axios.post(
+          //   `${USERS_URL}/subsidiary/image-upload`,
+          //   formData
+          // ).then((res) => {
+          //   setSubsidiaryLogo(res.data.imageUrl);
+          //   handleSubmit({ ...values, Logo: res.data.imageUrl });
+          // });
+
+          try {
+
+            const uploadRes = await uploadFile(file);
+            setSubsidiaryLogo(uploadRes.data.filename);
+            handleSubmit({ ...values, Logo: uploadRes.data.filename });
+          } catch (err) {
+            console.error("File upload failed:", err);
+
+          }
+
         } else {
           handleSubmit(values);
         }
@@ -350,61 +363,61 @@ export const EditForm = ({
                     />
                   </div>
 
-                         <div className="col-span-1">
-                              <label>
-    Creating request on behalf of Subordinate <span style={{ color: "red" }}>*</span>
-  </label>
-                     <Select
+                  <div className="col-span-1">
+                    <label>
+                      Creating request on behalf of Subordinate <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <Select
 
-  name="isSubordinateRequest"
-  value={String(values.isSubordinateRequest)} // convert to string
-  onChange={(e) => setFieldValue("isSubordinateRequest", e.target.value)}
-  error={errors.isSubordinateRequest}
-  touched={touched.isSubordinateRequest}
-  onBlur={handleBlur}
-  autoComplete="off"
->
-  <option value="">Select</option>
-  {subordinateRequestOptions.map((option) => (
-    <option key={option.value} value={String(option.value)}>
-      {option.label}
-    </option>
-  ))}
-</Select>
+                      name="isSubordinateRequest"
+                      value={String(values.isSubordinateRequest)} // convert to string
+                      onChange={(e) => setFieldValue("isSubordinateRequest", e.target.value)}
+                      error={errors.isSubordinateRequest}
+                      touched={touched.isSubordinateRequest}
+                      onBlur={handleBlur}
+                      autoComplete="off"
+                    >
+                      <option value="">Select</option>
+                      {subordinateRequestOptions.map((option) => (
+                        <option key={option.value} value={String(option.value)}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
 
-                      {errors.isSubordinateRequest && touched.isSubordinateRequest && (
-                       <ErrorMessage
-                       className="invalid-feedback"
-                       name="isSubordinateRequest"
-                       component="div"
-                     />
-                        
-              
-                      )}
-                    </div> 
-                    
+                    {errors.isSubordinateRequest && touched.isSubordinateRequest && (
+                      <ErrorMessage
+                        className="invalid-feedback"
+                        name="isSubordinateRequest"
+                        component="div"
+                      />
 
-                       <div className="col-span-1">
-                      <Select
-                        label={
-                          <span>
-                            {" "}
-                            Policy for calculating Income Tax based on <span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        name="incomeTaxTypeId"
-                     
-                        value={values.incomeTaxTypeId}
-                        onChange={(e) => {
-                          setFieldValue("incomeTaxTypeId", e.target.value);
-                        }}
-                        error={errors.incomeTaxTypeId}
-                        touched={touched.incomeTaxTypeId}
-                        onBlur={handleBlur}
-                   
-                        autoComplete="off"
-                      >
-                    <option value="">Select </option>
+
+                    )}
+                  </div>
+
+
+                  <div className="col-span-1">
+                    <Select
+                      label={
+                        <span>
+                          {" "}
+                          Policy for calculating Income Tax based on <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      name="incomeTaxTypeId"
+
+                      value={values.incomeTaxTypeId}
+                      onChange={(e) => {
+                        setFieldValue("incomeTaxTypeId", e.target.value);
+                      }}
+                      error={errors.incomeTaxTypeId}
+                      touched={touched.incomeTaxTypeId}
+                      onBlur={handleBlur}
+
+                      autoComplete="off"
+                    >
+                      <option value="">Select </option>
                       {incomeTaxOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -412,40 +425,40 @@ export const EditForm = ({
 
 
                       ))}
-                      </Select>
-                      {errors.incomeTaxTypeId && touched.incomeTaxTypeId && (
-                       <ErrorMessage
-                       className="invalid-feedback"
-                       name="incomeTaxTypeId"
-                       component="div"
-                     />
-                        
-              
-                      )}
-                    </div> 
-                    
-                    
-                      <div className="col-span-1">
-                      <Select
-                        label={
-                          <span>
-                            {" "}
-                            Localization<span style={{ color: "red" }}>*</span>
-                          </span>
-                        }
-                        name="localizationId"
-                     
-                        value={values.localizationId}
-                        onChange={(e) => {
-                          setFieldValue("localizationId", e.target.value);
-                        }}
-                        error={errors.localizationId}
-                        touched={touched.localizationId}
-                        onBlur={handleBlur}
-                   
-                        autoComplete="off"
-                      >
-                    <option value="">Select </option>
+                    </Select>
+                    {errors.incomeTaxTypeId && touched.incomeTaxTypeId && (
+                      <ErrorMessage
+                        className="invalid-feedback"
+                        name="incomeTaxTypeId"
+                        component="div"
+                      />
+
+
+                    )}
+                  </div>
+
+
+                  <div className="col-span-1">
+                    <Select
+                      label={
+                        <span>
+                          {" "}
+                          Localization<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      name="localizationId"
+
+                      value={values.localizationId}
+                      onChange={(e) => {
+                        setFieldValue("localizationId", e.target.value);
+                      }}
+                      error={errors.localizationId}
+                      touched={touched.localizationId}
+                      onBlur={handleBlur}
+
+                      autoComplete="off"
+                    >
+                      <option value="">Select </option>
                       {localizationOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
@@ -453,20 +466,20 @@ export const EditForm = ({
 
 
                       ))}
-                      </Select>
-                      {errors.localizationId && touched.localizationId && (
-                       <ErrorMessage
-                       className="invalid-feedback"
-                       name="localizationId"
-                       component="div"
-                     />
-                        
-              
-                      )}
-                    </div>
-                    <div className="mt-6">
-                      <Checkbox isSelected={values?.isAttendanceLocation} onChange={(e)=> setFieldValue("isAttendanceLocation" , e?.target?.checked)} children={'Location required for Attendance Marking'}  />
-                    </div>
+                    </Select>
+                    {errors.localizationId && touched.localizationId && (
+                      <ErrorMessage
+                        className="invalid-feedback"
+                        name="localizationId"
+                        component="div"
+                      />
+
+
+                    )}
+                  </div>
+                  <div className="mt-6">
+                    <Checkbox isSelected={values?.isAttendanceLocation} onChange={(e) => setFieldValue("isAttendanceLocation", e?.target?.checked)} children={'Location required for Attendance Marking'} />
+                  </div>
                   <div className="col-span-2 md:col-span-3 grid  grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                     {
                       <div className="col-span-2 md:col-span-3">
@@ -536,7 +549,7 @@ export const EditForm = ({
                     </div>
                   </div> */}
                   <div>
-                    <label>Subsidiary Logo</label>
+                    {/* <label>Subsidiary Logo</label>
                     <input
                       id="file_input"
                       className="hidden"
@@ -544,15 +557,64 @@ export const EditForm = ({
                       name="myImage"
                       accept=".jpg, .jpeg, .png"
                       onChange={onImageChange}
-                      // disabled={isEdit}
-                      // ref={inputFile}
+                    // disabled={isEdit}
+                    // ref={inputFile}
                     />
                     <label
                       htmlFor="file_input"
                       className="form-control block w-full cursor-pointer"
                     >
                       {subsidiaryLogo ? subsidiaryLogo : "Upload"}
-                    </label>
+                    </label> */}
+
+
+                    <div className="col-span-1">
+
+                      <FileUpload
+                        label={
+                          <>
+                            Subsidiary Logo
+                          </>
+                        }
+                        id="file_input"
+                        name="file_input"
+                        type="file"
+                        accept=".jpeg,.jpg,.png,"
+                        ref={inputFile}
+                        className="hidden"
+                        onChange={onImageChange}
+
+
+                      />
+                      {errors.Logo && touched.Logo && (
+                        <div className="invalid-feedback">{errors.Logo}</div>
+                      )}
+
+
+
+
+                      {(data?.Logo || values?.Logo) && (
+                        <div className="mt-2">
+                          <label>Existing File:</label>
+
+                          <a
+                            href={
+                              typeof (values?.Logo || data?.Logo) === "string"
+                                ? getUploadUrl(values?.Logo || data?.Logo)
+                                : URL.createObjectURL(values?.Logo || data?.Logo)
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline text-primary text-sm"
+                          >
+                            {typeof (values?.Logo || data?.Logo) === "string"
+                              ? getFileName(values?.Logo || data?.Logo)
+                              : (values?.Logo)?.name || data?.Logo}
+                          </a>
+                        </div>
+                      )}
+
+                    </div>
 
                     {/* Show existing file if any */}
                     {/* {companyLogo && (
