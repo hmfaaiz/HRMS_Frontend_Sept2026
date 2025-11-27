@@ -4,11 +4,11 @@ import './form.css';
 import { getSeparatedAttSummaryEmpById } from '../../modules/Dashboard/_redux/dashboardCrud';
 
 const SeparatedAttendanceSummary = ({ employeeId, panelMode,hitAttSummary,data }) => {
-    console.log("aaaa111",employeeId,hitAttSummary,data)
+
     // const [data, setData] = useState(presentData || {});
 
 
-console.log("aaaa222",data)
+
 
 // useEffect(() => {
 //     if (employeeId) {
