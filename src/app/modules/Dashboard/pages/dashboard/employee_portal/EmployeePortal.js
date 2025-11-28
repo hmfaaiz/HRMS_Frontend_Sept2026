@@ -23,6 +23,7 @@ import { PendingRequestSelf } from "../EmpPortalComponent/PendingRequest";
 import AttendanceBarChart from "../EmpPortalComponent/AttendanceBarChart";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 import { JobRequestion } from "../EmpPortalComponent/JobRequestion";
+import { CompanyDocument } from "../EmpPortalComponent/CompanyDocument";
 import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
 import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { fetchResignationApprovalApplication } from "../../../../ResignationApproval/redux/formAction";
@@ -195,6 +196,14 @@ export const EmployeePortal = () => {
               <ResignationRequest />
               <AppraisalEvaluation />
             </div>
+            
+            <div className="grid grid-cols-3">
+              <div className="flex flex-col md:flex-row gap-4">
+              <CompanyDocument />
+            
+            </div>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AttendanceBarChart data={attRecord} />
               <HolidayTable

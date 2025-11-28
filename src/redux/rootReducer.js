@@ -151,6 +151,8 @@ import { PayrollIncomeTaxReportSlice } from "../app/modules/PayrollIncomeTaxRepo
 import {oneTimeAllowanceSlice} from "../app/modules/One_Time_Allowances/_redux/fromSlice";
 import { PayrollGratuityReportSlice } from "../app/modules/PayrollGratuityReport/_redux/formSlice";
 import { PayrollOvertimeSlice } from "../app/modules/PayrollOverTimeReport/_redux/formSlice"
+import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redux-Slice"
+import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice"
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -299,6 +301,8 @@ export const rootReducer = combineReducers({
   onetime_allowance : oneTimeAllowanceSlice.reducer,
   gratuity_report : PayrollGratuityReportSlice.reducer,
   overtime_report : PayrollOvertimeSlice.reducer,
+  company_doc : CompanyDocumentSlice.reducer,
+ company_doc_portal : CompanyDocumentPortalSlice.reducer,
 });
 
 export function* rootSaga() {
