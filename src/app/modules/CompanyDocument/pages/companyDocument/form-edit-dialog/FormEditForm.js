@@ -17,16 +17,22 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 // percentage: Yup.string().required("Required*"),
 const news_event_tickerEditSchema = Yup.object().shape({
-  subsidiaryId: Yup.number().nullable(),
-  // .required(VALIDATION_MESSAGES.required),
+  subsidiaryId: Yup.number().nullable()
+  .required(VALIDATION_MESSAGES.required),
+  
+  
+  compAttachment: Yup.string().nullable()
+  .required(VALIDATION_MESSAGES.required),
 
   docName: Yup.string()
     .trim()
+    .nullable()
     .required(VALIDATION_MESSAGES.required), 
     
     
     docDesc: Yup.string()
     .trim()
+    .nullable()
     .required(VALIDATION_MESSAGES.required),
 
 
