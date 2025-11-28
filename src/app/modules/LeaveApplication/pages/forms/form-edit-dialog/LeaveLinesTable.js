@@ -14,8 +14,13 @@ const LeaveLinesTable = ({ values, setFieldValue, isEdit }) => {
             return (
               <div>
                 <hr />
-                <div className="flex justify-between items-center mb-1">
-                  <h6 className="font-bold mb-0 text-primary">Leave Lines</h6>
+                <div className="flex items-center mb-1">
+                  <h6 className="font-bold w-fit mb-0 text-primary">
+                    Leave Lines
+                  </h6>
+                  <span className="text-xs text-[#e23f35] ml-2">
+                    {values?.message || ""}
+                  </span>
                 </div>
 
                 <div className="w-full overflow-x-auto">
@@ -54,7 +59,11 @@ const LeaveLinesTable = ({ values, setFieldValue, isEdit }) => {
                                     <select
                                       className="form-control"
                                       value={row.day}
-                                      disabled={isSandwich || isEdit}
+                                      disabled={
+                                        isSandwich ||
+                                        isEdit ||
+                                        values?.days == 0.5
+                                      }
                                       onChange={(e) => {
                                         const dayVal = parseFloat(
                                           e.target.value
@@ -94,7 +103,9 @@ const LeaveLinesTable = ({ values, setFieldValue, isEdit }) => {
                                     <select
                                       className="form-control"
                                       value={row.halfDayType || ""}
-                                      disabled={isSandwich || row.day != 0.5 || isEdit}
+                                      disabled={
+                                        isSandwich || row.day != 0.5 || isEdit
+                                      }
                                       onChange={(e) => {
                                         if (e?.target?.value) {
                                           setFieldValue(

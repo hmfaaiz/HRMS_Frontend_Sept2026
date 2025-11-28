@@ -178,6 +178,17 @@ export function MasterEditForm({
               ),
             otherwise: Yup.number().notRequired(),
           }),
+          negativeCount: Yup.number().when("allowNegative", {
+            is: true,
+            then: Yup.number()
+              .required(VALIDATION_MESSAGES.required)
+              .min(1, VALIDATION_MESSAGES.minOneValue)
+              .max(
+                Yup.ref("maxAllowed"),
+                "Cannot be greater than Entitled Days"
+              ),
+            otherwise: Yup.number().notRequired(),
+          }),
           maxAllowed: Yup.number()
             .min(0, VALIDATION_MESSAGES.minZeroValue)
             .max(999, VALIDATION_MESSAGES.maxThreeDigit)

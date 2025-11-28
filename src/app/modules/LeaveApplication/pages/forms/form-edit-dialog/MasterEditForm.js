@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -66,7 +66,7 @@ export function MasterEditForm({
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
-
+  const formikRef = useRef(null);
   //Validation for Form.
   //If payroll month is available then form should not allow to add date for before payroll month end date.
   //else just normal validation for form
@@ -75,7 +75,7 @@ export function MasterEditForm({
       ? new Date(payrollData.startDate)
       : null;
     const endDate = payrollData?.endDate ? new Date(payrollData.endDate) : null;
-    if ((payrollData && startDate, endDate)) {
+    if (payrollData && startDate && endDate) {
       return Yup.object().shape({
         from: Yup.date()
           .required(VALIDATION_MESSAGES.required)
@@ -90,16 +90,18 @@ export function MasterEditForm({
             "balance-check",
             "Leave days exceed available balance",
             function(to) {
-              const { from, leaveType } = this.parent;
+              const { from, leaveType, days } = this.parent;
               // if sandwich is disabled → skip balance check completely
               if (sandwichPolicy?.isSandwich == 0) return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
-              const diffDays = getDateDiffInDays(from, to);
+              const diffDays = days || getDateDiffInDays(from, to);
+              const leaveTypeRecord = leaveBalances?.find(
+                (el) => el?.leaveType === leaveType
+              );
               const balance =
-                leaveBalances?.find((el) => el?.leaveType === leaveType)
-                  ?.remainingCount || 0;
-
+                (leaveTypeRecord?.remainingCount ?? 0) +
+                (leaveTypeRecord?.negativeCount ?? 0);
               return diffDays <= balance; //  enforce balance
             }
           ),
@@ -123,18 +125,22 @@ export function MasterEditForm({
             "balance-check",
             "Leave days exceed available balance",
             function(to) {
-              const { from, leaveType } = this.parent;
+              const { from, leaveType, days } = this.parent;
               // if sandwich is disabled → skip balance check completely
               if (sandwichPolicy?.isSandwich == 0) return true;
 
               if (!from || !to || !leaveType) return true; // skip if missing values
 
-              const diffDays = getDateDiffInDays(from, to);
-              const balance =
-                leaveBalances?.find((el) => el?.leaveType === leaveType)
-                  ?.remainingCount || 0;
+              const diffDays = days || getDateDiffInDays(from, to);
+              const leaveTypeRecord = leaveBalances?.find(
+                (el) => el?.leaveType === leaveType
+              );
 
-              return diffDays <= balance; // ✅ enforce balance
+              const balance =
+                (leaveTypeRecord?.remainingCount ?? 0) +
+                (leaveTypeRecord?.negativeCount ?? 0);
+
+              return diffDays <= balance; //  enforce balance
             }
           ),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -167,7 +173,12 @@ export function MasterEditForm({
     }
   };
 
-  const validateAndFetch = async (updatedValues, validateForm) => {
+  const validateAndFetch = async (
+    updatedValues,
+    validateForm,
+    setFieldValue
+  ) => {
+    setFieldValue("leaveLines", []);
     const formErrors = await validateForm(updatedValues);
 
     const isValid =
@@ -178,10 +189,21 @@ export function MasterEditForm({
     }
   };
 
+  useEffect(() => {
+    if (employeeId) {
+      // you need to get Formik's resetForm method
+      if (formikRef.current) {
+        formikRef.current.resetForm({ values: initialValue });
+      }
+      if (inputFile?.current) inputFile.current.value = "";
+    }
+  }, [employeeId]);
+
   return (
     <>
       {/* Formik Start */}
       <Formik
+        innerRef={formikRef}
         enableReinitialize={true}
         initialValues={user}
         validationSchema={formValidation}
@@ -270,7 +292,8 @@ export function MasterEditForm({
                         setFieldValue("leaveType", value);
                         await validateAndFetch(
                           { ...values, leaveType: value },
-                          validateForm
+                          validateForm,
+                          setFieldValue
                         );
                       }}
                       label={
@@ -316,7 +339,8 @@ export function MasterEditForm({
                         // getLeaveLines({ ...values, from: date }, errors);
                         await validateAndFetch(
                           { ...values, from: date },
-                          validateForm
+                          validateForm,
+                          setFieldValue
                         );
                       }}
                       autoComplete="off"
@@ -353,7 +377,8 @@ export function MasterEditForm({
                         ); //Set difference in to from days in days key
                         await validateAndFetch(
                           { ...values, to: date },
-                          validateForm
+                          validateForm,
+                          setFieldValue
                         );
                       }}
                       autoComplete="off"
@@ -386,7 +411,14 @@ export function MasterEditForm({
                       } //disable field if the difference in dates is more than 1 days
                       type="number"
                       min="0"
-                      onChange={handleChange}
+                      onChange={async (e) => {
+                        setFieldValue("days", e?.target?.value);
+                        await validateAndFetch(
+                          { ...values, days: e?.target.value },
+                          validateForm,
+                          setFieldValue
+                        );
+                      }}
                       label={<span> Days</span>}
                     />
                   </div>

@@ -264,8 +264,7 @@ export const getSandwichPolicy = (subsidiaryId) => (dispatch) => {
 export const getLeaveApplicationDetail = (
   data,
   employeeId,
-  disableLoading,
-  setLeaveLines
+  disableLoading
 ) => (dispatch) => {
   if (employeeId) {
     return requestFromServer
@@ -283,7 +282,6 @@ export const getLeaveApplicationDetail = (
       })
       .catch((error) => {
         disableLoading();
-        setLeaveLines("leaveLines", []);
         error.clientMessage = "Can't Extract Leave  Detail";
         toast.error(error?.response?.data?.message || error.clientMessage, {
           position: "top-right",

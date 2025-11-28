@@ -74,7 +74,7 @@ export function MasterEditForm({
       ? new Date(payrollData.startDate)
       : null;
     const endDate = payrollData?.endDate ? new Date(payrollData.endDate) : null;
-    if ((payrollData && startDate, endDate)) {
+    if (payrollData && startDate && endDate) {
       return Yup.object().shape({
         from: Yup.date()
           .required(VALIDATION_MESSAGES.required)
@@ -89,17 +89,20 @@ export function MasterEditForm({
             "balance-check",
             "Leave days exceed available balance",
             function(to) {
-              const { from, leaveType } = this.parent;
+              const { from, leaveType, days } = this.parent;
               // if sandwich is disabled → skip balance check completely
               if (sandwichPolicy?.isSandwich == 0) return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
-              const diffDays = getDateDiffInDays(from, to);
+              const diffDays = days || getDateDiffInDays(from, to);
+              const leaveTypeRecord = leaveBalances?.find(
+                (el) => el?.leaveType === leaveType
+              );
               const balance =
-                leaveBalances?.find((el) => el?.leaveType === leaveType)
-                  ?.remainingCount || 0;
+                (leaveTypeRecord?.remainingCount ?? 0) +
+                (leaveTypeRecord?.negativeCount ?? 0);
 
-              return diffDays <= balance; // ✅ enforce balance
+              return diffDays <= balance; //  enforce balance
             }
           ),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -122,17 +125,21 @@ export function MasterEditForm({
             "balance-check",
             "Leave days exceed available balance",
             function(to) {
-              const { from, leaveType } = this.parent;
+              const { from, leaveType, days } = this.parent;
               // if sandwich is disabled → skip balance check completely
               if (sandwichPolicy?.isSandwich == 0) return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
-              const diffDays = getDateDiffInDays(from, to);
-              const balance =
-                leaveBalances?.find((el) => el?.leaveType === leaveType)
-                  ?.remainingCount || 0;
+              const diffDays = days || getDateDiffInDays(from, to);
+              const leaveTypeRecord = leaveBalances?.find(
+                (el) => el?.leaveType === leaveType
+              );
 
-              return diffDays <= balance; // ✅ enforce balance
+              const balance =
+                (leaveTypeRecord?.remainingCount ?? 0) +
+                (leaveTypeRecord?.negativeCount ?? 0);
+
+              return diffDays <= balance; //  enforce balance
             }
           ),
         leaveType: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -148,7 +155,7 @@ export function MasterEditForm({
     }
   }, [payrollData, leaveBalances, sandwichPolicy]);
 
-  const getLeaveLines = (values, errors , setFieldValue) => {
+  const getLeaveLines = (values, errors) => {
     let valuesExists = values?.leaveType && values?.from && values?.to;
     if (valuesExists && employeeId) {
       const payload = {
@@ -160,19 +167,24 @@ export function MasterEditForm({
           : getDateDiffInDays(values?.from, values?.to),
       };
       dispatch(
-        actions.getLeaveApplicationDetail(payload, employeeId, disbaleLoading , setFieldValue)
+        actions.getLeaveApplicationDetail(payload, employeeId, disbaleLoading)
       );
     }
   };
 
-  const validateAndFetch = async (updatedValues, validateForm , setFieldValue) => {
+  const validateAndFetch = async (
+    updatedValues,
+    validateForm,
+    setFieldValue
+  ) => {
+    setFieldValue("leaveLines", []);
     const formErrors = await validateForm(updatedValues);
 
     const isValid =
       !formErrors?.leaveType && !formErrors?.from && !formErrors?.to;
-
+    
     if (isValid) {
-      getLeaveLines(updatedValues, formErrors , setFieldValue);
+      getLeaveLines(updatedValues, formErrors);
     }
   };
 
@@ -377,7 +389,14 @@ export function MasterEditForm({
                       } //disable field if the difference in dates is more than 1 days
                       type="number"
                       min="0"
-                      onChange={handleChange}
+                      onChange={async (e) => {
+                        setFieldValue("days", e?.target?.value);
+                        await validateAndFetch(
+                          { ...values, days: e?.target.value },
+                          validateForm,
+                          setFieldValue
+                        );
+                      }}
                       label={<span> Days</span>}
                     />
                   </div>
