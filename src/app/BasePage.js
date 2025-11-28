@@ -379,6 +379,14 @@ import("./modules/PayrollGratuityReport/pages/index"))
 const PayrollOvertimeReport = lazy(()=>
 import("./modules/PayrollOverTimeReport/pages/index"));
 
+
+const CompanyDocument = lazy(()=>
+import("./modules/CompanyDocument/pages/index"));
+
+
+const CompanyDocumentPortal = lazy(()=>
+import("./modules/CompanyDocumentPortal/pages/index"));
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -523,6 +531,8 @@ const ROUTES = {
   onetime_allowance : OneTimeAllowanceModule,
   gratuity_report : PayrollGratuityReport,
   overtime_report : PayrollOvertimeReport,
+  company_doc : CompanyDocument,
+  company_doc_portal : CompanyDocumentPortal,
 };
 
 export default function BasePage() {
