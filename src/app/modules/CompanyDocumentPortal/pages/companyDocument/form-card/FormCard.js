@@ -13,6 +13,8 @@ import { useSelector, shallowEqual } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { CirclePlus } from "lucide-react";
+import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
+import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -26,7 +28,7 @@ export function FormCard() {
 
   const { userAccess } = useSelector(
     (state) => ({
-      userAccess: state.auth.userAccess.company_doc,
+      userAccess: state.auth.userAccess.company_doc_portal,
     }),
     shallowEqual
   );
@@ -37,8 +39,8 @@ export function FormCard() {
 
   const { currentState } = useSelector((state) => {
     return {
-      currentState: state.company_doc,
-      userAccess: state?.auth?.userAccess["company_doc"],
+      currentState: state.company_doc_portal,
+      userAccess: state?.auth?.userAccess["company_doc_portal"],
     };
   }, shallowEqual);
 
@@ -48,56 +50,50 @@ export function FormCard() {
 
   return (
     <>
-      {/* <Card>
-        <CardHeader title={CurrentModuleName()}>
-          <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
-            <div className="col-6">
-              <FormFIlter />
-            </div>
 
-            <div className=" p-2">
-              <CardHeaderToolbar>
-                {accessUser && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={FormUIProps.newFormButtonClick}
-                  >
-                    + Add News & Event Ticker
-                  </button>
-                )}
-              </CardHeaderToolbar>
-            </div>
-          </div>
-        </CardHeader>
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
+        <div className="xl:hidden block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+            isDashboardRedirect={true}
+            menuOptions={[
 
-        <CardBody>
-          <FormTable />
-        </CardBody>
-      </Card> */}
-      <TCard name={CurrentModuleName()}>
-        <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-          <FormFIlter />
-
-          <div className="flex items-center gap-2">
-            {/* <CardHeaderToolbar> */}
-            {accessUser && (
-              <>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={FormUIProps.newFormButtonClick}
-                >
-                  <CirclePlus className="w-3 h-3 mb-1 text-white cursor-pointer" />{" "}
-                  Add
-                </button>
-              </>
-            )}
-            {/* </CardHeaderToolbar> */}
-          </div>
+            ]}
+            isDashboardIcon={true}
+          />
         </div>
-        <FormTable />
-      </TCard>
+        <EmployeeProfile />
+      </div>
+      <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
+        <div className="hidden xl:block">
+          <EmployeePortalMenu
+            name={CurrentModuleName()}
+            isBackButton={true}
+              isDashboardRedirect={true}
+            menuOptions={[
+
+            ]}
+            isDashboardIcon={true}
+          />
+        </div>
+        <div className="px-3 py-2 rounded-lg bg-white">
+          <div className="grid grid-cols-6">
+   <FormFIlter />
+          </div>
+       
+        
+
+          <FormTable />
+          <br></br>
+
+        </div>
+
+      </div>
+    </div>
+    
+  
     </>
   );
 }

@@ -52,7 +52,7 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setIds([]);
 
-    dispatch(actions.fetchHolidays(formUIProps.queryParams));
+    dispatch(actions.fetchCompanyDocs(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
@@ -72,6 +72,21 @@ export function FormTable() {
 
   const columns = [
 
+        {
+      dataField: "docName",
+      text: "Document Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
     {
       dataField: "docDesc",
       text: "Document Description",
@@ -87,20 +102,22 @@ export function FormTable() {
       },
     }, 
     
-    {
-      dataField: "docName",
-      text: "Document Name",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "300px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+  {
+  dataField: "subsidiaries",
+  text: "Subsidiaries",
+  sort: false,
+  sortCaret: sortCaret,
+  headerSortingClasses,
+  style: {
+    minWidth: "300px",
+  },
+  formatter: (cell) => {
+    if (!cell || !Array.isArray(cell)) return "";
+    // Extract names and join with comma
+    const names = cell.map(sub => sub.name).filter(Boolean).join(", ");
+    return names.length > 50 ? <span title={names}>{names.substring(0, 50) + "..."}</span> : names;
+  },
+},
 
  
   {

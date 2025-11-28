@@ -5,16 +5,16 @@ import { SERVER_MESSAGES } from "../../../utils/constants";
 const { actions } = CompanyDocumentSlice;
 
 
-export const fetchHolidays = (queryparm) => async (dispatch) => {
+export const fetchCompanyDocs = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllHoliday(queryparm)
+  return requestFromServer.getAllCompanyDoc(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.holidayFetched(response));
+      dispatch(actions.companyDocFetched(response));
     })
     .catch((error) => {
     
@@ -23,20 +23,20 @@ export const fetchHolidays = (queryparm) => async (dispatch) => {
     });
 };
 
-export const fetchHoliday = (id) => (dispatch) => {
+export const fetchCompanyDoc = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.HolidayFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.CompanyDocFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getHolidayById(id)
+    .getCompanyDocById(id)
     .then((response) => {
       const entities = response.data?.data;
 
    
-      dispatch(actions.HolidayFetchedForEdit({ userForEdit: entities }));
+      dispatch(actions.CompanyDocFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -44,13 +44,13 @@ export const fetchHoliday = (id) => (dispatch) => {
     });
 };
 
-export const deleteHoliday = (id) => (dispatch) => {
+export const deleteCompanyDoc = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteHoliday( id)
+    .deleteCompanyDoc( id)
     .then((response) => {
     
-      dispatch(actions.HolidayDeleted({ Id: id }));
+      dispatch(actions.CompanyDocDeleted({ Id: id }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -69,19 +69,19 @@ export const deleteHoliday = (id) => (dispatch) => {
 
 
 
-export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
+export const createCompanyDoc = (companyDocForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
   
   return requestFromServer
-    .createHoliday(holidayForCreation)
+    .createCompanyDoc(companyDocForCreation)
     .then((res) => {
    
       const user = res.data?.data;
      
   
-      dispatch(actions.holidayCreated(user));
+      dispatch(actions.companyDocCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
@@ -110,14 +110,14 @@ export const createHoliday = (holidayForCreation, disbaleLoading, onHide) => (
     });
 };
 
-export const updateHoliday = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateCompanyDoc = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateHoliday(user)
+    .updateCompanyDoc(user)
     .then((response) => {
   
-      const updatedHoliday = response?.config?.data; // response.data?.data;
+      const updatedCompanyDoc = response?.config?.data; // response.data?.data;
    
-      dispatch(actions.holidayUpdated({ updatedHoliday }));
+      dispatch(actions.companyDocUpdated({ updatedCompanyDoc }));
     
       disbaleLoading();
       onHide();

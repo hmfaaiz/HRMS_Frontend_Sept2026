@@ -37,52 +37,7 @@ export function FormPage({ history }) {
 
     
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      <Route exact path="/company_doc_portal/read-all-company-doc-portal/new">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            onHide={() => {
-              history.push("/company_doc_portal/read-all-company-doc-portal");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/company_doc_portal/read-all-company-doc-portal/:id/edit">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() => {
-              history.push("/company_doc_portal/read-all-company-doc-portal");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/company_doc_portal/read-all-company-doc-portal/:id/read">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            userForRead={true}
-            onHide={() => {
-              history.push("/company_doc_portal/read-all-company-doc-portal");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/company_doc_portal/read-all-company-doc-portal/:id/:status/delete">
-        {({ history, match }) => (
-          <FormDeleteDialog
-            show={match != null}
-            id={match && match.params.id}
-            status={match && match.params.status}
-            onHide={() => {
-              history.push("/company_doc_portal/read-all-company-doc-portal");
-            }}
-          />
-        )}
-      </Route>
-    
+
       <FormCard />
       <ToastContainer
         position="top-right"

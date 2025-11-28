@@ -52,10 +52,10 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     actionsLoading: state.users.actionsLoading,
     user: state.users, // change for users to receipt
-    userForEdit: state.company_doc.userForEdit,
+    userForEdit: state.company_doc_portal.userForEdit,
     roles: state.users.roles,
     userStatusTypes: state.users.userStatusTypes,
-    isuserForRead: state.company_doc.userForRead,
+    isuserForRead: state.company_doc_portal.userForRead,
   }));
 
 

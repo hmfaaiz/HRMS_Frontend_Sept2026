@@ -38,8 +38,8 @@ export function FormTable() {
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
-      currentState: state.company_doc,
-      userAccess: state?.auth?.userAccess["company_doc"],
+      currentState: state.company_doc_portal,
+      userAccess: state?.auth?.userAccess["company_doc_portal"],
     };
   }, shallowEqual);
 
@@ -55,22 +55,27 @@ export function FormTable() {
     dispatch(actions.fetchHolidays(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateCompanyDoc"
-  );
 
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteCompanyDoc"
-  );
-
-  const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadCompanyDoc"
-  );
 
   // ReadCompanyDocr,CreateCompanyDocr
   // Table columns
 
   const columns = [
+
+       {
+      dataField: "docName",
+      text: "Document Name",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "300px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
 
     {
       dataField: "docDesc",
@@ -87,20 +92,7 @@ export function FormTable() {
       },
     }, 
     
-    {
-      dataField: "docName",
-      text: "Document Name",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "300px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+ 
 
  
   {
@@ -132,28 +124,7 @@ export function FormTable() {
      },
  
 
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        openEditFormDialog: formUIProps.openEditFormDialog,
-        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        openActiveFormDialog: formUIProps.openActiveFormDialog,
-        openReadFormDialog: formUIProps.openReadFormDialog,
-        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
-      },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: {
-        minWidth: "10px",
-      },
-    },
+  
   ];
 
   //Table pagination properties

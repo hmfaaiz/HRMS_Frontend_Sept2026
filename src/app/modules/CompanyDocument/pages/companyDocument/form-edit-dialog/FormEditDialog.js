@@ -62,9 +62,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchHoliday(id));
+    dispatch(actions.fetchCompanyDoc(id));
 
-    // dispatch(actions.fetchHoliday(formUIProps .queryParams))
+    // dispatch(actions.fetchCompanyDoc(formUIProps .queryParams))
   }, [id, dispatch]);
 
 
@@ -89,15 +89,15 @@ console.log("formData in save", formData);
 
 
 
-      dispatch(actions.createHoliday(formData, disbaleLoading, onHide, formUIProps.queryParams));
-      dispatch(actions.fetchHolidays(formUIProps.queryParams));
+      dispatch(actions.createCompanyDoc(formData, disbaleLoading, onHide, formUIProps.queryParams));
+      dispatch(actions.fetchCompanyDocs(formUIProps.queryParams));
 
 
 
     } else {
 
-      //  await dispatch(actions.createHoliday(user, disbaleLoading, onHide));
-      //   await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      //  await dispatch(actions.createCompanyDoc(user, disbaleLoading, onHide));
+      //   await dispatch(actions.fetchCompanyDocs(usersUIProps.queryParams));
 
 
 
@@ -128,9 +128,9 @@ console.log("formData in save", formData);
         formUpdatedFields.compAttachment = formData.compAttachment;
       }
 
-      await dispatch(actions.updateHoliday(formUpdatedFields, disbaleLoading, onHide));
+      await dispatch(actions.updateCompanyDoc(formUpdatedFields, disbaleLoading, onHide));
 
-      await dispatch(actions.fetchHolidays(usersUIProps.queryParams));
+      await dispatch(actions.fetchCompanyDocs(usersUIProps.queryParams));
     }
 
 

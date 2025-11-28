@@ -52,16 +52,13 @@ export function FormEditForm({
 
   const { currentState, userAccess } = useSelector((state) => {
     return {
-      currentState: state.company_doc,
-      userAccess: state?.auth?.userAccess["company_doc"],
+      currentState: state.company_doc_portal,
+      userAccess: state?.auth?.userAccess["company_doc_portal"],
     };
   }, shallowEqual);
 
 
-  const activeOptions = [
-    { value: false, label: "Inactive" },
-    { value: true, label: "Active" },
-  ];
+
 
   return (
     <Formik
