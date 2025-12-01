@@ -52,7 +52,7 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setIds([]);
 
-    dispatch(actions.fetchHolidays(formUIProps.queryParams));
+    dispatch(actions.fetchCompanyDocs(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
 

@@ -5,16 +5,16 @@ import { SERVER_MESSAGES } from "../../../utils/constants";
 const { actions } = CompanyDocumentPortalSlice;
 
 
-export const fetchHolidays = (queryparm) => async (dispatch) => {
+export const fetchCompanyDocs = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllHoliday(queryparm)
+  return requestFromServer.getAllCompanyDoc(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.holidayFetched(response));
+      dispatch(actions.companyDocFetched(response));
     })
     .catch((error) => {
     
