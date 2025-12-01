@@ -383,9 +383,15 @@ import("./modules/PayrollOverTimeReport/pages/index"));
 const CompanyDocument = lazy(()=>
 import("./modules/CompanyDocument/pages/index"));
 
+const EmployeeDocument = lazy(()=>
+import("./modules/EmployeeDocument/pages/index"));
+
 
 const CompanyDocumentPortal = lazy(()=>
 import("./modules/CompanyDocumentPortal/pages/index"));
+
+const EmployeeDocumentPortal = lazy(()=>
+import("./modules/EmployeeDocumentPortal/pages/index"));
 
 const ROUTES = {
   settings: SettingsPage,
@@ -533,6 +539,8 @@ const ROUTES = {
   overtime_report : PayrollOvertimeReport,
   company_doc : CompanyDocument,
   company_doc_portal : CompanyDocumentPortal,
+  employee_doc : EmployeeDocument,
+  employee_doc_portal : EmployeeDocumentPortal,
 };
 
 export default function BasePage() {
