@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -21,6 +21,8 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import * as actions from "../../../_redux/formActions";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import LeaveLinesTable from "../../../../LeaveApplication/pages/forms/form-edit-dialog/LeaveLinesTable";
+import { EmployeeSelect } from "./EmployeeSelect";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 
 export function MasterEditForm({
   submitForm,
@@ -38,6 +40,7 @@ export function MasterEditForm({
   isPolicyExists,
   currentLevel,
   initialValue,
+  panelMode,
 }) {
   //Get all leave types from dashboard global state
   //Get User Access for Edit and Create Save Button
@@ -65,7 +68,7 @@ export function MasterEditForm({
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
-
+  const formikRef = useRef(null);
   //Validation for Form.
   //If payroll month is available then form should not allow to add date for before payroll month end date.
   //else just normal validation for form
@@ -182,17 +185,28 @@ export function MasterEditForm({
 
     const isValid =
       !formErrors?.leaveType && !formErrors?.from && !formErrors?.to;
-    
+
     if (isValid) {
       getLeaveLines(updatedValues, formErrors);
     }
   };
+
+  useEffect(() => {
+    if (employeeId) {
+      // you need to get Formik's resetForm method
+      if (formikRef.current) {
+        formikRef.current.resetForm({ values: initialValue });
+      }
+      if (inputFile?.current) inputFile.current.value = "";
+    }
+  }, [employeeId]);
 
   return (
     <>
       {/* Formik Start */}
       <Formik
         enableReinitialize={true}
+        innerRef={formikRef}
         initialValues={user}
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
@@ -223,7 +237,6 @@ export function MasterEditForm({
           handleBlur,
           handleChange,
           setFieldValue,
-          handleReset,
           setValues,
           validateForm,
         }) => (
@@ -248,6 +261,18 @@ export function MasterEditForm({
                   Authorities exists as per the policy.
                 </span>
               )
+            )}
+            {currentLevel > 0 && (
+              <>
+                {" "}
+                <EmployeeSelect />
+                <br />
+                <EmployeeProfile
+                  employeeId={employeeId}
+                  panelMode={panelMode}
+                />
+                <br />{" "}
+              </>
             )}
             {/* Form Start */}
             <Form className="form form-label-right">

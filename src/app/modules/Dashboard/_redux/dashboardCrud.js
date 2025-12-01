@@ -223,6 +223,10 @@ export const getSeparatedAttSummaryEmpById = async (id) => {
   return await axios.get(`${USERS_URL}/settings/read-separated-att-summary/${id}`);
 };
 
+export const requestRaisedBySenior = async () => {
+  return await axios.get(`${USERS_URL}/settings/request-raised-by-senior`);
+};
+
 
 export function uploadFiles(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);

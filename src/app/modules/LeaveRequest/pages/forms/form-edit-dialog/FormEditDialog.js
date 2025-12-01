@@ -23,6 +23,7 @@ export function FormEditDialog({
     return {
       setId: FormUIContext.setId,
       queryParamsLeaveApp: FormUIContext.queryParamsLeaveApp,
+      panelMode: FormUIContext.panelMode,
     };
   }, [FormUIContext]);
 
@@ -109,6 +110,7 @@ export function FormEditDialog({
           empAuthorityList={empAuthorityList}
           isPolicyExists={isPolicyExists}
           currentLevel={currentLevel}
+          panelMode={formUIProps.panelMode}
           isReaply={
             !id ? false : userForEdit?.request_status !== "R" ? true : false
           }

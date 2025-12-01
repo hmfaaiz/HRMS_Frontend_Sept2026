@@ -655,6 +655,20 @@ subsidiaryId
     });
 };
 
+export const requestRaisedBySenior = (
+
+) => async (dispatch) => {
+  return await requestFromServer
+    .requestRaisedBySenior()
+    .then((response) => {
+
+      dispatch(actions.requestRaisedBySenior(response?.data?.data));
+    })
+    .catch((error) => {
+  
+    });
+};
+
 
 export const uploadFile = async (file) => {
   const formData = new FormData()

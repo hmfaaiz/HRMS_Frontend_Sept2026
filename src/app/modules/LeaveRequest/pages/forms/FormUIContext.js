@@ -17,6 +17,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   );
   const [currentLevel, setCurrentLevel] = useState(0);
   const [employeeId, setemployeeId] = useState("");
+  const [panelMode, setPanelMode] = useState(false);
   const [id, setId] = useState("");
   const setQueryParamsLeaveApp = useCallback((nextQueryParams) => {
     setQueryParamsLeaveAppBaseLeaveApp((prevQueryParams) => {
@@ -57,6 +58,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     id,
     setId,
     editRecord,
+    panelMode,
+    setPanelMode,
     employeeId,
     setemployeeId,
     currentLevel,
