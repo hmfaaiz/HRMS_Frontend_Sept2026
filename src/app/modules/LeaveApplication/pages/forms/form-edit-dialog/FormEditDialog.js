@@ -49,16 +49,28 @@ export function FormEditDialog({ id, employeeId }) {
   }, [id, dispatch]);
   
 
+
+
   //Create or Update record on form submit. First if file or image is available then will be uploaded then data is saved in db
   const submitForm = (values, resetForm) => {
     if (values.file && typeof values.file == 'object') { //This is to check if file is uploaded or not. If uploaded then upload the file to server else just save form values
       actions.uploadImage(values.file)
       .then((res) => {
-        dispatch(actions.saveRecord({ ...values, file: res.data.filename }, employeeId, disbaleLoading, resetForm));
+        if(values?.leaveLines?.length > 0){
+          dispatch(actions.saveRecord({ ...values, file: res.data.filename }, employeeId, disbaleLoading, resetForm));
+        }
+        // else{
+        //   dispatch(actions.getLeaveApplicationDetail({ ...values, file: res.data.filename }, employeeId, disbaleLoading, resetForm));
+        // }
       })
     }
     else {
-      dispatch(actions.saveRecord(values, employeeId, disbaleLoading, resetForm));
+      if(values?.leaveLines?.length > 0){
+        dispatch(actions.saveRecord(values, employeeId, disbaleLoading, resetForm));
+        }
+      //   else{
+      //   dispatch(actions.getLeaveApplicationDetail(values, employeeId, disbaleLoading, resetForm));
+      // }
     }
   }
 
@@ -69,9 +81,11 @@ export function FormEditDialog({ id, employeeId }) {
         submitForm={submitForm}
         user={userForEdit || formUIProps.initUser}
         enableLoading={enableLoading}
+        initialValue={formUIProps.initUser}
         loading={loading}
         employeeId={employeeId}
         isEdit={id ? true : false}
+        disbaleLoading={disbaleLoading}
         setId={formUIProps.setId}
         payrollData={payrollData}
         

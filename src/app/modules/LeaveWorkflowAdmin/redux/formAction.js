@@ -67,8 +67,8 @@ export const handleLeaveRequest = (body, resetForm, setLoading) => () => {
       return res;
     })
     .catch((error) => {
-      error.clientMessage = "Can't Handle Leave Request";
-      toast.error(SERVER_MESSAGES.updatedFail);
+      error.clientMessage = "Leave Approval Failed";
+      toast.error(error?.response?.data?.message || error?.clientMessage);
       setLoading(false);
     });
 };

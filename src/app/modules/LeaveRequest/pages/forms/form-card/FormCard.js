@@ -16,7 +16,12 @@ import { useLocation } from "react-router-dom";
 import { WorkflowAuthortiesTable } from "../form-table/WorkflowAuthortiesTable";
 import EmployeePortalMenu from "../../../../../utils/common-modules/EmployeePortalMenu";
 import EmployeeProfile from "../../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
+import EmpProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
+import {
+  getEmployeeHierarchy,
+  requestRaisedBySenior,
+} from "../../../../Dashboard/_redux/dashboardActions";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -31,7 +36,6 @@ export function FormCard() {
       setemployeeId: FormUIContext.setemployeeId,
       queryParamsLeaveApp: FormUIContext.queryParamsLeaveApp,
       id: FormUIContext.id,
-      setId: FormUIContext.setId,
       currentLevel: FormUIContext.currentLevel,
       setCurrentLevel: FormUIContext.setCurrentLevel,
       initUser: FormUIContext.initUser,
@@ -40,78 +44,71 @@ export function FormCard() {
 
   //Get data from states
   const {
-    dashboard,
-    entities,
     empAuthorityList,
     isPolicyExists,
-    payrollData,
-    employeeList,
     leave,
+    user,
+    allowRequestBySenior,
   } = useSelector(
     (state) => ({
-      dashboard: state.dashboard,
-      entities: state.leave_request.entities,
       leave: state?.auth?.userAccess["Leave"],
-      payrollData: state.leave_request?.payrollData,
       empAuthorityList: state?.leave_request?.empAuthorityList,
       isPolicyExists: state?.leave_request?.isPolicyExists,
-      employeeList: state?.dashboard?.employeeList,
+      user: state?.auth?.user,
+      allowRequestBySenior: state.dashboard.allowRequestBySenior,
     }),
     shallowEqual
   );
 
   useEffect(() => {
+    if (!formUIProps?.employeeId)
+      formUIProps.setemployeeId(user?.employeeIdMapping);
+
+    dispatch(requestRaisedBySenior());
+    if (allowRequestBySenior) {
+      formUIProps.setCurrentLevel(1);
+    }
+  }, [user, allowRequestBySenior]);
+
+  useEffect(() => {
     if (location?.state) {
       let state = location?.state;
-      formUIProps.setCurrentLevel(state?.employeeId?.level);
+      formUIProps.setCurrentLevel(state?.level);
       formUIProps.setemployeeId(state?.employeeId);
       setDateFromAtt(state?.leaveDate);
     }
-    if (
-      !formUIProps?.employeeId?.value &&
-      employeeList?.length > 0 &&
-      !location?.state
-    ) {
-      formUIProps.setemployeeId(employeeList[0]);
-    }
-  }, [employeeList, formUIProps?.employeeId, location]);
+  }, [location]);
 
   //Get data from server and set on state whenever employee Id is updated
   useEffect(() => {
-    if (formUIProps.employeeId?.value) {
+    if (formUIProps.employeeId) {
       dispatch(
         actions.fetchLeaveApplication(
           formUIProps.queryParamsLeaveApp,
-          formUIProps.employeeId.value
+          formUIProps.employeeId
         )
       );
-
-      if (!dashboard.allEmployees?.length) {
-        dispatch(fetchAllActiveEmployees());
-      }
     }
-  }, [formUIProps.employeeId?.value, formUIProps.queryParamsLeaveApp]);
+  }, [formUIProps.employeeId, formUIProps.queryParamsLeaveApp]);
+  /// get employee herichey if current level is greater then 0
+  useEffect(() => {
+    if (formUIProps?.currentLevel > 0) {
+      dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
+    }
+  }, [formUIProps?.currentLevel]);
 
   //Update Leave Balances whenever employee Id is changed or leave application table is updated
   //Also update dropdown of leave type when employee is selected
   useEffect(() => {
-    if (formUIProps.employeeId?.value) {
-      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId.value));
-      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId.value));
-      dispatch(
-        fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId.value)
-      );
-      dispatch(actions.getPayrollMonth(formUIProps.employeeId.value));
-      dispatch(actions.getSandwichPolicy(formUIProps.employeeId.value));
+    if (formUIProps.employeeId) {
+      dispatch(actions.fetchLeaveBalances(formUIProps.employeeId));
+      dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId));
+      dispatch(fetchAllLeaveType("allLeaveTypes", formUIProps.employeeId));
+      dispatch(actions.getPayrollMonth(formUIProps.employeeId));
+      dispatch(actions.getSandwichPolicy(formUIProps.employeeId));
     }
-  }, [formUIProps.employeeId?.value]);
-  useEffect(() => {
-    if (payrollData) {
-      dispatch(
-        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
-      );
-    }
-  }, [payrollData]);
+  }, [formUIProps.employeeId]);
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
@@ -190,21 +187,13 @@ export function FormCard() {
             isDashboardIcon={true}
           />
         </div>
-        <EmployeeSelect
-          setId={formUIProps?.setId}
-          setemployeeId={formUIProps?.setemployeeId}
-          employeeId={formUIProps?.employeeId?.value}
-          currentLevel={formUIProps?.currentLevel}
-          initUser={formUIProps?.initUser}
-          setCurrentLevel={formUIProps?.setCurrentLevel}
-        />
 
         <LeaveBalanceTable />
 
         <FormEditDialog
           id={formUIProps.id}
           currentLevel={formUIProps?.currentLevel}
-          employeeId={formUIProps?.employeeId?.value}
+          employeeId={formUIProps?.employeeId}
           empAuthorityList={empAuthorityList}
           isPolicyExists={isPolicyExists}
           initUser={{

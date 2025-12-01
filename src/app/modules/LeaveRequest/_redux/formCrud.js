@@ -57,3 +57,10 @@ export function getSandwichPolicy(subsidiaryId) {
     `${USERS_URL}/leave_application/read-sandwich-policy/${subsidiaryId}`
   );
 }
+
+export function getLeaveApplicationDetail(body) {
+  return axios.post(
+    `${USERS_URL}/leave_request/get-leave-application-detail`,
+    body
+  );
+}

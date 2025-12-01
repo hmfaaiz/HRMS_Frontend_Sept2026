@@ -19,6 +19,8 @@ import { Modal } from "react-bootstrap";
 import { format } from "date-fns";
 import { useHistory } from "react-router-dom";
 import { formatTime } from "../../../../../utils/common";
+import { EmployeeSelect } from "../form-edit-dialog/EmployeeSelect";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 
 const isValidMonthRequest = (monthStartDate, monthEndDate, attDate) => {
   const start = new Date(monthStartDate);
@@ -39,6 +41,8 @@ export function FormTable() {
       setQueryParams: formUIContext.setQueryParams,
       newAttendanceRequest: formUIContext?.newAttendanceRequest,
       employeeId: formUIContext?.employeeId,
+      panelMode: formUIContext.panelMode,
+      currentLevel: formUIContext.currentLevel,
     };
   }, [formUIContext]);
   const { currentState } = useSelector((state) => {
@@ -62,7 +66,7 @@ export function FormTable() {
     dispatch(actions.fetchAttendance(FormUIProps.queryParams));
   }, [FormUIProps.queryParams, dispatch]);
 
-  const allowRequestOnThisLevel = FormUIProps.employeeId?.level < 2;
+  const allowRequestOnThisLevel = FormUIProps.currentLevel >= 0;
   const isAuthorityExists = empAuthorityList.length > 0;
   // Table columns
   const columns = [
@@ -132,7 +136,7 @@ export function FormTable() {
         maxWidth: "70px",
       },
       formatter: (cell) => {
-        return cell ?  format(new Date(cell), "dd-MMM-yyyy") : '';
+        return cell ? format(new Date(cell), "dd-MMM-yyyy") : "";
       },
     },
     {
@@ -299,6 +303,7 @@ export function FormTable() {
     history.push("/leave-request/read-all-leave-request", {
       leaveDate: attDate,
       employeeId: FormUIProps?.employeeId,
+      level: FormUIProps.currentLevel,
     });
   };
 
@@ -347,14 +352,26 @@ export function FormTable() {
                     </span>
                   )
                 )}
-                {!allowRequestOnThisLevel && (
+                {FormUIProps?.currentLevel > 0 && (
+                  <>
+                    {" "}
+                    <EmployeeSelect />
+                    <br />
+                    <EmployeeProfile
+                      employeeId={FormUIProps.employeeId}
+                      panelMode={FormUIProps.panelMode}
+                    />
+                    <br />{" "}
+                  </>
+                )}
+                {/* {!allowRequestOnThisLevel && (
                   <>
                     <span style={{ color: "red" }}>
                       Employee level request not permitted.
                     </span>
                     <br />
                   </>
-                )}
+                )} */}
                 <BootstrapTable
                   responsive
                   style={{ width: "100%", overflow: "auto" }}

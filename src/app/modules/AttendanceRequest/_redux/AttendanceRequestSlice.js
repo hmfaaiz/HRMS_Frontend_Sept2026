@@ -69,9 +69,9 @@ export const AttendanceRequestSlice = createSlice({
       const entities = action?.payload?.userForEdit;
       state.actionsLoading = false;
       if (entities) {
-        // Commented out due to date shifting to the next day because of timezone conversion issue
-        entities.attDateIn = new Date(entities.attDateIn);
-        entities.attDateOut = new Date(entities.attDateOut);
+        // // Commented out due to date shifting to the next day because of timezone conversion issue
+        // entities.attDateIn = new Date(entities.attDateIn);
+        // entities.attDateOut = new Date(entities.attDateOut);
       }
       state.userForEdit = entities;
       state.error = null;

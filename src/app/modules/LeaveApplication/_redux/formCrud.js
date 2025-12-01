@@ -38,6 +38,13 @@ export function createLeaveApplicationSetup(body) {
   );
 }
 
+export function getLeaveApplicationDetail(body) {
+  return axios.post(
+    `${USERS_URL}/leave_application/get-leave-application-detail`,
+    body
+  );
+}
+
 /**
  *
  * Get All Leave Application Data Paginated
