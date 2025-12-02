@@ -197,11 +197,10 @@ export const EmployeePortal = () => {
               <AppraisalEvaluation />
             </div>
             
-            <div className="grid grid-cols-3">
-              <div className="flex flex-col md:flex-row gap-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="flex flex-col md:flex-row ">
               <CompanyDocument />
-            
-            </div>
+             </div>          
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

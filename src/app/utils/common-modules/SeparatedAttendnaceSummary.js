@@ -53,16 +53,16 @@
 //                                          <Col md={3} className="font-medium">Total Working Hours</Col>
 //                                         <Col md={3}>{data?.TotalWorkingHours || '0'}</Col>
 
-                                      
+
 //                                     </Row>
 
 //                                     <Row className="mb-2">
 
-                                        
+
 //                                         {/* <Col md={3} className="font-medium">Holidays</Col>
 //                                         <Col md={3}>{data?.Holidays || '0'}</Col> */}
 
-                                       
+
 //                                     </Row>
 
 //                                     {/* <Row className="mb-2">
@@ -76,7 +76,7 @@
 //                                     <Row className="mb-2">
 //                                          <Col md={3} className="font-medium">Absent Days</Col>
 //                                         <Col md={3}>{data?.AbsentDays || '0'}</Col>
-                                       
+
 
 //                                          <Col md={3} className="font-medium">Final Settlement Applicable</Col>
 //                                         <Col md={3}>{data?.forFinalSettlement === 1 ? "Yes" : "No"}</Col>
@@ -95,13 +95,13 @@
 
 //                                         {/* <Col md={3} className="font-medium">Late Days Count</Col>
 //                                         <Col md={3}>{data?.LateDaysCount || '0'}</Col> */}   
-                                        
+
 //                                           {/* <Col md={3} className="font-medium">Total Days</Col>
 //                                         <Col md={3}>{data?.Total_Days || '0'}</Col> */}
 //                                     </Row>
 
 //                                     <Row className="mb-2">
-                                       
+
 
 //                                           <Col md={3} className="font-medium">Leave Days</Col>
 //                                         <Col md={3}>{data?.LeaveDays || '0'}</Col>
@@ -141,35 +141,42 @@ const SeparatedAttendanceSummary = ({ data, panelMode }) => {
 
                 <div className="mb-4 text-sm">
                   <Row className="mb-2">
-                    <Col md={3} className="font-medium">Total Days</Col>
-                    <Col md={3}>{data?.TotalDays || '0'}</Col>
+                    <Col md={3} className="font-medium">From Date</Col>
+                    <Col md={3}>{data?.DateFrom || '0'}</Col>
 
-                    <Col md={3} className="font-medium">Paid Days</Col>
-                    <Col md={3}>{data?.PaidDays || '0'}</Col>
+                    <Col md={3} className="font-medium">To Date</Col>
+                    <Col md={3}>{data?.DateTo || '0'}</Col>
                   </Row>
 
                   <Row className="mb-2">
+                    <Col md={3} className="font-medium">Paid Days</Col>
+                    <Col md={3}>{data?.PresentDays || '0'}</Col>
+
                     <Col md={3} className="font-medium">Absent Days</Col>
                     <Col md={3}>{data?.AbsentDays || '0'}</Col>
 
-                    <Col md={3} className="font-medium">Leave Days</Col>
-                    <Col md={3}>{data?.LeaveDays || '0'}</Col>
+
                   </Row>
 
                   <Row className="mb-2">
-                    <Col md={3} className="font-medium">OT Hours</Col>
-                    <Col md={3}>{data?.OTHours || '0'}</Col>
+
+                    <Col md={3} className="font-medium">Leave Days</Col>
+                    <Col md={3}>{data?.LeaveDays || '0'}</Col>
+
 
                     <Col md={3} className="font-medium">Encashment Days</Col>
                     <Col md={3}>{data?.EncashmentDays || '0'}</Col>
                   </Row>
 
                   <Row className="mb-2">
+
+                    <Col md={3} className="font-medium">OT Hours</Col>
+                    <Col md={3}>{data?.OTHours || '0'}</Col>
+
                     <Col md={3} className="font-medium">Total Working Hours</Col>
                     <Col md={3}>{data?.TotalWorkingHours || '0'}</Col>
 
-                    <Col md={3} className="font-medium">Final Settlement Applicable</Col>
-                    <Col md={3}>{data?.forFinalSettlement === 1 ? 'Yes' : 'No'}</Col>
+
                   </Row>
                 </div>
               </>

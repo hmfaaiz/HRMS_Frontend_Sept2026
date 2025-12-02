@@ -24,12 +24,12 @@ console.log("company_doc_portal111",auth)
               <Link
                 to={"/company_doc_portal/read-all-company-doc-portal"}
               >
-                Company Document{" "}
+                Company / My Documents{" "}
               </Link>
             </p>
           </div>
         ) : (
-          <p className="text-sm mb-0">No Document for Company</p>
+          <p className="text-sm mb-0">No Document</p>
         )}
       </div>
     </>
