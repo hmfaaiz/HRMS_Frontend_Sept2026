@@ -44,6 +44,8 @@ function LeaveTypePolicyTable({
                       encashableCount: "",
                       carryForwardable: false,
                       carryForwardableCount: "",
+                      allowNegative : false,
+                      negativeCount : "",
                       maritalStatus: null,
                     })
                   }
@@ -64,6 +66,7 @@ function LeaveTypePolicyTable({
                       <td>Entitle At</td>
                       <td>Encashable</td>
                       <td>Carry Forwardable</td>
+                      <td title="Allow Negative Leave Balance" >Allow Negative Leave</td>
                       <td>Attachment Required</td>
                       <td>Gender</td>
                       <td className="text-right">Action</td>
@@ -104,6 +107,10 @@ function LeaveTypePolicyTable({
                                 );
                                 setFieldValue(
                                   `leavetypePolicies[${index}].carryForwardable`,
+                                  false
+                                );
+                                setFieldValue(
+                                  `leavetypePolicies[${index}].allowNegative`,
                                   false
                                 );
                               }
@@ -340,7 +347,72 @@ function LeaveTypePolicyTable({
                           </div>
                         </td>
                         {/* Carry Forwardable Field End */}
-
+                        {/* Negative count field start  */}
+                                                <td>
+                          <div className="d-flex align-items-center">
+                            <div className="mr-3">
+                              <input
+                                type="checkbox"
+                                name={`leavetypePolicies[${index}].allowNegative`}
+                                // component={Checkbox}
+                                onChange={(e) => {
+                                  setFieldValue(
+                                    `leavetypePolicies[${index}].allowNegative`,
+                                    e.target.checked
+                                  );
+                                }}
+                                checked={row.allowNegative}
+                                disabled={
+                                  !Boolean(
+                                    allLeaveTypeMap?.get(row?.leaveType || "")
+                                      ?.type == 1
+                                  )
+                                }
+                              />
+                            </div>
+                            <div >
+                              <Field
+                                name={`leavetypePolicies[${index}].negativeCount`}
+                                component={Input}
+                                type="number"
+                                min="0"
+                                className={
+                                  errors.leavetypePolicies?.[index]
+                                    ?.negativeCount &&
+                                  touched.leavetypePolicies?.[index]
+                                    ?.negativeCount
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                                }
+                                onChange={(e) => {
+                                  setFieldValue(
+                                    `leavetypePolicies[${index}].negativeCount`,
+                                    e.target.value
+                                  );
+                                }}
+                                value={
+                                  Boolean(row.allowNegative)
+                                    ? row.negativeCount
+                                    : ""
+                                }
+                                disabled={!Boolean(row.allowNegative)}
+                              />
+                            </div>
+                            {errors.leavetypePolicies?.[index]
+                              ?.negativeCount &&
+                              touched.leavetypePolicies?.[index]
+                                ?.negativeCount && (
+                                <CustomErrorLabel
+                                  touched={true}
+                                  error={
+                                    errors.leavetypePolicies?.[index]
+                                      ?.negativeCount
+                                  }
+                                />
+                              )}
+                          </div>
+                        </td>
+{/* negative count field end */}
                         {/* Attachement Required Field Starts */}
                         <td>
                           <input

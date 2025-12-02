@@ -98,6 +98,7 @@ const initialDashboardState = {
   profileDetailInfo : [],
   allFSApprovedEmp : [],
   allTaxYearSetupList : [],
+  allowRequestBySenior : false,
 };
 
 export const callTypes = {
@@ -410,6 +411,10 @@ export const dashboardSlice = createSlice({
 
     TaxYearSetupFetch: (state, action) => {
       state.allTaxYearSetupList  = action.payload;
+   
+    },
+        requestRaisedBySenior: (state, action) => {
+      state.allowRequestBySenior  = action.payload;
    
     },
 

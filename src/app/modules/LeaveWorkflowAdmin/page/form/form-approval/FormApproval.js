@@ -35,15 +35,25 @@ export const FormApproval = () => {
 
   const handleRequestSubmit = async (values, resetForm) => {
     setLoading(true);
-    await dispatch(
-      actions.handleLeaveRequest(values, resetForm, setLoading)
-    ).then(async () => {
-      formUIProps.setIds([]);
-      formUIProps.setLeaveData(null);
-      await dispatch(
-        actions.fetchLeaveApprovalApplication(formUIProps?.queryParams?.filter)
-      );
-    });
+    await dispatch(actions.handleLeaveRequest(values, resetForm, setLoading))
+      .then(async () => {
+        formUIProps.setIds([]);
+        formUIProps.setLeaveData(null);
+        await dispatch(
+          actions.fetchLeaveApprovalApplication(
+            formUIProps?.queryParams?.filter
+          )
+        );
+      })
+      .catch(async () => {
+        formUIProps.setIds([]);
+        formUIProps.setLeaveData(null);
+        await dispatch(
+          actions.fetchLeaveApprovalApplication(
+            formUIProps?.queryParams?.filter
+          )
+        );
+      });
   };
 
   const handleRejectClick = (setFieldValue, handleSubmit) => {

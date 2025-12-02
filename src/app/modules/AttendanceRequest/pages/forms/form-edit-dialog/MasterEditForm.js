@@ -37,12 +37,14 @@ export function MasterEditForm({
     if (payrollData && payrollData.endDate) {
       return Yup.object().shape({
         attDateIn: Yup.date()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .min(
             payrollData.startDate,
             `Date cannot be before ${formatDates(payrollData.startDate)}`
           ),
         attDateOut: Yup.date()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .min(Yup.ref("attDateIn"), "Date Out cannot be before Date in date")
           .test(
@@ -75,12 +77,14 @@ export function MasterEditForm({
           ),
 
         timeIn: Yup.string()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .matches(
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
             "Time must be in HHMM format and valid 24-hour format"
           ),
         oT: Yup.string()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .matches(
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
@@ -120,8 +124,11 @@ export function MasterEditForm({
       });
     } else {
       return Yup.object().shape({
-        attDateIn: Yup.date().required(VALIDATION_MESSAGES.required),
+        attDateIn: Yup.date()
+          .nullable()
+          .required(VALIDATION_MESSAGES.required),
         attDateOut: Yup.date()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .min(Yup.ref("attDateIn"), "Date Out cannot be before Date in date")
           .test(
@@ -137,12 +144,14 @@ export function MasterEditForm({
             }
           ),
         timeIn: Yup.string()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .matches(
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
             "Time must be in HHMM format and valid 24-hour format"
           ),
         timeOut: Yup.string()
+          .nullable()
           .required(VALIDATION_MESSAGES.required)
           .matches(
             /^(?:[01]\d|2[0-3])[0-5]\d$/,
@@ -152,7 +161,6 @@ export function MasterEditForm({
       });
     }
   }, [payrollData]);
-
   return (
     <>
       <Formik
@@ -160,26 +168,26 @@ export function MasterEditForm({
         initialValues={{
           ...user,
           attDate: user?.attDate ? new Date(user.attDate) : null,
-          attDateIn:
-            user?.attDateIn &&
-            !isNaN(new Date(user.attDateIn)) &&
-            new Date(user.attDateIn).toISOString().startsWith("1970-01-01")
-              ? user?.attDate
-                ? new Date(user.attDate)
-                : ""
-              : user?.attDateIn
-              ? new Date(user.attDateIn)
-              : "",
-          attDateOut:
-            user?.attDateOut &&
-            !isNaN(new Date(user.attDateOut)) &&
-            new Date(user.attDateOut).toISOString().startsWith("1970-01-01")
-              ? user?.attDate
-                ? new Date(user.attDate)
-                : ""
-              : user?.attDateOut
-              ? new Date(user.attDateOut)
-              : "",
+          attDateIn: user?.attDateIn || user?.attDate,
+          // &&
+          // !isNaN(new Date(user.attDateIn)) &&
+          // new Date(user.attDateIn).toISOString().startsWith("1970-01-01")
+          //   ? user?.attDate
+          //     ? new Date(user.attDate)
+          //     : ""
+          //   : user?.attDateIn
+          //   ? new Date(user.attDateIn)
+          //   : ""
+          attDateOut: user?.attDateOut || user?.attDate,
+          // &&
+          // !isNaN(new Date(user.attDateOut)) &&
+          // new Date(user.attDateOut).toISOString().startsWith("1970-01-01")
+          //   ? user?.attDate
+          //     ? new Date(user.attDate)
+          //     : ""
+          //   : user?.attDateOut
+          //   ? new Date(user.attDateOut)
+          //   : "",
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -194,6 +202,7 @@ export function MasterEditForm({
           setFieldValue,
           handleSubmit,
           handleReset,
+          errors,
         }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">

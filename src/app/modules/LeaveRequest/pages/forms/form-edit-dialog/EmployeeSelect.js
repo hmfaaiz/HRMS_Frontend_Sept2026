@@ -1,148 +1,109 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Formik, Form, Field } from "formik";
-import {
-  DatePickerField,
-  Select,
-} from "../../../../../../_metronic/_partials/controls";
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
+import { useSelector, shallowEqual } from "react-redux";
 import CustomErrorLabel from "../../../../../utils/common-modules/CustomErrorLabel";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
-import ActivePayrollMonthLabel from "../../../../../utils/common-modules/ActivePayrollMonthLabel";
 import { useFormUIContext } from "../FormUIContext";
-import { initialFilter } from "../FormUIHelpers";
-import * as actions from "../../../_redux/formActions";
-import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
-import { isEqual } from "lodash";
+import { Eye, XCircle } from "lucide-react";
 
-const prepareFilter = (queryParams, values) => {
-  const newQueryParams = { ...queryParams };
-  newQueryParams.filter = { ...values };
-  return newQueryParams;
-};
-
-export function EmployeeSelect({
-  actionsLoading,
-  setId,
-  setemployeeId,
-  employeeId,
-  currentLevel,
-  setCurrentLevel,
-}) {
+export function EmployeeSelect() {
   //Get all Employee list from dashboard global state
-  const dispatch = useDispatch();
   const FormUIContext = useFormUIContext();
-  const {
-    employeeList,
-    levelList,
-    payrollData,
-    activeFiscalYear,
-    user,
-  } = useSelector(
+  const { employeeList } = useSelector(
     (state) => ({
       employeeList: state?.dashboard?.employeeList,
-      levelList: state?.dashboard?.levelList,
-      payrollData: state?.leave_request?.payrollData,
-      activeFiscalYear: state?.dashboard?.activeFiscalYear,
-      user: state?.auth?.user,
     }),
     shallowEqual
   );
   const formUIProps = useMemo(() => {
     return {
-      queryParams: FormUIContext.queryParamsLeaveApp,
-      setQueryParams: FormUIContext.setQueryParamsLeaveAppBaseLeaveApp,
-      currentLevel: FormUIContext?.currentLevel,
-      setCurrentLevel: FormUIContext.setCurrentLevel,
       employeeId: FormUIContext?.employeeId,
       setemployeeId: FormUIContext?.setemployeeId,
+      panelMode: FormUIContext.panelMode,
+      setPanelMode: FormUIContext.setPanelMode,
     };
   }, [FormUIContext]);
-  //Create Maps for every dropdown data so setting value in dropdown can be fast optimized (Start)
-  const allEmployeesMap = useMemo(() => {
-    return new Map(employeeList?.map((item) => [item.value, item]));
-  }, [employeeList]);
-
-  const applyFilter = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    if (!isEqual(newQueryParams, formUIProps.queryParams)) {
-      newQueryParams.pageNumber = 1;
-      // update list by queryParams
-      formUIProps.setQueryParams(newQueryParams);
-    }
-    dispatch(actions.fetchLeaveApplication(newQueryParams));
-  };
-
-  useEffect(() => {
-    dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
-  }, [formUIProps?.currentLevel]);
-
-  useEffect(() => {
-    if (!formUIProps?.employeeId?.value && employeeList?.length > 0) {
-      formUIProps.setemployeeId(employeeList[0]);
-    }
-    if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
-      let findEmp = employeeList.find(
-        (e) => e?.value === user?.employeeIdMapping
-      );
-      formUIProps.setemployeeId(findEmp);
-    }
-  }, [employeeList, formUIProps?.employeeId]);
-
-  useEffect(() => {
-    // Only proceed if we have an employeeId
-    if (!formUIProps?.employeeId?.value) return;
-
-    dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId?.value));
-    // Fetch payroll month if we don't have the data yet
-    if (!payrollData) {
-      dispatch(actions.getPayrollMonth(formUIProps?.employeeId?.value));
-      return;
-    }
-    // Only apply filter when we have all required data
-    if (payrollData?.startDate && payrollData?.endDate) {
-      // const values = {
-      //   ...initialFilter.filter,
-      //   employeeId: formUIProps.employeeId?.value,
-      //   from: payrollData.startDate,
-      //   to: payrollData.endDate,
-      // };
-      // applyFilter(values);
-      // dispatch(actions.fetchLeaveApplication(values));
-      dispatch(
-        getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
-      );
-    }
-  }, [formUIProps.employeeId?.value, payrollData]); // Dependencies remain the same
 
   return (
     <>
-      {/* <Formik
-        enableReinitialize={true}
-        initialValues={{
-          ...initialFilter.filter,
-          currentLevel: formUIProps?.currentLevel,
-          employeeId: formUIProps?.employeeId?.value,
-          from: payrollData ? payrollData?.startDate : "",
-          to: payrollData ? payrollData?.endDate : "",
-        }}
-      >
-        {({ errors, values, handleBlur, setFieldValue }) => (
+      {/* Formik Starts */}
+      <Formik enableReinitialize={true} initialValues={{}}>
+        {({ handleBlur, setFieldValue }) => (
           <>
-            {actionsLoading && (
-              <div className="overlay-layer bg-transparent">
-                <div className="spinner spinner-lg spinner-success" />
-              </div>
-            )}
+            {/* Form Starts */}
             <Form className="form form-label-right">
               <fieldset>
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                  {/* Employee Id Dropdown Starts */}
+                  <div className="col-span-1">
+                    <div>
+                      <Field
+                        name="employeeId"
+                        component={SearchSelect}
+                        onBlur={handleBlur}
+                        onChange={(e) => {
+                          const value =
+                            e.value == "Select" ? "" : Number(e.value);
+                          setFieldValue("employeeId", value);
+                          formUIProps.setemployeeId(value);
+                        }}
+                        label={
+                          <span>
+                            {" "}
+                            Employee<span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={
+                          employeeList?.find(
+                            (el) => el?.value === formUIProps.employeeId
+                          ) || ""
+                        }
+                        autoComplete="off"
+                        options={employeeList}
+                      />
+                      {!formUIProps?.employeeId && (
+                        <CustomErrorLabel
+                          touched={true}
+                          error={VALIDATION_MESSAGES.required}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    {formUIProps.panelMode ? (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                        onClick={() =>
+                          formUIProps.setPanelMode(!formUIProps.panelMode)
+                        }
+                      >
+                        <XCircle className="w-3 h-3 text-black" />
+                        Cancel
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn btn-primary d-flex align-items-center gap-2"
+                        onClick={() =>
+                          formUIProps.setPanelMode(!formUIProps.panelMode)
+                        }
+                      >
+                        <Eye className="w-4 h-4 text-white" />
+                        View Details
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {/* Employee Id Dropdown Ends */}
               </fieldset>
             </Form>
+            {/* Form Ends */}
           </>
         )}
-      </Formik> */}
+      </Formik>
+      {/* Formik Ends */}
     </>
   );
 }

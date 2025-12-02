@@ -12,6 +12,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [currentLevel, setCurrentLevel] = useState(0);
   const [employeeId, setemployeeId] = useState("");
+  const [panelMode, setPanelMode] = useState(false);
+
   const initFilters = {
     employeeId: "",
     attDateIn: "",
@@ -68,6 +70,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setCurrentLevel,
     employeeId,
     setemployeeId,
+    panelMode,
+    setPanelMode,
     ...FormUIEvents,
   };
   return (

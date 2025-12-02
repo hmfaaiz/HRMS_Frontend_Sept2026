@@ -9,7 +9,7 @@ import { DatePickerField } from "../../../../../../_metronic/_partials/controls"
 import { useDispatch } from "react-redux";
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
-import { getEmployeeHierarchy } from "../../../../Dashboard/_redux/dashboardActions";
+import { getEmployeeHierarchy, requestRaisedBySenior } from "../../../../Dashboard/_redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getActiveFiscalYear } from "../../../../../../_metronic/redux/dashboardActions";
 import { formatDates } from "../../../../../utils/common";
@@ -107,12 +107,14 @@ export function FormFilter() {
     attendanceSummary,
     user,
     listLoading,
+    allowRequestBySenior,
   } = useSelector((state) => ({
     employeeList: state.dashboard?.employeeList,
     attendanceSummary: state?.attendance_request?.attendanceSummary,
     payrollData: state?.attendance_request?.payrollData,
     user: state?.auth?.user,
     listLoading: state?.attendance_request?.listLoading,
+    allowRequestBySenior: state.dashboard.allowRequestBySenior,
   }));
 
   const formUIProps = useMemo(
@@ -127,6 +129,23 @@ export function FormFilter() {
     [FormUIContext]
   );
 
+  
+
+
+  useEffect(() => {
+    formUIProps.setemployeeId(user?.employeeIdMapping);
+    dispatch(requestRaisedBySenior());
+    if (allowRequestBySenior) {
+      formUIProps.setCurrentLevel(1);
+    }
+  }, [user, allowRequestBySenior]);
+
+    useEffect(() => {
+    if (formUIProps?.currentLevel > 0) {
+      dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
+    }
+  }, [formUIProps?.currentLevel]);
+
   const applyFilter = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     if (!isEqual(newQueryParams, formUIProps.queryParams)) {
@@ -137,36 +156,22 @@ export function FormFilter() {
     dispatch(actions.fetchAttendanceSheetConsolidated(newQueryParams.filter));
   };
 
-  useEffect(() => {
-    dispatch(getEmployeeHierarchy(formUIProps?.currentLevel));
-  }, [formUIProps?.currentLevel]);
+
 
   useEffect(() => {
-    if (!formUIProps?.employeeId?.value && employeeList?.length > 0) {
-      formUIProps.setemployeeId(employeeList[0]);
-    }
-    if (formUIProps.employeeId?.value && formUIProps?.currentLevel === 0) {
-      const findEmp = employeeList.find(
-        (e) => e?.value === user?.employeeIdMapping
-      );
-      formUIProps.setemployeeId(findEmp);
-    }
-  }, [formUIProps.employeeId, employeeList]);
+    if (!formUIProps?.employeeId) return;
 
-  useEffect(() => {
-    if (!formUIProps?.employeeId?.value) return;
-
-    dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId?.value));
+    dispatch(actions.getEmployeeAuthorities(formUIProps.employeeId));
 
     if (!payrollData) {
-      dispatch(actions.getPayrollMonth(formUIProps?.employeeId?.value));
+      dispatch(actions.getPayrollMonth(formUIProps?.employeeId));
       return;
     }
 
     if (payrollData?.startDate && payrollData?.endDate) {
       const values = {
         ...initialFilter.filter,
-        employeeId: formUIProps.employeeId?.value,
+        employeeId: formUIProps.employeeId,
         // from: payrollData.startDate,
         // to: payrollData.endDate,
         from: payrollData?.startDate
@@ -182,7 +187,7 @@ export function FormFilter() {
         getActiveFiscalYear("activeFiscalYear", payrollData?.subsidiaryId)
       );
     }
-  }, [formUIProps.employeeId?.value, payrollData]);
+  }, [formUIProps.employeeId, payrollData]);
 
   return (
     <div className="px-3 py-2 rounded-lg bg-white">
@@ -191,7 +196,7 @@ export function FormFilter() {
         initialValues={{
           ...initialFilter.filter,
           currentLevel: formUIProps?.currentLevel,
-          employeeId: formUIProps?.employeeId?.value,
+          employeeId: formUIProps?.employeeId,
           from: payrollData ? payrollData?.startDate : "",
           to: payrollData ? payrollData?.endDate : "",
         }}

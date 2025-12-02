@@ -224,6 +224,39 @@ export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
   }
 };
 
+export const getLeaveApplicationDetail = (
+  data,
+  employeeId,
+  disableLoading,
+) => (dispatch) => {
+  if (employeeId) {
+    return requestFromServer
+      .getLeaveApplicationDetail({ ...data, employeeId })
+      .then((res) => {
+        const LeaveApplicationData = res.data?.data;
+        if (LeaveApplicationData) {
+          dispatch(
+            actions.LeaveApplicationFetchedForEdit({ userForEdit: LeaveApplicationData })
+          );
+          disableLoading();
+        }
+      })
+      .catch((error) => {
+        disableLoading();
+        error.clientMessage = "Can't Extract Leave Application Detail";
+        toast.error(error?.response?.data?.message || error.clientMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+  }
+};
+
 /**
  *
  * Delete Single Leave Application Record By Id
