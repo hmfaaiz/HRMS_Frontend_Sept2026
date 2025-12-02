@@ -68,7 +68,9 @@ export function FormCard() {
         <div className="md:col-span-1 xl:col-span-9 flex flex-col gap-4">
           <div className="hidden xl:block">
             <EmployeePortalMenu
-              name={CurrentModuleName()}
+              // name={CurrentModuleName()}
+              name={"Company / My Documents"}
+
               isBackButton={true}
               isDashboardRedirect={true}
               menuOptions={[
@@ -77,12 +79,16 @@ export function FormCard() {
               isDashboardIcon={true}
             />
           </div>
+
+
+
           <div className="px-3 py-2 rounded-lg bg-white">
             {/* <div className="grid grid-cols-6">
               <FormFIlter />
             </div> */}
-
-
+            <h6 className="font-bold mb-0 text-primary">
+              Company Documents
+            </h6>
 
             <FormTable />
             <br></br>
@@ -90,22 +96,25 @@ export function FormCard() {
           </div>
 
 
-          {/* Employee Doc */}
-            <EmployeeUIProvider>
-          
 
-           <div className="px-3 py-2 rounded-lg bg-white">
-            {/* <div className="grid grid-cols-6">
+          {/* Employee Doc */}
+          <EmployeeUIProvider>
+
+
+            <div className="px-3 py-2 rounded-lg bg-white">
+              {/* <div className="grid grid-cols-6">
               <FormFIlter />
             </div> */}
 
+              <h6 className="font-bold mb-0 text-primary">
+                My Documents
+              </h6>
 
+              <EmployeeDocTable />
+              <br></br>
 
-            <EmployeeDocTable />
-            <br></br>
-
-          </div>
-           </EmployeeUIProvider>
+            </div>
+          </EmployeeUIProvider>
 
         </div>
       </div>

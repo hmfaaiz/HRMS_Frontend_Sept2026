@@ -25,23 +25,23 @@ export function EmployeeDocTable() {
 
   const formUIProps = useMemo(() => {
     return {
- 
-  
+
+
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
-     
+
     };
   }, [formUIContext]);
 
-  const { currentState,  } = useSelector((state) => {
+  const { currentState, } = useSelector((state) => {
     return {
       currentState: state.company_doc_portal,
 
     };
   }, shallowEqual);
 
-  const { emptotalCount, empentities, emplistLoading} = currentState;
-console.log("data111", currentState)
+  const { emptotalCount, empentities, emplistLoading } = currentState;
+  console.log("data111", currentState)
   //totalCount = 10
 
   const dispatch = useDispatch();
@@ -51,11 +51,11 @@ console.log("data111", currentState)
     dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, emptotalCount]);
 
- 
+
 
   const columns = [
 
-        {
+    {
       dataField: "docName",
       text: "Document Name",
       sort: false,
@@ -83,34 +83,48 @@ console.log("data111", currentState)
         if (!cell) return "";
         return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
-    }, 
+    },
 
- 
-  {
-       dataField: "empAttachment",
-       text: "File",
-       sort: false,
-       sortCaret: sortCaret,
-       headerSortingClasses,
-       style: {
-         minWidth: "100px",
-       },
-   
-       formatter: (cell) => {
-         if (!cell) return "";
- 
-         return (
-           <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-             View Document
-           </a>
-         );
-       }
- 
- 
-     },
- 
+    {
+      dataField: "createdAt",
+      text: "Document Upload Date",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell) => {
+        // Only format if cell has a valid date
+        if (!cell) return "";
+        return format(new Date(cell), "dd-MMM-yyyy");
+      },
+    },
+    {
+      dataField: "empAttachment",
+      text: "File",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
 
-   
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        return (
+          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+            View Document
+          </a>
+        );
+      }
+
+
+    },
+
+
+
   ];
 
   //Table pagination properties

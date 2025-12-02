@@ -160,6 +160,7 @@ console.log("id11111",id)
         enableLoading={enableLoading}
         loading={loading}
         setId={formUIProps.setId}
+        setReadMode={formUIProps.setReadMode}
 
       />
       <ToastContainer

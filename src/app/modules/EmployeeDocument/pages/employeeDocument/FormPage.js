@@ -37,51 +37,6 @@ export function FormPage({ history }) {
 
     
     <FormUIProvider FormUIEvents={FormUIEvents}>
-      {/* <Route exact path="/employee_doc/read-all-employee-doc/new">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            onHide={() => {
-              history.push("/employee_doc/read-all-employee-doc");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/employee_doc/read-all-employee-doc/:id/edit">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() => {
-              history.push("/employee_doc/read-all-employee-doc");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/employee_doc/read-all-employee-doc/:id/read">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            userForRead={true}
-            onHide={() => {
-              history.push("/employee_doc/read-all-employee-doc");
-            }}
-          />
-        )}
-      </Route>
-      <Route path="/employee_doc/read-all-employee-doc/:id/:status/delete">
-        {({ history, match }) => (
-          <FormDeleteDialog
-            show={match != null}
-            id={match && match.params.id}
-            status={match && match.params.status}
-            onHide={() => {
-              history.push("/employee_doc/read-all-employee-doc");
-            }}
-          />
-        )}
-      </Route> */}
 
 
         

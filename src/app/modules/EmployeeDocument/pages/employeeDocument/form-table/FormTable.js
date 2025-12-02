@@ -74,7 +74,7 @@ export function FormTable() {
 
   const columns = [
 
-        {
+    {
       dataField: "docName",
       text: "Document Name",
       sort: false,
@@ -102,32 +102,46 @@ export function FormTable() {
         if (!cell) return "";
         return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
-    }, 
+    },
+    {
+      dataField: "createdAt",
+      text: "Document Upload Date",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell) => {
+        // Only format if cell has a valid date
+        if (!cell) return "";
+        return format(new Date(cell), "dd-MMM-yyyy");
+      },
+    },
 
- 
-  {
-       dataField: "empAttachment",
-       text: "File",
-       sort: false,
-       sortCaret: sortCaret,
-       headerSortingClasses,
-       style: {
-         minWidth: "100px",
-       },
-   
-       formatter: (cell) => {
-         if (!cell) return "";
- 
-         return (
-           <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-             View Document
-           </a>
-         );
-       }
- 
- 
-     },
- 
+    {
+      dataField: "empAttachment",
+      text: "File",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        return (
+          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+            View Document
+          </a>
+        );
+      }
+
+
+    },
+
 
     {
       dataField: "action",
@@ -148,7 +162,7 @@ export function FormTable() {
         setReadMode: formUIProps.setReadMode,
         // setIsFileReq : formUIProps.setIsFileReq,
 
-    
+
 
       },
       classes: "text-right pr-0",

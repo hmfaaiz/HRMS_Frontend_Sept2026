@@ -306,7 +306,7 @@ export const rootReducer = combineReducers({
   company_doc : CompanyDocumentSlice.reducer,
   company_doc_portal : CompanyDocumentPortalSlice.reducer,
   employee_doc : EmployeeDocumentSlice.reducer,
-  employee_doc_portal : CompanyDocumentPortalSlice.reducer,
+
 });
 
 export function* rootSaga() {

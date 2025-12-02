@@ -43,7 +43,7 @@ export function FormEditForm({
   onHide,
   isUserForRead,
   enableLoading,
-  loading, setId
+  loading, setId,setReadMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -201,12 +201,13 @@ export function FormEditForm({
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            {!isUserForRead ? (
+            {/* {!isUserForRead ? ( */}
               <button
                 type="reset"
                 onClick={() => {
                   setId("");
                   handleReset();
+                  setReadMode(false)
 
                   if (inputFile?.current) {
                     inputFile.current.value = "";
@@ -216,7 +217,7 @@ export function FormEditForm({
               >
                 Cancel
               </button>
-            ) : (
+            {/* ) : (
               <button
                 type="button"
                 onClick={onHide}
@@ -224,7 +225,7 @@ export function FormEditForm({
               >
                 OK
               </button>
-            )}
+            )} */}
 
             {!isUserForRead && (
               <button
