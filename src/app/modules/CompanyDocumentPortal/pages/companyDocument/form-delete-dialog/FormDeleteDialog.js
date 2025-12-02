@@ -41,17 +41,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteHoliday = () => {
-    // server request for deleting customer by id
-    enableLoading();
-    dispatch(actions.deleteHoliday(id)).then(() => {
-      onHide();
-      // refresh list after deletion
-      dispatch(actions.fetchHolidays(usersUIProps.queryParams));
 
-      disableLoading();
-    });
-  };
 
   return (
     <Modal
@@ -79,7 +69,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteHoliday}
+        
             className="btn btn-danger btn-elevate"
           >
             Delete

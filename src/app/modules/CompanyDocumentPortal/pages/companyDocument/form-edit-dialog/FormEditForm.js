@@ -81,13 +81,12 @@ export function FormEditForm({
             )}
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
-                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-3 gap-y-1">
 
 
-                  <div className=" ">
-                    <div className="col-12 text-black mt-1">
+                    <div className=" text-black mt-1">
                       <label>
-                        Subsidiary
+                        Subsidiary<span style={{ color: "red" }}>*</span>
                       </label>
 
                       <div className="overflow-auto"
@@ -133,7 +132,7 @@ export function FormEditForm({
                         </div>
                       </div>
                     </div>
-                  </div>
+                 
 
                 </div>
 
@@ -167,7 +166,7 @@ export function FormEditForm({
                     <FileUpload
                       label={
                         <>
-                          Companyr Attachment<span style={{ color: "red" }}>*</span>
+                          Company Attachment<span style={{ color: "red" }}>*</span>
                         </>
                       }
                       id="file"
