@@ -23,3 +23,22 @@ export const fetchCompanyDocs = (queryparm) => async (dispatch) => {
     });
 };
 
+
+export const fetchEmployeeDocs = (queryparm) => async (dispatch) => {
+
+
+  
+  return requestFromServer.getAllEmployeeDoc(queryparm)
+   
+    .then((response) => {
+    
+
+      dispatch(actions.employeeDocFetched(response));
+    })
+    .catch((error) => {
+    
+      error.clientMessage = "Can't find";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};
+

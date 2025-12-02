@@ -5,12 +5,16 @@ const initialCompanyDocumentPortalState = {
     actionsLoading: null,
     totalCount: 0,
     entities: null,
-    roles: null,
-    centers: null,
-    userStatusTypes: null,
-    userForEdit: undefined,
+  
+
     lastError: null,
-    userForRead: false,
+ 
+
+
+     emplistLoading: false,
+     empactionsLoading: null,
+     emptotalCount: 0,
+     empentities: null,
 };
 
 
@@ -27,33 +31,50 @@ export const CompanyDocumentPortalSlice = createSlice({
             state.error = `${action.type}: ${action.payload.error}`;
             if (action.payload.callType === callTypes.list) {
                 state.listLoading = false;
+                state.emplistLoading = false;
             } else {
                 state.actionsLoading = false;
+                state.empactionsLoading = false;
             }
         },
 
-       companyDocFetched: (state, action) => {
-        
-  
+        companyDocFetched: (state, action) => {
+
+
             const entities = action.payload.data?.data.rows;
-           
+
             const totalResult = action.payload.data?.data.totalResults;
             // const updatedEntities = entities.map(entity => {
-             
+
             //     const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basis';
-                
-            
+
+
             //     return {
             //         ...entity,
             //         basis_of_gratuity // Add the new field to the entity
             //     };
             // });
-          
+
             state.listLoading = false;
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
-           
+
+        },
+
+
+        employeeDocFetched: (state, action) => {
+
+
+            const empentities = action.payload.data?.data.rows;
+
+            const emptotalResult = action.payload.data?.data.totalResults;
+ 
+            state.emplistLoading = false;
+            state.error = null;
+            state.empentities = empentities;
+            state.emptotalCount = emptotalResult;
+
         },
 
 
@@ -61,8 +82,6 @@ export const CompanyDocumentPortalSlice = createSlice({
 
 
 
-        
-        
 
     },
 });

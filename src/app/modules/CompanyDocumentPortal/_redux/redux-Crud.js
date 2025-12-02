@@ -12,5 +12,9 @@ export function getAllCompanyDoc(body) {
 }
 
 
+export function getAllEmployeeDoc(body) {
+
+  return axios.post(`${USERS_URL}/company_doc_portal/read-all-employee-doc-portal`, body);
+}
 
 

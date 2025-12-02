@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
-import { FormPage } from "./companyDocument/FormPage";
+import { FormPage } from "./employeeDocument/FormPage";
 
 export default function CompanyDocManagement() {
-  console.log("ggggg")
+
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
     

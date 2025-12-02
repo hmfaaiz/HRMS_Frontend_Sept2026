@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialCompanyDocumentPortalState = {
+const initialEmployeeDocumentPortalState = {
     listLoading: false,
     actionsLoading: null,
     totalCount: 0,
@@ -19,9 +19,9 @@ export const callTypes = {
     action: "action",
 };
 
-export const CompanyDocumentPortalSlice = createSlice({
-    name: "CompanyDocumentPortal",
-    initialState: initialCompanyDocumentPortalState,
+export const EmployeeDocumentPortalSlice = createSlice({
+    name: "EmployeeDocumentPortal",
+    initialState: initialEmployeeDocumentPortalState,
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
@@ -32,7 +32,7 @@ export const CompanyDocumentPortalSlice = createSlice({
             }
         },
 
-       companyDocFetched: (state, action) => {
+       employeeDocFetched: (state, action) => {
         
   
             const entities = action.payload.data?.data.rows;

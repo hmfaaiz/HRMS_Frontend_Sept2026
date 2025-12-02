@@ -1,20 +1,20 @@
 import * as requestFromServer from "./redux-Crud";
-import {CompanyDocumentPortalSlice, callTypes } from "./redux-Slice";
+import {EmployeeDocumentPortalSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
 import { SERVER_MESSAGES } from "../../../utils/constants";
-const { actions } = CompanyDocumentPortalSlice;
+const { actions } = EmployeeDocumentPortalSlice;
 
 
-export const fetchCompanyDocs = (queryparm) => async (dispatch) => {
+export const fetchEmployeeDocs = (queryparm) => async (dispatch) => {
 
 
   
-  return requestFromServer.getAllCompanyDoc(queryparm)
+  return requestFromServer.getAllEmployeeDoc(queryparm)
    
     .then((response) => {
     
 
-      dispatch(actions.companyDocFetched(response));
+      dispatch(actions.employeeDocFetched(response));
     })
     .catch((error) => {
     
