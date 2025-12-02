@@ -196,20 +196,41 @@ export const sendInterviewEmail = (body, disableLoading, onHide) => async (
   dispatch
 ) => {
   dispatch(actions.startCall({ error: null, callType: callTypes.action }));
-  return requestFromServer.sendInterviewEmail(body).then((response) => {
-    disableLoading();
-    dispatch(actions.InterviewEmailSent({}));
-    toast.success(SERVER_MESSAGES.processSuccessful, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
+  return requestFromServer
+    .sendInterviewEmail(body)
+    .then((response) => {
+      disableLoading();
+      dispatch(actions.InterviewEmailSent({}));
+      toast.success(SERVER_MESSAGES.processSuccessful, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      onHide();
+    })
+    .catch((error) => {
+      disableLoading();
+      dispatch(
+        actions.catchError({
+          error: error?.response?.data?.message || "Internal Server Error",
+          callType: callTypes.action,
+        })
+      );
+      toast.error(error?.response?.data?.message || "Internal Server Error", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      onHide();
     });
-    onHide();
-  });
 };
 
 export const fetchJobVacancyList = () => async (dispatch) => {

@@ -52,7 +52,7 @@ export const PendingRequestSelf = ({
   );
   return (
     <div className="p-3 rounded-lg bg-white w-full flex flex-col max-h-max sm:max-h-56 overflow-y-auto justify-between">
-      <h6 className="font-bold mb-0 text-primary my-2">Pending Request</h6>
+      <h6 className="font-bold mb-0 text-primary my-2">Subordinate Pending Requests</h6>
       <div className="grid grid-cols-1  sm:grid-cols-4 gap-2 w-full mb-2">
         <div className="bg-tsecondary font-weight-bolder w-full px-4 py-3 gap-2 sm:gap-5 lg:gap-11 rounded-lg d-flex flex-column justify-content-between">
           <div className="text-primary d-flex  justify-content-between">

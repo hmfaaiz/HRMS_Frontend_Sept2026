@@ -191,7 +191,7 @@ export const EmployeePortal = () => {
                 entities={loanList?.length > 0 ? loanList : []}
               />
             </div>
-            <div className="flex flex-col md:flex-row gap-4">
+            {/* <div className="flex flex-col md:flex-row gap-4">
               <JobRequestion />
               <ResignationRequest />
               <AppraisalEvaluation />
@@ -202,7 +202,7 @@ export const EmployeePortal = () => {
               <CompanyDocument />
             
             </div>
-            </div>
+            </div> */}
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AttendanceBarChart data={attRecord} />
