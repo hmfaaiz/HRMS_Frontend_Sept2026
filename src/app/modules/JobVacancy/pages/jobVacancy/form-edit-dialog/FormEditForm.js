@@ -326,7 +326,9 @@ export function FormEditForm({
   }, [formData]);
 
   const fetchData = async (setJobCode) => {
-    if (!formData.Id) {
+    
+    if (!formData.Id || formData.Id && !isdataForRead && formData.jobPostingStatus == 3) {
+     
       dispatch(
         getLatestTableId(
           "r_jobvacancy",
@@ -338,8 +340,9 @@ export function FormEditForm({
     }
   };
   useEffect(() => {
+   
     fetchData(setJobCode);
-  }, [!formData.Id]);
+  }, [!formData.Id,isdataForRead]);
 
   useEffect(() => {
     if (cleanedFormData?.gradeId) {
@@ -352,7 +355,12 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...cleanedFormData,
-        jobCode: cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
+        // jobCode: cleanedFormData.jobCode ? cleanedFormData?.jobCode : jobCode,
+        jobCode:
+  (!isdataForRead && formData.jobPostingStatus == 3)
+    ? jobCode
+    : (cleanedFormData.jobCode ? cleanedFormData.jobCode : jobCode)
+,
         jobDate: cleanedFormData?.jobDate
           ? cleanedFormData?.jobDate
           : formatDates(new Date(), "yyyy-MM-dd"),
