@@ -43,7 +43,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'Employee Register.pdf');
+      link.setAttribute('download', 'Employee_Register.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
