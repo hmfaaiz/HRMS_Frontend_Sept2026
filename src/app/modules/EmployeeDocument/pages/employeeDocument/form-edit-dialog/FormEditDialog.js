@@ -1,0 +1,180 @@
+import React, { useState, useEffect, useMemo } from "react";
+import { Modal } from "react-bootstrap";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { FormEditForm } from "./FormEditForm";
+import { FormEditDialogHeader } from './FormEditDialogHeader'
+
+import * as actions from "../../../_redux/redux-Actions";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useFormUIContext } from "../FormUIContext";
+import { uploadFile } from "../../../../Dashboard/_redux/dashboardActions";
+
+
+export function FormEditDialog({ id, show, onHide, userForRead }) {
+  const [action, setaction] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const title = "FormEditDialog";
+  const FormUIContext = useFormUIContext();
+console.log("id11111",id)
+
+  const usersUIProps = useMemo(() => {
+    return {
+      queryParams: FormUIContext.queryParams,
+    };
+  }, [FormUIContext]);
+
+  const formUIProps = useMemo(() => {
+    return {
+      initUser: FormUIContext.initUser,
+      queryParams: FormUIContext.queryParams,
+      employeeId: FormUIContext.employeeId,
+      queryParams: FormUIContext.queryParams,
+      isFileReq: FormUIContext.isFileReq,
+      setIsFileReq: FormUIContext.setIsFileReq,
+      readMode: FormUIContext.readMode,
+      setReadMode: FormUIContext.setReadMode,
+      setId: FormUIContext.setId,
+    };
+  }, [FormUIContext]);
+
+  const enableLoading = () => {
+    setLoading(true);
+  };
+  const disbaleLoading = () => {
+    setLoading(false);
+  };
+
+  const dispatch = useDispatch();
+  const {
+    actionsLoading,
+    user,
+    userForEdit,
+    roles,
+    centers,
+    userStatusTypes,
+    isuserForRead,
+  } = useSelector((state) => ({
+
+
+    actionsLoading: state.users.actionsLoading,
+    user: state.users, // change for users to receipt
+    userForEdit: state.employee_doc.userForEdit,
+    roles: state.users.roles,
+    userStatusTypes: state.users.userStatusTypes,
+    isuserForRead: state.employee_doc.userForRead,
+  }));
+
+
+
+
+  useEffect(() => {
+    dispatch(actions.fetchEmployeeDoc(id));
+  }, [id, dispatch, show]);
+
+
+  const saveForm = async (formData,clearForm) => {
+
+    
+
+ formUIProps.setId("");
+
+    if (!formData.Id) {
+      formData.employeeId = formUIProps.employeeId
+      if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
+        try {
+          const uploadRes = await uploadFile(formData.empAttachment);
+          formData.empAttachment = uploadRes.data.filename;
+        } catch (err) {
+          console.error("File upload failed:", err);
+          // Optionally return here or set a default file value
+        }
+      } else if (typeof formData?.empAttachment == "string") {
+        formData.empAttachment = formData.empAttachment;
+      }
+
+
+
+      dispatch(actions.createEmployeeDoc(formData, disbaleLoading,clearForm));
+      dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+       // setId("");
+                  // handleReset();
+
+
+
+    } else {
+
+
+
+
+
+
+      const formUpdatedFields = {
+        Id: formData.Id,
+        docName: formData.docName,
+        docDesc: formData.docDesc,
+        empAttachment: formData.empAttachment,
+        employeeId: formData.employeeId,
+
+
+
+      };
+
+
+      if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
+        try {
+          const uploadRes = await uploadFile(formData.empAttachment);
+          formUpdatedFields.empAttachment = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+        } catch (err) {
+          console.error("File upload failed:", err);
+          // Optionally return here or set a default file value
+        }
+      } else if (typeof formData?.empAttachment == "string") {
+        formUpdatedFields.empAttachment = formData.empAttachment;
+      }
+
+      await dispatch(actions.updateEmployeeDoc(formUpdatedFields, disbaleLoading, clearForm));
+
+      await dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
+    }
+
+
+
+
+
+
+  };
+
+  return (
+
+    <>
+
+      <FormEditForm
+        saveForm={saveForm}
+        formData={userForEdit || formUIProps.initUser}
+        onHide={onHide}
+        roles={roles}
+        centers={centers}
+        userStatusTypes={userStatusTypes}
+        isUserForRead={formUIProps.readMode}
+        enableLoading={enableLoading}
+        loading={loading}
+        setId={formUIProps.setId}
+        setReadMode={formUIProps.setReadMode}
+
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
+
+  );
+}

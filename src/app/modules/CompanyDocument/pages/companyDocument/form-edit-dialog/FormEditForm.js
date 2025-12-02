@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 // percentage: Yup.string().required("Required*"),
-const news_event_tickerEditSchema = Yup.object().shape({
+const company_docEditSchema = Yup.object().shape({
   subsidiaryId: Yup.number().nullable()
   .required(VALIDATION_MESSAGES.required),
   
@@ -73,7 +73,7 @@ export function FormEditForm({
     <Formik
       enableReinitialize={true}
       initialValues={formData}
-      validationSchema={news_event_tickerEditSchema}
+      validationSchema={company_docEditSchema}
       onSubmit={(values) => {
         enableLoading();
       
@@ -93,10 +93,10 @@ export function FormEditForm({
                 <div className="grid grid-cols-3 gap-x-3 gap-y-1">
 
 
-                  <div className=" ">
-                    <div className="col-12 text-black mt-1">
+                
+                    <div className=" text-black mt-1">
                       <label>
-                        Subsidiary
+                        Subsidiary<span style={{ color: "red" }}>*</span>
                       </label>
 
                       <div className="overflow-auto"
@@ -142,7 +142,7 @@ export function FormEditForm({
                         </div>
                       </div>
                     </div>
-                  </div>
+               
 
                 </div>
 

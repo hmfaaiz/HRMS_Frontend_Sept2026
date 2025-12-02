@@ -90,7 +90,7 @@ console.log("formData in save", formData);
 
 
       dispatch(actions.createCompanyDoc(formData, disbaleLoading, onHide, formUIProps.queryParams));
-      dispatch(actions.fetchCompanyDocs(formUIProps.queryParams));
+      // dispatch(actions.fetchCompanyDocs(formUIProps.queryParams));
 
 
 
