@@ -224,11 +224,9 @@ export const saveRecord = (data, employeeId, disableLoading, resetForm) => (
   }
 };
 
-export const getLeaveApplicationDetail = (
-  data,
-  employeeId,
-  disableLoading,
-) => (dispatch) => {
+export const getLeaveApplicationDetail = (data, employeeId, disableLoading) => (
+  dispatch
+) => {
   if (employeeId) {
     return requestFromServer
       .getLeaveApplicationDetail({ ...data, employeeId })
@@ -236,9 +234,12 @@ export const getLeaveApplicationDetail = (
         const LeaveApplicationData = res.data?.data;
         if (LeaveApplicationData) {
           dispatch(
-            actions.LeaveApplicationFetchedForEdit({ userForEdit: LeaveApplicationData })
+            actions.LeaveApplicationFetchedForEdit({
+              userForEdit: LeaveApplicationData,
+            })
           );
           disableLoading();
+          return LeaveApplicationData;
         }
       })
       .catch((error) => {
