@@ -23,6 +23,7 @@ import FileUpload from "../../../../../../_metronic/_partials/controls/forms/Fil
 import LeaveLinesTable from "../../../../LeaveApplication/pages/forms/form-edit-dialog/LeaveLinesTable";
 import { EmployeeSelect } from "./EmployeeSelect";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+import { RotateCcw } from "lucide-react";
 
 export function MasterEditForm({
   submitForm,
@@ -59,6 +60,7 @@ export function MasterEditForm({
     }),
     shallowEqual
   );
+
   //Check Access for creation and Updation
   const accessUser = useMemo(
     () =>
@@ -68,6 +70,7 @@ export function MasterEditForm({
 
   //This ref is to get reference of file field. It will be used to clear field when reseting form
   const inputFile = useRef(null);
+  const debounceRef = useRef(null);
   const formikRef = useRef(null);
   //Validation for Form.
   //If payroll month is available then form should not allow to add date for before payroll month end date.
@@ -94,7 +97,11 @@ export function MasterEditForm({
             function(to) {
               const { from, leaveType, days } = this.parent;
               // if sandwich is disabled → skip balance check completely
-              if (sandwichPolicy?.isSandwich == 0) return true;
+              if (
+                sandwichPolicy?.isSandwich == 0 ||
+                sandwichPolicy?.isSandwich == 2
+              )
+                return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
               const diffDays = days || getDateDiffInDays(from, to);
@@ -130,7 +137,11 @@ export function MasterEditForm({
             function(to) {
               const { from, leaveType, days } = this.parent;
               // if sandwich is disabled → skip balance check completely
-              if (sandwichPolicy?.isSandwich == 0) return true;
+              if (
+                sandwichPolicy?.isSandwich == 0 ||
+                sandwichPolicy?.isSandwich == 2
+              )
+                return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
 
               const diffDays = days || getDateDiffInDays(from, to);
@@ -158,7 +169,7 @@ export function MasterEditForm({
     }
   }, [payrollData, leaveBalances, sandwichPolicy]);
 
-  const getLeaveLines = (values, errors) => {
+  const getLeaveLines = async (values, setValues) => {
     let valuesExists = values?.leaveType && values?.from && values?.to;
     if (valuesExists && employeeId) {
       const payload = {
@@ -169,25 +180,31 @@ export function MasterEditForm({
           ? values?.days
           : getDateDiffInDays(values?.from, values?.to),
       };
-      dispatch(
+      await dispatch(
         actions.getLeaveApplicationDetail(payload, employeeId, disbaleLoading)
-      );
+      ).then((e) => {
+        if (e) {
+          setValues(e);
+        } else {
+          setValues({
+            ...payload,
+            days: getDateDiffInDays(values?.from, values?.to),
+            leaveLines: [],
+          });
+        }
+      });
     }
   };
 
-  const validateAndFetch = async (
-    updatedValues,
-    validateForm,
-    setFieldValue
-  ) => {
-    setFieldValue("leaveLines", []);
+  const validateAndFetch = async (updatedValues, validateForm, setValues) => {
+    setValues({ ...updatedValues, leaveLines: [] });
     const formErrors = await validateForm(updatedValues);
 
     const isValid =
       !formErrors?.leaveType && !formErrors?.from && !formErrors?.to;
 
     if (isValid) {
-      getLeaveLines(updatedValues, formErrors);
+      getLeaveLines(updatedValues, setValues);
     }
   };
 
@@ -306,7 +323,7 @@ export function MasterEditForm({
                         await validateAndFetch(
                           { ...values, leaveType: value },
                           validateForm,
-                          setFieldValue
+                          setValues
                         );
                       }}
                       label={
@@ -349,7 +366,7 @@ export function MasterEditForm({
                         await validateAndFetch(
                           { ...values, from: date },
                           validateForm,
-                          setFieldValue
+                          setValues
                         );
                       }}
                       autoComplete="off"
@@ -384,7 +401,7 @@ export function MasterEditForm({
                         await validateAndFetch(
                           { ...values, to: date },
                           validateForm,
-                          setFieldValue
+                          setValues
                         );
                       }}
                       autoComplete="off"
@@ -415,12 +432,29 @@ export function MasterEditForm({
                       type="number"
                       min="0"
                       onChange={async (e) => {
-                        setFieldValue("days", e?.target?.value);
-                        await validateAndFetch(
-                          { ...values, days: e?.target.value },
-                          validateForm,
-                          setFieldValue
-                        );
+                        const newDays = e.target.value;
+
+                        // Immediately update Formik state
+                        setFieldValue("days", newDays);
+
+                        // Clear old timeout (important!)
+                        if (debounceRef.current) {
+                          clearTimeout(debounceRef.current);
+                        }
+
+                        // Create a new debounce timer
+                        debounceRef.current = setTimeout(async () => {
+                          const updatedValues = {
+                            ...formikRef.current.values,
+                            days: newDays,
+                          };
+
+                          await validateAndFetch(
+                            updatedValues,
+                            validateForm,
+                            setValues
+                          );
+                        }, 1500); // 500ms debounce
                       }}
                       label={<span> Days</span>}
                     />

@@ -261,11 +261,9 @@ export const getSandwichPolicy = (subsidiaryId) => (dispatch) => {
   }
 };
 
-export const getLeaveApplicationDetail = (
-  data,
-  employeeId,
-  disableLoading
-) => (dispatch) => {
+export const getLeaveApplicationDetail = (data, employeeId, disableLoading) => (
+  dispatch
+) => {
   if (employeeId) {
     return requestFromServer
       .getLeaveApplicationDetail({ ...data, employeeId })
@@ -278,6 +276,7 @@ export const getLeaveApplicationDetail = (
             })
           );
           disableLoading();
+          return LeaveApplicationData;
         }
       })
       .catch((error) => {

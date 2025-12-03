@@ -111,7 +111,7 @@ export function BigTable({ data, setBigTableModalData }) {
       const label =
         data.trendValue == 1 ? dashboard?.activeFiscalYear?.label : dashboard?.activeFiscalYear?.payrollMonthLabel;
 
-      name = `${name} (${label})`;
+      name = `${name} - ${label}`;
     }
 
     return name;
