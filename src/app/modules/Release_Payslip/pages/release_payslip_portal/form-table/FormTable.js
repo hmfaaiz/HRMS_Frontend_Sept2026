@@ -97,7 +97,6 @@ export function FormTable() {
   ];
 
   const handleSubmit = () => {
-    console.log("updatedRow", updatedRow);
     dispatch(actions.updatePayrollGroupForReleasePayslip(updatedRow)).then(
       () => {
         dispatch(actions.fetchPayrollGroup({ subsidiaryId }));
@@ -126,7 +125,7 @@ export function FormTable() {
           type="button"
           onClick={handleSubmit}
           className="btn btn-primary btn-elevate"
-          disabled={actionLoading}
+          disabled={actionLoading || updatedRow?.length == 0}
         >
           Save
           {actionLoading && (
