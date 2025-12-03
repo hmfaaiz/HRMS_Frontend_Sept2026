@@ -42,7 +42,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'leave_register.pdf');
+      link.setAttribute('download', 'Leave_Register.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -72,7 +72,7 @@ export const fetchLeaveBalancePdfData = (filter, document, labels = {}) => async
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'payroll_leave_balance.pdf');
+      link.setAttribute('download', 'Leave_Balance_Summary_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));

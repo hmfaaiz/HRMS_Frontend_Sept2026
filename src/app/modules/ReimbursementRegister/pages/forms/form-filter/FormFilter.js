@@ -492,7 +492,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                   }
                   className="btn btn-primary btn-elevate"
                 >
-                  Reimbursement Report
+                Re-Imbursement Claim Report
                   {/* <SVG
                       src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                     /> */}
