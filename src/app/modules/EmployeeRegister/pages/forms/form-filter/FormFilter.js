@@ -617,7 +617,7 @@ export function FormFilter({
                               setFieldValue("salary_type", e.target.value); // Use the raw value
                             }}
                           >
-                            <option value="">All </option>
+                            <option value="">Select </option>
                             {salaryTypeOptions.map((option) => (
                               <option key={option.value} value={option.value}>
                                 {option.label}
@@ -641,7 +641,7 @@ export function FormFilter({
                               setFieldValue("operator", e.target.value); // Use the raw value
                             }}
                           >
-                            <option value="">All </option>
+                            <option value="">Select </option>
                             {operatorOptions.map((option) => (
                               <option key={option.value} value={option.value}>
                                 {option.label}
