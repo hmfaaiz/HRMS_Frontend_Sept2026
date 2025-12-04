@@ -1,21 +1,38 @@
 import React from "react";
 import { PeriodType } from "../EmpUIHelper";
-import { format } from "date-fns";
+import { useSelector } from "react-redux";
 
 const SingleCard = ({ data, setSmallTableModalData }) => {
   let theme = data?.theme_class;
+  const dashboard = useSelector((state) => state.dashboard || []);
+ console.log("dashboard?.activeFiscalYeardashboard?.activeFiscalYear" , dashboard?.activeFiscalYear)
   const getHeading = () => {
-    if (data?.isPeriodType) {
-      if (PeriodType[data?.PeriodType]) {
-        return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
+    if (!data) return "";
+
+    let name = data.dashlet_name || "";
+    // Handle period type name override
+    if (data.isPeriodType) {
+      const periodLabel = PeriodType[data.PeriodType];
+
+      if (periodLabel) {
+        name = `${name} In ${periodLabel}`;
       } else {
-        return `${data.dashlet_name} In ${
-          data?.sequenceStatus == "0" ? "Next" : "Last"
-        } ${data?.days} Days`;
+        const type = data.sequenceStatus == "0" ? "Next" : "Last";
+        name = `${name} In ${type} ${data.days} Days`;
       }
-    } else {
-      return data?.dashlet_name;
     }
+
+    // Add trend label
+    if (data.trendValue) {
+      const label =
+        data.trendValue == 1
+          ? dashboard?.activeFiscalYear?.label
+          : dashboard?.activeFiscalYear?.payrollMonthLabel;
+
+      name = `${name} - ${label}`;
+    }
+
+    return name;
   };
   return (
     <div className="bg-white w-full rounded-lg px-3 py-2">

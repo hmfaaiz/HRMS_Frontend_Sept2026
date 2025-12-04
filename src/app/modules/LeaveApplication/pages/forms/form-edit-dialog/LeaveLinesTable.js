@@ -18,7 +18,7 @@ const LeaveLinesTable = ({ values, setFieldValue, isEdit }) => {
                   <h6 className="font-bold w-fit mb-0 text-primary">
                     Leave Lines
                   </h6>
-                  <span className="text-xs text-[#e23f35] ml-2">
+                  <span className="text-sm text-[#e23f35] ml-2">
                     {values?.message || ""}
                   </span>
                 </div>

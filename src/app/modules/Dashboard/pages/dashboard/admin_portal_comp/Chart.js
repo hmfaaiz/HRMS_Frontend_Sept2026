@@ -13,6 +13,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState } from "react";
 import { BarChart, LineChart, PieChart, TorusIcon } from "lucide-react";
 import { PeriodType } from "../EmpUIHelper";
+import { useSelector } from "react-redux";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(ChartDataLabels);
@@ -31,92 +32,6 @@ const colorPalette = [
   "#5cb85c",
 ];
 
-// const getOptions = (chartType, chartId) => {
-//   const showGrid =
-//     chartType === "bar" ||
-//     chartType === "line" ||
-//     chartType === "horizontalBar";
-
-//   return {
-//     plugins: {
-//       legend: { display: false },
-//       tooltip: {
-//         enabled: false, // disable default
-//         external: function(context) {
-//           const uniqueId = `chartjs-tooltip-${chartId}`;
-//           let tooltipEl = document.getElementById(uniqueId);
-
-//           if (!tooltipEl) {
-//             tooltipEl = document.createElement("div");
-//             tooltipEl.id = uniqueId;
-//             tooltipEl.style.position = "absolute";
-//             tooltipEl.style.background = "#E6F8FF";
-//             tooltipEl.style.color = "#0093DD";
-//             tooltipEl.style.fontSize = "10.4px";
-//             tooltipEl.style.fontWeight = "500";
-//             tooltipEl.style.padding = "4px 8px";
-//             tooltipEl.style.borderRadius = "6px";
-//             tooltipEl.style.pointerEvents = "none";
-//             tooltipEl.style.whiteSpace = "nowrap";
-//             tooltipEl.style.transition = "all .1s ease";
-//             tooltipEl.style.zIndex = "9999"; // high z-index
-//             document.body.appendChild(tooltipEl); // <--- append to body instead of chart container
-//           }
-
-//           const tooltipModel = context.tooltip;
-
-//           if (tooltipModel.opacity === 0) {
-//             tooltipEl.style.opacity = 0;
-//             return;
-//           }
-
-//           if (tooltipModel.dataPoints?.length) {
-//             const dp = tooltipModel.dataPoints[0];
-//             let value = dp.raw;
-//             if (typeof value === "object" && value !== null) {
-//               const isHorizontal = context.chart.options.indexAxis === "y";
-//               value = isHorizontal ? value.x : value.y;
-//             }
-
-//             const dataArr = dp.dataset.data.map((v) =>
-//               typeof v === "object" && v !== null
-//                 ? typeof v.x === "number"
-//                   ? v.x
-//                   : v.y
-//                 : v
-//             );
-//             const total = dataArr.reduce((a, b) => a + b, 0);
-//             const percent = total ? ((value / total) * 100).toFixed(1) : 0;
-
-//             tooltipEl.innerHTML = `${dp.label}: ${value} (${percent}%)`;
-//           }
-
-//           // --- position relative to the page, not container ---
-//           const canvasRect = context.chart.canvas.getBoundingClientRect();
-//           const { caretX, caretY } = tooltipModel;
-
-//           tooltipEl.style.opacity = 1;
-//           tooltipEl.style.left =
-//             canvasRect.left + window.scrollX + caretX + "px";
-//           tooltipEl.style.top = canvasRect.top + window.scrollY + caretY + "px";
-//         },
-//       },
-//       datalabels: {
-//         display: false,
-//       },
-//     },
-//     scales: {
-//       x: {
-//         ticks: { display: showGrid },
-//         grid: { display: showGrid, drawBorder: false },
-//       },
-//       y: {
-//         ticks: { display: showGrid },
-//         grid: { display: showGrid, drawBorder: false },
-//       },
-//     },
-//   };
-// };
 const getOptions = (chartType, chartId) => {
   const showGrid =
     chartType === "bar" ||
@@ -179,10 +94,16 @@ const getOptions = (chartType, chartId) => {
                   : v.y
                 : v
             );
-            const total = dataArr.reduce((a, b) => a + b, 0);
-            const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+            // Convert all values to number
+            const total = dataArr.reduce((a, b) => a + Number(b), 0);
+            const numericValue = Number(value);
+            const percent = total
+              ? ((numericValue / total) * 100).toFixed(1)
+              : 0;
 
-            tooltipEl.innerHTML = `${dp.label}: ${value} (${percent}%)`;
+            tooltipEl.innerHTML = `${dp.label}: ${numericValue}${
+              percent ? ` (${percent}%)` : ""
+            }`;
           }
 
           const canvasRect = context.chart.canvas.getBoundingClientRect();
@@ -235,7 +156,7 @@ const getOptions = (chartType, chartId) => {
             return value;
           },
           font: {
-            size: 9, // 👈 change font size for X-axis
+            size: 9, //  change font size for X-axis
           },
           maxRotation: 20,
           autoSkip: true,
@@ -250,6 +171,7 @@ const getOptions = (chartType, chartId) => {
 };
 const ChartData = ({ data }) => {
   const [chartType, setChartType] = useState(data?.graph_type || "pie");
+  const dashboard = useSelector((state) => state.dashboard || []);
   // Memoize departmentData and total
   const departmentData = useMemo(() => {
     const labels =
@@ -298,17 +220,33 @@ const ChartData = ({ data }) => {
   ];
 
   const getHeading = () => {
-    if (data?.isPeriodType) {
-      if (PeriodType[data?.PeriodType]) {
-        return `${data.dashlet_name} In ${PeriodType[data?.PeriodType]}`;
+    if (!data) return "";
+
+    let name = data.dashlet_name || "";
+
+    // Handle period type name override
+    if (data.isPeriodType) {
+      const periodLabel = PeriodType[data.PeriodType];
+
+      if (periodLabel) {
+        name = `${name} In ${periodLabel}`;
       } else {
-        return `${data.dashlet_name} In ${
-          data?.sequenceStatus == "0" ? "Next" : "Last"
-        } ${data?.days} Days`;
+        const type = data.sequenceStatus == "0" ? "Next" : "Last";
+        name = `${name} In ${type} ${data.days} Days`;
       }
-    } else {
-      return data?.dashlet_name;
     }
+
+    // Add trend label
+    if (data.trendValue) {
+      const label =
+        data.trendValue == 1
+          ? dashboard?.activeFiscalYear?.label
+          : dashboard?.activeFiscalYear?.payrollMonthLabel;
+
+      name = `${name} - ${label}`;
+    }
+
+    return name;
   };
 
   return (
@@ -429,7 +367,7 @@ const ChartData = ({ data }) => {
                   }}
                   className="font-extrabold m-0 col-span-2 text-right"
                 >
-                  {e?.total || 0}
+                  {e?.total ? Number(e?.total)?.toLocaleString() : 0}
                 </p>
               </div>
             ))}

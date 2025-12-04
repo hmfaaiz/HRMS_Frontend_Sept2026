@@ -6,6 +6,7 @@ import {
   fetchAllFormsMenu,
   fetchAllParentDept,
   fetchAllSubsidiaryData,
+  getActiveFiscalYear,
 } from "../../../../../../_metronic/redux/dashboardActions";
 
 import AdminHead from "../admin_portal_comp/AdminHead";
@@ -104,6 +105,15 @@ export const AdminPortal = () => {
     });
     setActiveTab(e?.value);
   };
+
+  useEffect(() => {
+    if (summaryFilter?.subsidiaryId) {
+      dispatch(
+        getActiveFiscalYear("activeFiscalYear", summaryFilter?.subsidiaryId)
+      );
+      // dispatch()
+    }
+  }, [summaryFilter?.subsidiaryId]);
 
   return (
     <>
