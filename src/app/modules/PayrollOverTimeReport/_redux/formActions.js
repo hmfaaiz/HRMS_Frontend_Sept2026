@@ -13,7 +13,7 @@ export const fetchAllOvertimeReportForPdf = (filter, document, labels = {}) => a
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_overtime_report_by_fiscal_year.pdf');
+      link.setAttribute('download', 'Overtime_Statement.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -46,7 +46,7 @@ export const fetchAllOvertimeReportByMonthForPdf = (filter, document, labels = {
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_overtime_report_by_month.pdf');
+      link.setAttribute('download', 'Overtime_Detail_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.monththPdfFetched({}));
