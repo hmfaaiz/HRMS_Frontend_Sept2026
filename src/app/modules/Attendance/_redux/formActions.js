@@ -166,7 +166,7 @@ export const fetchAttendanceReport = (queryparm) => async (dispatch) => {
          // Trigger file download
          const link = document.createElement('a');
          link.href = pdfUrl;
-         link.setAttribute('download', 't_attendance.pdf');
+         link.setAttribute('download', 'Attendance_Sheet.pdf');
          document.body.appendChild(link);
          link.click();
          dispatch(actions.pdf2Fetched({}));
@@ -206,7 +206,7 @@ export const fetchAttendanceReport = (queryparm) => async (dispatch) => {
          // Trigger file download
          const link = document.createElement('a');
          link.href = pdfUrl;
-         link.setAttribute('download', 't_attendance.csv');
+         link.setAttribute('download', 'Attendance_Sheet.csv');
          document.body.appendChild(link);
          link.click();
          dispatch(actions.csvFetched({}));
@@ -247,7 +247,7 @@ export const fetchAttendanceReport = (queryparm) => async (dispatch) => {
          // Trigger file download
          const link = document.createElement('a');
          link.href = pdfUrl;
-         link.setAttribute('download', 't_attendance.xlsx');
+         link.setAttribute('download', 'Attendance_Sheet.xlsx');
          document.body.appendChild(link);
          link.click();
          dispatch(actions.excelFetched({}));
@@ -490,7 +490,7 @@ if(group_by_emp){
         // Trigger file download
         const link = document.createElement('a');
         link.href = pdfUrl;
-        link.setAttribute('download', 't_attendance_sheet.pdf');
+        link.setAttribute('download', 'Attendance_Sheet.pdf');
         document.body.appendChild(link);
         link.click();
         dispatch(actions.pdfFetched({}));

@@ -23,7 +23,7 @@ export const generateRegisterPdf = (filter, document, labels = {}) => async (dis
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'fs_payable_report.pdf');
+      link.setAttribute('download', 'Payable_Slip.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.payableSlipFetched({}));
@@ -56,7 +56,7 @@ export const generateIncomeTaxComputationReport = (filter, document, labels = {}
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'fs_income_tax_computation_report.pdf');
+      link.setAttribute('download', 'Income_Tax_Computation_Slip.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.incomeTaxComputationSlipetched({}));
@@ -89,7 +89,7 @@ export const generateGratuityReport = (filter, document, labels = {}) => async (
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'fs_gratuity_report.pdf');
+      link.setAttribute('download', 'Gratuity_Slip.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.gratuitySlipFetched({}));
@@ -123,7 +123,7 @@ export const getProvidentFundReport = (filter, document, labels = {}) => async (
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'fs_providentfund_report.pdf');
+      link.setAttribute('download', 'Provident_Fund_Slip.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.providentFundSlipFetched({}));
@@ -157,7 +157,7 @@ export const getAcknowledgmentLetter = (filter, document, labels = {}) => async 
       const pdfUrl = URL.createObjectURL(pdfBlob);
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'acknowledgment_letter.pdf');
+      link.setAttribute('download', 'FInal_Settlement_Acknowledgment.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.acknowledgementLetterFetched({}));

@@ -43,7 +43,7 @@ export const fetchPdfData = (filter, document, labels = {}) => async (dispatch) 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'employee_register.pdf');
+      link.setAttribute('download', 'Employee_Register.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -76,7 +76,7 @@ export const generateRegisterExcel = (filter, document, labels = {}) => async (d
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'employee_register.xlsx');
+      link.setAttribute('download', 'Employee_Register.xlsx');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.registerExcelFetched({}));

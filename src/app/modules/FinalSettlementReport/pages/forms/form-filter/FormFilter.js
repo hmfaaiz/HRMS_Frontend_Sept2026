@@ -290,7 +290,7 @@ export function FormFilter({
 
                         }
                         type="button"
-                        className="btn btn-primary btn-elevate h-9 mt-4"
+                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
                       >
                         Payable Slip
 
@@ -329,7 +329,7 @@ export function FormFilter({
 
                         }
                         type="button"
-                        className="btn btn-primary btn-elevate h-9 mt-4"
+                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
                       >
                         Income Tax Computation Slip
 
@@ -369,7 +369,7 @@ export function FormFilter({
 
                         }
                         type="button"
-                        className="btn btn-primary btn-elevate h-9 mt-4"
+                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
                       >
                         Gratuity Slip
 
@@ -407,7 +407,7 @@ export function FormFilter({
 
                         }
                         type="button"
-                        className="btn btn-primary btn-elevate h-9 mt-4"
+                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
                       >
                         Provident Fund Slip
 
@@ -446,7 +446,7 @@ export function FormFilter({
 
                         }
                         type="button"
-                        className="btn btn-primary btn-elevate h-9 mt-4"
+                        className="btn btn-primary btn-elevate mt-3 h-9  w-80 cursor-pointer"
                       >
                         Final Settlement Acknowledgement
 

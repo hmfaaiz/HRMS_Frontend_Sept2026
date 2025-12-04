@@ -159,6 +159,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
+          
           applyFilter(values);
         }}
       >
@@ -228,8 +229,18 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
                           if(e?.payrollMonth){
-                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                              let formattedFromDate = formatDates(
+                                e?.payrollMonth?.startDate,
+                                "yyyy-MM-dd"
+                              );
+                              let formattedToDate = formatDates(
+                                e?.payrollMonth?.endDate,
+                                "yyyy-MM-dd"
+                              );
+                              setFieldValue("from", formattedFromDate);
+                              setFieldValue("to", formattedToDate); 
+                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
                             setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
                         }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
@@ -252,8 +263,18 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
                           if(e?.payrollMonth){
-                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                            let formattedFromDate = formatDates(
+                                e?.payrollMonth?.startDate,
+                                "yyyy-MM-dd"
+                              );
+                              let formattedToDate = formatDates(
+                                e?.payrollMonth?.endDate,
+                                "yyyy-MM-dd"
+                              );
+                              setFieldValue("from", formattedFromDate);
+                              setFieldValue("to", formattedToDate); 
+                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
                             setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
                         }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
@@ -492,7 +513,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                   }
                   className="btn btn-primary btn-elevate"
                 >
-                  Reimbursement Report
+                Re-Imbursement Claim Report
                   {/* <SVG
                       src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
                     /> */}

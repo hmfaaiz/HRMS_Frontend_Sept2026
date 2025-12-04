@@ -31,7 +31,7 @@ export const fetchLoanReqReport = (filter, document, labels = {}) => async (disp
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'loan_request_report.pdf');
+      link.setAttribute('download', 'Loan_Request_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -65,7 +65,7 @@ export const fetchLoanPositionReport = (filter, document, labels = {}) => async 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'loan_position_report.pdf');
+      link.setAttribute('download', 'Loan_Position_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfLoanPositionFetched({}));

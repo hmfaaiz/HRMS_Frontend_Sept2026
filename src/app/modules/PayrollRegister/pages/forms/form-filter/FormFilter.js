@@ -557,7 +557,7 @@ export function FormFilter({
                         }
                         className="btn btn-primary btn-elevate"
                       >
-                        Generate Payment Advice
+                        Bank Payment Advice
                         {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
                         {/* <SVG
                             src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
