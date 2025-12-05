@@ -247,8 +247,18 @@ export function FormFilter({
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
                           if(e?.payrollMonth){
-                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                                let formattedFromDate = formatDates(
+                                                            e?.payrollMonth?.startDate,
+                                                            "yyyy-MM-dd"
+                                                          );
+                                                          let formattedToDate = formatDates(
+                                                            e?.payrollMonth?.endDate,
+                                                            "yyyy-MM-dd"
+                                                          );
+                                                          setFieldValue("from", formattedFromDate);
+                                                          setFieldValue("to", formattedToDate); 
                             setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
                         }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
@@ -271,8 +281,18 @@ export function FormFilter({
                             e.value == "--Select--" ? "" : Number(e.value);
                           setFieldValue("subsidiaryId", value);
                           if(e?.payrollMonth){
-                            setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
+                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                             let formattedFromDate = formatDates(
+                                                            e?.payrollMonth?.startDate,
+                                                            "yyyy-MM-dd"
+                                                          );
+                                                          let formattedToDate = formatDates(
+                                                            e?.payrollMonth?.endDate,
+                                                            "yyyy-MM-dd"
+                                                          );
+                                                          setFieldValue("from", formattedFromDate);
+                                                          setFieldValue("to", formattedToDate); 
                             setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
                         }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));

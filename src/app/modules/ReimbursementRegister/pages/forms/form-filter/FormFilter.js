@@ -239,8 +239,7 @@ export function FormFilter({ dispatch, reimbursementLoading }) {
                               );
                               setFieldValue("from", formattedFromDate);
                               setFieldValue("to", formattedToDate); 
-                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
+                      
                             setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
                         }
                           dispatch(fetchAllActiveEmployeesBySubsidiary(value));
