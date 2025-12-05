@@ -27,16 +27,15 @@ export const AttendanceMarking = () => {
     }
   }, [localDate]);
 
-  // 2. Increment server time by 1 second every tick
   useEffect(() => {
-    if (date) {
-      const timer = setInterval(() => {
-        setDate((prev) => new Date(prev.getTime() + 1000));
-      }, 1000);
+    if (!date) return;
 
-      return () => clearInterval(timer);
-    }
-  }, []);
+    const timer = setInterval(() => {
+      setDate((prev) => new Date(prev.getTime() + 1000));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [!!date]);
 
   useEffect(() => {
     dispatch(action.getAttendance(setLoading));
@@ -112,18 +111,18 @@ export const AttendanceMarking = () => {
     const isCrossDay = currentShift?.name === "today" ? true : false;
 
     // Start Date
-    const fromDate = 
-    // isCrossDay
-      // ? 
-      format(shiftDate, "dd-MMM-yyyy")
-      // : format(subDays(shiftDate, 1), "dd-MMM-yyyy");
+    const fromDate =
+      // isCrossDay
+      // ?
+      format(shiftDate, "dd-MMM-yyyy");
+    // : format(subDays(shiftDate, 1), "dd-MMM-yyyy");
 
     // End Date
     const toDate =
-    //  isCrossDay
+      //  isCrossDay
       // ?
-       format(addDays(shiftDate, 1), "dd-MMM-yyyy")
-      // : format(shiftDate, "dd-MMM-yyyy");
+      format(addDays(shiftDate, 1), "dd-MMM-yyyy");
+    // : format(shiftDate, "dd-MMM-yyyy");
 
     // Attendance Tag Date
     const attendanceTagDate = format(shiftDate, "dd-MMM-yyyy");
@@ -181,16 +180,19 @@ export const AttendanceMarking = () => {
       <div className="col-span-4 text-tprimary">
         {shiftInfo && !loading && (
           <>
+            <p className="text-xs  mb-0">
+              Shift Range of Shift : {shiftInfo.name}-{shiftInfo.shiftCode}
+            </p>
             <p className="text-xs  mb-1">
-              Shift Range of Shift : {shiftInfo.name}-{shiftInfo.shiftCode} -
+              {" "}
               From {shiftInfo.fromDate}{" "}
               {formatTime(shiftInfo?.visibleStartTime)} to {shiftInfo.toDate}{" "}
               {formatTime(shiftInfo.visibleEndTime)}
             </p>
 
             <p className="text-xs  mb-0">
-              Attendance marked in above range will be tagged in{" "}
-              {shiftInfo.attendanceTagDate} Attendance record.
+              Attendance marked will be tagged in {shiftInfo.attendanceTagDate}{" "}
+              Attendance record.
             </p>
           </>
         )}
