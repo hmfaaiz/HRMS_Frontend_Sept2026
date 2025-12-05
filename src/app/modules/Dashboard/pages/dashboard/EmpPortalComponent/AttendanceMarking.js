@@ -177,14 +177,14 @@ export const AttendanceMarking = () => {
       <div className="col-span-4 text-tprimary">
         {shiftInfo && !loading && (
           <>
-            <p className="text-xs text-black mb-1">
+            <p className="text-xs  mb-1">
               Shift Range of Shift : {shiftInfo.name}-{shiftInfo.shiftCode} -
               From {shiftInfo.fromDate}{" "}
               {formatTime(shiftInfo?.visibleStartTime)} to {shiftInfo.toDate}{" "}
               {formatTime(shiftInfo.visibleEndTime)}
             </p>
 
-            <p className="text-xs text-black mb-0">
+            <p className="text-xs  mb-0">
               Attendance marked in above range will be tagged in{" "}
               {shiftInfo.attendanceTagDate} Attendance record.
             </p>
