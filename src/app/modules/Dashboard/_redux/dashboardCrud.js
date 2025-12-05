@@ -156,8 +156,8 @@ export function getExitReason(id) {
   return axios.get(`${USERS_URL}/settings/read-all-exit-reason/${id}`);
 }
 
-export async function getAttendance() {
-  return axios.get(`${USERS_URL}/emp_portal/read-attendance`);
+export async function getAttendance(body) {
+  return axios.post(`${USERS_URL}/emp_portal/read-attendance` , body);
 }
 
 export async function createAttendance(body) {
