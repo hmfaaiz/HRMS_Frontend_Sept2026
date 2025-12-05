@@ -13,7 +13,7 @@ export const fetchAllEOBIContributionSummaryForPdf = (filter, document, labels =
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_income_tax_report_by_taxyear.pdf');
+      link.setAttribute('download', 'Income_Tax_Computation_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -46,7 +46,7 @@ export const fetchAllIncomeTaxReportByMonthForPdf = (filter, document, labels = 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_income_tax_report_by_month.pdf');
+      link.setAttribute('download', 'Monthly_Income_Tax_Detail.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.monththPdfFetched({}));

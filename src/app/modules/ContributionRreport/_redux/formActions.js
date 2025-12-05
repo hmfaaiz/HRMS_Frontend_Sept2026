@@ -13,7 +13,7 @@ export const fetchAllEOBIContributionSummaryForPdf = (filter, document, labels =
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'eobi_contribution.pdf');
+      link.setAttribute('download', 'Eobi_Contribution.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -44,7 +44,7 @@ export const fetchAllSocialSecurityContributionSummaryForPdf = (filter, document
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'social_security_contribution.pdf');
+      link.setAttribute('download', 'Social_Security_Contribution.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -75,7 +75,7 @@ export const fetchAllPFContributionSummaryForPdf = (filter, document, labels = {
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'pf_contribution.pdf');
+      link.setAttribute('download', 'PF_Contribution.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -109,7 +109,7 @@ export const fetchAllProvidentFundComputationReportForPdf= (filter, document, la
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'contribution_provident_fund_report.pdf');
+      link.setAttribute('download', 'Contribution_Provident_Fund_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -141,7 +141,7 @@ export const fetchAllEOBIComputationReportForPdf= (filter, document, labels = {}
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'contribution_eobi_computation_report.pdf');
+      link.setAttribute('download', 'Contribution_Eobi_Computation_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
@@ -172,7 +172,7 @@ export const fetchAllSocialSecurityReportForPdf= (filter, document, labels = {})
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'contribution_social_security_computation_report.pdf');
+      link.setAttribute('download', 'Contribution_Social_Security_Computation_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));

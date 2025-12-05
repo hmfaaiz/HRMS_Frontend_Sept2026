@@ -13,7 +13,7 @@ export const fetchAllGratuityForPdf = (filter, document, labels = {}) => async (
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_gratuity_report.pdf');
+      link.setAttribute('download', 'Gratuity_Computation_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.garuityReportFetched({}));
@@ -46,7 +46,7 @@ export const fetchAllGratuityReportByMonthForPdf = (filter, document, labels = {
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_gratuity_detail_report.pdf');
+      link.setAttribute('download', 'Monthly_Gratuity_Detail_report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.monthPdfFetched({}));
@@ -78,7 +78,7 @@ export const fetchAllGratuityAccrualForPdf = (filter, document, labels = {}) => 
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'p_gratuity_accrual_report.pdf');
+      link.setAttribute('download', 'Gratuity_Accrual_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.gratuityAccrualPdfFetched({}));

@@ -31,7 +31,7 @@ export const fetchReimbursementReport = (filter, document, labels = {}) => async
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'reimbursement_report.pdf');
+      link.setAttribute('download', 'Reimbursement_Report.pdf');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.pdfFetched({}));
