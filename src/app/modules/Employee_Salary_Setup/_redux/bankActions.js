@@ -193,3 +193,10 @@ export const approveEmployeeSalary = (id, setapproveLoading, onHide) => (
       });
     });
 };
+
+
+export const clearData = () => (dispatch) => {
+
+      dispatch(actions.clear(null));
+     
+};
