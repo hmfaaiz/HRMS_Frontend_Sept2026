@@ -4,6 +4,7 @@ import { dashboardSlice } from "./dashboardSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SERVER_MESSAGES } from "../../../utils/constants";
+import { formatDates } from "../../../utils/common";
 
 const { actions } = dashboardSlice;
 
@@ -405,10 +406,12 @@ export const fetchExitReasonData = (Id) => async (dispatch) => {
     });
 };
 
-
 export const getAttendance = (setLoading) => (dispatch) => {
   return requestFromServer
-    .getAttendance()
+    .getAttendance({
+      date: formatDates(new Date(), "dd-MMM-yyyy"),
+      timeZone: new Date().getTimezoneOffset(),
+    })
     .then((res) => {
       dispatch(actions.CurrentAttFetch(res?.data?.data));
       setLoading(false);
@@ -422,7 +425,7 @@ export const createAttendance = (body, setLoading) => (dispatch) => {
   return requestFromServer
     .createAttendance(body)
     .then((res) => {
-      dispatch(actions.CurrentAttFetch(res?.data?.data));
+      // dispatch(actions.CurrentAttFetch(res?.data?.data));
       toast.success("Attendance Mark Successfully", {
         position: "top-right",
         autoClose: 5000,
@@ -464,7 +467,7 @@ export const fetchAllUserData = (Id) => async (dispatch) => {
 };
 export const fetchAllAuditTablesName = (userId) => async (dispatch) => {
   return await requestFromServer
-    .getAllAuditTablesName({userId})
+    .getAllAuditTablesName({ userId })
     .then((response) => {
       const data = response.data?.data;
       dispatch(actions.AllAuditTablesNameFetch(data));
@@ -474,9 +477,9 @@ export const fetchAllAuditTablesName = (userId) => async (dispatch) => {
     });
 };
 
-
-
-export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (dispatch) => {
+export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllFiscalYearBySubsidiaryId({ subsidiaryId })
     .then((response) => {
@@ -488,7 +491,9 @@ export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (dis
     });
 };
 
-export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (dispatch) => {
+export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (
+  dispatch
+) => {
   return await requestFromServer
     .getAllDepartmentBySubsidiaryIds({ subsidiaryIds })
     .then((response) => {
@@ -500,10 +505,9 @@ export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (dispa
     });
 };
 
-
 export const fetchAllAppraisalPeriod = (employeeId) => async (dispatch) => {
   return await requestFromServer
-    .getAllAppraisalPeriod({employeeId})
+    .getAllAppraisalPeriod({ employeeId })
     .then((response) => {
       const entities = [...response.data?.data];
       dispatch(actions.AllAppraisalPeriodListFetch(entities));
@@ -512,7 +516,9 @@ export const fetchAllAppraisalPeriod = (employeeId) => async (dispatch) => {
       toast.error("Something went wrong");
     });
 };
-export const fetchAllAppraisalPeriodDataBySubsidiaryId = (subsidiaryId) => async (dispatch) => {
+export const fetchAllAppraisalPeriodDataBySubsidiaryId = (
+  subsidiaryId
+) => async (dispatch) => {
   return await requestFromServer
     .getAllAppraisalPeriodBySubsidiaryId({ subsidiaryId })
     .then((response) => {
@@ -524,7 +530,7 @@ export const fetchAllAppraisalPeriodDataBySubsidiaryId = (subsidiaryId) => async
     });
 };
 
-export const fetchAllApprovedResignedEmp= () => async (dispatch) => {
+export const fetchAllApprovedResignedEmp = () => async (dispatch) => {
   return await requestFromServer
     .getAllApprovedResignedEmp({})
     .then((response) => {
@@ -536,149 +542,120 @@ export const fetchAllApprovedResignedEmp= () => async (dispatch) => {
     });
 };
 
-export const fetchGeoLocationBySubsidiary= (subsidiaryId) => async (dispatch) => {
+export const fetchGeoLocationBySubsidiary = (subsidiaryId) => async (
+  dispatch
+) => {
   return await requestFromServer
-    .getAllGeoLocationBySubsidiary({subsidiaryId})
+    .getAllGeoLocationBySubsidiary({ subsidiaryId })
     .then((response) => {
       const entities = [...response.data?.data];
       dispatch(actions.AllGeoLocationFetchedFetch(entities));
     })
     .catch((error) => {
-      console.log("Something went wrong" , error);
+      console.log("Something went wrong", error);
     });
 };
 
-export const fetchEmpDeviceId= (employeeId) => async (dispatch) => {
+export const fetchEmpDeviceId = (employeeId) => async (dispatch) => {
   return await requestFromServer
-    .getDeviceIdByEmpId({employeeId})
+    .getDeviceIdByEmpId({ employeeId })
     .then((response) => {
       const entities = [...response.data?.data];
-      return entities
+      return entities;
     })
     .catch((error) => {
-      console.log("Something went wrong" , error);
+      console.log("Something went wrong", error);
     });
 };
 
-
-export const fetchAllEarning = (
-
-) => async (dispatch) => {
+export const fetchAllEarning = () => async (dispatch) => {
   return await requestFromServer
     .getAllEarning()
     .then((response) => {
-       const entities = Array.isArray(response?.data?.data)
-      ? response.data.data
-      : [];
+      const entities = Array.isArray(response?.data?.data)
+        ? response.data.data
+        : [];
 
       dispatch(actions.AllEarningFetch(entities));
     })
     .catch((error) => {
-      
       toast.error("Something went wrong");
     });
 };
 
-export const fetchSeparatedEmployeeById = (Id
-
-) => async (dispatch) => {
+export const fetchSeparatedEmployeeById = (Id) => async (dispatch) => {
   return await requestFromServer
     .getSeparatedEmployeeById(Id)
     .then((response) => {
-
       dispatch(actions.SeparatedEmployeeFetch(response.data));
     })
     .catch((error) => {
-      
       toast.error("Something went wrong");
     });
 };
 
-export const FetchAllSalaryRoundingByFilters = (
-
-) => async (dispatch) => {
+export const FetchAllSalaryRoundingByFilters = () => async (dispatch) => {
   return await requestFromServer
     .getAllSalaryRoundingByFilters()
     .then((response) => {
-
       dispatch(actions.SalaryRoundingFetch(response?.data?.data));
     })
     .catch((error) => {
-  
       toast.error("Something went wrong");
     });
 };
 
-
-export const FetchProfileDetailInfo = (id
-
-) => async (dispatch) => {
+export const FetchProfileDetailInfo = (id) => async (dispatch) => {
   return await requestFromServer
     .getProfileDetailInfo(id)
     .then((response) => {
-
       dispatch(actions.ProfileDetailInfoFetch(response?.data?.data));
     })
     .catch((error) => {
-  
       toast.error("Something went wrong");
     });
 };
 
-export const FetchAllApprovedFSEmp = (body
-
-) => async (dispatch) => {
+export const FetchAllApprovedFSEmp = (body) => async (dispatch) => {
   return await requestFromServer
     .getAllApprovedFSEmp(body)
     .then((response) => {
-
       dispatch(actions.FSApprovedEmpFetch(response?.data?.data));
     })
     .catch((error) => {
-  
       toast.error("Something went wrong");
     });
 };
 
-export const FetchAllTaxYearSetup = (
-subsidiaryId
-) => async (dispatch) => {
+export const FetchAllTaxYearSetup = (subsidiaryId) => async (dispatch) => {
   return await requestFromServer
     .getAllTaxYearSetup(subsidiaryId)
     .then((response) => {
-
       dispatch(actions.TaxYearSetupFetch(response?.data?.data));
     })
     .catch((error) => {
-  
       toast.error("Something went wrong");
     });
 };
 
-export const requestRaisedBySenior = (
-
-) => async (dispatch) => {
+export const requestRaisedBySenior = () => async (dispatch) => {
   return await requestFromServer
     .requestRaisedBySenior()
     .then((response) => {
-
       dispatch(actions.requestRaisedBySenior(response?.data?.data));
     })
-    .catch((error) => {
-  
-    });
+    .catch((error) => {});
 };
 
-
 export const uploadFile = async (file) => {
-  const formData = new FormData()
-  formData.append('file', file)
-  return await requestFromServer.uploadFiles(formData)
+  const formData = new FormData();
+  formData.append("file", file);
+  return await requestFromServer
+    .uploadFiles(formData)
     .then((response) => {
       return response;
     })
     .catch((error) => {
-
       toast.error(error?.response?.data?.message || SERVER_MESSAGES.fileFail, {
         position: "top-right",
         autoClose: 5000,
@@ -688,7 +665,5 @@ export const uploadFile = async (file) => {
         draggable: true,
         progress: undefined,
       });
-
     });
-
 };
