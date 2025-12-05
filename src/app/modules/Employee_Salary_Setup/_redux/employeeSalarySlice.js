@@ -115,5 +115,8 @@ export const employeeSalarySlice = createSlice({
         MaxIdFetchForReceipt: (state, action) => {
             state.donationReportFetch = action.payload;
         },
+        clear:(state, action)=>{
+            state.userForEdit=null
+        }
     },
 });

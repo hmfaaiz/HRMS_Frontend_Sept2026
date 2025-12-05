@@ -9,11 +9,12 @@ import {
 import { BanksTable } from "../bank-table/BanksTable";
 import { useBanksUIContext } from "../BanksUIContext";
 import { BanksFilter } from "../bank-filter/BanksFIlter";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual,useDispatch } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { CirclePlus, FileText } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import TCard from "../../../../../utils/common-modules/TCard";
+import { clearData } from "../../../_redux/bankActions";
 
 export function BanksCard() {
   const banksUIContext = useBanksUIContext();
@@ -35,7 +36,7 @@ export function BanksCard() {
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateEmployeeSalary"
   );
-
+const dispatch = useDispatch();
   return (
     // <>
 
@@ -78,7 +79,9 @@ export function BanksCard() {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={BanksUIProps.newBankButtonClick}
+                onClick={()=>{
+                  dispatch(clearData());
+                  BanksUIProps.newBankButtonClick()}}
               >
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                 Add

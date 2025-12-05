@@ -190,7 +190,7 @@ export function MasterEditForm({
   }, [allEmployees]);
   const dispatch = useDispatch();
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
-
+console.log("user1111",user)
   return (
     <>
       <Formik
@@ -309,21 +309,22 @@ export function MasterEditForm({
                         </button>
                       )}
                       
-                      {values.attDate && (
+                      {/* {values.attDate && (
                         <label className="pl-3">
                           {" "}
                           Date {values.attDate}
                         </label>
-                      )}
+                      )} */}
                         
 
                  
                     </div>
-                   
+
+                    
 
                     {/* Active payroll month */}
 
-                    <div className="mt-4 col-span-4 text-xs d-flex flex-column align-items-end">
+                    {/* <div className="mt-4 col-span-4 text-xs d-flex flex-column align-items-end">
                       {activeFiscalYear
                         ? (() => {
                             return (
@@ -340,7 +341,7 @@ export function MasterEditForm({
                             );
                           })()
                         : null}
-                    </div>
+                    </div> */}
                   </div>
 
                   <br />
@@ -356,7 +357,15 @@ export function MasterEditForm({
 
                      
                   
+                   <div className="col-span-4 md:col-span-6">
+                     {values.attDate && (
+                        <label >
+                          {" "}
+                          Attendance Date: {values.attDate}
+                        </label>
+                      )}
                    
+                   </div>
                  
                     
                    
