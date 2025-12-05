@@ -112,14 +112,18 @@ export const AttendanceMarking = () => {
     const isCrossDay = currentShift?.name === "today" ? true : false;
 
     // Start Date
-    const fromDate = isCrossDay
-      ? format(shiftDate, "dd-MMM-yyyy")
-      : format(subDays(shiftDate, 1), "dd-MMM-yyyy");
+    const fromDate = 
+    // isCrossDay
+      // ? 
+      format(shiftDate, "dd-MMM-yyyy")
+      // : format(subDays(shiftDate, 1), "dd-MMM-yyyy");
 
     // End Date
-    const toDate = isCrossDay
-      ? format(addDays(shiftDate, 1), "dd-MMM-yyyy")
-      : format(shiftDate, "dd-MMM-yyyy");
+    const toDate =
+    //  isCrossDay
+      // ?
+       format(addDays(shiftDate, 1), "dd-MMM-yyyy")
+      // : format(shiftDate, "dd-MMM-yyyy");
 
     // Attendance Tag Date
     const attendanceTagDate = format(shiftDate, "dd-MMM-yyyy");
