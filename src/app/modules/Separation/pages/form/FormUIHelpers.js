@@ -19,8 +19,15 @@ export const initialFilter = {
 
   },
 
-
+  pdf: false,
+  csv: false,
+  excel: false,
   sortOrder: "asc",
   pageSize: 5,
-  pageNumber: 1
+  pageNumber: 1,
+  subsidiaryId: "",
+  departmentId: "",
+  employeeTypeId: "",
+  designationId: "",
+  subsidiaryLabel:"",departmentLabel:"",designationLabel:"",employeeLabel:""
 }
