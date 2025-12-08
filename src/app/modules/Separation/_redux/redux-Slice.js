@@ -13,6 +13,9 @@ const initialSeparationState = {
   dataForRead: false,
   pdfGenerateLoading: false,
   activeEmployeeList: [],
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
@@ -31,7 +34,19 @@ export const SeparationSlice = createSlice({
         state.listLoading = false;
       } else if (action.payload.callType === callTypes.pdfGenerate) {
         state.pdfGenerateLoading = false;
-      } else {
+      }
+      else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = false;
+      }
+
+      else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = false;
+      }
+      else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = false;
+      }
+
+      else {
         state.actionsLoading = false;
       }
     },
@@ -51,7 +66,7 @@ export const SeparationSlice = createSlice({
     },
 
     separationFetched: (state, action) => {
-     
+
       const entities = action.payload.data?.data.rows;
 
       const totalResult = action.payload.data?.data.totalResults;
@@ -68,13 +83,13 @@ export const SeparationSlice = createSlice({
       state.dataForEdit = action.payload.dataForEdit;
       state.error = null;
 
-    
+
     },
 
 
     EmployeeFetchedList: (state, action) => {
       state.actionsLoading = false;
-   
+
       state.activeEmployeeList = action.payload;
       state.error = null;
     },
@@ -137,5 +152,17 @@ export const SeparationSlice = createSlice({
         return entity;
       });
     },
+
+     pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
+        },
   },
 });

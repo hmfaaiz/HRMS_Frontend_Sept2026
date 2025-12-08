@@ -52,9 +52,11 @@ const { userAccess } = useSelector(
   return (
     
     <TCard name={CurrentModuleName()}>
-      <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-        <FormFIlter />
-        <div className="flex items-center gap-2">
+     <div className="grid md:grid-cols-7 justify-between  items-center gap-2 ">
+               <div className="grid md:col-span-5"> 
+                       <FormFIlter />
+                     </div>
+            <div className="flex md:col-span-2 items-center gap-2 md:justify-end  ">
           {accessUser && (
             <>
               <button

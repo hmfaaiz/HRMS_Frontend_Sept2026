@@ -13,8 +13,13 @@ export function createFinalSettlement(body) {
 // Read
 export function getAllFinalSettlement(body) {
 
-  return axios.post(`${USERS_URL}/final_settlement/read-all-final-settlement`, body);
-}
+const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
+ return axios.post(`${USERS_URL}/final_settlement/read-all-final-settlement`, body, config);
+};
+
+
 
 
 // employee by status

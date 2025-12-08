@@ -13,8 +13,11 @@ export function createSeparation(body) {
 // Read
 export function getAllSeparation(body) {
 
-  return axios.post(`${USERS_URL}/separation/read-all-separation`, body);
-}
+const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
+ return axios.post(`${USERS_URL}/separation/read-all-separation`, body, config);
+};
 
 
 // employee by status
