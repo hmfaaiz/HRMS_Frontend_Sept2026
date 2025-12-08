@@ -29,6 +29,7 @@ export function FormTable() {
       setQueryParams: formUIContext.setQueryParams,
       openEditFormDialog: formUIContext.openEditFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      openAnalysisFormDialog: formUIContext.openAnalysisFormDialog,
     };
   }, [formUIContext]);
 
@@ -121,6 +122,16 @@ export function FormTable() {
       },
     },
     {
+      dataField: "AppraisalCategory.formName",
+      text: "Appraisal Category",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+    },
+    {
       dataField: "isHREvaluation",
       text: "Feedback Type",
       sort: false,
@@ -167,6 +178,7 @@ export function FormTable() {
       formatExtraData: {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openAnalysisFormDialog: formUIProps.openAnalysisFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
       },

@@ -81,3 +81,26 @@ export const updateAppraisalEvaluation = (body) => (dispatch) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };
+
+export const fetchAppraisalEmployeeDetail = (empId, Id) => (dispatch) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getAppraisalEmployeeDetail({ Id, empId })
+    .then((response) => {
+      const res = response.data?.data || {};
+      dispatch(actions.AppraisalEmployeeDetailFetched(res));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
