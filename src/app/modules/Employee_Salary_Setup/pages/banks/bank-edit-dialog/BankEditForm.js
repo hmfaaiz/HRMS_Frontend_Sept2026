@@ -383,6 +383,8 @@ export function BankEditForm({
     );
 
     fetchEmployeeSalaryEarningList(employeeId, 0, null);
+    console.log("add1111",employeeId,user?.employeeId,dashboard.employeeId)
+    setPanelMode(false)
   }, [user?.employeeId, dashboard.employeeId]);
 
   useEffect(() => {
@@ -928,7 +930,6 @@ export function BankEditForm({
     setRoundingPolicyAmount(filtered[0]?.amount);
 
   }, [dashboard.salaryRoundingPolicy, user?.subsidiaryId, salaryRoundingSubsidiaryId]);
-
 
 
   return (
