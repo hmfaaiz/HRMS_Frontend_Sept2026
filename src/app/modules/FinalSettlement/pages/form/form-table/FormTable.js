@@ -44,7 +44,7 @@ export function FormTable() {
 
 
         currentState: state.final_settlement,
-        
+
         userAccess: state?.auth?.userAccess["final_settlement"],
       }
     },
@@ -84,7 +84,7 @@ export function FormTable() {
   const columns = [
 
 
-  {
+    {
       dataField: "Employee.employeeCode",
       text: "Employee Code",
       sort: false,
@@ -104,6 +104,39 @@ export function FormTable() {
         minWidth: "160px",
       },
     },
+
+    {
+      dataField: "Employee.department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+
+    {
+      dataField: "Employee.designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
+
+    {
+      dataField: "Employee.employeeType.formName",
+      text: "employee Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "50px",
+      },
+    },
     {
       dataField: "netFinalSettlementAmount",
       text: "Total Payable Amount",
@@ -113,6 +146,33 @@ export function FormTable() {
       style: {
         minWidth: "160px",
       },
+    },
+   
+       {
+      dataField: "exitClearence",
+      text: "HR Clearance",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell) => {
+    if (cell === 1) return "Received";
+    if (cell === 0) return "Not Received";
+    return ""; // agar koi aur value ho
+  },
+    }, 
+     {
+      dataField: "settlementFinalized",
+      text: "Finalized",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+        formatter: (cell) => (cell ? "Yes" : "No"),
     },
 
 

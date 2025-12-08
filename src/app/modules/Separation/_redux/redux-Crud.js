@@ -12,7 +12,7 @@ export function createSeparation(body) {
 
 // Read
 export function getAllSeparation(body) {
-console.log("pdf1111",body)
+
 const config = {
     responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
   };
