@@ -23,3 +23,10 @@ export function updateAppraisalEvaluation(body) {
     body
   );
 }
+
+export function getAppraisalEmployeeDetail(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_evaluation/read-appraisal-employee-detail`,
+    body
+  );
+}

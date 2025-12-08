@@ -16,7 +16,7 @@ const initialState = {
   payrollData: null,
   leaveBalances: [],
   detailUpdateLoading: false,
-  sandwichPolicy : null
+  sandwichPolicy: null,
 };
 
 export const callTypes = {
@@ -51,7 +51,7 @@ export const LeaveApplicationSlice = createSlice({
       } else if (action.payload.detail_action === callTypes.detail_action) {
         state.detailUpdateLoading = true;
       } else {
-        state.actionsLoading = true;
+        // state.actionsLoading = true;
       }
     },
     LeaveApplicationFetched: (state, action) => {
@@ -66,7 +66,10 @@ export const LeaveApplicationSlice = createSlice({
       const entities = action.payload.data?.data || [];
       state.detailLoading = false;
       state.error = null;
-      state.leaveApplicationDetail = entities.map((e)=> ({...e , isOldCancel : e.isCancel})); // This is to keep old cancel value in state, so that we can compare it with new cancel value in form}));
+      state.leaveApplicationDetail = entities.map((e) => ({
+        ...e,
+        isOldCancel: e.isCancel,
+      })); // This is to keep old cancel value in state, so that we can compare it with new cancel value in form}));
     },
     LeaveDetailUpdated: (state, action) => {
       state.detailUpdateLoading = false;

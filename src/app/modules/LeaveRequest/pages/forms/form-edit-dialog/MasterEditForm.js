@@ -306,7 +306,7 @@ export function MasterEditForm({
                     <Field
                       name="leaveType"
                       component={Select}
-                      disabled={isReaply || !employeeId}
+                      disabled={isReaply || !employeeId || actionsLoading}
                       className={
                         errors?.leaveType && touched?.leaveType
                           ? "form-control is-invalid"
@@ -334,7 +334,17 @@ export function MasterEditForm({
                       }
                       value={values.leaveType}
                       autoComplete="off"
-                      children={CustomDropdown({ data: allLeaveTypes })}
+                      children={CustomDropdown({
+                        data: leaveBalances?.map((e) => ({
+                          label: e?.leaveTypeName,
+                          value: e?.leaveType,
+                        })),
+                        leaveTypData: [],
+                        firstElement: {
+                          label: "--Select--",
+                          value: null,
+                        },
+                      })}
                     />
                     {errors.leaveType && touched.leaveType && (
                       <CustomErrorLabel
@@ -349,7 +359,7 @@ export function MasterEditForm({
                     <Field
                       name="from"
                       component={DatePickerField}
-                      disabled={isEdit}
+                      disabled={isEdit || actionsLoading}
                       dateFormat="dd-MMM-yyyy"
                       label={
                         <span>
@@ -384,7 +394,7 @@ export function MasterEditForm({
                     <Field
                       name="to"
                       component={DatePickerField}
-                      disabled={isEdit}
+                      disabled={isEdit || actionsLoading}
                       dateFormat="dd-MMM-yyyy"
                       label={
                         <span>
@@ -427,6 +437,7 @@ export function MasterEditForm({
                       } //throw validation error if the difference in days is 1 day
                       disabled={
                         isEdit ||
+                        actionsLoading ||
                         getDateDiffInDays(values.from, values.to) !== 1
                       } //disable field if the difference in dates is more than 1 days
                       type="number"

@@ -32,6 +32,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setIds,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
+    openAnalysisFormDialog: FormUIEvents.openAnalysisFormDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

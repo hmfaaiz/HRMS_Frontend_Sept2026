@@ -11,6 +11,7 @@ const initialState = {
   ratingSelection: false,
   ratingDetail: [],
   employeeDetail: null,
+  appraisalEmpDetail: {},
 };
 
 export const callTypes = {
@@ -68,6 +69,11 @@ export const appraisalEvaluationSlice = createSlice({
         );
         state.userForEdit = updatedUser;
       }
+    },
+    AppraisalEmployeeDetailFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.error = null;
+      state.appraisalEmpDetail = action.payload;
     },
   },
 });
