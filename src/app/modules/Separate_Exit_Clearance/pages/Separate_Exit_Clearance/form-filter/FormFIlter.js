@@ -122,7 +122,7 @@ const dispatch = useDispatch();
                                   formUIProps.setQueryParams(updatedQueryParams);
             
             
-                                  dispatch(fetchExitTypeExitReason(formUIProps.queryParams));
+                                  dispatch(fetchExitTypeExitReason(updatedQueryParams));
                                   dispatch(fetchAllDept(e.value));
                                 }}
             
@@ -166,7 +166,7 @@ const dispatch = useDispatch();
                                   formUIProps.setQueryParams(updatedQueryParams);
             
             
-                                  dispatch(fetchExitTypeExitReason(formUIProps.queryParams));
+                                  dispatch(fetchExitTypeExitReason(updatedQueryParams));
                                 }}
             
                                 // options={dashboard.allDept}
@@ -210,7 +210,7 @@ const dispatch = useDispatch();
                                   formUIProps.setQueryParams(updatedQueryParams);
             
             
-                                  dispatch(fetchExitTypeExitReason(formUIProps.queryParams));
+                                  dispatch(fetchExitTypeExitReason(updatedQueryParams));
                                 }}
             
                                 // options={dashboard?.allDesignations}
@@ -257,7 +257,7 @@ const dispatch = useDispatch();
                                   formUIProps.setQueryParams(updatedQueryParams);
             
             
-                                  dispatch(fetchExitTypeExitReason(formUIProps.queryParams));
+                                  dispatch(fetchExitTypeExitReason(updatedQueryParams));
                                 }}
             
                               // options={[
