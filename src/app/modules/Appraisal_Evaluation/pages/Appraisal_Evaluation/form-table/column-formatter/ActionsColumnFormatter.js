@@ -1,17 +1,37 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CirclePower, Eye, Pencil, Trash2 } from "lucide-react";
+import { CirclePower, Eye, IdCardLanyard, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
 
-  { openEditFormDialog, openReadFormDialog, isAccessForEdit, isAccessForRead }
+  {
+    openEditFormDialog,
+    openReadFormDialog,
+    isAccessForEdit,
+    isAccessForRead,
+    openAnalysisFormDialog,
+  }
 ) {
-  const isUserRead = false;
   return (
     <div className="space-x-2">
+      {/* <OverlayTrigger
+        overlay={
+          <Tooltip id="products-edit-tooltip">View Employee Analaytics</Tooltip>
+        }
+      >
+        <a
+          title=""
+          className=""
+          onClick={() => {
+            if (row?.FromEmp?.Id) openAnalysisFormDialog(row?.FromEmp?.Id , row?.Id);
+          }}
+        >
+          <IdCardLanyard className="w-4 h-4 text-black cursor-pointer" />
+        </a>
+      </OverlayTrigger> */}
       {isAccessForRead && row?.isSubmitted && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
@@ -23,7 +43,9 @@ export function ActionsColumnFormatter(
       )}
       {isAccessForEdit && !row?.isSubmitted && (
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Attempt Feedback</Tooltip>}
+          overlay={
+            <Tooltip id="products-edit-tooltip">Attempt Feedback</Tooltip>
+          }
         >
           <a title="" className="" onClick={() => openEditFormDialog(row.Id)}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />

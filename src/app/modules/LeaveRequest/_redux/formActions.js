@@ -265,6 +265,7 @@ export const getLeaveApplicationDetail = (data, employeeId, disableLoading) => (
   dispatch
 ) => {
   if (employeeId) {
+    dispatch(actions.startCall({ callType: callTypes.action }));
     return requestFromServer
       .getLeaveApplicationDetail({ ...data, employeeId })
       .then((res) => {
@@ -282,6 +283,7 @@ export const getLeaveApplicationDetail = (data, employeeId, disableLoading) => (
       .catch((error) => {
         disableLoading();
         error.clientMessage = "Can't Extract Leave  Detail";
+        dispatch(actions.catchError({ callType: callTypes.action }));
         toast.error(error?.response?.data?.message || error.clientMessage, {
           position: "top-right",
           autoClose: 5000,

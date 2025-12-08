@@ -40,9 +40,10 @@ export function FormEditDialog({
   const dispatch = useDispatch();
 
   //Get data from leave application state
-  const { userForEdit, payrollData } = useSelector((state) => ({
+  const { userForEdit, payrollData , actionsLoading } = useSelector((state) => ({
     userForEdit: state.leave_request.userForEdit,
     payrollData: state.leave_request.payrollData,
+    actionsLoading: state.leave_request.actionsLoading,
   }));
 
   //Fetch record to edit when an Id is selected from table
@@ -111,6 +112,7 @@ export function FormEditDialog({
           isPolicyExists={isPolicyExists}
           currentLevel={currentLevel}
           panelMode={formUIProps.panelMode}
+          actionsLoading={actionsLoading}
           isReaply={
             !id ? false : userForEdit?.request_status !== "R" ? true : false
           }

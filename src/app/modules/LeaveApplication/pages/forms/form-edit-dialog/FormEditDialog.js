@@ -35,10 +35,12 @@ export function FormEditDialog({ id, employeeId }) {
   //Get data from leave application state
   const {
     userForEdit,
-    payrollData
+    payrollData,
+    actionsLoading
   } = useSelector((state) => ({
     userForEdit: state.leave_application.userForEdit,
-    payrollData: state.leave_application.payrollData
+    payrollData: state.leave_application.payrollData,
+    actionsLoading : state.leave_application.actionsLoading
   }
   ));
 
@@ -88,6 +90,7 @@ export function FormEditDialog({ id, employeeId }) {
         disbaleLoading={disbaleLoading}
         setId={formUIProps.setId}
         payrollData={payrollData}
+        actionsLoading={actionsLoading}
         
       />
       <ToastContainer
