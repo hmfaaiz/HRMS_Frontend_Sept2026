@@ -17,7 +17,7 @@ export function ActionsColumnFormatter(
 ) {
   return (
     <div className="space-x-2">
-      {/* <OverlayTrigger
+      <OverlayTrigger
         overlay={
           <Tooltip id="products-edit-tooltip">View Employee Analaytics</Tooltip>
         }
@@ -26,12 +26,13 @@ export function ActionsColumnFormatter(
           title=""
           className=""
           onClick={() => {
-            if (row?.FromEmp?.Id) openAnalysisFormDialog(row?.FromEmp?.Id , row?.Id);
+            if (row?.FromEmp?.Id)
+              openAnalysisFormDialog(row?.FromEmp?.Id, row?.Id);
           }}
         >
           <IdCardLanyard className="w-4 h-4 text-black cursor-pointer" />
         </a>
-      </OverlayTrigger> */}
+      </OverlayTrigger>
       {isAccessForRead && row?.isSubmitted && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
