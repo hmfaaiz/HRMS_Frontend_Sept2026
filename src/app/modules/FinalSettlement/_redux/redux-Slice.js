@@ -13,6 +13,9 @@ const initialFinalSettlementState = {
   dataForRead: false,
   pdfGenerateLoading: false,
   activeEmployeeList: [],
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
@@ -31,7 +34,19 @@ export const FinalSettlementSlice = createSlice({
         state.listLoading = false;
       } else if (action.payload.callType === callTypes.pdfGenerate) {
         state.pdfGenerateLoading = false;
-      } else {
+      } 
+      else if (action.payload.callType === callTypes.pdf) {
+              state.pdfLoading = false;
+            }
+      
+            else if (action.payload.callType === callTypes.csv) {
+              state.csvLoading = false;
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+              state.excelLoading = false;
+            }
+      
+      else {
         state.actionsLoading = false;
       }
     },
@@ -119,5 +134,17 @@ export const FinalSettlementSlice = createSlice({
         return entity;
       });
     },
+    
+     pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
+        },
   },
 });

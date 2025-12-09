@@ -224,7 +224,7 @@ export function ReligionCard({ onHide }) {
           <div className="">
             <div>
               <SearchSelect
-                name="employeeTypeId"
+                name="designationId"
                 label={
                   <span>
                     {" "}

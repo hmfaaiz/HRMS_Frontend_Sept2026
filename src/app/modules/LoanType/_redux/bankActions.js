@@ -4,43 +4,6 @@ import { LoanTypeSlice, callTypes } from "./LoanTypeSlice";
 import { toast } from "react-toastify";
 
 const { actions } = LoanTypeSlice;
-// const { roleActions } = getAllrolesSlice
-
-// export const fetchUsers = (queryparm) => async (dispatch) => {
-
-//   dispatch(actions.startCall({ callType: callTypes.list }));
-
-//   return requestFromServer.getAll_LoanType({...queryparm,id:'null'})
-   
-
-
-
-//     .then((response) => {
-
-//       const transformedRows = response?.data?.data?.rows.map(item => ({
-//         ...item,
-//         linkedAttendance: item.linkedAttendance ? 'Yes' : 'No'  // Transform the value
-//       }));
-      
-//       // Update the response with transformed rows
-//       const updatedResponse = {
-//         ...response,
-//         data: {
-//           ...response.data,
-//           rows: transformedRows
-//         }
-//       };
-  
-  
-//       dispatch(actions.loan_type_Fetched(updatedResponse));
-//     })
-//     .catch((error) => {
-    
-//       error.clientMessage = "Can't find receipts";
-//       dispatch(actions.catchError({ error, callType: callTypes.list }));
-//     });
-// };
-
 
 export const fetchUsers = (queryparm) => async (dispatch) => {
 
