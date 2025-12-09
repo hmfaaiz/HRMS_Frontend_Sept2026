@@ -82,7 +82,9 @@ export const updateAppraisalEvaluation = (body) => (dispatch) => {
     });
 };
 
-export const fetchAppraisalEmployeeDetail = (empId, Id) => (dispatch) => {
+export const fetchAppraisalEmployeeDetail = (empId, Id, onHide) => (
+  dispatch
+) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   return requestFromServer
     .getAppraisalEmployeeDetail({ Id, empId })
@@ -92,6 +94,7 @@ export const fetchAppraisalEmployeeDetail = (empId, Id) => (dispatch) => {
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
+      onHide();
       toast.error(error?.response?.data?.message, {
         position: "top-right",
         autoClose: 5000,

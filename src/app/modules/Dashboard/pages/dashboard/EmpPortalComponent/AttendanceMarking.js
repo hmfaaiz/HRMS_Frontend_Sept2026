@@ -181,18 +181,25 @@ export const AttendanceMarking = () => {
         {shiftInfo && !loading && (
           <>
             <p className="text-xs  mb-0">
-              Shift Range of Shift : {shiftInfo.name}-{shiftInfo.shiftCode}
+              Range of Shift:{" "}
+              <strong>
+                {shiftInfo.shiftCode} - {shiftInfo.name}
+              </strong>{" "}
+              is scheduled
             </p>
             <p className="text-xs  mb-1">
               {" "}
-              From {shiftInfo.fromDate}{" "}
-              {formatTime(shiftInfo?.visibleStartTime)} to {shiftInfo.toDate}{" "}
-              {formatTime(shiftInfo.visibleEndTime)}
+              From
+              <strong>
+                {" "}
+                {shiftInfo.fromDate} {formatTime(shiftInfo?.visibleStartTime)}{" "}
+                to {shiftInfo.toDate} {formatTime(shiftInfo.visibleEndTime)}
+              </strong>
             </p>
 
             <p className="text-xs  mb-0">
-              Attendance marked will be tagged in {shiftInfo.attendanceTagDate}{" "}
-              Attendance record.
+              Attendance will be recorded in{" "}
+              <strong>{shiftInfo.attendanceTagDate}</strong> attendance entry.
             </p>
           </>
         )}
