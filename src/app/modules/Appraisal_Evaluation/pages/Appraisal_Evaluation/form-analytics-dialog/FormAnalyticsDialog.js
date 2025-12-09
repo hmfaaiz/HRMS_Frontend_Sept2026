@@ -92,8 +92,9 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
                     <th>On Time</th>
                     <th>Late In</th>
                     <th>Early Out</th>
-                    <th>Leaves (Paid)</th>
-                    <th>Leaves (Unpaid)</th>
+                    <th>Half Days</th>
+                    <th>Leaves</th>
+                    <th>Absent</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -103,6 +104,7 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
                     <td>{attendance?.onTime}</td>
                     <td>{attendance?.lateIn}</td>
                     <td>{attendance?.earlyGoing}</td>
+                    <td>{attendance?.halfDay}</td>
                     <td>{attendance?.onLeave}</td>
                     <td>{attendance?.absentDay}</td>
                   </tr>

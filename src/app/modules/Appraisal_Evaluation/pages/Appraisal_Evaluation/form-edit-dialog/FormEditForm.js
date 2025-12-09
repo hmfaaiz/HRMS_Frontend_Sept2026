@@ -12,7 +12,13 @@ import {
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
-const getFormSchema = ({ isComment, ratingSelection, min, max }) =>
+const getFormSchema = ({
+  isComment,
+  ratingSelection,
+  min,
+  max,
+  isLastQuestion,
+}) =>
   Yup.object().shape({
     ratingValue: ratingSelection
       ? Yup.number()
@@ -25,6 +31,17 @@ const getFormSchema = ({ isComment, ratingSelection, min, max }) =>
           .max(max, `Rating cannot exceed ${max}`),
 
     comments: isComment
+      ? Yup.string()
+          .trim()
+          .required(VALIDATION_MESSAGES.required)
+      : Yup.string().nullable(),
+    feedback: isLastQuestion
+      ? Yup.string()
+          .trim()
+          .required(VALIDATION_MESSAGES.required)
+      : Yup.string().nullable(),
+
+    recommendation: isLastQuestion
       ? Yup.string()
           .trim()
           .required(VALIDATION_MESSAGES.required)
@@ -81,13 +98,16 @@ export function FormEditForm({
   }, [localUserForEdit]);
 
   const formSchema = useMemo(() => {
+    const isLast =
+      currentQues?.Id === localUserForEdit[localUserForEdit.length - 1]?.Id;
     return getFormSchema({
       isComment: currentQues?.isCommentRequired,
       ratingSelection,
       min: ratingDetail?.minPoint,
       max: ratingDetail?.maxPoint,
+      isLastQuestion: isLast,
     });
-  }, [ratingSelection, ratingDetail, currentQues]);
+  }, [ratingSelection, ratingDetail, currentQues, localUserForEdit]);
 
   const prevClick = (val) => {
     let index = localUserForEdit.findIndex((el) => el?.Id === val?.Id);
@@ -170,7 +190,6 @@ export function FormEditForm({
       await dispatch(
         actions.updateAppraisalEvaluation({ values, isLast: true })
       );
-
       // Update local state
       const updatedLocalUserForEdit = localUserForEdit.map((question) =>
         question.Id === values.Id
@@ -196,6 +215,8 @@ export function FormEditForm({
         ...currentQues,
         comments: currentQues?.comments || "",
         ratingValue: currentQues?.ratingValue || "",
+        feedback: employeeDetail?.feedback || "",
+        recommendation: employeeDetail?.recommendation || "",
       }}
       validationSchema={formSchema}
     >
@@ -348,6 +369,50 @@ export function FormEditForm({
                       }
                     />
                   </div>
+                  {localUserForEdit?.length > 0 &&
+                    localUserForEdit[localUserForEdit.length - 1]?.Id ===
+                      currentQues?.Id && (
+                      <>
+                        <div className="col-span-5 lg:col-span-6">
+                          <hr />
+                          <span className="font-medium text-tprimary">
+                            Feedback and Recommendation
+                          </span>
+                        </div>
+                        <div className="col-span-5 lg:col-span-6">
+                          <Field
+                            name="feedback"
+                            component={TextArea}
+                            type="text"
+                            onChange={(e) => {
+                              setFieldValue("feedback", e?.target?.value);
+                            }}
+                            label={
+                              <span>
+                                Feedback
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                          />
+                        </div>
+                        <div className="col-span-5 lg:col-span-6">
+                          <Field
+                            name="recommendation"
+                            component={TextArea}
+                            type="text"
+                            onChange={(e) => {
+                              setFieldValue("recommendation", e?.target?.value);
+                            }}
+                            label={
+                              <span>
+                                Appraisal Recommendation
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
+                          />
+                        </div>
+                      </>
+                    )}
                 </div>
               </fieldset>
             </Form>
