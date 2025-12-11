@@ -18,7 +18,7 @@ import {
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 
