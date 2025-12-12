@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { fetchExitTypeExitReason } from "../../../_redux/redux-Actions";
 import { fetchAllDept, fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 const prepareFilter = (queryParams, values) => {
   const { searchText } = values;

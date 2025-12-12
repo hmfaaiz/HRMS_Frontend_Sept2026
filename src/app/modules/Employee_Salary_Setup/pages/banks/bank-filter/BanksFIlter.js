@@ -20,7 +20,7 @@ import {
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 import { fetchUsers } from "../../../_redux/bankActions";
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 const prepareFilter = (queryParams, values) => {

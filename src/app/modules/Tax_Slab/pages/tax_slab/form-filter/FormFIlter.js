@@ -14,7 +14,7 @@ import {} from "../../../../../../_metronic/redux/dashboardActions";
 import { debounce } from "redux-saga/effects";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 

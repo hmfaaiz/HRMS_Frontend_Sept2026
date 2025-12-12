@@ -24,7 +24,7 @@ import {
 import { amountLimitDynamic, formatDates } from "../../../../../utils/common";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 
 
