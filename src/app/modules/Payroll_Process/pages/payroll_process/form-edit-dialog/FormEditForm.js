@@ -767,7 +767,17 @@ export function FormEditForm({
                     <div className="grid grid-cols-1 gap-x-3 col-span-12">
                       <div className="">
                         <label>
-                          Total Employee:
+                          Total Employees (Active):
+                          <span style={{ fontWeight: "bold" }}>
+                            {" "}
+                            {currentState?.payroll_group_details
+                              ?.active_employee || 0}
+                          </span>
+                        </label>
+                      </div>
+                      <div className="">
+                        <label>
+                          Total Employees (Approved for Payroll):
                           <span style={{ fontWeight: "bold" }}>
                             {" "}
                             {currentState?.payroll_group_details

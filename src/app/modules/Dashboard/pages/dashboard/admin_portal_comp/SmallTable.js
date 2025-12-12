@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 const SingleCard = ({ data, setSmallTableModalData }) => {
   let theme = data?.theme_class;
   const dashboard = useSelector((state) => state.dashboard || []);
- console.log("dashboard?.activeFiscalYeardashboard?.activeFiscalYear" , dashboard?.activeFiscalYear)
   const getHeading = () => {
     if (!data) return "";
 
