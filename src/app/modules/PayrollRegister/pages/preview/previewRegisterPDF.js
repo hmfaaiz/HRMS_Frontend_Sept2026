@@ -34,7 +34,7 @@ export const PayrollRegisterPreviewPage = () => {
   if (!data) return <p>No data found. Please go back...</p>;
 
   // Extract data
-  const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals} = data;
+  const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals,currencyName} = data;
 
 
 
@@ -50,6 +50,7 @@ export const PayrollRegisterPreviewPage = () => {
         deductionColumns={deductionColumns}
         loanColumns={loanColumns}
         totals={totals}
+        currencyName={currencyName}
       />
     )}
   </>
@@ -70,7 +71,7 @@ const PreviewRegisterPDF = ({
   deductionColumns = [],
   loanColumns = [],
   employeeData = [],
-  totals = {}
+  totals = {},currencyName=""
 }) => {
   const toFixed = (value) => Number(value || 0).toFixed(2);
 
@@ -158,24 +159,24 @@ const PreviewRegisterPDF = ({
           {/* Grand Total Row */}
           <tr className="tfoot" style={{ fontWeight: 'bold', backgroundColor: '#ffeb3b' }}>
             <td colSpan="7" style={{ textAlign: 'left' }}>Grand Total</td>
-            <td>{toFixed(totals.grossPackage)}</td>
+            <td>{currencyName} {toFixed(totals.grossPackage)}</td>
             <td colSpan="4"></td>
 
             {earningColumns.map((col, i) => (
-              <td key={`t-e-${i}`}>{toFixed(totals[col])}</td>
+              <td key={`t-e-${i}`}>{currencyName} {toFixed(totals[col])}</td>
             ))}
-            <td>{toFixed(totals.totalAllowances)}</td>
+            <td>{currencyName} {toFixed(totals.totalAllowances)}</td>
 
             {deductionColumns.map((col, i) => (
-              <td key={`t-d-${i}`}>{toFixed(totals[col])}</td>
+              <td key={`t-d-${i}`}>{currencyName} {toFixed(totals[col])}</td>
             ))}
 
             {loanColumns.map((col, i) => (
-              <td key={`t-l-${i}`}>{toFixed(totals[col])}</td>
+              <td key={`t-l-${i}`}>{currencyName} {toFixed(totals[col])}</td>
             ))}
 
-            <td>{toFixed(totals.totalDeductions)}</td>
-            <td>{toFixed(totals.netPayableSalary)}</td>
+            <td>{currencyName} {toFixed(totals.totalDeductions)}</td>
+            <td>{currencyName} {toFixed(totals.netPayableSalary)}</td>
           </tr>
         </tbody>
       </table>
