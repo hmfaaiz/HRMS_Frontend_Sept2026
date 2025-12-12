@@ -159,23 +159,23 @@ const PreviewRegisterPDF = ({
           {/* Grand Total Row */}
           <tr className="tfoot" style={{ fontWeight: 'bold', backgroundColor: '#ffeb3b' }}>
             <td colSpan="7" style={{ textAlign: 'left' }}>Grand Total</td>
-            <td>{currencyName} {toFixed(totals.grossPackage)}</td>
+            <td>{toFixed(totals.grossPackage)}</td>
             <td colSpan="4"></td>
 
             {earningColumns.map((col, i) => (
-              <td key={`t-e-${i}`}>{currencyName} {toFixed(totals[col])}</td>
+              <td key={`t-e-${i}`}>{toFixed(totals[col])}</td>
             ))}
-            <td>{currencyName} {toFixed(totals.totalAllowances)}</td>
+            <td>{toFixed(totals.totalAllowances)}</td>
 
             {deductionColumns.map((col, i) => (
-              <td key={`t-d-${i}`}>{currencyName} {toFixed(totals[col])}</td>
+              <td key={`t-d-${i}`}>{toFixed(totals[col])}</td>
             ))}
 
             {loanColumns.map((col, i) => (
-              <td key={`t-l-${i}`}>{currencyName} {toFixed(totals[col])}</td>
+              <td key={`t-l-${i}`}>{toFixed(totals[col])}</td>
             ))}
 
-            <td>{currencyName} {toFixed(totals.totalDeductions)}</td>
+            <td>{toFixed(totals.totalDeductions)}</td>
             <td>{currencyName} {toFixed(totals.netPayableSalary)}</td>
           </tr>
         </tbody>
