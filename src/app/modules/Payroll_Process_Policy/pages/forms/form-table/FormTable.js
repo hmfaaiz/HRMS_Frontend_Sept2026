@@ -894,7 +894,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
                 <div className="flex justify-between">
                   <h6 className="font-bold mb-0 text-primary ">
-                    Payroll Configuration From
+                    Payroll Configuration
                   </h6>
                   <X title="Close" onClick={() =>
                     user.setActive(false)} className="w-4 h-4 text-black cursor-pointer" />
