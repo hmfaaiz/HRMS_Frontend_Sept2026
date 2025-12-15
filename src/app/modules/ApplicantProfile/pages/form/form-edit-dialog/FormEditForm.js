@@ -1105,15 +1105,15 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-                              <th className="">Job Vacancy</th>
-                              <th className="">Application Date</th>
-                              <th className="">Application Status</th>
-                              <th className=""> Status Date</th>
+                              <td className="">Job Vacancy</td>
+                              <td className="">Application Date</td>
+                              <td className="">Application Status</td>
+                              <td className=""> Status Date</td>
 
-                              <th className="">Appointment Type</th>
-                              <th className="">Signed File</th>
-                              <th className="">Active Vacancy</th>
-                              <th className="text-right">Action</th>
+                              <td className="">Appointment Type</td>
+                              <td className="">Signed File</td>
+                              <td className="">Active Vacancy</td>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -2399,7 +2399,7 @@ export function FormEditForm({
                               <td className="min-w-32">City</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th className="text-right">Action</th>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -2769,7 +2769,7 @@ export function FormEditForm({
                               <td className="min-w-32">CGPA</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th className="text-right">Action</th>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -3218,7 +3218,7 @@ export function FormEditForm({
                               <td className="min-w-32">Rating</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th className="text-right">Action</th>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -3490,7 +3490,7 @@ export function FormEditForm({
                 )}
               </div>
 
-
+ <hr></hr>
               {/* Interview Skills  */}
               <div className="w-full overflow-x-auto">
                 <FieldArray name="details_interview">
@@ -3581,7 +3581,7 @@ export function FormEditForm({
 
                                           return dateTime.length > 30 ? (
                                             <span
-                                            
+
                                               title={dateTime}
                                             >
                                               {dateTime.substring(0, 30) + "..."}

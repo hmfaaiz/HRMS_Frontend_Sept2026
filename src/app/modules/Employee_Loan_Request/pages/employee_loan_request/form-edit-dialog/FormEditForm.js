@@ -531,9 +531,11 @@ export function FormEditForm({
 
   const handleCloseModal = () => {
     setShowModal(false); // Close the modal
+  
   };
 
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
+
 
   return (
     <Formik

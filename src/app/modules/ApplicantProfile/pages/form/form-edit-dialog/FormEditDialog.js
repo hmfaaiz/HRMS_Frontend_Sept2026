@@ -78,7 +78,7 @@ export function FormEditDialog({ id, show, onHide, dataForRead ,status }) {
 
   const saveForm = async (formData, image) => {
 
-
+   delete formData.details_interview
 
     if (!formData.Id) {
       if (formData?.file && typeof formData?.file === "object") {
