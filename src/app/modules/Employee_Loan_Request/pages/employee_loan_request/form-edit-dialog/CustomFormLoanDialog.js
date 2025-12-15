@@ -5,7 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 
 const CustomFormLoanDialog = ({ showModal, handleClose,userForEdit,message ,handleReset, setIds,formUIProps}) => {
-  console.log("messages",message)
+
   const dispatch = useDispatch();
  const [loading, setLoading] = useState(false);
   const enableLoading = () => {
@@ -31,6 +31,8 @@ const handleSubmit=async()=>{
       setIds("")
     )
   );
+
+  await dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
 
 }
 
@@ -58,7 +60,9 @@ const handleSubmit=async()=>{
                               // onClick={() => handleSubmit()}
                               onClick={() => {
                                 handleSubmit();
-                                dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
+                              
+                              
+                                
                               }}
                               className="btn btn-primary btn-elevate"
                               disabled={ loading}
