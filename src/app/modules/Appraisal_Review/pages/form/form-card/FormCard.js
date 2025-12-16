@@ -1,0 +1,67 @@
+import React, { useMemo } from "react";
+import { FormTable } from "../form-table/FormTable";
+import { useFromUIContext } from "../FormUIContext";
+import { FormFilter } from "../form-filter/FormFIlter";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
+import { CirclePlus } from "lucide-react";
+import TCard from "../../../../../utils/common-modules/TCard";
+import * as actions from "../../../_redux/formActions";
+
+export function FormCard() {
+  const dispatch = useDispatch();
+  const formUIContext = useFromUIContext();
+  const FormUIProps = useMemo(() => {
+    return {
+      newButtonClick: formUIContext.newButtonClick,
+      openEditDialog: formUIContext.openEditDialog,
+      panelMode: formUIContext.panelMode,
+      setPanelMode: formUIContext.setPanelMode,
+      subsidiaryId: formUIContext.subsidiaryId,
+      appraisalCategoryId: formUIContext.appraisalCategoryId,
+      setEmployeeId: formUIContext.setEmployeeId,
+    };
+  }, [formUIContext]);
+
+  const { userAccess } = useSelector(
+    (state) => ({
+      userAccess: state.auth.userAccess.appraisal_review,
+    }),
+    shallowEqual
+  );
+  const accessUser = userAccess.find(
+    (item) => item.componentName === "CreateAppraisalReview"
+  );
+
+  return (
+    <TCard name={CurrentModuleName()}>
+      <div className="flex justify-start sm:justify-end items-end flex-wrap gap-2">
+        <FormFilter />
+        <div className="flex items-end gap-2">
+          {/* <CardHeaderToolbar> */}
+          {accessUser && (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={
+                  !FormUIProps.appraisalCategoryId || !FormUIProps.subsidiaryId
+                }
+                onClick={() => {
+                  dispatch(actions.clearAppraisalReview());
+                  FormUIProps.setEmployeeId(null);
+                  FormUIProps.newButtonClick();
+                }}
+              >
+                <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
+                Add
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+      <FormTable />
+    </TCard>
+    // </>
+  );
+}

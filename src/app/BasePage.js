@@ -390,6 +390,9 @@ import("./modules/EmployeeDocument/pages/index"));
 const CompanyDocumentPortal = lazy(()=>
 import("./modules/CompanyDocumentPortal/pages/index"));
 
+const AppraisalReview = lazy(()=>
+import("./modules/Appraisal_Review/pages/index"))
+
 
 
 const ROUTES = {
@@ -539,7 +542,7 @@ const ROUTES = {
   company_doc : CompanyDocument,
   company_doc_portal : CompanyDocumentPortal,
   employee_doc : EmployeeDocument,
-
+  appraisal_review : AppraisalReview,
 };
 
 export default function BasePage() {
