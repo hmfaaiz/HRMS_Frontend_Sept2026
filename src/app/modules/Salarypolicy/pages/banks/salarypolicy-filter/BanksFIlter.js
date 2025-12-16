@@ -17,7 +17,7 @@
 // } from "../../../../../../_metronic/redux/dashboardActions";
 
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// 
 // const API_URL = process.env.REACT_APP_API_URL;
 
 

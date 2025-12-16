@@ -540,6 +540,7 @@ export function FormEditForm({
       dispatch(fetchAllFormsMenu(108, "allDegreeTitle"));
       dispatch(fetchAllFormsMenu(128, "allNationalities"));
       dispatch(fetchAllFormsMenu(414, "allJobSkillList"));
+      dispatch(fetchAllFormsMenu(89, "allLocationChildMenus")); // For Location
     }
   }, [dispatch, formData.Id]);
 
@@ -1104,15 +1105,15 @@ export function FormEditForm({
                         <div className="react-bootstrap-table table-responsive">
                           <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                             <tr className="custom-table-header">
-                              <th className="">Job Vacancy</th>
-                              <th className="">Application Date</th>
-                              <th className="">Application Status</th>
-                              <th className=""> Status Date</th>
+                              <td className="">Job Vacancy</td>
+                              <td className="">Application Date</td>
+                              <td className="">Application Status</td>
+                              <td className=""> Status Date</td>
 
-                              <th className="">Appointment Type</th>
-                              <th className="">Signed File</th>
-                              <th className="">Active Vacancy</th>
-                              <th className="text-right">Action</th>
+                              <td className="">Appointment Type</td>
+                              <td className="">Signed File</td>
+                              <td className="">Active Vacancy</td>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -1131,7 +1132,7 @@ export function FormEditForm({
                                             zIndex: 9999,
                                           }}
                                           isDisabled={
-                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1266,7 +1267,7 @@ export function FormEditForm({
                                           dateFormat="dd-MMM-yyyy"
                                           name={`details_applicant_vacancy[${index}].applicationDate`}
                                           disabled={
-                                            isdataForRead || values.details_applicant_vacancy?.[index]?.activeCV ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.activeCV || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1301,7 +1302,7 @@ export function FormEditForm({
                                           name={`details_applicant_vacancy[${index}].applicationStatusId`}
                                           className="form-control"
                                           style={{ width: "130px" }}
-                                          isDisabled={values.details_applicant_vacancy?.[index]?.activeCV ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                                          isDisabled={values.details_applicant_vacancy?.[index]?.activeCV || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             isdataForRead ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
@@ -1365,7 +1366,7 @@ export function FormEditForm({
                                           className="form-control"
 
                                           // component={DatePickerField}
-                                      
+
                                           placeholderText="Select Date"
                                           selected={
                                             values?.details_applicant_vacancy?.[
@@ -1420,7 +1421,7 @@ export function FormEditForm({
                                           className="form-control"
                                           style={{ width: "130px" }}
                                           isDisabled={
-                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1488,7 +1489,7 @@ export function FormEditForm({
                                           name={`details_applicant_vacancy[${index}].activeCV`}
                                           type="checkbox"
                                           disabled={
-                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -1534,7 +1535,7 @@ export function FormEditForm({
                                       <td className="text-right">
                                         <button
                                           disabled={
-                                            isdataForRead ||  values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
+                                            isdataForRead || values.details_applicant_vacancy?.[index]?.isFromRecPortal ||
                                             selectedJobVacancy(
                                               values.details_applicant_vacancy[
                                               index
@@ -2398,7 +2399,7 @@ export function FormEditForm({
                               <td className="min-w-32">City</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th className="text-right">Action</th>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -2768,7 +2769,7 @@ export function FormEditForm({
                               <td className="min-w-32">CGPA</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th className="text-right">Action</th>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -3217,7 +3218,7 @@ export function FormEditForm({
                               <td className="min-w-32">Rating</td>
                               <td className="min-w-32">Start Date</td>
                               <td className="min-w-32">End Date</td>
-                              <th className="text-right">Action</th>
+                              <td className="text-right">Action</td>
                             </tr>
 
                             <tbody>
@@ -3471,6 +3472,318 @@ export function FormEditForm({
                                           <Trash2 className="w-4 h-4 text-black cursor-pointer" />
                                         </button>
                                       </td>
+                                    </tr>
+                                  )
+                                )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </FieldArray>
+
+                {typeof errors.details_applicant_skills === "string" && (
+                  <div className="text-danger">
+                    {errors.details_applicant_skills}
+                  </div>
+                )}
+              </div>
+
+ <hr></hr>
+              {/* Interview Skills  */}
+              <div className="w-full overflow-x-auto">
+                <FieldArray name="details_interview">
+                  {({ push, remove }) => (
+                    <div>
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-bold mb-0 text-primary">
+                          Interview Details{"  "}
+                        </h6>
+
+                      </div>
+                      <div className="w-full overflow-x-auto">
+                        <div className="react-bootstrap-table table-responsive">
+                          <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                            <tr className="custom-table-header">
+                              <td className="min-w-32"> Job Title</td>
+                              <td className="min-w-32">Interview Date & Time</td>
+
+                              <td className="min-w-32">Interview Detail</td>
+                              <td className="min-w-32">Location</td>
+                              <td className="min-w-32">Interviewer(s)</td>
+                              <td className="min-w-32">Interview Remarks</td>
+                              <td className="min-w-32">Interviewer Recommendation</td>
+                              <td className="min-w-32">Recommended Applicant Status</td>
+                            </tr>
+
+                            <tbody>
+                              {values?.details_interview &&
+                                values?.details_interview?.length > 0 &&
+                                values?.details_interview?.map(
+                                  (detail, index) => (
+                                    <tr key={index}>
+
+
+                                      {/* <td>
+                                        <SearchSelect
+                                          name={`details_interview[${index}].jobVacancyId`}
+                                          component={Input}
+                                          isDisabled={true}
+                                          value={
+                                            dashboard?.allJobVacancyList?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_interview[
+                                                  index
+                                                ]?.jobVacancyId
+                                            ) || null
+                                          }
+
+                                        />
+
+
+                                      </td> */}
+                                      <td>
+                                        {(() => {
+                                          const jobObj = dashboard?.allJobVacancyList?.find(
+                                            (x) => x.value === values.details_interview[index]?.jobVacancyId
+                                          );
+                                          const displayText = jobObj ? jobObj.label : "";
+
+                                          return displayText.length > 30 ? (
+                                            <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
+                                          ) : (
+                                            <span >{displayText}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+
+
+                                      {/* <td>
+                                        <Field
+                                          name={`details_interview[${index}].interview_datetime`} // new name just for display
+                                          component={Input}
+                                          value={`${values.details_interview[index].interview_date} ${values.details_interview[index].interview_time}`}
+                                          disabled={true}
+                                          placeholder="Enter description"
+                                          autoComplete="off"
+                                        />
+
+
+                                      </td> */}
+
+                                      <td>
+                                        {(() => {
+                                          const dateTime = `${values.details_interview[index].interview_date} ${values.details_interview[index].interview_time}`;
+
+                                          return dateTime.length > 30 ? (
+                                            <span
+
+                                              title={dateTime}
+                                            >
+                                              {dateTime.substring(0, 30) + "..."}
+                                            </span>
+                                          ) : (
+                                            <span >
+                                              {dateTime}
+                                            </span>
+                                          );
+                                        })()}
+                                      </td>
+
+
+                                      {/* <td className="max-w-16">
+                                        <Field
+                                          name={`details_interview[${index}].interview_detail`}
+                                          className="form-control"
+                                          disabled={true}
+
+                                        />
+
+
+                                      </td> */}
+
+                                      <td >
+                                        {(() => {
+                                          const cell = values.details_interview[index].interview_detail || "";
+                                          return cell.length > 30 ? (
+                                            <span title={cell}>{cell.substring(0, 45) + "..."}</span>
+                                          ) : (
+                                            <span>{cell}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+
+                                      {/* <td>
+                                        <SearchSelect
+                                          name={`details_interview[${index}].locationId`}
+                                          component={Input}
+                                          isDisabled={
+                                            true
+                                          }
+                                          value={
+                                            dashboard?.allLocationChildMenus?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_interview[
+                                                  index
+                                                ]?.locationId
+                                            ) || null
+                                          }
+
+                                        />
+
+
+                                      </td> */}
+
+                                      <td>
+                                        {(() => {
+                                          const locationObj = dashboard?.allLocationChildMenus?.find(
+                                            (x) => x.value === values.details_interview[index]?.locationId
+                                          );
+                                          const displayText = locationObj ? locationObj.label : "";
+
+                                          return displayText.length > 30 ? (
+                                            <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
+                                          ) : (
+                                            <span>{displayText}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+
+                                      {/* <td>
+                              
+
+                                        <Field
+                                          name={`details_interview[${index}].details_interviewer`}
+                                          component={Input}
+                                          value={values.details_interview[index].details_interviewer
+                                            .map(i =>
+                                              [i.employee.firstName, i.employee.middleName, i.employee.lastName] // array of names
+                                                .filter(Boolean) // remove null/undefined
+                                                .join(' ') // combine into full name
+                                            )
+                                            .join(', ') // join multiple interviewers if any
+                                          }
+                                          disabled={true}
+                                        />
+
+
+                                      </td> */}
+
+                                      <td >
+                                        {(() => {
+                                          const fullText = values.details_interview[index].details_interviewer
+                                            .map(i =>
+                                              [i.employee.firstName, i.employee.middleName, i.employee.lastName]
+                                                .filter(Boolean)
+                                                .join(' ')
+                                            )
+                                            .join(', ');
+
+                                          return fullText.length > 30 ? (
+                                            <span title={fullText}>{fullText.substring(0, 45) + "..."}</span>
+                                          ) : (
+                                            <span>{fullText}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+                                      {/* <td className="max-w-16">
+                                        <Field
+                                          name={`details_interview[${index}].interview_remarks`}
+                                          className="form-control"
+                                          disabled={true}
+
+                                        />
+
+
+
+                                        
+                                      </td> */}
+
+                                      <td className="max-w-16">
+                                        {(() => {
+                                          const cell = values.details_interview[index].interview_remarks || "";
+                                          return cell.length > 30 ? (
+                                            <span title={cell}>{cell.substring(0, 30) + "..."}</span>
+                                          ) : (
+                                            <span>{cell}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+
+                                      {/* <td className="max-w-16">
+                                        <Field
+                                          name={`details_interview[${index}].interview_recommendation`}
+                                          className="form-control"
+                                          disabled={true}
+
+                                        />
+
+
+                                      </td> */}
+
+                                      <td className="max-w-16">
+                                        {(() => {
+                                          const cell = values.details_interview[index].interview_recommendation || "";
+                                          return cell.length > 30 ? (
+                                            <span title={cell}>{cell.substring(0, 30) + "..."}</span>
+                                          ) : (
+                                            <span>{cell}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+
+                                      {/* <td className="max-w-16">
+                                        <SearchSelect
+                                          name={`details_interview[${index}].recommendedApplicantStatusId`}
+                                          className="form-control"
+                                          isDisabled={true}
+                                          value={
+                                            dashboard?.allApplicationStatusList?.find(
+                                              (x) =>
+                                                x.value ===
+                                                values
+                                                  .details_interview[
+                                                  index
+                                                ]?.recommendedApplicantStatusId
+                                            ) || null
+                                          }
+
+                                        />
+
+
+                                      </td> */}
+
+
+
+                                      <td className="max-w-16">
+                                        {(() => {
+                                          const statusObj = dashboard?.allApplicationStatusList?.find(
+                                            (x) =>
+                                              x.value ===
+                                              values.details_interview[index]?.recommendedApplicantStatusId
+                                          );
+                                          const displayText = statusObj ? statusObj.label : "";
+
+                                          return displayText.length > 30 ? (
+                                            <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
+                                          ) : (
+                                            <span>{displayText}</span>
+                                          );
+                                        })()}
+                                      </td>
+
+
                                     </tr>
                                   )
                                 )}

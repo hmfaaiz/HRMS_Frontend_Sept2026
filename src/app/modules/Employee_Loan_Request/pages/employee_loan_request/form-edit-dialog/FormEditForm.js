@@ -531,9 +531,11 @@ export function FormEditForm({
 
   const handleCloseModal = () => {
     setShowModal(false); // Close the modal
+  
   };
 
   const { activeFiscalYear } = useSelector((state) => state.dashboard);
+
 
   return (
     <Formik
@@ -932,6 +934,8 @@ export function FormEditForm({
                         }
                         handleReset={handleReset}
                         setIds={setIds}
+                        formUIProps={formUIProps}
+                         
                       />
                     </div>
                   </div>
@@ -975,6 +979,7 @@ export function FormEditForm({
                   // onClick={() => handleSubmit()}
                   onClick={() => {
                     handleSubmit();
+                      dispatch(fetchEmployeeLoanRequest(formUIProps));
                   }}
                   className="btn btn-primary btn-elevate"
                   disabled={userForEdit || loading}
@@ -991,7 +996,12 @@ export function FormEditForm({
                       <button
                         type="button"
                         className="btn btn-green"
-                        onClick={() => UpdateApprovedStatus(user.Id, 1)}
+                        onClick={() => {UpdateApprovedStatus(user.Id, 1)
+                           dispatch(fetchEmployeeLoanRequest(formUIProps));
+
+
+
+                        }}
                       >
                         Approve
                       </button>
@@ -1010,7 +1020,9 @@ export function FormEditForm({
                         <button
                           type="button"
                           className="btn btn-green"
-                          onClick={() => UpdateApprovedStatus(user.Id, 1)}
+                          onClick={() =>{ UpdateApprovedStatus(user.Id, 1)
+                             dispatch(fetchEmployeeLoanRequest(formUIProps));
+                          }}
                         >
                           Approve
                         </button>

@@ -22,7 +22,7 @@ import {
 import { formatDates } from "../../../../../utils/common";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 

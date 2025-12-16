@@ -246,6 +246,7 @@ const PreviewPayslipPDF = () => {
         <div className="payslip-container payslip-page-break">
             {data.map((item, index) => {
                 const {
+                    currentCurrencyName,
                     employeeData,
                     earningData,
                     deductionData,
@@ -464,19 +465,19 @@ const PreviewPayslipPDF = () => {
                                 {/* Totals */}
                                 <tr>
                                     <td colSpan="2">Total Allowances:</td>
-                                    <td className="payslip-right-align">{totalEarningAmount}</td>
+                                    <td className="payslip-right-align">{currentCurrencyName} {totalEarningAmount}</td>
                                     <td colSpan="2">Total Deductions:</td>
-                                    <td className="payslip-right-align">{totalDeductionAmount}</td>
+                                    <td className="payslip-right-align">{currentCurrencyName} {totalDeductionAmount}</td>
                                 </tr>
                                 <tr>
                                     <td colSpan="2"><strong>Gross Salary:</strong></td>
-                                    <td className="payslip-right-align">{grossSalary}</td>
+                                    <td className="payslip-right-align">{currentCurrencyName} {grossSalary}</td>
                                     <td colSpan="2"><strong>Net Payable Salary:</strong></td>
-                                    <td className="payslip-right-align">{earningDeductionDifference}</td>
+                                    <td className="payslip-right-align">{currentCurrencyName} {earningDeductionDifference}</td>
                                 </tr>
                                 <tr>
                                     <td colSpan="2">Amount in Words:</td>
-                                    <td colSpan="4">{earningDeductionDifferenceInWords}</td>
+                                    <td colSpan="4" className='text-right'>{currentCurrencyName} : {earningDeductionDifferenceInWords}</td>
                                 </tr>
 
                                 {/* Leave Balance */}

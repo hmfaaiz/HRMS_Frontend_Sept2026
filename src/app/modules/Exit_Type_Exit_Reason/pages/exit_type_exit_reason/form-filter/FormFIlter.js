@@ -6,7 +6,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 const prepareFilter = (queryParams, values) => {
   const { searchText } = values;

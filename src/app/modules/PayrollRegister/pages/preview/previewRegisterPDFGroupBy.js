@@ -20,7 +20,7 @@ export const PreviewRegisterPDFGroupBy = () => {
     return <div>No data found. Please go back.</div>; // Show loading message while the data is being fetched
   }
 
-  const { labels, earningColumns, deductionColumns, loanColumns, obj, totals } = data;
+  const { labels, earningColumns, deductionColumns, loanColumns, obj, totals ,currencyName} = data;
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', backgroundColor: '#f9f9f9' }}>
@@ -110,7 +110,7 @@ export const PreviewRegisterPDFGroupBy = () => {
                   <td key={index}>{formatCurrency(deptTotals[col] || 0)}</td>
                 ))}
                 <td>{formatCurrency(deptTotals.totalDeductions)}</td>
-                <td>{formatCurrency(deptTotals.netPayableSalary)}</td>
+                <td>{currencyName} {formatCurrency(deptTotals.netPayableSalary)}</td>
               </tr>
             </React.Fragment>
           ))}
@@ -129,8 +129,8 @@ export const PreviewRegisterPDFGroupBy = () => {
             {loanColumns.map((col, index) => (
               <td key={index}>{formatCurrency(totals[col] || 0)}</td>
             ))}
-            <td>{formatCurrency(totals.totalDeductions)}</td>
-            <td>{formatCurrency(totals.netPayableSalary)}</td>
+            <td> {formatCurrency(totals.totalDeductions)}</td>
+            <td>{currencyName} {formatCurrency(totals.netPayableSalary)}</td>
           </tr>
         </tbody>
       </table>

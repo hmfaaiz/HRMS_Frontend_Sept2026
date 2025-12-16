@@ -4,8 +4,8 @@ import * as actions from "../../../_redux/redux-Actions";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 
-const CustomFormLoanDialog = ({ showModal, handleClose,userForEdit,message ,handleReset, setIds}) => {
-  console.log("messages",message)
+const CustomFormLoanDialog = ({ showModal, handleClose,userForEdit,message ,handleReset, setIds,formUIProps}) => {
+
   const dispatch = useDispatch();
  const [loading, setLoading] = useState(false);
   const enableLoading = () => {
@@ -31,6 +31,8 @@ const handleSubmit=async()=>{
       setIds("")
     )
   );
+
+  await dispatch(actions.fetchEmployeeLoanRequest(formUIProps));
 
 }
 
@@ -58,6 +60,9 @@ const handleSubmit=async()=>{
                               // onClick={() => handleSubmit()}
                               onClick={() => {
                                 handleSubmit();
+                              
+                              
+                                
                               }}
                               className="btn btn-primary btn-elevate"
                               disabled={ loading}

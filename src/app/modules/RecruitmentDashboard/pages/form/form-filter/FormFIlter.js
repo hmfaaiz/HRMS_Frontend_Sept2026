@@ -27,7 +27,7 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import { CircleMinus, CirclePlus } from "lucide-react";
 
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 
 

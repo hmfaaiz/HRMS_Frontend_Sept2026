@@ -34,7 +34,7 @@ export const PayrollRegisterPreviewPage = () => {
   if (!data) return <p>No data found. Please go back...</p>;
 
   // Extract data
-  const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals} = data;
+  const {groupBy,employeeData, labels ,earningColumns,deductionColumns,loanColumns,totals,currencyName} = data;
 
 
 
@@ -50,6 +50,7 @@ export const PayrollRegisterPreviewPage = () => {
         deductionColumns={deductionColumns}
         loanColumns={loanColumns}
         totals={totals}
+        currencyName={currencyName}
       />
     )}
   </>
@@ -70,7 +71,7 @@ const PreviewRegisterPDF = ({
   deductionColumns = [],
   loanColumns = [],
   employeeData = [],
-  totals = {}
+  totals = {},currencyName=""
 }) => {
   const toFixed = (value) => Number(value || 0).toFixed(2);
 
@@ -175,7 +176,7 @@ const PreviewRegisterPDF = ({
             ))}
 
             <td>{toFixed(totals.totalDeductions)}</td>
-            <td>{toFixed(totals.netPayableSalary)}</td>
+            <td>{currencyName} {toFixed(totals.netPayableSalary)}</td>
           </tr>
         </tbody>
       </table>

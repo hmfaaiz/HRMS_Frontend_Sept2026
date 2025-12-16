@@ -353,6 +353,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
           otherwise: Yup.number().notRequired(),
         }),
       default_loan_accountId: Yup.number()
+      .nullable()
         .when('isEnableAccounting', {
           is: true, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.required).required(VALIDATION_MESSAGES.required),
@@ -471,6 +472,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
 
       SalaryPolicy_Days: Yup.number()
+      .nullable()
         .when('SalaryPolicy', {
           is: 1, // if select value is 2
           then: Yup.number().min(1, VALIDATION_MESSAGES.minZeroValue).max(99, "Max 99 days").required(VALIDATION_MESSAGES.required),
@@ -542,7 +544,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
     isEnableAccounting: false,
     basic_pay_accountId: "",
     payroll_payable_accountId: "",
-    default_loan_accountId: "",
+    default_loan_accountId: null,
     // isGroupEarningOnAccount: "",
     // isGroupDeduductionOnAccount: "",
     // isAccrueGratuityOnPayroll: "",
@@ -598,6 +600,8 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
 
     SalaryPolicy:0,
+
+    OvertimeBasis:"",
 
     //-- Other
   };
@@ -890,7 +894,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
                 <div className="flex justify-between">
                   <h6 className="font-bold mb-0 text-primary ">
-                    Payroll Configuration From
+                    Payroll Configuration
                   </h6>
                   <X title="Close" onClick={() =>
                     user.setActive(false)} className="w-4 h-4 text-black cursor-pointer" />
@@ -1525,6 +1529,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                         options={overtimeBasisOptions}
                         isDisabled={Boolean(user?.readOnly)}
                       />
+                      
                     </div>
 
                   </div>
