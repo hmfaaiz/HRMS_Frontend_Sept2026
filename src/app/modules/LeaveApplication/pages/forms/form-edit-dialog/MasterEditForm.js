@@ -95,7 +95,8 @@ export function MasterEditForm({
               // if sandwich is disabled → skip balance check completely
               if (
                 sandwichPolicy?.isSandwich == 0 ||
-                sandwichPolicy?.isSandwich == 2
+                sandwichPolicy?.isSandwich == 2 ||
+                sandwichPolicy?.isSandwich == 1
               )
                 return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
@@ -134,7 +135,8 @@ export function MasterEditForm({
               // if sandwich is disabled → skip balance check completely
               if (
                 sandwichPolicy?.isSandwich == 0 ||
-                sandwichPolicy?.isSandwich == 2
+                sandwichPolicy?.isSandwich == 2 ||
+                sandwichPolicy?.isSandwich == 1
               )
                 return true;
               if (!from || !to || !leaveType) return true; // skip if missing values
