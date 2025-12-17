@@ -12,6 +12,9 @@ const initialApplicantProfileState = {
     lastError: null,
     dataForRead: false,
     pdfGenerateLoading: false,
+    pdfLoading: false,
+    csvLoading: false,
+    excelLoading: false,
 };
 
 
@@ -31,6 +34,16 @@ export const ApplicantProfileSlice = createSlice({
                 state.listLoading = false;
             } else if (action.payload.callType === callTypes.pdfGenerate) {
                 state.pdfGenerateLoading = false;
+            }
+            else if (action.payload.callType === callTypes.pdf) {
+                state.pdfLoading = false;
+            }
+
+            else if (action.payload.callType === callTypes.csv) {
+                state.csvLoading = false;
+            }
+            else if (action.payload.callType === callTypes.xlsx) {
+                state.excelLoading = false;
             }
             else {
                 state.actionsLoading = false;
@@ -54,7 +67,7 @@ export const ApplicantProfileSlice = createSlice({
 
         stopCall: (state, action) => {
             state.pdfGenerateLoading = false;
-          
+
 
         },
 
@@ -164,6 +177,30 @@ export const ApplicantProfileSlice = createSlice({
                 return entity;
             });
 
+        },
+
+        pdfFetched: (state, action) => {
+            state.pdfLoading = false;
+        },
+
+        csvFetched: (state, action) => {
+            state.csvLoading = false;
+        },
+
+        excelFetched: (state, action) => {
+            state.excelLoading = false;
+        },
+
+
+        startCall: (state, action) => {
+            state.error = null;
+            if (action.payload.callType === callTypes.list) {
+                state.listLoading = true;
+            } else if (action.payload.callType === callTypes.pdfGenerate) {
+                state.pdfGenerateLoading = true;
+            } else {
+                state.actionsLoading = true;
+            }
         },
 
 

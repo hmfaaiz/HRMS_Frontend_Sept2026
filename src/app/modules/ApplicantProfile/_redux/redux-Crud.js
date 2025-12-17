@@ -13,7 +13,11 @@ export function createApplicantProfile(body) {
 // Read
 export function getAllApplicantProfile(body) {
 
-  return axios.post(`${USERS_URL}/applicant_profile/read-all-applicant-profile`, body);
+  // return axios.post(`${USERS_URL}/applicant_profile/read-all-applicant-profile`, body);
+    const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
+ return axios.post(`${USERS_URL}//applicant_profile/read-all-applicant-profile`, body, config);
 }
 
 export function getApplicantProfileById(id) {

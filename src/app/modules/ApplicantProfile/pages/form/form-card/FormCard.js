@@ -12,7 +12,8 @@ import { FormFIlter } from "../form-filter/FormFIlter";
 import { useSelector, shallowEqual } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, FileSpreadsheet, FileText, Sheet } from "lucide-react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -24,9 +25,12 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess } = useSelector((state) => {
+  const { userAccess, pdfLoading, csvLoading, excelLoading } = useSelector((state) => {
     return {
       userAccess: state.auth.userAccess.applicant_profile,
+      pdfLoading: state?.applicant_profile?.pdfLoading,
+      csvLoading: state?.applicant_profile?.csvLoading,
+      excelLoading: state?.applicant_profile?.excelLoading,
     };
   }, shallowEqual);
 
@@ -46,42 +50,14 @@ export function FormCard() {
   const { entities } = currentState;
 
   return (
-    // <>
-    //   <Card>
-    //     <CardHeader title={CurrentModuleName()}>
-    //       <div className="d-flex justify-content-end align-items-center gap-3 m-4 col-8">
-    //         <div className="col-6">
-    //           <FormFIlter />
-    //         </div>
-    //         <div className=" p-2">
-    //           <CardHeaderToolbar>
-    //             {accessUser && (
-    //               <>
-    //                 <button
-    //                   type="button"
-    //                   className="btn btn-primary "
-    //                   onClick={FormUIProps.newFormButtonClick}
-    //                 >
-    //                   + Applicant Profile
-    //                 </button>
-    //               </>
-    //             )}
-    //           </CardHeaderToolbar>
-    //         </div>
-    //       </div>
-    //     </CardHeader>
 
-    //     <CardBody>
-    //       <FormTable />
-    //     </CardBody>
-    //   </Card>
     <TCard name={CurrentModuleName()}>
       <div className="grid md:grid-cols-7 justify-between  items-center gap-2 ">
-        <div className="grid md:col-span-5"> 
+        <div className="grid md:col-span-5">
           <FormFIlter />
         </div>
 
-        <div className="grid md:col-span-2 items-center gap-2 md:justify-end ">
+         <div className="flex md:col-span-2 items-center gap-2 md:justify-end  ">
           {/* <CardHeaderToolbar> */}
           {accessUser && (
             <>
@@ -96,6 +72,71 @@ export function FormCard() {
               </button>
             </>
           )}
+
+          <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ">
+            <OverlayTrigger
+              overlay={<Tooltip id="products-edit-tooltip">Export PDF</Tooltip>}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={pdfLoading}
+                onClick={() => {
+                  print("pdf");
+                }}
+              >
+                {/* Print PDF */}
+                <FileText className="w-4 h-4 text-black cursor-pointer" />
+                {/* {pdfLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )} */}
+              </button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              overlay={<Tooltip id="products-edit-tooltip">Export CSV</Tooltip>}
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={csvLoading}
+                onClick={() => {
+                  print("csv");
+                }}
+              >
+                {/* Print CSV
+                 */}
+
+                <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
+                {/* {csvLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )} */}
+              </button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="products-edit-tooltip">Export Excel</Tooltip>
+              }
+            >
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                disabled={excelLoading}
+                onClick={() => {
+                  print("excel");
+                }}
+              >
+                {/* Print Excel
+                 */}
+
+                <Sheet className="w-4 h-4 text-black cursor-pointer" />
+                {/* {excelLoading && (
+            <span className="ml-3 mr-3 spinner spinner-white"></span>
+          )} */}
+              </button>
+            </OverlayTrigger>
+          </div>
+
           {/* </CardHeaderToolbar> */}
         </div>
       </div>
