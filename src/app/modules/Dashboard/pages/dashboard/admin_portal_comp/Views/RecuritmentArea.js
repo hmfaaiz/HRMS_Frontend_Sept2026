@@ -164,21 +164,13 @@ const RecuritmentArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Applicants Final Phase"}
-              value={summaryData?.applicantInFinalPhase || 0}
-              keyName={"applicantInFinalPhase"}
-              icon={<NotepadText className="w-5 h-5 text-white" />}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
               name={"Application Phase"}
               value={summaryData?.applicantInApplicationPhase || 0}
               keyName={"applicantInApplicationPhase"}
               icon={<FileUser className="w-5 h-5 text-white" />}
             />
+          </div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
@@ -187,25 +179,15 @@ const RecuritmentArea = ({
               keyName={"applicantInEvaluationPhase"}
               icon={<ListCheck className="w-5 h-5 text-white" />}
             />
+            <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+              name={"Applicants Finalization Phase"}
+              value={summaryData?.applicantInFinalPhase || 0}
+              keyName={"applicantInFinalPhase"}
+              icon={<NotepadText className="w-5 h-5 text-white" />}
+            />
           </div>
-          {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-              name={"Active Jobs"}
-              value={summaryData?.openJobs || 0}
-              keyName={"openJobs"}
-              icon={<Briefcase className="w-5 h-5 text-white" />}
-            />
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-              name={"Active Applicants"}
-              value={summaryData?.applicant || 0}
-              keyName={"applicant"}
-              icon={<User className="w-5 h-5 text-white" />}
-            />
-          </div> */}
         </div>
         {/* chart area  */}
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">

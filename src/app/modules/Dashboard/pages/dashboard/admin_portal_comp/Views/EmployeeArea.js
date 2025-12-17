@@ -186,15 +186,6 @@ const EmployeeArea = ({
               keyName={"averageAgeEmployee"}
               icon={<Cake className="w-5 h-5 text-white" />}
             />
-            {/* <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-
-              name={"Applicants Final Phase"}
-              value={summaryData?.applicantInFinalPhase || 0}
-              keyName={"applicantInFinalPhase"}
-              icon={<User className="w-5 h-5 text-white" />}
-            /> */}
           </div>
         </div>
         {/* chart area  */}

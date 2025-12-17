@@ -6,15 +6,16 @@ import { formatDates, formatTime } from "../../../../../utils/common";
 import { toast } from "react-toastify";
 
 export const AttendanceMarking = () => {
-  const { attRecord } = useSelector(
+  const { attRecord, currentDateTime } = useSelector(
     (state) => ({
       attRecord: state?.dashboard?.currentAtt,
+      currentDateTime: state?.dashboard?.currentDateTime,
     }),
     shallowEqual
   );
   const attendanceDetail = attRecord?.attendanceDetail;
   const currentShift = attRecord?.currentShift;
-  const localDate = attRecord?.localDate;
+  const localDate = currentDateTime;
   const allowedAnywhere = attRecord?.allowedAnywhere;
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -22,8 +23,9 @@ export const AttendanceMarking = () => {
 
   // 1. Update date when API updates
   useEffect(() => {
-    if (localDate) {
-      setDate(new Date(localDate));
+    if (localDate?.dateTime) {
+      // Convert the payload to JS Date
+      setDate(new Date(localDate.dateTime));
     }
   }, [localDate]);
 
@@ -39,6 +41,7 @@ export const AttendanceMarking = () => {
 
   useEffect(() => {
     dispatch(action.getAttendance(setLoading));
+    dispatch(action.getCurrentTime(setLoading));
   }, []);
 
   const handleToggle = () => {
@@ -144,31 +147,35 @@ export const AttendanceMarking = () => {
       <h6 className="font-bold mb-0 text-primary">Attendance</h6>
       <div className="inline-flex me-5 relative col-span-3">
         {/* Toggle */}
-        <div className="checkbox-wrapper-3">
-          <input
-            type="checkbox"
-            id="cbx-3"
-            disabled={loading}
-            checked={attendanceDetail?.Status == "01"}
-            onChange={handleToggle}
-          />
-          <label htmlFor="cbx-3" className="toggle">
-            <span></span>
-          </label>
-        </div>
+        {date && (
+          <>
+            <div className="checkbox-wrapper-3">
+              <input
+                type="checkbox"
+                id="cbx-3"
+                disabled={loading}
+                checked={attendanceDetail?.Status == "01"}
+                onChange={handleToggle}
+              />
+              <label htmlFor="cbx-3" className="toggle">
+                <span></span>
+              </label>
+            </div>
 
-        {/* Info section */}
-        <div className="ms-3">
-          <div className="text-sm text-black block">
-            {attendanceDetail?.Status == "01" ? "Check Out" : "Check In"}
-          </div>
-          <div className="text-black text-sm block">
-            {date && format(date, "EEEE do MMMM yyyy")}
-          </div>
-          <div className="text-black text-lg font-semibold block">
-            {date && format(date, "hh:mm:ss a")}
-          </div>
-        </div>
+            {/* Info section */}
+            <div className="ms-3">
+              <div className="text-sm text-black block">
+                {attendanceDetail?.Status == "01" ? "Check Out" : "Check In"}
+              </div>
+              <div className="text-black text-sm block">
+                {date && format(date, "EEEE do MMMM yyyy")}
+              </div>
+              <div className="text-black text-lg font-semibold block">
+                {date && format(date, "hh:mm:ss a")}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Inline loader over toggle */}
         {loading && (

@@ -168,7 +168,8 @@ function LeaveTypePolicyTable({
 
                         {/* Entitle At Field Starts */}
                         <td className="max-w-48">
-                          <Field
+                          {allLeaveTypeMap?.get(row?.leaveType || "")
+                                  ?.type == 1 && row?.leaveType ? <> <Field
                             name={`leavetypePolicies[${index}].entitledAt`}
                             component={Select}
                             className={
@@ -210,7 +211,8 @@ function LeaveTypePolicyTable({
                                   errors.leavetypePolicies?.[index]?.entitledAt
                                 }
                               />
-                            )}
+                            )} </>
+                            : row?.leaveType && "Special Leave"}
                         </td>
                         {/* Entitle At Field Ends */}
 

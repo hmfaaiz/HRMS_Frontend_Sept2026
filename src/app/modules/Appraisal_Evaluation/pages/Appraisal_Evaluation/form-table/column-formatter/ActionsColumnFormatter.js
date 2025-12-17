@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { CirclePower, Eye, IdCardLanyard, Pencil, Trash2 } from "lucide-react";
+import { CircleArrowOutUpRight, CirclePower, Eye, IdCardLanyard, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -49,7 +49,7 @@ export function ActionsColumnFormatter(
           }
         >
           <a title="" className="" onClick={() => openEditFormDialog(row.Id)}>
-            <Pencil className="w-4 h-4 text-black cursor-pointer" />
+            <CircleArrowOutUpRight  className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
       )}

@@ -213,7 +213,7 @@ const DefaultArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Applicants Final Phase"}
+              name={"Applicants Finalization Phase"}
               value={summaryData?.applicantInFinalPhase || 0}
               keyName={"applicantInFinalPhase"}
               icon={<NotepadText className="w-5 h-5 text-white" />}

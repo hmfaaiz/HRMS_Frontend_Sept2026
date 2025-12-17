@@ -421,6 +421,18 @@ export const getAttendance = (setLoading) => (dispatch) => {
     });
 };
 
+export const getCurrentTime = (setLoading) => (dispatch) => {
+  return requestFromServer
+    .getCurrentDateTime(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    .then((res) => {
+      dispatch(actions.CurrentDateTimeFetch(res?.data));
+      setLoading(false);
+    })
+    .catch((error) => {
+      setLoading(false);
+    });
+};
+
 export const createAttendance = (body, setLoading) => (dispatch) => {
   return requestFromServer
     .createAttendance(body)
