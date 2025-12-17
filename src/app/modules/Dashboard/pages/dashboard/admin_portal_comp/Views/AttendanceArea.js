@@ -25,29 +25,6 @@ const AttendanceArea = ({
     <div className="grid grid-cols-4 lg:grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
         <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
-          {/* dropdown area  */}
-          {/* <div>
-            <SearchSelect
-              name="subsidiaryId"
-              isDisabled={!allSubsidiaryList}
-              label={<span>Subsidiary</span>}
-              onChange={(e) =>
-                setSummaryFilter({
-                  ...summaryFilter,
-                  subsidiaryId: e.value,
-                })
-              }
-              value={
-                allSubsidiaryList?.find(
-                  (e) => e?.value === summaryFilter?.subsidiaryId
-                ) || ""
-              }
-              options={[
-                { value: "", label: "All" },
-                ...(Array.isArray(allSubsidiaryList) ? allSubsidiaryList : []),
-              ]}
-            />
-          </div> */}
           <div>
             <SearchSelect
               name="gradeId"
@@ -163,42 +140,6 @@ const AttendanceArea = ({
               icon={<HouseWifi className="w-5 h-5 text-white" />}
             />
           </div>
-          {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-              name={"Active Jobs"}
-              value={summaryData?.openJobs || 0}
-              keyName={"openJobs"}
-              icon={<Briefcase className="w-5 h-5 text-white" />}
-            />
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-              name={"Active Applicants"}
-              value={summaryData?.applicant || 0}
-              keyName={"applicant"}
-              icon={<User className="w-5 h-5 text-white" />}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-              name={"Applicants Hired"}
-              value={summaryData?.applicantHiredThisYear || 0}
-              keyName={"applicantHiredThisYear"}
-              icon={<User className="w-5 h-5 text-white" />}
-            />
-            <StatsCard
-              summaryFilter={summaryFilter}
-              setSummaryModalHeading={setSummaryModalHeading}
-              name={"Applicants Final Phase"}
-              value={summaryData?.applicantInFinalPhase || 0}
-              keyName={"applicantInFinalPhase"}
-              icon={<User className="w-5 h-5 text-white" />}
-            />
-          </div> */}
         </div>
         {/* chart area  */}
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">

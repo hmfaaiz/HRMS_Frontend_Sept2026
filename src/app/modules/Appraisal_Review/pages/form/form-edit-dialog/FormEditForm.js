@@ -638,7 +638,11 @@ export function MasterEditForm({
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td>HR Evaluation</td>
+                                      <td>
+                                        <strong style={{ fontWeight: 700 }}>
+                                          HR Evaluation
+                                        </strong>
+                                      </td>
                                       <td>{values?.hrWeight}%</td>
                                       <td className="text-center">
                                         {values?.hrSelfRating} |{" "}
@@ -658,7 +662,11 @@ export function MasterEditForm({
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td>General Evaluation</td>
+                                      <td>
+                                        <strong style={{ fontWeight: 700 }}>
+                                          General Evaluation
+                                        </strong>
+                                      </td>
                                       <td>{values?.generalWeight}%</td>
                                       <td className="text-center">
                                         {values?.generalSelfRating} |{" "}
@@ -678,7 +686,11 @@ export function MasterEditForm({
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td>Goals & Objective</td>
+                                      <td>
+                                        <strong style={{ fontWeight: 700 }}>
+                                          Goals & Objective
+                                        </strong>
+                                      </td>
                                       <td>{values?.goalWeight}%</td>
                                       <td className="text-center">
                                         {values?.goalSelfRating} |{" "}
@@ -698,11 +710,10 @@ export function MasterEditForm({
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td
-                                        style={{ fontWeight: "700 !important" }}
-                                        className="text-tprimary"
-                                      >
-                                        Final Rating
+                                      <td className="text-tprimary">
+                                        <strong style={{ fontWeight: 700 }}>
+                                          Final Rating
+                                        </strong>
                                       </td>
                                       <td></td>
                                       <td className="text-center"></td>
@@ -798,15 +809,27 @@ export function MasterEditForm({
                               <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                                 <tbody>
                                   <tr>
-                                    <td>Self Recommendation</td>
+                                    <td>
+                                      <strong style={{ fontWeight: 700 }}>
+                                        Self Recommendation
+                                      </strong>
+                                    </td>
                                     <td>{values?.selfRecommendation || ""}</td>
                                   </tr>
                                   <tr>
-                                    <td>HR Recommendation</td>
+                                    <td>
+                                      <strong style={{ fontWeight: 700 }}>
+                                        HR Recommendation
+                                      </strong>
+                                    </td>
                                     <td>{values?.hrRecommendation || ""}</td>
                                   </tr>
                                   <tr>
-                                    <td>Manager Recommendation</td>
+                                    <td>
+                                      <strong style={{ fontWeight: 700 }}>
+                                        Manager Recommendation
+                                      </strong>
+                                    </td>
                                     <td
                                       dangerouslySetInnerHTML={{
                                         __html: values?.managerRecommendation,
@@ -855,7 +878,7 @@ export function MasterEditForm({
                   )}
 
                   {/* Finalize Button */}
-                  {!isUserForRead && !values.isFinalize && (
+                  {!isUserForRead && !values.isFinalize && id && (
                     <button
                       type="button"
                       className="btn btn-success btn-elevate"

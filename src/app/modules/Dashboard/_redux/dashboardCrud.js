@@ -160,6 +160,10 @@ export async function getAttendance(body) {
   return axios.post(`${USERS_URL}/emp_portal/read-attendance` , body);
 }
 
+export async function getCurrentDateTime(payload) {
+  return axios.get(`https://timeapi.io/api/time/current/zone?timeZone=${payload}`);
+}
+
 export async function createAttendance(body) {
   return axios.post(`${USERS_URL}/emp_portal/create-attendance` , body);
 }

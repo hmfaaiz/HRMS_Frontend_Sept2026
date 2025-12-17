@@ -49,14 +49,14 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
         <div className="p-2 border rounded-md ">
           <div className="grid grid-cols-2 text-sm gap-1">
             <p className="mb-0">
-              <span className="font-semibold">Code:</span> {emp?.employeeCode}
+              <span className="font-semibold">Employee Code:</span> {emp?.employeeCode}
             </p>
             <p className="mb-0">
-              <span className="font-semibold">Name:</span> {emp?.firstName}{" "}
+              <span className="font-semibold">Employee Name:</span> {emp?.firstName}{" "}
               {emp?.middleName} {emp?.lastName}
             </p>
             <p className="mb-0">
-              <span className="font-semibold">Designaion:</span>{" "}
+              <span className="font-semibold">Designation:</span>{" "}
               {emp?.designation?.formName}
             </p>
             <p className="mb-0">
@@ -69,7 +69,7 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
               {emp?.ReportTo?.lastName}
             </p>
             <p className="mb-0">
-              <span className="font-semibold">Manager Designaion:</span>{" "}
+              <span className="font-semibold">Manager Designation:</span>{" "}
               {emp?.ReportTo?.designation?.formName}
             </p>
           </div>

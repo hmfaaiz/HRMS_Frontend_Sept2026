@@ -99,6 +99,7 @@ const initialDashboardState = {
   allFSApprovedEmp : [],
   allTaxYearSetupList : [],
   allowRequestBySenior : false,
+  currentDateTime : null,
 };
 
 export const callTypes = {
@@ -355,6 +356,9 @@ export const dashboardSlice = createSlice({
     },
     CurrentAttFetch: (state, action) => {
       state.currentAtt = action.payload;
+    },
+    CurrentDateTimeFetch: (state, action) => {
+      state.currentDateTime = action.payload;
     },
     AllUserFetch: (state, action) => {
       state.getAllUserList = action.payload;

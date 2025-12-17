@@ -141,7 +141,28 @@ export function FormTable() {
         maxWidth: "100px",
       },
     },
-    
+    {
+      dataField: "isFinalize",
+      text: "Approval Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        let text = "";
+        let classname = "";
+        if (cell) {
+          classname = "text-approved font-bold";
+          text = "Approved";
+        } else {
+          classname = "text-pending font-bold";
+          text = "Pending";
+        }
+        return <span className={classname}>{text}</span>;
+      },
+    },
     {
       dataField: "action",
       text: "Actions",

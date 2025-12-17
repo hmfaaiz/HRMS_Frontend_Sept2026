@@ -1,7 +1,7 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import { User, Briefcase } from "lucide-react";
+import { User, Briefcase, DollarSign, IdCardLanyard } from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -19,12 +19,12 @@ const PayrollArea = ({
   setSummaryModalHeading,
   setBigTableModalData,
   holidayList,
+  summaryFilter,
 }) => {
   return (
     <div className="grid grid-cols-4 lg:grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
-        {/*         <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
-          
+        <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
           <div>
             <SearchSelect
               name="gradeId"
@@ -32,14 +32,16 @@ const PayrollArea = ({
               label={<span>Grade</span>}
               onChange={(e) =>
                 setSummaryFilter({
-                  ...setSummaryFilter,
+                  ...summaryFilter,
                   gradeId: e.value,
                 })
               }
               value={
-                allEmployeegradeList?.find(
-                  (e) => e?.value === setSummaryFilter?.gradeId
-                ) || ""
+                summaryFilter?.gradeId == ""
+                  ? { value: "", label: "All" }
+                  : allEmployeegradeList?.find(
+                      (option) => option.value === summaryFilter.gradeId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -56,14 +58,16 @@ const PayrollArea = ({
               label={<span>Department</span>}
               onChange={(e) =>
                 setSummaryFilter({
-                  ...setSummaryFilter,
+                  ...summaryFilter,
                   departmentId: e.value,
                 })
               }
               value={
-                allParentDept?.find(
-                  (e) => e?.value === setSummaryFilter?.departmentId
-                ) || ""
+                summaryFilter?.departmentId == ""
+                  ? { value: "", label: "All" }
+                  : allParentDept?.find(
+                      (option) => option.value === summaryFilter?.departmentId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -78,14 +82,16 @@ const PayrollArea = ({
               label={<span>Location</span>}
               onChange={(e) =>
                 setSummaryFilter({
-                  ...setSummaryFilter,
+                  ...summaryFilter,
                   locationId: e.value,
                 })
               }
               value={
-                allLocationChildMenus?.find(
-                  (e) => e?.value === setSummaryFilter?.locationId
-                ) || ""
+                summaryFilter?.locationId == ""
+                  ? { value: "", label: "All" }
+                  : allLocationChildMenus?.find(
+                      (option) => option.value === summaryFilter?.locationId
+                    ) || null
               }
               options={[
                 { value: "", label: "All" },
@@ -98,69 +104,59 @@ const PayrollArea = ({
           <div></div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Total Active Employees"}
-              value={summaryData?.activeEmployee || 0}
+              summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"activeEmployee"}
-              icon={<User className="w-5 h-5 text-white" />}
+              name={"Active Loans"}
+              value={summaryData?.activeLoan || 0}
+              keyName={"activeLoan"}
+              icon={<DollarSign className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Inactive Employees in current Fiscal Year"}
-              value={summaryData?.inActiveEmployee || 0}
+              summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"inActiveEmployee"}
-              icon={<User className="w-5 h-5 text-white" />}
+              name={"EOBI Entitled"}
+              value={summaryData?.eobiEmployee || 0}
+              keyName={"eobiEmployee"}
+              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"New Employees"}
-              value={summaryData?.newEmployee || 0}
+              summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"newEmployee"}
-              icon={<User className="w-5 h-5 text-white" />}
+              name={"Social Security Entitled"}
+              value={summaryData?.socialSecurityEmployee || 0}
+              keyName={"socialSecurityEmployee"}
+              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Today Employees On Leave"}
-              value={summaryData?.employeeOnLeave || 0}
+              summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"employeeOnLeave"}
-              icon={<User className="w-5 h-5 text-white" />}
+              name={"Provident Fund Entitled"}
+              value={summaryData?.pfEmployee || 0}
+              keyName={"pfEmployee"}
+              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
-              name={"Active Jobs"}
-              value={summaryData?.openJobs || 0}
+              summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"openJobs"}
-              icon={<Briefcase className="w-5 h-5 text-white" />}
+              name={"Gratuity Entitled"}
+              value={summaryData?.gratuityEmployee || 0}
+              keyName={"gratuityEmployee"}
+              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
             />
             <StatsCard
-              name={"Active Applicants"}
-              value={summaryData?.applicant || 0}
+              summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"applicant"}
-              icon={<User className="w-5 h-5 text-white" />}
+              name={"Overtime Entitled"}
+              value={summaryData?.overTimeEmployee || 0}
+              keyName={"overTimeEmployee"}
+              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
             />
           </div>
-          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
-            <StatsCard
-              name={"Applicants Hired"}
-              value={summaryData?.applicantHiredThisYear || 0}
-              setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"applicantHiredThisYear"}
-              icon={<User className="w-5 h-5 text-white" />}
-            />
-            <StatsCard
-              name={"Applicants Final Phase"}
-              value={summaryData?.applicantInFinalPhase || 0}
-              setSummaryModalHeading={setSummaryModalHeading}
-              keyName={"applicantInFinalPhase"}
-              icon={<User className="w-5 h-5 text-white" />}
-            />
-          </div>
-        </div> */}
+        </div>
         {/* chart area  */}
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
