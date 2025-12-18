@@ -13,7 +13,11 @@ export function createJobVacancy(body) {
 // Read
 export function getAllJobVacancy(body) {
 
-  return axios.post(`${USERS_URL}/job_vacancy/read-all-job-vacancy`, body);
+
+  const config = {
+    responseType: (body?.pdf || body?.excel  || body?.csv) ? 'arraybuffer' : 'json', 
+  };
+ return axios.post(`${USERS_URL}/job_vacancy/read-all-job-vacancy`, body, config);
 }
 
 export function getJobVacancyById(id) {
