@@ -49,14 +49,14 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
         <div className="p-2 border rounded-md ">
           <div className="grid grid-cols-2 text-sm gap-1">
             <p className="mb-0">
-              <span className="font-semibold">Code:</span> {emp?.employeeCode}
+              <span className="font-semibold">Employee Code:</span> {emp?.employeeCode}
             </p>
             <p className="mb-0">
-              <span className="font-semibold">Name:</span> {emp?.firstName}{" "}
+              <span className="font-semibold">Employee Name:</span> {emp?.firstName}{" "}
               {emp?.middleName} {emp?.lastName}
             </p>
             <p className="mb-0">
-              <span className="font-semibold">Designaion:</span>{" "}
+              <span className="font-semibold">Designation:</span>{" "}
               {emp?.designation?.formName}
             </p>
             <p className="mb-0">
@@ -69,7 +69,7 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
               {emp?.ReportTo?.lastName}
             </p>
             <p className="mb-0">
-              <span className="font-semibold">Manager Designaion:</span>{" "}
+              <span className="font-semibold">Manager Designation:</span>{" "}
               {emp?.ReportTo?.designation?.formName}
             </p>
           </div>
@@ -114,79 +114,7 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
           </div>
         </div>
 
-        {/* Incidents */}
-        {incidents?.length > 0 && (
-          <div className="p-2 border rounded-md ">
-            <div className="flex items-center mb-1">
-              <h6 className="font-bold w-fit mb-0 text-primary">
-                Incident Detail - During the Period
-              </h6>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <div className="react-bootstrap-table table-responsive">
-                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                  <thead>
-                    <tr className="custom-table-header">
-                      <th>Incident Detail</th>
-                      <th>Action Taken</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {incidents?.map((e) => {
-                      return (
-                        <tr>
-                          <td>{e?.incidentDetail || "-"}</td>
-                          <td>{e?.actionTaken || "-"}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Skills & Certifications */}
-        {skills?.length > 0 && (
-          <div className="p-2 border rounded-md ">
-            <div className="flex items-center mb-1">
-              <h6 className="font-bold w-fit mb-0 text-primary">
-                Skill & Certification - Done During the Period
-              </h6>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <div className="react-bootstrap-table table-responsive">
-                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                  <thead>
-                    <tr className="custom-table-header">
-                      <th>Name</th>
-                      <th>Detail</th>
-                      <th>Rating</th>
-                      <th>Start Date</th>
-                      <th>End Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {skills?.map((e) => {
-                      return (
-                        <tr>
-                          <td>{e?.skill || "-"}</td>
-                          <td>{e?.description || "-"}</td>
-                          <td>{e?.ratingScale || "-"}</td>
-                          <td>{e?.startDate || "-"}</td>
-                          <td>{e?.endDate || "-"}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Qualification */}
+{/* Qualification */}
         {qualifications?.length > 0 && (
           <div className="p-2 border rounded-md ">
             <div className="flex items-center mb-1">
@@ -226,6 +154,80 @@ export function FormAnalyticsDialog({ id, empId, show, onHide }) {
             </div>
           </div>
         )}
+        {/* Skills & Certifications */}
+        {skills?.length > 0 && (
+          <div className="p-2 border rounded-md ">
+            <div className="flex items-center mb-1">
+              <h6 className="font-bold w-fit mb-0 text-primary">
+                Skill & Certification - During the Period
+              </h6>
+            </div>
+            <div className="w-full overflow-x-auto">
+              <div className="react-bootstrap-table table-responsive">
+                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                  <thead>
+                    <tr className="custom-table-header">
+                      <th>Name</th>
+                      <th>Detail</th>
+                      <th>Rating</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {skills?.map((e) => {
+                      return (
+                        <tr>
+                          <td>{e?.skill || "-"}</td>
+                          <td>{e?.description || "-"}</td>
+                          <td>{e?.ratingScale || "-"}</td>
+                          <td>{e?.startDate || "-"}</td>
+                          <td>{e?.endDate || "-"}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Incidents */}
+        {incidents?.length > 0 && (
+          <div className="p-2 border rounded-md ">
+            <div className="flex items-center mb-1">
+              <h6 className="font-bold w-fit mb-0 text-primary">
+                Incident Detail - During the Period
+              </h6>
+            </div>
+            <div className="w-full overflow-x-auto">
+              <div className="react-bootstrap-table table-responsive">
+                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                  <thead>
+                    <tr className="custom-table-header">
+                      <th>Incident Detail</th>
+                      <th>Action Taken</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {incidents?.map((e) => {
+                      return (
+                        <tr>
+                          <td>{e?.incidentDetail || "-"}</td>
+                          <td>{e?.actionTaken || "-"}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        
+
+        
       </Modal.Body>
 
       <Modal.Footer className="border-t">
