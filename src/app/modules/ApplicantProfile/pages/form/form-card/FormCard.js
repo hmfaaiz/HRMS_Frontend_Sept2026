@@ -22,6 +22,8 @@ export function FormCard() {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
       openEditFormDialog: FormUIContext.openEditFormDialog,
+       queryParams: FormUIContext.queryParams,
+      setQueryParams: FormUIContext.setQueryParams,
     };
   }, [FormUIContext]);
 
@@ -48,6 +50,30 @@ export function FormCard() {
   // const { currentState } = useSelector();
 
   const { entities } = currentState;
+
+    const print = async (value) => {
+      let updatedQueryParams = {
+        ...FormUIProps.queryParams,
+        csv: false,
+        excel: false,
+        pdf: false,
+        [value]: true,
+      };
+  
+      // Set the updated queryParams
+      FormUIProps.setQueryParams(updatedQueryParams);
+  
+      await dispatch(actions.fetchJobVacancy(FormUIProps.queryParams));
+      updatedQueryParams = {
+        ...FormUIProps.queryParams,
+        csv: false,
+        excel: false,
+        pdf: false,
+        [value]: false,
+      };
+  
+      FormUIProps.setQueryParams(updatedQueryParams);
+    };
 
   return (
 
