@@ -792,7 +792,7 @@ export function FormEditForm({
 
             }
 
-            if (x.isPartOfGrossSalary) {
+            if (x.isPartOfGrossSalary && x.transactionType == "Earning") {
               basicSalaryNumber += x.updatedAmount;
             }
           }
