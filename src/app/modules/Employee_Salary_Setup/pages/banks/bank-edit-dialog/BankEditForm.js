@@ -718,14 +718,16 @@ export function BankEditForm({
 
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList.map((x) => {
-          if (x.calculation_type == "% Of Basic") {
+          if (x.calculation_type == "% Of Basic" ) {
             // x.amount = (originalSalaryNumber * x.factorValue) / 100;
             x.amount = parseFloat(((originalSalaryNumber * x.factorValue) / 100).toFixed(2));
             if (!roundingPolicyAmount) {
               x.amount = Math.round(x.amount); // nearest integer tak round
 
             }
-            if (x.isPartOfGrossSalary) {
+            // console.log("x.amount1111", x.amount);
+            if (x.isPartOfGrossSalary && x.transactionType == "Earning") {
+              
               basicSalaryNumber += x.amount;
             }
           }
