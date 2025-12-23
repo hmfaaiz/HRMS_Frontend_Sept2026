@@ -64,7 +64,8 @@ export const deleteEmployeeLoanRequest= (id) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(SERVER_MESSAGES.deletedFail);
+      console.log("error1111",error.response.data.message);
+      toast.error(error.response.data.message || SERVER_MESSAGES.deletedFail);
     });
 };
 
