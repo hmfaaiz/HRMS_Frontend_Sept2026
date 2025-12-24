@@ -15,8 +15,8 @@ import { CirclePlus, FileText } from "lucide-react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { clearData } from "../../../_redux/bankActions";
-
-export function BanksCard() {
+import * as actions from "../../../_redux/bankActions";
+export function BanksCard({onHide}) {
   const banksUIContext = useBanksUIContext();
   const BanksUIProps = useMemo(() => {
     return {
@@ -24,6 +24,8 @@ export function BanksCard() {
       openEditBankDialog: banksUIContext.openEditBankDialog,
       panelMode: banksUIContext.panelMode,
       setPanelMode: banksUIContext.setPanelMode,
+        queryParams: banksUIContext.queryParams,
+      setQueryParams: banksUIContext.setQueryParams,
     };
   }, [banksUIContext]);
 
@@ -37,6 +39,38 @@ export function BanksCard() {
     (item) => item.componentName === "CreateEmployeeSalary"
   );
 const dispatch = useDispatch();
+
+  const fetchInctive = () => {
+    onHide()
+    dispatch(actions.clearData());
+    const updatedQueryParams = {
+      ...BanksUIProps.queryParams,
+      isActive: false,
+      pageNumber: 1, // Toggle the isActive flag
+    };
+
+    // Set the updated queryParams
+    BanksUIProps.setQueryParams(updatedQueryParams);
+    // initialFilter.isActive = false
+
+    dispatch(actions.fetchUsers(BanksUIProps.queryParams));
+  };
+
+  const fetchActive = () => {
+    onHide()
+    dispatch(actions.clearData());
+    const updatedQueryParams = {
+      ...BanksUIProps.queryParams,
+      isActive: true,
+      pageNumber: 1, // Toggle the isActive flag
+    };
+
+    // Set the updated queryParams
+    BanksUIProps.setQueryParams(updatedQueryParams);
+    // initialFilter.isActive = true
+
+    dispatch(actions.fetchUsers(BanksUIProps.queryParams));
+  };
   return (
     // <>
 
@@ -70,6 +104,37 @@ const dispatch = useDispatch();
     //     </CardBody>
     //   </Card >
     <TCard name={CurrentModuleName()}>
+
+         <div className="grid md:grid-cols-6">
+
+            <div className="">
+              <button
+                type="button"
+                className={`btn mr-2 rounded-xl ${BanksUIProps.queryParams?.isActive
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+                  }`}
+                onClick={fetchActive}
+              >
+                Active Employee
+              </button>
+            </div>
+            <div className="">
+              <button
+                type="button"
+                className={`btn mr-2 rounded-xl ${!BanksUIProps.queryParams?.isActive
+                  ? "bg-black text-white"
+                  : "btn-secondary"
+                  }`}
+                onClick={fetchInctive}
+              >
+                Inactive Employee
+              </button>
+            </div>
+
+
+
+          </div>
       <div className="flex justify-between items-center flex-wrap gap-2">
         <BanksFilter />
         <div className="flex items-center gap-2">

@@ -150,7 +150,7 @@ export function EmployeeSalarySetupPage({ history }) {
 
 
         <BanksUIProvider BanksUIEvents={BanksUIEvents}>
-            <BanksCard />
+            <BanksCard  onHide={() => history.push("/employee_salary/read-all-employee-salary")}/>
 
                 {accessUser && (
                      <Route path="/employee_salary/read-all-employee-salary/new" render={({ match, history }) => (
