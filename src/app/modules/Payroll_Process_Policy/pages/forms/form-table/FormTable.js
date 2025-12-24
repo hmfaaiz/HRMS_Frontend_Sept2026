@@ -693,6 +693,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
         salaryApproverId: user.salaryApproverId,
         loanApproverId: user.loanApproverId,
         payrollApproverId: user.payrollApproverId,
+        separationApproverId: user.separationApproverId,
 
         journalChequeAccountId: user?.journalChequeAccountId,
         journalCashAccountId: user?.journalCashAccountId,
@@ -1017,7 +1018,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                         Approval Authorities
                       </h6>
 
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-2 justify-start">
+                      <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-2 justify-start">
                         <div className="">
                           <label>
                             Salary Setup Approver
@@ -1113,6 +1114,36 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
 
                         </div>
 
+
+                           <div className="">
+                          <label>
+                            Separation Approver
+                          </label>
+
+
+
+
+
+                          <div className="overflow-auto max-h-16 border-none scrollbar-fancy">
+                            {roles?.map((option) => (
+                              <div key={option.Id} className="flex justify-start items-center">
+                                <input className="mr-1"
+                                  name="separationApproverId"
+                                  type="checkbox"
+                                  value={option.value}
+                                  checked={Boolean(values?.separationApproverId?.includes(option?.value?.toString()))}
+                                  onChange={handleChange}
+                                />
+                                <label>{option.label}
+                                </label>
+                              </div>
+                            ))}
+
+                          </div>
+
+
+                        </div>
+
                       </div>
 
                     </div>
@@ -1125,7 +1156,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                     <h6 className="font-bold mb-0 text-primary mt-0">
                       Email Preferences
                     </h6>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-2">
                       {/* <div className="">
                       <SearchSelect
                         name="sender_emailId"
@@ -1145,7 +1176,7 @@ console.log("currentState.userForEdit?.tran_payroll_policy_providentFundAllowanc
                         options={dashboard.allEmployees}
                       />
                     </div> */}
-                      <div className="md:ml-20">
+                      <div className="">
                         <label>Email Recipients</label>
 
 

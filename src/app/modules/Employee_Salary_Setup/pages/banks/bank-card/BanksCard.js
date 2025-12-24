@@ -105,7 +105,7 @@ const dispatch = useDispatch();
     //   </Card >
     <TCard name={CurrentModuleName()}>
 
-         <div className="grid md:grid-cols-6">
+         {/* <div className="grid md:grid-cols-6">
 
             <div className="">
               <button
@@ -134,7 +134,7 @@ const dispatch = useDispatch();
 
 
 
-          </div>
+          </div> */}
       <div className="flex justify-between items-center flex-wrap gap-2">
         <BanksFilter />
         <div className="flex items-center gap-2">
