@@ -21,6 +21,7 @@ import {
   fetchAllEmployeesWithNoPermissionData,
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
+  fetchPayrollConfigApproverPermission,
   getAllJobVacancy,
 
 } from "../../../../../../_metronic/redux/dashboardActions";
@@ -78,6 +79,7 @@ export const getSeparationEditSchema = (formData) => {
 
 
       finalSettlementPolicy: Yup.number()
+      .nullable()
 
         .required(VALIDATION_MESSAGES.required),
 
@@ -85,6 +87,7 @@ export const getSeparationEditSchema = (formData) => {
 
         .required(VALIDATION_MESSAGES.required),
       noticePeriodtype: Yup.number()
+      .nullable()
 
         .required(VALIDATION_MESSAGES.required),
 
@@ -146,6 +149,7 @@ export function FormEditForm({
   const [separateMode, setSeparateMode] = useState("");
   const [empPayrollInfo, setEmpPayrollInfo] = useState("");
   const [empSalInfo, setSalInfo] = useState("");
+  const [ isRoleSeparationApprover, setIsRoleSeparationApprover] = useState("");
 
 
 
@@ -163,6 +167,7 @@ export function FormEditForm({
 
       dispatch(fetchAllFormsMenu(526, "allExitTypeList"));
       dispatch(fetchExitReasonData(formData?.exitTypeId));
+      dispatch(fetchPayrollConfigApproverPermission( "allPayrollConfigApproverPermissionList" ) );
       dispatch(
         fetchAllEmployeesWithNoPermissionData(
           "allEmployeesWithNoPermissionList"
@@ -178,7 +183,7 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-
+  const { auth } = useSelector((state) => state);
   const { currentState } = useSelector((state) => {
     return {
       currentState: state.separation,
@@ -217,33 +222,6 @@ export function FormEditForm({
   ];
 
 
-  // const getServicePeriod = (start, end) => {
-
-  //   if (!start || !end) return "";
-
-  //   const startDate = new Date(start);
-  //   const endDate = new Date(end);
-
-  //   let years = endDate.getFullYear() - startDate.getFullYear();
-  //   let months = endDate.getMonth() - startDate.getMonth();
-  //   let days = endDate.getDate() - startDate.getDate();
-
-
-  //   if (days < 0) {
-  //     months -= 1;
-  //     const prevMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
-  //     days += prevMonth.getDate();
-  //   }
-
-
-  //   if (months < 0) {
-  //     years -= 1;
-  //     months += 12;
-  //   }
-  //   setGetServicePeriod(`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
-
-  //   return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
-  // };
 
   const getServicePeriod = (start, end) => {
     if (!start || !end) return "";
@@ -317,6 +295,36 @@ export function FormEditForm({
       panelMode: FormUIContext.panelMode,
     };
   }, [FormUIContext]);
+
+  console.log("qqqqqqqqqqqqq",dashboard?.allPayrollConfigApproverPermissionList)
+
+
+useEffect(() => {
+  // Filter the permissions based on the subsidiaryId
+  const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
+    (entity) => entity.subsidiaryId === Number(formData?.subsidiaryId)
+  );
+
+  console.log("Filtered Permission:", formData.subsidiaryId, filteredPermission);
+
+  if (filteredPermission?.length > 0) {
+    const permission = filteredPermission[0]; // Access the first matching permission
+
+    const roleId = String(auth?.user?.roleId).trim();
+    
+    // Checking against salaryApproverId, loanApproverId, and payrollApproverId
+    const separationApproverIds = permission?.separationApproverId?.map((id) => String(id).trim());
+
+    // Check if the roleId exists in separationApproverId
+    setIsRoleSeparationApprover(separationApproverIds?.includes(roleId));
+
+    console.log("separationApproverId:", isRoleSeparationApprover);
+  } else {
+    console.log("No permissions found for the given subsidiaryId.");
+  }
+
+}, [formData?.subsidiaryId]); // Re-run this effect if formData.subsidiaryId changes
+console.log("aaaaa11111",formData?.isFromPortal , isRoleSeparationApprover)
 
   return (
     <Formik
@@ -914,7 +922,7 @@ export function FormEditForm({
                     <div>
 
                       <div className="flex items-center gap-1 mt-1">
-                        <label>Accepted By</label>
+                        <label>Accepted By{values?.isFromPortal && !isRoleSeparationApprover}</label>
                         <input
                           name="all_report_to"
                           type="checkbox"
@@ -929,7 +937,7 @@ export function FormEditForm({
                           value={values.all_report_to}
                           checked={values.all_report_to}
                           label="Show All"
-                          disabled={values?.isFromPortal}
+                          disabled={values?.isFromPortal && !isRoleSeparationApprover}
                         />
                         <label>Show All</label>
                         <ErrorMessage
@@ -940,7 +948,7 @@ export function FormEditForm({
                       </div>
                       <SearchSelect
                         name="acceptedEmployeeId"
-                        isDisabled={isdataForRead || !values.employeeId || values?.isFromPortal}
+                        isDisabled={isdataForRead || !values.employeeId ||( values?.isFromPortal && !isRoleSeparationApprover)}
                         // onBlur={() => {
                         //   handleBlur({ target: { name: "countryId" } });
                         // }}
@@ -987,7 +995,7 @@ export function FormEditForm({
                         className="form-control"
                         placeholder="Date of Resignation Acceptance"
                         component={DatePickerField}
-                        disabled={!values.employeeId || values?.isFromPortal}
+                        disabled={!values.employeeId || ( values?.isFromPortal && !isRoleSeparationApprover)}
                         selected={
                           values?.resignationAcceptanceDate
                             ? new Date(values.resignationAcceptanceDate)
