@@ -83,7 +83,7 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
     // dispatch(actions.fetchmoduledata(formUIProps .queryParams))
   }, [userForEdit?.employeeId, formUIProps.queryParams, dispatch,userForEdit]);
 
-  const saveForm = async (data, defMapEarningDeductionList) => {
+  const saveForm = async (data, defMapEarningDeductionList,prevGrossSalary,prevBasicSalary) => {
 
     if (data.revisedDate === null || data.revisedDate === undefined) {
       toast.error("Please select a salary revision date");
@@ -91,7 +91,8 @@ export function FormEditDialog({ id, show, onHide, userForRead, revisedDate,setR
     }
 
     const updatedData = {
-      ...data, forEdit: formUIProps?.ids || "",
+      ...data,prevGrossSalary: prevGrossSalary,
+  prevBasicSalary: prevBasicSalary,forEdit: formUIProps?.ids || "",
       EmpSalEarDeducChild: defMapEarningDeductionList,
     };
 

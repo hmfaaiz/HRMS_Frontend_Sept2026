@@ -41,4 +41,5 @@ export const initialFilter = {
     departmentId:"",
     employeeTypeId:"",
     designationId:"",
+     isActive:true,
 }

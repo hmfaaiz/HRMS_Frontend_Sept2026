@@ -78,15 +78,17 @@ export function BankEditDialog({ id, show, onHide, userForRead, status }) {
     // dispatch(actions.fetchUser(banksUIProps.queryParams))
   }, [id, dispatch, show]);
 
-  const saveEarningDeductionTran = async (user, emp_ed_Obj) => {
+  const saveEarningDeductionTran = async (user, emp_ed_Obj,currentSalaryMethod) => {
     if (!id) {
       delete user.dateOfJoining;
+      
+
       const finalObject = { user };
       const response = await axios.post(
         `${USERS_URL}/employee_salary_earning/update-salary-earning-deduction-bulk`,
         { data: { emp_ed_Obj, employeeId: user.employeeId } }
       );
-
+user.salaryMethod=currentSalaryMethod
       await dispatch(
         actions.createEmployee_Salary(user, disbaleLoading, onHide)
       );

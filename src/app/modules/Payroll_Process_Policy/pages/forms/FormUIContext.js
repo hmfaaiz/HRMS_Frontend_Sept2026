@@ -81,6 +81,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     salaryApproverId:"",
     loanApproverId:"",
     payrollApproverId:"",
+    separationApproverId:"",
 
     SalaryPolicy:"",
     SalaryPolicy_Days:"",
