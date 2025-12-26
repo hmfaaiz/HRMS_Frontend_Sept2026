@@ -52,32 +52,41 @@ const formValidation = Yup.object().shape({
     ), // Only digits validation
 
   eobi_accNo: Yup.string()
-    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("eobi_member", {
       is: true, // Condition to check if eobi_member is true
-      then: Yup.string().required(VALIDATION_MESSAGES.required),
+      then: (schema) =>
+      schema
+        .required(VALIDATION_MESSAGES.required)
+        .max(30, "Maximum 30 characters allowed"),
       otherwise: Yup.string().nullable(), // Optional if eobi_member is false
     }),
 
   pf_accNo: Yup.string()
     .nullable()
-    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("pf_member", {
       is: true, // Condition to check if pf_member is true
-      then: Yup.string().required(VALIDATION_MESSAGES.required),
+      then: (schema) =>
+      schema
+        .required(VALIDATION_MESSAGES.required)
+        .max(30, "Maximum 30 characters allowed"),
       otherwise: Yup.string().nullable(), // Optional if pf_member is false
     }),
 
   social_security_accNo: Yup.string()
-    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("social_security_member", {
       is: true, // Condition to check if social_security_member is true
-      then: Yup.string().required(VALIDATION_MESSAGES.required),
+     then: (schema) =>
+      schema
+        .required(VALIDATION_MESSAGES.required)
+        .max(30, "Maximum 30 characters allowed"),
       otherwise: Yup.string().nullable(), // Optional if social_security_member is false
     }),
 
   pension_accNo: Yup.string()
-    .matches(/^\d+$/, "Must contain only digits") // Only digits validation
+    // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("pension_member", {
       is: true, // Condition to check if pension_member is true
       then: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -88,7 +97,10 @@ const formValidation = Yup.object().shape({
   //   .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
   emp_bank_accNo: Yup.string()
-    .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
+  .nullable()
+    // .matches(/^\d+$/, "Must contain only digits")
+    
+    , // Only digits validation
 
   gratuity_startDate: Yup.date()
     .nullable()
@@ -192,10 +204,14 @@ const formValidation = Yup.object().shape({
   //     otherwise: Yup.number().notRequired(),
   //   }),
 
-  emp_bank_accNo: Yup.number().when("payment_mode_Id", {
+  emp_bank_accNo: Yup.string().when("payment_mode_Id", {
     is: 153, // if select value is 153
-    then: Yup.number().required(VALIDATION_MESSAGES.required),
-    otherwise: Yup.number().notRequired(),
+    // then: Yup.string().required(VALIDATION_MESSAGES.required),
+      then: (schema) =>
+      schema
+        .required(VALIDATION_MESSAGES.required)
+        .max(30, "Maximum 30 characters allowed"),
+    otherwise: Yup.string().notRequired(),
   }),
 });
 export function BankEditForm({
@@ -1111,7 +1127,7 @@ export function BankEditForm({
                         label={
                           <span>
                             {" "}
-                            Gross Salary<span style={{ color: "red" }}>*</span>{currentSalaryMethod}
+                            Gross Salary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         placeholder="Enter Gross Salary"
@@ -1144,7 +1160,7 @@ export function BankEditForm({
                         }}
                         label={
                           <span>
-                            Basic Salary<span style={{ color: "red" }}>*</span>{currentSalaryMethod}
+                            Basic Salary<span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         placeholder="Enter Basic Salary"
@@ -2046,17 +2062,17 @@ export function BankEditForm({
 
                     <div>
                       <Field
-                        maxLength={20}
+                        // maxLength={25}
                         disabled={checkReadOnlyStatus(values, [151, 152])}
                         name="emp_bank_accNo"
                         component={Input}
-                        type="number"
-                        onInput={(e) => {
-                          e.target.value = amountLimitDynamic(
-                            e.target.value,
-                            15
-                          ); // Limit to 3 digits
-                        }}
+                        // type="number"
+                        // onInput={(e) => {
+                        //   e.target.value = amountLimitDynamic(
+                        //     e.target.value,
+                        //     15
+                        //   ); // Limit to 3 digits
+                        // }}
                         // value={clearEmpBankAccField}
                         //onChange={(e) => setEmpBankAccClearField(e.target.value)}
                         placeholder="Enter Bank Account No"
@@ -2353,14 +2369,14 @@ export function BankEditForm({
                             <div>
                               <Field
                                 name="eobi_accNo"
-                                type="number"
+                                // type="number"
                                 component={Input}
-                                onInput={(e) => {
-                                  e.target.value = amountLimitDynamic(
-                                    e.target.value,
-                                    15
-                                  ); // Limit to 3 digits
-                                }}
+                                // onInput={(e) => {
+                                //   e.target.value = amountLimitDynamic(
+                                //     e.target.value,
+                                //     15
+                                //   ); // Limit to 3 digits
+                                // }}
                                 placeholder="Enter EOBI Account No"
                                 label={
                                   <span>
@@ -2449,15 +2465,15 @@ export function BankEditForm({
                             </div>
                             <div>
                               <Field
-                                onInput={(e) => {
-                                  e.target.value = amountLimitDynamic(
-                                    e.target.value,
-                                    15
-                                  ); // Limit to 3 digits
-                                }}
+                                // onInput={(e) => {
+                                //   e.target.value = amountLimitDynamic(
+                                //     e.target.value,
+                                //     15
+                                //   ); // Limit to 3 digits
+                                // }}
                                 name="social_security_accNo"
                                 component={Input}
-                                type="number"
+                                // type="number"
                                 placeholder="Enter Social Security AccNo"
                                 label={
                                   <span>
@@ -2581,14 +2597,14 @@ export function BankEditForm({
                           <div>
                             <Field
                               name="pf_accNo"
-                              type="number"
+                              // type="number"
                               component={Input}
-                              onInput={(e) => {
-                                e.target.value = amountLimitDynamic(
-                                  e.target.value,
-                                  15
-                                ); // Limit to 3 digits
-                              }}
+                              // onInput={(e) => {
+                              //   e.target.value = amountLimitDynamic(
+                              //     e.target.value,
+                              //     15
+                              //   ); // Limit to 3 digits
+                              // }}
                               placeholder="Enter PF Account No"
                               label={
                                 <span>
