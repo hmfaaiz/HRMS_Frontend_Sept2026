@@ -283,8 +283,10 @@ export function FormEditForm({
 
   useEffect(() => {
     if (data) {
-
+console.log("grossSalary111111",data)
       setUser(data);
+      setPrevGrossSalary(data.grossSalary)
+      setPrevBasicSalary(data.basicSalary)
       // setRevisedDate()
     }
   }, [data]);
@@ -294,6 +296,8 @@ export function FormEditForm({
   );
   const [currentSalaryMethod, setcurrentSalaryMethod] = useState("");
   const [comparisonModal, setComparisonModal] = useState("");
+  const [prevGrossSalary, setPrevGrossSalary] = useState("");
+  const [prevBasicSalary, setPrevBasicSalary] = useState("");
   const [salaryApproverPermission, setSalaryApproverPermission] = useState(
     false
   );
@@ -657,7 +661,7 @@ export function FormEditForm({
 
   const addRow = (element) => {
 
-
+console.log("element.target.id11111",element.target.id)
     if (element.target.id === "Other") {
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList,
@@ -704,8 +708,7 @@ export function FormEditForm({
   };
   const calculateEmployeeSalaryPolicy = async (el, setFieldValue, values) => {
 
-    const basicSalaryInputFactor =
-      el.target.form.elements["basicSalaryFactor"].value;
+    const basicSalaryInputFactor = el.target.form.elements["basicSalaryFactor"].value;
     let grossSalaryInput = values.grossSalary;
     let basicSalaryInput = values.basicSalary;
 
@@ -746,6 +749,11 @@ export function FormEditForm({
               if (!roundingPolicyAmount) {
                 x.updatedAmount = Math.round(x.updatedAmount); // nearest integer tak round
               }
+
+            }
+            else if (x.calculation_type == "Fixed Amount" &&  !x.updatedAmount){
+              
+                x.updatedAmount = x.amount;
 
             }
             return x;
@@ -1151,7 +1159,7 @@ export function FormEditForm({
                     ? Number(values.grossSalary)
                     : Number(defGrossSalary))
               },
-              earningDeductionList
+              earningDeductionList,prevGrossSalary,prevBasicSalary
             );
           }
         }}
@@ -1197,145 +1205,6 @@ export function FormEditForm({
               </div>)}
 
               {comparisonModal && (
-                // <CustomModal
-                //   show={comparisonModal}
-                //   onClose={handlePolicyModalClose}
-                //   title="Salary Comparison"
-                //   className="max-w-7xl"
-                // >
-
-                //   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                //     {comparisonFields.map((field, index) => {
-                //       let previousValue = previousSalaryComparison?.[field.key];
-                //       let updatedValue = previousSalaryComparison?.[field.updatedKey];
-
-                //       console.log("Prev11111", field.key, previousValue)
-                //       console.log("Updated1111", updatedValue)
-                //       if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
-                //       if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
-
-                //       if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
-                //       if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
-
-                //       if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
-                //       if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
-
-                //       if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
-                //       if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
-
-
-
-
-                //       if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
-                //       if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
-
-
-                //       if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
-                //       if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
-
-                //       if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
-                //       if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
-                //       // const isDifferent = previousValue !== updatedValue;
-                //       const normalize = (val) =>
-                //         val === null || val === undefined || val === "" ? null : String(val).trim();
-
-                //       const isDifferent = normalize(previousValue) !== normalize(updatedValue);
-
-                //       return (
-                //         <div
-                //           key={index}
-                //           // className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
-                //           className={`p-4 border border-gray-200 rounded-2xl shadow-sm ${isDifferent ? "bg-yellow-100" : "bg-white"
-                //             }`}
-                //         >
-                //           <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
-                //           <p className="text-gray-700 text-sm">
-                //             <span className="font-medium">Previous:</span>{" "}
-                //             {previousValue === true
-                //               ? "Yes"
-                //               : previousValue === false
-                //                 ? "No"
-                //                 : previousValue ?? "—"}
-                //           </p>
-                //           <p className="text-gray-700 text-sm">
-                //             <span className="font-medium">Updated:</span>{" "}
-                //             {updatedValue === true
-                //               ? "Yes"
-                //               : updatedValue === false
-                //                 ? "No"
-                //                 : updatedValue ?? "—"}
-                //           </p>
-                //         </div>
-                //       );
-
-                //     })}
-                //   </div>
-
-
-                //   <div className="space-y-8">
-
-                //     <div>
-                //       <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
-                //       <table className="w-full border border-gray-200 text-sm">
-                //         <thead className="border-gray-200 shadow-sm bg-white">
-                //           <tr>
-                //             <th className="border px-3 py-2 text-left">Earning Name</th>
-                //             <th className="border px-3 py-2 text-left">Calculation Type</th>
-                //             <th className="border px-3 py-2 text-left">Factor Value</th>
-                //             <th className="border px-3 py-2 text-left">Previous Amount</th>
-                //             <th className="border px-3 py-2 text-left">Updated Amount</th>
-                //           </tr>
-                //         </thead>
-                //         <tbody>
-                //           {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
-                //             (item) => item.transactionType === "Earning"
-                //           ).map((item, i) => (
-                //             <tr key={i}>
-                //               <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
-                //               <td className="border px-3 py-2">{item?.calculation_type}</td>
-                //               <td className="border px-3 py-2">{item?.factorValue}</td>
-                //               <td className="border px-3 py-2">{item?.amount}</td>
-                //               <td className="border px-3 py-2">{item?.updatedAmount}</td>
-                //             </tr>
-                //           ))}
-                //         </tbody>
-                //       </table>
-                //     </div>
-
-
-                //     <div>
-                //       <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
-                //       <table className="w-full border border-gray-200 text-sm">
-                //         <thead className="border-gray-200 shadow-sm bg-white">
-                //           <tr>
-                //             <th className="border px-3 py-2 text-left">Deduction Name</th>
-                //             <th className="border px-3 py-2 text-left">Calculation Type</th>
-                //             <th className="border px-3 py-2 text-left">Factor Value</th>
-                //             <th className="border px-3 py-2 text-left">Previous Amount</th>
-                //             <th className="border px-3 py-2 text-left">Updated Amount</th>
-                //           </tr>
-                //         </thead>
-                //         <tbody>
-                //           {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
-                //             (item) => item.transactionType === "Deduction"
-                //           ).map((item, i) => (
-                //             <tr key={i}>
-                //               <td className="border px-3 py-2">
-                //                 {(dashboard?.allDeductions || [])
-                //                   .filter((x) => x.value === item.earning_deduction_id)
-                //                   .map((x) => <span key={x.value}>{x.label}</span>)}
-                //               </td>
-                //               <td className="border px-3 py-2">{item.calculation_type}</td>
-                //               <td className="border px-3 py-2">{item.factorValue}</td>
-                //               <td className="border px-3 py-2">{item.amount}</td>
-                //               <td className="border px-3 py-2">{item.updatedAmount}</td>
-                //             </tr>
-                //           ))}
-                //         </tbody>
-                //       </table>
-                //     </div>
-                //   </div>
-                // </CustomModal>
 
                 <CustomModal
                   show={comparisonModal}
@@ -1465,140 +1334,6 @@ export function FormEditForm({
 
 
 
-                {/* {comparisonModal && (
-  <CustomModal
-    show={comparisonModal}
-    onClose={handlePolicyModalClose}
-    title="Salary Comparison"
-    className="max-w-7xl"
-  >
-  
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      {comparisonFields.map((field, index) => {
-        let previousValue = previousSalaryComparison?.[field.key];
-        let updatedValue = previousSalaryComparison?.[field.updatedKey];
-
-      
-        if (field.key === "gradeId") previousValue = previousSalaryComparison?.grade?.formName;
-        if (field.updatedKey === "updatedGradeId") updatedValue = previousSalaryComparison?.updatedgrade?.formName;
-
-        if (field.key === "designationId") previousValue = previousSalaryComparison?.designation?.formName;
-        if (field.updatedKey === "updatedDesignationId") updatedValue = previousSalaryComparison?.updateddesignation?.formName;
-
-        if (field.key === "employeeTypeId") previousValue = previousSalaryComparison?.employeeType?.formName;
-        if (field.updatedKey === "updatedEmployeeTypeId") updatedValue = previousSalaryComparison?.updatedemployeeType?.formName;
-
-        if (field.key === "employeeStatusId") previousValue = previousSalaryComparison?.employeeStatus?.formName;
-        if (field.updatedKey === "updatedEmployeeStatusId") updatedValue = previousSalaryComparison?.updatedemployeeStatus?.formName;
-
-
-
-        
-          if (field.key === "emp_bankId") previousValue = previousSalaryComparison?.emp_bank?.Name;
-        if (field.updatedKey === "updatedEmp_bankId") updatedValue = previousSalaryComparison?.updatedEmp_bank?.Name;
-     
-     
-        if (field.key === "emp_bank_branchId") previousValue = previousSalaryComparison?.emp_bank_branch?.Name;
-        if (field.updatedKey === "updatedEmp_bank_branchId") updatedValue = previousSalaryComparison?.updatedEmp_bank_branch?.Name;
-     
-        if (field.key === "payment_mode_Id") previousValue = previousSalaryComparison?.payment_mode?.formName;
-        if (field.updatedKey === "updatedPayment_mode_Id") updatedValue = previousSalaryComparison?.updatedPayment_mode?.formName;
-
-
-       return (
-  <div
-    key={index}
-    className="p-4 border border-gray-200 rounded-2xl shadow-sm bg-white"
-  >
-    <h3 className="text-lg font-semibold text-primary mb-2">{field.label}</h3>
-    <p className="text-gray-700 text-sm">
-      <span className="font-medium">Previous:</span>{" "}
-      {previousValue === true
-        ? "Yes"
-        : previousValue === false
-        ? "No"
-        : previousValue ?? "—"}
-    </p>
-    <p className="text-gray-700 text-sm">
-      <span className="font-medium">Updated:</span>{" "}
-      {updatedValue === true
-        ? "Yes"
-        : updatedValue === false
-        ? "No"
-        : updatedValue ?? "—"}
-    </p>
-  </div>
-);
-
-      })}
-    </div>
-
-  
-    <div className="space-y-8">
-    
-      <div>
-        <h3 className="text-lg font-semibold text-primary mb-4">Earnings</h3>
-        <table className="w-full border border-gray-200 text-sm">
-          <thead className="border-gray-200 shadow-sm bg-white">
-            <tr>
-              <th className="border px-3 py-2 text-left">Earning Name</th>
-              <th className="border px-3 py-2 text-left">Calculation Type</th>
-              <th className="border px-3 py-2 text-left">Factor Value</th>
-              <th className="border px-3 py-2 text-left">Previous Amount</th>
-              <th className="border px-3 py-2 text-left">Updated Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
-              (item) => item.transactionType === "Earning"
-            ).map((item, i) => (
-              <tr key={i}>
-                <td className="border px-3 py-2">{item?.EarningDeductionName?.earningName}</td>
-                <td className="border px-3 py-2">{item?.calculation_type}</td>
-                <td className="border px-3 py-2">{item?.factorValue}</td>
-                <td className="border px-3 py-2">{item?.amount}</td>
-                <td className="border px-3 py-2">{item?.updatedAmount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
- 
-      <div>
-        <h3 className="text-lg font-semibold text-primary mb-4">Deductions</h3>
-        <table className="w-full border border-gray-200 text-sm">
-            <thead className="border-gray-200 shadow-sm bg-white">
-            <tr>
-              <th className="border px-3 py-2 text-left">Deduction Name</th>
-              <th className="border px-3 py-2 text-left">Calculation Type</th>
-              <th className="border px-3 py-2 text-left">Factor Value</th>
-              <th className="border px-3 py-2 text-left">Previous Amount</th>
-              <th className="border px-3 py-2 text-left">Updated Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {previousSalaryComparison?.EmpSalaryRevisionChildLogs?.filter(
-              (item) => item.transactionType === "Deduction"
-            ).map((item, i) => (
-              <tr key={i}>
-                <td className="border px-3 py-2">
-                  {(dashboard?.allDeductions || [])
-                    .filter((x) => x.value === item.earning_deduction_id)
-                    .map((x) => <span key={x.value}>{x.label}</span>)}
-                </td>
-                <td className="border px-3 py-2">{item.calculation_type}</td>
-                <td className="border px-3 py-2">{item.factorValue}</td>
-                <td className="border px-3 py-2">{item.amount}</td>
-                <td className="border px-3 py-2">{item.updatedAmount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </CustomModal>
-)} */}
 
 
                 <div className="grid grid-cols-6 gap-x-3 gap-y-1">
@@ -1944,7 +1679,7 @@ export function FormEditForm({
                         label={
                           <span>
                             {" "}
-                            Gross Salary<span style={{ color: "red" }}>*</span>
+                            Gross Salary<span style={{ color: "red" }}>*</span> {values.prevGrossSalary && `(Old Gross Salary ${values.prevGrossSalary})`}
                           </span>
                         }
                         placeholder="Enter Gross Salary"
@@ -1976,7 +1711,7 @@ export function FormEditForm({
                         }}
                         label={
                           <span>
-                            Basic Salary<span style={{ color: "red" }}>*</span>
+                            Basic Salary<span style={{ color: "red" }}>*</span>{values.prevBasicSalary && `(Old Basic Salary  ${values.prevBasicSalary})`}
                           </span>
                         }
                         placeholder="Enter Basic Salary"

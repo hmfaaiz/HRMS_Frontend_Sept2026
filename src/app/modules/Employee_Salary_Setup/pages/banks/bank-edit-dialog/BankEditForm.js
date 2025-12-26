@@ -478,7 +478,9 @@ export function BankEditForm({
           DROPDOWN[response.data?.data?.[0]?.salaryMethod] ||
           DEFAULT_CALCULATION_TYPE_DROPDOWN
         );
-      } else {
+      } 
+      
+      else {
         const value = response?.data?.data?.find(
           (el) =>
             el.calculation_type == "% Of Basic" ||
@@ -977,7 +979,7 @@ export function BankEditForm({
                     : Number(defGrossSalary))
 
               },
-              defMapEarningDeductionList
+              defMapEarningDeductionList,currentSalaryMethod
             );
           }
         }}
@@ -1109,7 +1111,7 @@ export function BankEditForm({
                         label={
                           <span>
                             {" "}
-                            Gross Salary<span style={{ color: "red" }}>*</span>
+                            Gross Salary<span style={{ color: "red" }}>*</span>{currentSalaryMethod}
                           </span>
                         }
                         placeholder="Enter Gross Salary"
@@ -1142,7 +1144,7 @@ export function BankEditForm({
                         }}
                         label={
                           <span>
-                            Basic Salary<span style={{ color: "red" }}>*</span>
+                            Basic Salary<span style={{ color: "red" }}>*</span>{currentSalaryMethod}
                           </span>
                         }
                         placeholder="Enter Basic Salary"
