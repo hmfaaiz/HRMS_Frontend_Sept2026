@@ -51,6 +51,7 @@ export const getSeparationEditSchema = (formData) => {
         .required(VALIDATION_MESSAGES.required),
 
       exitReasonId: Yup.number()
+      .nullable()
         .required(VALIDATION_MESSAGES.required),
 
 
@@ -661,6 +662,7 @@ export function FormEditForm({
                         isDisabled={isdataForRead || !values.employeeId}
                         onChange={(e) => {
                           setFieldValue("exitTypeId", e.value || null);
+                          setFieldValue("exitReasonId",  null);
                           dispatch(fetchExitReasonData(e.value));
                         }}
                         value={

@@ -118,6 +118,20 @@ export function FormFilter({
       subsidiaryLabel: allSubsidiaryMap?.get(values.subsidiaryId || "")?.label,
       groupWiseLabel: allGroupByMap?.get(values.groupBy || "")?.label,
       departmentLabel: allDeptMap?.get(values.departmentId || "")?.label,
+    groupByLabel: values?.groupByEmployee
+  ? "Employee"
+  : [
+      values?.groupByDepartment && "Department",
+      values?.groupByLocation && "Location"
+    ]
+      .filter(Boolean)
+      .join(" & ")
+      ? `${[
+          values?.groupByDepartment && "Department",
+          values?.groupByLocation && "Location"
+        ].filter(Boolean).join(" & ")}`
+      : ""
+
     };
   };
 
