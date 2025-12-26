@@ -16,6 +16,7 @@ import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import * as actions from "../../../_redux/formActions";
 import { useFromUIContext } from "../FormUIContext";
+import { TextArea } from "../../../../../../_metronic/_partials/controls";
 
 const formValidation = (minPoint, maxPoint) =>
   Yup.object().shape({
@@ -53,6 +54,16 @@ const formValidation = (minPoint, maxPoint) =>
         finalizedComments: Yup.string().optional(),
       })
     ),
+    incrementPercentageRecommendedByManager: Yup.number()
+      .required(VALIDATION_MESSAGES.required)
+      .min(0, `Rating cannot be less than 0`)
+      .max(100, `Rating cannot exceed 100`),
+    managerRecomendationAfterFinalization: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
+    additionalRemarks: Yup.string()
+      .nullable()
+      .optional(),
   });
 
 function calculateWeightedScore(setupArray = [], weight = 0) {
@@ -740,60 +751,31 @@ export function MasterEditForm({
                       )}
 
                     {/* {Recommendation of increment && ( */}
-                    <div>
-                      <h6 className="font-bold mb-0 text-primary">
-                        Increment Suggested :{" "}
-                        {(values?.ratingList?.length > 0 &&
-                          [...values.ratingList]
-                            .sort(
-                              (a, b) =>
-                                parseFloat(a.points) - parseFloat(b.points)
-                            )
-                            .reduce((acc, curr) => {
-                              const total =
-                                (Number(values?.goalFinalizeWeight) || 0) +
-                                (Number(values?.generalFinalizeWeight) || 0) +
-                                (Number(values?.hrFinalizeWeight) || 0);
+                    {values?.employeeId && (
+                      <div>
+                        <h6 className="font-bold mb-0 text-primary">
+                          Increment Suggested :{" "}
+                          {(values?.ratingList?.length > 0 &&
+                            [...values.ratingList]
+                              .sort(
+                                (a, b) =>
+                                  parseFloat(a.points) - parseFloat(b.points)
+                              )
+                              .reduce((acc, curr) => {
+                                const total =
+                                  (Number(values?.goalFinalizeWeight) || 0) +
+                                  (Number(values?.generalFinalizeWeight) || 0) +
+                                  (Number(values?.hrFinalizeWeight) || 0);
 
-                              return total >= parseFloat(curr.points)
-                                ? curr
-                                : acc;
-                            }, null)?.increment_percentage) ||
-                          0}
-                        %
-                      </h6>
-
-                      {/* <div className="text-sm">
-                        Final Point:{" "}
-                        {Number(
-                          (Number(values?.goalFinalizeWeight) || 0) +
-                            (Number(values?.generalFinalizeWeight) || 0) +
-                            (Number(values?.hrFinalizeWeight) || 0)
-                        ).toFixed(2)}
+                                return total >= parseFloat(curr.points)
+                                  ? curr
+                                  : acc;
+                              }, null)?.increment_percentage) ||
+                            0}
+                          %
+                        </h6>
                       </div>
-
-                      <div className="mt-1 text-sm">
-                        <strong>Increment :</strong>{" "}
-                        {(values?.ratingList?.length > 0 &&
-                          [...values.ratingList]
-                            .sort(
-                              (a, b) =>
-                                parseFloat(a.points) - parseFloat(b.points)
-                            )
-                            .reduce((acc, curr) => {
-                              const total =
-                                (Number(values?.goalFinalizeWeight) || 0) +
-                                (Number(values?.generalFinalizeWeight) || 0) +
-                                (Number(values?.hrFinalizeWeight) || 0);
-
-                              return total >= parseFloat(curr.points)
-                                ? curr
-                                : acc;
-                            }, null)?.increment_percentage) ||
-                          0}
-                        %
-                      </div> */}
-                    </div>
+                    )}
                     {/* Recomentdation */}
                     {values?.selfRecommendation && (
                       <>
@@ -844,6 +826,34 @@ export function MasterEditForm({
                       </>
                     )}
 
+                    {values?.employeeId && (
+                      <>
+                        <div className="w-2/12">
+                          <Field
+                            name="incrementPercentageRecommendedByManager"
+                            component={AmountInput}
+                            label="Increment Percentage Recommended by Manager"
+                            disabled={values?.isFinalize || isUserForRead}
+                          />
+                        </div>
+                        <div className="w-9/12">
+                          <Field
+                            name="managerRecomendationAfterFinalization"
+                            component={TextArea}
+                            label="Manager Recommendation after Finalization"
+                            disabled={values?.isFinalize || isUserForRead}
+                          />
+                        </div>
+                        <div className="w-9/12">
+                          <Field
+                            name="additionalRemarks"
+                            component={TextArea}
+                            label="Additional Remarks"
+                            disabled={values?.isFinalize || isUserForRead}
+                          />
+                        </div>{" "}
+                      </>
+                    )}
                     {/* )} */}
                   </fieldset>
                 </Form>

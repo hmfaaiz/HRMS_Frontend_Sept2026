@@ -1,42 +1,35 @@
 import { SERVER_MESSAGES } from "../../../utils/constants";
 import * as requestFromServer from "./redux-Crud";
-import {AppraisalPeriodsSetupSlice, callTypes } from "./redux-Slice";
+import { AppraisalPeriodsSetupSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
 
 const { actions } = AppraisalPeriodsSetupSlice;
 
-
 export const fetchAppraisals = (queryparm) => async (dispatch) => {
+  return requestFromServer
+    .getAllAppraisal(queryparm)
 
-
-  
-  return requestFromServer.getAllAppraisal(queryparm)
-   
     .then((response) => {
-    
-
       dispatch(actions.appraisalFetched(response));
     })
     .catch((error) => {
-    
       error.clientMessage = "Can't find";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
 };
 
 export const fetchAppraisal = (Id) => (dispatch) => {
-
-
   if (!Id) {
-    return dispatch(actions.AppraisalFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(
+      actions.AppraisalFetchedForEdit({ userForEdit: undefined })
+    );
   }
 
   return requestFromServer
-    .getAppraisalById( Id)
+    .getAppraisalById(Id)
     .then((response) => {
       const entities = response.data?.data;
 
-   
       dispatch(actions.AppraisalFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
@@ -46,12 +39,10 @@ export const fetchAppraisal = (Id) => (dispatch) => {
 };
 
 export const deleteAppraisal = (Id) => (dispatch) => {
-
   return requestFromServer
     .deleteAppraisal(Id)
     .then((response) => {
-    
-      dispatch(actions.AppraisalDeleted({ Id}));
+      dispatch(actions.AppraisalDeleted({ Id }));
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -68,25 +59,39 @@ export const deleteAppraisal = (Id) => (dispatch) => {
     });
 };
 
-
-
-
-
-export const createAppraisal = (appraisalForCreation, disbaleLoading, onHide) => (
+export const getAppraisalConfig = ({ subsidiaryId, fiscalYearId }) => (
   dispatch
 ) => {
+  if (!subsidiaryId || !fiscalYearId) return;
+  dispatch(actions.startCall({ actions: callTypes.action }));
+  return requestFromServer
+    .getAppraisalConfig({ fiscalYearId, subsidiaryId })
+    .then((response) => {
+      dispatch(actions.AppraisalConfigFetched(response?.data?.data || {}));
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      dispatch(actions.AppraisalConfigFetched({}));
+      toast.error(
+        error?.response?.data?.message ||
+          "Cant find AppraisalConfig of this subsidiary"
+      );
+    });
+};
 
-  
+export const createAppraisal = (
+  appraisalForCreation,
+  disbaleLoading,
+  onHide
+) => (dispatch) => {
   return requestFromServer
     .createAppraisal(appraisalForCreation)
     .then((res) => {
-   
       const user = res.data?.data;
-     
-  
+
       dispatch(actions.appraisalCreated(user));
       disbaleLoading();
-      toast.success(SERVER_MESSAGES.insertedSuccess,{
+      toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -117,11 +122,10 @@ export const updateAppraisal = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
     .updateAppraisal(user)
     .then((response) => {
-  
       const updatedAppraisal = response?.config?.data; // response.data?.data;
-   
+
       dispatch(actions.appraisalUpdated({ updatedAppraisal }));
-    
+
       disbaleLoading();
       onHide();
       toast.success(SERVER_MESSAGES.updatedSuccess, {
@@ -133,11 +137,8 @@ export const updateAppraisal = (user, disbaleLoading, onHide) => (dispatch) => {
         draggable: true,
         progress: undefined,
       });
-      
-
     })
     .catch((error) => {
-  
       //error.clientMessage = "Can't update User"
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();

@@ -147,6 +147,24 @@ export function FormTable() {
     },
 
     {
+      dataField: "appraisalId",
+      text: "Create from Appraisal Finalization",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+        textAlign: "center",
+      },
+      headerStyle: {
+        textAlign: "center", // Align header text to the left
+      },
+      formatter: (cell) => {
+        return cell ? "Yes" : "No";
+      },
+    },
+
+    {
       dataField: "action",
       text: "Actions",
       isDummyField: true,

@@ -11,6 +11,8 @@ import {
 import { InputSearch } from "../../../../../utils/common-modules/InputSearch";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import * as actions from "../../../_redux/formActions";
+import { useHistory } from "react-router-dom";
 
 const FilterSchema = Yup.object().shape({
   subsidiaryId: Yup.string().required(VALIDATION_MESSAGES.required),
@@ -33,6 +35,8 @@ const prepareFilter = (queryParams, values) => {
 
 export function FormFilter() {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const formUIContext = useFromUIContext();
   const { dashboard, auth } = useSelector((state) => state);
   const formUIProps = useMemo(() => {
@@ -43,6 +47,7 @@ export function FormFilter() {
       setAppraisalCategoryId: formUIContext.setAppraisalCategoryId,
       subsidiaryId: formUIContext.subsidiaryId,
       setSubsidiaryId: formUIContext.setSubsidiaryId,
+      setEmployeeId: formUIContext.setEmployeeId,
     };
   }, [formUIContext]);
 
@@ -164,6 +169,9 @@ export function FormFilter() {
                   formUIProps.setAppraisalCategoryId(e.value);
                   setFieldValue("appraisalCategoryId", e.value);
                   formUIProps.setQueryParams(updatedQueryParams);
+                  formUIProps.setEmployeeId(null);
+                  dispatch(actions.clearAppraisalReview());
+                  history.push("/appraisal_review/read-all-appraisal-review");
                 }}
                 options={dashboard?.allAppraisalCategory}
               />

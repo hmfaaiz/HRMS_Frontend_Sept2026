@@ -55,9 +55,12 @@ export function BigTable({ data, setBigTableModalData }) {
         formatter: (cell) => {
           // For date formatting
           if (isDate && typeof cell === "string") {
+            const dateObj = new Date(cell);
+            const isValidDate = !isNaN(dateObj.getTime()); // check if valid
+
             return (
-              <div title={cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}>
-                {cell ? format(new Date(cell), "dd-MMM-yyyy") : ""}
+              <div title={isValidDate ? format(dateObj, "dd-MMM-yyyy") : ""}>
+                {isValidDate ? format(dateObj, "dd-MMM-yyyy") : "-"}
               </div>
             );
           }
@@ -109,7 +112,9 @@ export function BigTable({ data, setBigTableModalData }) {
     // Add trend label
     if (data.trendValue) {
       const label =
-        data.trendValue == 1 ? dashboard?.activeFiscalYear?.label : dashboard?.activeFiscalYear?.payrollMonthLabel;
+        data.trendValue == 1
+          ? dashboard?.activeFiscalYear?.label
+          : dashboard?.activeFiscalYear?.payrollMonthLabel;
 
       name = `${name} - ${label}`;
     }

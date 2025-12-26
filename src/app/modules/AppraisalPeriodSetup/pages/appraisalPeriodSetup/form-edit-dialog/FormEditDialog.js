@@ -74,7 +74,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
     if (!id) {
 
-      dispatch(actions.createAppraisal(data, disbaleLoading, onHide));
+      dispatch(actions.createAppraisal(data, disbaleLoading, onHide)).then(async ()=>{
+        await dispatch(actions.fetchAppraisals(usersUIProps.queryParams));
+      });
 
 
 
@@ -91,8 +93,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
 
-      await dispatch(actions.updateAppraisal(formUpdatedFields, disbaleLoading, onHide));
-      await dispatch(actions.fetchAppraisals(usersUIProps.queryParams));
+      await dispatch(actions.updateAppraisal(formUpdatedFields, disbaleLoading, onHide)).then(async ()=>{
+        await dispatch(actions.fetchAppraisals(usersUIProps.queryParams));
+      });
     }
   };
 
@@ -113,6 +116,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         isUserForRead={userForRead}
         enableLoading={enableLoading}
         loading={loading}
+        id={id}
 
       />
       <ToastContainer

@@ -148,11 +148,11 @@ function CustomApprovalWorkflowTable({
                                 ) || ""
                               }
                               options={
-                                dashboard?.allApprovalWorkflowList.map(
+                                dashboard?.allApprovalWorkflowList?.map(
                                   (e, i) => {
                                     return {
                                       ...e,
-                                      isDisabled: values?.customApprovalList.some(
+                                      isDisabled: values?.customApprovalList?.some(
                                         (el) => el?.isHOD && e.value == "406"
                                       ),
                                     };
