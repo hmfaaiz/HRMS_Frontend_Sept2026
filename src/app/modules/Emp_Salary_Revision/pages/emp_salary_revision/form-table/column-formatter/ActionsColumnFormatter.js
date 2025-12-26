@@ -63,7 +63,7 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
-      {row.isForDelete && (
+      {row.isForDelete && !row?.appraisalId && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
@@ -71,7 +71,7 @@ export function ActionsColumnFormatter(
             </Tooltip>
           }
         >
-          {row.isActive ? (
+          {row.isActive ?  (
             <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
               <Trash2 className="w-4 h-4 text-black cursor-pointer" />
             </a>

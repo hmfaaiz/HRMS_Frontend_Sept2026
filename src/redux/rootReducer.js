@@ -155,6 +155,7 @@ import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redu
 import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice"
 import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice"
 import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fromSlice";
+import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -307,6 +308,7 @@ export const rootReducer = combineReducers({
   company_doc_portal : CompanyDocumentPortalSlice.reducer,
   employee_doc : EmployeeDocumentSlice.reducer,
   appraisal_review : appraisalReviewSlice.reducer,
+  appraisal_finalization : appraisalFinalizationSlice.reducer,
 
 });
 

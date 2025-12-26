@@ -72,6 +72,25 @@ export function FormTable() {
       },
     },
     {
+      dataField: "appraisalType",
+      text: "Appraisal Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "110px",
+      },
+      formatter: (cell) => {
+        return cell == "1"
+          ? "Quarterly"
+          : cell == "2"
+          ? "Bi-Annual"
+          : cell == "3"
+          ? "Annual"
+          : "-";
+      },
+    },
+    {
       dataField: "generalEvaluationRating",
       text: "General Evaluation Rating %",
       sort: false,

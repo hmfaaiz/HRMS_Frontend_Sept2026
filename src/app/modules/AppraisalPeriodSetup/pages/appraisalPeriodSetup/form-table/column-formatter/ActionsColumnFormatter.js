@@ -15,7 +15,6 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
-    
   }
 ) {
   const isUserRead = false;
@@ -29,7 +28,6 @@ export function ActionsColumnFormatter(
 
   return (
     <div className="space-x-2">
-    
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
       >
@@ -41,7 +39,7 @@ export function ActionsColumnFormatter(
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
       </OverlayTrigger>
-      {isAccessForEdit  && (
+      {isAccessForEdit && row?.isActive && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -51,31 +49,17 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete  && (
+      {isAccessForDelete && row?.isActive && (
         <OverlayTrigger
-          overlay={
-            <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
-            </Tooltip>
-          }
+          overlay={<Tooltip id="products-edit-tooltip">Delete</Tooltip>}
         >
-          {row.isActive ? (
-            <a
-              title=""
-              className=""
-              onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
-            >
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          ) : (
-            <a
-              title=""
-              className="btn btn-icon btn-light btn-hover-success btn-sm mx-3"
-              onClick={() => openActiveFormDialog(row.Id, row.isActive)}
-            >
-              <CirclePower className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          )}
+          <a
+            title=""
+            className=""
+            onClick={() => openDeleteFormDialog(row.Id, row.isActive)}
+          >
+            <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+          </a>
         </OverlayTrigger>
       )}
     </div>
