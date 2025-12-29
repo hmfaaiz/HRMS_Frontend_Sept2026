@@ -394,6 +394,10 @@ const AppraisalReview = lazy(()=>
 import("./modules/Appraisal_Review/pages/index"))
 
 
+const AttendanceCorrection = lazy(()=>
+import("./modules/AttendanceCorrection/pages/index"))
+
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -543,6 +547,7 @@ const ROUTES = {
   company_doc_portal : CompanyDocumentPortal,
   employee_doc : EmployeeDocument,
   appraisal_review : AppraisalReview,
+  attendance_correction : AttendanceCorrection,
 };
 
 export default function BasePage() {
