@@ -57,7 +57,7 @@ export const publishAppraisal = (body) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(error?.response?.data?.message, {
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.insertedFail, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -87,7 +87,7 @@ export const holdAppraisalPublish = (body) => (dispatch) => {
     })
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
-      toast.error(error?.response?.data?.message, {
+      toast.error(error?.response?.data?.message || SERVER_MESSAGES.insertedFail, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

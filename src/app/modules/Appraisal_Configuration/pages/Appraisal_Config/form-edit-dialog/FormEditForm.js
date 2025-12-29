@@ -17,31 +17,45 @@ import {
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 
+const appraisalTypes = [
+  {
+    label: "Quarterly",
+    value: "1",
+  },
+  {
+    label: "Bi-Annual",
+    value: "2",
+  },
+  {
+    label: "Annual",
+    value: "3",
+  },
+];
+
 const formSchema = Yup.object()
   .shape({
     subsidiaryId: Yup.number()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-
+    appraisalType: Yup.string()
+      .nullable()
+      .required(VALIDATION_MESSAGES.required),
     generalEvaluationRating: Yup.number()
       .nullable()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
       .required(VALIDATION_MESSAGES.required),
-
     empGoalRating: Yup.number()
       .nullable()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(100, VALIDATION_MESSAGES.maxHundredValue)
       .required(VALIDATION_MESSAGES.required),
-
     appraisalFeedbackPeriod: Yup.number()
       .integer("Only whole numbers are allowed") //  ensures no decimals
       .nullable()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
       .max(99, VALIDATION_MESSAGES.maxAgeNinetyNineValue)
       .required(VALIDATION_MESSAGES.required),
-
     HRRating: Yup.number()
       .nullable()
       .min(0, VALIDATION_MESSAGES.minZeroValue)
@@ -51,15 +65,21 @@ const formSchema = Yup.object()
     appraisalFacilitatorId: Yup.string()
       .nullable()
       .required(VALIDATION_MESSAGES.required),
-
+    signIncrementEmailId: Yup.string()
+      .nullable()
+      .optional(),
+    signIncrementLetter1Id: Yup.string()
+      .nullable()
+      .optional(),
+    signIncrementLetter2Id: Yup.string()
+      .nullable()
+      .optional(),
     superVisorRattingToEmp: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
       .oneOf([true, false], VALIDATION_MESSAGES.required),
-
     empRattingToSuperVisor: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
       .oneOf([true, false], VALIDATION_MESSAGES.required),
-
     ratingScaleSelection: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
       .oneOf([true, false], VALIDATION_MESSAGES.required),
@@ -170,6 +190,29 @@ export function FormEditForm({
                         }}
                       />
                     </div>
+                    <div>
+                      <SearchSelect
+                        name={"appraisalType"}
+                        label={
+                          <span>
+                            Appraisal Type
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={!values?.subsidiaryId}
+                        onChange={(e) => {
+                          setFieldValue("appraisalType", e?.value || null);
+                        }}
+                        value={
+                          appraisalTypes?.find(
+                            (el) => el?.value === values?.appraisalType
+                          ) || null
+                        }
+                        error={errors?.appraisalType}
+                        touched={touched?.appraisalType}
+                        options={appraisalTypes}
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
@@ -249,149 +292,152 @@ export function FormEditForm({
                     </div>
                   </div>
 
-                  {/* <div>
-                    <Checkbox
-                      isSelected={values?.superVisorRattingToEmp}
-                      children={"Show Supervisor Rating to Employee"}
-                      onChange={(e) => {
-                        setFieldValue(
-                          "superVisorRattingToEmp",
-                          e?.target?.checked
-                        );
-                      }}
-                    />
-                  </div> */}
-                  <div>
-                    <Checkbox
-                      isSelected={values?.empRattingToSuperVisor}
-                      children={"Show Employee Rating to Supervisor"}
-                      onChange={(e) => {
-                        setFieldValue(
-                          "empRattingToSuperVisor",
-                          e?.target?.checked
-                        );
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Checkbox
-                      isSelected={values?.ratingScaleSelection}
-                      children={"Allow User Rating Scale Selection"}
-                      onChange={(e) => {
-                        setFieldValue(
-                          "ratingScaleSelection",
-                          e?.target?.checked
-                        );
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <SearchSelect
-                      name={"appraisalFacilitatorId"}
-                      label={
-                        <span>
-                          Appraisal Facilitator
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      isDisabled={!values?.subsidiaryId}
-                      onChange={(e) => {
-                        setFieldValue(
-                          "appraisalFacilitatorId",
-                          e?.value || null
-                        );
-                      }}
-                      value={
-                        dashboard?.allEmployees?.find(
-                          (el) => el?.value === values?.appraisalFacilitatorId
-                        ) || null
-                      }
-                      error={errors?.appraisalFacilitatorId}
-                      touched={touched?.appraisalFacilitatorId}
-                      options={dashboard?.allEmployees}
-                    />
-                  </div>
-                  <div>
-                    <Field
-                      name="appraisalFeedbackPeriod"
-                      component={Input}
-                      type="number"
-                      label={
-                        <span>
-                          Appraisal Feedback Period
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      onChange={(e) => {
-                        setFieldValue(
-                          "appraisalFeedbackPeriod",
-                          e?.target?.value
-                        );
-                      }}
-                    />
-                  </div>
-                  {/* <div className="text-black mt-1">
-                    <label>
-                      Designation<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <div
-                      className="overflow-auto scrollbar-fancy"
-                      style={{ maxHeight: "150px" }}
-                    >
-                      <div className="p-0 m-0" style={{ fontSize: "10.2px" }}>
-                        <div className="flex justify-start items-center font-semibold">
-                          <input
-                            type="checkbox"
-                            className="mr-1"
-                            checked={
-                              values?.designationId?.length ===
-                              designationList?.length
-                            }
-                            disabled={!values?.departmentId}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                // Sab select
-                                const allValues = designationList?.map((opt) =>
-                                  opt.value.toString()
-                                );
-                                setFieldValue("designationId", allValues);
-                              } else {
-                                setFieldValue("designationId", []);
-                              }
-                            }}
-                          />
-                          Select All
-                        </div>
-
-                        {designationList?.map((option) => (
-                          <div
-                            key={option.value}
-                            className="flex justify-start items-center"
-                          >
-                            <input
-                              className="mr-1"
-                              name="designationId"
-                              type="checkbox"
-                              disabled={!values?.departmentId}
-                              value={option.value}
-                              checked={Boolean(
-                                values?.designationId?.includes(
-                                  option?.value?.toString()
-                                )
-                              )}
-                              onChange={handleChange}
-                            />
-                            {option.label}
-                          </div>
-                        ))}
+                  <hr className="col-span-2 lg:col-span-3" />
+                  <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
+                    <p className="text-tprimary text-sm col-span-2 font-semibold lg:col-span-3 mb-0">
+                      Survey Publish Policy
+                    </p>
+                    <div>
+                      <SearchSelect
+                        name={"appraisalFacilitatorId"}
+                        label={
+                          <span>
+                            Appraisal Facilitator
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        isDisabled={!values?.subsidiaryId}
+                        onChange={(e) => {
+                          setFieldValue(
+                            "appraisalFacilitatorId",
+                            e?.value || null
+                          );
+                        }}
+                        value={
+                          dashboard?.allEmployees?.find(
+                            (el) => el?.value === values?.appraisalFacilitatorId
+                          ) || null
+                        }
+                        error={errors?.appraisalFacilitatorId}
+                        touched={touched?.appraisalFacilitatorId}
+                        options={dashboard?.allEmployees}
+                      />
+                    </div>
+                    <div>
+                      <Field
+                        name="appraisalFeedbackPeriod"
+                        component={Input}
+                        type="number"
+                        label={
+                          <span>
+                            Appraisal Feedback Period
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        onChange={(e) => {
+                          setFieldValue(
+                            "appraisalFeedbackPeriod",
+                            e?.target?.value
+                          );
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <div>
+                        <Checkbox
+                          isSelected={values?.empRattingToSuperVisor}
+                          children={"Show Employee Rating to Supervisor"}
+                          onChange={(e) => {
+                            setFieldValue(
+                              "empRattingToSuperVisor",
+                              e?.target?.checked
+                            );
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Checkbox
+                          isSelected={values?.ratingScaleSelection}
+                          children={"Allow User Rating Scale Selection"}
+                          onChange={(e) => {
+                            setFieldValue(
+                              "ratingScaleSelection",
+                              e?.target?.checked
+                            );
+                          }}
+                        />
                       </div>
                     </div>
-                    {errors.designationId && touched.designationId && (
-                      <div className="invalid-feedback">
-                        {errors.designationId}
-                      </div>
-                    )}
-                  </div> */}
+                  </div>
+                  <hr className="col-span-2 lg:col-span-3" />
+                  <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
+                    <p className="text-tprimary text-sm col-span-2 font-semibold lg:col-span-3 mb-0">
+                      Increment Finalization Signatures
+                    </p>
+                    <div>
+                      <SearchSelect
+                        name={"signIncrementEmailId"}
+                        label={<span>Email</span>}
+                        isDisabled={!values?.subsidiaryId}
+                        onChange={(e) => {
+                          setFieldValue(
+                            "signIncrementEmailId",
+                            e?.value || null
+                          );
+                        }}
+                        value={
+                          dashboard?.allEmployees?.find(
+                            (el) => el?.value === values?.signIncrementEmailId
+                          ) || null
+                        }
+                        error={errors?.signIncrementEmailId}
+                        touched={touched?.signIncrementEmailId}
+                        options={dashboard?.allEmployees}
+                      />
+                    </div>
+                    <div>
+                      <SearchSelect
+                        name={"signIncrementLetter1Id"}
+                        label={<span>Letter 1</span>}
+                        isDisabled={!values?.subsidiaryId}
+                        onChange={(e) => {
+                          setFieldValue(
+                            "signIncrementLetter1Id",
+                            e?.value || null
+                          );
+                        }}
+                        value={
+                          dashboard?.allEmployees?.find(
+                            (el) => el?.value === values?.signIncrementLetter1Id
+                          ) || null
+                        }
+                        error={errors?.signIncrementLetter1Id}
+                        touched={touched?.signIncrementLetter1Id}
+                        options={dashboard?.allEmployees}
+                      />
+                    </div>
+                    <div>
+                      <SearchSelect
+                        name={"signIncrementLetter2Id"}
+                        label={<span>Letter 2</span>}
+                        isDisabled={!values?.subsidiaryId}
+                        onChange={(e) => {
+                          setFieldValue(
+                            "signIncrementLetter2Id",
+                            e?.value || null
+                          );
+                        }}
+                        value={
+                          dashboard?.allEmployees?.find(
+                            (el) => el?.value === values?.signIncrementLetter2Id
+                          ) || null
+                        }
+                        error={errors?.signIncrementLetter2Id}
+                        touched={touched?.signIncrementLetter2Id}
+                        options={dashboard?.allEmployees}
+                      />
+                    </div>
+                  </div>
                 </div>
               </fieldset>
             </Form>

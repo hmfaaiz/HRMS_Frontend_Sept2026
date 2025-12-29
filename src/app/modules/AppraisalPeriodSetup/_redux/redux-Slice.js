@@ -11,6 +11,7 @@ const initialAppraisalPeriodsSetupState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    appraisalConfig : null,
 };
 
 
@@ -83,7 +84,13 @@ export const AppraisalPeriodsSetupSlice = createSlice({
                 (el) => el.Id !== action.payload.Id
             );
         },
-       
+       AppraisalConfigFetched: (state, action) => {
+
+            state.error = null;
+            state.actionsLoading = false;
+            state.appraisalConfig = action.payload || null
+          
+        },
 
 
 

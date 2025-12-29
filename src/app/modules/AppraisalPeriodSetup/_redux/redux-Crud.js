@@ -32,3 +32,8 @@ export function deleteAppraisal(Id) {
 
   return axios.delete(`${USERS_URL}/appraisal_period_setup/delete-appraisal-period-setup/${Id}`);
 }
+
+//Delete
+export function getAppraisalConfig(body) {
+  return axios.post(`${USERS_URL}/appraisal_period_setup/read-appraisal-config` , body);
+}

@@ -35,6 +35,10 @@ export function FormUIProvider({ FormUIEvents, children }) {
     ratingScaleSelection: false,
     appraisalFacilitatorId: "",
     appraisalFeedbackPeriod: "",
+    appraisalType : '',
+    signIncrementEmailId : '',
+    signIncrementLetter1Id : '',
+    signIncrementLetter2Id : '',
   };
 
   const value = {

@@ -103,7 +103,15 @@ console.log("userAccess1111",userAccess)
       formatter: (cell) => { return cell ? format(new Date(cell), "dd-MMM-yyyy") : "" }
    
     },
-
+{
+      dataField: "isActive",
+      text: "Active",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      formatter: (cell) => { return cell ? 'Yes' : "No" }
+   
+    },
 
 
     {
