@@ -165,6 +165,13 @@ export function FormFilter({
       actions.generateBankAdvice(newQueryParams.filter, document, labels)
     );
   };
+  const getNewBankAdvice = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(
+      actions.generateNewBankAdvice(newQueryParams.filter, document, labels)
+    );
+  };
 
   const generateDubaiBankAdviceCSV = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
@@ -452,6 +459,26 @@ export function FormFilter({
              
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
                     <div className="col-start-3 col-end-5 flex justify-end gap-2">
+                     
+                       <button
+                        onClick={() => {
+                          getNewBankAdvice(values);
+                        }}
+                        disabled={
+                          adviceLoading ||
+                          !values.subsidiaryId ||
+                          !values.monthId
+                        }
+                        className="btn btn-primary btn-elevate"
+                      >
+                        New Payment Advice
+              
+                        <Download className="w-4 h-4 ml-2" />
+                        {/* </span> */}
+                        {adviceLoading && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
+                      </button>
                       <button
                         onClick={() => {
                           getBankAdvice(values);
@@ -492,6 +519,8 @@ export function FormFilter({
                       </button>
                     </div>
                   </div>
+
+
 
 
                 </fieldset>
