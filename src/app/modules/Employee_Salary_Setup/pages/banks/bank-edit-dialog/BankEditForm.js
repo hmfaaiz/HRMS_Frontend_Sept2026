@@ -2021,6 +2021,14 @@ export function BankEditForm({
                           setDefaultBanks(e);
                           // dispatch(fetchAllBanks(e.value));
                           fetchBranch(e.value);
+setFieldValue("swiftCode", "");
+                            const selectedBank = dashboard.allBanks?.find(bank => bank.value === e.value);
+      if (selectedBank) {
+        setFieldValue("swiftCode", selectedBank.swiftCode);
+      } else {
+        setFieldValue("swiftCode", "");
+      }
+      console.log("selectedBank111111",selectedBank)
                         }}
                         value={
                           !checkReadOnlyStatus(values, [151, 152])
@@ -2081,6 +2089,23 @@ export function BankEditForm({
                       />
                       {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                     </div>
+
+<div>
+  <Field
+                        name="swiftCode"
+                        disabled
+                    
+                      
+                        component={Input}
+                        placeholder="Enter Bank Account Title"
+                        label={<span> Swift Code</span>}
+                        autoComplete="off"
+                      />
+</div>
+
+
+
+
 
                     {/* <div>
                       <Field
