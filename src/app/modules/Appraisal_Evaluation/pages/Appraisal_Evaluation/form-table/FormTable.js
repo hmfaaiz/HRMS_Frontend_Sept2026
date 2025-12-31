@@ -101,26 +101,26 @@ export function FormTable() {
         minWidth: "60px",
       },
     },
-    {
-      dataField: "FromEmp.employeeType.formName",
-      text: "Employee Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-    },
-    {
-      dataField: "FromEmp.employeeStatus.formName",
-      text: "Employee Status",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-    },
+    // {
+    //   dataField: "FromEmp.employeeType.formName",
+    //   text: "Employee Type",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    // },
+    // {
+    //   dataField: "FromEmp.employeeStatus.formName",
+    //   text: "Employee Status",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "70px",
+    //   },
+    // },
     {
       dataField: "AppraisalCategory.formName",
       text: "Appraisal Category",
@@ -131,6 +131,7 @@ export function FormTable() {
         minWidth: "70px",
       },
     },
+
     {
       dataField: "isHREvaluation",
       text: "Feedback Type",
@@ -168,6 +169,20 @@ export function FormTable() {
           text = "Pending";
         }
         return <span className={classname}>{text}</span>;
+      },
+    },
+    {
+      dataField: "isSupervisor",
+      text: "Submitted by Employee",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+        textAlign: "center",
+      },
+      formatter: (cell, row) => {
+        return cell ? (row?.submittedByEmployee ? "Yes" : "No") : "-";
       },
     },
     {

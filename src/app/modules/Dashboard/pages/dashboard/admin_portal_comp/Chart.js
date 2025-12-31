@@ -243,7 +243,7 @@ const ChartData = ({ data }) => {
           ? dashboard?.activeFiscalYear?.label
           : dashboard?.activeFiscalYear?.payrollMonthLabel;
 
-      name = `${name} - ${label}`;
+      name = `${name} - ${label ?? ""}`;
     }
 
     return name;

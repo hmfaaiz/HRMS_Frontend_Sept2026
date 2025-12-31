@@ -26,15 +26,11 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-const { userAccess } = useSelector(
-  (state) => {
-
+  const { userAccess } = useSelector((state) => {
     return {
       userAccess: state.auth.userAccess.employee_goal_setup,
     };
-  },
-  shallowEqual
-);
+  }, shallowEqual);
 
   const accessUser = userAccess.find(
     (item) => item.componentName === "CreateEmployeeGoalSetup"
@@ -47,10 +43,7 @@ const { userAccess } = useSelector(
     };
   }, shallowEqual);
 
-
-
   return (
-    
     <TCard name={CurrentModuleName()}>
       <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
         <FormFIlter />
@@ -60,9 +53,11 @@ const { userAccess } = useSelector(
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={FormUIProps.newFormButtonClick}
+                onClick={() => {
+                  FormUIProps.newFormButtonClick();
+                  FormUIProps.setPanelMode(false);
+                }}
               >
-              
                 <CirclePlus className="w-3 h-3  text-white cursor-pointer mb-1 stroke-3" />{" "}
                 Add
               </button>

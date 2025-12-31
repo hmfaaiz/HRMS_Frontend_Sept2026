@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   salaryPolicy: null,
   appraisalFinalizedRating: {},
+  fiscalFinalizedRating: [],
 };
 
 export const callTypes = {
@@ -45,6 +46,10 @@ export const appraisalFinalizationSlice = createSlice({
     AppraisalFinalizationRatingFetched: (state, action) => {
       state.actionsLoading = false;
       state.appraisalFinalizedRating = action?.payload || {};
+    },
+    AppraisalFinalizationRatingOfFiscalPeriodFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.fiscalFinalizedRating = action?.payload || [];
     },
     SaveAppraisalFinalization: (state, action) => {
       state.actionsLoading = false;

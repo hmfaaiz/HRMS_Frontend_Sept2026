@@ -116,9 +116,8 @@ export function BigTable({ data, setBigTableModalData }) {
           ? dashboard?.activeFiscalYear?.label
           : dashboard?.activeFiscalYear?.payrollMonthLabel;
 
-      name = `${name} - ${label}`;
+      name = `${name} - ${label ?? ""}`;
     }
-
     return name;
   };
 

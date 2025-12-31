@@ -122,8 +122,18 @@ export function FormTable() {
       },
     },
     {
-      dataField: "Employee.employeeStatus.formName",
+      dataField: "Employee.employeeType.formName",
       text: "Employee Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        maxWidth: "100px",
+      },
+    },
+    {
+      dataField: "Employee.employeeStatus.formName",
+      text: "Employee Status",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

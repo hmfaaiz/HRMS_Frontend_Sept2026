@@ -18,6 +18,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
+    setPanelMode
   }
 ) {
   const isUserRead = false;
@@ -30,7 +31,10 @@ export function ActionsColumnFormatter(
         <a
           title=""
           className=""
-          onClick={() => openReadFormDialog(row.employeeId, row.appraisalPeriodId, isUserRead)}
+          onClick={() => {
+            openReadFormDialog(row.employeeId, row.appraisalPeriodId, isUserRead)
+          setPanelMode(false)
+        }}
         >
           <Eye className="w-4 h-4 text-black cursor-pointer" />
         </a>
@@ -39,7 +43,10 @@ export function ActionsColumnFormatter(
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
-          <a title="" className="" onClick={() => openEditFormDialog(row.employeeId, row.appraisalPeriodId)}>
+          <a title="" className="" onClick={() => {
+            openEditFormDialog(row.employeeId, row.appraisalPeriodId)
+              setPanelMode(false)
+            }}>
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
@@ -59,7 +66,10 @@ export function ActionsColumnFormatter(
           <a
             title=""
             className=""
-            onClick={() => openDeleteFormDialog(row.employeeId, row.appraisalPeriodId)}
+            onClick={() =>{
+               openDeleteFormDialog(row.employeeId, row.appraisalPeriodId)
+                setPanelMode(false)
+              }}
           >
             <Trash2 className="w-4 h-4 text-black cursor-pointer" />
           </a>

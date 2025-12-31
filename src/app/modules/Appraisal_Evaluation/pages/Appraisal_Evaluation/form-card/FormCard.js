@@ -15,6 +15,7 @@ export function FormCard() {
             name={CurrentModuleName()}
             isBackButton={true}
             menuOptions={[]}
+            isDashboardRedirect={true}
             isDashboardIcon={true}
           />
         </div>
@@ -27,6 +28,7 @@ export function FormCard() {
             menuOptions={[]}
             isBackButton={true}
             isDashboardIcon={true}
+            isDashboardRedirect={true}  
           />
         </div>
         <div className="px-3 py-2 rounded-lg bg-white">
