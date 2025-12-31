@@ -108,7 +108,8 @@ export function BankEditDialog({ id, show, onHide, userForRead }) {
       const bankUpdatedFields = {
         Id: user.Id,
         Name: user.Name,
-        subsidiaryId : user.subsidiaryId
+        subsidiaryId : user.subsidiaryId,
+        swiftCode : user.swiftCode,
       };
 
       console.log("bankUpdatedFields", bankUpdatedFields);

@@ -555,7 +555,7 @@ export function FormFilter({
 
                   <hr></hr>
 
-                  <h6 className="font-bold mb-0 text-primary my-2">
+                  {/* <h6 className="font-bold mb-0 text-primary my-2">
                     Bank Payment Advice
                   </h6>
                   <div className="grid md:grid-cols-4 gap-x-3 gap-y-1">
@@ -572,12 +572,9 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate"
                       >
                         Bank Payment Advice
-                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                        {/* <SVG
-                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          /> */}
+               
                         <Download className="w-4 h-4 ml-2" />
-                        {/* </span> */}
+                    
                         {adviceLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -594,12 +591,9 @@ export function FormFilter({
                         className="btn btn-primary btn-elevate"
                       >
                          SIF
-                        {/* <span className="svg-icon svg-icon-md svg-icon-primary ml-1"> */}
-                        {/* <SVG
-                            src={toAbsoluteUrl("/media/svg/icons/Communication/ReportDownload.svg")}
-                          /> */}
+            
                         <Download className="w-4 h-4 ml-2" />
-                        {/* </span> */}
+                 
                         {adviceLoading && (
                           <span className="ml-3 mr-3 spinner spinner-white"></span>
                         )}
@@ -607,7 +601,7 @@ export function FormFilter({
                     </div>
                   </div>
 
-                  <hr></hr>
+                  <hr></hr> */}
 
                   <div>
                     <h6 className="font-bold mb-0 text-primary">Payslip</h6>

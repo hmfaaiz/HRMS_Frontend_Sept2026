@@ -400,6 +400,10 @@ const AttendanceCorrection = lazy(()=>
 import("./modules/AttendanceCorrection/pages/index"))
 
 
+const BankAdvice = lazy(()=>
+import("./modules/BankPaymentAdvice/pages/index"))
+
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -551,6 +555,7 @@ const ROUTES = {
   appraisal_review : AppraisalReview,
   attendance_correction : AttendanceCorrection,
   appraisal_finalization : AppraisalFinalization,
+  bank_advice : BankAdvice,
 };
 
 export default function BasePage() {

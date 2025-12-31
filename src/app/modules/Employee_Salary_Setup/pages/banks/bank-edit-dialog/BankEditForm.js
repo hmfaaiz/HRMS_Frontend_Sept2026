@@ -56,9 +56,9 @@ const formValidation = Yup.object().shape({
     .when("eobi_member", {
       is: true, // Condition to check if eobi_member is true
       then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .max(30, "Maximum 30 characters allowed"),
+        schema
+          .required(VALIDATION_MESSAGES.required)
+          .max(30, "Maximum 30 characters allowed"),
       otherwise: Yup.string().nullable(), // Optional if eobi_member is false
     }),
 
@@ -68,9 +68,9 @@ const formValidation = Yup.object().shape({
     .when("pf_member", {
       is: true, // Condition to check if pf_member is true
       then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .max(30, "Maximum 30 characters allowed"),
+        schema
+          .required(VALIDATION_MESSAGES.required)
+          .max(30, "Maximum 30 characters allowed"),
       otherwise: Yup.string().nullable(), // Optional if pf_member is false
     }),
 
@@ -78,10 +78,10 @@ const formValidation = Yup.object().shape({
     // .matches(/^\d+$/, "Must contain only digits") // Only digits validation
     .when("social_security_member", {
       is: true, // Condition to check if social_security_member is true
-     then: (schema) =>
-      schema
-        .required(VALIDATION_MESSAGES.required)
-        .max(30, "Maximum 30 characters allowed"),
+      then: (schema) =>
+        schema
+          .required(VALIDATION_MESSAGES.required)
+          .max(30, "Maximum 30 characters allowed"),
       otherwise: Yup.string().nullable(), // Optional if social_security_member is false
     }),
 
@@ -97,10 +97,10 @@ const formValidation = Yup.object().shape({
   //   .matches(/^\d+$/, "Must contain only digits"), // Only digits validation
 
   emp_bank_accNo: Yup.string()
-  .nullable()
-    // .matches(/^\d+$/, "Must contain only digits")
-    
-    , // Only digits validation
+    .nullable()
+  // .matches(/^\d+$/, "Must contain only digits")
+
+  , // Only digits validation
 
   gratuity_startDate: Yup.date()
     .nullable()
@@ -207,7 +207,7 @@ const formValidation = Yup.object().shape({
   emp_bank_accNo: Yup.string().when("payment_mode_Id", {
     is: 153, // if select value is 153
     // then: Yup.string().required(VALIDATION_MESSAGES.required),
-      then: (schema) =>
+    then: (schema) =>
       schema
         .required(VALIDATION_MESSAGES.required)
         .max(30, "Maximum 30 characters allowed"),
@@ -241,6 +241,7 @@ export function BankEditForm({
   const [defSocialSecurity, setSocialSecurityDate] = useState(null);
   const [defPension, setPensionDate] = useState(null);
   const [defProvidenFund, setProvidentFundDate] = useState(null);
+  const [swiftCode, setSwiftCode] = useState("");
   const [defCurrencyCodeList = null, setDefualtCurrencyCodeList] = useState(
     null
   );
@@ -399,7 +400,7 @@ export function BankEditForm({
     );
 
     fetchEmployeeSalaryEarningList(employeeId, 0, null);
-    console.log("add1111",employeeId,user?.employeeId,dashboard.employeeId)
+    console.log("add1111", employeeId, user?.employeeId, dashboard.employeeId)
     setPanelMode(false)
   }, [user?.employeeId, dashboard.employeeId]);
 
@@ -494,8 +495,8 @@ export function BankEditForm({
           DROPDOWN[response.data?.data?.[0]?.salaryMethod] ||
           DEFAULT_CALCULATION_TYPE_DROPDOWN
         );
-      } 
-      
+      }
+
       else {
         const value = response?.data?.data?.find(
           (el) =>
@@ -736,7 +737,7 @@ export function BankEditForm({
 
       setDefaultMapEarningDeductionList([
         ...defMapEarningDeductionList.map((x) => {
-          if (x.calculation_type == "% Of Basic" ) {
+          if (x.calculation_type == "% Of Basic") {
             // x.amount = (originalSalaryNumber * x.factorValue) / 100;
             x.amount = parseFloat(((originalSalaryNumber * x.factorValue) / 100).toFixed(2));
             if (!roundingPolicyAmount) {
@@ -745,7 +746,7 @@ export function BankEditForm({
             }
             // console.log("x.amount1111", x.amount);
             if (x.isPartOfGrossSalary && x.transactionType == "Earning") {
-              
+
               basicSalaryNumber += x.amount;
             }
           }
@@ -794,7 +795,7 @@ export function BankEditForm({
         }
       }
     } else {
-     
+
       let basicSalaryNumber = Number(basicSalaryInput);
       let gross = 0;
       const result = await Promise.all(
@@ -923,7 +924,24 @@ export function BankEditForm({
 
   const fetchBranch = (bankId) => {
     dispatch(fetchAllBankBranch(bankId));
+
   };
+
+  const applySwiftCode = (bankId) => {
+    const selectedBank = dashboard.allBanks?.find(bank => bank.value === bankId);
+    if (selectedBank && selectedBank?.swiftCode) {
+      setSwiftCode(selectedBank.swiftCode);
+    } else {
+      setSwiftCode("");
+    }
+
+  }
+  useEffect(() => {
+    console.log("user?.bankId1111",user)
+    applySwiftCode(user?.emp_bankId)
+
+  }, [user?.emp_bankId]);
+
 
   useEffect(() => {
     const filteredPermission = dashboard?.allPayrollConfigApproverPermissionList?.entities.filter(
@@ -995,7 +1013,7 @@ export function BankEditForm({
                     : Number(defGrossSalary))
 
               },
-              defMapEarningDeductionList,currentSalaryMethod
+              defMapEarningDeductionList, currentSalaryMethod
             );
           }
         }}
@@ -1992,6 +2010,7 @@ export function BankEditForm({
                           setFieldValue("emp_bank_branchId", null);
                           setFieldValue("emp_bank_accNo", "");
                           setDefaultBanks("")
+                          setSwiftCode("")
 
 
 
@@ -2015,12 +2034,21 @@ export function BankEditForm({
                         }}
                         onChange={(e) => {
                           setFieldValue("emp_bankId", e.value);
+                          applySwiftCode(e.value)
                           setFieldValue("emp_bank_branchId", null);
                           setDefaultEmpBankBranch(null);
 
                           setDefaultBanks(e);
                           // dispatch(fetchAllBanks(e.value));
                           fetchBranch(e.value);
+                          // setFieldValue("swiftCode", "");
+                          //                             const selectedBank = dashboard.allBanks?.find(bank => bank.value === e.value);
+                          //       if (selectedBank) {
+                          //         setFieldValue("swiftCode", selectedBank.swiftCode);
+                          //       } else {
+                          //         setFieldValue("swiftCode", "");
+                          //       }
+                          //       console.log("selectedBank111111",selectedBank)
                         }}
                         value={
                           !checkReadOnlyStatus(values, [151, 152])
@@ -2081,6 +2109,24 @@ export function BankEditForm({
                       />
                       {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                     </div>
+
+                    <div>
+                      <Field
+                        name="swiftCode"
+                        disabled
+
+
+                        component={Input}
+                        value={swiftCode ? swiftCode : ""}
+                        placeholder="Auto"
+                        label={<span> Swift Code</span>}
+                        autoComplete="off"
+                      />
+                    </div>
+
+
+
+
 
                     {/* <div>
                       <Field

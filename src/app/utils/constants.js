@@ -359,7 +359,17 @@ export const ATTENDANCE_TYPE = [
   },
 ]
 
+export const ATTENDANCE_TYPE_FOR_ATTENDANCE_CORRECTION = [
 
+  {
+    label: "Regular Attendance",
+    value: 1
+  },
+  {
+    label: "Auto Present Attendance",
+    value: 2
+  },
+]
 
 export const ATTENDANCE_STATUS = [
   {
