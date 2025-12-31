@@ -170,7 +170,7 @@ export const generateNewBankAdvice = (filter, document, labels = {}) => async (d
       // Trigger file download
       const link = document.createElement('a');
       link.href = pdfUrl;
-      link.setAttribute('download', 'New_Bank_Payment_Advice.xlsx');
+      link.setAttribute('download', 'Bank_Payment_Advice_(Dynasoft).xlsx');
       document.body.appendChild(link);
       link.click();
       dispatch(actions.adviceFetched({}));

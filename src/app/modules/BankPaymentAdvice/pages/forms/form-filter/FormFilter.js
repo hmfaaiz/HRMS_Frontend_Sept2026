@@ -471,7 +471,7 @@ export function FormFilter({
                         }
                         className="btn btn-primary btn-elevate"
                       >
-                        New Payment Advice
+                        Bank Payment Advice (Dynasoft)
               
                         <Download className="w-4 h-4 ml-2" />
                         {/* </span> */}
