@@ -31,6 +31,7 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      setPanelMode : formUIContext.setPanelMode
     };
   }, [formUIContext]);
 
@@ -161,6 +162,7 @@ export function FormTable() {
       formatExtraData: {
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
+        setPanelMode : formUIProps?.setPanelMode,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,

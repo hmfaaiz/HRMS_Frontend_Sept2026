@@ -228,3 +228,9 @@ console.log("calculateServicePeriod1111")
 console.log("aaaaaaa1",`${years} Year(s), ${months} Month(s), ${days} Day(s)`)
   return `${years} Year(s), ${months} Month(s), ${days} Day(s)`;
 };
+
+export const decodeHtml = (html) => {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+};

@@ -18,6 +18,13 @@ export function getAppraisalFinalizationRatingById(body) {
   );
 }
 
+export function getAppraisalFinalizationRatingOfFiscalPeriodById(body) {
+  return axios.post(
+    `${USERS_URL}/appraisal_finalization/read-appraisal-finalization-rating-fiscal-period`,
+    body
+  );
+}
+
 export function saveAppraisalFinalization(body) {
   return axios.post(
     `${USERS_URL}/appraisal_finalization/save-appraisal-finalization`,

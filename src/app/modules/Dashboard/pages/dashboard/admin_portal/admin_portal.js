@@ -20,6 +20,7 @@ import BigTableModal from "../admin_portal_comp/ExpandViews/BigTableModal";
 import SmallTableModal from "../admin_portal_comp/ExpandViews/SmallTableModal";
 import StatsCardModal from "../admin_portal_comp/ExpandViews/StatsCardModal";
 import SeparationArea from "../admin_portal_comp/Views/SeparationArea";
+import AppraisalArea from "../admin_portal_comp/Views/AppraisalArea";
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
@@ -33,15 +34,19 @@ export const AdminPortal = () => {
   const [smallTableModalData, setSmallTableModalData] = useState(null);
   const [summaryModalHeading, setSummaryModalHeading] = useState("");
   const [summaryFilter, setSummaryFilter] = useState({
-    subsidiaryId: user?.EmployeeMapping?.subsidiaryId
-      ? user.EmployeeMapping.subsidiaryId
-      : user?.subsidiaryId?.length > 0
-      ? Number(user?.subsidiaryId?.[0]) || ""
-      : "",
+    subsidiaryId:
+      // user?.EmployeeMapping?.subsidiaryId
+      //   ? user.EmployeeMapping.subsidiaryId
+      //   : user?.subsidiaryId?.length > 0
+      //   ? Number(user?.subsidiaryId?.[0]) || ""
+      //   :
+      "",
     gradeId: "",
     departmentId: "",
     designationId: "",
     locationId: "",
+    appraisalPeriodId: "",
+    appraisalCategoryId: "",
   });
 
   const {
@@ -64,18 +69,19 @@ export const AdminPortal = () => {
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
     dispatch(actions.fetchHolidayDetail());
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    if (user?.EmployeeMapping?.subsidiaryId) {
-      setSummaryFilter({
-        ...summaryFilter,
-        subsidiaryId: user?.EmployeeMapping?.subsidiaryId,
-      });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.EmployeeMapping?.subsidiaryId) {
+  //     setSummaryFilter({
+  //       ...summaryFilter,
+  //       subsidiaryId: user?.EmployeeMapping?.subsidiaryId,
+  //     });
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -102,6 +108,8 @@ export const AdminPortal = () => {
       departmentId: "",
       designationId: "",
       locationId: "",
+      appraisalPeriodId: "",
+      appraisalCategoryId: "",
     });
     setActiveTab(e?.value);
   };
@@ -114,6 +122,19 @@ export const AdminPortal = () => {
       // dispatch()
     }
   }, [summaryFilter?.subsidiaryId]);
+
+  useEffect(() => {
+    let subs = dashboard?.allSubsidiaryList?.find(
+      (e) => e?.value === user?.EmployeeMapping?.subsidiaryId
+    );
+    if (!subs) return;
+    if (subs) {
+      setSummaryFilter({
+        ...summaryFilter,
+        subsidiaryId: subs?.value,
+      });
+    }
+  }, [dashboard?.allSubsidiaryList, user?.EmployeeMapping]);
 
   return (
     <>
@@ -130,6 +151,7 @@ export const AdminPortal = () => {
             allSubsidiaryList={allSubsidiaryList}
             summaryFilter={summaryFilter}
             setSummaryFilter={setSummaryFilter}
+            dashboard={dashboard}
           />
           {activeTab === "default" ? (
             <DefaultArea
@@ -220,6 +242,21 @@ export const AdminPortal = () => {
             />
           ) : activeTab === "separation" ? (
             <SeparationArea
+              allSubsidiaryList={allSubsidiaryList}
+              allLocationChildMenus={allLocationChildMenus}
+              summaryFilter={summaryFilter}
+              allParentDept={allParentDept}
+              setSummaryFilter={setSummaryFilter}
+              allEmployeegradeList={allEmployeegradeList}
+              allDashboardAlerts={allDashboardAlerts}
+              summaryData={summaryData}
+              setBigTableModalData={setBigTableModalData}
+              setSmallTableModalData={setSmallTableModalData}
+              setSummaryModalHeading={setSummaryModalHeading}
+              holidayList={holidayList}
+            />
+          ) : activeTab === "appraisal" ? (
+            <AppraisalArea
               allSubsidiaryList={allSubsidiaryList}
               allLocationChildMenus={allLocationChildMenus}
               summaryFilter={summaryFilter}

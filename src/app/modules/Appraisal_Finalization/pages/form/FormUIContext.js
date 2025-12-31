@@ -30,6 +30,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setQueryParamsBase,
     setQueryParams,
     openReadDialog: FormUIEvents.openReadDialog,
+    openReadFiscalPeriodDialog: FormUIEvents?.openReadFiscalPeriodDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

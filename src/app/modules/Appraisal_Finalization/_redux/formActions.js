@@ -108,3 +108,24 @@ export const downloadIncrementLetter = (payload) => async (dispatch) => {
     return Promise.resolve(); // <-- resolves so outer `.then()` still triggers
   }
 };
+
+export const fetchAppraisalFinalizationRatingOfFiscalPeriod = (Id) => async (
+  dispatch
+) => {
+  dispatch(actions.startCall({ callType: callTypes.action }));
+  return requestFromServer
+    .getAppraisalFinalizationRatingOfFiscalPeriodById({ Id })
+    .then((response) => {
+      dispatch(
+        actions.AppraisalFinalizationRatingOfFiscalPeriodFetched(
+          response?.data?.data
+        )
+      );
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find Record";
+      dispatch(actions.AppraisalFinalizationRatingOfFiscalPeriodFetched({}));
+      toast.error(error?.response?.data?.message || error.clientMessage);
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};

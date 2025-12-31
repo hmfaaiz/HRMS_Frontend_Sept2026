@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/formActions";
+import { decodeHtml } from "../../../../../utils/common";
 
 export function FormReadDialog({ id, show, onHide }) {
   // Customers UI Context
@@ -39,11 +40,10 @@ export function FormReadDialog({ id, show, onHide }) {
       {/*end::Loading*/}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          View Ratings
+          View Ratings (Appraisal Period Wise)
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        
         <div className="py-2">
           <div className="grid grid-cols-2 text-sm gap-1">
             <p className="mb-0">
@@ -83,7 +83,7 @@ export function FormReadDialog({ id, show, onHide }) {
         <div>
           <div className="flex justify-between items-center">
             <h6 className="font-bold mb-0 text-primary">
-              Manager's Overall Assessment
+              Overall Assessment (Summary)
             </h6>
           </div>
           <div className="w-full overflow-x-auto">
@@ -218,7 +218,7 @@ export function FormReadDialog({ id, show, onHide }) {
         <hr />
         <div>
           <div className="flex justify-between items-center">
-            <h6 className="font-bold mb-0 text-primary">Recommendation</h6>
+            <h6 className="font-bold mb-1 text-primary">Recommendation</h6>
           </div>
           <div className="w-full overflow-x-auto">
             <div className="react-bootstrap-table table-responsive">
@@ -250,10 +250,34 @@ export function FormReadDialog({ id, show, onHide }) {
                     </td>
                     <td
                       dangerouslySetInnerHTML={{
-                        __html: appraisalFinalizedRating?.managerRecommendation,
+                        __html: decodeHtml(
+                          appraisalFinalizedRating?.managerRecommendation
+                        ),
                       }}
                     ></td>
                   </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h6 className="font-bold mb-0 text-primary text-xs">
+            Increment Suggested :{" "}
+            {appraisalFinalizedRating?.recommendedIncrement}%
+          </h6>
+        </div>
+        <hr />
+        <div>
+          <div className="flex justify-between items-center">
+            <h6 className="font-bold mb-1 text-primary">
+              Manager's Recommendation (After Rating Finalization)
+            </h6>
+          </div>
+          <div className="w-full overflow-x-auto">
+            <div className="react-bootstrap-table table-responsive">
+              <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                <tbody>
                   <tr>
                     <td>
                       <strong style={{ fontWeight: 700 }}>
@@ -281,15 +305,10 @@ export function FormReadDialog({ id, show, onHide }) {
             </div>
           </div>
         </div>
-        <hr />
         <div>
-          <h6 className="font-semibold mb-0 text-primary text-sm">
+          <h6 className="font-bold mb-0 text-primary text-xs">
             Increment Percentage Recommended by Manager :{" "}
             {appraisalFinalizedRating?.incrementPercentageRecommendedByManager}%
-          </h6>
-          <h6 className="font-bold mb-0 text-primary">
-            Increment Suggested :{" "}
-            {appraisalFinalizedRating?.recommendedIncrement}%
           </h6>
         </div>
       </Modal.Body>

@@ -17,6 +17,7 @@ import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile
 import * as actions from "../../../_redux/formActions";
 import { useFromUIContext } from "../FormUIContext";
 import { TextArea } from "../../../../../../_metronic/_partials/controls";
+import { decodeHtml } from "../../../../../utils/common";
 
 const formValidation = (minPoint, maxPoint) =>
   Yup.object().shape({
@@ -814,7 +815,9 @@ export function MasterEditForm({
                                     </td>
                                     <td
                                       dangerouslySetInnerHTML={{
-                                        __html: values?.managerRecommendation,
+                                        __html: decodeHtml(
+                                          values?.managerRecommendation
+                                        ),
                                       }}
                                     ></td>
                                   </tr>
@@ -828,11 +831,15 @@ export function MasterEditForm({
 
                     {values?.employeeId && (
                       <>
-                        <div className="w-2/12">
+                        <div className="w-3/12">
                           <Field
                             name="incrementPercentageRecommendedByManager"
                             component={AmountInput}
-                            label="Increment Percentage Recommended by Manager"
+                            label={
+                              <span className="font-bold">
+                                Increment Percentage Recommended by Manager
+                              </span>
+                            }
                             disabled={values?.isFinalize || isUserForRead}
                           />
                         </div>
@@ -840,7 +847,13 @@ export function MasterEditForm({
                           <Field
                             name="managerRecomendationAfterFinalization"
                             component={TextArea}
-                            label="Manager Recommendation after Finalization"
+                            // label="Manager Recommendation after Finalization"
+                            label={
+                              <span className="font-bold">
+                                Manager Recommendation after Finalization
+                                <span style={{ color: "red" }}>*</span>
+                              </span>
+                            }
                             disabled={values?.isFinalize || isUserForRead}
                           />
                         </div>
@@ -848,7 +861,12 @@ export function MasterEditForm({
                           <Field
                             name="additionalRemarks"
                             component={TextArea}
-                            label="Additional Remarks"
+                            // label="Additional Remarks"
+                            label={
+                              <span className="font-bold">
+                                Additional Remarks
+                              </span>
+                            }
                             disabled={values?.isFinalize || isUserForRead}
                           />
                         </div>{" "}

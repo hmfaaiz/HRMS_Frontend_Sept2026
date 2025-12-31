@@ -7,7 +7,7 @@ import { ErrorMessage, Field, FieldArray, Formik } from "formik";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { LayoutList } from "lucide-react";
+import { Calendar1, LayoutList } from "lucide-react";
 import {
   Checkbox,
   DatePickerField,
@@ -16,6 +16,7 @@ import { NumericFormat } from "react-number-format";
 import * as Yup from "yup";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { toast } from "react-toastify";
+import { amountFormat } from "../../../../../utils/common";
 
 const FormValidation = Yup.object().shape({
   // entities is an array of rows
@@ -99,6 +100,7 @@ export function FormTable() {
       queryParams: formUIContext.queryParams,
       setQueryParams: formUIContext.setQueryParams,
       openReadDialog: formUIContext.openReadDialog,
+      openReadFiscalPeriodDialog: formUIContext.openReadFiscalPeriodDialog,
     };
   }, [formUIContext]);
 
@@ -147,7 +149,8 @@ export function FormTable() {
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
     dispatch(fetchAllFormsMenu(275, "allEmployeeStatus"));
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
-    dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
+    dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus2"));
+    dispatch(fetchAllFormsMenu(88, "allEmpTypeDynamicChildMenus1")); // For EmployeeType
   }, [dispatch]);
 
   // Handle form submission for all buttons
@@ -267,9 +270,10 @@ export function FormTable() {
                                     disabled={!values.entities?.length}
                                     checked={
                                       values.entities?.length > 0 &&
-                                      values.entities.every(
-                                        (row) => row.isSelected
-                                      )
+                                      values.entities?.length ===
+                                        values.entities?.filter(
+                                          (row) => row?.isSelected
+                                        )?.length
                                     }
                                     onChange={(e) => {
                                       const checked = e.target.checked;
@@ -289,13 +293,13 @@ export function FormTable() {
                                 <th className="w-28">Manager Rec.</th>
                                 <th className="w-40">Final Increment %</th>
                                 <th className="w-80">Final Remarks</th>
-                                <th className="w-44">
+                                {/* <th className="w-44">
                                   Actucal{" "}
                                   {salaryPolicy == "Basic to Gross"
                                     ? "Basic"
                                     : "Gross"}{" "}
                                   Salary
-                                </th>
+                                </th> */}
                                 <th className="w-52">
                                   Before Revised{" "}
                                   {salaryPolicy == "Basic to Gross"
@@ -434,8 +438,13 @@ export function FormTable() {
                                           className="invalid-feedback d-block"
                                         />
                                       </td>
-                                      <td>{e?.salary || ""}</td>
-                                      <td>{e?.revisedBeforeSalary || ""}</td>
+                                      {/* <td>{e?.salary || ""}</td> */}
+                                      <td>
+                                        {amountFormat(
+                                          e?.revisedBeforeSalary,
+                                          true
+                                        ) || ""}
+                                      </td>
                                       <td>
                                         <Field
                                           name={`entities.${i}.revisedSalary`}
@@ -549,15 +558,19 @@ export function FormTable() {
                                             );
                                           }}
                                           value={
-                                            dashboard?.allEmpTypeDynamicChildMenus?.find(
+                                            [
+                                              ...dashboard?.allEmpTypeDynamicChildMenus1,
+                                              ...dashboard?.allEmpTypeDynamicChildMenus2,
+                                            ]?.find(
                                               (el) =>
                                                 el?.value ===
                                                 e?.revisedEmployeeTypeId
                                             ) || null
                                           }
-                                          options={
-                                            dashboard?.allEmpTypeDynamicChildMenus
-                                          }
+                                          options={[
+                                            ...dashboard?.allEmpTypeDynamicChildMenus1,
+                                            ...dashboard?.allEmpTypeDynamicChildMenus2,
+                                          ]}
                                           isDisabled={
                                             !e?.isSelected || e?.isCompleted
                                           }
@@ -670,7 +683,7 @@ export function FormTable() {
                                           }
                                         >
                                           {e?.isCompleted
-                                            ? "Completed"
+                                            ? "Finalized"
                                             : "Pending"}
                                         </span>
                                       </td>
@@ -685,17 +698,16 @@ export function FormTable() {
                                           {e?.isEmailSend ? "Send" : "Not Send"}
                                         </span>
                                       </td>
-                                      <td className="text-right">
+                                      <td className="text-right gap-2">
                                         <OverlayTrigger
                                           overlay={
                                             <Tooltip id="products-edit-tooltip">
-                                              View Ratings
+                                              View Ratings (Appraisal Period)
                                             </Tooltip>
                                           }
                                         >
                                           <a
-                                            title=""
-                                            className=""
+                                            className="mx-1"
                                             onClick={() =>
                                               formUIProps.openReadDialog(
                                                 e?.AppraisalReview?.Id
@@ -703,6 +715,23 @@ export function FormTable() {
                                             }
                                           >
                                             <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+                                          </a>
+                                        </OverlayTrigger>
+                                        <OverlayTrigger
+                                          overlay={
+                                            <Tooltip id="products-edit-tooltip">
+                                              View Ratings (Fiscal Period)
+                                            </Tooltip>
+                                          }
+                                        >
+                                          <a
+                                            onClick={() =>
+                                              formUIProps.openReadFiscalPeriodDialog(
+                                                e?.AppraisalReview?.Id
+                                              )
+                                            }
+                                          >
+                                            <Calendar1 className="w-4 h-4 text-black cursor-pointer" />
                                           </a>
                                         </OverlayTrigger>
                                       </td>
