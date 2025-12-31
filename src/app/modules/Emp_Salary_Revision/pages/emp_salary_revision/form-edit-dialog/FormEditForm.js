@@ -313,7 +313,7 @@ export function FormEditForm({
   ] = useState([]);
 
   const [clearBankAccTitleField, setBankAccTitleClearField] = useState("");
-
+  const [swiftCode, setSwiftCode] = useState("");
   const [defBasicSalaryFactor, setBasicSalaryFactor] = useState(0);
   const [defGrossSalary, setGrossSalary] = useState(0);
   const [defBasicSalary, setBasicSalary] = useState(0);
@@ -1151,7 +1151,20 @@ console.log("element.target.id11111",element.target.id)
 
   }, [dashboard.salaryRoundingPolicy, user?.subsidiaryId, salaryRoundingSubsidiaryId]);
 
+  const applySwiftCode = (bankId) => {
+    const selectedBank = dashboard.allBanks?.find(bank => bank.value === bankId);
+    if (selectedBank && selectedBank?.swiftCode) {
+      setSwiftCode(selectedBank.swiftCode);
+    } else {
+      setSwiftCode("");
+    }
 
+  }
+  useEffect(() => {
+    console.log("user?.bankId1111",user?.emp_bankId)
+    applySwiftCode(user?.emp_bankId)
+
+  }, [user]);
   return (
     <>
       <Formik
@@ -2881,6 +2894,7 @@ console.log("element.target.id11111",element.target.id)
                         setFieldValue("emp_bankId", e.value);
                         setFieldValue("emp_bank_branchId", null);
                         setDefaultEmpBankBranch(null);
+                        applySwiftCode(e.value)
                         setDefaultBanks(e);
 
                         dispatch(fetchAllBankBranch(e.value));
@@ -2942,6 +2956,20 @@ console.log("element.target.id11111",element.target.id)
 
                     {/* <ErrorMessage className="form-feedBack" name="emp_bank_accNo" component="div" /> */}
                   </div>
+
+                    <div>
+                                        <Field
+                                          name="swiftCode"
+                                          disabled
+                  
+                  
+                                          component={Input}
+                                          value={swiftCode ? swiftCode : ""}
+                                          placeholder="Auto"
+                                          label={<span> Swift Code</span>}
+                                          autoComplete="off"
+                                        />
+                                      </div>
                   {/* Hidden by Mubin bhai  12-9-2025*/}
                   {/* <div>
                     <Field

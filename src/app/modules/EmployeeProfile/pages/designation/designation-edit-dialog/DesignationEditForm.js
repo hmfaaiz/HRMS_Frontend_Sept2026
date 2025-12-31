@@ -3529,7 +3529,7 @@ export function DesignationEditForm({
                     <span style={{ color: "red" }}>*</span>
                   ) : null}
                 </span>
-                <div className="grid grid-cols-6 gap-x-2">
+                {/* <div className="grid grid-cols-6 gap-x-2">
                   {dashboard?.geoLocation?.map((el, ind) => {
                     // Always normalize to array
                     const selectedIds =
@@ -3580,7 +3580,51 @@ export function DesignationEditForm({
 
                     );
                   })}
-                </div>
+                </div> */}
+
+                <div className="grid grid-cols-6 gap-x-2">
+  {dashboard?.geoLocation?.map((el, ind) => {
+
+    const selectedIds =
+      typeof values?.geoLocationIds === "string"
+        ? JSON.parse(values.geoLocationIds)
+        : values?.geoLocationIds || [];
+
+    const isChecked = selectedIds.includes(String(el?.value));
+
+    return (
+      <Checkbox
+        key={ind}
+        children={el?.label}
+        isSelected={isChecked}
+        onChange={(payload) => {
+          const checked =
+            typeof payload === "boolean"
+              ? payload
+              : payload?.target?.checked ?? false;
+
+          const current =
+            typeof values?.geoLocationIds === "string"
+              ? JSON.parse(values.geoLocationIds || "[]")
+              : values?.geoLocationIds || [];
+
+          const val = String(el?.value);
+
+          let updated;
+          if (checked) {
+            updated = current.includes(val) ? [...current] : [...current, val];
+          } else {
+            updated = current.filter((id) => id !== val);
+          }
+
+          setFieldValue("geoLocationIds", updated);
+        }}
+        disabled={!values?.subsidiaryId || isUserForRead || values?.allowedAnywhere}
+      />
+    );
+  })}
+</div>
+
                   {errors?.geoLocationIds && (
                   <div className="invalid-feedback">{errors.geoLocationIds}</div>
                 )}
