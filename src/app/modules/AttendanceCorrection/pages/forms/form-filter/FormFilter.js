@@ -10,7 +10,7 @@ import {
   DatePickerField,
   Select,
 } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_STATUS, ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import { ATTENDANCE_STATUS, ATTENDANCE_TYPE_FOR_ATTENDANCE_CORRECTION, VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import {
@@ -429,12 +429,12 @@ export function FormFilter({
                         const value =
                           e.target.value == -1 ? "" : Number(e.target.value);
                         setFieldValue("attendanceType", value);
-                        setFieldValue("markAttendancewithshift", "");
+                        setFieldValue("employeeId", "");
                       }}
                       label={<span> Attendance Type</span>}
                       value={values.attendanceType}
                       autoComplete="off"
-                      children={CustomDropdown({ data: ATTENDANCE_TYPE })}
+                      children={CustomDropdown({ data: ATTENDANCE_TYPE_FOR_ATTENDANCE_CORRECTION })}
                     />
                   </div>
                   <div>
