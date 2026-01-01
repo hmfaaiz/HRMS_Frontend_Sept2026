@@ -301,18 +301,16 @@ export function FormTable() {
                                   Salary
                                 </th> */}
                                 <th className="w-52">
-                                  Before Revised{" "}
                                   {salaryPolicy == "Basic to Gross"
                                     ? "Basic"
                                     : "Gross"}{" "}
-                                  Salary
+                                  Salary (Before)
                                 </th>
                                 <th className="w-44">
-                                  Revised{" "}
                                   {salaryPolicy == "Basic to Gross"
                                     ? "Basic"
                                     : "Gross"}{" "}
-                                  Salary
+                                  Salary (after Revision)
                                 </th>
                                 <th className="w-52">Revised Grade</th>
                                 <th className="w-60">Revised Designation</th>

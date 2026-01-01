@@ -44,9 +44,11 @@ export const fetchDesignationsByGradeId = (id) => (dispatch) => {
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.allDesignationFetched(entities));
+      return entities;
     })
     .catch((error) => {
       error.clientMessage = "Can't find";
+      return [];
     });
 };
 
