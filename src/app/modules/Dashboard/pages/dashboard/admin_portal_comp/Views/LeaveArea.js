@@ -103,6 +103,7 @@ const LeaveArea = ({
               ]}
             />
           </div>
+          <div></div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
