@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import * as actions from "../../../_redux/dashboardActions";
-import { useDispatch } from "react-redux";
 import {
   fetchAllFormsMenu,
   fetchAllParentDept,
@@ -24,23 +23,14 @@ import AppraisalArea from "../admin_portal_comp/Views/AppraisalArea";
 
 export const AdminPortal = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth?.user || {});
-  const dashboard = useSelector((state) => state.dashboard || []);
 
-  const [isLoading, setIsLoading] = useState(false);
-  //for dropdown of tab intially default
-  const [activeTab, setActiveTab] = useState("default"); // Default to Employee
-  const [bigTableModalData, setBigTableModalData] = useState(null);
-  const [smallTableModalData, setSmallTableModalData] = useState(null);
-  const [summaryModalHeading, setSummaryModalHeading] = useState("");
+  const user = useSelector((state) => state.auth?.user || {});
+  const dashboard = useSelector((state) => state.dashboard || {});
+
+  const [activeTab, setActiveTab] = useState("default");
+
   const [summaryFilter, setSummaryFilter] = useState({
-    subsidiaryId:
-      // user?.EmployeeMapping?.subsidiaryId
-      //   ? user.EmployeeMapping.subsidiaryId
-      //   : user?.subsidiaryId?.length > 0
-      //   ? Number(user?.subsidiaryId?.[0]) || ""
-      //   :
-      "",
+    subsidiaryId: "",
     gradeId: "",
     departmentId: "",
     designationId: "",
@@ -60,10 +50,18 @@ export const AdminPortal = () => {
     summaryDetailData,
     announcement,
     holidayList,
+    appraisalPeriodBySubList,
+    allAppraisalCategory,
   } = dashboard;
 
+  const [bigTableModalData, setBigTableModalData] = useState(null);
+  const [smallTableModalData, setSmallTableModalData] = useState(null);
+  const [summaryModalHeading, setSummaryModalHeading] = useState("");
+
+  /* ===============================
+     1️ INITIAL STATIC DATA
+  ================================ */
   useEffect(() => {
-    setIsLoading(true);
     dispatch(actions.fetchAnnouncementData());
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
@@ -71,231 +69,289 @@ export const AdminPortal = () => {
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
     dispatch(actions.fetchHolidayDetail());
-    setIsLoading(false);
-  }, []);
-
-  // useEffect(() => {
-  //   if (user?.EmployeeMapping?.subsidiaryId) {
-  //     setSummaryFilter({
-  //       ...summaryFilter,
-  //       subsidiaryId: user?.EmployeeMapping?.subsidiaryId,
-  //     });
-  //   }
-  // }, [user]);
-
+  }, [dispatch]);
+  console.log("wrrroooo");
+  /* ===============================
+     2️ SET DEFAULT SUBSIDIARY
+  ================================ */
   useEffect(() => {
-    setIsLoading(true);
+    if (
+      summaryFilter.subsidiaryId ||
+      !allSubsidiaryList?.length ||
+      !user?.EmployeeMapping?.subsidiaryId
+    )
+      return;
+
+    const subs = allSubsidiaryList.find(
+      (s) => s.value === user.EmployeeMapping.subsidiaryId
+    );
+
+    if (subs) {
+      setSummaryFilter((prev) => ({
+        ...prev,
+        subsidiaryId: subs.value,
+      }));
+    }
+  }, [
+    allSubsidiaryList,
+    user?.EmployeeMapping?.subsidiaryId,
+    summaryFilter.subsidiaryId,
+  ]);
+
+  /* ===============================
+     3️ APPRAISAL DEFAULTS
+     Set appraisalPeriodId & appraisalCategoryId before fetching alerts
+  ================================ */
+  useEffect(() => {
+    if (activeTab !== "appraisal") return;
+
+    setSummaryFilter((prev) => ({
+      ...prev,
+      appraisalPeriodId: appraisalPeriodBySubList?.[0]?.value ?? "",
+      appraisalCategoryId: allAppraisalCategory?.[0]?.value ?? "",
+    }));
+  }, [activeTab, appraisalPeriodBySubList, allAppraisalCategory]);
+
+  /* ===============================
+     4️ FETCH DASHBOARD ALERTS + DEPTS
+  ================================ */
+  useEffect(() => {
+    if (!summaryFilter.subsidiaryId) return;
+
+    // For appraisal, wait until both values exist
+    if (
+      activeTab === "appraisal" &&
+      (!summaryFilter.appraisalPeriodId || !summaryFilter.appraisalCategoryId)
+    )
+      return;
+
     dispatch(
       actions.fetchDashboardAlert({
-        subsidiaryId: summaryFilter?.subsidiaryId,
+        subsidiaryId: summaryFilter.subsidiaryId,
         activeTab,
+        appraisalPeriodId: summaryFilter.appraisalPeriodId,
+        appraisalCategoryId: summaryFilter.appraisalCategoryId,
       })
     );
-    dispatch(fetchAllParentDept(summaryFilter?.subsidiaryId));
-    setIsLoading(false);
-  }, [summaryFilter?.subsidiaryId, activeTab]);
 
+    dispatch(fetchAllParentDept(summaryFilter.subsidiaryId));
+  }, [
+    dispatch,
+    summaryFilter.subsidiaryId,
+    activeTab,
+    summaryFilter.appraisalPeriodId,
+    summaryFilter.appraisalCategoryId,
+  ]);
+
+  /* ===============================
+     5️ SUMMARY DATA (CONTROLLED)
+  ================================ */
   useEffect(() => {
-    setIsLoading(true);
-    dispatch(actions.fetchSummary(summaryFilter));
-    setIsLoading(false);
-  }, [summaryFilter]);
+    if (!summaryFilter.subsidiaryId) return;
 
+    dispatch(actions.fetchSummary(summaryFilter));
+  }, [
+    dispatch,
+    summaryFilter.subsidiaryId,
+    summaryFilter.gradeId,
+    summaryFilter.departmentId,
+    summaryFilter.designationId,
+    summaryFilter.locationId,
+    summaryFilter.appraisalPeriodId,
+    summaryFilter.appraisalCategoryId,
+  ]);
+
+  /* ===============================
+     6️ FISCAL YEAR & APPRAISAL PERIODS
+  ================================ */
+  useEffect(() => {
+    if (!summaryFilter.subsidiaryId) return;
+
+    dispatch(
+      getActiveFiscalYear("activeFiscalYear", summaryFilter.subsidiaryId)
+    );
+
+    if (activeTab === "appraisal") {
+      dispatch(
+        actions.fetchAllAppraisalPeriodDataBySubsidiaryId(
+          summaryFilter.subsidiaryId
+        )
+      );
+    }
+  }, [dispatch, summaryFilter.subsidiaryId, activeTab]);
+
+  /* ===============================
+     TAB CHANGE HANDLER
+  ================================ */
   const handleTabChange = (e) => {
-    setSummaryFilter({
-      ...summaryFilter,
+    setActiveTab(e.value);
+    setSummaryFilter((prev) => ({
+      ...prev,
       gradeId: "",
       departmentId: "",
       designationId: "",
       locationId: "",
       appraisalPeriodId: "",
       appraisalCategoryId: "",
-    });
-    setActiveTab(e?.value);
+    }));
   };
 
-  useEffect(() => {
-    if (summaryFilter?.subsidiaryId) {
-      dispatch(
-        getActiveFiscalYear("activeFiscalYear", summaryFilter?.subsidiaryId)
-      );
-      // dispatch()
-    }
-  }, [summaryFilter?.subsidiaryId]);
-
-  useEffect(() => {
-    let subs = dashboard?.allSubsidiaryList?.find(
-      (e) => e?.value === user?.EmployeeMapping?.subsidiaryId
-    );
-    if (!subs) return;
-    if (subs) {
-      setSummaryFilter({
-        ...summaryFilter,
-        subsidiaryId: subs?.value,
-      });
-    }
-  }, [dashboard?.allSubsidiaryList, user?.EmployeeMapping]);
-
+  /* ===============================
+     RENDER
+  ================================ */
   return (
     <>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
-        </div>
-      ) : (
-        <>
-          <AdminHead
-            announcement={announcement}
-            handleChange={handleTabChange}
-            activeTab={activeTab}
-            allSubsidiaryList={allSubsidiaryList}
-            summaryFilter={summaryFilter}
-            setSummaryFilter={setSummaryFilter}
-            dashboard={dashboard}
-          />
-          {activeTab === "default" ? (
-            <DefaultArea
-              allSubsidiaryList={allSubsidiaryList}
-              summaryFilter={summaryFilter}
-              allLocationChildMenus={allLocationChildMenus}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : activeTab === "employee" ? (
-            <EmployeeArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : activeTab === "leave" ? (
-            <LeaveArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : activeTab === "attendance" ? (
-            <AttendanceArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-            />
-          ) : activeTab === "recruitment" ? (
-            <RecuritmentArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              allDesignations={allDesignations}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : activeTab === "payroll" ? (
-            <PayrollArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : activeTab === "separation" ? (
-            <SeparationArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : activeTab === "appraisal" ? (
-            <AppraisalArea
-              allSubsidiaryList={allSubsidiaryList}
-              allLocationChildMenus={allLocationChildMenus}
-              summaryFilter={summaryFilter}
-              allParentDept={allParentDept}
-              setSummaryFilter={setSummaryFilter}
-              allEmployeegradeList={allEmployeegradeList}
-              allDashboardAlerts={allDashboardAlerts}
-              summaryData={summaryData}
-              setBigTableModalData={setBigTableModalData}
-              setSmallTableModalData={setSmallTableModalData}
-              setSummaryModalHeading={setSummaryModalHeading}
-              holidayList={holidayList}
-            />
-          ) : null}
-          <BigTableModal
-            show={bigTableModalData}
-            data={bigTableModalData}
-            onHide={() => {
-              setBigTableModalData(null);
-            }}
-          />
-          <SmallTableModal
-            show={smallTableModalData}
-            data={smallTableModalData}
-            onHide={() => {
-              setSmallTableModalData(null);
-            }}
-          />
-          <StatsCardModal
-            show={summaryDetailData}
-            data={summaryDetailData}
-            heading={summaryModalHeading}
-            onHide={() => {
-              setSummaryModalHeading("");
-              dispatch(actions.fetchSummaryDetail());
-            }}
-          />
-        </>
-      )}
+      {" "}
+      <AdminHead
+        announcement={announcement}
+        handleChange={handleTabChange}
+        activeTab={activeTab}
+        allSubsidiaryList={allSubsidiaryList}
+        summaryFilter={summaryFilter}
+        setSummaryFilter={setSummaryFilter}
+        dashboard={dashboard}
+      />{" "}
+      {activeTab === "default" ? (
+        <DefaultArea
+          allSubsidiaryList={allSubsidiaryList}
+          summaryFilter={summaryFilter}
+          allLocationChildMenus={allLocationChildMenus}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab === "employee" ? (
+        <EmployeeArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab === "leave" ? (
+        <LeaveArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab === "attendance" ? (
+        <AttendanceArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+        />
+      ) : activeTab === "recruitment" ? (
+        <RecuritmentArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          allDesignations={allDesignations}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab === "payroll" ? (
+        <PayrollArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab === "separation" ? (
+        <SeparationArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : activeTab === "appraisal" ? (
+        <AppraisalArea
+          allSubsidiaryList={allSubsidiaryList}
+          allLocationChildMenus={allLocationChildMenus}
+          summaryFilter={summaryFilter}
+          allParentDept={allParentDept}
+          setSummaryFilter={setSummaryFilter}
+          allEmployeegradeList={allEmployeegradeList}
+          allDashboardAlerts={allDashboardAlerts}
+          summaryData={summaryData}
+          setBigTableModalData={setBigTableModalData}
+          setSmallTableModalData={setSmallTableModalData}
+          setSummaryModalHeading={setSummaryModalHeading}
+          holidayList={holidayList}
+        />
+      ) : null}
+      <BigTableModal
+        show={bigTableModalData}
+        data={bigTableModalData}
+        onHide={() => {
+          setBigTableModalData(null);
+        }}
+      />{" "}
+      <SmallTableModal
+        show={smallTableModalData}
+        data={smallTableModalData}
+        onHide={() => {
+          setSmallTableModalData(null);
+        }}
+      />{" "}
+      <StatsCardModal
+        show={summaryDetailData}
+        data={summaryDetailData}
+        heading={summaryModalHeading}
+        onHide={() => {
+          setSummaryModalHeading("");
+          dispatch(actions.fetchSummaryDetail());
+        }}
+      />{" "}
     </>
   );
 };

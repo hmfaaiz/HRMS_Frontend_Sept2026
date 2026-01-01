@@ -32,10 +32,10 @@ const options = [
     title: "Separation",
     key: "separation",
   },
-  // {
-  //   title: "Appraisal",
-  //   key: "appraisal",
-  // },
+  {
+    title: "Appraisal",
+    key: "appraisal",
+  },
 ];
 
 const AdminHead = ({
@@ -90,6 +90,7 @@ const AdminHead = ({
                       ...summaryFilter,
                       subsidiaryId: e.value,
                       departmentId: "",
+                      appraisalPeriodId: "",
                     })
                   }
                   value={
@@ -141,29 +142,27 @@ const AdminHead = ({
                 <label class="whitespace-nowrap">Appraisal Period : </label>
                 <div className="w-full">
                   <SearchSelect
-                    name="subsidiaryId"
-                    isDisabled={!allSubsidiaryList}
+                    name="appraisalPeriodId"
+                    isDisabled={
+                      !allSubsidiaryList || !summaryFilter?.subsidiaryId
+                    }
                     onChange={(e) =>
                       setSummaryFilter({
                         ...summaryFilter,
-                        subsidiaryId: e.value,
-                        departmentId: "",
+                        appraisalPeriodId: e.value,
                       })
                     }
                     value={
-                      summaryFilter?.subsidiaryId === ""
-                        ? { value: "", label: "All" }
-                        : allSubsidiaryList?.find(
-                            (option) =>
-                              option.value === summaryFilter?.subsidiaryId
-                          ) || null
+                      dashboard?.appraisalPeriodBySubList?.find(
+                        (option) =>
+                          option?.value === summaryFilter?.appraisalPeriodId
+                      ) ||
+                      dashboard?.appraisalPeriodBySubList?.find(
+                        (option) => option?.isActive
+                      ) ||
+                      null
                     }
-                    options={[
-                      { value: "", label: "All" },
-                      ...(Array.isArray(allSubsidiaryList)
-                        ? allSubsidiaryList
-                        : []),
-                    ]}
+                    options={dashboard?.appraisalPeriodBySubList}
                   />
                 </div>
               </div>
@@ -188,7 +187,8 @@ const AdminHead = ({
                           (option) =>
                             option.value === summaryFilter?.appraisalCategoryId
                         )) ||
-                      dashboard?.allAppraisalCategory?.[0]
+                      dashboard?.allAppraisalCategory?.[0] ||
+                      null
                     }
                     options={dashboard?.allAppraisalCategory}
                   />
