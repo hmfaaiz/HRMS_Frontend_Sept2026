@@ -404,6 +404,10 @@ const BankAdvice = lazy(()=>
 import("./modules/BankPaymentAdvice/pages/index"))
 
 
+const FacilitatorTicketCreation = lazy(()=>
+import("./modules/FacilitatorTicketCreation/pages/index"))
+
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -556,6 +560,7 @@ const ROUTES = {
   attendance_correction : AttendanceCorrection,
   appraisal_finalization : AppraisalFinalization,
   bank_advice : BankAdvice,
+  facilitator_ticket_creation : FacilitatorTicketCreation,
 };
 
 export default function BasePage() {

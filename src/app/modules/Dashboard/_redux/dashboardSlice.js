@@ -100,6 +100,8 @@ const initialDashboardState = {
   allTaxYearSetupList : [],
   allowRequestBySenior : false,
   currentDateTime : null,
+  allTicketTypeList: [],
+  priorityLevelList: [],
 };
 
 export const callTypes = {
@@ -420,8 +422,8 @@ export const dashboardSlice = createSlice({
         requestRaisedBySenior: (state, action) => {
       state.allowRequestBySenior  = action.payload;
    
-    },
-
+    }, 
+    
 
   },
 });
