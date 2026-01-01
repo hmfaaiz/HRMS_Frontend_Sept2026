@@ -107,7 +107,10 @@ export const AdminPortal = () => {
 
     setSummaryFilter((prev) => ({
       ...prev,
-      appraisalPeriodId: appraisalPeriodBySubList?.[0]?.value ?? "",
+      appraisalPeriodId:
+        appraisalPeriodBySubList?.find((e) => e?.isActive)?.value ??
+        appraisalPeriodBySubList?.[0]?.value ??
+        "",
       appraisalCategoryId: allAppraisalCategory?.[0]?.value ?? "",
     }));
   }, [activeTab, appraisalPeriodBySubList, allAppraisalCategory]);
