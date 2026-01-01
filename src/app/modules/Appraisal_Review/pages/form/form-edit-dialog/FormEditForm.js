@@ -784,7 +784,7 @@ export function MasterEditForm({
                         <div className="mt-4">
                           <div className="flex justify-between items-center mb-3">
                             <h6 className="font-bold mb-0 text-primary">
-                              Recommendation
+                              Manager's Recommendation (After Rating Finalization)
                             </h6>
                           </div>
                           <div className="w-full overflow-x-auto">

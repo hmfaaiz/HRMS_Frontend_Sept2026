@@ -14,15 +14,16 @@ import { CompanyDocument } from "./CompanyDocument";
 const formatDate = (date, fmt) => (date ? format(new Date(date), fmt) : "N/A");
 
 const renderInfoGrid = (data, fields) => (
-  <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+  <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
     {fields.map(([label, value], idx) => (
-      <React.Fragment key={idx}>
+      <div key={idx} className="contents">
         <div className="font-medium">{label}</div>
-        <div>{value || "N/A"}</div>
-      </React.Fragment>
+        <div className="break-words">{value || "N/A"}</div>
+      </div>
     ))}
   </div>
 );
+
 
 const renderStars = (ratingScale) => {
   const rating = ratingScale / 2;
