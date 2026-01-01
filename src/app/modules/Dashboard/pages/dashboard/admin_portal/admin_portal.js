@@ -70,16 +70,11 @@ export const AdminPortal = () => {
     dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
     dispatch(actions.fetchHolidayDetail());
   }, [dispatch]);
-  console.log("wrrroooo");
   /* ===============================
      2️ SET DEFAULT SUBSIDIARY
   ================================ */
   useEffect(() => {
-    if (
-      summaryFilter.subsidiaryId ||
-      !allSubsidiaryList?.length ||
-      !user?.EmployeeMapping?.subsidiaryId
-    )
+    if (!allSubsidiaryList?.length || !user?.EmployeeMapping?.subsidiaryId)
       return;
 
     const subs = allSubsidiaryList.find(
@@ -92,11 +87,7 @@ export const AdminPortal = () => {
         subsidiaryId: subs.value,
       }));
     }
-  }, [
-    allSubsidiaryList,
-    user?.EmployeeMapping?.subsidiaryId,
-    summaryFilter.subsidiaryId,
-  ]);
+  }, [allSubsidiaryList, user?.EmployeeMapping?.subsidiaryId]);
 
   /* ===============================
      3️ APPRAISAL DEFAULTS
@@ -119,14 +110,12 @@ export const AdminPortal = () => {
      4️ FETCH DASHBOARD ALERTS + DEPTS
   ================================ */
   useEffect(() => {
-    if (!summaryFilter.subsidiaryId) return;
-
     // For appraisal, wait until both values exist
-    if (
-      activeTab === "appraisal" &&
-      (!summaryFilter.appraisalPeriodId || !summaryFilter.appraisalCategoryId)
-    )
-      return;
+    // if (
+    //   activeTab === "appraisal" &&
+    //   (!summaryFilter.appraisalPeriodId || !summaryFilter.appraisalCategoryId)
+    // )
+    //   return;
 
     dispatch(
       actions.fetchDashboardAlert({
@@ -136,7 +125,7 @@ export const AdminPortal = () => {
         appraisalCategoryId: summaryFilter.appraisalCategoryId,
       })
     );
-
+    if (!summaryFilter.subsidiaryId) return;
     dispatch(fetchAllParentDept(summaryFilter.subsidiaryId));
   }, [
     dispatch,
@@ -150,7 +139,7 @@ export const AdminPortal = () => {
      5️ SUMMARY DATA (CONTROLLED)
   ================================ */
   useEffect(() => {
-    if (!summaryFilter.subsidiaryId) return;
+    // if (!summaryFilter.subsidiaryId) return;
 
     dispatch(actions.fetchSummary(summaryFilter));
   }, [
