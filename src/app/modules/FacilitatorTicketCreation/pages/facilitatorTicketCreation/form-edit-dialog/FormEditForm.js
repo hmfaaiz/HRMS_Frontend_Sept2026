@@ -20,11 +20,54 @@ import { TimePickerField } from "../../../../../../_metronic/_partials/controls/
 const facilitator_ticket_creationEditSchema = Yup.object().shape({
 
 
-  empAttachment: Yup.string().nullable()
+  file: Yup.string().nullable()
     .required(VALIDATION_MESSAGES.required),
 
-  docName: Yup.string()
-    .trim()
+  assignTo: Yup.number()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  priorityLevelId: Yup.number()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  ticketTypeId: Yup.number()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  dueDate: Yup.date()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+  // ticketDate: Yup.date()
+
+  //   .nullable()
+  //   .required(VALIDATION_MESSAGES.required),
+
+  timeRangeFrom: Yup.string()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+
+  timeRangeTo: Yup.string()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+
+  noOfHours: Yup.number()
+
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+
+
+  ticketStatus: Yup.number()
+
     .nullable()
     .required(VALIDATION_MESSAGES.required),
 
@@ -73,6 +116,41 @@ export function FormEditForm({
     { value: 2, label: "In Review" },
   ];
 
+
+  const calculateHours = (fromTime, toTime) => {
+    if (!fromTime || !toTime) return 0;
+
+    // Convert string like "12:49 PM" to Date objects
+    const parseTime = (timeStr) => {
+      const [time, modifier] = timeStr.split(" "); // ["12:49", "PM"]
+      let [hours, minutes] = time.split(":").map(Number);
+
+      if (modifier === "PM" && hours < 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    };
+
+    const from = parseTime(fromTime);
+    const to = parseTime(toTime);
+
+    // Total hours difference
+    let diffHours = to.hours - from.hours;
+    let diffMinutes = to.minutes - from.minutes;
+
+    if (diffMinutes < 0) {
+      diffMinutes += 60;
+      diffHours -= 1;
+    }
+
+    const totalHours = diffHours + diffMinutes / 60;
+
+    // Prevent negative hours
+    console.log("totalHours1111",totalHours)
+    return totalHours > 0 ? totalHours : 0;
+  };
+
+
   return (
     <Formik
       enableReinitialize={true}
@@ -102,14 +180,14 @@ export function FormEditForm({
               <fieldset disabled={isUserForRead}>
 
 
-                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
-                  <div className="col-span-6 lg:col-span-4">
+                  <div className="">
                     <SearchSelect
                       name="ticketTypeId"
                       label={
                         <span>
-                          Ticket Type
+                          Ticket Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
@@ -133,7 +211,7 @@ export function FormEditForm({
                       name="priorityLevelId"
                       label={
                         <span>
-                          Priority Level
+                          Priority Level<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
@@ -157,7 +235,7 @@ export function FormEditForm({
                       name="assignTo"
                       label={
                         <span>
-                          Assign To
+                          Assign To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       isDisabled={isUserForRead}
@@ -165,78 +243,12 @@ export function FormEditForm({
                         setFieldValue("assignTo", e.value || null);
                       }}
                       value={
-                        allEmployees?.find(option => option.value === values.employeeId) || null
+                        allEmployees?.find(option => option.value === values.assignTo) || null
                       }
                       options={allEmployees}
                       error={errors.assignTo}
                       touched={touched.assignTo}
                     />
-                  </div>
-
-                  <div className="">
-                    <Field
-                      name="ticketDescription"
-                      component={TextArea}
-                      placeholder="Enter ticket description"
-                      className="form-control" // Force full height
-                      label={
-                        <span>
-                          {" "}
-                          Ticket Description
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-                    <div>
-
-                    </div>
-                  </div>
-
-                  <div className="">
-                    <Field
-                      name="remarks"
-                      component={TextArea}
-                      placeholder="Enter remarks"
-                      className="form-control" // Force full height
-                      label={
-                        <span>
-                          {" "}
-                          Remarks
-
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-                    <div>
-
-                    </div>
-                  </div>
-
-                  <div className="">
-                    <label>
-                      {" "}
-                      Due Date<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <DatePicker
-                      className="form-control"
-                      placeholder="Job Date"
-                      selected={
-                        values?.dueDate ? new Date(values.dueDate) : null
-                      }
-                      disabled={true}
-                      dateFormat="dd-MMM-yyyy"
-                      name="dueDate"
-                      autoComplete="off"
-                      minDate={new Date()}
-                      maxDate={new Date()}
-                    />
-
-                    {touched.dueDate && errors.dueDate && (
-                      <div className="invalid-feedback d-block">
-                        {errors.dueDate}
-                      </div>
-                    )}
                   </div>
 
                   <div className="">
@@ -248,7 +260,7 @@ export function FormEditForm({
                       className="form-control"
                       placeholder="Ticket Date"
                       selected={
-                        values?.ticketDate ? new Date(values.ticketDate) : null
+                        values?.ticketDate ? new Date(values.ticketDate) : new Date()
                       }
                       disabled={true}
                       dateFormat="dd-MMM-yyyy"
@@ -264,6 +276,38 @@ export function FormEditForm({
                       </div>
                     )}
                   </div>
+                </div>
+
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+                  <div className="">
+                    <label>
+                      {" "}
+                      Due Date<span style={{ color: "red" }}>*</span>
+                    </label>
+                    <DatePicker
+                      className="form-control"
+                      placeholder="Job Date"
+                      selected={
+                        values?.dueDate ? new Date(values.dueDate) : null
+                      }
+                      onChange={(date) => setFieldValue("dueDate", date)}
+                      disabled={isUserForRead}
+                      dateFormat="dd-MMM-yyyy"
+                      name="dueDate"
+                      autoComplete="off"
+                      minDate={new Date()}
+                    // maxDate={new Date()}
+                    />
+
+                    {touched.dueDate && errors.dueDate && (
+                      <div className="invalid-feedback d-block">
+                        {errors.dueDate}
+                      </div>
+                    )}
+                  </div>
+
 
 
 
@@ -284,6 +328,8 @@ export function FormEditForm({
                       }
                       onChange={(val) => {
                         setFieldValue("timeRangeFrom", val);
+                        const hours = calculateHours(val, values.timeRangeTo);
+                        setFieldValue("noOfHours", hours.toFixed(2)); // 2 decimal places
                       }}
                       onBlur={() => setFieldTouched("timeRangeFrom", true)}
                       touched={touched.timeRangeFrom}
@@ -309,6 +355,8 @@ export function FormEditForm({
                       }
                       onChange={(val) => {
                         setFieldValue("timeRangeTo", val);
+                        const hours = calculateHours(values.timeRangeFrom, val);
+                        setFieldValue("noOfHours", hours.toFixed(2));
                       }}
                       onBlur={() => setFieldTouched("timeRangeTo", true)}
                       touched={touched.timeRangeTo}
@@ -324,15 +372,25 @@ export function FormEditForm({
                         <span style={{ color: "red" }}>*</span>
                       </span>
                     </label>
+                    {/* <Field
+                      name="noOfHours"
+                      component={Input}
+                      placeholder="Enter no of hours"
+                      type="number"
+                    /> */}
+
                     <Field
                       name="noOfHours"
                       component={Input}
                       placeholder="Enter no of hours"
                       type="number"
+                      readOnly
                     />
+
                   </div>
+                </div>
 
-
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
                   <div className="">
 
                     <FileUpload
@@ -349,35 +407,35 @@ export function FormEditForm({
                       className="hidden"
                       onChange={(event) => {
                         const file = event.currentTarget.files[0];
-                        setFieldValue("empAttachment", file);
+                        setFieldValue("file", file);
                       }}
 
 
                     />
-                    {errors.empAttachment && touched.empAttachment && (
-                      <div className="invalid-feedback">{errors.empAttachment}</div>
+                    {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
                     )}
 
 
 
 
-                    {(formData?.empAttachment || values?.empAttachment) && (
+                    {(formData?.file || values?.file) && (
                       <div className="mt-2">
                         <label>Existing File:</label>
 
                         <a
                           href={
-                            typeof (values?.empAttachment || formData?.empAttachment) === "string"
-                              ? getUploadUrl(values?.empAttachment || formData?.empAttachment)
-                              : URL.createObjectURL(values?.empAttachment || formData?.empAttachment)
+                            typeof (values?.file || formData?.file) === "string"
+                              ? getUploadUrl(values?.file || formData?.file)
+                              : URL.createObjectURL(values?.file || formData?.file)
                           }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 underline text-primary text-sm"
                         >
-                          {typeof (values?.empAttachment || formData?.empAttachment) === "string"
-                            ? getFileName(values?.empAttachment || formData?.empAttachment)
-                            : (values?.empAttachment)?.name || formData?.empAttachment}
+                          {typeof (values?.file || formData?.file) === "string"
+                            ? getFileName(values?.file || formData?.file)
+                            : (values?.file)?.name || formData?.file}
                         </a>
                       </div>
                     )}
@@ -387,7 +445,7 @@ export function FormEditForm({
 
                   <div className="">
                     <label htmlFor="ticketStatus">
-                      Ticket Status
+                      Ticket Status<span style={{ color: "red" }}>*</span>
 
                     </label>
 
@@ -402,13 +460,13 @@ export function FormEditForm({
                           e.target.value === "N/A" ? null : e.target.value
                         );
 
-                    
+
                       }}
                     >
-                 
+
 
                       {[
-                     
+
                         ...ticketStatusOptions, // This renders the rest of the options
                       ].map((option) => (
                         <option key={option.value} value={option.value}>
@@ -427,6 +485,49 @@ export function FormEditForm({
 
 
 
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+
+                  <div className="">
+                    <Field
+                      name="ticketDescription"
+                      component={TextArea}
+                      placeholder="Enter ticket description"
+                      className="form-control" // Force full height
+                      label={
+                        <span>
+                          {" "}
+                          Ticket Description
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                    <div>
+
+                    </div>
+                  </div>
+
+                  {/* <div className="">
+                    <Field
+                      name="remarks"
+                      component={TextArea}
+                      placeholder="Enter remarks"
+                      className="form-control" // Force full height
+                      label={
+                        <span>
+                          {" "}
+                          Remarks
+
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                    <div>
+
+                    </div>
+                  </div> */}
                 </div>
 
 

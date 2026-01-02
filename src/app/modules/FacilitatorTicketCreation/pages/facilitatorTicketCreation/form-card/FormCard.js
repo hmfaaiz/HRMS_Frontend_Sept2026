@@ -58,21 +58,22 @@ export function FormCard() {
   return (
 
     <TCard name={CurrentModuleName()}>
-      <EmployeeSelect
+      {/* <EmployeeSelect
         setemployeeId={FormUIProps.setemployeeId}
         setPanelMode={FormUIProps.setPanelMode}
         panelMode={FormUIProps.panelMode}
       />
-      <br />
+      <br /> */}
 
-      <EmployeeProfile
+      {/* <EmployeeProfile
         employeeId={FormUIProps.employeeId}
         panelMode={FormUIProps.panelMode}
-      />
+      /> */}
       {/* EmployeeProfile Ends */}
 
-      {/* <br /> */}
-
+    <FormTable />
+      <br />
+   <hr />
       {/* FormEditDialog Starts */}
       <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
       {/* FormEditDialog Ends */}

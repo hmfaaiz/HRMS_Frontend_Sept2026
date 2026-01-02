@@ -58,25 +58,30 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateEmployeeDoc"
+    (item) => item.componentName === "UpdateFacilitatorTicketCreation"
   );
 
   const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteEmployeeDoc"
+    (item) => item.componentName === "DeleteFacilitatorTicketCreation"
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadEmployeeDoc"
+    (item) => item.componentName === "ReadFacilitatorTicketCreation"
   );
 
   // ReadEmployeeDocr,CreateEmployeeDocr
   // Table columns
-
+const ticketStatusOptions = [
+  { value: 1, label: "Open" },
+  { value: 0, label: "Closed" },
+  { value: 3, label: "Re-opened" },
+  { value: 2, label: "In Review" },
+];
   const columns = [
 
     {
-      dataField: "docName",
-      text: "Document Name",
+      dataField: "ticketType.formName",
+      text: "Ticket Type",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -90,8 +95,8 @@ export function FormTable() {
     },
 
     {
-      dataField: "docDesc",
-      text: "Document Description",
+      dataField: "priorityLevel.formName",
+      text: "Priority",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -104,8 +109,8 @@ export function FormTable() {
       },
     },
     {
-      dataField: "createdAt",
-      text: "Document Upload Date",
+      dataField: "dueDate",
+      text: "Due Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -120,8 +125,8 @@ export function FormTable() {
     },
 
     {
-      dataField: "empAttachment",
-      text: "File",
+      dataField: "file",
+      text: "Attachment",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -141,7 +146,28 @@ export function FormTable() {
 
 
     },
+   {
+    dataField: "ticketStatus",
+    text: "Status",
+    sort: false,
+    sortCaret: sortCaret,
+    headerSortingClasses,
+    style: {
+      minWidth: "200px",
+    },
+    formatter: (cell) => {
+      if (cell === null || cell === undefined) return "";
+      
+      // Agar aapko cell value ko label me convert karna hai
+      const status = ticketStatusOptions.find(opt => opt.value === cell);
+      const displayText = status ? status.label : cell;
 
+      // Agar text lamba ho, truncate karo
+      return displayText.length > 30 
+        ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span> 
+        : displayText;
+    },
+  },
 
     {
       dataField: "action",

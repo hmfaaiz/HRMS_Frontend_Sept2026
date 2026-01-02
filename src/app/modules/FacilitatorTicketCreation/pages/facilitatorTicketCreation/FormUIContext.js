@@ -32,10 +32,18 @@ export function FormUIProvider({ FormUIEvents, children }) {
   }, []);
   const initUser = {
     Id: "",
-    subsidiaryId: null,
-    docName: "",
-    docDesc: "",
-    empAttachment: "",
+    assignTo: null,
+    priorityLevelId: "",
+    ticketDescription: "",
+    remarks: "",
+    ticketTypeId: "",
+    dueDate: "",
+    ticketDate: "",
+    timeRangeFrom: "",
+    timeRangeTo: "",
+    noOfHours: "",
+    ticketStatus: "",
+    file: "",
 
   };
 

@@ -75,31 +75,29 @@ console.log("id11111",id)
 
   const saveForm = async (formData,clearForm) => {
 
-    
+    formData.noOfHours=parseFloat(formData.noOfHours)
 
  formUIProps.setId("");
 
     if (!formData.Id) {
-      formData.employeeId = formUIProps.employeeId
-      if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
+     
+      if (formData?.file && typeof formData?.file === "object") {
         try {
-          const uploadRes = await uploadFile(formData.empAttachment);
-          formData.empAttachment = uploadRes.data.filename;
+          const uploadRes = await uploadFile(formData.file);
+          formData.file = uploadRes.data.filename;
         } catch (err) {
           console.error("File upload failed:", err);
           // Optionally return here or set a default file value
         }
-      } else if (typeof formData?.empAttachment == "string") {
-        formData.empAttachment = formData.empAttachment;
+      } else if (typeof formData?.file == "string") {
+        formData.file = formData.file;
       }
 
 
 
       dispatch(actions.createEmployeeDoc(formData, disbaleLoading,clearForm));
       dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
-       // setId("");
-                  // handleReset();
-
+     
 
 
     } else {
@@ -111,26 +109,32 @@ console.log("id11111",id)
 
       const formUpdatedFields = {
         Id: formData.Id,
-        docName: formData.docName,
-        docDesc: formData.docDesc,
-        empAttachment: formData.empAttachment,
-        employeeId: formData.employeeId,
+        assignTo: formData.assignTo,
+        priorityLevelId: formData.priorityLevelId,
+        ticketDescription: formData.ticketDescription,
+        ticketTypeId: formData.ticketTypeId,
+        dueDate: formData.dueDate,
+        ticketDate: formData.ticketDate,
+        timeRangeFrom: formData.timeRangeFrom,
+        timeRangeTo: formData.timeRangeTo,
+        noOfHours: formData.noOfHours,
+        file: formData.file,
 
 
 
       };
 
 
-      if (formData?.empAttachment && typeof formData?.empAttachment === "object") {
+      if (formData?.file && typeof formData?.file === "object") {
         try {
-          const uploadRes = await uploadFile(formData.empAttachment);
-          formUpdatedFields.empAttachment = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
+          const uploadRes = await uploadFile(formData.file);
+          formUpdatedFields.file = uploadRes.data.filename;  // e.g. "1747978810103---Resume_CV_Format_Download-6-1-min.pdf"
         } catch (err) {
           console.error("File upload failed:", err);
           // Optionally return here or set a default file value
         }
-      } else if (typeof formData?.empAttachment == "string") {
-        formUpdatedFields.empAttachment = formData.empAttachment;
+      } else if (typeof formData?.file == "string") {
+        formUpdatedFields.file = formData.file;
       }
 
       await dispatch(actions.updateEmployeeDoc(formUpdatedFields, disbaleLoading, clearForm));
