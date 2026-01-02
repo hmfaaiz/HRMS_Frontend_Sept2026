@@ -33,6 +33,8 @@ console.log("id11111",id)
       isFileReq: FormUIContext.isFileReq,
       setIsFileReq: FormUIContext.setIsFileReq,
       readMode: FormUIContext.readMode,
+      setReceiveMode: FormUIContext.setReceiveMode,
+      receiveMode: FormUIContext.receiveMode,
       setReadMode: FormUIContext.setReadMode,
       setId: FormUIContext.setId,
     };
@@ -74,7 +76,7 @@ console.log("id11111",id)
 
 
   const saveForm = async (formData,clearForm) => {
-
+console.log("formData11111",formData)
     formData.noOfHours=parseFloat(formData.noOfHours)
 
  formUIProps.setId("");
@@ -119,6 +121,7 @@ console.log("id11111",id)
         timeRangeTo: formData.timeRangeTo,
         noOfHours: formData.noOfHours,
         file: formData.file,
+        remarks: formData.remarks,
 
 
 
@@ -165,6 +168,8 @@ console.log("id11111",id)
         loading={loading}
         setId={formUIProps.setId}
         setReadMode={formUIProps.setReadMode}
+        setReceiveMode={formUIProps.setReceiveMode}
+        receiveMode={formUIProps.receiveMode}
 
       />
       <ToastContainer

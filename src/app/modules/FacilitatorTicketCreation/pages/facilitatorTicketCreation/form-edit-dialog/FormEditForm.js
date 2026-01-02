@@ -87,7 +87,7 @@ export function FormEditForm({
   onHide,
   isUserForRead,
   enableLoading,
-  loading, setId, setReadMode
+  loading, setId, setReadMode, receiveMode, setReceiveMode
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
@@ -146,7 +146,7 @@ export function FormEditForm({
     const totalHours = diffHours + diffMinutes / 60;
 
     // Prevent negative hours
-    console.log("totalHours1111",totalHours)
+    console.log("totalHours1111", totalHours)
     return totalHours > 0 ? totalHours : 0;
   };
 
@@ -190,7 +190,7 @@ export function FormEditForm({
                           Ticket Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || receiveMode}
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
                       }}
@@ -238,7 +238,7 @@ export function FormEditForm({
                           Assign To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || receiveMode}
                       onChange={(e) => {
                         setFieldValue("assignTo", e.value || null);
                       }}
@@ -385,6 +385,7 @@ export function FormEditForm({
                       placeholder="Enter no of hours"
                       type="number"
                       readOnly
+                      disabled={true}
                     />
 
                   </div>
@@ -493,8 +494,11 @@ export function FormEditForm({
                     <Field
                       name="ticketDescription"
                       component={TextArea}
+                      disabled={receiveMode}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
+                      value={receiveMode ? formData?.Master?.ticketDescription :values?.ticketDescription}
+
                       label={
                         <span>
                           {" "}
@@ -508,26 +512,32 @@ export function FormEditForm({
 
                     </div>
                   </div>
+                  {receiveMode
+                    && (
+                      <div className="">
+                        <Field
+                          name="remarks"
+                          component={TextArea}
+                          placeholder="Enter remarks"
+                          className="form-control" // Force full height
+                          label={
+                            <span>
+                              {" "}
+                              Remarks
 
-                  {/* <div className="">
-                    <Field
-                      name="remarks"
-                      component={TextArea}
-                      placeholder="Enter remarks"
-                      className="form-control" // Force full height
-                      label={
-                        <span>
-                          {" "}
-                          Remarks
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
+                        <div>
 
-                        </span>
-                      }
-                      autoComplete="off"
-                    />
-                    <div>
+                        </div>
+                      </div>
+                    )
 
-                    </div>
-                  </div> */}
+                  }
+
+
                 </div>
 
 

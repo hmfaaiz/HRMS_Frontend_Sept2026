@@ -35,6 +35,8 @@ export function FormTable() {
       openReadFormDialog: formUIContext.openReadFormDialog,
       setIsFileReq: formUIContext.setIsFileReq,
       setReadMode: formUIContext.setReadMode,
+      setReceiveMode: formUIContext.setReceiveMode,
+      receiveMode: formUIContext.receiveMode,
     };
   }, [formUIContext]);
 
@@ -71,12 +73,12 @@ export function FormTable() {
 
   // ReadEmployeeDocr,CreateEmployeeDocr
   // Table columns
-const ticketStatusOptions = [
-  { value: 1, label: "Open" },
-  { value: 0, label: "Closed" },
-  { value: 3, label: "Re-opened" },
-  { value: 2, label: "In Review" },
-];
+  const ticketStatusOptions = [
+    { value: 1, label: "Open" },
+    { value: 0, label: "Closed" },
+    { value: 3, label: "Re-opened" },
+    { value: 2, label: "In Review" },
+  ];
   const columns = [
 
     {
@@ -146,28 +148,28 @@ const ticketStatusOptions = [
 
 
     },
-   {
-    dataField: "ticketStatus",
-    text: "Status",
-    sort: false,
-    sortCaret: sortCaret,
-    headerSortingClasses,
-    style: {
-      minWidth: "200px",
-    },
-    formatter: (cell) => {
-      if (cell === null || cell === undefined) return "";
-      
-      // Agar aapko cell value ko label me convert karna hai
-      const status = ticketStatusOptions.find(opt => opt.value === cell);
-      const displayText = status ? status.label : cell;
+    {
+      dataField: "ticketStatus",
+      text: "Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "200px",
+      },
+      formatter: (cell) => {
+        if (cell === null || cell === undefined) return "";
 
-      // Agar text lamba ho, truncate karo
-      return displayText.length > 30 
-        ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span> 
-        : displayText;
+        // Agar aapko cell value ko label me convert karna hai
+        const status = ticketStatusOptions.find(opt => opt.value === cell);
+        const displayText = status ? status.label : cell;
+
+        // Agar text lamba ho, truncate karo
+        return displayText.length > 30
+          ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
+          : displayText;
+      },
     },
-  },
 
     {
       dataField: "action",
@@ -187,6 +189,8 @@ const ticketStatusOptions = [
           : false,
         setReadMode: formUIProps.setReadMode,
         // setIsFileReq : formUIProps.setIsFileReq,
+        setReceiveMode: formUIProps.setReceiveMode,
+        receiveMode: formUIProps.receiveMode,
 
 
 
@@ -197,6 +201,7 @@ const ticketStatusOptions = [
         minWidth: "10px",
       },
     },
+
   ];
 
   //Table pagination properties

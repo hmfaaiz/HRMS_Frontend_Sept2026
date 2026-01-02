@@ -23,6 +23,24 @@ export const fetchEmployeeDocs = (queryparm) => async (dispatch) => {
     });
 };
 
+export const fetchReceiveTickets = (queryparm) => async (dispatch) => {
+
+
+  
+  return requestFromServer.getAllReceiveTicket(queryparm)
+   
+    .then((response) => {
+    
+
+      dispatch(actions.receiveFetched(response));
+    })
+    .catch((error) => {
+    
+      error.clientMessage = "Can't find";
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+    });
+};
+
 export const fetchEmployeeDoc = (id) => (dispatch) => {
 
 

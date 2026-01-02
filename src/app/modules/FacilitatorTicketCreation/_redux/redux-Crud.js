@@ -6,7 +6,7 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 export function createEmployeeDoc(body) {
 
   return axios.post(`${USERS_URL}/facilitator_ticket_creation/create-facilitator-ticket-creation`, body);
-  
+
 }
 
 
@@ -14,6 +14,10 @@ export function createEmployeeDoc(body) {
 export function getAllEmployeeDoc(body) {
 
   return axios.post(`${USERS_URL}/facilitator_ticket_creation/read-all-facilitator-ticket-creation`, body);
+}
+//Receive
+export function getAllReceiveTicket(body) {
+  return axios.post(`${USERS_URL}/facilitator_ticket_creation/read-all-receive-facilitator-ticket-creation`, body);
 }
 
 export function getEmployeeDocById(id) {
@@ -23,7 +27,7 @@ export function getEmployeeDocById(id) {
 
 //Update
 export function updateEmployeeDoc(body) {
-   
+
   return axios.put(`${USERS_URL}/facilitator_ticket_creation/update-facilitator-ticket-creation`, body);
 }
 

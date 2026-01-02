@@ -11,6 +11,7 @@ import { EmployeeSelect } from "../form-edit-dialog/employeeSelect";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
+import { ResponseTable } from "../form-table/ResponseTable";
 
 export function FormCard() {
   const FormUIContext = useFormUIContext();
@@ -58,6 +59,10 @@ export function FormCard() {
   return (
 
     <TCard name={CurrentModuleName()}>
+
+           <h6 className="font-bold mb-0 text-primary my-2">
+                    Response
+                  </h6>
       {/* <EmployeeSelect
         setemployeeId={FormUIProps.setemployeeId}
         setPanelMode={FormUIProps.setPanelMode}
@@ -71,7 +76,7 @@ export function FormCard() {
       /> */}
       {/* EmployeeProfile Ends */}
 
-    <FormTable />
+    <ResponseTable />
       <br />
    <hr />
       {/* FormEditDialog Starts */}

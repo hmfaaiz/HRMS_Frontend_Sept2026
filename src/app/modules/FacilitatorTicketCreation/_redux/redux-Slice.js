@@ -11,6 +11,9 @@ const initialFacilitatorTicketCreationState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    receiveEntities:null,
+    receiveTotalCount:0,
+    userForReceive: false,
 };
 
 
@@ -38,21 +41,25 @@ export const FacilitatorTicketCreationSlice = createSlice({
             const entities = action.payload.data?.data.rows;
            
             const totalResult = action.payload.data?.data.totalResults;
-            // const updatedEntities = entities.map(entity => {
-             
-            //     const basis_of_gratuity = entity.basis_of_gratuityId === 0 ? 'Gross' : 'Basis';
-                
             
-            //     return {
-            //         ...entity,
-            //         basis_of_gratuity // Add the new field to the entity
-            //     };
-            // });
-          
             state.listLoading = false;
             state.error = null;
             state.entities = entities;
             state.totalCount = totalResult;
+           
+        }, 
+        
+        receiveFetched: (state, action) => {
+        
+  
+            const entities = action.payload.data?.data.rows;
+           
+            const totalResult = action.payload.data?.data.totalResults;
+            
+            state.listLoading = false;
+            state.error = null;
+            state.receiveEntities = entities;
+            state.receiveTotalCount = totalResult;
            
         },
 

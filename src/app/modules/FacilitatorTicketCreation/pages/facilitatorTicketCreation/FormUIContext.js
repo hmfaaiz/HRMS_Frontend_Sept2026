@@ -16,6 +16,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
    const [employeeId, setemployeeId] = useState('');
   const [isFileReq, setIsFileReq] = useState(false)
   const [readMode, setReadMode] = useState(false)
+  const [receiveMode, setReceiveMode] = useState(false)
   const [panelMode, setPanelMode] = useState(false);
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
@@ -44,6 +45,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     noOfHours: "",
     ticketStatus: "",
     file: "",
+  
 
   };
 
@@ -59,12 +61,13 @@ export function FormUIProvider({ FormUIEvents, children }) {
     setemployeeId,
     employeeId,
     panelMode,
-    setPanelMode, setReadMode, readMode,
+    setPanelMode, setReadMode, readMode,setReceiveMode,receiveMode,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
     openActiveFormDialog: FormUIEvents.openActiveFormDialog,
     openReadFormDialog: FormUIEvents.openReadFormDialog,
+    openReceiveFormDialog: FormUIEvents.openReceiveFormDialog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

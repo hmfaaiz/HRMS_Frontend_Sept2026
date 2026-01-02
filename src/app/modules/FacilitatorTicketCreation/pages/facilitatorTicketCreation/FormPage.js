@@ -31,6 +31,9 @@ console.log("FormPage111111")
     },
     openReadFormDialog: (id, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/read`);
+    },  
+     openReceiveFormDialog: (id, isUserRead) => {
+      history.push(`/facilitator_ticket_creation/read-all-receive/${id}/receive`);
     },
   };
   return (
