@@ -155,8 +155,11 @@ import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redu
 import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice"
 import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice"
 import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fromSlice";
+import { AttendanceCorrectionSlice } from "../app/modules/AttendanceCorrection/_redux/AttendanceSlice";
 import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
 import { appraisalStatusSlice } from "../app/modules/Appraisal_Status_Employee_Wise/_redux/fromSlice";
+import { BankPaymentAdviceSlice } from "../app/modules/BankPaymentAdvice/_redux/formSlice";
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -308,8 +311,11 @@ export const rootReducer = combineReducers({
   company_doc_portal : CompanyDocumentPortalSlice.reducer,
   employee_doc : EmployeeDocumentSlice.reducer,
   appraisal_review : appraisalReviewSlice.reducer,
+  attendance_correction : AttendanceCorrectionSlice.reducer,
   appraisal_finalization : appraisalFinalizationSlice.reducer,
   appraisal_status : appraisalStatusSlice.reducer,
+  bank_advice : BankPaymentAdviceSlice.reducer,
+
 });
 
 export function* rootSaga() {

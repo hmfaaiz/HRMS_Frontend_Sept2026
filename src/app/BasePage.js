@@ -398,6 +398,13 @@ import("./modules/Appraisal_Finalization/pages/index"))
 
 const AppraisalStatus = lazy(()=>
 import("./modules/Appraisal_Status_Employee_Wise/pages/index"))
+const AttendanceCorrection = lazy(()=>
+import("./modules/AttendanceCorrection/pages/index"))
+
+
+const BankAdvice = lazy(()=>
+import("./modules/BankPaymentAdvice/pages/index"))
+
 
 
 const ROUTES = {
@@ -548,8 +555,10 @@ const ROUTES = {
   company_doc_portal : CompanyDocumentPortal,
   employee_doc : EmployeeDocument,
   appraisal_review : AppraisalReview,
+  attendance_correction : AttendanceCorrection,
   appraisal_finalization : AppraisalFinalization,
   appraisal_status : AppraisalStatus,
+  bank_advice : BankAdvice,
 };
 
 export default function BasePage() {

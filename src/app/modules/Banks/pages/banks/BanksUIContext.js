@@ -33,7 +33,8 @@ export function BanksUIProvider({ BanksUIEvents, children }) {
   const initUser = {
     Name: "",
     subsidiaryId: "",
-    companyId: ""
+    companyId: "",
+    swiftCode:""
 
   };
 

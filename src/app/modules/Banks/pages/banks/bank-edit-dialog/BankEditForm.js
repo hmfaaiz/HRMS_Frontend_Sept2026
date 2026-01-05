@@ -34,7 +34,11 @@ const bankEditSchema = Yup.object().shape({
     // .matches(/^[A-Za-z\s]+$/, 'Only alphabetic characters allowed')
     // .matches(/^[A-Za-z\s.-]+$/, 'Name must only contain letters.')
     .trim()
-    .required(VALIDATION_MESSAGES.required),
+    .required(VALIDATION_MESSAGES.required),  
+    
+    swiftCode: Yup.string()
+    .trim()
+     .max(30, "Maximum 30 characters allowed"),
   subsidiaryId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -187,6 +191,22 @@ export function BankEditForm({
                             50
                           ); // Limit to 50 digits
                         }}
+                      />
+                    </div>   
+                    
+                        <div className="col-span-1 sm:col-span-2">
+                      <Field
+                        name="swiftCode"
+                        MaxLength={40}
+                        component={Input}
+                        placeholder="Bank swift code"
+                        label={
+                          <span>
+                            {" "}
+                          Swift Code
+                          </span>
+                        }
+                       
                       />
                     </div>
                   </div>
