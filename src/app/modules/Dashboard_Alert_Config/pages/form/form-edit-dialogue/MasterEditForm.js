@@ -16,6 +16,41 @@ import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as Yup from "yup";
 
+const options = [
+  {
+    title: "Default View",
+    key: "default",
+  },
+  {
+    title: "Employee",
+    key: "employee",
+  },
+  {
+    title: "Leave",
+    key: "leave",
+  },
+  {
+    title: "Attendance",
+    key: "attendance",
+  },
+  {
+    title: "Payroll",
+    key: "payroll",
+  },
+  {
+    title: "Recruitment",
+    key: "recruitment",
+  },
+  {
+    title: "Separation",
+    key: "separation",
+  },
+  {
+    title: "Appraisal",
+    key: "appraisal",
+  },
+];
+
 const validationSchema = Yup.array().of(
   Yup.object().shape({
     isPeriodType: Yup.boolean().default(false),
@@ -25,7 +60,8 @@ const validationSchema = Yup.array().of(
         originalValue === "" || originalValue === null ? undefined : value
       )
       .when(["isPeriodType", "PeriodType"], {
-        is: (isPeriodType, periodType) => !!isPeriodType && Number(periodType) === 0,
+        is: (isPeriodType, periodType) =>
+          !!isPeriodType && Number(periodType) === 0,
         then: (schema) =>
           schema
             .min(1, "Day must be at least 1")
@@ -82,6 +118,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                   <thead>
                     <tr className="custom-table-header">
                       <td>Dashboard Name</td>
+                      <td>Module</td>
                       <td>Dashboard Type</td>
                       <td>Graph Type</td>
                       <td>Reminder Theme</td>
@@ -96,6 +133,10 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                       values?.map((row, index) => (
                         <tr key={index}>
                           <td>{row?.dashlet_name || ""}</td>
+                          <td>
+                            {options?.find((el) => el?.key == row?.tab_key)
+                              ?.title || ""}
+                          </td>
                           <td>{dashletType[row?.dashlet_type] || ""}</td>
                           <td>
                             {row?.dashlet_type == "chart" ? (
@@ -186,15 +227,24 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                                   max={90}
                                   autoComplete="off"
                                   validate={(value) => {
-                                    const periodEnabled = values[index]?.isPeriodType && Number(values[index]?.PeriodType) === 0;
+                                    const periodEnabled =
+                                      values[index]?.isPeriodType &&
+                                      Number(values[index]?.PeriodType) === 0;
                                     if (!periodEnabled) return undefined;
-                                    if (value === "" || value === null || value === undefined) {
+                                    if (
+                                      value === "" ||
+                                      value === null ||
+                                      value === undefined
+                                    ) {
                                       return "Day is required";
                                     }
                                     const num = Number(value);
-                                    if (Number.isNaN(num)) return "Day is required";
-                                    if (num < 1) return "Day must be at least 1";
-                                    if (num > 90) return "Day must be at most 90";
+                                    if (Number.isNaN(num))
+                                      return "Day is required";
+                                    if (num < 1)
+                                      return "Day must be at least 1";
+                                    if (num > 90)
+                                      return "Day must be at most 90";
                                     return undefined;
                                   }}
                                 />
@@ -212,6 +262,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                           <td>
                             <Checkbox
                               isSelected={values[index]?.is_fav} // or === true depending on backend
+                              disabled={row?.tab_key === "appraisal"}
                               onChange={(e) => {
                                 setFieldValue(
                                   `[${index}].is_fav`,
