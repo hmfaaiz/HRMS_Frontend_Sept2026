@@ -396,6 +396,9 @@ import("./modules/Appraisal_Review/pages/index"))
 const AppraisalFinalization = lazy(()=>
 import("./modules/Appraisal_Finalization/pages/index"))
 
+const AppraisalStatus = lazy(()=>
+import("./modules/Appraisal_Status_Employee_Wise/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -546,6 +549,7 @@ const ROUTES = {
   employee_doc : EmployeeDocument,
   appraisal_review : AppraisalReview,
   appraisal_finalization : AppraisalFinalization,
+  appraisal_status : AppraisalStatus,
 };
 
 export default function BasePage() {

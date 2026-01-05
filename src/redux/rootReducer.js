@@ -156,7 +156,7 @@ import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal
 import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice"
 import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fromSlice";
 import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
-
+import { appraisalStatusSlice } from "../app/modules/Appraisal_Status_Employee_Wise/_redux/fromSlice";
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -309,7 +309,7 @@ export const rootReducer = combineReducers({
   employee_doc : EmployeeDocumentSlice.reducer,
   appraisal_review : appraisalReviewSlice.reducer,
   appraisal_finalization : appraisalFinalizationSlice.reducer,
-
+  appraisal_status : appraisalStatusSlice.reducer,
 });
 
 export function* rootSaga() {
