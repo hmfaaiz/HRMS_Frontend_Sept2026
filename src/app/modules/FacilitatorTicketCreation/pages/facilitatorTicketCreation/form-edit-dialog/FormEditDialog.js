@@ -16,7 +16,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
   const [loading, setLoading] = useState(false);
   const title = "FormEditDialog";
   const FormUIContext = useFormUIContext();
-console.log("id11111",id)
+
 
   const usersUIProps = useMemo(() => {
     return {
@@ -75,14 +75,14 @@ console.log("id11111",id)
   }, [id, dispatch, show]);
 
 
-  const saveForm = async (formData,clearForm) => {
-console.log("formData11111",formData)
-    formData.noOfHours=parseFloat(formData.noOfHours)
+  const saveForm = async (formData, clearForm) => {
+    console.log("formData11111", formData)
+    formData.noOfHours = parseFloat(formData.noOfHours)
 
- formUIProps.setId("");
+    formUIProps.setId("");
 
     if (!formData.Id) {
-     
+
       if (formData?.file && typeof formData?.file === "object") {
         try {
           const uploadRes = await uploadFile(formData.file);
@@ -97,9 +97,9 @@ console.log("formData11111",formData)
 
 
 
-      dispatch(actions.createEmployeeDoc(formData, disbaleLoading,clearForm));
+      dispatch(actions.createEmployeeDoc(formData, disbaleLoading, clearForm));
       dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
-     
+
 
 
     } else {
@@ -122,6 +122,14 @@ console.log("formData11111",formData)
         noOfHours: formData.noOfHours,
         file: formData.file,
         remarks: formData.remarks,
+        masterId: formData.masterId,
+        subsidiaryId: formData.subsidiaryId,
+        receiverSubsidiaryId: formData.receiverSubsidiaryId,
+        assignBy: formData.assignBy,
+        ticketStatus: formData.ticketStatus,
+      
+
+
 
 
 

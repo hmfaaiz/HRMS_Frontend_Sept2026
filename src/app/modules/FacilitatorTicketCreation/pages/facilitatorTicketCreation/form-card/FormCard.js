@@ -61,7 +61,7 @@ export function FormCard() {
     <TCard name={CurrentModuleName()}>
 
            <h6 className="font-bold mb-0 text-primary my-2">
-                    Response
+                    Receive
                   </h6>
       {/* <EmployeeSelect
         setemployeeId={FormUIProps.setemployeeId}

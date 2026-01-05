@@ -80,6 +80,42 @@ export function FormTable() {
     { value: 2, label: "In Review" },
   ];
   const columns = [
+    {
+  dataField: "priorityLevel.formName",
+
+  sort: false,
+  sortCaret: sortCaret,
+  headerSortingClasses,
+  style: {
+    minWidth: "5px",
+  },
+  formatter: (cell,row) => {
+    if (!cell) return "";
+
+    // Define color based on priority
+    let color=row.color;
+    
+    // Truncate long text
+    const displayText = cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+
+    // Return colored dot + text
+    return (
+      <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+        <span
+          style={{
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            backgroundColor: color,
+            display: "inline-block",
+          }}
+        ></span>
+  
+      </span>
+    );
+  },
+},
+
 
     {
       dataField: "ticketType.formName",

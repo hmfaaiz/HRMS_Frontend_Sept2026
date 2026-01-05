@@ -49,7 +49,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForDelete && (
+      {/* {isAccessForDelete && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">
@@ -63,7 +63,7 @@ export function ActionsColumnFormatter(
             </a>
           }
         </OverlayTrigger>
-      )}
+      )} */}
     </div>
   );
 }
@@ -84,7 +84,7 @@ export function ResponseColumnFormatter(
   
     
         <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+          overlay={<Tooltip id="products-edit-tooltip">Response</Tooltip>}
         >
           <a onClick={() =>   {
                   setReceiveMode(true);

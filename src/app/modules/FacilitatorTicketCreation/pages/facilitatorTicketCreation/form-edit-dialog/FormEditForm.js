@@ -72,10 +72,10 @@ const facilitator_ticket_creationEditSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
 
 
-  ticketDescription: Yup.string()
-    .trim()
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+  // ticketDescription: Yup.string()
+  //   .trim()
+  //   .nullable()
+  //   .required(VALIDATION_MESSAGES.required),
 
 
 });
@@ -110,13 +110,14 @@ export function FormEditForm({
 
 
   const ticketStatusOptions = [
-    { value: 1, label: "Open                                                                                                      |V					" },
-    { value: 0, label: "Closed" },
+
+    { value: 1, label: "Open" },
+    { value: 0, label: "Completed" },
     { value: 3, label: "Re-opened" },
-    { value: 2, label: "In Review" },
+    { value: 2, label: "Send for Review" },
   ];
 
-
+  console.log(" !formData111111", formData, !formData)
   const calculateHours = (fromTime, toTime) => {
     if (!fromTime || !toTime) return 0;
 
@@ -154,7 +155,12 @@ export function FormEditForm({
   return (
     <Formik
       enableReinitialize={true}
-      initialValues={formData}
+      initialValues={{
+        ...formData,
+ initiator: formData?.initiator ?? true,
+
+           ticketStatus: formData?.ticketStatus?  formData?.ticketStatus:1,
+      }}
       validationSchema={facilitator_ticket_creationEditSchema}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
@@ -170,6 +176,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
         <>
+          {console.log("aaaaaaaa", errors)}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -179,6 +186,59 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
 
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                  {values.receiver && (
+
+                    <>
+
+                      <div className="">
+                        <SearchSelect
+                          name="assignBy"
+                          label={
+                            <span>
+                              Sender
+                            </span>
+                          }
+                          isDisabled={true}
+                          onChange={(e) => {
+                            setFieldValue("assignBy", e.value || null);
+                          }}
+                          value={
+                            allEmployees?.find(option => option.value === values.assignBy) || null
+                          }
+                          options={allEmployees}
+
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <Field
+                          name="remarks"
+                          component={TextArea}
+                          disabled={true}
+                          placeholder="Enter remarks"
+                          className="form-control" // Force full height
+                          value={values.receiver ? formData?.remarks : ""}
+                          label={
+                            <span>
+                              {" "}
+                              Sender Remarks
+
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
+                        <div>
+
+                        </div>
+                      </div>
+                    </>
+
+
+                  )}
+
+
+
+                </div>
 
                 <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
@@ -190,7 +250,7 @@ export function FormEditForm({
                           Ticket Type<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || receiveMode}
+                      isDisabled={isUserForRead || !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
                       }}
@@ -214,7 +274,7 @@ export function FormEditForm({
                           Priority Level<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead}
+                      isDisabled={isUserForRead || !values.initiator }
                       onChange={(e) => {
                         setFieldValue("priorityLevelId", e.value || null);
                       }}
@@ -238,7 +298,7 @@ export function FormEditForm({
                           Assign To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || receiveMode}
+                      isDisabled={isUserForRead || !values.initiator}
                       onChange={(e) => {
                         setFieldValue("assignTo", e.value || null);
                       }}
@@ -293,7 +353,7 @@ export function FormEditForm({
                         values?.dueDate ? new Date(values.dueDate) : null
                       }
                       onChange={(date) => setFieldValue("dueDate", date)}
-                      disabled={isUserForRead}
+                      disabled={isUserForRead || !values.initiator }
                       dateFormat="dd-MMM-yyyy"
                       name="dueDate"
                       autoComplete="off"
@@ -314,6 +374,7 @@ export function FormEditForm({
                   <div className="">
                     <TimePickerField
                       className="form-control"
+                      disabled={!values.initiator }
 
                       name="timeRangeFrom"
                       label={
@@ -331,7 +392,7 @@ export function FormEditForm({
                         const hours = calculateHours(val, values.timeRangeTo);
                         setFieldValue("noOfHours", hours.toFixed(2)); // 2 decimal places
                       }}
-                      onBlur={() => setFieldTouched("timeRangeFrom", true)}
+                      // onBlur={() => setFieldTouched("timeRangeFrom", true)}
                       touched={touched.timeRangeFrom}
                       errors={errors.timeRangeFrom}
                     />
@@ -341,7 +402,7 @@ export function FormEditForm({
                   <div className="">
                     <TimePickerField
                       className="form-control"
-
+                      disabled={!values.initiator }
                       name="timeRangeTo"
                       label={
                         <span>
@@ -358,7 +419,7 @@ export function FormEditForm({
                         const hours = calculateHours(values.timeRangeFrom, val);
                         setFieldValue("noOfHours", hours.toFixed(2));
                       }}
-                      onBlur={() => setFieldTouched("timeRangeTo", true)}
+                      // onBlur={() => setFieldTouched("timeRangeTo", true)}
                       touched={touched.timeRangeTo}
                       errors={errors.timeRangeTo}
                     />
@@ -400,6 +461,7 @@ export function FormEditForm({
                           Attachment<span style={{ color: "red" }}>*</span>
                         </>
                       }
+                      isEdit={isUserForRead}
                       id="file"
                       name="file"
                       type="file"
@@ -446,7 +508,7 @@ export function FormEditForm({
 
                   <div className="">
                     <label htmlFor="ticketStatus">
-                      Ticket Status<span style={{ color: "red" }}>*</span>
+                      Ticket Status{values.ticketStatus}<span style={{ color: "red" }}>*</span>
 
                     </label>
 
@@ -470,7 +532,9 @@ export function FormEditForm({
 
                         ...ticketStatusOptions, // This renders the rest of the options
                       ].map((option) => (
-                        <option key={option.value} value={option.value}>
+                        <option key={option.value} value={String(option.value)}
+                         disabled={!values.initiator && (option.value === 1 || option.value === 3)} 
+    >
                           {option.label}
                         </option>
                       ))}
@@ -494,15 +558,15 @@ export function FormEditForm({
                     <Field
                       name="ticketDescription"
                       component={TextArea}
-                      disabled={receiveMode}
+                      disabled={receiveMode || formData?.Master?.ticketDescription}
                       placeholder="Enter ticket description"
                       className="form-control" // Force full height
-                      value={receiveMode ? formData?.Master?.ticketDescription :values?.ticketDescription}
+                      value={receiveMode ? formData?.Master?.ticketDescription : values?.ticketDescription || formData?.Master?.ticketDescription ? formData?.Master?.ticketDescription : values?.ticketDescription}
 
                       label={
                         <span>
                           {" "}
-                          Ticket Description
+                          Ticket Description {formData?.Master?.ticketDescription}
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -512,30 +576,30 @@ export function FormEditForm({
 
                     </div>
                   </div>
-                  {receiveMode
-                    && (
-                      <div className="">
-                        <Field
-                          name="remarks"
-                          component={TextArea}
-                          placeholder="Enter remarks"
-                          className="form-control" // Force full height
-                          label={
-                            <span>
-                              {" "}
-                              Remarks
+                  {/* {receiveMode 
+                    && ( */}
+                  <div className="">
+                    <Field
+                      name="remarks"
+                      component={TextArea}
+                      placeholder="Enter remarks"
+                      className="form-control" // Force full height
+                      label={
+                        <span>
+                          {" "}
+                          Remarks
 
-                            </span>
-                          }
-                          autoComplete="off"
-                        />
-                        <div>
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                    <div>
 
-                        </div>
-                      </div>
-                    )
+                    </div>
+                  </div>
+                  {/* ) */}
 
-                  }
+                  {/* } */}
 
 
                 </div>
