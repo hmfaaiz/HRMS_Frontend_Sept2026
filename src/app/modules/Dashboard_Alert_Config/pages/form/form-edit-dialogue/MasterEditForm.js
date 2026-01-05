@@ -133,7 +133,6 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                       values?.map((row, index) => (
                         <tr key={index}>
                           <td>{row?.dashlet_name || ""}</td>
-                          {console.log("rowww", row)}
                           <td>
                             {options?.find((el) => el?.key == row?.tab_key)
                               ?.title || ""}
