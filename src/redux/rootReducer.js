@@ -155,6 +155,7 @@ import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redu
 import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice"
 import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice"
 import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fromSlice";
+import { empAppraisalReviewSlice } from "../app/modules/Appraisal_Review_Portal/_redux/fromSlice";
 import { AttendanceCorrectionSlice } from "../app/modules/AttendanceCorrection/_redux/AttendanceSlice";
 import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
 import { appraisalStatusSlice } from "../app/modules/Appraisal_Status_Employee_Wise/_redux/fromSlice";
@@ -315,6 +316,7 @@ export const rootReducer = combineReducers({
   appraisal_finalization : appraisalFinalizationSlice.reducer,
   appraisal_status : appraisalStatusSlice.reducer,
   bank_advice : BankPaymentAdviceSlice.reducer,
+  emp_appraisal : empAppraisalReviewSlice.reducer,
 
 });
 

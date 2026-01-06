@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { a } from "react-router-dom";
 import { useSelector, shallowEqual } from "react-redux";
 export const PendingRequestSelf = ({
   attendanceApprovalCount,
@@ -62,9 +62,9 @@ export const PendingRequestSelf = ({
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline">
               {isAttApproval ? (
-                <Link to={"/attendance_approval/read-all-attendance-approval"}>
+                <a href={"/attendance_approval/read-all-attendance-approval"}>
                   Request Approval{" "}
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Request Approval{" "}
@@ -73,13 +73,13 @@ export const PendingRequestSelf = ({
             </p>
             <p className="m-0 underline">
               {isAttWorkflowStatus ? (
-                <Link
-                  to={
+                <a
+                  href={
                     "/attendance-workflow-status/read-all-attendance-workflow-status"
                   }
                 >
                   Workflow Status
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Workflow Status{" "}
@@ -96,9 +96,9 @@ export const PendingRequestSelf = ({
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline ">
               {isLeaveApproval ? (
-                <Link to={"/leave-approval/read-all-leave-approval"}>
+                <a href={"/leave-approval/read-all-leave-approval"}>
                   Request Approval{" "}
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Request Approval{" "}
@@ -107,11 +107,11 @@ export const PendingRequestSelf = ({
             </p>
             <p className="m-0 underline">
               {isLeaveWorkflowStatus ? (
-                <Link
-                  to={"/leave-workflow-status/read-all-leave-workflow-status"}
+                <a
+                  href={"/leave-workflow-status/read-all-leave-workflow-status"}
                 >
                   Workflow Status
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Workflow Status{" "}
@@ -128,9 +128,9 @@ export const PendingRequestSelf = ({
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline">
               {isLoanApproval ? (
-                <Link to={"/loan_approval/read-all-loan-approval"}>
+                <a href={"/loan_approval/read-all-loan-approval"}>
                   Request Approval{" "}
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Request Approval{" "}
@@ -139,11 +139,11 @@ export const PendingRequestSelf = ({
             </p>
             <p className="m-0 underline">
               {isLoanWorkflowStatus ? (
-                <Link
-                  to={"/loan-workflow-status/read-all-loan-workflow-status"}
+                <a
+                  href={"/loan-workflow-status/read-all-loan-workflow-status"}
                 >
                   Workflow Status
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Workflow Status{" "}
@@ -160,11 +160,11 @@ export const PendingRequestSelf = ({
           <div className="font-size-xs flex flex-col max-sm:flex-row  max-sm:gap-4 text-black mt-2">
             <p className="m-0 underline">
               {isSeparationApproval ? (
-                <Link
-                  to={"/resignation_approval/read-all-resignation-approval"}
+                <a
+                  href={"/resignation_approval/read-all-resignation-approval"}
                 >
                   Request Approval{" "}
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Request Approval{" "}
@@ -173,13 +173,13 @@ export const PendingRequestSelf = ({
             </p>
             <p className="m-0 underline">
               {isSeparationWorkflowStatus ? (
-                <Link
-                  to={
+                <a
+                  href={
                     "/resignation_workflow_status/read-all-resignation-workflow-status"
                   }
                 >
                   Workflow Status
-                </Link>
+                </a>
               ) : (
                 <label className="opacity-50 cursor-not-allowed">
                   Workflow Status{" "}

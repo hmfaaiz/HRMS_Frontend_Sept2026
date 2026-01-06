@@ -127,9 +127,9 @@ export function EmployeeLoanDetail({ entities }) {
         <div className="font-size-xs font-semibold flex gap-x-4 items-end text-black mt-2 flex-wrap">
           <p className="m-0 underline hover:text-primary">
             {isLoanRequest ? (
-              <Link to={"/loan_request/read-all-loan-request"}>
+              <a href={"/loan_request/read-all-loan-request"}>
                 Loan Request{" "}
-              </Link>
+              </a>
             ) : (
               <label className="opacity-50 cursor-not-allowed">
                 Loan Request
@@ -138,23 +138,12 @@ export function EmployeeLoanDetail({ entities }) {
           </p>
           <p className="m-0 underline">
             {isPayslip ? (
-              <Link to={"/payslip/read-payslip"}>Payslip</Link>
+              <a href={"/payslip/read-payslip"}>Payslip</a>
             ) : (
               <label className="opacity-50 cursor-not-allowed">Payslip</label>
             )}
           </p>
 
-          {/* <p className="m-0 underline">
-            {isAppraisalEvaluation ? (
-              <Link to={"/appraisal_evaluation/read-all-appraisal-evaluation"}>
-                Appraisal Evaluation
-              </Link>
-            ) : (
-              <label className="opacity-50 cursor-not-allowed">
-                Appraisal Evaluation
-              </label>
-            )}
-          </p> */}
         </div>
       </div>
     </div>

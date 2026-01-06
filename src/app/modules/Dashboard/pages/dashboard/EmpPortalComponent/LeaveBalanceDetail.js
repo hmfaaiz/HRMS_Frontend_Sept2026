@@ -51,9 +51,9 @@ export function LeaveBalanceDetail({ leaveBalances }) {
         <div className="font-size-xs font-semibold flex gap-4 items-end text-black mt-2 flex-wrap">
           <p className="m-0 underline">
             {isLeaveRequest ? (
-              <Link to={"/leave-request/read-all-leave-request"}>
+              <a href={"/leave-request/read-all-leave-request"}>
                 Leave Request
-              </Link>
+              </a>
             ) : (
               <label className="opacity-50 cursor-not-allowed">
                 Leave Request
@@ -62,9 +62,9 @@ export function LeaveBalanceDetail({ leaveBalances }) {
           </p>
           <p className="m-0 underline">
             {isLeaveCalendar ? (
-              <Link to={"/leave_calendar_team/read-leave-calendar"}>
+              <a href={"/leave_calendar_team/read-leave-calendar"}>
                 Leave Calendar
-              </Link>
+              </a>
             ) : (
               <label className="opacity-50 cursor-not-allowed">
                 Leave Calendar

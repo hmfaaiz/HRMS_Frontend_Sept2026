@@ -21,9 +21,9 @@ export const ResignationRequest = () => {
         {isAccessForResignationRequest?.isResourceShow ? (
           <div className="font-size-xs text-black font-bold">
             <p className="m-0 underline">
-              <Link to={"/employee_resignation/read-all-resignation"}>
+              <a href={"/employee_resignation/read-all-resignation"}>
                 Request Resignation{" "}
-              </Link>
+              </a>
             </p>
           </div>
         ) : (

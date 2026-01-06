@@ -82,6 +82,7 @@ export function EmployeeAttendanceManualSection({ downloadExcel, dispatch , setH
                   label={"Upload"}
                   name="file"
                   id={"employeeAttendance"}
+                  isEdit={loading}
                   onChange={(event) => {
                     // Update Formik's value
                     const file = event.currentTarget.files[0];
@@ -96,11 +97,11 @@ export function EmployeeAttendanceManualSection({ downloadExcel, dispatch , setH
 
               <button
                 type="submit"
-                disabled={false}
+                disabled={loading}
                 className="btn btn-primary btn-elevate"
               >
                 Save
-                {false && (
+                {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>
