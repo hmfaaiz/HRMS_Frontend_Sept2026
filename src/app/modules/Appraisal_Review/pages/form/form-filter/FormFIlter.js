@@ -111,10 +111,10 @@ export function FormFilter() {
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
           <form
             onSubmit={handleSubmit}
-            className="grid md:grid-cols-7 gap-3 px-3"
+            className="grid md:grid-cols-5 gap-3"
           >
             {values?.subsidiaryId && dashboard?.allSubsidiaryList?.length > 0 && (
-              <div className="col-start-4 flex flex-col justify-end items-end">
+              <div className="col-start-2 flex flex-col justify-end items-end">
                 <span className="text-sm text-black font-bold">
                   Active Appraisal Period
                 </span>
@@ -127,7 +127,7 @@ export function FormFilter() {
                 </span>
               </div>
             )}
-            <div className="col-start-5">
+            <div className="col-start-3">
               <SearchSelect
                 name="subsidiaryId"
                 label={<span> Subsidiary</span>}
@@ -150,7 +150,7 @@ export function FormFilter() {
                 options={dashboard?.allSubsidiaryList}
               />
             </div>
-            <div className="col-start-6">
+            <div className="col-start-4">
               <SearchSelect
                 name="appraisalCategoryId"
                 label={<span> Appraisal Category</span>}
@@ -177,7 +177,7 @@ export function FormFilter() {
               />
             </div>
 
-            <div className="col-start-7">
+            <div className="col-start-5">
               <label>
                 <span> Search</span>
               </label>

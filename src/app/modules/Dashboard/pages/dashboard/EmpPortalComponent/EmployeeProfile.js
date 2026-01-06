@@ -24,7 +24,6 @@ const renderInfoGrid = (data, fields) => (
   </div>
 );
 
-
 const renderStars = (ratingScale) => {
   const rating = ratingScale / 2;
   return [1, 2, 3, 4, 5].map((i) => (
@@ -200,19 +199,6 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
 
       {/* Skills */}
       {isOpen && (
-        // <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-        //   <h6 className="font-bold mb-0 text-primary my-2">Skills</h6>
-        //   {skillsInfo?.length > 0 ? (
-        //     skillsInfo.map((item, index) => (
-        //       <div key={index} className="grid grid-cols-12 gap-1 text-black">
-        //         <p className="text-sm mb-0 col-span-3">{item.skill}</p>
-        //         <p className="col-span-3">{renderStars(item?.ratingScale)}</p>
-        //       </div>
-        //     ))
-        //   ) : (
-        //     <p className="text-sm mb-0">No Skills Found</p>
-        //   )}
-        // </div>
         <>
           {" "}
           <ResignationRequest />
@@ -221,27 +207,6 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
           <CompanyDocument />
         </>
       )}
-
-      {/* Requisition */}
-      {/* {isOpen && requisition_job_vacancy?.length > 0 && (
-  <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-    <h6 className="font-bold mb-0 text-primary my-2">
-      Job Requisition Form
-    </h6>
-
-    {requisition_job_vacancy?.length > 0 ? (
-        <div className="font-size-xs text-black font-bold">
-       <p className="m-0 underline">
-       <Link to={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}>
-                        Request Job Vacancy{" "}
-        </Link>
-     </p>
-     </div>
-    ) : (
-      <p className="text-sm mb-0">No Request for Job Vacancy Found</p>
-    )}
-  </div>
-)} */}
     </>
   );
 };
