@@ -16,12 +16,13 @@ import DatePicker from "react-datepicker";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
+import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = Yup.object().shape({
 
 
-  file: Yup.string().nullable()
-    .required(VALIDATION_MESSAGES.required),
+  file: Yup.string().nullable(),
+  // .required(VALIDATION_MESSAGES.required),
 
   assignTo: Yup.number()
 
@@ -100,11 +101,12 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList } = useSelector((state) => {
     return {
       currentState: state.facilitator_ticket_creation,
       userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
-      allEmployees: state.dashboard.allEmployees
+      allEmployees: state.dashboard.allEmployees,
+      facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList
     };
   }, shallowEqual);
 
@@ -157,9 +159,9 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...formData,
- initiator: formData?.initiator ?? true,
+        initiator: formData?.initiator ?? true,
 
-           ticketStatus: formData?.ticketStatus?  formData?.ticketStatus:1,
+        //  ticketStatus: formData?.ticketStatus?  formData?.ticketStatus:1,
       }}
       validationSchema={facilitator_ticket_creationEditSchema}
       onSubmit={(values, { resetForm }) => {
@@ -186,59 +188,7 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
 
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
-                  {values.receiver && (
 
-                    <>
-
-                      <div className="">
-                        <SearchSelect
-                          name="assignBy"
-                          label={
-                            <span>
-                              Sender
-                            </span>
-                          }
-                          isDisabled={true}
-                          onChange={(e) => {
-                            setFieldValue("assignBy", e.value || null);
-                          }}
-                          value={
-                            allEmployees?.find(option => option.value === values.assignBy) || null
-                          }
-                          options={allEmployees}
-
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <Field
-                          name="remarks"
-                          component={TextArea}
-                          disabled={true}
-                          placeholder="Enter remarks"
-                          className="form-control" // Force full height
-                          value={values.receiver ? formData?.remarks : ""}
-                          label={
-                            <span>
-                              {" "}
-                              Sender Remarks
-
-                            </span>
-                          }
-                          autoComplete="off"
-                        />
-                        <div>
-
-                        </div>
-                      </div>
-                    </>
-
-
-                  )}
-
-
-
-                </div>
 
                 <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
@@ -253,6 +203,7 @@ export function FormEditForm({
                       isDisabled={isUserForRead || !values.initiator || receiveMode}
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
+                        dispatch(FetchAllFacilitatorEmployee(e.value));
                       }}
                       value={
                         dashboard.allTicketTypeList.find(
@@ -274,7 +225,7 @@ export function FormEditForm({
                           Priority Level<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator }
+                      isDisabled={isUserForRead || !values.initiator}
                       onChange={(e) => {
                         setFieldValue("priorityLevelId", e.value || null);
                       }}
@@ -303,9 +254,9 @@ export function FormEditForm({
                         setFieldValue("assignTo", e.value || null);
                       }}
                       value={
-                        allEmployees?.find(option => option.value === values.assignTo) || null
+                        facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
                       }
-                      options={allEmployees}
+                      options={facilitatorEmployeeList}
                       error={errors.assignTo}
                       touched={touched.assignTo}
                     />
@@ -353,7 +304,7 @@ export function FormEditForm({
                         values?.dueDate ? new Date(values.dueDate) : null
                       }
                       onChange={(date) => setFieldValue("dueDate", date)}
-                      disabled={isUserForRead || !values.initiator }
+                      disabled={isUserForRead || !values.initiator}
                       dateFormat="dd-MMM-yyyy"
                       name="dueDate"
                       autoComplete="off"
@@ -374,7 +325,7 @@ export function FormEditForm({
                   <div className="">
                     <TimePickerField
                       className="form-control"
-                      disabled={!values.initiator }
+                      disabled={!values.initiator}
 
                       name="timeRangeFrom"
                       label={
@@ -402,7 +353,7 @@ export function FormEditForm({
                   <div className="">
                     <TimePickerField
                       className="form-control"
-                      disabled={!values.initiator }
+                      disabled={!values.initiator}
                       name="timeRangeTo"
                       label={
                         <span>
@@ -458,7 +409,7 @@ export function FormEditForm({
                     <FileUpload
                       label={
                         <>
-                          Attachment<span style={{ color: "red" }}>*</span>
+                          Attachment
                         </>
                       }
                       isEdit={isUserForRead}
@@ -508,7 +459,7 @@ export function FormEditForm({
 
                   <div className="">
                     <label htmlFor="ticketStatus">
-                      Ticket Status{values.ticketStatus}<span style={{ color: "red" }}>*</span>
+                      Ticket Status<span style={{ color: "red" }}>*</span>
 
                     </label>
 
@@ -533,8 +484,8 @@ export function FormEditForm({
                         ...ticketStatusOptions, // This renders the rest of the options
                       ].map((option) => (
                         <option key={option.value} value={String(option.value)}
-                         disabled={!values.initiator && (option.value === 1 || option.value === 3)} 
-    >
+                          disabled={!values.initiator && (option.value === 1 || option.value === 3)}
+                        >
                           {option.label}
                         </option>
                       ))}
@@ -578,7 +529,7 @@ export function FormEditForm({
                   </div>
                   {/* {receiveMode 
                     && ( */}
-                  <div className="">
+                  {/* <div className="">
                     <Field
                       name="remarks"
                       component={TextArea}
@@ -596,12 +547,195 @@ export function FormEditForm({
                     <div>
 
                     </div>
-                  </div>
+                  </div> */}
                   {/* ) */}
 
                   {/* } */}
 
 
+                </div>
+                {values.receiver && (
+                  <h6 className="font-bold mb-0 text-primary my-2">
+                    Sender Response
+                  </h6>
+
+                )
+                }
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                  {values.receiver && (
+
+                    <>
+
+                      <div className="">
+                        <SearchSelect
+                          name="assignBy"
+                          label={
+                            <span>
+                              Sender
+                            </span>
+                          }
+                          isDisabled={true}
+                          onChange={(e) => {
+                            setFieldValue("assignBy", e.value || null);
+                          }}
+                          value={
+                            allEmployees?.find(option => option.value === values.assignBy) || null
+                          }
+                          options={allEmployees}
+
+                        />
+                      </div>
+                      <div className="">
+                        <Field
+                          name="remarks"
+                          component={TextArea}
+                          disabled={true}
+                          placeholder="Enter remarks"
+                          className="form-control" // Force full height
+                          value={values.receiver ? formData?.remarks : ""}
+                          label={
+                            <span>
+                              {" "}
+                              Sender Remarks
+
+                            </span>
+                          }
+                          autoComplete="off"
+                        />
+                        <div>
+
+                        </div>
+                      </div>
+                    </>
+
+
+                  )}
+
+
+
+                </div>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  My Response
+                </h6>
+
+                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+                  <div className="">
+
+                    <FileUpload
+                      label={
+                        <>
+                          Attachment
+                        </>
+                      }
+                      isEdit={isUserForRead}
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
+
+
+                    />
+                    {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
+                    )}
+
+
+
+
+                    {(formData?.file || values?.file) && (
+                      <div className="mt-2">
+                        <label>Existing File:</label>
+
+                        <a
+                          href={
+                            typeof (values?.file || formData?.file) === "string"
+                              ? getUploadUrl(values?.file || formData?.file)
+                              : URL.createObjectURL(values?.file || formData?.file)
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
+                        >
+                          {typeof (values?.file || formData?.file) === "string"
+                            ? getFileName(values?.file || formData?.file)
+                            : (values?.file)?.name || formData?.file}
+                        </a>
+                      </div>
+                    )}
+
+                  </div>
+
+                  <div className="">
+                    <label htmlFor="ticketStatus">
+                      Ticket Status<span style={{ color: "red" }}>*</span>
+
+                    </label>
+
+                    <Field
+                      name="ticketStatus"
+                      as="select"
+                      className="form-control"
+                      disabled={isUserForRead}
+                      onChange={(e) => {
+                        setFieldValue(
+                          "ticketStatus",
+                          e.target.value === "N/A" ? null : e.target.value
+                        );
+
+
+                      }}
+                    >
+
+
+                      {[
+
+                        ...ticketStatusOptions, // This renders the rest of the options
+                      ].map((option) => (
+                        <option key={option.value} value={String(option.value)}
+                          disabled={!values.initiator && (option.value === 1 || option.value === 3)}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </Field>
+
+                    {errors.ticketStatus &&
+                      touched.ticketStatus && (
+                        <div className="text-danger">
+                          {errors.ticketStatus}
+                        </div>
+                      )}
+                  </div>
+
+                </div>
+
+                <div className="">
+                  <Field
+                    name="remarks"
+                    component={TextArea}
+                    placeholder="Enter remarks"
+                    className="form-control" // Force full height
+                    label={
+                      <span>
+                        {" "}
+                        Remarks
+
+                      </span>
+                    }
+                    autoComplete="off"
+                  />
+                  <div>
+
+                  </div>
                 </div>
 
 

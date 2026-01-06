@@ -102,6 +102,7 @@ const initialDashboardState = {
   currentDateTime : null,
   allTicketTypeList: [],
   priorityLevelList: [],
+  facilitatorEmployeeList: [],
 };
 
 export const callTypes = {
@@ -421,6 +422,10 @@ export const dashboardSlice = createSlice({
     },
         requestRaisedBySenior: (state, action) => {
       state.allowRequestBySenior  = action.payload;
+   
+    }, 
+     FacilitatorEmployeeFetch: (state, action) => {
+      state.facilitatorEmployeeList  = action.payload;
    
     }, 
     

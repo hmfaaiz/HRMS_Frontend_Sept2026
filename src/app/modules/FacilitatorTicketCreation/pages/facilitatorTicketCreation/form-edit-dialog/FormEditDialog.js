@@ -76,7 +76,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   const saveForm = async (formData, clearForm) => {
-    console.log("formData11111", formData)
+
     formData.noOfHours = parseFloat(formData.noOfHours)
 
     formUIProps.setId("");
@@ -99,6 +99,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       dispatch(actions.createEmployeeDoc(formData, disbaleLoading, clearForm));
       dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+      dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
 
 
 
@@ -151,6 +152,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       await dispatch(actions.updateEmployeeDoc(formUpdatedFields, disbaleLoading, clearForm));
 
       await dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
+      await  dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
     }
 
 

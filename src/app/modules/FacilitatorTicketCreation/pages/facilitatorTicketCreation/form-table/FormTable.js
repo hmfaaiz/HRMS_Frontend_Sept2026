@@ -75,46 +75,46 @@ export function FormTable() {
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
-    { value: 0, label: "Closed" },
+    { value: 0, label: "Completed" },
     { value: 3, label: "Re-opened" },
     { value: 2, label: "In Review" },
   ];
   const columns = [
     {
-  dataField: "priorityLevel.formName",
+      dataField: "priorityLevel.formName",
 
-  sort: false,
-  sortCaret: sortCaret,
-  headerSortingClasses,
-  style: {
-    minWidth: "5px",
-  },
-  formatter: (cell,row) => {
-    if (!cell) return "";
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "5px",
+      },
+      formatter: (cell, row) => {
+        if (!cell) return "";
 
-    // Define color based on priority
-    let color=row.color;
-    
-    // Truncate long text
-    const displayText = cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+        // Define color based on priority
+        let color = row.color;
 
-    // Return colored dot + text
-    return (
-      <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-        <span
-          style={{
-            width: "10px",
-            height: "10px",
-            borderRadius: "50%",
-            backgroundColor: color,
-            display: "inline-block",
-          }}
-        ></span>
-  
-      </span>
-    );
-  },
-},
+        // Truncate long text
+        const displayText = cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+
+        // Return colored dot + text
+        return (
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <span
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: color,
+                display: "inline-block",
+              }}
+            ></span>
+
+          </span>
+        );
+      },
+    },
 
 
     {
@@ -124,7 +124,22 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+    {
+      dataField: "AssignToProfile.fullName",
+      text: "Assign To",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
       },
       formatter: (cell) => {
         if (!cell) return "";
@@ -139,51 +154,121 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "300px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
     },
+
     {
-      dataField: "dueDate",
-      text: "Due Date",
+      dataField: "desc",
+      text: "Description",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "70px",
       },
       formatter: (cell) => {
-        // Only format if cell has a valid date
         if (!cell) return "";
-        return format(new Date(cell), "dd-MMM-yyyy");
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
+
+
+
+
     },
 
     {
-      dataField: "file",
-      text: "Attachment",
+         dataField: "dueDate",
+         text: "Due Date",
+         sort: false,
+         sortCaret: sortCaret,
+         headerSortingClasses,
+         style: {
+           minWidth: "30px",
+         },
+         formatter: (cell) => {
+           if (!cell) return "";
+   
+           const dueDate = new Date(cell);
+           const today = new Date();
+   
+           // time reset (sirf date compare karni hai)
+           dueDate.setHours(0, 0, 0, 0);
+           today.setHours(0, 0, 0, 0);
+   
+           const isExpiredOrToday = dueDate <= today;
+   
+           return (
+             <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
+               {format(dueDate, "dd-MMM-yyyy")}
+             </span>
+           );
+         },
+       },
+
+    {
+      dataField: "timeRangeFrom",
+      text: "Time Range From",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "70px",
       },
-
       formatter: (cell) => {
         if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
 
-        return (
-          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-            View Document
-          </a>
-        );
-      }
+
 
 
     },
+
+    {
+      dataField: "timeRangeTo",
+      text: "Time Range To",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+
+
+
+
+    },
+
+
+    {
+      dataField: "noOfHours",
+      text: "No Of Hours",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+
+
+
+
+    },
+
+
     {
       dataField: "ticketStatus",
       text: "Status",
@@ -191,7 +276,7 @@ export function FormTable() {
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
         if (cell === null || cell === undefined) return "";
@@ -206,6 +291,7 @@ export function FormTable() {
           : displayText;
       },
     },
+
 
     {
       dataField: "action",

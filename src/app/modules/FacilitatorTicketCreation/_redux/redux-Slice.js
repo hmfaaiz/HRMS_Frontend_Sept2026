@@ -11,8 +11,8 @@ const initialFacilitatorTicketCreationState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
-    receiveEntities:null,
-    receiveTotalCount:0,
+    receiveEntities: null,
+    receiveTotalCount: 0,
     userForReceive: false,
 };
 
@@ -36,49 +36,90 @@ export const FacilitatorTicketCreationSlice = createSlice({
         },
 
         employeeDocFetched: (state, action) => {
-        
-  
-            const entities = action.payload.data?.data.rows;
-           
-            const totalResult = action.payload.data?.data.totalResults;
-            
+
+
+            // const entities = action.payload.data?.data.rows;
+
+            // const totalResult = action.payload.data?.data.totalResults;
+
+            // state.listLoading = false;
+            // state.error = null;
+            // state.entities = entities;
+            // state.totalCount = totalResult;
+
+            const rows = action.payload.data?.data.rows || [];
+            const totalResult = action.payload.data?.data.totalResults || 0;
+
+            // flatten all Details from all parents
+            // const allDetails = rows.flatMap(parent => parent.Details || []);
+            const allDetails = rows.flatMap(parent =>
+                (parent.Details || []).map(detail => ({
+                    ...detail,
+
+                    // 🔹 temporary field from parent
+                    desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                }))
+            );
             state.listLoading = false;
             state.error = null;
-            state.entities = entities;
-            state.totalCount = totalResult;
-           
-        }, 
-        
-        receiveFetched: (state, action) => {
-        
-  
-            const entities = action.payload.data?.data.rows;
-           
-            const totalResult = action.payload.data?.data.totalResults;
-            
-            state.listLoading = false;
-            state.error = null;
-            state.receiveEntities = entities;
-            state.receiveTotalCount = totalResult;
-           
+            state.entities = allDetails;
+            state.totalCount = allDetails.length; // total number of details
+
         },
 
-         //get User By ID
-         EmployeeDocFetchedForEdit: (state, action) => {
-           
-   
+        receiveFetched: (state, action) => {
+
+
+            // const entities = action.payload.data?.data.rows;
+
+            // const totalResult = action.payload.data?.data.totalResults;
+
+
+
+            // state.listLoading = false;
+            // state.error = null;
+            // state.receiveEntities = entities;
+            // state.receiveTotalCount = totalResult;
+
+
+            const rows = action.payload.data?.data.rows || [];
+            const totalResult = action.payload.data?.data.totalResults || 0;
+
+            // flatten all Details from all parents
+            // const allDetails = rows.flatMap(parent => parent.Details || []);
+
+            const allDetails = rows.flatMap(parent =>
+                (parent.Details || []).map(detail => ({
+                    ...detail,
+
+
+                    desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                })));
+
+            state.listLoading = false;
+            state.error = null;
+            state.receiveEntities = allDetails;
+            state.receiveTotalCount = allDetails.length; // total number of details
+
+
+        },
+
+        //get User By ID
+        EmployeeDocFetchedForEdit: (state, action) => {
+
+
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
             state.error = null;
         },
 
-      
+
         EmployeeDocDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
-         
-          
+
+
             state.entities = state.entities.filter(
                 (el) => el.Id !== action.payload.Id
             );
@@ -89,7 +130,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
 
         // employeeDocCreated: (state, action) => {
-           
+
         //     state.actionsLoading = false;
         //     state.error = null;
         //     state.entities.unshift(action.payload);
@@ -99,24 +140,24 @@ export const FacilitatorTicketCreationSlice = createSlice({
         employeeDocCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
-        
+
             // Clone the payload to avoid direct mutation
             // let payload = JSON.stringify(action.payload);
             // let payloadObj = JSON.parse(payload);
-        
+
             // // If basis_of_gratuityId is 0, set "Gross", if 1, set "Basis"
             // if (payloadObj.basis_of_gratuityId == 0) {
-             
+
             //     payloadObj.basis_of_gratuity = "Gross";
             // } else if (payloadObj.basis_of_gratuityId == 1) {
-          
+
             //     payloadObj.basis_of_gratuity = "Basis";
             // }
-        
+
             // Add the modified payload to the beginning of the entities list
             state.entities.unshift(action.payload);
         },
-        
+
 
 
 
@@ -124,10 +165,10 @@ export const FacilitatorTicketCreationSlice = createSlice({
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
-            
-          
+
+
             state.entities = state.entities.map((entity) => {
-                
+
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
@@ -137,12 +178,12 @@ export const FacilitatorTicketCreationSlice = createSlice({
                 }
                 return entity;
             });
-           
+
         },
 
 
-        
-        
+
+
 
     },
 });

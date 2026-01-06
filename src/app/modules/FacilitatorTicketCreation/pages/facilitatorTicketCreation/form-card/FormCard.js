@@ -4,7 +4,7 @@ import React, { useEffect, useMemo } from "react";
 import { FormTable } from "../form-table/FormTable";
 import { useFormUIContext } from "../FormUIContext";
 
-import { useSelector, shallowEqual,useDispatch } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { EmployeeSelect } from "../form-edit-dialog/employeeSelect";
@@ -30,10 +30,10 @@ export function FormCard() {
     };
   }, [FormUIContext]);
 
-  const { userAccess,dashboard } = useSelector(
+  const { userAccess, dashboard } = useSelector(
     (state) => ({
       userAccess: state.auth.userAccess.facilitator_ticket_creation,
-       dashboard: state.dashboard,
+      dashboard: state.dashboard,
     }),
     shallowEqual
   );
@@ -60,9 +60,9 @@ export function FormCard() {
 
     <TCard name={CurrentModuleName()}>
 
-           <h6 className="font-bold mb-0 text-primary my-2">
-                    Receive
-                  </h6>
+      <h6 className="font-bold mb-0 text-primary my-2">
+        Ticket (Receive)
+      </h6>
       {/* <EmployeeSelect
         setemployeeId={FormUIProps.setemployeeId}
         setPanelMode={FormUIProps.setPanelMode}
@@ -76,15 +76,23 @@ export function FormCard() {
       /> */}
       {/* EmployeeProfile Ends */}
 
-    <ResponseTable />
-      <br />
-   <hr />
+      <ResponseTable />
+
+
+
+      <h6 className="font-bold mb-0 text-primary my-2">
+        Ticket Detail
+      </h6>
       {/* FormEditDialog Starts */}
       <FormEditDialog id={FormUIProps.id} employeeId={FormUIProps.employeeId} />
       {/* FormEditDialog Ends */}
 
-      <br />
-      <hr />
+
+
+
+      <h6 className="font-bold mb-0 text-primary my-2">
+        Ticket (Send)
+      </h6>
       <FormTable />
     </TCard>
     // </>

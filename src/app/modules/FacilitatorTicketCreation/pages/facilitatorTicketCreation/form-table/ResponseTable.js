@@ -45,7 +45,7 @@ export function ResponseTable() {
 
   const { receiveTotalCount, receiveEntities, listLoading } = currentState;
 
-  //receiveTotalCount = 10
+
 
   const dispatch = useDispatch();
 
@@ -69,13 +69,168 @@ export function ResponseTable() {
 
   // ReadEmployeeDocr,CreateEmployeeDocr
   // Table columns
-const ticketStatusOptions = [
-  { value: 1, label: "Open" },
-  { value: 0, label: "Closed" },
-  { value: 3, label: "Re-opened" },
-  { value: 2, label: "In Review" },
-];
+  const ticketStatusOptions = [
+    { value: 1, label: "Open" },
+    { value: 0, label: "Closed" },
+    { value: 3, label: "Re-opened" },
+    { value: 2, label: "In Review" },
+  ];
+
+  console.log("receiveEntities1111111", receiveEntities)
+  // const columns = [
+
+  //   {
+  //     dataField: "ticketType.formName",
+  //     text: "Ticket Type",
+  //     sort: false,
+  //     sortCaret: sortCaret,
+  //     headerSortingClasses,
+  //     style: {
+  //       minWidth: "200px",
+  //     },
+  //     formatter: (cell) => {
+  //       if (!cell) return "";
+  //       return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+  //     },
+  //   },
+
+  //   {
+  //     dataField: "priorityLevel.formName",
+  //     text: "Priority",
+  //     sort: false,
+  //     sortCaret: sortCaret,
+  //     headerSortingClasses,
+  //     style: {
+  //       minWidth: "300px",
+  //     },
+  //     formatter: (cell) => {
+  //       if (!cell) return "";
+  //       return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+  //     },
+  //   },
+  //   {
+  //     dataField: "dueDate",
+  //     text: "Due Date",
+  //     sort: false,
+  //     sortCaret: sortCaret,
+  //     headerSortingClasses,
+  //     style: {
+  //       minWidth: "160px",
+  //     },
+  //     formatter: (cell) => {
+  //       // Only format if cell has a valid date
+  //       if (!cell) return "";
+  //       return format(new Date(cell), "dd-MMM-yyyy");
+  //     },
+  //   },
+
+  //   {
+  //     dataField: "file",
+  //     text: "Attachment",
+  //     sort: false,
+  //     sortCaret: sortCaret,
+  //     headerSortingClasses,
+  //     style: {
+  //       minWidth: "100px",
+  //     },
+
+  //     formatter: (cell) => {
+  //       if (!cell) return "";
+
+  //       return (
+  //         <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+  //           View Document
+  //         </a>
+  //       );
+  //     }
+
+
+  //   },
+  //  {
+  //   dataField: "ticketStatus",
+  //   text: "Status",
+  //   sort: false,
+  //   sortCaret: sortCaret,
+  //   headerSortingClasses,
+  //   style: {
+  //     minWidth: "200px",
+  //   },
+  //   formatter: (cell) => {
+  //     if (cell === null || cell === undefined) return "";
+
+  //     // Agar aapko cell value ko label me convert karna hai
+  //     const status = ticketStatusOptions.find(opt => opt.value === cell);
+  //     const displayText = status ? status.label : cell;
+
+  //     // Agar text lamba ho, truncate karo
+  //     return displayText.length > 30 
+  //       ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span> 
+  //       : displayText;
+  //   },
+  // },
+
+
+  //   {
+  //     dataField: "response",
+  //     text: "Response",
+  //     isDummyField: true,
+  //     formatter: ResponseColumnFormatter,
+  //     formatExtraData: {
+  //       setId: formUIProps.setId,
+
+  //       setReceiveMode: formUIProps.setReceiveMode,
+  //       receiveMode: formUIProps.receiveMode,
+
+  //     },
+  //     classes: "text-right pr-0",
+  //     headerClasses: "text-right pr-3",
+  //     style: {
+  //       minWidth: "10px",
+  //     },
+  //   }, 
+
+  // ];
+
+  //Table pagination properties
+
+
   const columns = [
+    {
+      dataField: "priorityLevel.formName",
+
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "5px",
+      },
+      formatter: (cell, row) => {
+        if (!cell) return "";
+
+        // Define color based on priority
+        let color = row.color;
+
+        // Truncate long text
+        const displayText = cell.length > 30 ? cell.substring(0, 30) + "..." : cell;
+
+        // Return colored dot + text
+        return (
+          <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <span
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                backgroundColor: color,
+                display: "inline-block",
+              }}
+            ></span>
+
+          </span>
+        );
+      },
+    },
+
 
     {
       dataField: "ticketType.formName",
@@ -84,7 +239,22 @@ const ticketStatusOptions = [
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "200px",
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+    {
+      dataField: "AssignByProfile.fullName",
+      text: "Assign To",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
       },
       formatter: (cell) => {
         if (!cell) return "";
@@ -99,13 +269,49 @@ const ticketStatusOptions = [
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "300px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
         if (!cell) return "";
         return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
     },
+
+    {
+      dataField: "desc",
+      text: "Description",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+
+
+
+
+    },
+
+    // {
+    //   dataField: "dueDate",
+    //   text: "Due Date",
+    //   sort: false,
+    //   sortCaret: sortCaret,
+    //   headerSortingClasses,
+    //   style: {
+    //     minWidth: "30px",
+    //   },
+    //   formatter: (cell) => {
+    //     // Only format if cell has a valid date
+    //     if (!cell) return "";
+    //     return format(new Date(cell), "dd-MMM-yyyy");
+    //   },
+    // },
+
     {
       dataField: "dueDate",
       text: "Due Date",
@@ -113,61 +319,112 @@ const ticketStatusOptions = [
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "160px",
+        minWidth: "30px",
       },
       formatter: (cell) => {
-        // Only format if cell has a valid date
         if (!cell) return "";
-        return format(new Date(cell), "dd-MMM-yyyy");
+
+        const dueDate = new Date(cell);
+        const today = new Date();
+
+        // time reset (sirf date compare karni hai)
+        dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const isExpiredOrToday = dueDate <= today;
+
+        return (
+          <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
+            {format(dueDate, "dd-MMM-yyyy")}
+          </span>
+        );
       },
     },
 
+
     {
-      dataField: "file",
-      text: "Attachment",
+      dataField: "timeRangeFrom",
+      text: "Time Range From",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "100px",
+        minWidth: "70px",
       },
-
       formatter: (cell) => {
         if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
 
-        return (
-          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-            View Document
-          </a>
-        );
-      }
+
 
 
     },
-   {
-    dataField: "ticketStatus",
-    text: "Status",
-    sort: false,
-    sortCaret: sortCaret,
-    headerSortingClasses,
-    style: {
-      minWidth: "200px",
-    },
-    formatter: (cell) => {
-      if (cell === null || cell === undefined) return "";
-      
-      // Agar aapko cell value ko label me convert karna hai
-      const status = ticketStatusOptions.find(opt => opt.value === cell);
-      const displayText = status ? status.label : cell;
 
-      // Agar text lamba ho, truncate karo
-      return displayText.length > 30 
-        ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span> 
-        : displayText;
-    },
-  },
+    {
+      dataField: "timeRangeTo",
+      text: "Time Range To",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
 
-   
+
+
+
+    },
+
+
+    {
+      dataField: "noOfHours",
+      text: "No Of Hours",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+
+
+
+
+    },
+
+
+    {
+      dataField: "ticketStatus",
+      text: "Status",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (cell === null || cell === undefined) return "";
+
+        // Agar aapko cell value ko label me convert karna hai
+        const status = ticketStatusOptions.find(opt => opt.value === cell);
+        const displayText = status ? status.label : cell;
+
+        // Agar text lamba ho, truncate karo
+        return displayText.length > 30
+          ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span>
+          : displayText;
+      },
+    },
+
+
     {
       dataField: "response",
       text: "Response",
@@ -175,21 +432,19 @@ const ticketStatusOptions = [
       formatter: ResponseColumnFormatter,
       formatExtraData: {
         setId: formUIProps.setId,
-       
+
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
-     
+
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
       style: {
         minWidth: "10px",
       },
-    }, 
-   
-  ];
+    },
 
-  //Table pagination properties
+  ];
   const paginationOptions = {
     custom: true,
     totalSize: receiveTotalCount,

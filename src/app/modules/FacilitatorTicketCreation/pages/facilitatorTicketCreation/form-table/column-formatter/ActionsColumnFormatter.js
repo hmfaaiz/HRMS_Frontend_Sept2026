@@ -36,7 +36,7 @@ export function ActionsColumnFormatter(
           </a>
         </OverlayTrigger>
       )}
-      {isAccessForEdit && (
+      {/* {isAccessForEdit && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
         >
@@ -47,7 +47,7 @@ export function ActionsColumnFormatter(
             <Pencil className="w-4 h-4 text-black cursor-pointer" />
           </a>
         </OverlayTrigger>
-      )}
+      )} */}
 
       {/* {isAccessForDelete && (
         <OverlayTrigger

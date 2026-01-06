@@ -43,7 +43,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     timeRangeFrom: "",
     timeRangeTo: "",
     noOfHours: "",
-    ticketStatus: "",
+    ticketStatus: 1,
     file: "",
   
 
