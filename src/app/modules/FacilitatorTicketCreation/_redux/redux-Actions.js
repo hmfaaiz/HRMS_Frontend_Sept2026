@@ -172,7 +172,7 @@ export const updateEmployeeDoc = (user, disbaleLoading, onHide) => (dispatch) =>
 
 export const fetchAllFacilitatorDetail = (Id) => (dispatch) => {
 
-
+console.log("fetchAllFacilitatorDetail11111")
   if (!Id) {
     return dispatch(actions.FacilitatorDetailFetched({ userForEdit: undefined }));
   }

@@ -9,6 +9,7 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
 import {} from "../../_redux/redux-Actions";
+import { DetailData } from "./form-edit-dialog/DetailData";
 
 
 
@@ -35,8 +36,8 @@ console.log("FormPage111111")
      openReceiveFormDialog: (id, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-receive/${id}/receive`);
     }, 
-        openDetailGridData: (id, isUserRead) => {
-      history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/detail`);
+        openDetailGridData: (detailId, isUserRead) => {
+      history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detail`);
     },
   };
   return (
@@ -60,11 +61,11 @@ console.log("FormPage111111")
             </Route>
 
 
-        <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/detail">
+        <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:detailId/detail">
               {({ history, match }) => (
                 <DetailData
                   show={match != null}
-                  id={match && match.params.id}
+                  detailId={match && match.params.detailId}
                   status={match && match.params.status}
                   onHide={() => {
                     history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");

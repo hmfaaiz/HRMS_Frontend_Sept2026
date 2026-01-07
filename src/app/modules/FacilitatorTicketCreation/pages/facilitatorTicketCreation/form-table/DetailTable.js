@@ -19,7 +19,7 @@ import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
 import { getUploadUrl } from "../../../../../utils/common";
 
-export function FormTable() {
+export function DetailTable() {
   //Users UI Context
   const formUIContext = useFormUIContext();
 

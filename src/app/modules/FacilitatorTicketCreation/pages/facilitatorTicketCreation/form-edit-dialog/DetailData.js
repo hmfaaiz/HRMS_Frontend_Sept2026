@@ -4,93 +4,88 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
+import { DetailTable } from "../form-table/DetailTable";
 
-export function DetailData({ id, status, show, onHide }) {
+export function DetailData({ detailId, status, show, onHide }) {
 
-  console.log("/${status}11111111")
-  const [loading, setLoading] = useState(false);
-  // Customers UI Context
-  const usersUIContext = useFormUIContext();
-  const usersUIProps = useMemo(() => {
-    return {
-      queryParams: usersUIContext.queryParams,
+    console.log("/${status}11111111")
+    const [loading, setLoading] = useState(false);
+    // Customers UI Context
+    const usersUIContext = useFormUIContext();
+    const usersUIProps = useMemo(() => {
+        return {
+            queryParams: usersUIContext.queryParams,
+        };
+    }, [usersUIContext]);
+
+    // Customers Redux state
+    const dispatch = useDispatch();
+    const { isLoading } = useSelector(
+        (state) => ({ isLoading: state.customers.actionsLoading }),
+        shallowEqual
+    );
+
+    const enableLoading = () => {
+        setLoading(true);
     };
-  }, [usersUIContext]);
 
-  // Customers Redux state
-  const dispatch = useDispatch();
-  const { isLoading } = useSelector(
-    (state) => ({ isLoading: state.customers.actionsLoading }),
-    shallowEqual
-  );
+    const disableLoading = () => {
+        setLoading(false);
+    };
 
-  const enableLoading = () => {
-    setLoading(true);
-  };
+    // if !id we should close modal
+    useEffect(() => {
+        if (!detailId) {
+            onHide();
+        }
+        if (detailId) {
+            fetchDetailData()
+        }
 
-  const disableLoading = () => {
-    setLoading(false);
-  };
+    }, [detailId]);
 
-  // if !id we should close modal
-  useEffect(() => {
-    if (!id) {
-      onHide();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+    // looking for loading/dispatch
 
-  // looking for loading/dispatch
-  useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteEmployeeDoc = () => {
-    // server request for deleting customer by id
-    enableLoading();
-    dispatch(actions.deleteEmployeeDoc(id)).then(() => {
-      onHide();
-      // refresh list after deletion
-      dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
+    const fetchDetailData = () => {
+        // server request for deleting customer by id
+        enableLoading();
+        console.log("fetchDetailData111111")
+        dispatch(actions.fetchAllFacilitatorDetail(detailId)).then(() => {
+            // onHide();
+            // refresh list after deletion
+            // dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
 
-      disableLoading();
-    });
-  };
+            disableLoading();
+        });
+    };
 
-  return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      aria-labelledby="example-modal-sizes-title-lg"
-    >
-      {/*begin::Loading*/}
-      {isLoading && <ModalProgressBar />}
-      {/*end::Loading*/}
-      <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-lg">
-          Delete Record
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {!isLoading && <label>Are you sure want to delete this record?</label>}
-        {isLoading && <label>user is deactivating...</label>}
-      </Modal.Body>
-      <Modal.Footer>
-        <div>
-          <button type="button" onClick={onHide} className="btn btn-light ">
-            Cancel
-          </button>
-          <> </>
-          <button
-            type="button"
-            onClick={deleteEmployeeDoc}
-            className="btn btn-danger btn-elevate"
-          >
-            Delete
-            {loading && (
-              <span className="ml-3 mr-3 spinner spinner-white"></span>
-            )}
-          </button>
-        </div>
-      </Modal.Footer>
-    </Modal>
-  );
+    return (
+        <Modal
+            show={show}
+            onHide={onHide}
+            aria-labelledby="example-modal-sizes-title-lg"
+        >
+            {/*begin::Loading*/}
+            {isLoading && <ModalProgressBar />}
+            {/*end::Loading*/}
+            <Modal.Header closeButton>
+                <Modal.Title id="example-modal-sizes-title-lg">
+                    Delete Record
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <DetailTable />
+            </Modal.Body>
+            <Modal.Footer>
+                <div>
+                    <button type="button" onClick={onHide} className="btn btn-light ">
+                        Cancel
+                    </button>
+
+
+                </div>
+            </Modal.Footer>
+        </Modal>
+    );
 }
