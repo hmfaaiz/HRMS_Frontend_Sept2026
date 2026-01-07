@@ -159,9 +159,12 @@ export function FormEditForm({
       enableReinitialize={true}
       initialValues={{
         ...formData,
+        remarks: !isUserForRead ? "" : formData.remarks || "",
+        file: !isUserForRead ? "" : formData.file || "",
+        ticketStatus: !isUserForRead ? 1 : formData.ticketStatus || 1,
         initiator: formData?.initiator ?? true,
 
-        //  ticketStatus: formData?.ticketStatus?  formData?.ticketStatus:1,
+
       }}
       validationSchema={facilitator_ticket_creationEditSchema}
       onSubmit={(values, { resetForm }) => {
@@ -190,7 +193,7 @@ export function FormEditForm({
 
 
 
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
                   <div className="">
                     <SearchSelect
@@ -287,10 +290,6 @@ export function FormEditForm({
                       </div>
                     )}
                   </div>
-                </div>
-
-
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
                   <div className="">
                     <label>
@@ -403,61 +402,13 @@ export function FormEditForm({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
-                  <div className="">
-
-                    <FileUpload
-                      label={
-                        <>
-                          Attachment
-                        </>
-                      }
-                      isEdit={isUserForRead}
-                      id="file"
-                      name="file"
-                      type="file"
-                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
-                      ref={inputFile}
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        setFieldValue("file", file);
-                      }}
-
-
-                    />
-                    {errors.file && touched.file && (
-                      <div className="invalid-feedback">{errors.file}</div>
-                    )}
 
 
 
-
-                    {(formData?.file || values?.file) && (
-                      <div className="mt-2">
-                        <label>Existing File:</label>
-
-                        <a
-                          href={
-                            typeof (values?.file || formData?.file) === "string"
-                              ? getUploadUrl(values?.file || formData?.file)
-                              : URL.createObjectURL(values?.file || formData?.file)
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline text-primary text-sm"
-                        >
-                          {typeof (values?.file || formData?.file) === "string"
-                            ? getFileName(values?.file || formData?.file)
-                            : (values?.file)?.name || formData?.file}
-                        </a>
-                      </div>
-                    )}
-
-                  </div>
+                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
 
-                  <div className="">
+                  {/* <div className="">
                     <label htmlFor="ticketStatus">
                       Ticket Status<span style={{ color: "red" }}>*</span>
 
@@ -497,15 +448,9 @@ export function FormEditForm({
                           {errors.ticketStatus}
                         </div>
                       )}
-                  </div>
+                  </div> */}
 
-
-
-                </div>
-
-                <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-
-                  <div className="">
+                  <div className="col-span-3">
                     <Field
                       name="ticketDescription"
                       component={TextArea}
@@ -517,7 +462,7 @@ export function FormEditForm({
                       label={
                         <span>
                           {" "}
-                          Ticket Description {formData?.Master?.ticketDescription}
+                          Ticket Description
                           <span style={{ color: "red" }}>*</span>
                         </span>
                       }
@@ -527,6 +472,73 @@ export function FormEditForm({
 
                     </div>
                   </div>
+
+                  {formData?.file && (
+                    <div className="">
+                      <label>   Attachment</label>
+
+                      {/* <FileUpload
+                      label={
+                        <>
+                       Attachment
+                        </>
+                      }
+                      isEdit={isUserForRead}
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
+
+
+                    /> */}
+                      {/* {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
+                    )} */}
+
+
+
+
+                      {(formData?.file) && (
+                        <div className="mt-2">
+                          <label>Existing File:</label>
+
+                          <a
+                            href={
+                              typeof (formData?.file) === "string"
+                                ? getUploadUrl(formData?.file)
+                                : URL.createObjectURL(formData?.file)
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline text-primary text-sm"
+                          >
+                            {typeof (formData?.file) === "string"
+                              ? getFileName(formData?.file)
+                              : formData?.file}
+                          </a>
+                        </div>
+                      )}
+
+                    </div>
+
+                  )}
+
+
+
+
+
+
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+
+
                   {/* {receiveMode 
                     && ( */}
                   {/* <div className="">
@@ -562,7 +574,7 @@ export function FormEditForm({
                 )
                 }
 
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
                   {values.receiver && (
 
                     <>
@@ -586,7 +598,7 @@ export function FormEditForm({
 
                         />
                       </div>
-                      <div className="">
+                      <div className="col-span-3">
                         <Field
                           name="remarks"
                           component={TextArea}
@@ -607,27 +619,65 @@ export function FormEditForm({
 
                         </div>
                       </div>
-                    </>
+
+                      <div className="">
+                        <label htmlFor="ticketStatus">
+                          Ticket Status<span style={{ color: "red" }}>*</span>
+
+                        </label>
+
+                        {/* <Field
+                          name="ticketStatus"
+                          as="select"
+                          className="form-control"
+                          disabled={true}
+                         
+                        >
 
 
-                  )}
+                          {[
+
+                            ...ticketStatusOptions, // This renders the rest of the options
+                          ].map((option) => (
+                            <option key={option.value} value={String(option.value)}
+                              disabled={!values.initiator && (option.value === 1 || option.value === 3)}
+                            >
+                              {option.label}
+                            </option>
+                          ))}
+                        </Field> */}
+
+                        <Field
+                          name="ticketStatus"
+                          as="select"
+                          className="form-control"
+                          disabled={true} // always read-only
+                          value={formData?.ticketStatus ?? ""} // always show current formData
+                        >
+                          {[...ticketStatusOptions].map((option) => (
+                            <option
+                              key={option.value}
+                              value={String(option.value)}
+                              disabled={!values.initiator && (option.value === 1 || option.value === 3)}
+                            >
+                              {option.label}
+                            </option>
+                          ))}
+                        </Field>
 
 
 
-                </div>
+                      </div>
 
-                <h6 className="font-bold mb-0 text-primary my-2">
-                  My Response
-                </h6>
 
-                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                      {formData?.file && (
+                        <div className="">
+                          <label>   Attachment</label>
 
-                  <div className="">
-
-                    <FileUpload
+                          {/* <FileUpload
                       label={
                         <>
-                          Attachment
+                       Attachment
                         </>
                       }
                       isEdit={isUserForRead}
@@ -643,36 +693,75 @@ export function FormEditForm({
                       }}
 
 
-                    />
-                    {errors.file && touched.file && (
+                    /> */}
+                          {/* {errors.file && touched.file && (
                       <div className="invalid-feedback">{errors.file}</div>
-                    )}
+                    )} */}
 
 
 
 
-                    {(formData?.file || values?.file) && (
-                      <div className="mt-2">
-                        <label>Existing File:</label>
+                          {(formData?.file) && (
+                            <div className="mt-2">
+                              <label>Existing File:</label>
 
-                        <a
-                          href={
-                            typeof (values?.file || formData?.file) === "string"
-                              ? getUploadUrl(values?.file || formData?.file)
-                              : URL.createObjectURL(values?.file || formData?.file)
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline text-primary text-sm"
-                        >
-                          {typeof (values?.file || formData?.file) === "string"
-                            ? getFileName(values?.file || formData?.file)
-                            : (values?.file)?.name || formData?.file}
-                        </a>
-                      </div>
-                    )}
+                              <a
+                                href={
+                                  typeof (formData?.file) === "string"
+                                    ? getUploadUrl(formData?.file)
+                                    : URL.createObjectURL(formData?.file)
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline text-primary text-sm"
+                              >
+                                {typeof (formData?.file) === "string"
+                                  ? getFileName(formData?.file)
+                                  : formData?.file}
+                              </a>
+                            </div>
+                          )}
 
+                        </div>
+
+                      )}
+                    </>
+
+
+                  )}
+
+
+
+                </div>
+
+                <h6 className="font-bold mb-0 text-primary my-2">
+                  My Response
+                </h6>
+
+                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+
+                  <div className="col-span-3">
+                    <Field
+                      name="remarks"
+                      component={TextArea}
+                      placeholder="Enter remarks"
+                      className="form-control" // Force full height
+
+                      label={
+                        <span>
+                          {" "}
+                          Remarks
+
+                        </span>
+                      }
+                      autoComplete="off"
+                    />
+                    <div>
+
+                    </div>
                   </div>
+
+
 
                   <div className="">
                     <label htmlFor="ticketStatus">
@@ -710,33 +799,69 @@ export function FormEditForm({
 
                     {errors.ticketStatus &&
                       touched.ticketStatus && (
-                        <div className="text-danger">
+                        <div className="invalid-feedback">
                           {errors.ticketStatus}
                         </div>
                       )}
                   </div>
 
-                </div>
+                  <div className="">
 
-                <div className="">
-                  <Field
-                    name="remarks"
-                    component={TextArea}
-                    placeholder="Enter remarks"
-                    className="form-control" // Force full height
-                    label={
-                      <span>
-                        {" "}
-                        Remarks
+                    <FileUpload
+                      label={
+                        <>
+                          My Attachment
+                        </>
+                      }
+                      isEdit={isUserForRead}
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept=".jpeg,.jpg,.png,.pdf,.doc,.docx"
+                      ref={inputFile}
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        setFieldValue("file", file);
+                      }}
 
-                      </span>
-                    }
-                    autoComplete="off"
-                  />
-                  <div>
+
+                    />
+                    {errors.file && touched.file && (
+                      <div className="invalid-feedback">{errors.file}</div>
+                    )}
+
+
+
+
+                    {(values?.file) && (
+                      <div className="mt-2">
+                        <label>Existing File:</label>
+
+                        <a
+                          href={
+                            typeof (values?.file) === "string"
+                              ? getUploadUrl(values?.file)
+                              : URL.createObjectURL(values?.file)
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline text-primary text-sm"
+                        >
+                          {typeof (values?.file) === "string"
+                            ? getFileName(values?.file)
+                            : (values?.file)?.name}
+                        </a>
+                      </div>
+                    )}
 
                   </div>
+
+
+
+
                 </div>
+
 
 
 
