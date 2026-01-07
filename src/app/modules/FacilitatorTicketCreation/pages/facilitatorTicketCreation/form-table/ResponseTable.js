@@ -249,7 +249,36 @@ export function ResponseTable() {
 
     {
       dataField: "AssignByProfile.fullName",
-      text: "Assign To",
+      text: "Assign By",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+    {
+      dataField: "AssignByProfile.department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+    {
+      dataField: "AssignByProfile.designation.formName",
+      text: "Designation",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -344,7 +373,7 @@ export function ResponseTable() {
 
     {
       dataField: "timeRangeFrom",
-      text: "Time Range From",
+      text: "Time From",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -363,7 +392,7 @@ export function ResponseTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time Range To",
+      text: "Time To",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -424,10 +453,43 @@ export function ResponseTable() {
       },
     },
 
+  {
+  dataField: "dueDate",
+  text: "",
+  sort: false,
+  sortCaret: sortCaret,
+  headerSortingClasses,
+  style: {
+    minWidth: "10px",
+  },
+  formatter: (cell) => {
+    if (!cell) return "";
+
+    const dueDate = new Date(cell);
+    const today = new Date();
+
+    // Reset time (compare only the date)
+    dueDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    const isExpiredOrToday = dueDate <= today;
+
+    return (
+      <>
+        {isExpiredOrToday && (
+          <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
+            Over Due
+          </span>
+        )}
+      </>
+    );
+  },
+},
+
 
     {
       dataField: "response",
-      text: "Response",
+      text: "Action",
       isDummyField: true,
       formatter: ResponseColumnFormatter,
       formatExtraData: {

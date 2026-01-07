@@ -148,6 +148,36 @@ export function FormTable() {
     },
 
     {
+      dataField: "AssignToProfile.department.deptName",
+      text: "Department",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+    {
+      dataField: "AssignToProfile.designation.formName",
+      text: "Designation",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+    {
       dataField: "priorityLevel.formName",
       text: "Priority",
       sort: false,
@@ -182,37 +212,37 @@ export function FormTable() {
     },
 
     {
-         dataField: "dueDate",
-         text: "Due Date",
-         sort: false,
-         sortCaret: sortCaret,
-         headerSortingClasses,
-         style: {
-           minWidth: "30px",
-         },
-         formatter: (cell) => {
-           if (!cell) return "";
-   
-           const dueDate = new Date(cell);
-           const today = new Date();
-   
-           // time reset (sirf date compare karni hai)
-           dueDate.setHours(0, 0, 0, 0);
-           today.setHours(0, 0, 0, 0);
-   
-           const isExpiredOrToday = dueDate <= today;
-   
-           return (
-             <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
-               {format(dueDate, "dd-MMM-yyyy")}
-             </span>
-           );
-         },
-       },
+      dataField: "dueDate",
+      text: "Due Date",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        const dueDate = new Date(cell);
+        const today = new Date();
+
+        // time reset (sirf date compare karni hai)
+        dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const isExpiredOrToday = dueDate <= today;
+
+        return (
+          <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
+            {format(dueDate, "dd-MMM-yyyy")}
+          </span>
+        );
+      },
+    },
 
     {
       dataField: "timeRangeFrom",
-      text: "Time Range From",
+      text: "Time From",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -231,7 +261,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time Range To",
+      text: "Time To",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -292,6 +322,38 @@ export function FormTable() {
       },
     },
 
+    {
+      dataField: "dueDate",
+      text: "",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        const dueDate = new Date(cell);
+        const today = new Date();
+
+        // Reset time (compare only the date)
+        dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const isExpiredOrToday = dueDate <= today;
+
+        return (
+          <>
+            {isExpiredOrToday && (
+              <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
+                Over Due
+              </span>
+            )}
+          </>
+        );
+      },
+    },
 
     {
       dataField: "action",
