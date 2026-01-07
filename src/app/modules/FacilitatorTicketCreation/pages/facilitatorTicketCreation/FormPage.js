@@ -34,6 +34,9 @@ console.log("FormPage111111")
     },  
      openReceiveFormDialog: (id, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-receive/${id}/receive`);
+    }, 
+        openDetailGridData: (id, isUserRead) => {
+      history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/detail`);
     },
   };
   return (
@@ -46,6 +49,20 @@ console.log("FormPage111111")
             <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/:status/delete">
               {({ history, match }) => (
                 <FormDeleteDialog
+                  show={match != null}
+                  id={match && match.params.id}
+                  status={match && match.params.status}
+                  onHide={() => {
+                    history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
+                  }}
+                />
+              )}
+            </Route>
+
+
+        <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/detail">
+              {({ history, match }) => (
+                <DetailData
                   show={match != null}
                   id={match && match.params.id}
                   status={match && match.params.status}

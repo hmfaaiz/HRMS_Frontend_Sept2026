@@ -497,6 +497,7 @@ export function ResponseTable() {
 
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
+        openDetailGridData: formUIProps.openDetailGridData,
 
       },
       classes: "text-right pr-0",

@@ -14,6 +14,7 @@ const initialFacilitatorTicketCreationState = {
     receiveEntities: null,
     receiveTotalCount: 0,
     userForReceive: false,
+    detailData: undefined,
 };
 
 
@@ -110,6 +111,14 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
             state.actionsLoading = false;
             state.userForEdit = action.payload.userForEdit;
+            state.error = null;
+        },
+
+         FacilitatorDetailFetched: (state, action) => {
+
+
+            state.actionsLoading = false;
+            state.detailData = action.payload.detailData;
             state.error = null;
         },
 

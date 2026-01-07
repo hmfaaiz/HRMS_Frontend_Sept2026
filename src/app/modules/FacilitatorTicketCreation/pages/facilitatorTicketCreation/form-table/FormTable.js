@@ -33,10 +33,14 @@ export function FormTable() {
       openDeleteFormDialog: formUIContext.openDeleteFormDialog,
       openActiveFormDialog: formUIContext.openActiveFormDialog,
       openReadFormDialog: formUIContext.openReadFormDialog,
+      openDetailGridData: formUIContext.openDetailGridData,
       setIsFileReq: formUIContext.setIsFileReq,
       setReadMode: formUIContext.setReadMode,
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
+      masterId: formUIContext.masterId,
+      setMasterId: formUIContext.setMasterId,
+      
     };
   }, [formUIContext]);
 
@@ -362,10 +366,12 @@ export function FormTable() {
       formatter: ActionsColumnFormatter,
       formatExtraData: {
         setId: formUIProps.setId,
+        setMasterId: formUIProps.setMasterId,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,
         openReadFormDialog: formUIProps.openReadFormDialog,
+        openDetailGridData: formUIProps.openDetailGridData,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
         isAccessForDelete: isAccessForDelete

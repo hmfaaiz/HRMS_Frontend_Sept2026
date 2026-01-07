@@ -62,6 +62,8 @@ export const fetchEmployeeDoc = (id) => (dispatch) => {
     });
 };
 
+
+
 export const deleteEmployeeDoc = (id) => (dispatch) => {
 
   return requestFromServer
@@ -165,5 +167,26 @@ export const updateEmployeeDoc = (user, disbaleLoading, onHide) => (dispatch) =>
         draggable: true,
         progress: undefined,
       });
+    });
+};
+
+export const fetchAllFacilitatorDetail = (Id) => (dispatch) => {
+
+
+  if (!Id) {
+    return dispatch(actions.FacilitatorDetailFetched({ userForEdit: undefined }));
+  }
+
+  return requestFromServer
+    .getAllFacilitatorDetail(Id)
+    .then((response) => {
+      const entities = response.data?.data;
+
+   
+      dispatch(actions.FacilitatorDetailFetched({ userForEdit: entities }));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
 };

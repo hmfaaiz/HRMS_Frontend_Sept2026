@@ -4,13 +4,14 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Eye, Pencil, Reply, Trash2 } from "lucide-react";
+import { fetchAllFacilitatorDetail } from "../../../../_redux/redux-Actions";
 
 export function ActionsColumnFormatter(
   cellContent,
   row,
   rowIndex,
 
-  { setId,
+  { setId,setMasterId,
     openEditFormDialog,
     openDeleteFormDialog,
     openActiveFormDialog,
@@ -18,7 +19,7 @@ export function ActionsColumnFormatter(
     isAccessForEdit,
     isAccessForDelete,
     openReadFormDialog,
-    isAccessForRead, setReadMode, setReceiveMode, receiveMode,
+    isAccessForRead, setReadMode, setReceiveMode, receiveMode,openDetailGridData,
   }
 ) {
   const isUserRead = false;
@@ -48,6 +49,26 @@ export function ActionsColumnFormatter(
           }}>
             <Eye className="w-4 h-4 text-black cursor-pointer" />
           </a>
+        </OverlayTrigger>
+      )} 
+      
+          {isAccessForRead && (
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
+        >
+            <button
+      type="button"
+      onClick={() => {
+        setReceiveMode(false);
+        setReadMode(false);
+        setId("");
+        setMasterId(row.masterId);
+       openDetailGridData(row.masterId)
+      }}
+      style={{ background: 'none', border: 'none', padding: 0 }}
+    >
+      <Eye className="w-4 h-4 text-black cursor-pointer" />
+    </button>
         </OverlayTrigger>
       )}
       {/* {isAccessForEdit && (
@@ -89,7 +110,7 @@ export function ResponseColumnFormatter(
   { setId,
 
     isAccessForEdit,
-    setReceiveMode, receiveMode,
+    setReceiveMode, receiveMode,openDetailGridData,
   }
 ) {
   const isUserRead = false;

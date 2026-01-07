@@ -36,3 +36,8 @@ export function deleteEmployeeDoc(Id) {
 
   return axios.delete(`${USERS_URL}/facilitator_ticket_creation/delete-facilitator-ticket-creation/${Id}`);
 }
+//Delete
+export function getAllFacilitatorDetail(Id) {
+
+  return axios.get(`${USERS_URL}/facilitator_ticket_creation/read-all-facilitator-detail/${Id}`);
+}
