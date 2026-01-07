@@ -158,6 +158,10 @@ import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fro
 import { AttendanceCorrectionSlice } from "../app/modules/AttendanceCorrection/_redux/AttendanceSlice";
 import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
 
+
+import { facilitatorSetupSlice } from "../app/modules/Facilitator_Setup/_redux/facilitatorSetupSlice";
+
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -311,6 +315,8 @@ export const rootReducer = combineReducers({
   appraisal_review : appraisalReviewSlice.reducer,
   attendance_correction : AttendanceCorrectionSlice.reducer,
   appraisal_finalization : appraisalFinalizationSlice.reducer,
+
+  facilitator_setup: facilitatorSetupSlice.reducer,
 
 });
 

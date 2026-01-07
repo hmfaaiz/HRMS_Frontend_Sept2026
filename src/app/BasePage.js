@@ -400,6 +400,9 @@ const AttendanceCorrection = lazy(()=>
 import("./modules/AttendanceCorrection/pages/index"))
 
 
+const Facilitator_Setup = lazy(()=>
+import("./modules/Facilitator_Setup/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -551,6 +554,9 @@ const ROUTES = {
   appraisal_review : AppraisalReview,
   attendance_correction : AttendanceCorrection,
   appraisal_finalization : AppraisalFinalization,
+  
+
+  facilitator_setup : Facilitator_Setup,
 };
 
 export default function BasePage() {

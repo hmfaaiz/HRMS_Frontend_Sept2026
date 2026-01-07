@@ -735,3 +735,14 @@ export const fetchAllAccountsByType = (
     });
 };
 
+
+// Fetch Ticket Types
+export const fetchAllTicketTypes = (parentId) => async (dispatch) => {
+  try {
+    const response = await requestFromServer.getAllFormMenus(parentId);
+    const ticketTypes = response.data?.data || [];
+    dispatch(actions.ticketTypesFetched({ ticketTypes }));
+  } catch (error) {
+    toast.error("Something went wrong while fetching ticket types");
+  }
+};

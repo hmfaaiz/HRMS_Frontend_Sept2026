@@ -79,6 +79,9 @@ const initialDashboardState = {
   allExitReasonList: [],
   allAppraisalCompetencySetupList: [],
 
+
+  allTicketTypes: [],
+
   
 };
 
@@ -273,7 +276,15 @@ export const dashboardSlice = createSlice({
      AllExitReasonListFetch: (state, action) => {
       state.allExitReasonList = action.payload;
     }, 
+
+
+
+    ticketTypesFetched: (state, action) => {
+      const { ticketTypes } = action.payload;
+      state.listLoading = false;
+      state.allTicketTypes = ticketTypes;
+      state.lastError = null;
+    },
     
-  
   },
 });
