@@ -679,3 +679,16 @@ export const uploadFile = async (file) => {
       });
     });
 };
+
+export const updateDefaultSubsidiary = (Id) => async (dispatch) => {
+  return await requestFromServer
+    .updateDefaultSubsidiary({ Id })
+    .then((response) => {
+      return;
+    })
+    .catch((error) => {
+      toast.error(
+        error?.response?.data?.message || SERVER_MESSAGES.updatedFail
+      );
+    });
+};

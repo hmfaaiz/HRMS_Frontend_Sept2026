@@ -101,6 +101,7 @@ export function FormCard(fetchSubsidiaryId, fetchTaxSetupId) {
         <SelectTaxSetup
           setFetchSubsidiaryId={FormUIProps?.setFetchSubsidiaryId}
           setFetchTaxSetupId={FormUIProps?.setFetchTaxSetupId}
+          fetchSubsidiaryId={FormUIProps?.fetchSubsidiaryId}
         />
         <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
           <div className="flex items-center gap-2">

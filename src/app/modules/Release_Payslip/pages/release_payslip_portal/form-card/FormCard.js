@@ -25,6 +25,7 @@ export function FormCard() {
       <SelectSub
         setFetchSubsidiaryId={FormUIProps?.setSubsidiaryId}
         payrollMonth={payrollMonth}
+        fetchSubsidiaryId={FormUIProps.subsidiaryId}
       />
       {FormUIProps?.subsidiaryId ? <FormTable /> : <></>}
     </TCard>

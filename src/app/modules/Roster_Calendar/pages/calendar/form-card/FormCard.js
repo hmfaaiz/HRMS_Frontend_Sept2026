@@ -78,11 +78,16 @@ export function FormCard() {
   };
 
   useEffect(() => {
-    if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
-      const firstSubsidiary = dashboard.allSubsidiaryList[0];
-      setInitialValues(firstSubsidiary);
-      dispatch(fetchAllDept(dashboard.allSubsidiaryList[0].value));
+     if(!dashboard?.allSubsidiaryList?.length) {
+      return
     }
+const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
+    if(!findDefaultSubs?.value) {
+      return
+    }
+      setInitialValues(findDefaultSubs);
+      dispatch(fetchAllDept(findDefaultSubs.value));
+  
   }, [dashboard.allSubsidiaryList]);
 
   useEffect(() => {
@@ -406,7 +411,7 @@ export function FormCard() {
                     <div className="grid-cols-3 md:grid-cols-5 grid gap-x-3 gap-y-1">
                       {/* Subsidiary Selector */}
                       <div>
-                        {/* <SearchSelect
+                        <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -423,8 +428,8 @@ export function FormCard() {
                           options={dashboard?.allSubsidiaryList}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
-                        /> */}
-                        <SubsidiarySelect
+                        />
+                        {/* <SubsidiarySelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -437,7 +442,7 @@ export function FormCard() {
                           touched={touched.subsidiaryId}
                           currentValue={values?.subsidiaryId}
                           initializeSubsidiary={handleSubsidiaryChange}
-                        />
+                        /> */}
                       </div>
 
                       <div>

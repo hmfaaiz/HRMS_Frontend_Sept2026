@@ -85,12 +85,31 @@ export const FormFIlter = () => {
     dispatch(fetchAllFormsMenu(143, "allEmployeegradeList"));
     dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
     dispatch(fetchAllActiveEmployees());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!dashboard?.allSubsidiaryList?.length) {
+      return;
+    }
+    const findDefaultSubs = dashboard?.allSubsidiaryList?.find(
+      (el) => el?.isDefault
+    );
+    if (!findDefaultSubs) {
+      return;
+    }
+    dispatch(fetchAllAppraisalPeriodDataBySubsidiaryId(findDefaultSubs.value));
+    dispatch(fetchAllParentDept(findDefaultSubs.value));
+  }, [dashboard?.allSubsidiaryList]);
 
   return (
     <Formik
       enableReinitialize
-      initialValues={initialFilter?.filter}
+      initialValues={{
+        ...initialFilter?.filter,
+        subsidiaryId:
+          dashboard?.allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+          null,
+      }}
       onSubmit={applyFilter}
       validationSchema={formValidator}
     >
@@ -108,7 +127,7 @@ export const FormFIlter = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-1">
               {/* subsidiary  */}
               <div>
-                <SubsidiarySelect
+                <SearchSelect
                   name="subsidiaryId"
                   label={
                     <span>
@@ -126,16 +145,12 @@ export const FormFIlter = () => {
                   }}
                   error={errors?.subsidiaryId}
                   touched={touched?.subsidiaryId}
-                  currentValue={values?.subsidiaryId}
-                  initializeSubsidiary={(e) => {
-                    setFieldValue("subsidiaryId", e.value || null);
-                    dispatch(
-                      fetchAllAppraisalPeriodDataBySubsidiaryId(e.value)
-                    );
-                    dispatch(fetchAllParentDept(e.value));
-                    setFieldValue("yearId", "");
-                    setFieldValue("departmentId", "");
-                  }}
+                  value={
+                    dashboard?.allSubsidiaryList?.find(
+                      (e) => e.value === values?.subsidiaryId
+                    ) || null
+                  }
+                  options={dashboard?.allSubsidiaryList}
                 />
               </div>
               {/* appraisal period  */}

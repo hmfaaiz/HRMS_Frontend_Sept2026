@@ -12,6 +12,8 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/formActions";
 import { fetchAllAppraisalPeriodDataBySubsidiaryId } from "../../../../Dashboard/_redux/dashboardActions";
+import { Eye, XCircle } from "lucide-react";
+import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 
 const formSchema = Yup.object().shape({
   subsidiaryId: Yup.string()
@@ -41,6 +43,7 @@ export function FormFilter() {
   );
 
   const [initialValues, setInitialValues] = useState(initialFilter);
+  const [panelMode, setPanelMode] = useState(false);
 
   /* Fetch initial data */
   useEffect(() => {
@@ -50,23 +53,24 @@ export function FormFilter() {
 
   /* Auto select subsidiary for logged-in user */
   useEffect(() => {
-    const subsidiaries = dashboard?.allSubsidiaryList || [];
-    const userSubsidiaryId = auth?.user?.EmployeeMapping?.subsidiaryId;
-    const selectedSub =
-      subsidiaries.find((s) => s.value === userSubsidiaryId) ?? subsidiaries[0];
+    if (!dashboard?.allSubsidiaryList?.length) return;
 
-    if (!selectedSub) return;
+    const findDefaultSub = dashboard?.allSubsidiaryList?.find(
+      (e) => e.isDefault
+    );
 
-    dispatch(fetchAllAppraisalPeriodDataBySubsidiaryId(selectedSub.value));
-    dispatch(fetchAllActiveEmployeesBySubsidiary(selectedSub.value));
+    if (!findDefaultSub) return;
+
+    dispatch(fetchAllAppraisalPeriodDataBySubsidiaryId(findDefaultSub.value));
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSub.value));
 
     setInitialValues({
-      subsidiaryId: selectedSub.value,
-      appraisalPeriodId: selectedSub.appraisalFiscalYear?.Id ?? "",
+      subsidiaryId: findDefaultSub.value,
+      appraisalPeriodId: findDefaultSub.appraisalFiscalYear?.Id ?? "",
       appraisalCategoryId: "",
       employeeId: "",
     });
-  }, [dashboard?.allSubsidiaryList, auth?.user, dispatch]);
+  }, [dashboard?.allSubsidiaryList]);
 
   return (
     <Formik
@@ -175,7 +179,8 @@ export function FormFilter() {
                 }
               />
             </div>
-
+          </div>
+          <div className="grid md:grid-cols-5 gap-3 px-3">
             {/* Employee */}
             <div>
               <SearchSelect
@@ -199,8 +204,32 @@ export function FormFilter() {
                 onChange={(e) => setFieldValue("employeeId", e?.value ?? "")}
               />
             </div>
+            <div className="mt-6">
+              {panelMode ? (
+                <button
+                  type="button"
+                  className="btn btn-light btn-elevate d-flex align-items-center gap-2"
+                  onClick={() => setPanelMode(!panelMode)}
+                >
+                  <XCircle className="w-3 h-3 text-black" />
+                  Cancel
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary d-flex align-items-center gap-2"
+                  onClick={() => setPanelMode(!panelMode)}
+                >
+                  <Eye className="w-4 h-4 text-white" />
+                  View Details
+                </button>
+              )}
+            </div>
           </div>
-
+          <EmployeeProfile
+            employeeId={values.employeeId}
+            panelMode={panelMode}
+          />
           <div className="flex gap-2 justify-end mt-2">
             <button
               type="button"

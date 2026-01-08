@@ -78,11 +78,11 @@ export function FormCard() {
   };
 
   useEffect(() => {
-    if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
-      const firstSubsidiary = dashboard.allSubsidiaryList[0];
-      dispatch(fetchAllDept(dashboard.allSubsidiaryList[0].value));
-      setInitialValues(firstSubsidiary);
-    }
+    if(!dashboard?.allSubsidiaryList?.length) return
+    const findDefaultSubs = dashboard.allSubsidiaryList?.find((e)=> e?.isDefault)
+    if(!findDefaultSubs?.value) return
+      dispatch(fetchAllDept(findDefaultSubs?.value));
+      setInitialValues(findDefaultSubs);
   }, [dashboard.allSubsidiaryList]);
 
   useEffect(() => {
@@ -145,7 +145,7 @@ export function FormCard() {
                         <div className="grid grid-cols-5 gap-x-3 gap-y-1">
                           {/* Subsidiary Selector */}
                           <div>
-                            {/* <SearchSelect
+                            <SearchSelect
                               name="subsidiaryId"
                               label={
                                 <label>
@@ -160,11 +160,12 @@ export function FormCard() {
                                     option?.value === values?.subsidiaryId
                                 ) || null
                               }
+                              
                               options={dashboard?.allSubsidiaryList}
                               error={errors.subsidiaryId}
                               touched={touched.subsidiaryId}
-                            /> */}
-                            <SubsidiarySelect
+                            />
+                            {/* <SubsidiarySelect
                               name="subsidiaryId"
                               label={
                                 <label>
@@ -177,7 +178,7 @@ export function FormCard() {
                               touched={touched?.subsidiaryId}
                               currentValue={values?.subsidiaryId}
                               initializeSubsidiary={handleSubsidiaryChange}
-                            />
+                            /> */}
                           </div>
 
                           <div>
