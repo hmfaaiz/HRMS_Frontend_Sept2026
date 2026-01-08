@@ -235,3 +235,7 @@ export const requestRaisedBySenior = async () => {
 export function uploadFiles(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
 }
+
+export function updateDefaultSubsidiary(body) {
+  return axios.post(`${USERS_URL}/settings/update-default-subsidiary`, body);
+}

@@ -157,22 +157,23 @@ export function MasterEditForm({
     });
   };
 
-  // useEffect(() => {
-  //   if (defaultSubsidiary) {
-  //     dispatch(actions.getPayrollMonth(defaultSubsidiary));
-  //     dispatch(fetchAllActiveEmployeesBySubsidiary(defaultSubsidiary));
-  //     setQueryParams({
-  //       ...initialFilter,
-  //       filter: { subsidiaryId: defaultSubsidiary },
-  //     });
-  //   }
-  // }, [defaultSubsidiary]);
+  useEffect(()=> {
+    if(!allSubsidiaryList?.length) return
+    const findDefaultSubs = allSubsidiaryList?.find((e)=> e?.isDefault)
+    if(!findDefaultSubs) return
+      dispatch(actions.getPayrollMonth(findDefaultSubs?.value));
+      dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
+      setQueryParams({
+      ...initialFilter,
+      filter: { subsidiaryId: findDefaultSubs?.value },
+      });
+  },[allSubsidiaryList])
 
   return (
     <>
       <Formik
         enableReinitialize={true}
-        initialValues={user}
+        initialValues={{...user , subsidiaryId : allSubsidiaryList?.find((el)=> el?.isDefault)?.value || null}}
         validationSchema={formValidation}
         onSubmit={(values, { resetForm }) => {
           enableLoading();
@@ -207,9 +208,14 @@ export function MasterEditForm({
 
                   {/* Subsidiary Field Start */}
                   <div>
-                    {/* <Field
-                      component={SearchSelect}
+                    <SearchSelect
                       name="subsidiaryId"
+                       label={
+                        <span>
+                          {" "}
+                          Subsidiary<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
                       onBlur={handleBlur}
                       onChange={(e) => {
                         const value =
@@ -230,28 +236,19 @@ export function MasterEditForm({
                         clearFields(["patternId"], setFieldValue);
                         setFieldValue("isEnable_roster_via_pattern", false);
                       }}
-                      label={
-                        <span>
-                          {" "}
-                          Subsidiary<span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
+                     
                       isDisabled={isEdit}
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                       value={
-                        setDefaultSubsidiary(
-                          values?.subsidiaryId,
-                          allSubsidiaryList,
-                          defaultSubsidiary
-                        )
+                        allSubsidiaryList?.find((el) => el?.value === values.subsidiaryId) || null
                         // allSubsidiaryList?.find((el) => el?.value === values?.subsidiaryId) || ""
                         // allSubsidiaryMap?.get(values?.subsidiaryId || "") || ""
                       }
                       autoComplete="off"
                       options={allSubsidiaryList}
-                    /> */}
-                    <SubsidiarySelect
+                    />
+                    {/* <SubsidiarySelect
                       name="subsidiaryId"
                       onBlur={handleBlur}
                       onChange={(e) => {
@@ -302,7 +299,7 @@ export function MasterEditForm({
                         clearFields(["patternId"], setFieldValue);
                         setFieldValue("isEnable_roster_via_pattern", false);
                       }}
-                    />
+                    /> */}
                   </div>
 
                   {/* Subsidiary Field End */}

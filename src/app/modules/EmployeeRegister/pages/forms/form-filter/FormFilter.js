@@ -31,22 +31,42 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 const formValidation = Yup.object()
   .shape({
     subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
-    dojFrom: Yup.date().nullable().optional(),
-    dojTo: Yup.date().nullable()
+    dojFrom: Yup.date()
+      .nullable()
+      .optional(),
+    dojTo: Yup.date()
+      .nullable()
       .optional()
-      .min(Yup.ref("dojFrom"), "'To Date' should not be less than 'From Date'."),
-    docFrom: Yup.date().nullable().optional(),
-    docTo: Yup.date().nullable()
+      .min(
+        Yup.ref("dojFrom"),
+        "'To Date' should not be less than 'From Date'."
+      ),
+    docFrom: Yup.date()
+      .nullable()
+      .optional(),
+    docTo: Yup.date()
+      .nullable()
       .optional()
-      .min(Yup.ref("docFrom"), "'To Date' should not be less than 'From Date'."),
-    dobFrom: Yup.date().nullable().optional(),
-    dobTo: Yup.date().nullable()
+      .min(
+        Yup.ref("docFrom"),
+        "'To Date' should not be less than 'From Date'."
+      ),
+    dobFrom: Yup.date()
+      .nullable()
+      .optional(),
+    dobTo: Yup.date()
+      .nullable()
       .optional()
-      .min(Yup.ref("dobFrom"), "'To Date' should not be less than 'From Date'."),
+      .min(
+        Yup.ref("dobFrom"),
+        "'To Date' should not be less than 'From Date'."
+      ),
 
     alary_type: Yup.string().optional(),
     operator: Yup.string().optional(),
-    amount: Yup.number().nullable().optional(),
+    amount: Yup.number()
+      .nullable()
+      .optional(),
 
     // Custom test to ensure all three fields (salary_type, operator, amount) are selected together
   })
@@ -74,27 +94,15 @@ const formValidation = Yup.object()
 //Prepare new Filter
 const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams };
-      const formattedValues = {
-            ...values,
-            dojFrom: values.dojFrom
-              ? formatDates(values.dojFrom, "dd-MMM-yyyy")
-              : null,
-            dojTo: values.dojTo
-              ? formatDates(values.dojTo, "dd-MMM-yyyy")
-              : null,
-            dobFrom: values.dobFrom
-              ? formatDates(values.dobFrom, "dd-MMM-yyyy")
-              : null,
-            dobTo: values.dobTo
-              ? formatDates(values.dobTo, "dd-MMM-yyyy")
-              : null,
-            docFrom: values.docFrom
-              ? formatDates(values.docFrom, "dd-MMM-yyyy")
-              : null,
-            docTo: values.docTo
-              ? formatDates(values.docTo, "dd-MMM-yyyy")
-              : null,
-          };
+  const formattedValues = {
+    ...values,
+    dojFrom: values.dojFrom ? formatDates(values.dojFrom, "dd-MMM-yyyy") : null,
+    dojTo: values.dojTo ? formatDates(values.dojTo, "dd-MMM-yyyy") : null,
+    dobFrom: values.dobFrom ? formatDates(values.dobFrom, "dd-MMM-yyyy") : null,
+    dobTo: values.dobTo ? formatDates(values.dobTo, "dd-MMM-yyyy") : null,
+    docFrom: values.docFrom ? formatDates(values.docFrom, "dd-MMM-yyyy") : null,
+    docTo: values.docTo ? formatDates(values.docTo, "dd-MMM-yyyy") : null,
+  };
   newQueryParams.filter = { ...formattedValues };
   return newQueryParams;
 };
@@ -223,13 +231,14 @@ export function FormFilter({
 
   useEffect(() => {
     // Extract subsidiaryId logic
-    const subsidiaryId =
-      allSubsidiaryList && allSubsidiaryList.length > 0
-        ? allSubsidiaryList[0].value
-        : null;
+    if (!allSubsidiaryList?.length) return;
 
-    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
-    dispatch(fetchAllDept(subsidiaryId));
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+
+    if (!findDefaultSubs) return;
+
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
+    dispatch(fetchAllDept(findDefaultSubs?.value));
   }, [allSubsidiaryList]);
 
   return (
@@ -241,9 +250,8 @@ export function FormFilter({
           ...initialFilter.filter,
           subsidiaryId:
             initialFilter.filter?.subsidiaryId ||
-            (allSubsidiaryList && allSubsidiaryList.length > 0
-              ? allSubsidiaryList[0].value
-              : ""), // Set default subsidiaryId if it's not provided
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            "", // Set default subsidiaryId if it's not provided
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -291,8 +299,7 @@ export function FormFilter({
                     <div className="grid gird-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-1">
                       {/* Subsidiary Field Start */}
                       <div className="col-span-1">
-                     
-                        <SubsidiarySelect
+                        <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -300,8 +307,7 @@ export function FormFilter({
                             </span>
                           }
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : (e.value);
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("subsidiaryId", value);
                             dispatch(
                               fetchAllActiveEmployeesBySubsidiary(value)
@@ -312,18 +318,12 @@ export function FormFilter({
                           }}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
-                          currentValue={values?.subsidiaryId}
-                          initializeSubsidiary={(e) => {
-                            const value =
-                              e.value == "All" ? "" : Number(e.value);
-                            setFieldValue("subsidiaryId", value);
-                            dispatch(
-                              fetchAllActiveEmployeesBySubsidiary(value)
-                            );
-                            dispatch(fetchAllDept(value));
-                            setFieldValue("employeeId", "");
-                            setFieldValue("departmentId", "");
-                          }}
+                          value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                          options={allSubsidiaryList}
                         />
                       </div>
                       {/* Subsidiary Field End */}
@@ -335,19 +335,18 @@ export function FormFilter({
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" :e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("departmentId", value);
                           }}
                           label={<span> Department</span>}
                           // value={
                           //   allDeptMap?.get(values?.departmentId || "") || ""
                           // }
-                           value={
-                        values.departmentId === ""
-                          ? { label: "All", value: "" }
-                          : allDeptMap?.get(values.departmentId) || ""
-                      }
+                          value={
+                            values.departmentId === ""
+                              ? { label: "All", value: "" }
+                              : allDeptMap?.get(values.departmentId) || ""
+                          }
                           autoComplete="off"
                           // options={allDept}
                           options={[
@@ -365,19 +364,18 @@ export function FormFilter({
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("reportTo", value);
                           }}
                           label={<span> Report To</span>}
                           // value={
                           //   allEmployeesMap?.get(values?.reportTo || "") || ""
                           // }
-                                  value={
-                        values.reportTo === ""
-                          ? { label: "All", value: "" }
-                          : allEmployeesMap?.get(values.reportTo) || ""
-                      }
+                          value={
+                            values.reportTo === ""
+                              ? { label: "All", value: "" }
+                              : allEmployeesMap?.get(values.reportTo) || ""
+                          }
                           autoComplete="off"
                           // options={allEmployees}
                           options={[
@@ -397,17 +395,16 @@ export function FormFilter({
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("gradeId", value);
                           }}
                           label={<span> Grade</span>}
                           // value={allGradeMap?.get(values?.gradeId || "") || ""}
-                           value={
-                        values.gradeId === ""
-                          ? { label: "All", value: "" }
-                          : allGradeMap?.get(values.gradeId) || ""
-                      }
+                          value={
+                            values.gradeId === ""
+                              ? { label: "All", value: "" }
+                              : allGradeMap?.get(values.gradeId) || ""
+                          }
                           autoComplete="off"
                           // options={allEmployeeGradeList}
                           options={[
@@ -427,8 +424,7 @@ export function FormFilter({
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("designationId", value);
                           }}
                           label={<span> Designation</span>}
@@ -438,11 +434,12 @@ export function FormFilter({
                           //   ) || ""
                           // }
 
-                             value={
-                        values.designationId === ""
-                          ? { label: "All", value: "" }
-                          : allDesignationsMap?.get(values.designationId) || ""
-                      }
+                          value={
+                            values.designationId === ""
+                              ? { label: "All", value: "" }
+                              : allDesignationsMap?.get(values.designationId) ||
+                                ""
+                          }
                           autoComplete="off"
                           // options={allDesignations}
                           options={[
@@ -462,19 +459,18 @@ export function FormFilter({
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("locationId", value);
                           }}
                           label={<span> Location</span>}
                           // value={
                           //   allLocationMap?.get(values?.locationId || "") || ""
                           // }
-                                value={
-                        values.locationId === ""
-                          ? { label: "All", value: "" }
-                          : allLocationMap?.get(values.locationId) || ""
-                      }
+                          value={
+                            values.locationId === ""
+                              ? { label: "All", value: "" }
+                              : allLocationMap?.get(values.locationId) || ""
+                          }
                           autoComplete="off"
                           // options={allLocationChildMenus}
                           options={[

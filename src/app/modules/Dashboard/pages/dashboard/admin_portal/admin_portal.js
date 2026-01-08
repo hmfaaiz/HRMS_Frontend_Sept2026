@@ -74,20 +74,17 @@ export const AdminPortal = () => {
      2️ SET DEFAULT SUBSIDIARY
   ================================ */
   useEffect(() => {
-    if (!allSubsidiaryList?.length || !user?.EmployeeMapping?.subsidiaryId)
-      return;
+    if (!allSubsidiaryList?.length) return;
 
-    const subs = allSubsidiaryList.find(
-      (s) => s.value === user.EmployeeMapping.subsidiaryId
-    );
+    const subs = allSubsidiaryList.find((s) => s?.isDefault);
 
     if (subs) {
       setSummaryFilter((prev) => ({
         ...prev,
-        subsidiaryId: subs.value,
+        subsidiaryId: subs?.value || "",
       }));
     }
-  }, [allSubsidiaryList, user?.EmployeeMapping?.subsidiaryId]);
+  }, [allSubsidiaryList]);
 
   /* ===============================
      3️ APPRAISAL DEFAULTS
@@ -129,10 +126,8 @@ export const AdminPortal = () => {
     dispatch(fetchAllParentDept(summaryFilter.subsidiaryId));
   }, [
     dispatch,
-    summaryFilter.subsidiaryId,
+    summaryFilter,
     activeTab,
-    summaryFilter.appraisalPeriodId,
-    summaryFilter.appraisalCategoryId,
   ]);
 
   /* ===============================

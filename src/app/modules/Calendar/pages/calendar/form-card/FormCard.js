@@ -62,15 +62,19 @@ export function FormCard() {
   const { holidayCalendar } = currentState;
 
   useEffect(() => {
-    if (dashboard.allSubsidiaryList && dashboard.allSubsidiaryList.length > 0) {
-      const firstSubsidiary = dashboard.allSubsidiaryList[0];
+    if(!dashboard?.allSubsidiaryList?.length) {
+      return
+    }
+    const findDefaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
+    if(!findDefaultSubs?.value) {
+      return
+    }
       setBodyValues({
-        from_date: firstSubsidiary.fiscalYear?.startDate || "",
-        to_date: firstSubsidiary.fiscalYear?.endDate || "",
-        subsidiaryId: firstSubsidiary.value || "",
+        from_date: findDefaultSubs.fiscalYear?.startDate || "",
+        to_date: findDefaultSubs.fiscalYear?.endDate || "",
+        subsidiaryId: findDefaultSubs?.value || "",
       });
       setIsDataLoaded(true); // Mark data as loaded
-    }
   }, [dashboard.allSubsidiaryList]);
 
   useEffect(() => {
@@ -304,7 +308,7 @@ export function FormCard() {
 
                     <div className="grid-cols-3 md:grid-cols-6 grid gap-x-3 gap-y-1">
                       <div className="col-span-1">
-                        {/* <SearchSelect
+                        <SearchSelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -323,8 +327,8 @@ export function FormCard() {
                           options={dashboard?.allSubsidiaryList}
                           error={errors.subsidiaryId}
                           touched={touched.subsidiaryId}
-                        /> */}
-                        <SubsidiarySelect
+                        />
+                        {/* <SubsidiarySelect
                           name="subsidiaryId"
                           label={
                             <span>
@@ -341,7 +345,7 @@ export function FormCard() {
                           initializeSubsidiary={(e) => {
                             setFieldValue("subsidiaryId", e.value || null);
                           }}
-                        />
+                        /> */}
                       </div>
 
                       {/* 

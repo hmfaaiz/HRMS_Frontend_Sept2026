@@ -10,7 +10,10 @@ import {
   DatePickerField,
   Select,
 } from "../../../../../../_metronic/_partials/controls";
-import { ATTENDANCE_TYPE, VALIDATION_MESSAGES } from "../../../../../utils/constants";
+import {
+  ATTENDANCE_TYPE,
+  VALIDATION_MESSAGES,
+} from "../../../../../utils/constants";
 import CustomDropdown from "../../../../../utils/common-modules/CustomDropdown";
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
@@ -26,8 +29,11 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 
 //Validation for date fields
 const formValidation = Yup.object().shape({
-  from: Yup.date().nullable().required(VALIDATION_MESSAGES.required),
-  to: Yup.date().nullable()
+  from: Yup.date()
+    .nullable()
+    .required(VALIDATION_MESSAGES.required),
+  to: Yup.date()
+    .nullable()
     .required(VALIDATION_MESSAGES.required)
     .min(Yup.ref("from"), "'To Date' should not be less than 'From Date'."),
 });
@@ -37,13 +43,8 @@ const prepareFilter = (queryParams, values) => {
   const newQueryParams = { ...queryParams };
   const formattedValues = {
     ...values,
-    from: values.from
-      ? formatDates(values.from, "dd-MMM-yyyy")
-      : null,
-    to: values.to
-      ? formatDates(values.to, "dd-MMM-yyyy")
-      : null,
-
+    from: values.from ? formatDates(values.from, "dd-MMM-yyyy") : null,
+    to: values.to ? formatDates(values.to, "dd-MMM-yyyy") : null,
   };
   newQueryParams.filter = { ...formattedValues };
   return newQueryParams;
@@ -133,18 +134,23 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
     dispatch(actions.fetchPdfData(newQueryParams.filter, document, labels));
   };
 
-
   const getLeaveBalancePdf = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
-    dispatch(actions.fetchLeaveBalancePdfData(newQueryParams.filter, document, labels));
+    dispatch(
+      actions.fetchLeaveBalancePdfData(newQueryParams.filter, document, labels)
+    );
   };
 
   useEffect(() => {
-    if (allSubsidiaryList && allSubsidiaryList.length > 0) {
-      dispatch(fetchAllActiveEmployeesBySubsidiary(allSubsidiaryList[0].value));
-      dispatch(fetchAllDept(allSubsidiaryList[0].value));
-    }
+    if (!allSubsidiaryList?.length) return;
+
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+
+    if (!findDefaultSubs) return;
+
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs.value));
+    dispatch(fetchAllDept(findDefaultSubs.value));
   }, [allSubsidiaryList]);
   return (
     <>
@@ -153,11 +159,26 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
-          // subsidiaryId:
-          //   initialFilter.filter?.subsidiaryId ||
-          //   (allSubsidiaryList && allSubsidiaryList.length > 0
-          //     ? allSubsidiaryList[0].value
-          //     : ""), // Set default subsidiaryId if it's not provided
+          subsidiaryId:
+            initialFilter.filter?.subsidiaryId ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            "", // Set default subsidiaryId if it's not provided
+          from: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+            ?.startDate
+            ? new Date(
+                allSubsidiaryList?.find(
+                  (el) => el?.isDefault
+                )?.payrollMonth?.startDate
+              )
+            : "",
+          to: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+            ?.endDate
+            ? new Date(
+                allSubsidiaryList?.find(
+                  (el) => el?.isDefault
+                )?.payrollMonth?.endDate
+              )
+            : "",
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -177,8 +198,6 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                   <div className="">
                     {/* Subsidiary Field Start */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
-
-
                       <div className="col-span-1">
                         {/* <Field
                         name="subsidiaryId"
@@ -207,38 +226,43 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                             : []),
                         ]}
                       /> */}
-                        <SubsidiarySelect
+                        <SearchSelect
                           name="subsidiaryId"
-                          label={<span> Subsidiary<span style={{ color: "red" }}>*</span></span>}
+                          label={
+                            <span>
+                              {" "}
+                              Subsidiary<span style={{ color: "red" }}>*</span>
+                            </span>
+                          }
                           // isDisabled={isUserForRead && true}
                           onBlur={handleBlur}
                           onChange={(e) => {
                             const value =
                               e.value == "Select" ? "" : Number(e.value);
                             setFieldValue("subsidiaryId", value);
-                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
+                            dispatch(
+                              fetchAllActiveEmployeesBySubsidiary(value)
+                            );
                             dispatch(fetchAllDept(value));
                             setFieldValue("employeeId", "");
                             setFieldValue("departmentId", "");
                             if (e?.payrollMonth) {
-                              setFieldValue("from", new Date(e?.payrollMonth?.startDate))
-                              setFieldValue("to", new Date(e?.payrollMonth?.endDate))
+                              setFieldValue(
+                                "from",
+                                new Date(e?.payrollMonth?.startDate)
+                              );
+                              setFieldValue(
+                                "to",
+                                new Date(e?.payrollMonth?.endDate)
+                              );
                             }
                           }}
-                          // error={errors?.subsidiaryId}
-                          // touched={touched?.subsidiaryId}
-                          currentValue={values?.subsidiaryId}
-                          initializeSubsidiary={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("subsidiaryId", value);
-                            setFieldValue("from", new Date(e?.payrollMonth?.startDate))
-                            setFieldValue("to", new Date(e?.payrollMonth?.endDate))
-                            setFieldValue("departmentId", "");
-                            setFieldValue("employeeId", "");
-                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                            dispatch(fetchAllDept(value));
-                          }}
+                          value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                          options={allSubsidiaryList}
                         />
                       </div>
                       {/* Subsidiary Field End */}
@@ -271,8 +295,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("departmentId", value);
                           }}
                           label={<span> Department</span>}
@@ -301,8 +324,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("reportTo", value);
                           }}
                           label={<span> Report To</span>}
@@ -318,7 +340,9 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           // options={allEmployees}
                           options={[
                             { label: "All", value: "" },
-                            ...(Array.isArray(allEmployees) ? allEmployees : []),
+                            ...(Array.isArray(allEmployees)
+                              ? allEmployees
+                              : []),
                           ]}
                         />
                       </div>
@@ -331,8 +355,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("gradeId", value);
                           }}
                           label={<span> Grade</span>}
@@ -361,8 +384,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("designationId", value);
                           }}
                           label={<span> Designation</span>}
@@ -374,7 +396,8 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           value={
                             values.designationId === ""
                               ? { label: "All", value: "" }
-                              : allDesignationsMap?.get(values.designationId) || ""
+                              : allDesignationsMap?.get(values.designationId) ||
+                                ""
                           }
                           autoComplete="off"
                           // options={allDesignations}
@@ -395,8 +418,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("locationId", value);
                           }}
                           label={<span> Location</span>}
@@ -428,7 +450,9 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           placeholder=""
                           onChange={(e) => {
                             const value =
-                              e.target.value == -1 ? "" : Number(e.target.value);
+                              e.target.value == -1
+                                ? ""
+                                : Number(e.target.value);
                             setFieldValue("attendanceType", value);
                           }}
                           label={<span> Attendance Type</span>}
@@ -446,8 +470,7 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           component={SearchSelect}
                           onBlur={handleBlur}
                           onChange={(e) => {
-                            const value =
-                              e.value == "All" ? "" : e.value;
+                            const value = e.value == "All" ? "" : e.value;
                             setFieldValue("employeeId", value);
                           }}
                           label={<span> Employee</span>}
@@ -464,13 +487,14 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                           // options={allEmployees}
                           options={[
                             { label: "All", value: "" },
-                            ...(Array.isArray(allEmployees) ? allEmployees : []),
+                            ...(Array.isArray(allEmployees)
+                              ? allEmployees
+                              : []),
                           ]}
                         />
                       </div>
                       {/* Employee Field End */}
                       <div className="col-span-2">
-
                         {/* <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
                           <OverlayTrigger
                             overlay={
@@ -501,29 +525,22 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
-                              }`}
-
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${
+                              pdfLoading
+                                ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
                             type="button"
-
                           >
                             Leave Balance Summary Report
-
                             <Download className="w-4 h-4 ml-2" />
-
                           </button>
                         </div>
                       </div>
                     </div>
 
-
-
                     <hr></hr>
                     <div className="grid grid-cols-2 sm:grid-cols-6 md:grid-cols-5 gap-x-3 gap-y-1 ">
-
-
-
-
                       {/* Date from Field Start */}
                       <div className="col-span-1">
                         <Field
@@ -566,20 +583,18 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                               }
                             }}
                             disabled={pdfLoading}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
-                              }`}
-
+                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${
+                              pdfLoading
+                                ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed"
+                                : ""
+                            }`}
                             type="button"
-
                           >
                             Leave Availed Report
-
                             <Download className="w-4 h-4 ml-2" />
-
                           </button>
                         </div>
                       </div>
-
                     </div>
                     {/* Date to Field End */}
                   </div>
@@ -631,8 +646,6 @@ export function FormFilter({ loading, dispatch, pdfLoading }) {
                   </button>
                 </OverlayTrigger>
               </div> */}
-
-
             </Modal.Footer>
           </>
         )}

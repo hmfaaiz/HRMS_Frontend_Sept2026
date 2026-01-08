@@ -90,25 +90,24 @@ export function FormFilter() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (
-      dashboard?.allSubsidiaryList?.length > 0 &&
-      auth?.user?.EmployeeMapping?.subsidiaryId
-    ) {
-      let subsid = dashboard?.allSubsidiaryList?.find(
-        (e) => e.value === auth?.user?.EmployeeMapping?.subsidiaryId
-      );
-      const updatedQueryParams = {
-        ...formUIProps.queryParams,
-        filter: {
-          ...formUIProps.queryParams?.filter,
-          subsidiaryId: subsid?.value,
-        },
-        pageNumber: 1,
-      };
-      formUIProps.setQueryParams(updatedQueryParams);
-      dispatch(fetchAllParentDept(subsid?.value));
-    }
-  }, [dashboard.allSubsidiaryList, auth?.user?.EmployeeMapping?.subsidiaryId]);
+    if (!dashboard?.allSubsidiaryList?.length) return;
+
+    const findDefaultSub = dashboard?.allSubsidiaryList?.find(
+      (e) => e.isDefault
+    );
+
+    if (!findDefaultSub) return;
+    const updatedQueryParams = {
+      ...formUIProps.queryParams,
+      filter: {
+        ...formUIProps.queryParams?.filter,
+        subsidiaryId: findDefaultSub?.value,
+      },
+      pageNumber: 1,
+    };
+    formUIProps.setQueryParams(updatedQueryParams);
+    dispatch(fetchAllParentDept(findDefaultSub?.value));
+  }, [dashboard.allSubsidiaryList]);
   return (
     <Formik
       enableReinitialize

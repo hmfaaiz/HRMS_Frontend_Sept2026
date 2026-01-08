@@ -154,6 +154,32 @@ export const FormFilter = ({ loading, queryParams }) => {
     }
   };
 
+  useEffect(() => {
+    /// if not subsidires list return
+    if (!dashboard?.allSubsidiaryList?.length) return;
+    // then find default
+    const findDefaultSubs = dashboard?.allSubsidiaryList?.find(
+      (e) => e?.isDefault
+    );
+    /// if not default then return
+    if (!findDefaultSubs) return;
+    /// extract payroll month
+    const payrollData = findDefaultSubs?.payrollMonth;
+    /// if payroll month then set
+    let valueToUpdate = {
+      ...queryParams.filter,
+      subsidiaryId: findDefaultSubs?.value || null,
+      leaveDate: {
+        from: payrollData?.startDate ? new Date(payrollData.startDate) : null,
+        to: payrollData?.endDate ? new Date(payrollData.endDate) : null,
+      },
+      requestStatus: "P",
+    };
+    applyFilter(valueToUpdate);
+    dispatch(actions.fetchLeaveApprovalApplication(valueToUpdate));
+    dispatch(fetchAllDept(findDefaultSubs?.value));
+  }, [dashboard?.allSubsidiaryList]);
+
   return (
     <Formik
       enableReinitialize={true}
@@ -200,7 +226,7 @@ export const FormFilter = ({ loading, queryParams }) => {
               <div className="grid grid-cols-12 gap-4">
                 {/* Subsidiary */}
                 <div className="col-span-6 sm:col-span-2">
-                  <SubsidiarySelect
+                  <SearchSelect
                     name="subsidiaryId"
                     label={
                       <span>
@@ -219,16 +245,12 @@ export const FormFilter = ({ loading, queryParams }) => {
                     }}
                     error={errors?.subsidiaryId}
                     touched={touched?.subsidiaryId}
-                    currentValue={values?.subsidiaryId}
-                    initializeSubsidiary={(e) => {
-                      setFieldValue("subsidiaryId", e?.value || null);
-                      setPayrollMonthDatesBaseOnSubsidiary(
-                        setValues,
-                        values,
-                        e
-                      );
-                      dispatch(fetchAllDept(e?.value));
-                    }}
+                    value={
+                      dashboard?.allSubsidiaryList?.find(
+                        (opt) => opt.value === values?.subsidiaryId
+                      ) || null
+                    }
+                    options={dashboard?.allSubsidiaryList}
                   />
                 </div>
                 {/* Department */}

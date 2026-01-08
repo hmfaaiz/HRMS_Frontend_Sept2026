@@ -1,19 +1,33 @@
 import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector } from "react-redux";
 import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
-import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 
-export function SelectSub({ setFetchSubsidiaryId, payrollMonth }) {
+export function SelectSub({
+  setFetchSubsidiaryId,
+  payrollMonth,
+  fetchSubsidiaryId,
+}) {
   const dispatch = useDispatch();
+
+  const {dashboard} = useSelector((e)=> e)
 
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!dashboard?.allSubsidiaryList?.length) return;
+    const defaultSubs = dashboard?.allSubsidiaryList?.find((e) => e?.isDefault);
+    if (!defaultSubs) return;
+
+    setFetchSubsidiaryId(defaultSubs.value);
+  }, [dashboard?.allSubsidiaryList]);
+
   return (
     <>
-      <Formik enableReinitialize={true} initialValues={{}}>
+      <Formik enableReinitialize={true} initialValues={{ subsidiaryId : fetchSubsidiaryId }}>
         {({ errors, touched, values, setFieldValue }) => (
           <>
             {/* Form Starts */}
@@ -39,7 +53,7 @@ export function SelectSub({ setFetchSubsidiaryId, payrollMonth }) {
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                     /> */}
-                    <SubsidiarySelect
+                    <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -52,11 +66,12 @@ export function SelectSub({ setFetchSubsidiaryId, payrollMonth }) {
                       }}
                       error={errors?.subsidiaryId}
                       touched={touched?.subsidiaryId}
-                      currentValue={values?.subsidiaryId}
-                      initializeSubsidiary={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        setFetchSubsidiaryId(e.value);
-                      }}
+                      value={
+                        dashboard?.allSubsidiaryList?.find(
+                          (e) => e.value === values?.subsidiaryId
+                        ) || null
+                      }
+                      options={dashboard?.allSubsidiaryList}
                     />
                   </div>
                   <div>
