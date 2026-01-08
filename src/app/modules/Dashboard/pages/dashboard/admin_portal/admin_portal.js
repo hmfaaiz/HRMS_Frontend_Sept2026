@@ -78,12 +78,10 @@ export const AdminPortal = () => {
 
     const subs = allSubsidiaryList.find((s) => s?.isDefault);
 
-    if (subs) {
-      setSummaryFilter((prev) => ({
-        ...prev,
-        subsidiaryId: subs?.value || "",
-      }));
-    }
+    setSummaryFilter((prev) => ({
+      ...prev,
+      subsidiaryId: subs?.value || "",
+    }));
   }, [allSubsidiaryList]);
 
   /* ===============================
@@ -124,11 +122,7 @@ export const AdminPortal = () => {
     );
     if (!summaryFilter.subsidiaryId) return;
     dispatch(fetchAllParentDept(summaryFilter.subsidiaryId));
-  }, [
-    dispatch,
-    summaryFilter,
-    activeTab,
-  ]);
+  }, [dispatch, summaryFilter, activeTab]);
 
   /* ===============================
      5️ SUMMARY DATA (CONTROLLED)
