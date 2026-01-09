@@ -52,7 +52,7 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-      {isAccessForRead && (
+    
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
         >
@@ -70,7 +70,7 @@ export function ActionsColumnFormatter(
             <LayoutList className="w-4 h-4 text-black cursor-pointer" />
           </button>
         </OverlayTrigger>
-      )}
+   
       {/* {isAccessForEdit && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
@@ -110,7 +110,9 @@ export function ResponseColumnFormatter(
   { setId,
 
     isAccessForEdit,
-    setReceiveMode, receiveMode, openDetailGridData,
+    setReceiveMode, receiveMode, openDetailGridData,setMasterId,
+
+     setReadMode,
   }
 ) {
   const isUserRead = false;
@@ -141,7 +143,25 @@ export function ResponseColumnFormatter(
         </a>
       </OverlayTrigger>
 
-
+ 
+        <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setId("");
+              setMasterId(row.masterId);
+              openDetailGridData(row.masterId)
+            }}
+            style={{ background: 'none', border: 'none', padding: 0 }}
+          >
+            <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
+      
 
     </div>
   );

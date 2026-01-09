@@ -184,7 +184,7 @@ console.log("detailEntities11111",detailEntities)
 
     {
       dataField: "desc",
-      text: "Description",
+      text: "Ticket Description",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

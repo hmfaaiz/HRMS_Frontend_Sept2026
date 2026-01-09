@@ -33,6 +33,10 @@ export function ResponseTable() {
       setIsFileReq: formUIContext.setIsFileReq,
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
+       masterId: formUIContext.masterId,
+      setMasterId: formUIContext.setMasterId,
+      setReadMode: formUIContext.setReadMode,
+      openDetailGridData: formUIContext.openDetailGridData,
     };
   }, [formUIContext]);
 
@@ -231,6 +235,40 @@ export function ResponseTable() {
       },
     },
 
+        {
+      dataField: "priorityLevel.formName",
+      text: "Priority",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+    {
+      dataField: "desc",
+      text: "Ticket Description",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+
+
+
+
+    },
+
 
     {
       dataField: "ticketType.formName",
@@ -291,39 +329,7 @@ export function ResponseTable() {
       },
     },
 
-    {
-      dataField: "priorityLevel.formName",
-      text: "Priority",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
 
-    {
-      dataField: "desc",
-      text: "Description",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "70px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-
-
-
-
-    },
 
     // {
     //   dataField: "dueDate",
@@ -494,10 +500,11 @@ export function ResponseTable() {
       formatter: ResponseColumnFormatter,
       formatExtraData: {
         setId: formUIProps.setId,
-
+  setMasterId: formUIProps.setMasterId,
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
         openDetailGridData: formUIProps.openDetailGridData,
+        setReadMode: formUIProps.setReadMode,
 
       },
       classes: "text-right pr-0",

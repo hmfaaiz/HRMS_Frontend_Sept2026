@@ -214,7 +214,8 @@ export function FormEditForm({
                           (option) => option.value === values.ticketTypeId
                         ) || null
                       }
-                      options={dashboard.allTicketTypeList}
+                      // options={dashboard.allTicketTypeList}
+                      options={dashboard.allTicketTypeList.filter(option => option.label !== "Escalation Ticket")}
                       error={errors.ticketTypeId}
                       touched={touched.ticketTypeId}
                     />
@@ -570,11 +571,13 @@ export function FormEditForm({
 
                 </div>
                 {values.receiver && (
+                    <>
+                   <hr/>
                   <h6 className="font-bold mb-0 text-primary my-2">
                     Sender Response
                   </h6>
 
-                )
+                 </>   )
                 }
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
@@ -736,7 +739,7 @@ export function FormEditForm({
 
 
                 </div>
-
+               <hr/>
                 <h6 className="font-bold mb-0 text-primary my-2">
                   My Response
                 </h6>
@@ -813,7 +816,7 @@ export function FormEditForm({
                     <FileUpload
                       label={
                         <>
-                          My Attachment
+                          Attachment
                         </>
                       }
                       isEdit={isUserForRead}
