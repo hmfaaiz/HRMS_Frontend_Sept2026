@@ -72,7 +72,7 @@ export function DetailData({ detailId, status, show, onHide }) {
             {/*end::Loading*/}
             <Modal.Header closeButton>
                 <Modal.Title id="example-modal-sizes-title-lg">
-                    Details
+                  Ticket Details
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

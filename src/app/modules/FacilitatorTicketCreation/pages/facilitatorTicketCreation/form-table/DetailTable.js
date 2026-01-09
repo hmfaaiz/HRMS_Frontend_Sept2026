@@ -51,7 +51,7 @@ export function DetailTable() {
   const { detailTotalCount, detailEntities, listLoading } = currentState;
 
   //totalCount = 10
-console.log("detailEntities11111",detailEntities)
+  console.log("detailEntities11111", detailEntities)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -123,8 +123,8 @@ console.log("detailEntities11111",detailEntities)
     },
 
     {
-      dataField: "AssignToProfile.fullName",
-      text: "Assign To",
+      dataField: "AssignByProfile.fullName",
+      text: "Updated By",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -137,54 +137,11 @@ console.log("detailEntities11111",detailEntities)
       },
     },
 
-    {
-      dataField: "AssignToProfile.department.deptName",
-      text: "Department",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+
 
     {
-      dataField: "AssignToProfile.designation.formName",
-      text: "Designation",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "100px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
-
-    {
-      dataField: "priorityLevel.formName",
-      text: "Priority",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
-
-    {
-      dataField: "desc",
-      text: "Ticket Description",
+      dataField: "remarks",
+      text: "Remarks",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -202,31 +159,56 @@ console.log("detailEntities11111",detailEntities)
     },
 
     {
+      dataField: "file",
+      text: "File",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "100px",
+      },
+
+      formatter: (cell) => {
+        if (!cell) return "";
+
+        return (
+          <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
+            Attachment
+          </a>
+        );
+      }
+
+
+    },
+
+{
+      dataField: "createdAt",
+      text: "Created Date",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "160px",
+      },
+      formatter: (cell) => {
+        // Only format if cell has a valid date
+        if (!cell) return "";
+        return format(new Date(cell), "dd-MMM-yyyy");
+      },
+    },
+    {
       dataField: "dueDate",
       text: "Due Date",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
       style: {
-        minWidth: "30px",
+        minWidth: "160px",
       },
       formatter: (cell) => {
+        // Only format if cell has a valid date
         if (!cell) return "";
-
-        const dueDate = new Date(cell);
-        const today = new Date();
-
-        // time reset (sirf date compare karni hai)
-        dueDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
-
-        const isExpiredOrToday = dueDate <= today;
-
-        return (
-          <span style={{ color: isExpiredOrToday ? "red" : "inherit", fontWeight: isExpiredOrToday ? "600" : "normal" }}>
-            {format(dueDate, "dd-MMM-yyyy")}
-          </span>
-        );
+        return format(new Date(cell), "dd-MMM-yyyy");
       },
     },
 
@@ -312,40 +294,9 @@ console.log("detailEntities11111",detailEntities)
       },
     },
 
-    {
-      dataField: "dueDate",
-      text: "",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "10px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
 
-        const dueDate = new Date(cell);
-        const today = new Date();
 
-        // Reset time (compare only the date)
-        dueDate.setHours(0, 0, 0, 0);
-        today.setHours(0, 0, 0, 0);
 
-        const isExpiredOrToday = dueDate <= today;
-
-        return (
-          <>
-            {isExpiredOrToday && (
-              <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
-                Over Due
-              </span>
-            )}
-          </>
-        );
-      },
-    },
-
- 
 
   ];
 
@@ -374,24 +325,24 @@ console.log("detailEntities11111",detailEntities)
       </PaginationProvider> */}
 
 
-         <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={detailEntities === null ? [] : detailEntities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-            
-              >
-                <PleaseWaitMessage entities={detailEntities} />
-                <NoRecordsFoundMessage entities={detailEntities} />
-              </BootstrapTable>
+      <BootstrapTable
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={detailEntities === null ? [] : detailEntities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(
+          formUIProps.setQueryParams
+        )}
+
+      >
+        <PleaseWaitMessage entities={detailEntities} />
+        <NoRecordsFoundMessage entities={detailEntities} />
+      </BootstrapTable>
     </div>
   );
 }

@@ -236,6 +236,21 @@ export function ResponseTable() {
     },
 
         {
+      dataField: "ticketType.formName",
+      text: "Ticket Type",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
+        {
       dataField: "priorityLevel.formName",
       text: "Priority",
       sort: false,
@@ -270,20 +285,7 @@ export function ResponseTable() {
     },
 
 
-    {
-      dataField: "ticketType.formName",
-      text: "Ticket Type",
-      sort: false,
-      sortCaret: sortCaret,
-      headerSortingClasses,
-      style: {
-        minWidth: "30px",
-      },
-      formatter: (cell) => {
-        if (!cell) return "";
-        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-      },
-    },
+
 
     {
       dataField: "AssignByProfile.fullName",
