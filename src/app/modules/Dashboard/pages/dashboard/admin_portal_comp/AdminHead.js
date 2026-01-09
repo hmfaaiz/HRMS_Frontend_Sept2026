@@ -3,8 +3,15 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { Megaphone, Star } from "lucide-react";
 import Marquee from "react-fast-marquee";
 import { useDispatch } from "react-redux";
-import { updateDefaultSubsidiary } from "../../../_redux/dashboardActions";
-import { fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllAppraisalPeriodDataBySubsidiaryId,
+  updateDefaultSubsidiary,
+} from "../../../_redux/dashboardActions";
+import {
+  fetchAllParentDept,
+  fetchAllSubsidiaryData,
+  getActiveFiscalYear,
+} from "../../../../../../_metronic/redux/dashboardActions";
 
 const options = [
   {
@@ -98,6 +105,13 @@ const AdminHead = ({
                         departmentId: "",
                         appraisalPeriodId: "",
                       });
+                      dispatch(fetchAllParentDept(e?.value));
+                      dispatch(
+                        getActiveFiscalYear("activeFiscalYear", e?.value)
+                      );
+                      dispatch(
+                        fetchAllAppraisalPeriodDataBySubsidiaryId(e?.value)
+                      );
                       dispatch(updateDefaultSubsidiary(e?.value || null)).then(
                         () => {
                           dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
