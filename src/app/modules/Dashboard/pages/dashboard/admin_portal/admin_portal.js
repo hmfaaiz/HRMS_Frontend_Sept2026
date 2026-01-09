@@ -83,6 +83,9 @@ export const AdminPortal = () => {
         ...prev,
         subsidiaryId: subs?.value || "",
       }));
+      dispatch(fetchAllParentDept(subs?.value));
+      dispatch(getActiveFiscalYear("activeFiscalYear", subs?.value));
+      dispatch(actions.fetchAllAppraisalPeriodDataBySubsidiaryId(subs?.value));
     }
   }, [allSubsidiaryList]);
 
@@ -107,65 +110,26 @@ export const AdminPortal = () => {
      4️ FETCH DASHBOARD ALERTS + DEPTS
   ================================ */
   useEffect(() => {
-    // For appraisal, wait until both values exist
-    // if (
-    //   activeTab === "appraisal" &&
-    //   (!summaryFilter.appraisalPeriodId || !summaryFilter.appraisalCategoryId)
-    // )
-    //   return;
-
     dispatch(
       actions.fetchDashboardAlert({
-        subsidiaryId: summaryFilter.subsidiaryId,
+        subsidiaryId: summaryFilter?.subsidiaryId,
         activeTab,
-        appraisalPeriodId: summaryFilter.appraisalPeriodId,
-        appraisalCategoryId: summaryFilter.appraisalCategoryId,
+        appraisalPeriodId: summaryFilter?.appraisalPeriodId,
+        appraisalCategoryId: summaryFilter?.appraisalCategoryId,
       })
     );
-    if (!summaryFilter.subsidiaryId) return;
-    dispatch(fetchAllParentDept(summaryFilter.subsidiaryId));
-  }, [
-    dispatch,
-    summaryFilter,
-    activeTab,
-  ]);
-
-  /* ===============================
-     5️ SUMMARY DATA (CONTROLLED)
-  ================================ */
-  useEffect(() => {
-    // if (!summaryFilter.subsidiaryId) return;
-
     dispatch(actions.fetchSummary(summaryFilter));
   }, [
     dispatch,
-    summaryFilter.subsidiaryId,
-    summaryFilter.gradeId,
-    summaryFilter.departmentId,
-    summaryFilter.designationId,
-    summaryFilter.locationId,
-    summaryFilter.appraisalPeriodId,
-    summaryFilter.appraisalCategoryId,
+    summaryFilter?.subsidiaryId,
+    summaryFilter?.gradeId,
+    summaryFilter?.departmentId,
+    summaryFilter?.designationId,
+    summaryFilter?.locationId,
+    summaryFilter?.appraisalPeriodId,
+    summaryFilter?.appraisalCategoryId,
+    activeTab,
   ]);
-
-  /* ===============================
-     6️ FISCAL YEAR & APPRAISAL PERIODS
-  ================================ */
-  useEffect(() => {
-    if (!summaryFilter.subsidiaryId) return;
-
-    dispatch(
-      getActiveFiscalYear("activeFiscalYear", summaryFilter.subsidiaryId)
-    );
-
-    if (activeTab === "appraisal") {
-      dispatch(
-        actions.fetchAllAppraisalPeriodDataBySubsidiaryId(
-          summaryFilter.subsidiaryId
-        )
-      );
-    }
-  }, [dispatch, summaryFilter.subsidiaryId, activeTab]);
 
   /* ===============================
      TAB CHANGE HANDLER
