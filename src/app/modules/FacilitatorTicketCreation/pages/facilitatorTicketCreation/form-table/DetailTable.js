@@ -48,29 +48,18 @@ export function DetailTable() {
     };
   }, shallowEqual);
 
-  const { totalCount, entities, listLoading } = currentState;
+  const { detailTotalCount, detailEntities, listLoading } = currentState;
 
   //totalCount = 10
-
+console.log("detailEntities11111",detailEntities)
   const dispatch = useDispatch();
 
   useEffect(() => {
     formUIProps.setId([]);
 
     dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
-  }, [formUIProps.queryParams, dispatch, totalCount]);
+  }, [formUIProps.queryParams, dispatch, detailTotalCount]);
 
-  const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateFacilitatorTicketCreation"
-  );
-
-  const isAccessForDelete = userAccess?.find(
-    (item) => item.componentName === "DeleteFacilitatorTicketCreation"
-  );
-
-  const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadFacilitatorTicketCreation"
-  );
 
   // ReadEmployeeDocr,CreateEmployeeDocr
   // Table columns
@@ -356,45 +345,14 @@ export function DetailTable() {
       },
     },
 
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        setId: formUIProps.setId,
-        openEditFormDialog: formUIProps.openEditFormDialog,
-        openDeleteFormDialog: formUIProps.openDeleteFormDialog,
-        openActiveFormDialog: formUIProps.openActiveFormDialog,
-        openReadFormDialog: formUIProps.openReadFormDialog,
-        openDetailGridData: formUIProps.openDetailGridData,
-        isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
-        isAccessForRead: isAccessForRead ? isAccessForRead.isAccess : false,
-        isAccessForDelete: isAccessForDelete
-          ? isAccessForDelete.isAccess
-          : false,
-        setReadMode: formUIProps.setReadMode,
-        // setIsFileReq : formUIProps.setIsFileReq,
-        setReceiveMode: formUIProps.setReceiveMode,
-        receiveMode: formUIProps.receiveMode,
-        
-
-
-
-      },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: {
-        minWidth: "10px",
-      },
-    },
+ 
 
   ];
 
   //Table pagination properties
   const paginationOptions = {
     custom: true,
-    totalSize: totalCount,
+    totalSize: detailTotalCount,
     sizePerPageList: uiHelpers.sizePerPageList,
     sizePerPage: formUIProps.queryParams.pageSize,
     page: formUIProps.queryParams.pageNumber,
@@ -402,39 +360,38 @@ export function DetailTable() {
 
   return (
     <div className="w-full overflow-x-auto">
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+      {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
             <Pagination
               isLoading={listLoading}
               paginationProps={paginationProps}
             >
-              <BootstrapTable
+           
+            </Pagination>
+          );
+        }}
+      </PaginationProvider> */}
+
+
+         <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
                 classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
                 bootstrap4
                 remote
                 keyField="Id"
-                data={entities === null ? [] : entities}
+                data={detailEntities === null ? [] : detailEntities}
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
                   formUIProps.setQueryParams
                 )}
-                // selectRow={getSelectRow({
-                //   entities,
-
-                // })}
-                {...paginationTableProps}
+            
               >
-                <PleaseWaitMessage entities={entities} />
-                <NoRecordsFoundMessage entities={entities} />
+                <PleaseWaitMessage entities={detailEntities} />
+                <NoRecordsFoundMessage entities={detailEntities} />
               </BootstrapTable>
-            </Pagination>
-          );
-        }}
-      </PaginationProvider>
     </div>
   );
 }

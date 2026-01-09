@@ -518,14 +518,20 @@ export function ResponseTable() {
 
   return (
     <div className="w-full overflow-x-auto">
-      <PaginationProvider pagination={paginationFactory(paginationOptions)}>
+      {/* <PaginationProvider pagination={paginationFactory(paginationOptions)}>
         {({ paginationProps, paginationTableProps }) => {
           return (
             <Pagination
               isLoading={listLoading}
               paginationProps={paginationProps}
             >
-              <BootstrapTable
+
+            </Pagination>
+          );
+        }}
+      </PaginationProvider> */}
+
+                    <BootstrapTable
                 wrapperClasses="table-responsive"
                 bordered={false}
                 classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
@@ -542,15 +548,11 @@ export function ResponseTable() {
                 //   receiveEntities,
 
                 // })}
-                {...paginationTableProps}
+                // {...paginationTableProps}
               >
                 <PleaseWaitMessage receiveEntities={receiveEntities} />
                 <NoRecordsFoundMessage receiveEntities={receiveEntities} />
               </BootstrapTable>
-            </Pagination>
-          );
-        }}
-      </PaginationProvider>
     </div>
   );
 }

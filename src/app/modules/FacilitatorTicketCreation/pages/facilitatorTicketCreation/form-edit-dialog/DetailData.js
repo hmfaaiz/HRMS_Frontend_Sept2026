@@ -8,7 +8,7 @@ import { DetailTable } from "../form-table/DetailTable";
 
 export function DetailData({ detailId, status, show, onHide }) {
 
-    console.log("/${status}11111111")
+
     const [loading, setLoading] = useState(false);
     // Customers UI Context
     const usersUIContext = useFormUIContext();
@@ -50,7 +50,7 @@ export function DetailData({ detailId, status, show, onHide }) {
     const fetchDetailData = () => {
         // server request for deleting customer by id
         enableLoading();
-        console.log("fetchDetailData111111")
+
         dispatch(actions.fetchAllFacilitatorDetail(detailId)).then(() => {
             // onHide();
             // refresh list after deletion
@@ -63,6 +63,7 @@ export function DetailData({ detailId, status, show, onHide }) {
     return (
         <Modal
             show={show}
+            size="xl"
             onHide={onHide}
             aria-labelledby="example-modal-sizes-title-lg"
         >
@@ -71,7 +72,7 @@ export function DetailData({ detailId, status, show, onHide }) {
             {/*end::Loading*/}
             <Modal.Header closeButton>
                 <Modal.Title id="example-modal-sizes-title-lg">
-                    Delete Record
+                    Details
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

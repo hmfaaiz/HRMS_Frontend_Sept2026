@@ -15,6 +15,8 @@ const initialFacilitatorTicketCreationState = {
     receiveTotalCount: 0,
     userForReceive: false,
     detailData: undefined,
+    detailEntities: null,
+    detailTotalCount: 0,
 };
 
 
@@ -114,14 +116,31 @@ export const FacilitatorTicketCreationSlice = createSlice({
             state.error = null;
         },
 
-         FacilitatorDetailFetched: (state, action) => {
-
-
-            state.actionsLoading = false;
-            state.detailData = action.payload.detailData;
+        FacilitatorDetailFetched: (state, action) => {
+            state.listLoading = false;
             state.error = null;
-        },
 
+            // Backend se data aa raha hai (single object OR array)
+            const data = action.payload;
+console.log("data1111",data)
+            // Defensive: hamesha array bana lo
+            const parents = Array.isArray(data) ? data : data ? [data] : [];
+
+            // Flatten Details + inject parent fields
+            const allDetails = parents.flatMap(parent =>
+                (parent.Details || []).map(detail => ({
+                    ...detail,
+
+                    // 🔹 parent se fields
+                    desc: parent.ticketDescription, // ya parent.remarks
+                    parentId: parent.Id,
+                    parentDueDate: parent.dueDate,
+                }))
+            );
+
+            state.detailEntities = allDetails;
+            state.detailTotalCount = allDetails.length;
+        },
 
         EmployeeDocDeleted: (state, action) => {
 

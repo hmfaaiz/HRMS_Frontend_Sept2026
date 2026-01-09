@@ -172,18 +172,18 @@ export const updateEmployeeDoc = (user, disbaleLoading, onHide) => (dispatch) =>
 
 export const fetchAllFacilitatorDetail = (Id) => (dispatch) => {
 
-console.log("fetchAllFacilitatorDetail11111")
+
   if (!Id) {
-    return dispatch(actions.FacilitatorDetailFetched({ userForEdit: undefined }));
+    return dispatch(actions.FacilitatorDetailFetched({ detailData: undefined }));
   }
 
   return requestFromServer
     .getAllFacilitatorDetail(Id)
     .then((response) => {
-      const entities = response.data?.data;
-
+      const entities = response.data.data;
+console.log("response1111",response.data.data)
    
-      dispatch(actions.FacilitatorDetailFetched({ userForEdit: entities }));
+      dispatch(actions.FacilitatorDetailFetched( entities));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
