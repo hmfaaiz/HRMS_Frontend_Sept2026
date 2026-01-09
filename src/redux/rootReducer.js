@@ -160,6 +160,10 @@ import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalizatio
 import { BankPaymentAdviceSlice } from "../app/modules/BankPaymentAdvice/_redux/formSlice";
 import { FacilitatorTicketCreationSlice } from "../app/modules/FacilitatorTicketCreation/_redux/redux-Slice";
 
+
+import { facilitatorSetupSlice } from "../app/modules/Facilitator_Setup/_redux/facilitatorSetupSlice";
+
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -315,6 +319,8 @@ export const rootReducer = combineReducers({
   appraisal_finalization : appraisalFinalizationSlice.reducer,
   bank_advice : BankPaymentAdviceSlice.reducer,
   facilitator_ticket_creation : FacilitatorTicketCreationSlice.reducer,
+
+  facilitator_setup: facilitatorSetupSlice.reducer,
 
 });
 

@@ -303,3 +303,20 @@ export const getAllChartOfAccounts = async (Id, accountType=null) => {
   });
 };
 
+
+
+
+//fetch all ticket types
+
+
+// Fetch all ticket types by parentId (545)
+export function fetchAllTicketTypes(parentId) {
+  return axios.post(`${USERS_URL}/forms/read-all-forms-menu`, {
+    filter: { parentId: parentId },
+    sortOrder: "asc",
+    pageNumber: 1,
+    pageSize: 1000,
+  });
+}
+
+
