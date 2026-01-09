@@ -1,155 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { Modal } from "react-bootstrap";
-// import { Formik, Form } from "formik";
-// import * as Yup from "yup";
-// import { Input } from "../../../../../../_metronic/_partials/controls";
-// import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-// import { shallowEqual, useDispatch, useSelector } from "react-redux";
-// import * as dashboardActions from "../../../../../../_metronic/redux/dashboardActions";
-// import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
-
-// const facilitatorValidation = Yup.object().shape({
-//   ticketType: Yup.string().required(VALIDATION_MESSAGES.required),
-//   departmentId: Yup.number().required(VALIDATION_MESSAGES.required),
-//   employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
-//   locationId: Yup.number().required(VALIDATION_MESSAGES.required),
-// });
-
-// export function FacilitatorEditForm({
-//   saveFacilitator,
-//   data,
-//   actionsLoading,
-//   onHide,
-//   isUserForRead,
-//   loading,
-// }) {
-//   const dispatch = useDispatch();
-//   const { dashboard } = useSelector((state) => ({ dashboard: state.dashboard }), shallowEqual);
-
-//   const [defchildLocationMenus, setDefaultChildLocationMenus] = useState(null);
-//   const [employeesList, setEmployeesList] = useState([]);
-//   const [locationsList, setLocationsList] = useState([]);
-
-//   // Fetch departments on load (replace invalid actions)
-//   useEffect(() => {
-//     dispatch(dashboardActions.fetchAllDept());
-//   }, [dispatch, data?.subsidiaryId]);
-//   useEffect(() => {
-//     dispatch(dashboardActions.fetchAllTicketTypes());
-//   }, [dispatch, data?.subsidiaryId]);
-
-//   // Handle department change
-//   const handleDepartmentChange = (departmentId, setFieldValue) => {
-//     setFieldValue("departmentId", departmentId);
-//     setFieldValue("employeeId", "");
-//     // dispatch(dashboardActions.getEmployeeHierarchy(departmentId)) // comment out
-//     //   .then(res => setEmployeesList(res?.employeeList || []));
-//     setEmployeesList([]); // fallback until function exists
-//   };
-
-//   // Set locations from dashboard
-//   useEffect(() => {
-//     if (dashboard?.AllGeoLocationFetchedList?.length) {
-//       setLocationsList(dashboard.AllGeoLocationFetchedList);
-//     }
-//   }, [dashboard.AllGeoLocationFetchedList]);
-
-//   return (
-//     <Formik
-//       enableReinitialize
-//       initialValues={data}
-//       validationSchema={facilitatorValidation}
-//       onSubmit={(values) => saveFacilitator(values)}
-//     >
-//       {({ handleSubmit, errors, touched, values, setFieldValue }) => (
-//         <>
-//           <Modal.Body className="overlay overlay-block cursor-default">
-//             {actionsLoading && (
-//               <div className="overlay-layer bg-transparent">
-//                 <div className="spinner spinner-lg spinner-success" />
-//               </div>
-//             )}
-//             <Form className="form form-label-right">
-//               <fieldset disabled={isUserForRead}>
-//                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-//                   <div>
-//                     <Input
-//                       name="ticketType"
-//                       label="Ticket Type"
-//                       value={values.ticketType || ""}
-//                       onChange={(e) => setFieldValue("ticketType", e.target.value)}
-//                       isDisabled={isUserForRead}
-//                       error={errors.ticketType}
-//                       touched={touched.ticketType}
-//                     />
-//                   </div>
-
-//                   <div>
-//                     <SearchSelect
-//                       name="departmentId"
-//                       label={<span>Department <span className="text-red-500">*</span></span>}
-//                       isDisabled={isUserForRead}
-//                       value={dashboard?.AllDepartmentBysSubIdsList?.find(
-//                         (opt) => opt.value === values.departmentId
-//                       ) || null}
-//                       onChange={(e) => handleDepartmentChange(e.value, setFieldValue)}
-//                       options={dashboard?.AllDepartmentBysSubIdsList || []}
-//                       error={errors.departmentId}
-//                       touched={touched.departmentId}
-//                     />
-//                   </div>
-
-//                   <div>
-//                     <SearchSelect
-//                       name="employeeId"
-//                       label={<span>Employee <span className="text-red-500">*</span></span>}
-//                       isDisabled={isUserForRead || !values.departmentId}
-//                       value={employeesList?.find((opt) => opt.value === values.employeeId) || null}
-//                       onChange={(e) => setFieldValue("employeeId", e.value)}
-//                       options={employeesList || []}
-//                       error={errors.employeeId}
-//                       touched={touched.employeeId}
-//                     />
-//                   </div>
-
-//                   <div>
-//                     <SearchSelect
-//                       name="locationId"
-//                       label={<span>Location <span className="text-red-500">*</span></span>}
-//                       isDisabled={isUserForRead}
-//                       onChange={(e) => setFieldValue("locationId", e.value)}
-//                       value={defchildLocationMenus || null}
-//                       options={locationsList || []}
-//                       error={errors.locationId}
-//                       touched={touched.locationId}
-//                     />
-//                   </div>
-//                 </div>
-//               </fieldset>
-//             </Form>
-//           </Modal.Body>
-
-//           <Modal.Footer>
-//             <button type="button" onClick={onHide} className="btn btn-light btn-elevate">
-//               {isUserForRead ? "OK" : "Cancel"}
-//             </button>
-//             {!isUserForRead && (
-//               <button
-//                 type="submit"
-//                 onClick={handleSubmit}
-//                 disabled={loading}
-//                 className="btn btn-primary btn-elevate"
-//               >
-//                 Save {loading && <span className="ml-2 spinner spinner-white"></span>}
-//               </button>
-//             )}
-//           </Modal.Footer>
-//         </>
-//       )}
-//     </Formik>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -161,8 +9,8 @@ import { CirclePlus, Trash2 } from "lucide-react";
 
 // Validation schema
 const facilitatorValidation = Yup.object().shape({
-  ticketTypeId: Yup.number().required(VALIDATION_MESSAGES.required),
-  employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
+  ticketTypeId: Yup.mixed().required(VALIDATION_MESSAGES.required),
+  employeeId: Yup.mixed().required(VALIDATION_MESSAGES.required),
   departmentLocations: Yup.array()
     .of(
       Yup.object().shape({
@@ -170,6 +18,7 @@ const facilitatorValidation = Yup.object().shape({
         locationId: Yup.number().required(VALIDATION_MESSAGES.required),
       })
     )
+
     .min(1, "At least one department and location is required"),
 });
 
@@ -273,11 +122,12 @@ export function FacilitatorEditForm({
   const initialValues = {
     ticketTypeId: data.ticketTypeId || null,
     subsidiaryId: data.subsidiaryId || user?.subsidiaryId || null,
+    selectedDepartmentId: null, // only for filtering employees
     employeeId: data.employeeId || null,
     departmentLocations: data.departmentLocations?.length
       ? data.departmentLocations.map((d) => ({
-          departmentId: d.departmentId ?? null,
-          locationId: d.locationId ?? null,
+          departmentId: d.departmentId ?? -1,
+          locationId: d.locationId ?? -1,
         }))
       : [{ departmentId: null, locationId: null }],
   };
@@ -306,59 +156,40 @@ export function FacilitatorEditForm({
       initialValues={initialValues}
       validationSchema={facilitatorValidation}
       onSubmit={async (values) => {
+        if (isSaving) return;
         setIsSaving(true);
 
         try {
-          // Collect all save operations
-          const allSavePromises = [];
-
-          // values.departmentLocations.forEach((row) => {
-          //   const deptIds =
-          //     row.departmentId === -1
-          //       ? dashboard.allDept
-          //           .filter((d) => d.value !== -1)
-          //           .map((d) => d.value)
-          //       : [row.departmentId];
-
-          //   const locIds =
-          //     row.locationId === -1
-          //       ? dashboard.allLocationChildMenus.map((l) => l.value)
-          //       : [row.locationId];
-
-          //   deptIds.forEach((deptId) => {
-          //     locIds.forEach((locId) => {
-          //       allSavePromises.push(
-          //         saveFacilitator({
-          //           ticketTypeId: values.ticketTypeId,
-          //           subsidiaryId: values.subsidiaryId,
-          //           departmentId: deptId,
-          //           locationId: locId,
-          //           employeeId: values.employeeId,
-          //         })
-          //       );
-          //     });
-          //   });
-          // });
+          const payload = [];
 
           values.departmentLocations.forEach((row) => {
-            const deptId = row.departmentId === -1 ? null : row.departmentId;
-            const locId = row.locationId === -1 ? null : row.locationId;
+            const selectedDepartments =
+              row.departmentId === -1
+                ? [null] // All departments
+                : [row.departmentId];
 
-            allSavePromises.push(
-              saveFacilitator({
-                ticketTypeId: values.ticketTypeId,
-                subsidiaryId: values.subsidiaryId,
-                departmentId: deptId, // null if All
-                locationId: locId, // null if All
-                employeeId: values.employeeId,
-              })
-            );
+            const selectedLocations =
+              row.locationId === -1
+                ? [null] // All locations
+                : [row.locationId];
+
+            selectedDepartments.forEach((deptId) => {
+              selectedLocations.forEach((locId) => {
+                payload.push({
+                  departmentId: deptId,
+                  locationId: locId,
+                });
+              });
+            });
           });
 
-          // Wait for all saves to complete
-          await Promise.all(allSavePromises);
+          await saveFacilitator({
+            ticketTypeId: values.ticketTypeId,
+            subsidiaryId: values.subsidiaryId,
+            employeeId: values.employeeId,
+            departmentLocations: payload,
+          });
 
-          // Only close modal after ALL saves are done
           onHide();
         } catch (error) {
           console.error("Save error:", error);
@@ -371,6 +202,38 @@ export function FacilitatorEditForm({
         <Form className="form form-label-right">
           <fieldset disabled={isUserForRead}>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {/* Subsidiary */}
+              <div>
+                <SearchSelect
+                  name="subsidiaryId"
+                  label={
+                    <span>
+                      Subsidiary <span className="text-red-500">*</span>
+                    </span>
+                  }
+                  value={
+                    dashboard?.allSubsidiaryData?.find(
+                      (s) => s.value === values.subsidiaryId
+                    ) || null
+                  }
+                  options={
+                    dashboard?.allSubsidiaryData?.map((s) => ({
+                      value: s.id || s.value,
+                      label: s.name || s.label,
+                    })) || []
+                  }
+                  isDisabled={isUserForRead}
+                  onChange={(e) => {
+                    setFieldValue("subsidiaryId", e?.value || null)
+                    dispatch(dashboardActions.fetchAllActiveEmployeesBySubsidiary(e?.value));
+                  }
+
+                  }
+                  error={errors.subsidiaryId}
+                  touched={touched.subsidiaryId}
+                />
+              </div>
+
               {/* Ticket Type */}
               <div>
                 <SearchSelect
@@ -394,6 +257,27 @@ export function FacilitatorEditForm({
                   touched={touched?.ticketTypeId}
                 />
               </div>
+              <div>
+                <SearchSelect
+                  label={
+                    <span>
+                      Department <span className="text-red-500">*</span>
+                    </span>
+                  }
+                  value={
+                    allDepartments.find(
+                      (d) => d.value === values?.departmentId
+                    ) || null
+                  }
+                  options={allDepartments.filter(d => d.value !== -1)}
+                  isDisabled={isUserForRead || !values?.ticketTypeId}
+                  onChange={(e) => {
+                    setFieldValue("departmentId", e?.value);
+                  }}
+                  error={errors.departmentId}
+                  touched={touched.departmentId}
+                />
+              </div>
 
               {/* Employee */}
               <div>
@@ -405,8 +289,17 @@ export function FacilitatorEditForm({
                     </span>
                   }
                   value={defEmp || null}
-                  options={employees || []}
-                  isDisabled={isUserForRead}
+                  options={
+                    dashboard?.allEmployees?.filter(
+                      (el) => el?.departmentId == values?.departmentId
+                    ) || []
+                  }
+                  isDisabled={
+                    isUserForRead ||
+                    !values?.departmentId ||
+                    !values?.ticketTypeId ||
+                    !values?.subsidiaryId
+                  }
                   onChange={(e) => handleEmployeeChange(e, setFieldValue)}
                   error={errors?.employeeId}
                   touched={touched?.employeeId}
@@ -425,7 +318,9 @@ export function FacilitatorEditForm({
                 type="button"
                 className="btn btn-primary"
                 onClick={() => addRowInfo(values, setFieldValue)}
-                disabled={isUserForRead}
+                disabled={
+                  isUserForRead || !values?.employeeId || !values?.ticketTypeId
+                }
               >
                 <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
                 Add
@@ -464,7 +359,11 @@ export function FacilitatorEditForm({
                               ) || null
                             }
                             options={allDepartments || []}
-                            isDisabled={isUserForRead}
+                            isDisabled={
+                              isUserForRead ||
+                              !values?.employeeId ||
+                              !values?.ticketTypeId
+                            }
                             onChange={(e) => {
                               const list = [...values.departmentLocations];
                               list[index].departmentId = e?.value || null;
@@ -486,8 +385,19 @@ export function FacilitatorEditForm({
                                 (l) => l.value === obj.locationId
                               ) || null
                             }
-                            options={locations}
-                            isDisabled={isUserForRead}
+                            options={locations?.map((e, i) => ({
+                              ...e,
+                              isDisabled: values?.departmentLocations?.find(
+                                (el) =>
+                                  el?.departmentId == obj.departmentId &&
+                                  e?.value == el?.locationId
+                              ),
+                            }))}
+                            isDisabled={
+                              isUserForRead ||
+                              !values?.employeeId ||
+                              !values?.ticketTypeId
+                            }
                             onChange={(e) => {
                               const list = [...values.departmentLocations];
                               list[index].locationId = e?.value || null;

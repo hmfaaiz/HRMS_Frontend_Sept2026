@@ -52,7 +52,7 @@ export function FacilitatorTable() {
 
   const { totalCount, entities, listLoading } = currentState;
 
-  // Fetch dashboard data on mount (CRITICAL: Load dropdown data first)
+  
   useEffect(() => {
     dispatch(dashboardActions.fetchAllActiveEmployees("allEmployees"));
     dispatch(dashboardActions.fetchAllFormsMenu(545, "allTicketTypes"));
@@ -66,72 +66,65 @@ export function FacilitatorTable() {
     dispatch(actions.fetchFacilitatorSetups(facilitatorUIProps.queryParams));
   }, [dispatch, facilitatorUIProps.queryParams]);
 
-  const mappedEntities = useMemo(() => {
-    if (!Array.isArray(entities)) return [];
 
-    const grouped = {};
+const mappedEntities = useMemo(() => {
+  if (!Array.isArray(entities)) return [];
 
-    entities.forEach((item) => {
-      if (!item.employeeId || !item.ticketTypeId) return;
+  const grouped = {};
 
-      const key = `${item.employeeId}_${item.ticketTypeId}_${item.subsidiaryId || 0}`;
+  entities.forEach((item) => {
+    if (!item.employeeId || !item.ticketTypeId) return;
 
-      if (!grouped[key]) {
-        grouped[key] = {
-          id: key,
-          employeeId: item.employeeId,
-          ticketTypeId: item.ticketTypeId,
-          subsidiaryId: item.subsidiaryId,
-          departmentLocationPairs: [],
-        };
-      }
-      grouped[key].departmentLocationPairs.push({
-        departmentId: item.departmentId,
-        locationId: item.locationId,
-      });
-    });
+    const key = `${item.employeeId}_${item.ticketTypeId}_${item.subsidiaryId || 0}`;
 
-    return Object.values(grouped).map((group) => {
-      const uniqueDepartmentIds = new Set(
-        group.departmentLocationPairs
-          .map(pair => pair.departmentId)
-          .filter(id => id !== -1)
-      );
-
-      const uniqueLocationIds = new Set(
-        group.departmentLocationPairs
-          .map(pair => pair.locationId)
-          .filter(id => id !== -1)
-      );
-      const totalDepartments = dashboard?.allDept?.filter(d => d.value !== -1).length || 0;
-      const totalLocations = dashboard?.allLocationChildMenus?.length || 0;
-
-      const isAllDepartments = uniqueDepartmentIds.size === totalDepartments && totalDepartments > 0;
-
-      const isAllLocations = uniqueLocationIds.size === totalLocations && totalLocations > 0;
-
-      return {
-        id: group.id,
-        ticketTypeName:
-          dashboard?.allTicketTypes?.find((t) => t.value === group.ticketTypeId)
-            ?.label || "-",
-        employeeName:
-          dashboard?.allEmployees?.find((e) => e.value === group.employeeId)
-            ?.label || "-",
-        departmentDisplay: isAllDepartments ? "All" : `${uniqueDepartmentIds.size}`,
-        locationDisplay: isAllLocations ? "All" : `${uniqueLocationIds.size}`,
-        departmentCount: uniqueDepartmentIds.size || 0,
-        locationCount: uniqueLocationIds.size || 0,
-        // Store the original data structure for edit functionality
-        raw: {
-          employeeId: group.employeeId,
-          ticketTypeId: group.ticketTypeId,
-          subsidiaryId: group.subsidiaryId,
-          departmentLocations: group.departmentLocationPairs,
-        },
+    if (!grouped[key]) {
+      grouped[key] = {
+        id: key,
+        employeeId: item.employeeId,
+        ticketTypeId: item.ticketTypeId,
+        subsidiaryId: item.subsidiaryId,
+        departmentLocationPairs: [],
       };
+    }
+
+    grouped[key].departmentLocationPairs.push({
+      departmentId: item.departmentId,
+      locationId: item.locationId,
     });
-  }, [entities, dashboard?.allTicketTypes, dashboard?.allEmployees, dashboard?.allDept, dashboard?.allLocationChildMenus]);
+  });
+
+  return Object.values(grouped).map((group) => {
+    const deptPairs = group.departmentLocationPairs;
+
+    // If any row has null departmentId -> show All
+    const hasAllDept = deptPairs.some((d) => d.departmentId === null);
+    const hasAllLoc = deptPairs.some((d) => d.locationId === null);
+
+    // Count actual rows only if not "All"
+    const totalDepartments = hasAllDept ? "All" : deptPairs.filter(d => d.departmentId != null).length;
+    const totalLocations = hasAllLoc ? "All" : deptPairs.filter(d => d.locationId != null).length;
+
+    return {
+      id: group.id,
+      ticketTypeName:
+        dashboard?.allTicketTypes?.find((t) => t.value === group.ticketTypeId)
+          ?.label || "-",
+      employeeName:
+        dashboard?.allEmployees?.find((e) => e.value === group.employeeId)
+          ?.label || "-",
+      departmentCount: totalDepartments,
+      locationCount: totalLocations,
+      raw: {
+        employeeId: group.employeeId,
+        ticketTypeId: group.ticketTypeId,
+        subsidiaryId: group.subsidiaryId,
+        departmentLocations: group.departmentLocationPairs,
+      },
+    };
+  });
+}, [entities, dashboard?.allTicketTypes, dashboard?.allEmployees]);
+
+
 
   const isAccessForEdit = userAccess.find(
     (a) => a.componentName === "UpdateFacilitatorSetup"
@@ -143,54 +136,62 @@ export function FacilitatorTable() {
     (a) => a.componentName === "ReadFacilitatorSetup"
   );
 
-  const columns = [
-    {
-      dataField: "ticketTypeName",
-      text: "Ticket Type",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "150px" },
-    },
-    {
-      dataField: "employeeName",
-      text: "Employee Name",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "150px" },
-    },
 
-    
-    {
-      dataField: "locationDisplay",
-      text: "No. of Department and Location",
-      sort: false,
-      sortCaret,
-      headerSortingClasses,
-      style: { minWidth: "130px" },
+  const columns = [
+  {
+    dataField: "ticketTypeName",
+    text: "Ticket Type",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "150px" },
+  },
+  {
+    dataField: "employeeName",
+    text: "Employee Name",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "150px" },
+  },
+  {
+    dataField: "departmentCount",
+    text: "No. of Departments",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "130px" },
+  },
+  {
+    dataField: "locationCount",
+    text: "No. of Locations",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "130px" },
+  },
+  {
+    dataField: "action",
+    text: "Actions",
+    isDummyField: true,
+    formatter: ActionsColumnFormatter,
+    formatExtraData: {
+      openEditFacilitatorDialog: facilitatorUIProps.openEditFacilitatorDialog,
+      openDeleteFacilitatorDialog:
+        facilitatorUIProps.openDeleteFacilitatorDialog,
+      openActiveFacilitatorDialog:
+        facilitatorUIProps.openActiveFacilitatorDialog,
+      openReadFacilitatorDialog: facilitatorUIProps.openReadFacilitatorDialog,
+      isAccessForEdit: isAccessForEdit?.isAccess ?? false,
+      isAccessForDelete: isAccessForDelete?.isAccess ?? false,
+      isAccessForRead: isAccessForRead?.isAccess ?? false,
     },
-    {
-      dataField: "action",
-      text: "Actions",
-      isDummyField: true,
-      formatter: ActionsColumnFormatter,
-      formatExtraData: {
-        openEditFacilitatorDialog: facilitatorUIProps.openEditFacilitatorDialog,
-        openDeleteFacilitatorDialog:
-          facilitatorUIProps.openDeleteFacilitatorDialog,
-        openActiveFacilitatorDialog:
-          facilitatorUIProps.openActiveFacilitatorDialog,
-        openReadFacilitatorDialog: facilitatorUIProps.openReadFacilitatorDialog,
-        isAccessForEdit: isAccessForEdit?.isAccess ?? false,
-        isAccessForDelete: isAccessForDelete?.isAccess ?? false,
-        isAccessForRead: isAccessForRead?.isAccess ?? false,
-      },
-      classes: "text-right pr-0",
-      headerClasses: "text-right pr-3",
-      style: { minWidth: "170px" },
-    },
-  ];
+    classes: "text-right pr-0",
+    headerClasses: "text-right pr-3",
+    style: { minWidth: "170px" },
+  },
+];
+
 
   const paginationOptions = {
     custom: true,

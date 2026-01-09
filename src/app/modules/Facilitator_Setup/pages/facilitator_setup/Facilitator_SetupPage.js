@@ -43,15 +43,14 @@ export function FacilitatorSetupPage() {
     },
     
     openEditFacilitatorDialog: (rawData) => {
-      // Store the data in sessionStorage before navigation
-      sessionStorage.setItem("facilitatorEditData", JSON.stringify(rawData));
+     
       const compositeId = `${rawData.employeeId}_${rawData.ticketTypeId}_${rawData.subsidiaryId || 0}`;
       history.push(`/facilitator_setup/read-all-facilitator-setup/${compositeId}/edit`);
     },
 
     openReadFacilitatorDialog: (rawData) => {
       // Store data for read view
-      sessionStorage.setItem("facilitatorReadData", JSON.stringify(rawData));
+      
       const compositeId = `${rawData.employeeId}_${rawData.ticketTypeId}_${rawData.subsidiaryId || 0}`;
       history.push(`/facilitator_setup/read-all-facilitator-setup/${compositeId}/read`);
     },
@@ -59,7 +58,7 @@ export function FacilitatorSetupPage() {
     openDeleteFacilitatorDialog: (id, rawData) => {
       // Store data for delete as well
       if (rawData) {
-        sessionStorage.setItem("facilitatorDeleteData", JSON.stringify(rawData));
+       
       }
       history.push(
         `/facilitator_setup/read-all-facilitator-setup/${id}/active/delete`

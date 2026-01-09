@@ -31,9 +31,9 @@ export function FacilitatorCard() {
 
   const accessUser = userAccess.find(item => item.componentName === "CreateFacilitatorSetup");
 
-  // 🔹 Fetch data on mount or when queryParams change
+ 
   useEffect(() => {
-    FormUIProps.setQueryParams(prev => ({ ...prev })); // ensure queryParams exist
+    FormUIProps.setQueryParams(prev => ({ ...prev })); 
     dispatch(actions.fetchFacilitatorSetups(FormUIProps.queryParams));
   }, [dispatch, FormUIProps.queryParams]);
 
