@@ -407,6 +407,8 @@ import("./modules/BankPaymentAdvice/pages/index"))
 const FacilitatorTicketCreation = lazy(()=>
 import("./modules/FacilitatorTicketCreation/pages/index"))
 
+const Facilitator_Setup = lazy(()=>
+import("./modules/Facilitator_Setup/pages/index"))
 
 
 const ROUTES = {
@@ -561,6 +563,9 @@ const ROUTES = {
   appraisal_finalization : AppraisalFinalization,
   bank_advice : BankAdvice,
   facilitator_ticket_creation : FacilitatorTicketCreation,
+  
+
+  facilitator_setup : Facilitator_Setup,
 };
 
 export default function BasePage() {
