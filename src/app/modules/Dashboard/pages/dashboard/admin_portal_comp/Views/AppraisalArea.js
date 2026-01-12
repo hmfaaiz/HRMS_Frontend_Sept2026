@@ -1,7 +1,15 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import { User, Briefcase, IdCardLanyardIcon, IdCardLanyard } from "lucide-react";
+import {
+  IdCardLanyardIcon,
+  IdCardLanyard,
+  ClipboardCheck,
+  CheckSquare,
+  Hourglass,
+  CheckCircle,
+  Award,
+} from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -24,8 +32,8 @@ const AppraisalArea = ({
   return (
     <div className="grid grid-cols-4 lg:grid-cols-5 gap-x-2 gap-y-2 mt-2">
       <div className="col-span-4 space-y-2">
-        {/* <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2"> */}
-          {/* <div>
+        <div className="grid grid-cols-2 lg:grid-cols-4  gap-x-2 gap-y-2 bg-white rounded-lg px-3 py-2">
+          <div>
             <SearchSelect
               name="gradeId"
               isDisabled={!allEmployeegradeList}
@@ -101,36 +109,54 @@ const AppraisalArea = ({
               ]}
             />
           </div>
-          <div></div> */}
-          {/* <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+          <div></div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Resignation in Process"}
-              value={summaryData?.resignationInProcess || 0}
-              keyName={"resignationInProcess"}
-              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
+              name={"No. of Survey Published"}
+              value={summaryData?.surveyPublish || 0}
+              keyName={"surveyPublish"}
+              icon={<ClipboardCheck className="w-5 h-5 text-white" />}
             />
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Exit Clearance in Process"}
-              value={summaryData?.exitClearanceInProcess || 0}
-              keyName={"exitClearanceInProcess"}
-              icon={<IdCardLanyardIcon className="w-5 h-5 text-white" />}
+              name={"No. of Surveys' Submitted"}
+              value={summaryData?.surveySubmitted || 0}
+              keyName={"surveySubmitted"}
+              icon={<CheckSquare className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Final Settlement in Process"}
-              value={summaryData?.finalSettlementInProcess || 0}
-              keyName={"finalSettlementInProcess"}
-              icon={<IdCardLanyard className="w-5 h-5 text-white" />}
+              name={"No. of Surveys' Pending"}
+              value={summaryData?.surveyPending || 0}
+              keyName={"surveyPending"}
+              icon={<Hourglass className="w-5 h-5 text-white" />}
             />
-          </div> */}
-        {/* </div> */}
+            <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+              name={"Survey Rating Finalized"}
+              value={summaryData?.surveyRatingFinalized || 0}
+              keyName={"surveyRatingFinalized"}
+              icon={<CheckCircle className="w-5 h-5 text-white" />}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+            <StatsCard
+              summaryFilter={summaryFilter}
+              setSummaryModalHeading={setSummaryModalHeading}
+              name={"Survey Finalized"}
+              value={summaryData?.surveyFinalized || 0}
+              keyName={"surveyFinalized"}
+              icon={<Award className="w-5 h-5 text-white" />}
+            />
+          </div>
+        </div>
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {

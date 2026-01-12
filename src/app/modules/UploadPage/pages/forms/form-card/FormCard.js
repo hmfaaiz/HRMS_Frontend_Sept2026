@@ -25,6 +25,7 @@ import { EmployeeOneTimeAllowancesSection } from "../form-edit-dialog/EmployeeOn
 import { FormHelpModel } from "../help-model/HelpModel";
 import { Title } from "chart.js";
 import { uploadInfo } from "../FormUIHelpers";
+import { EmployeeGoalSetupSection } from "../form-edit-dialog/EmployeeGoalSetup";
 
 export function FormCard() {
   const dispatch = useDispatch();
@@ -125,6 +126,12 @@ export function FormCard() {
 
         {/* Employee One time Earning Deduction */}
         <EmployeeOneTimeAllowancesSection
+          downloadExcel={downloadExcel}
+          dispatch={dispatch}
+          setHelp={setHelp}
+        />
+        {/* Employee One time Earning Deduction */}
+        <EmployeeGoalSetupSection
           downloadExcel={downloadExcel}
           dispatch={dispatch}
           setHelp={setHelp}
