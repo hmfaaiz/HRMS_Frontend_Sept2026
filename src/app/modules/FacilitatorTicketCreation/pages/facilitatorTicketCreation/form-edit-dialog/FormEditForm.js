@@ -18,68 +18,111 @@ import FileUpload from "../../../../../../_metronic/_partials/controls/forms/Fil
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
 import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
 // percentage: Yup.string().required("Required*"),
-const facilitator_ticket_creationEditSchema = Yup.object().shape({
+const facilitator_ticket_creationEditSchema = (value) => {
+  return Yup.object()
+    .shape({
+      file: Yup.string().nullable(),
+      // .required(VALIDATION_MESSAGES.required),
+
+      assignTo: Yup.number()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      priorityLevelId: Yup.number()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      ticketTypeId: Yup.number()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      dueDate: Yup.date()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      // ticketDate: Yup.date()
+
+      //   .nullable()
+      //   .required(VALIDATION_MESSAGES.required),
+
+      // timeRangeFrom: Yup.string()
+
+      //   .nullable()
+      //   // .required(VALIDATION_MESSAGES.required)
+      //   ,
 
 
-  file: Yup.string().nullable(),
-  // .required(VALIDATION_MESSAGES.required),
+      // timeRangeTo: Yup.string()
 
-  assignTo: Yup.number()
+      //   .nullable()
+      //   // .required(VALIDATION_MESSAGES.required)
+      //   ,
 
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+      timeRangeFrom: Yup.string()
+        .when("timeRangeTo", {
+          is: (value) => value !== null && value !== "",
+          then: Yup.string().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.string().notRequired(),
+        }),
 
-  priorityLevelId: Yup.number()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-
-  ticketTypeId: Yup.number()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-
-  dueDate: Yup.date()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-
-  // ticketDate: Yup.date()
-
-  //   .nullable()
-  //   .required(VALIDATION_MESSAGES.required),
-
-  timeRangeFrom: Yup.string()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+      timeRangeTo: Yup.string()
+        .when("timeRangeFrom", {
+          is: (value) => value !== null && value !== "",
+          then: Yup.string().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.string().notRequired(),
+        }),
 
 
-  timeRangeTo: Yup.string()
 
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+      noOfHours: Yup.number()
 
-
-  noOfHours: Yup.number()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
 
 
-  ticketStatus: Yup.number()
+      ticketStatus: Yup.number()
 
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      timeRangeFrom: Yup.string().test(
+        "from-required-if-to",
+        VALIDATION_MESSAGES.required,
+        function (value) {
+          const { timeRangeTo } = this.parent;
+          if (timeRangeTo && !value) {
+            return false;
+          }
+          return true;
+        }
+      ),
+
+      timeRangeTo: Yup.string().test(
+        "to-required-if-from",
+        VALIDATION_MESSAGES.required,
+        function (value) {
+          const { timeRangeFrom } = this.parent;
+          if (timeRangeFrom && !value) {
+            return false;
+          }
+          return true;
+        }
+      ),
 
 
-  // ticketDescription: Yup.string()
-  //   .trim()
-  //   .nullable()
-  //   .required(VALIDATION_MESSAGES.required),
 
+      ticketDescription: Yup.string()
+        .trim()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
 
-});
+    }
+    );
+};
 
 export function FormEditForm({
   saveForm,
@@ -167,7 +210,8 @@ export function FormEditForm({
 
 
       }}
-      validationSchema={facilitator_ticket_creationEditSchema}
+      // validationSchema={facilitator_ticket_creationEditSchema}
+      validationSchema={facilitator_ticket_creationEditSchema(formData)}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
         const clearForm = () => {
@@ -326,8 +370,8 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       <span>
-                        Time Range From
-                        <span style={{ color: "red" }}>*</span>
+                        From Time
+
                       </span>
                     </label>
                     <TimePickerField
@@ -356,8 +400,8 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       <span>
-                        Time Range To
-                        <span style={{ color: "red" }}>*</span>
+                        To Time
+
                       </span>
                     </label>
                     <TimePickerField
@@ -399,8 +443,8 @@ export function FormEditForm({
                       component={Input}
                       placeholder="Enter no of hours"
                       type="number"
-                      readOnly
-                      disabled={true}
+
+                      disabled={values.timeRangeFrom || values.timeRangeTo}
                     />
 
                   </div>
@@ -571,13 +615,13 @@ export function FormEditForm({
 
                 </div>
                 {values.receiver && (
-                    <>
-                   <hr/>
-                  <h6 className="font-bold mb-0 text-primary my-2">
-                    Sender Response
-                  </h6>
+                  <>
+                    <hr />
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      Sender Response
+                    </h6>
 
-                 </>   )
+                  </>)
                 }
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
@@ -739,10 +783,18 @@ export function FormEditForm({
 
 
                 </div>
-               <hr/>
-                <h6 className="font-bold mb-0 text-primary my-2">
-                  My Response
-                </h6>
+                <hr />
+
+                {values.receiver || isUserForRead && (
+                  <>
+
+
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      My Response
+                    </h6>
+
+                  </>
+                )}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 

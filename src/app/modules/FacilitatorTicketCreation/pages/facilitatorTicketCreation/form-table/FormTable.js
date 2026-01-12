@@ -263,7 +263,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeFrom",
-      text: "Time From",
+      text: "From Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -282,7 +282,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time To",
+      text: "To Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
