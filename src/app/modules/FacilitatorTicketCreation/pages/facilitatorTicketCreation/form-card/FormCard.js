@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 
 import { FormTable } from "../form-table/FormTable";
@@ -12,10 +12,14 @@ import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
 import { ResponseTable } from "../form-table/ResponseTable";
-
+import { Accordion, Button, Card } from "react-bootstrap";
+import { CircleMinus, CirclePlus } from "lucide-react";
+import { FormFIlter } from "../form-filter/FormFIlter";
+import { ReceiveFIlter } from "../form-filter/ReceiveFilter";
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
+   const [activeKey, setActiveKey] = useState(null);
   const FormUIProps = useMemo(() => {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
@@ -60,22 +64,40 @@ export function FormCard() {
 
     <TCard name={CurrentModuleName()}>
 
+
+
       <h6 className="font-bold mb-0 text-primary my-2">
         Ticket (Receive)
       </h6>
-      {/* <EmployeeSelect
-        setemployeeId={FormUIProps.setemployeeId}
-        setPanelMode={FormUIProps.setPanelMode}
-        panelMode={FormUIProps.panelMode}
-      />
-      <br /> */}
 
-      {/* <EmployeeProfile
-        employeeId={FormUIProps.employeeId}
-        panelMode={FormUIProps.panelMode}
-      /> */}
-      {/* EmployeeProfile Ends */}
+                <div >
+          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
+            <Card>
+              <Card.Header className="d-flex justify-content-center">
+                <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                  <Accordion.Toggle
+                    as={Button}
+                    eventKey="0"
+                    className="flex justify-start text-bold"
+                  >
+                   
+                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
 
+                  </Accordion.Toggle>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                
+                  <>
+                    <ReceiveFIlter />
+                  </>
+              
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
+
+    
       <ResponseTable />
 
 
@@ -93,6 +115,33 @@ export function FormCard() {
       <h6 className="font-bold mb-0 text-primary my-2">
         Ticket (Send)
       </h6>
+
+                 <div >
+          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
+            <Card>
+              <Card.Header className="d-flex justify-content-center">
+                <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                  <Accordion.Toggle
+                    as={Button}
+                    eventKey="0"
+                    className="flex justify-start text-bold"
+                  >
+                   
+                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
+
+                  </Accordion.Toggle>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                
+                  <>
+                    <FormFIlter />
+                  </>
+              
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
       <FormTable />
     </TCard>
     // </>
