@@ -59,8 +59,9 @@ export const FacilitatorTicketCreationSlice = createSlice({
                 (parent.Details || []).map(detail => ({
                     ...detail,
 
-                    // 🔹 temporary field from parent
+             
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                  ticketCode: parent.ticketCode,
                 }))
             );
             state.listLoading = false;
@@ -97,6 +98,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
 
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
+                  ticketCode: parent.ticketCode,
                 })));
 
             state.listLoading = false;
@@ -135,6 +137,7 @@ console.log("data1111",data)
                     desc: parent.ticketDescription, // ya parent.remarks
                     parentId: parent.Id,
                     parentDueDate: parent.dueDate,
+                  
                 }))
             );
 

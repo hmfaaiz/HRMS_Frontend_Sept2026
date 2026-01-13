@@ -120,6 +120,21 @@ export function FormTable() {
       },
     },
 
+            {
+      dataField: "ticketCode",
+      text: "Ticket Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
+
         {
       dataField: "ticketType.formName",
       text: "Ticket Type",
@@ -248,7 +263,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeFrom",
-      text: "Time From",
+      text: "From Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -267,7 +282,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time To",
+      text: "To Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,

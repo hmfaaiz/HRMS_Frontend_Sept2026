@@ -135,28 +135,6 @@ export function FormFilter({
     };
   };
 
-  //Trugger request to download PDF of data according to filters
-  const getPayslip = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(actions.generatePayslip(newQueryParams.filter, document, labels));
-  };
-
-  const getPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateRegisterPdf(newQueryParams.filter, document, labels)
-    );
-  };
-
-  const getExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateRegisterExcel(newQueryParams.filter, document, labels)
-    );
-  };
 
   const getBankAdvice = (values) => {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
@@ -181,25 +159,8 @@ export function FormFilter({
     );
   };
 
-  const getJVExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateRegisterJVExcel(newQueryParams.filter, document, labels)
-    );
-  };
 
-  const getJVCreditExcel = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.generateRegisterJVCreditExcel(
-        newQueryParams.filter,
-        document,
-        labels
-      )
-    );
-  };
+
 
   const [
     payrollPayableAccountApproverPermission,
@@ -242,22 +203,7 @@ export function FormFilter({
     checkPermission(subsidiaryId);
   }, [allSubsidiaryList]);
 
-  //preview
-  const previewRegisterPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.fetchPreviewRegisterPdf(newQueryParams.filter, document, labels)
-    );
-  };
 
-  const previewPayslipPdf = (values) => {
-    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
-    const labels = getLabels(values);
-    dispatch(
-      actions.fetchPreviewPayslipPdf(newQueryParams.filter, document, labels)
-    );
-  };
 
   return (
     <>

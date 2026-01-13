@@ -214,7 +214,7 @@ export function DetailTable() {
 
     {
       dataField: "timeRangeFrom",
-      text: "Time From",
+      text: "From Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -233,7 +233,7 @@ export function DetailTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time To",
+      text: "To Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
