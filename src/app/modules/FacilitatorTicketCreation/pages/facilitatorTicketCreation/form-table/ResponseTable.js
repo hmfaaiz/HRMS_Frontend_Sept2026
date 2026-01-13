@@ -75,7 +75,7 @@ export function ResponseTable() {
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
-    { value: 0, label: "Closed" },
+    { value: 0, label: "Completed" },
     { value: 3, label: "Re-opened" },
     { value: 2, label: "In Review" },
   ];

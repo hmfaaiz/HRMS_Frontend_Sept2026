@@ -17,6 +17,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
 import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
+
 // percentage: Yup.string().required("Required*"),
 const facilitator_ticket_creationEditSchema = (value) => {
   return Yup.object()
@@ -117,8 +118,8 @@ const facilitator_ticket_creationEditSchema = (value) => {
 
       ticketDescription: Yup.string()
         .trim()
-        .nullable()
-        .required(VALIDATION_MESSAGES.required),
+        .nullable(),
+      // .required(VALIDATION_MESSAGES.required),
 
     }
     );
@@ -134,6 +135,7 @@ export function FormEditForm({
   loading, setId, setReadMode, receiveMode, setReceiveMode
 }) {
   const dispatch = useDispatch();
+
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
   useEffect(() => {
@@ -197,6 +199,20 @@ export function FormEditForm({
     return totalHours > 0 ? totalHours : 0;
   };
 
+  const setAssignTo = (setFieldValue) => {
+    console.log("setFieldValue111112222", facilitatorEmployeeList[0].value)
+
+   
+
+  }
+
+  // useEffect(()=>{
+
+  //    if (facilitatorEmployeeList?.length == 1) {
+  //     setFieldValue("assignTo", facilitatorEmployeeList[0].value);
+  //   }
+
+  // },[facilitatorEmployeeList])
 
   return (
     <Formik
@@ -205,7 +221,15 @@ export function FormEditForm({
         ...formData,
         remarks: !isUserForRead ? "" : formData.remarks || "",
         file: !isUserForRead ? "" : formData.file || "",
-        ticketStatus: !isUserForRead ? 1 : formData.ticketStatus || 1,
+        ticketStatus: !formData?.ticketStatus
+          ? 1
+          : formData?.isUserForRead
+            ? formData.ticketStatus
+            : formData?.initiator
+              ? formData.ticketStatus
+              : 2,
+        // ticketStatus: !isUserForRead ? 1 : formData.ticketStatus || 1,
+        // ticketStatus:!formData?.initiator && (formData?.ticketStatus === 1 || formData?.ticketStatus === 3)? 2: formData?.ticketStatus ?? 1,
         initiator: formData?.initiator ?? true,
 
 
@@ -214,6 +238,8 @@ export function FormEditForm({
       validationSchema={facilitator_ticket_creationEditSchema(formData)}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
+
+
         const clearForm = () => {
 
           resetForm();
@@ -221,6 +247,7 @@ export function FormEditForm({
             inputFile.current.value = "";
           }
         };
+
         saveForm(values, clearForm);
       }}
     >
@@ -252,6 +279,11 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
                         dispatch(FetchAllFacilitatorEmployee(e.value));
+                        // setAssignTo(setFieldValue)
+                        // if (facilitatorEmployeeList?.length === 1) {
+                        //   console.log("Auto-assigning:", facilitatorEmployeeList[0].value);
+                        //   setFieldValue("assignTo", facilitatorEmployeeList[0].value);
+                        // }
                       }}
                       value={
                         dashboard.allTicketTypeList.find(
@@ -290,7 +322,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="assignTo"
                       label={
@@ -298,7 +330,7 @@ export function FormEditForm({
                           Assign To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator}
+                      isDisabled={isUserForRead || !values.initiator || facilitatorEmployeeList?.length == 1}
                       onChange={(e) => {
                         setFieldValue("assignTo", e.value || null);
                       }}
@@ -309,7 +341,37 @@ export function FormEditForm({
                       error={errors.assignTo}
                       touched={touched.assignTo}
                     />
-                  </div>
+                  </div> */}
+
+                  <div className="">
+  <SearchSelect
+    name="assignTo"
+    label={
+      <span>
+        Assign To<span style={{ color: "red" }}>*</span>
+      </span>
+    }
+    // Disable if read mode, no initiator, or auto-assigned
+    isDisabled={
+      isUserForRead || 
+      !values.initiator || 
+      facilitatorEmployeeList?.length === 1
+    }
+    onChange={(e) => {
+      setFieldValue("assignTo", e.value || null);
+    }}
+    // Auto-assign if only 1 record
+    value={
+      facilitatorEmployeeList?.length === 1
+        ? facilitatorEmployeeList[0]
+        : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
+    }
+    options={facilitatorEmployeeList}
+    error={errors.assignTo}
+    touched={touched.assignTo}
+  />
+</div>
+
 
                   <div className="">
                     <label>
@@ -511,7 +573,7 @@ export function FormEditForm({
                         <span>
                           {" "}
                           Ticket Description
-                          <span style={{ color: "red" }}>*</span>
+                          {/* <span style={{ color: "red" }}>*</span> */}
                         </span>
                       }
                       autoComplete="off"
@@ -785,7 +847,7 @@ export function FormEditForm({
                 </div>
                 <hr />
 
-                {values.receiver || isUserForRead && (
+                {(values?.receiver || isUserForRead) && (
                   <>
 
 
@@ -959,9 +1021,14 @@ export function FormEditForm({
               <button
                 type="button"
                 onClick={() => {
+                   console.log("values1111111",values)
+          if ( facilitatorEmployeeList?.length === 1) {
+    values.assignTo = facilitatorEmployeeList[0].value;
+  }
                   handleSubmit();
                   // setId("");
                   // handleReset();
+
 
                   if (inputFile?.current) {
                     inputFile.current.value = "";
