@@ -305,11 +305,11 @@ export function FormTable() {
                                 <th className="w-44">Name</th>
                                 <th className="w-48">Designation</th>
                                 <th className="w-28">Increment %</th>
-                                <th className="w-28">Manager Rec.</th>
-                                <th className="w-32">Promotion Rec.</th>
+                                <th title="Salary Recmmended By Manager" className="w-28">Manager Rec.</th>
+                                <th title="Promotion Recmmended By Manager" className="w-32">Promotion Rec.</th>
                                 <th className="w-40">Final Increment %</th>
-                                <th className="w-80">Mgt. Remarks</th>
-                                <th className="w-80">Mgt. Recommendations</th>
+                                <th title="Management Remarks" className="w-80">Mgmt. Remarks</th>
+                                <th title="Management Recommendations" className="w-80">Mgmt. Recommendations</th>
                                 {/* <th className="w-44">
                                   Actucal{" "}
                                   {salaryPolicy == "Basic to Gross"

@@ -140,7 +140,7 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
         } else if (cell) {
           text =
             row?.isHREvaluation ? row?.actionTakenBy
-              ? "Completed By" : "Completed"
+              ? "Completed (Submitted By)" : "Completed"
               : "Completed";
           classname = "text-approved font-bold";
         } else if (!cell) {

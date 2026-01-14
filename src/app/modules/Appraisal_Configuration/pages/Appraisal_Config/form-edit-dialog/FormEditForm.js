@@ -221,7 +221,7 @@ export function FormEditForm({
                       <MultiSelect
                         label={
                           <span>
-                            Appraisal Finalizer
+                            Appraisal Finalization Role
                             <span style={{ color: "red" }}>*</span>
                           </span>
                         }
