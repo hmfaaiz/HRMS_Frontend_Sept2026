@@ -33,10 +33,11 @@ export function ResponseTable() {
       setIsFileReq: formUIContext.setIsFileReq,
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
-       masterId: formUIContext.masterId,
+      masterId: formUIContext.masterId,
       setMasterId: formUIContext.setMasterId,
       setReadMode: formUIContext.setReadMode,
       openDetailGridData: formUIContext.openDetailGridData,
+      openTicketTimeLog: formUIContext.openTicketTimeLog,
     };
   }, [formUIContext]);
 
@@ -71,7 +72,7 @@ export function ResponseTable() {
     (item) => item.componentName === "ReadFacilitatorTicketCreation"
   );
 
-  // ReadEmployeeDocr,CreateEmployeeDocr
+
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -234,23 +235,23 @@ export function ResponseTable() {
         );
       },
     },
-       {
-          dataField: "ticketCode",
-          text: "Ticket Code",
-          sort: false,
-          sortCaret: sortCaret,
-          headerSortingClasses,
-          style: {
-            minWidth: "30px",
-          },
-          formatter: (cell) => {
-            if (!cell) return "";
-            return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-          },
-        },
-    
+    {
+      dataField: "ticketCode",
+      text: "Ticket Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
+      },
+    },
 
-        {
+
+    {
       dataField: "ticketType.formName",
       text: "Ticket Type",
       sort: false,
@@ -265,7 +266,7 @@ export function ResponseTable() {
       },
     },
 
-        {
+    {
       dataField: "priorityLevel.formName",
       text: "Priority",
       sort: false,
@@ -476,38 +477,38 @@ export function ResponseTable() {
       },
     },
 
-  {
-  dataField: "dueDate",
-  text: "",
-  sort: false,
-  sortCaret: sortCaret,
-  headerSortingClasses,
-  style: {
-    minWidth: "10px",
-  },
-  formatter: (cell) => {
-    if (!cell) return "";
+    {
+      dataField: "dueDate",
+      text: "",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "10px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
 
-    const dueDate = new Date(cell);
-    const today = new Date();
+        const dueDate = new Date(cell);
+        const today = new Date();
 
-    // Reset time (compare only the date)
-    dueDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+        // Reset time (compare only the date)
+        dueDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
 
-    const isExpiredOrToday = dueDate <= today;
+        const isExpiredOrToday = dueDate <= today;
 
-    return (
-      <>
-        {isExpiredOrToday && (
-          <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
-            Over Due
-          </span>
-        )}
-      </>
-    );
-  },
-},
+        return (
+          <>
+            {isExpiredOrToday && (
+              <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
+                Over Due
+              </span>
+            )}
+          </>
+        );
+      },
+    },
 
 
     {
@@ -517,10 +518,11 @@ export function ResponseTable() {
       formatter: ResponseColumnFormatter,
       formatExtraData: {
         setId: formUIProps.setId,
-  setMasterId: formUIProps.setMasterId,
+        setMasterId: formUIProps.setMasterId,
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
         openDetailGridData: formUIProps.openDetailGridData,
+        openTicketTimeLog: formUIProps.openTicketTimeLog,
         setReadMode: formUIProps.setReadMode,
 
       },
@@ -555,28 +557,28 @@ export function ResponseTable() {
         }}
       </PaginationProvider> */}
 
-                    <BootstrapTable
-                wrapperClasses="table-responsive"
-                bordered={false}
-                classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
-                bootstrap4
-                remote
-                keyField="Id"
-                data={receiveEntities === null ? [] : receiveEntities}
-                columns={columns}
-                defaultSorted={uiHelpers.defaultSorted}
-                onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
-                )}
-                // selectRow={getSelectRow({
-                //   receiveEntities,
+      <BootstrapTable
+        wrapperClasses="table-responsive"
+        bordered={false}
+        classes="table table-head-custom table-vertical-center overflow-hidden table-hover"
+        bootstrap4
+        remote
+        keyField="Id"
+        data={receiveEntities === null ? [] : receiveEntities}
+        columns={columns}
+        defaultSorted={uiHelpers.defaultSorted}
+        onTableChange={getHandlerTableChange(
+          formUIProps.setQueryParams
+        )}
+      // selectRow={getSelectRow({
+      //   receiveEntities,
 
-                // })}
-                // {...paginationTableProps}
-              >
-                <PleaseWaitMessage receiveEntities={receiveEntities} />
-                <NoRecordsFoundMessage receiveEntities={receiveEntities} />
-              </BootstrapTable>
+      // })}
+      // {...paginationTableProps}
+      >
+        <PleaseWaitMessage receiveEntities={receiveEntities} />
+        <NoRecordsFoundMessage receiveEntities={receiveEntities} />
+      </BootstrapTable>
     </div>
   );
 }

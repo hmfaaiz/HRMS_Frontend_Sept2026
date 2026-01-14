@@ -43,13 +43,13 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteEmployeeDoc = () => {
+  const deleteTicketCreation = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteEmployeeDoc(id)).then(() => {
+    dispatch(actions.deleteTicketCreation(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
+      dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
 
       disableLoading();
     });
@@ -81,7 +81,7 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteEmployeeDoc}
+            onClick={deleteTicketCreation}
             className="btn btn-danger btn-elevate"
           >
             Delete

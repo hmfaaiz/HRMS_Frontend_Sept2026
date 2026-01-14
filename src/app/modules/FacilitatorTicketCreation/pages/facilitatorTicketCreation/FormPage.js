@@ -8,14 +8,15 @@ import { FormEditDialog } from "./form-edit-dialog/FormEditDialog";
 import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
-import {} from "../../_redux/redux-Actions";
+import { } from "../../_redux/redux-Actions";
 import { DetailData } from "./form-edit-dialog/DetailData";
+import { TimeLog } from "./form-edit-dialog/TimeLog";
 
 
 
 export function FormPage({ history }) {
 
-console.log("FormPage111111")
+
   const dispatch = useDispatch();
   const FormUIEvents = {
     newFormButtonClick: () => {
@@ -32,49 +33,65 @@ console.log("FormPage111111")
     },
     openReadFormDialog: (id, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/read`);
-    },  
-     openReceiveFormDialog: (id, isUserRead) => {
+    },
+    openReceiveFormDialog: (id, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-receive/${id}/receive`);
-    }, 
-        openDetailGridData: (detailId, isUserRead) => {
+    },
+    openDetailGridData: (detailId, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detail`);
+    },
+    openTicketTimeLog: (detailId, isUserRead) => {
+      history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/timelog`);
     },
   };
   return (
 
-    
+
     <FormUIProvider FormUIEvents={FormUIEvents}>
 
 
-        
-            <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/:status/delete">
-              {({ history, match }) => (
-                <FormDeleteDialog
-                  show={match != null}
-                  id={match && match.params.id}
-                  status={match && match.params.status}
-                  onHide={() => {
-                    history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
-                  }}
-                />
-              )}
-            </Route>
+
+      <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:id/:status/delete">
+        {({ history, match }) => (
+          <FormDeleteDialog
+            show={match != null}
+            id={match && match.params.id}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
 
 
-        <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:detailId/detail">
-              {({ history, match }) => (
-                <DetailData
-                  show={match != null}
-                  detailId={match && match.params.detailId}
-                  status={match && match.params.status}
-                  onHide={() => {
-                    history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
-                  }}
-                />
-              )}
-            </Route>
-      
-    
+      <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:detailId/detail">
+        {({ history, match }) => (
+          <DetailData
+            show={match != null}
+            detailId={match && match.params.detailId}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
+
+      <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:detailId/timelog">
+        {({ history, match }) => (
+          <TimeLog
+            show={match != null}
+            detailId={match && match.params.detailId}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
+
+
       <FormCard />
       <ToastContainer
         position="top-right"

@@ -57,11 +57,11 @@ export function DetailTable() {
   useEffect(() => {
     formUIProps.setId([]);
 
-    dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+    dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, detailTotalCount]);
 
 
-  // ReadEmployeeDocr,CreateEmployeeDocr
+ 
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },

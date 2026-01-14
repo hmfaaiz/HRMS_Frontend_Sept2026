@@ -38,7 +38,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
             }
         },
 
-        employeeDocFetched: (state, action) => {
+        ticketCreationFetched: (state, action) => {
 
 
             // const entities = action.payload.data?.data.rows;
@@ -110,7 +110,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
         },
 
         //get User By ID
-        EmployeeDocFetchedForEdit: (state, action) => {
+        TicketCreationFetchedForEdit: (state, action) => {
 
 
             state.actionsLoading = false;
@@ -145,7 +145,7 @@ console.log("data1111",data)
             state.detailTotalCount = allDetails.length;
         },
 
-        EmployeeDocDeleted: (state, action) => {
+        TicketCreationDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -160,7 +160,7 @@ console.log("data1111",data)
 
 
 
-        // employeeDocCreated: (state, action) => {
+        // ticketCreationCreated: (state, action) => {
 
         //     state.actionsLoading = false;
         //     state.error = null;
@@ -168,7 +168,7 @@ console.log("data1111",data)
         // },
 
 
-        employeeDocCreated: (state, action) => {
+        ticketCreationCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
 
@@ -192,7 +192,7 @@ console.log("data1111",data)
 
 
 
-        employeeDocUpdated: (state, action) => {
+        ticketCreationUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
@@ -203,9 +203,9 @@ console.log("data1111",data)
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedEmployeeDoc);
+                let finalObj = JSON.parse(payloadObj.updatedTicketCreation);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedEmployeeDoc;
+                    return finalObj; //action.payload.updatedTicketCreation;
                 }
                 return entity;
             });

@@ -54,7 +54,7 @@ export function DetailData({ detailId, status, show, onHide }) {
         dispatch(actions.fetchAllFacilitatorDetail(detailId)).then(() => {
             // onHide();
             // refresh list after deletion
-            // dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
+            // dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
 
             disableLoading();
         });
@@ -72,7 +72,7 @@ export function DetailData({ detailId, status, show, onHide }) {
             {/*end::Loading*/}
             <Modal.Header closeButton>
                 <Modal.Title id="example-modal-sizes-title-lg">
-                  Ticket Details
+                    Ticket Details
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

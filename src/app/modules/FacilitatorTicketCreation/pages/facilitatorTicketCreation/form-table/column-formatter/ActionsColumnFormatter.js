@@ -108,11 +108,8 @@ export function ResponseColumnFormatter(
   rowIndex,
 
   { setId,
-
     isAccessForEdit,
-    setReceiveMode, receiveMode, openDetailGridData,setMasterId,
-
-     setReadMode,
+    setReceiveMode, receiveMode, openDetailGridData,setMasterId,openTicketTimeLog,setReadMode,
   }
 ) {
   const isUserRead = false;
@@ -161,6 +158,25 @@ export function ResponseColumnFormatter(
             <LayoutList className="w-4 h-4 text-black cursor-pointer" />
           </button>
         </OverlayTrigger>
+
+          <OverlayTrigger
+          overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setReceiveMode(false);
+              setReadMode(false);
+              setId("");
+     
+              openTicketTimeLog(row.Id)
+            }}
+            style={{ background: 'none', border: 'none', padding: 0 }}
+          >
+            <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+          </button>
+        </OverlayTrigger>
+      
       
 
     </div>

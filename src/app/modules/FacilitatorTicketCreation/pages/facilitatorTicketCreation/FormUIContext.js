@@ -50,7 +50,19 @@ export function FormUIProvider({ FormUIEvents, children }) {
 
   };
 
+  const initTimeLog = {
+    Id: "",
+    loggedByEmpId:"",
+    workDescription: "",
+    loggedDate: "",
+    timeRangeFrom: "",
+    timeRangeTo: "",
+    noOfHours: "",
+    isBillable:false,
+  
+  
 
+  };
 
   const value = {
     queryParams,
@@ -61,7 +73,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     initUser,
     setemployeeId,
     employeeId,
-    panelMode,
+    panelMode,initTimeLog,
     setPanelMode, setReadMode, readMode,setReceiveMode,receiveMode,
     masterId, setMasterId,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
@@ -71,6 +83,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openReadFormDialog: FormUIEvents.openReadFormDialog,
     openReceiveFormDialog: FormUIEvents.openReceiveFormDialog,
     openDetailGridData: FormUIEvents.openDetailGridData,
+    openTicketTimeLog: FormUIEvents.openTicketTimeLog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

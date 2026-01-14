@@ -60,7 +60,7 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setId([]);
 
-    dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+    dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
@@ -75,7 +75,7 @@ export function FormTable() {
     (item) => item.componentName === "ReadFacilitatorTicketCreation"
   );
 
-  // ReadEmployeeDocr,CreateEmployeeDocr
+ 
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
