@@ -35,6 +35,8 @@ export function ResponseTable() {
       receiveMode: formUIContext.receiveMode,
       masterId: formUIContext.masterId,
       setMasterId: formUIContext.setMasterId,
+      detailId: formUIContext.detailId,
+      setDetailId: formUIContext.setDetailId,
       setReadMode: formUIContext.setReadMode,
       openDetailGridData: formUIContext.openDetailGridData,
       openTicketTimeLog: formUIContext.openTicketTimeLog,
@@ -519,6 +521,7 @@ export function ResponseTable() {
       formatExtraData: {
         setId: formUIProps.setId,
         setMasterId: formUIProps.setMasterId,
+        setDetailId: formUIProps.setDetailId,
         setReceiveMode: formUIProps.setReceiveMode,
         receiveMode: formUIProps.receiveMode,
         openDetailGridData: formUIProps.openDetailGridData,

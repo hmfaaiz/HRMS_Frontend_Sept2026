@@ -40,6 +40,8 @@ export function FormTable() {
       receiveMode: formUIContext.receiveMode,
       masterId: formUIContext.masterId,
       setMasterId: formUIContext.setMasterId,
+      setDetailId: formUIContext.setDetailId,
+      detailId: formUIContext.detailId,
       
     };
   }, [formUIContext]);
@@ -384,6 +386,7 @@ export function FormTable() {
       formatExtraData: {
         setId: formUIProps.setId,
         setMasterId: formUIProps.setMasterId,
+        setDetailId: formUIProps.setDetailId,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,

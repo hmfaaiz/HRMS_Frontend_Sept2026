@@ -64,7 +64,7 @@ export function TimeLog({ detailId, status, show, onHide }) {
     return (
         <Modal
             show={show}
-            size="xl"
+            // size="xl"
             onHide={onHide}
             aria-labelledby="example-modal-sizes-title-lg"
         >
@@ -73,7 +73,7 @@ export function TimeLog({ detailId, status, show, onHide }) {
             {/*end::Loading*/}
             <Modal.Header closeButton>
                 <Modal.Title id="example-modal-sizes-title-lg">
-                    Ticket Time Log
+                    Time Logging
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

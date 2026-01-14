@@ -18,7 +18,7 @@ export function ActionsColumnFormatter(
     openReadUserDialog,
     isAccessForEdit,
     isAccessForDelete,
-    openReadFormDialog,
+    openReadFormDialog, setDetailId,
     isAccessForRead, setReadMode, setReceiveMode, receiveMode, openDetailGridData,
   }
 ) {
@@ -52,25 +52,25 @@ export function ActionsColumnFormatter(
         </OverlayTrigger>
       )}
 
-    
-        <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
+
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setReceiveMode(false);
+            setReadMode(false);
+            setId("");
+            setMasterId(row.masterId);
+            openDetailGridData(row.masterId)
+          }}
+          style={{ background: 'none', border: 'none', padding: 0 }}
         >
-          <button
-            type="button"
-            onClick={() => {
-              setReceiveMode(false);
-              setReadMode(false);
-              setId("");
-              setMasterId(row.masterId);
-              openDetailGridData(row.masterId)
-            }}
-            style={{ background: 'none', border: 'none', padding: 0 }}
-          >
-            <LayoutList className="w-4 h-4 text-black cursor-pointer" />
-          </button>
-        </OverlayTrigger>
-   
+          <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
       {/* {isAccessForEdit && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
@@ -109,7 +109,7 @@ export function ResponseColumnFormatter(
 
   { setId,
     isAccessForEdit,
-    setReceiveMode, receiveMode, openDetailGridData,setMasterId,openTicketTimeLog,setReadMode,
+    setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode,setDetailId ,
   }
 ) {
   const isUserRead = false;
@@ -140,44 +140,44 @@ export function ResponseColumnFormatter(
         </a>
       </OverlayTrigger>
 
- 
-        <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
-        >
-          <button
-            type="button"
-            onClick={() => {
-              setReceiveMode(false);
-              setReadMode(false);
-              setId("");
-              setMasterId(row.masterId);
-              openDetailGridData(row.masterId)
-            }}
-            style={{ background: 'none', border: 'none', padding: 0 }}
-          >
-            <LayoutList className="w-4 h-4 text-black cursor-pointer" />
-          </button>
-        </OverlayTrigger>
 
-          <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Detail</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setReceiveMode(false);
+            setReadMode(false);
+            setId("");
+            setMasterId(row.masterId);
+            openDetailGridData(row.masterId)
+          }}
+          style={{ background: 'none', border: 'none', padding: 0 }}
         >
-          <button
-            type="button"
-            onClick={() => {
-              setReceiveMode(false);
-              setReadMode(false);
-              setId("");
-     
-              openTicketTimeLog(row.Id)
-            }}
-            style={{ background: 'none', border: 'none', padding: 0 }}
-          >
-            <LayoutList className="w-4 h-4 text-black cursor-pointer" />
-          </button>
-        </OverlayTrigger>
-      
-      
+          <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setReceiveMode(false);
+            setReadMode(false);
+            setId("");
+            setDetailId(row.Id)
+            openTicketTimeLog(row.Id)
+          }}
+          style={{ background: 'none', border: 'none', padding: 0 }}
+        >
+          <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
+
 
     </div>
   );

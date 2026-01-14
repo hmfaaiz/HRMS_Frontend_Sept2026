@@ -24,11 +24,6 @@ const facilitator_ticket_creationEditSchema = (value) => {
 
 
 
-            loggedDate: Yup.date()
-
-                .nullable()
-                .required(VALIDATION_MESSAGES.required),
-
 
 
             timeRangeFrom: Yup.string()
@@ -99,6 +94,7 @@ export function TimeLogForm() {
         return {
             initTimeLog: FormUIContext.initTimeLog,
             setReadMode: FormUIContext.setReadMode,
+            detailId: FormUIContext.detailId,
 
         };
     }, [FormUIContext]);
@@ -170,15 +166,16 @@ export function TimeLogForm() {
     };
 
     const saveForm = async (timeLogData, clearForm) => {
-
+        console.log("timeLogData1111111", timeLogData)
         timeLogData.noOfHours = parseFloat(timeLogData.noOfHours)
+        timeLogData.detailId = formUIProps.detailId
 
 
 
         if (!timeLogData.Id) {
 
             dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm));
-           
+
 
 
         } else {
@@ -196,7 +193,7 @@ export function TimeLogForm() {
                 timeRangeFrom: timeLogData.timeRangeFrom,
                 timeRangeTo: timeLogData.timeRangeTo,
                 noOfHours: timeLogData.noOfHours,
-               
+
             };
 
 
@@ -250,7 +247,7 @@ export function TimeLogForm() {
 
 
 
-                                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+                                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
                                     {/* <div className="">
                                         <SearchSelect
@@ -319,25 +316,25 @@ export function TimeLogForm() {
                                     <div className="">
                                         <label>
                                             {" "}
-                                            Ticket Date<span style={{ color: "red" }}>*</span>
+                                            Logged Date<span style={{ color: "red" }}>*</span>
                                         </label>
                                         <DatePicker
                                             className="form-control"
-                                            placeholder="Ticket Date"
+                                            placeholder="Logged Date"
                                             selected={
-                                                values?.ticketDate ? new Date(values.ticketDate) : new Date()
+                                                values?.loggedDate ? new Date(values.loggedDate) : new Date()
                                             }
-                                            disabled={true}
+
                                             dateFormat="dd-MMM-yyyy"
-                                            name="ticketDate"
+                                            name="loggedDate"
                                             autoComplete="off"
-                                            minDate={new Date()}
+
                                             maxDate={new Date()}
                                         />
 
-                                        {touched.ticketDate && errors.ticketDate && (
+                                        {touched.loggedDate && errors.loggedDate && (
                                             <div className="invalid-feedback d-block">
-                                                {errors.ticketDate}
+                                                {errors.loggedDate}
                                             </div>
                                         )}
                                     </div>
@@ -358,9 +355,11 @@ export function TimeLogForm() {
 
 
 
-                                            value={
-                                                values?.timeRangeFrom ? values.timeRangeFrom : ""
-                                            }
+                                            // value={
+                                            //     values?.timeRangeFrom ? values.timeRangeFrom : ""
+                                            // }
+
+                                             value={values?.timeRangeFrom || "09:00 AM"} // default to 09:00 PM
                                             onChange={(val) => {
                                                 setFieldValue("timeRangeFrom", val);
                                                 const hours = calculateHours(val, values.timeRangeTo);
@@ -385,9 +384,11 @@ export function TimeLogForm() {
 
                                             name="timeRangeTo"
 
-                                            value={
-                                                values?.timeRangeTo ? values.timeRangeTo : ""
-                                            }
+                                            // value={
+                                            //     values?.timeRangeTo ? values.timeRangeTo : ""
+                                            // }
+
+                                             value={values?.timeRangeTo || "09:00 PM"} // default to 09:00 PM
                                             onChange={(val) => {
                                                 setFieldValue("timeRangeTo", val);
                                                 const hours = calculateHours(values.timeRangeFrom, val);
@@ -425,28 +426,13 @@ export function TimeLogForm() {
 
                                     </div>
 
-                                    <div className="flex items-center gap-1 mt-3">
-                                        <Field
-                                            name={`isBillable`}
-                                            component={Checkbox}
-                                            onChange={(e) => {
-                                                setFieldValue(
-                                                    `isBillable`,
-                                                    e.target.checked
-                                                );
-                                            }}
-                                            disabled
-                                            isSelected={values.isBillable}
-                                            children={"Biillable"}
-                                        />
 
-                                    </div>
                                 </div>
 
 
 
 
-                                <div className="grid grid-cols-8 gap-x-3 gap-y-1">
+                                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
 
 
@@ -484,6 +470,38 @@ export function TimeLogForm() {
 
 
 
+                                <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+
+                                    <div className="flex items-center gap-1 mt-3">
+                                        <Field
+                                            name={`isBillable`}
+                                            component={Checkbox}
+                                            onChange={(e) => {
+                                                setFieldValue(
+                                                    `isBillable`,
+                                                    e.target.checked
+                                                );
+                                            }}
+
+                                            isSelected={values.isBillable}
+                                            children={"Biillable"}
+                                        />
+
+                                    </div>
+
+
+
+
+
+
+
+                                </div>
+
+
+
 
 
 
@@ -502,7 +520,7 @@ export function TimeLogForm() {
                         <button
                             type="button"
                             onClick={() => {
-                               
+
                                 if (facilitatorEmployeeList?.length === 1) {
                                     values.assignTo = facilitatorEmployeeList[0].value;
                                 }
