@@ -58,6 +58,7 @@ export function FacilitatorTable() {
     dispatch(dashboardActions.fetchAllFormsMenu(545, "allTicketTypes"));
     dispatch(dashboardActions.fetchAllDept());
     dispatch(dashboardActions.fetchAllFormsMenu(89, "allLocationChildMenus"));
+    dispatch(dashboardActions.fetchAllSubsidiaryData("allSubsidiaryData"));
   }, [dispatch]);
 
   // Fetch table data on mount and when queryParams change
@@ -96,22 +97,32 @@ const mappedEntities = useMemo(() => {
   return Object.values(grouped).map((group) => {
     const deptPairs = group.departmentLocationPairs;
 
-    // If any row has null departmentId -> show All
     const hasAllDept = deptPairs.some((d) => d.departmentId === null);
     const hasAllLoc = deptPairs.some((d) => d.locationId === null);
 
-    // Count actual rows only if not "All"
-    const totalDepartments = hasAllDept ? "All" : deptPairs.filter(d => d.departmentId != null).length;
-    const totalLocations = hasAllLoc ? "All" : deptPairs.filter(d => d.locationId != null).length;
+    const totalDepartments = hasAllDept
+      ? "All"
+      : deptPairs.filter((d) => d.departmentId != null).length;
+
+    const totalLocations = hasAllLoc
+      ? "All"
+      : deptPairs.filter((d) => d.locationId != null).length;
+
+    const ticketType =
+      dashboard?.allTicketTypes?.find((t) => t.value === group.ticketTypeId);
+
+    const employee =
+      dashboard?.allEmployees?.find((e) => e.value === group.employeeId);
+
+    const subsidiary =
+      dashboard?.allSubsidiaryData?.find((s) => s.value === group.subsidiaryId
+      );
 
     return {
       id: group.id,
-      ticketTypeName:
-        dashboard?.allTicketTypes?.find((t) => t.value === group.ticketTypeId)
-          ?.label || "-",
-      employeeName:
-        dashboard?.allEmployees?.find((e) => e.value === group.employeeId)
-          ?.label || "-",
+      ticketTypeName: ticketType?.label || "-",
+      employeeName: employee?.label || "-",
+      subsidiaryName: subsidiary?.label ||  "-",
       departmentCount: totalDepartments,
       locationCount: totalLocations,
       raw: {
@@ -122,7 +133,13 @@ const mappedEntities = useMemo(() => {
       },
     };
   });
-}, [entities, dashboard?.allTicketTypes, dashboard?.allEmployees]);
+}, [
+  entities,
+  dashboard?.allTicketTypes,
+  dashboard?.allEmployees,
+  dashboard?.allSubsidiaryData,
+]);
+
 
 
 
@@ -138,6 +155,15 @@ const mappedEntities = useMemo(() => {
 
 
   const columns = [
+
+  {
+    dataField: "subsidiaryName",
+    text: "Subsidiary",
+    sort: false,
+    sortCaret,
+    headerSortingClasses,
+    style: { minWidth: "150px" },
+  },
   {
     dataField: "ticketTypeName",
     text: "Ticket Type",

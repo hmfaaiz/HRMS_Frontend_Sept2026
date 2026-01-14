@@ -235,3 +235,8 @@ export const requestRaisedBySenior = async () => {
 export function uploadFiles(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
 }
+
+
+export const getAllFacilitatorTicketType = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-facilitator-ticket-type`, );
+};

@@ -679,3 +679,15 @@ export const uploadFile = async (file) => {
       });
     });
 };
+
+
+export const FetchAllFacilitatorTicketType = () => async (dispatch) => {
+  return await requestFromServer
+    .getAllFacilitatorTicketType()
+    .then((response) => {
+      dispatch(actions.AllFacilitatorTicketTypeFetch(response?.data?.data));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
