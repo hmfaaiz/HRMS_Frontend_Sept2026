@@ -109,6 +109,11 @@ export const FormFIlter = () => {
         subsidiaryId:
           dashboard?.allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
           null,
+        yearId:
+          dashboard?.appraisalPeriodBySubList?.find((e) => e?.isActive)
+            ?.value || null,
+        appraisalCategoryId:
+          dashboard?.allAppraisalCategory?.[0]?.value || null,
       }}
       onSubmit={applyFilter}
       validationSchema={formValidator}
@@ -200,7 +205,7 @@ export const FormFIlter = () => {
               {/* appraisal status  */}
               <div>
                 <SearchSelect
-                  name={"statusId"}
+                  name={"appraisalCategoryId"}
                   label={
                     <span>
                       Appraisal Category<span style={{ color: "red" }}>*</span>
@@ -226,16 +231,21 @@ export const FormFIlter = () => {
                   label={<span>Department</span>}
                   isDisabled={!values?.subsidiaryId}
                   onChange={(e) => {
-                    setFieldValue("departmentId", e?.value || null);
+                    setFieldValue("departmentId", e?.value || "");
                   }}
                   value={
                     dashboard?.allParentDept?.find(
                       (el) => el?.value === values?.departmentId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.departmentId}
                   touched={touched?.departmentId}
-                  options={dashboard?.allParentDept}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allParentDept)
+                      ? dashboard.allParentDept
+                      : []),
+                  ]}
                 />
               </div>
               {/* grade  */}
@@ -244,7 +254,7 @@ export const FormFIlter = () => {
                   name={"gradeId"}
                   label={<span>Grade</span>}
                   onChange={(e) => {
-                    setFieldValue("gradeId", e?.value || null);
+                    setFieldValue("gradeId", e?.value || "");
                     setFieldValue("designationId", "");
                     dispatch(
                       fetchAllDesignationByGradeId(
@@ -256,11 +266,16 @@ export const FormFIlter = () => {
                   value={
                     dashboard?.allEmployeegradeList?.find(
                       (el) => el?.value === values?.gradeId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.gradeId}
                   touched={touched?.gradeId}
-                  options={dashboard?.allEmployeegradeList}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allEmployeegradeList)
+                      ? dashboard.allEmployeegradeList
+                      : []),
+                  ]}
                 />
               </div>
               {/* designation  */}
@@ -270,16 +285,21 @@ export const FormFIlter = () => {
                   label={<span>Designation</span>}
                   isDisabled={!values?.gradeId}
                   onChange={(e) => {
-                    setFieldValue("designationId", e?.value || null);
+                    setFieldValue("designationId", e?.value || "");
                   }}
                   value={
                     dashboard?.allDesignationByGrade?.find(
                       (el) => el?.value === values?.designationId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.designationId}
                   touched={touched?.designationId}
-                  options={dashboard?.allDesignationByGrade}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allDesignationByGrade)
+                      ? dashboard.allDesignationByGrade
+                      : []),
+                  ]}
                 />
               </div>
               {/* employee  */}
@@ -288,16 +308,21 @@ export const FormFIlter = () => {
                   name={"employeeId"}
                   label={<span>Employee</span>}
                   onChange={(e) => {
-                    setFieldValue("employeeId", e?.value || null);
+                    setFieldValue("employeeId", e?.value || "");
                   }}
                   value={
                     dashboard?.allEmployees?.find(
                       (el) => el?.value === values?.employeeId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.employeeId}
                   touched={touched?.employeeId}
-                  options={dashboard?.allEmployees}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allEmployees)
+                      ? dashboard.allEmployees
+                      : []),
+                  ]}
                 />
               </div>
             </div>

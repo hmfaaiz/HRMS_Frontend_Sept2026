@@ -11,11 +11,14 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import {
   fetchAllActiveEmployees,
+  fetchAllHumanResourceRole,
   fetchAllParentDept,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
+import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 
 const appraisalTypes = [
   {
@@ -83,6 +86,9 @@ const formSchema = Yup.object()
     ratingScaleSelection: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
       .oneOf([true, false], VALIDATION_MESSAGES.required),
+    approvers: Yup.array()
+      .min(1, VALIDATION_MESSAGES.required)
+      .required(VALIDATION_MESSAGES.required),
   })
   .test(
     "sum-must-be-100",
@@ -108,15 +114,13 @@ export function FormEditForm({
   const [totalConfigPercentage, seTotalConfigPercentage] = useState(0);
 
   const dispatch = useDispatch();
-  const { actionsLoading, dashboard, designationList } = useSelector(
-    (state) => {
-      return {
-        actionsLoading: state.appraisal_config?.actionsLoading,
-        designationList: state.appraisal_config?.designationList,
-        dashboard: state?.dashboard,
-      };
-    }
-  );
+  const { actionsLoading, dashboard, roles } = useSelector((state) => {
+    return {
+      actionsLoading: state.appraisal_config?.actionsLoading,
+      dashboard: state?.dashboard,
+      roles: state.users?.roles?.allRoles || [],
+    };
+  });
 
   // Calculate total %
   const calculateTotalConfigPerc = (value) => {
@@ -131,6 +135,7 @@ export function FormEditForm({
   useEffect(() => {
     calculateTotalConfigPerc(user);
     dispatch(fetchAllActiveEmployees());
+    dispatch(fetchRoles());
     if (user?.departmentId) {
       dispatch(actions.getDesignationByDeptId(user?.departmentId));
     }
@@ -156,8 +161,7 @@ export function FormEditForm({
         errors,
         touched,
         values,
-        resetForm,
-        handleChange,
+        setFieldTouched,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -211,6 +215,31 @@ export function FormEditForm({
                         error={errors?.appraisalType}
                         touched={touched?.appraisalType}
                         options={appraisalTypes}
+                      />
+                    </div>
+                    <div>
+                      <MultiSelect
+                        label={
+                          <span>
+                            Appraisal Finalization Role
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        options={roles || []}
+                        value={roles?.filter((el) =>
+                          values?.approvers?.includes(String(el.value))
+                        )}
+                        onChange={(e) => {
+                          setFieldTouched("approvers", true);
+                          if (Array?.isArray(e)) {
+                            setFieldValue("approvers", [
+                              ...e?.map((el) => String(el?.value)),
+                            ]);
+                          }
+                        }}
+                        error={errors?.approvers}
+                        touched={touched?.approvers}
+                        disabled={isUserForRead || !values?.subsidiaryId}
                       />
                     </div>
                   </div>

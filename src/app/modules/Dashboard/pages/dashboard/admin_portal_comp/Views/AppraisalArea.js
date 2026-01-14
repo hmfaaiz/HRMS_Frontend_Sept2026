@@ -1,15 +1,7 @@
 import React from "react";
 import { SearchSelect } from "../../../../../../../_metronic/_helpers/SearchSelect";
 import StatsCard from "../StatsCard";
-import {
-  IdCardLanyardIcon,
-  IdCardLanyard,
-  ClipboardCheck,
-  CheckSquare,
-  Hourglass,
-  CheckCircle,
-  Award,
-} from "lucide-react";
+import { Hourglass, ListChecks, ListCheck } from "lucide-react";
 import ChartData from "../Chart";
 import { BigTable } from "../BigTable";
 import SmallTable from "../SmallTable";
@@ -117,7 +109,7 @@ const AppraisalArea = ({
               name={"No. of Survey Published"}
               value={summaryData?.surveyPublish || 0}
               keyName={"surveyPublish"}
-              icon={<ClipboardCheck className="w-5 h-5 text-white" />}
+              icon={<ListChecks className="w-5 h-5 text-white" />}
             />
             <StatsCard
               summaryFilter={summaryFilter}
@@ -125,7 +117,7 @@ const AppraisalArea = ({
               name={"No. of Surveys' Submitted"}
               value={summaryData?.surveySubmitted || 0}
               keyName={"surveySubmitted"}
-              icon={<CheckSquare className="w-5 h-5 text-white" />}
+              icon={<ListCheck className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
@@ -143,7 +135,7 @@ const AppraisalArea = ({
               name={"Survey Rating Finalized"}
               value={summaryData?.surveyRatingFinalized || 0}
               keyName={"surveyRatingFinalized"}
-              icon={<CheckCircle className="w-5 h-5 text-white" />}
+              icon={<Hourglass className="w-5 h-5 text-white" />}
             />
           </div>
           <div className="grid grid-cols-2 gap-x-2 gap-y-2">
@@ -153,7 +145,7 @@ const AppraisalArea = ({
               name={"Survey Finalized"}
               value={summaryData?.surveyFinalized || 0}
               keyName={"surveyFinalized"}
-              icon={<Award className="w-5 h-5 text-white" />}
+              icon={<Hourglass className="w-5 h-5 text-white" />}
             />
           </div>
         </div>

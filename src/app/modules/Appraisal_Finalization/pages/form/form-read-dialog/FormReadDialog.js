@@ -310,6 +310,12 @@ export function FormReadDialog({ id, show, onHide }) {
             Increment Percentage Recommended by Manager :{" "}
             {appraisalFinalizedRating?.incrementPercentageRecommendedByManager}%
           </h6>
+          <h6 className="font-bold mb-0 text-primary text-xs">
+            Promotion Recommended by Manager :{" "}
+            {appraisalFinalizedRating?.promotionRecommendedByManager
+              ? "Yes"
+              : "No"}
+          </h6>
         </div>
       </Modal.Body>
       <Modal.Footer>

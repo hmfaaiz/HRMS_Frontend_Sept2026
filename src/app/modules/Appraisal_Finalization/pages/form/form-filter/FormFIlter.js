@@ -108,6 +108,20 @@ export function FormFilter() {
     formUIProps.setQueryParams(updatedQueryParams);
     dispatch(fetchAllParentDept(findDefaultSub?.value));
   }, [dashboard.allSubsidiaryList]);
+
+  useEffect(() => {
+    if (dashboard?.allAppraisalCategory?.length > 0) {
+      const updatedQueryParams = {
+        ...formUIProps.queryParams,
+        filter: {
+          ...formUIProps.queryParams?.filter,
+          appraisalCategoryId: dashboard?.allAppraisalCategory?.[0]?.value,
+        },
+        pageNumber: 1,
+      };
+      formUIProps.setQueryParams(updatedQueryParams);
+    }
+  }, [dashboard?.allAppraisalCategory]);
   return (
     <Formik
       enableReinitialize
@@ -196,11 +210,16 @@ export function FormFilter() {
                   value={
                     dashboard?.allParentDept?.find(
                       (el) => el?.value === values?.departmentId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.departmentId}
                   touched={touched?.departmentId}
-                  options={dashboard?.allParentDept}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allParentDept)
+                      ? dashboard.allParentDept
+                      : []),
+                  ]}
                 />
               </div>
               {/* grade  */}
@@ -221,11 +240,16 @@ export function FormFilter() {
                   value={
                     dashboard?.allEmployeegradeList?.find(
                       (el) => el?.value === values?.gradeId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.gradeId}
                   touched={touched?.gradeId}
-                  options={dashboard?.allEmployeegradeList}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allEmployeegradeList)
+                      ? dashboard.allEmployeegradeList
+                      : []),
+                  ]}
                 />
               </div>
               {/* designation  */}
@@ -240,11 +264,16 @@ export function FormFilter() {
                   value={
                     dashboard?.allDesignationByGrade?.find(
                       (el) => el?.value === values?.designationId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.designationId}
                   touched={touched?.designationId}
-                  options={dashboard?.allDesignationByGrade}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allDesignationByGrade)
+                      ? dashboard.allDesignationByGrade
+                      : []),
+                  ]}
                 />
               </div>
               {/* employee  */}
@@ -258,11 +287,16 @@ export function FormFilter() {
                   value={
                     dashboard?.allEmployees?.find(
                       (el) => el?.value === values?.employeeId
-                    ) || null
+                    ) || { value: "", label: "All" }
                   }
                   error={errors?.employeeId}
                   touched={touched?.employeeId}
-                  options={dashboard?.allEmployees}
+                  options={[
+                    { value: "", label: "All" },
+                    ...(Array.isArray(dashboard?.allEmployees)
+                      ? dashboard.allEmployees
+                      : []),
+                  ]}
                 />
               </div>
             </div>
