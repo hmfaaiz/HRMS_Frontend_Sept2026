@@ -151,6 +151,34 @@ export function FacilitatorEditForm({
     }
   };
 
+
+
+  const isDepartmentUsedWithAllLocation = (
+    departmentId,
+    departmentLocations,
+    currentIndex
+  ) => {
+    return departmentLocations.some(
+      (row, rowIndex) =>
+        rowIndex !== currentIndex &&
+        row.departmentId === departmentId &&
+        row.locationId === -1
+    );
+  };
+
+ 
+
+  const hasAllDepartmentWithSpecificLocation = (departmentLocations = []) => {
+    return departmentLocations.some(
+      (row) =>
+        row.departmentId === -1 &&
+        row.locationId !== null &&
+        row.locationId !== -1
+    );
+  };
+  
+
+  
   // ------------------ FORM ------------------
   return (
     <Formik
@@ -367,7 +395,31 @@ export function FacilitatorEditForm({
                                 (d) => d.value === obj.departmentId
                               ) || null
                             }
-                            options={allDepartments || []}
+                            options={allDepartments.map((dept) => {
+                              const disableAllDept =
+                                dept.value === -1 &&
+                                values.departmentLocations.some(
+                                  (row, rowIndex) =>
+                                    rowIndex !== index &&
+                                    row.departmentId !== null &&
+                                    row.departmentId !== -1
+                                );
+
+                              const disableSameDeptWhenAllLocationUsed =
+                                dept.value !== -1 &&
+                                isDepartmentUsedWithAllLocation(
+                                  dept.value,
+                                  values.departmentLocations,
+                                  index
+                                );
+
+                              return {
+                                ...dept,
+                                isDisabled:
+                                  disableAllDept ||
+                                  disableSameDeptWhenAllLocationUsed,
+                              };
+                            })}
                             isDisabled={
                               isUserForRead ||
                               !values?.employeeId ||
@@ -376,6 +428,10 @@ export function FacilitatorEditForm({
                             onChange={(e) => {
                               const list = [...values.departmentLocations];
                               list[index].departmentId = e?.value || null;
+
+                              // Reset location when department changes
+                              list[index].locationId = null;
+
                               setFieldValue("departmentLocations", list);
                             }}
                             error={
@@ -409,9 +465,20 @@ export function FacilitatorEditForm({
                                   row.locationId === loc.value
                               );
 
+                      
+                              const disableAllLocationBecauseAllDeptSelected =
+                                loc.value === -1 &&
+                                obj.departmentId !== -1 &&
+                                hasAllDepartmentWithSpecificLocation(
+                                  values.departmentLocations
+                                );
+
                               return {
                                 ...loc,
-                                isDisabled: isUsedInSameDept || isUsedInAllDept,
+                                isDisabled:
+                                  isUsedInSameDept ||
+                                  isUsedInAllDept ||
+                                  disableAllLocationBecauseAllDeptSelected,
                               };
                             })}
                             isDisabled={
@@ -424,12 +491,6 @@ export function FacilitatorEditForm({
                               list[index].locationId = e?.value || null;
                               setFieldValue("departmentLocations", list);
                             }}
-                            error={
-                              errors.departmentLocations?.[index]?.locationId
-                            }
-                            touched={
-                              touched.departmentLocations?.[index]?.locationId
-                            }
                           />
                         </td>
 
