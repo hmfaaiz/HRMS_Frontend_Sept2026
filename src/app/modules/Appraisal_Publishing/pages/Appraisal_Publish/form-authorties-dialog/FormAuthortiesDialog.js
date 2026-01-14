@@ -131,14 +131,17 @@ export function FormAuthortiesDialog({ id, show, onHide }) {
         minWidth: "70px",
         maxWidth: "70px",
       },
-      formatter: (cell) => {
+      formatter: (cell, row) => {
         let text = "";
         let classname = "";
         if (cell === "noRecord") {
           text = "-";
           classname = "font-bold";
         } else if (cell) {
-          text = "Completed";
+          text =
+            row?.isHREvaluation ? row?.actionTakenBy
+              ? "Completed By" : "Completed"
+              : "Completed";
           classname = "text-approved font-bold";
         } else if (!cell) {
           text = "Pending";

@@ -39,6 +39,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     signIncrementEmailId : '',
     signIncrementLetter1Id : '',
     signIncrementLetter2Id : '',
+    approvers : [],
   };
 
   const value = {
