@@ -14,7 +14,7 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
-import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
+
 import DatePicker from "react-datepicker";
 import { useFormUIContext } from "../FormUIContext";
 
@@ -85,7 +85,7 @@ const facilitator_ticket_creationEditSchema = (value) => {
         );
 };
 
-export function TimeLogForm() {
+export function TimeLogForm({onHide}) {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
 
@@ -165,8 +165,8 @@ export function TimeLogForm() {
         setLoading(true);
     };
 
-    const saveForm = async (timeLogData, clearForm) => {
-        console.log("timeLogData1111111", timeLogData)
+    const saveForm = async (timeLogData, clearForm,onHide) => {
+
         timeLogData.noOfHours = parseFloat(timeLogData.noOfHours)
         timeLogData.detailId = formUIProps.detailId
 
@@ -174,7 +174,7 @@ export function TimeLogForm() {
 
         if (!timeLogData.Id) {
 
-            dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm));
+            dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm,onHide));
 
 
 
@@ -234,7 +234,7 @@ export function TimeLogForm() {
 
                 };
 
-                saveForm(values, clearForm);
+                saveForm(values, clearForm,onHide);
             }}
         >
             {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
@@ -249,69 +249,14 @@ export function TimeLogForm() {
 
                                 <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
-                                    {/* <div className="">
-                                        <SearchSelect
-                                            name="ticketTypeId"
-                                            label={
-                                                <span>
-                                                    Ticket Type<span style={{ color: "red" }}>*</span>
-                                                </span>
-                                            }
-                                            isDisabled={!values.initiator}
-                                            onChange={(e) => {
-                                                setFieldValue("ticketTypeId", e.value || null);
-                                                dispatch(FetchAllFacilitatorEmployee(e.value));
-                                                // setAssignTo(setFieldValue)
-                                                // if (facilitatorEmployeeList?.length === 1) {
-                                                //   console.log("Auto-assigning:", facilitatorEmployeeList[0].value);
-                                                //   setFieldValue("assignTo", facilitatorEmployeeList[0].value);
-                                                // }
-                                            }}
-                                            value={
-                                                dashboard.allTicketTypeList.find(
-                                                    (option) => option.value === values.ticketTypeId
-                                                ) || null
-                                            }
-                                            // options={dashboard.allTicketTypeList}
-                                            options={dashboard.allTicketTypeList.filter(option => option.label !== "Escalation Ticket")}
-                                            error={errors.ticketTypeId}
-                                            touched={touched.ticketTypeId}
-                                        />
-                                    </div>
+                                 
 
 
 
 
 
 
-                                    <div className="">
-                                        <SearchSelect
-                                            name="assignTo"
-                                            label={
-                                                <span>
-                                                    Logged By
-                                                </span>
-                                            }
-                                            // Disable if read mode, no initiator, or auto-assigned
-                                            isDisabled={
-
-                                                !values.initiator ||
-                                                facilitatorEmployeeList?.length === 1
-                                            }
-                                            onChange={(e) => {
-                                                setFieldValue("assignTo", e.value || null);
-                                            }}
-                                            // Auto-assign if only 1 record
-                                            value={
-                                                facilitatorEmployeeList?.length === 1
-                                                    ? facilitatorEmployeeList[0]
-                                                    : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
-                                            }
-                                            options={facilitatorEmployeeList}
-                                            error={errors.assignTo}
-                                            touched={touched.assignTo}
-                                        />
-                                    </div> */}
+                              
 
                                     <div className="">
                                         <label>
@@ -325,6 +270,9 @@ export function TimeLogForm() {
                                                 values?.loggedDate ? new Date(values.loggedDate) : new Date()
                                             }
 
+                                            onChange={(date) => {
+                                                setFieldValue("loggedDate", date);
+                                            }}
                                             dateFormat="dd-MMM-yyyy"
                                             name="loggedDate"
                                             autoComplete="off"
@@ -359,7 +307,7 @@ export function TimeLogForm() {
                                             //     values?.timeRangeFrom ? values.timeRangeFrom : ""
                                             // }
 
-                                             value={values?.timeRangeFrom || "09:00 AM"} // default to 09:00 PM
+                                            value={values?.timeRangeFrom || "09:00 AM"} // default to 09:00 PM
                                             onChange={(val) => {
                                                 setFieldValue("timeRangeFrom", val);
                                                 const hours = calculateHours(val, values.timeRangeTo);
@@ -388,7 +336,7 @@ export function TimeLogForm() {
                                             //     values?.timeRangeTo ? values.timeRangeTo : ""
                                             // }
 
-                                             value={values?.timeRangeTo || "09:00 PM"} // default to 09:00 PM
+                                            value={values?.timeRangeTo || "09:00 PM"} // default to 09:00 PM
                                             onChange={(val) => {
                                                 setFieldValue("timeRangeTo", val);
                                                 const hours = calculateHours(values.timeRangeFrom, val);

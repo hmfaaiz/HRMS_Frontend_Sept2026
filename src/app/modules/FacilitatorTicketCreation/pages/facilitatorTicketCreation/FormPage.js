@@ -9,8 +9,9 @@ import { FormDeleteDialog } from "./form-delete-dialog/FormDeleteDialog";
 
 import { FormCard } from "./form-card/FormCard";
 import { } from "../../_redux/redux-Actions";
-import { DetailData } from "./form-edit-dialog/DetailData";
-import { TimeLog } from "./form-edit-dialog/TimeLog";
+import { DetailData } from "./modal/DetailData";
+import { TimeLog } from "./modal/TimeLog";
+import { DetailTimeLog } from "./modal/DetailTimeLog";
 
 
 
@@ -26,6 +27,7 @@ export function FormPage({ history }) {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
+      console.log("deleet111111111")
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/${status}/delete`);
     },
     openActiveFormDialog: (id) => {
@@ -42,6 +44,9 @@ export function FormPage({ history }) {
     },
     openTicketTimeLog: (detailId, isUserRead) => {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/timelog`);
+    },
+    openDetailTimeLog: (detailId, isUserRead) => {
+      history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${detailId}/detailtimelog`);
     },
   };
   return (
@@ -81,6 +86,20 @@ export function FormPage({ history }) {
       <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:detailId/timelog">
         {({ history, match }) => (
           <TimeLog
+            show={match != null}
+            detailId={match && match.params.detailId}
+            status={match && match.params.status}
+            onHide={() => {
+              history.push("/facilitator_ticket_creation/read-all-facilitator-ticket-creation");
+            }}
+          />
+        )}
+      </Route>
+
+
+       <Route path="/facilitator_ticket_creation/read-all-facilitator-ticket-creation/:detailId/detailtimelog">
+        {({ history, match }) => (
+          <DetailTimeLog
             show={match != null}
             detailId={match && match.params.detailId}
             status={match && match.params.status}

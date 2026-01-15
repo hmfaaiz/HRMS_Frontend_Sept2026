@@ -85,6 +85,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openReceiveFormDialog: FormUIEvents.openReceiveFormDialog,
     openDetailGridData: FormUIEvents.openDetailGridData,
     openTicketTimeLog: FormUIEvents.openTicketTimeLog,
+    openDetailTimeLog: FormUIEvents.openDetailTimeLog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

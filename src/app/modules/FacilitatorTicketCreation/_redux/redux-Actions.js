@@ -88,6 +88,30 @@ export const deleteTicketCreation = (id) => (dispatch) => {
 };
 
 
+export const deleteTimeLog = (id) => (dispatch) => {
+
+  return requestFromServer
+    .deleteTimeLog(id)
+    .then((response) => {
+
+
+      toast.success(SERVER_MESSAGES.deletedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error.response.data.message);
+    });
+};
+
+
 
 export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, onHide) => (
   dispatch
@@ -193,7 +217,29 @@ export const fetchAllFacilitatorDetail = (Id) => (dispatch) => {
 
 
 
-export const createTimeLog = (body, disbaleLoading, onHide) => (
+export const fetchAllFacilitatorTimeLogDetail = (Id) => (dispatch) => {
+
+
+  if (!Id) {
+    return dispatch(actions.FacilitatorTimeLogDetailFetched({ detailData: undefined }));
+  }
+
+  return requestFromServer
+    .getAllFacilitatorTimeLogDetail(Id)
+    .then((response) => {
+      const entities = response.data.data.rows;
+    
+      dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+
+
+export const createTimeLog = (body, disbaleLoading, clearForm,onHide) => (
   dispatch
 ) => {
 
@@ -213,6 +259,7 @@ export const createTimeLog = (body, disbaleLoading, onHide) => (
         draggable: true,
         progress: undefined,
       });
+      clearForm();
       onHide();
     })
     .catch((error) => {

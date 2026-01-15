@@ -5,6 +5,7 @@ import { toAbsoluteUrl } from "../../../../../../../_metronic/_helpers";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Eye, LayoutList, Pencil, Reply, Trash2 } from "lucide-react";
 import { fetchAllFacilitatorDetail } from "../../../../_redux/redux-Actions";
+import { FormDeleteDialog } from "../../form-delete-dialog/FormDeleteDialog";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -33,11 +34,7 @@ export function ActionsColumnFormatter(
   isOverdue = dueDate <= today;
   return (
     <div className="space-x-2">
-      {/* {isOverdue && (
-        <span style={{ color: "red", fontWeight: 600, marginLeft: "5px" }}>
-          Over Due
-        </span>
-      )} */}
+ 
       {isAccessForRead && (
         <OverlayTrigger
           overlay={<Tooltip id="products-edit-tooltip">View</Tooltip>}
@@ -71,34 +68,8 @@ export function ActionsColumnFormatter(
         </button>
       </OverlayTrigger>
 
-      {/* {isAccessForEdit && (
-        <OverlayTrigger
-          overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
-        >
-          <a onClick={() =>   {
-             setReceiveMode(false);
-                  setReadMode(false);
-              setId(row.Id);}}>
-            <Pencil className="w-4 h-4 text-black cursor-pointer" />
-          </a>
-        </OverlayTrigger>
-      )} */}
-
-      {/* {isAccessForDelete && (
-        <OverlayTrigger
-          overlay={
-            <Tooltip id="products-edit-tooltip">
-              {row.isActive ? "Delete" : "Mark Active"}
-            </Tooltip>
-          }
-        >
-          {
-            <a onClick={() => openDeleteFormDialog(row.Id, row.isActive)}>
-              <Trash2 className="w-4 h-4 text-black cursor-pointer" />
-            </a>
-          }
-        </OverlayTrigger>
-      )} */}
+ 
+   
     </div>
   );
 }
@@ -109,7 +80,7 @@ export function ResponseColumnFormatter(
 
   { setId,
     isAccessForEdit,
-    setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode,setDetailId ,
+    setReceiveMode, receiveMode, openDetailGridData, setMasterId, openTicketTimeLog, setReadMode,setDetailId ,openDetailTimeLog,
   }
 ) {
   const isUserRead = false;
@@ -159,6 +130,26 @@ export function ResponseColumnFormatter(
         </button>
       </OverlayTrigger>
 
+
+      <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Detail Time Log</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setReceiveMode(false);
+            setReadMode(false);
+            setId("");
+            setDetailId("");
+            setMasterId(row.Id);
+            openDetailTimeLog(row.Id)
+          }}
+          style={{ background: 'none', border: 'none', padding: 0 }}
+        >
+          <LayoutList className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Time Log</Tooltip>}
       >
@@ -168,6 +159,7 @@ export function ResponseColumnFormatter(
             setReceiveMode(false);
             setReadMode(false);
             setId("");
+            setDetailId("");
             setDetailId(row.Id)
             openTicketTimeLog(row.Id)
           }}
@@ -179,6 +171,46 @@ export function ResponseColumnFormatter(
 
 
 
+    </div>
+  );
+}
+
+
+export function TimeLogsColumnFormatter(
+  cellContent,
+  row,
+  rowIndex,
+  { openDeleteHandler }
+) {
+  return (
+    <div className="space-x-2">
+    
+
+        <OverlayTrigger
+        overlay={<Tooltip id="products-edit-tooltip">Edit</Tooltip>}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setReceiveMode(false);
+            setReadMode(false);
+            setId("");
+            setDetailId("");
+            setDetailId(row.detailId)
+            openTicketTimeLog(row.Id)
+          }}
+          style={{ background: 'none', border: 'none', padding: 0 }}
+        >
+          <Pencil className="w-4 h-4 text-black cursor-pointer" />
+        </button>
+      </OverlayTrigger>
+
+
+      <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
+        <a onClick={() => openDeleteHandler(row.Id,row.detailId)}>
+          <Trash2 className="w-4 h-4 text-black cursor-pointer" />
+        </a>
+      </OverlayTrigger>
     </div>
   );
 }

@@ -17,6 +17,8 @@ const initialFacilitatorTicketCreationState = {
     detailData: undefined,
     detailEntities: null,
     detailTotalCount: 0,
+    timeLogsTotalCount: 0,
+    timelogsEntities: null,
 };
 
 
@@ -59,9 +61,9 @@ export const FacilitatorTicketCreationSlice = createSlice({
                 (parent.Details || []).map(detail => ({
                     ...detail,
 
-             
+
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
-                  ticketCode: parent.ticketCode,
+                    ticketCode: parent.ticketCode,
                 }))
             );
             state.listLoading = false;
@@ -98,7 +100,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
 
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
-                  ticketCode: parent.ticketCode,
+                    ticketCode: parent.ticketCode,
                 })));
 
             state.listLoading = false;
@@ -124,7 +126,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
             // Backend se data aa raha hai (single object OR array)
             const data = action.payload;
-console.log("data1111",data)
+
             // Defensive: hamesha array bana lo
             const parents = Array.isArray(data) ? data : data ? [data] : [];
 
@@ -133,16 +135,30 @@ console.log("data1111",data)
                 (parent.Details || []).map(detail => ({
                     ...detail,
 
-                    // 🔹 parent se fields
+
                     desc: parent.ticketDescription, // ya parent.remarks
                     parentId: parent.Id,
                     parentDueDate: parent.dueDate,
-                  
+
                 }))
             );
 
             state.detailEntities = allDetails;
             state.detailTotalCount = allDetails.length;
+        },
+
+        FacilitatorTimeLogDetailFetched: (state, action) => {
+            state.listLoading = false;
+            state.error = null;
+
+            // Backend se data aa raha hai (single object OR array)
+            const data = action.payload;
+console.log("data111311",data)
+
+            state.listLoading = false;
+            state.error = null;
+            state.timelogsEntities = data || [];
+            state.timeLogsTotalCount = data.length; // total number of details
         },
 
         TicketCreationDeleted: (state, action) => {

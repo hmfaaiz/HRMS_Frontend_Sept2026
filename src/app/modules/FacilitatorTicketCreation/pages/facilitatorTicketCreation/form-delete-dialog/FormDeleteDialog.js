@@ -5,9 +5,8 @@ import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
-export function FormDeleteDialog({ id, status, show, onHide }) {
+export function FormDeleteDialog({ id, show ,detailId,onHide}) {
 
-  console.log("/${status}11111111")
   const [loading, setLoading] = useState(false);
   // Customers UI Context
   const usersUIContext = useFormUIContext();
@@ -33,23 +32,23 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
   };
 
   // if !id we should close modal
-  useEffect(() => {
-    if (!id) {
-      onHide();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  // useEffect(() => {
+  //   if (!id) {
+  //     onHide();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [id]);
 
   // looking for loading/dispatch
   useEffect(() => {}, [isLoading, dispatch]);
 
-  const deleteTicketCreation = () => {
+  const deleteTimeLog = () => {
     // server request for deleting customer by id
     enableLoading();
-    dispatch(actions.deleteTicketCreation(id)).then(() => {
+    dispatch(actions.deleteTimeLog(id)).then(() => {
       onHide();
       // refresh list after deletion
-      dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
+      dispatch(actions.fetchAllFacilitatorTimeLogDetail(detailId));
 
       disableLoading();
     });
@@ -81,13 +80,11 @@ export function FormDeleteDialog({ id, status, show, onHide }) {
           <> </>
           <button
             type="button"
-            onClick={deleteTicketCreation}
+            onClick={deleteTimeLog}
             className="btn btn-danger btn-elevate"
           >
             Delete
-            {loading && (
-              <span className="ml-3 mr-3 spinner spinner-white"></span>
-            )}
+        
           </button>
         </div>
       </Modal.Footer>

@@ -40,6 +40,7 @@ export function ResponseTable() {
       setReadMode: formUIContext.setReadMode,
       openDetailGridData: formUIContext.openDetailGridData,
       openTicketTimeLog: formUIContext.openTicketTimeLog,
+      openDetailTimeLog: formUIContext.openDetailTimeLog,
     };
   }, [formUIContext]);
 
@@ -82,123 +83,6 @@ export function ResponseTable() {
     { value: 3, label: "Re-opened" },
     { value: 2, label: "In Review" },
   ];
-
-  console.log("receiveEntities1111111", receiveEntities)
-  // const columns = [
-
-  //   {
-  //     dataField: "ticketType.formName",
-  //     text: "Ticket Type",
-  //     sort: false,
-  //     sortCaret: sortCaret,
-  //     headerSortingClasses,
-  //     style: {
-  //       minWidth: "200px",
-  //     },
-  //     formatter: (cell) => {
-  //       if (!cell) return "";
-  //       return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-  //     },
-  //   },
-
-  //   {
-  //     dataField: "priorityLevel.formName",
-  //     text: "Priority",
-  //     sort: false,
-  //     sortCaret: sortCaret,
-  //     headerSortingClasses,
-  //     style: {
-  //       minWidth: "300px",
-  //     },
-  //     formatter: (cell) => {
-  //       if (!cell) return "";
-  //       return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
-  //     },
-  //   },
-  //   {
-  //     dataField: "dueDate",
-  //     text: "Due Date",
-  //     sort: false,
-  //     sortCaret: sortCaret,
-  //     headerSortingClasses,
-  //     style: {
-  //       minWidth: "160px",
-  //     },
-  //     formatter: (cell) => {
-  //       // Only format if cell has a valid date
-  //       if (!cell) return "";
-  //       return format(new Date(cell), "dd-MMM-yyyy");
-  //     },
-  //   },
-
-  //   {
-  //     dataField: "file",
-  //     text: "Attachment",
-  //     sort: false,
-  //     sortCaret: sortCaret,
-  //     headerSortingClasses,
-  //     style: {
-  //       minWidth: "100px",
-  //     },
-
-  //     formatter: (cell) => {
-  //       if (!cell) return "";
-
-  //       return (
-  //         <a href={getUploadUrl(cell)} target="_blank" rel="noopener noreferrer">
-  //           View Document
-  //         </a>
-  //       );
-  //     }
-
-
-  //   },
-  //  {
-  //   dataField: "ticketStatus",
-  //   text: "Status",
-  //   sort: false,
-  //   sortCaret: sortCaret,
-  //   headerSortingClasses,
-  //   style: {
-  //     minWidth: "200px",
-  //   },
-  //   formatter: (cell) => {
-  //     if (cell === null || cell === undefined) return "";
-
-  //     // Agar aapko cell value ko label me convert karna hai
-  //     const status = ticketStatusOptions.find(opt => opt.value === cell);
-  //     const displayText = status ? status.label : cell;
-
-  //     // Agar text lamba ho, truncate karo
-  //     return displayText.length > 30 
-  //       ? <span title={displayText}>{displayText.substring(0, 30) + "..."}</span> 
-  //       : displayText;
-  //   },
-  // },
-
-
-  //   {
-  //     dataField: "response",
-  //     text: "Response",
-  //     isDummyField: true,
-  //     formatter: ResponseColumnFormatter,
-  //     formatExtraData: {
-  //       setId: formUIProps.setId,
-
-  //       setReceiveMode: formUIProps.setReceiveMode,
-  //       receiveMode: formUIProps.receiveMode,
-
-  //     },
-  //     classes: "text-right pr-0",
-  //     headerClasses: "text-right pr-3",
-  //     style: {
-  //       minWidth: "10px",
-  //     },
-  //   }, 
-
-  // ];
-
-  //Table pagination properties
 
 
   const columns = [
@@ -526,6 +410,7 @@ export function ResponseTable() {
         receiveMode: formUIProps.receiveMode,
         openDetailGridData: formUIProps.openDetailGridData,
         openTicketTimeLog: formUIProps.openTicketTimeLog,
+        openDetailTimeLog: formUIProps.openDetailTimeLog,
         setReadMode: formUIProps.setReadMode,
 
       },

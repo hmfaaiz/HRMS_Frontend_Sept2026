@@ -5,7 +5,7 @@ import { ModalProgressBar } from "../../../../../../_metronic/_partials/controls
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 import { DetailTable } from "../form-table/DetailTable";
-import { TimeLogForm } from "./TimeLogForm";
+import { TimeLogForm } from "../form-edit-dialog/TimeLogForm";
 
 export function TimeLog({ detailId, status, show, onHide }) {
 
@@ -39,27 +39,27 @@ export function TimeLog({ detailId, status, show, onHide }) {
         if (!detailId) {
             onHide();
         }
-        if (detailId) {
-            fetchDetailData()
-        }
+        // if (detailId) {
+        //     fetchDetailData()
+        // }
 
     }, [detailId]);
 
     // looking for loading/dispatch
 
 
-    const fetchDetailData = () => {
-        // server request for deleting customer by id
-        enableLoading();
+    // const fetchDetailData = () => {
+    //     // server request for deleting customer by id
+    //     enableLoading();
 
-        dispatch(actions.fetchAllFacilitatorDetail(detailId)).then(() => {
-            // onHide();
-            // refresh list after deletion
-            // dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
+    //     dispatch(actions.fetchAllFacilitatorDetail(detailId)).then(() => {
+    //         // onHide();
+    //         // refresh list after deletion
+    //         // dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
 
-            disableLoading();
-        });
-    };
+    //         disableLoading();
+    //     });
+    // };
 
     return (
         <Modal
@@ -77,7 +77,7 @@ export function TimeLog({ detailId, status, show, onHide }) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <TimeLogForm />
+                <TimeLogForm onHide={onHide}/>
             </Modal.Body>
             <Modal.Footer>
                 <div>

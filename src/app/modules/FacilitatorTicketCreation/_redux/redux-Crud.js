@@ -36,10 +36,18 @@ export function deleteTicketCreation(Id) {
 
   return axios.delete(`${USERS_URL}/facilitator_ticket_creation/delete-facilitator-ticket-creation/${Id}`);
 }
-//Delete
+export function deleteTimeLog(Id) {
+
+  return axios.delete(`${USERS_URL}/facilitator_ticket_creation/delete-ticket-creation-time-log/${Id}`);
+}
+
 export function getAllFacilitatorDetail(Id) {
 
   return axios.get(`${USERS_URL}/facilitator_ticket_creation/read-all-facilitator-detail/${Id}`);
+}
+export function getAllFacilitatorTimeLogDetail(Id) {
+
+  return axios.get(`${USERS_URL}/facilitator_ticket_creation/read-all-facilitator-timelog-detail/${Id}`);
 }
 
 export function createTimeLog(body) {
