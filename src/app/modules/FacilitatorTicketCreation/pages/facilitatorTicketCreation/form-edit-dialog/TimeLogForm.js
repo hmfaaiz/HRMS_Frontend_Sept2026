@@ -186,6 +186,7 @@ export function TimeLogForm({ onHide }) {
 
         // if (!timeLogData.Id) {
 
+        
             dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
             dispatch(actions.fetchAllFacilitatorTimeLogDetail(timeLogData.detailId));
 
