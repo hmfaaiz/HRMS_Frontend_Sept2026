@@ -55,3 +55,8 @@ export function createTimeLog(body) {
   return axios.post(`${USERS_URL}/facilitator_ticket_creation/create-ticket-creation-time-log`, body);
 
 }
+
+export function getTimeLog(Id) {
+
+  return axios.get(`${USERS_URL}/facilitator_ticket_creation/read-ticket-creation-time-log/${Id}`);
+}

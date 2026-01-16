@@ -40,6 +40,7 @@ export function ResponseTable() {
       setReadMode: formUIContext.setReadMode,
       openDetailGridData: formUIContext.openDetailGridData,
       openTicketTimeLog: formUIContext.openTicketTimeLog,
+      
       openDetailTimeLog: formUIContext.openDetailTimeLog,
     };
   }, [formUIContext]);

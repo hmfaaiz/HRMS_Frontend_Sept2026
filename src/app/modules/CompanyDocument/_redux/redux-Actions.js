@@ -149,3 +149,4 @@ export const updateCompanyDoc = (user, disbaleLoading, onHide) => (dispatch) => 
       });
     });
 };
+

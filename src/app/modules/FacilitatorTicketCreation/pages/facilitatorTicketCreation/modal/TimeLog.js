@@ -26,14 +26,6 @@ export function TimeLog({ detailId, status, show, onHide }) {
         shallowEqual
     );
 
-    const enableLoading = () => {
-        setLoading(true);
-    };
-
-    const disableLoading = () => {
-        setLoading(false);
-    };
-
     // if !id we should close modal
     useEffect(() => {
         if (!detailId) {
@@ -45,21 +37,6 @@ export function TimeLog({ detailId, status, show, onHide }) {
 
     }, [detailId]);
 
-    // looking for loading/dispatch
-
-
-    // const fetchDetailData = () => {
-    //     // server request for deleting customer by id
-    //     enableLoading();
-
-    //     dispatch(actions.fetchAllFacilitatorDetail(detailId)).then(() => {
-    //         // onHide();
-    //         // refresh list after deletion
-    //         // dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
-
-    //         disableLoading();
-    //     });
-    // };
 
     return (
         <Modal

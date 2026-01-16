@@ -85,10 +85,10 @@ const facilitator_ticket_creationEditSchema = (value) => {
         );
 };
 
-export function TimeLogForm({onHide}) {
+export function TimeLogForm({ onHide }) {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-
+    const [timeLogData, setTimeLogData] = useState(formUIProps?.initTimeLog);
     const FormUIContext = useFormUIContext();
     const formUIProps = useMemo(() => {
         return {
@@ -100,7 +100,9 @@ export function TimeLogForm({onHide}) {
     }, [FormUIContext]);
 
 
-    let timeLogData = formUIProps?.initTimeLog;
+
+
+
     const { dashboard } = useSelector((state) => state);
     const inputFile = useRef(null);
 
@@ -115,7 +117,17 @@ export function TimeLogForm({onHide}) {
         };
     }, shallowEqual);
 
+    const { timeLogForEdit } = currentState
 
+
+    useEffect(() => {
+        if (timeLogForEdit) {
+            setTimeLogData(timeLogForEdit);
+        }
+    }, [timeLogForEdit]);
+
+
+    console.log("TimeLogFetchedForEdit5555555555",timeLogForEdit,currentState)
     const ticketStatusOptions = [
 
         { value: 1, label: "Open" },
@@ -165,20 +177,22 @@ export function TimeLogForm({onHide}) {
         setLoading(true);
     };
 
-    const saveForm = async (timeLogData, clearForm,onHide) => {
+    const saveForm = async (timeLogData, clearForm, onHide) => {
 
         timeLogData.noOfHours = parseFloat(timeLogData.noOfHours)
-        timeLogData.detailId = formUIProps.detailId
+        timeLogData.detailId = formUIProps?.detailId ||  timeLogData.detailId
 
 
 
         if (!timeLogData.Id) {
 
-            dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm,onHide));
+            dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
 
 
 
-        } else {
+        } 
+        
+        else {
 
 
 
@@ -193,13 +207,14 @@ export function TimeLogForm({onHide}) {
                 timeRangeFrom: timeLogData.timeRangeFrom,
                 timeRangeTo: timeLogData.timeRangeTo,
                 noOfHours: timeLogData.noOfHours,
+                detailId: timeLogData.detailId,
 
             };
 
 
 
 
-            await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm));
+           dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
 
 
             await dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
@@ -234,7 +249,7 @@ export function TimeLogForm({onHide}) {
 
                 };
 
-                saveForm(values, clearForm,onHide);
+                saveForm(values, clearForm, onHide);
             }}
         >
             {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
@@ -249,14 +264,14 @@ export function TimeLogForm({onHide}) {
 
                                 <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
-                                 
 
 
 
 
 
 
-                              
+
+
 
                                     <div className="">
                                         <label>

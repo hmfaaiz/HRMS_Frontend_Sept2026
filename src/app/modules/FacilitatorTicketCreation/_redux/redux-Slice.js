@@ -9,6 +9,7 @@ const initialFacilitatorTicketCreationState = {
     centers: null,
     userStatusTypes: null,
     userForEdit: undefined,
+    timeLogForEdit: undefined,
     lastError: null,
     userForRead: false,
     receiveEntities: null,
@@ -153,7 +154,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
             // Backend se data aa raha hai (single object OR array)
             const data = action.payload;
-console.log("data111311",data)
+            console.log("data111311", data)
 
             state.listLoading = false;
             state.error = null;
@@ -171,6 +172,15 @@ console.log("data111311",data)
                 (el) => el.Id !== action.payload.Id
             );
         },
+
+        TimeLogFetchedForEdit: (state, action) => {
+           
+   
+            state.actionsLoading = false;
+            state.timeLogForEdit = action.payload.timeLogForEdit;
+            state.error = null;
+        },
+
 
 
 

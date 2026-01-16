@@ -16,6 +16,7 @@ import { TimeLogsColumnFormatter } from "./column-formatter/ActionsColumnFormatt
 import { useFormUIContext } from "../FormUIContext";
 import { format } from "date-fns";
 import { FormDeleteDialog } from "../form-delete-dialog/FormDeleteDialog";
+import { TimeLog } from "../modal/TimeLog";
 
 export function DetailTimeLogsTable() {
   // Users UI Context
@@ -36,6 +37,7 @@ export function DetailTimeLogsTable() {
       setReceiveMode: formUIContext.setReceiveMode,
       receiveMode: formUIContext.receiveMode,
       openDetailGridData: formUIContext.openDetailGridData,
+      setDetailId: formUIContext.setDetailId,
     };
   }, [formUIContext]);
 
@@ -55,11 +57,25 @@ export function DetailTimeLogsTable() {
   const [deleteId, setDeleteId] = useState(null);
   const [detailId, setDetailId] = useState(null);
 
+  const [showEdit, setShowEdit] = useState(false);
+  const [editTimeLogId, setEditTimeLogId] = useState(null);
+
   const openDeleteHandler = (id, detailId) => {
     setDeleteId(id);
     setDetailId(detailId);
     setShowDelete(true);
   };
+
+
+  const openEditHandler = (id, detailId) => {
+    setEditTimeLogId(id);
+    setShowEdit(true);
+  };
+
+    useEffect(() => {
+      console.log("editTimeLogId11111",editTimeLogId)
+      dispatch(actions.fetchTimeLog(editTimeLogId));
+    }, [editTimeLogId, dispatch]);
 
   // Table columns
   const columns = [
@@ -121,10 +137,14 @@ export function DetailTimeLogsTable() {
       formatter: TimeLogsColumnFormatter,
       formatExtraData: {
         setId: formUIProps.setId,
-        setMasterId: formUIProps.setMasterId,
+
         setDetailId: formUIProps.setDetailId,
         setReadMode: formUIProps.setReadMode,
-        openDeleteHandler, // parent delete handler
+        setReceiveMode: formUIProps.setReceiveMode,
+        openTicketTimeLog: formUIContext.openTicketTimeLog,
+
+        openDeleteHandler,
+        openEditHandler,
       },
       classes: "text-right pr-0",
       headerClasses: "text-right pr-3",
@@ -152,11 +172,22 @@ export function DetailTimeLogsTable() {
           setShowDelete(false)
           actions.fetchAllFacilitatorTimeLogDetail(detailId)
         }
-    
+
 
 
         }
       />
+
+      <TimeLog
+        show={showEdit}
+        detailId={null}
+        onHide={() => {
+          setShowEdit(false);
+          setEditTimeLogId(null);
+        }}
+      
+      />
+
 
       {/* Table */}
       <BootstrapTable

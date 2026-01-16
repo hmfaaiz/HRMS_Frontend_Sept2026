@@ -277,3 +277,25 @@ export const createTimeLog = (body, disbaleLoading, clearForm,onHide) => (
       });
     });
 };
+
+
+export const fetchTimeLog= (id) => (dispatch) => {
+
+
+  if (!id) {
+    return dispatch(actions.TimeLogFetchedForEdit({ timeLogForEdit: undefined }));
+  }
+
+  return requestFromServer
+    .getTimeLog(id)
+    .then((response) => {
+      const entities = response.data?.data;
+
+   
+      dispatch(actions.TimeLogFetchedForEdit({ timeLogForEdit: entities }));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
