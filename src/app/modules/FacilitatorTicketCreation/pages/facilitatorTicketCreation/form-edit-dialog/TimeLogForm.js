@@ -184,41 +184,24 @@ export function TimeLogForm({ onHide }) {
 
 
 
-        if (!timeLogData.Id) {
+        // if (!timeLogData.Id) {
 
             dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
+            dispatch(actions.fetchAllFacilitatorTimeLogDetail(timeLogData.detailId));
 
 
 
-        } 
+        // } 
         
-        else {
+        // else {
 
 
+        //    dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
 
 
+        //     await dispatch(actions.fetchAllFacilitatorTimeLogDetail(timeLogData.detailId));
 
-
-            const formUpdatedFields = {
-                Id: timeLogData.Id,
-                loggedByEmpId: timeLogData.loggedByEmpId,
-                workDescription: timeLogData.workDescription,
-                loggedDate: timeLogData.loggedDate,
-                timeRangeFrom: timeLogData.timeRangeFrom,
-                timeRangeTo: timeLogData.timeRangeTo,
-                noOfHours: timeLogData.noOfHours,
-                detailId: timeLogData.detailId,
-
-            };
-
-
-
-
-           dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
-
-
-            await dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
-        }
+        // }
 
 
 
