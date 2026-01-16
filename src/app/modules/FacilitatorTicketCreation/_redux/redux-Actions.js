@@ -1,23 +1,23 @@
 import * as requestFromServer from "./redux-Crud";
-import {FacilitatorTicketCreationSlice, callTypes } from "./redux-Slice";
+import { FacilitatorTicketCreationSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
 import { SERVER_MESSAGES } from "../../../utils/constants";
 const { actions } = FacilitatorTicketCreationSlice;
 
 
-export const fetchEmployeeDocs = (queryparm) => async (dispatch) => {
+export const fetchTicketCreations = (queryparm) => async (dispatch) => {
 
 
-  
-  return requestFromServer.getAllEmployeeDoc(queryparm)
-   
+
+  return requestFromServer.getAllTicketCreation(queryparm)
+
     .then((response) => {
-    
 
-      dispatch(actions.employeeDocFetched(response));
+
+      dispatch(actions.ticketCreationFetched(response));
     })
     .catch((error) => {
-    
+
       error.clientMessage = "Can't find";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
@@ -26,35 +26,35 @@ export const fetchEmployeeDocs = (queryparm) => async (dispatch) => {
 export const fetchReceiveTickets = (queryparm) => async (dispatch) => {
 
 
-  
+
   return requestFromServer.getAllReceiveTicket(queryparm)
-   
+
     .then((response) => {
-    
+
 
       dispatch(actions.receiveFetched(response));
     })
     .catch((error) => {
-    
+
       error.clientMessage = "Can't find";
       dispatch(actions.catchError({ error, callType: callTypes.list }));
     });
 };
 
-export const fetchEmployeeDoc = (id) => (dispatch) => {
+export const fetchTicketCreation = (id) => (dispatch) => {
 
 
   if (!id) {
-    return dispatch(actions.EmployeeDocFetchedForEdit({ userForEdit: undefined }));
+    return dispatch(actions.TicketCreationFetchedForEdit({ userForEdit: undefined }));
   }
 
   return requestFromServer
-    .getEmployeeDocById(id)
+    .getTicketCreationById(id)
     .then((response) => {
       const entities = response.data?.data;
 
-   
-      dispatch(actions.EmployeeDocFetchedForEdit({ userForEdit: entities }));
+
+      dispatch(actions.TicketCreationFetchedForEdit({ userForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";
@@ -64,13 +64,37 @@ export const fetchEmployeeDoc = (id) => (dispatch) => {
 
 
 
-export const deleteEmployeeDoc = (id) => (dispatch) => {
+export const deleteTicketCreation = (id) => (dispatch) => {
 
   return requestFromServer
-    .deleteEmployeeDoc( id)
+    .deleteTicketCreation(id)
     .then((response) => {
-    
-      dispatch(actions.EmployeeDocDeleted({ Id: id }));
+
+      dispatch(actions.TicketCreationDeleted({ Id: id }));
+      toast.success(SERVER_MESSAGES.deletedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    })
+    .catch((error) => {
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      toast.error(error.response.data.message);
+    });
+};
+
+
+export const deleteTimeLog = (id) => (dispatch) => {
+
+  return requestFromServer
+    .deleteTimeLog(id)
+    .then((response) => {
+
+
       toast.success(SERVER_MESSAGES.deletedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -89,19 +113,19 @@ export const deleteEmployeeDoc = (id) => (dispatch) => {
 
 
 
-export const createEmployeeDoc = (employeeDocForCreation, disbaleLoading, onHide) => (
+export const createTicketCreation = (ticketCreationForCreation, disbaleLoading, onHide) => (
   dispatch
 ) => {
 
-  
+
   return requestFromServer
-    .createEmployeeDoc(employeeDocForCreation)
+    .createTicketCreation(ticketCreationForCreation)
     .then((res) => {
-   
+
       const user = res.data?.data;
-     
-  
-      dispatch(actions.employeeDocCreated(user));
+
+
+      dispatch(actions.ticketCreationCreated(user));
       disbaleLoading();
       toast.success(SERVER_MESSAGES.insertedSuccess, {
         position: "top-right",
@@ -130,18 +154,18 @@ export const createEmployeeDoc = (employeeDocForCreation, disbaleLoading, onHide
     });
 };
 
-export const updateEmployeeDoc = (user, disbaleLoading, onHide) => (dispatch) => {
+export const updateTicketCreation = (user, disbaleLoading, onHide) => (dispatch) => {
   return requestFromServer
-    .updateEmployeeDoc(user)
+    .updateTicketCreation(user)
     .then((response) => {
-  
-      const updatedEmployeeDoc = response?.config?.data; // response.data?.data;
-   
-      dispatch(actions.employeeDocUpdated({ updatedEmployeeDoc }));
-    
+
+      const updatedTicketCreation = response?.config?.data; // response.data?.data;
+
+      dispatch(actions.ticketCreationUpdated({ updatedTicketCreation }));
+
       disbaleLoading();
       onHide();
-      toast.success(response.data.message , {
+      toast.success(response.data.message, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -150,11 +174,11 @@ export const updateEmployeeDoc = (user, disbaleLoading, onHide) => (dispatch) =>
         draggable: true,
         progress: undefined,
       });
-      
+
 
     })
     .catch((error) => {
-  
+
       //error.clientMessage = "Can't update User"
       dispatch(actions.catchError({ error, callType: callTypes.action }));
       disbaleLoading();
@@ -181,9 +205,94 @@ export const fetchAllFacilitatorDetail = (Id) => (dispatch) => {
     .getAllFacilitatorDetail(Id)
     .then((response) => {
       const entities = response.data.data;
-console.log("response1111",response.data.data)
+      console.log("response1111", response.data.data)
+
+      dispatch(actions.FacilitatorDetailFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+
+
+export const fetchAllFacilitatorTimeLogDetail = (Id) => (dispatch) => {
+
+
+  if (!Id) {
+    return dispatch(actions.FacilitatorTimeLogDetailFetched({ detailData: undefined }));
+  }
+
+  return requestFromServer
+    .getAllFacilitatorTimeLogDetail(Id)
+    .then((response) => {
+      const entities = response.data.data.rows;
+    
+      dispatch(actions.FacilitatorTimeLogDetailFetched(entities));
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't find user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+    });
+};
+
+
+
+export const createTimeLog = (body, disbaleLoading, clearForm,onHide) => (
+  dispatch
+) => {
+
+
+  return requestFromServer
+    .createTimeLog(body)
+    .then((res) => {
+
+      const data = res.data?.data;
+      disbaleLoading();
+      toast.success(SERVER_MESSAGES.insertedSuccess, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      clearForm();
+      onHide();
+    })
+    .catch((error) => {
+      error.clientMessage = "Can't create user";
+      dispatch(actions.catchError({ error, callType: callTypes.action }));
+      disbaleLoading();
+      toast.error(error?.response?.data?.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+};
+
+
+export const fetchTimeLog= (id) => (dispatch) => {
+
+
+  if (!id) {
+    return dispatch(actions.TimeLogFetchedForEdit({ timeLogForEdit: undefined }));
+  }
+
+  return requestFromServer
+    .getTimeLog(id)
+    .then((response) => {
+      const entities = response.data?.data;
+
    
-      dispatch(actions.FacilitatorDetailFetched( entities));
+      dispatch(actions.TimeLogFetchedForEdit({ timeLogForEdit: entities }));
     })
     .catch((error) => {
       error.clientMessage = "Can't find user";

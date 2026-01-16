@@ -40,6 +40,8 @@ export function FormTable() {
       receiveMode: formUIContext.receiveMode,
       masterId: formUIContext.masterId,
       setMasterId: formUIContext.setMasterId,
+      setDetailId: formUIContext.setDetailId,
+      detailId: formUIContext.detailId,
       
     };
   }, [formUIContext]);
@@ -60,7 +62,7 @@ export function FormTable() {
   useEffect(() => {
     formUIProps.setId([]);
 
-    dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+    dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
@@ -75,7 +77,7 @@ export function FormTable() {
     (item) => item.componentName === "ReadFacilitatorTicketCreation"
   );
 
-  // ReadEmployeeDocr,CreateEmployeeDocr
+ 
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -117,6 +119,21 @@ export function FormTable() {
 
           </span>
         );
+      },
+    },
+
+            {
+      dataField: "ticketCode",
+      text: "Ticket Code",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "30px",
+      },
+      formatter: (cell) => {
+        if (!cell) return "";
+        return cell.length > 30 ? <span title={cell}>{cell.substring(0, 70) + "..."}</span> : cell;
       },
     },
 
@@ -248,7 +265,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeFrom",
-      text: "Time From",
+      text: "From Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -267,7 +284,7 @@ export function FormTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time To",
+      text: "To Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -369,6 +386,7 @@ export function FormTable() {
       formatExtraData: {
         setId: formUIProps.setId,
         setMasterId: formUIProps.setMasterId,
+        setDetailId: formUIProps.setDetailId,
         openEditFormDialog: formUIProps.openEditFormDialog,
         openDeleteFormDialog: formUIProps.openDeleteFormDialog,
         openActiveFormDialog: formUIProps.openActiveFormDialog,

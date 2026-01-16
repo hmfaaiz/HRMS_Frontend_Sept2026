@@ -42,9 +42,6 @@ export function FormTable() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(actions.fetchPayrollRegister(FormUIProps.queryParams));
-  }, [FormUIProps.queryParams, dispatch]);
 
   // Table columns
   const columns = [

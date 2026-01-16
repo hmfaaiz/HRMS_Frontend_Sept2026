@@ -17,69 +17,113 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 import { TimePickerField } from "../../../../../../_metronic/_partials/controls/forms/TimePickerField";
 import { FetchAllFacilitatorEmployee } from "../../../../Dashboard/_redux/dashboardActions";
+
 // percentage: Yup.string().required("Required*"),
-const facilitator_ticket_creationEditSchema = Yup.object().shape({
+const facilitator_ticket_creationEditSchema = (value) => {
+  return Yup.object()
+    .shape({
+      file: Yup.string().nullable(),
+      // .required(VALIDATION_MESSAGES.required),
+
+      assignTo: Yup.number()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      priorityLevelId: Yup.number()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      ticketTypeId: Yup.number()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      dueDate: Yup.date()
+
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      // ticketDate: Yup.date()
+
+      //   .nullable()
+      //   .required(VALIDATION_MESSAGES.required),
+
+      // timeRangeFrom: Yup.string()
+
+      //   .nullable()
+      //   // .required(VALIDATION_MESSAGES.required)
+      //   ,
 
 
-  file: Yup.string().nullable(),
-  // .required(VALIDATION_MESSAGES.required),
+      // timeRangeTo: Yup.string()
 
-  assignTo: Yup.number()
+      //   .nullable()
+      //   // .required(VALIDATION_MESSAGES.required)
+      //   ,
 
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+      timeRangeFrom: Yup.string()
+        .when("timeRangeTo", {
+          is: (value) => value !== null && value !== "",
+          then: Yup.string().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.string().notRequired(),
+        }),
 
-  priorityLevelId: Yup.number()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-
-  ticketTypeId: Yup.number()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-
-  dueDate: Yup.date()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
-
-  // ticketDate: Yup.date()
-
-  //   .nullable()
-  //   .required(VALIDATION_MESSAGES.required),
-
-  timeRangeFrom: Yup.string()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+      timeRangeTo: Yup.string()
+        .when("timeRangeFrom", {
+          is: (value) => value !== null && value !== "",
+          then: Yup.string().required(VALIDATION_MESSAGES.required),
+          otherwise: Yup.string().notRequired(),
+        }),
 
 
-  timeRangeTo: Yup.string()
 
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+      noOfHours: Yup.number()
 
-
-  noOfHours: Yup.number()
-
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
 
 
-  ticketStatus: Yup.number()
+      ticketStatus: Yup.number()
 
-    .nullable()
-    .required(VALIDATION_MESSAGES.required),
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
+
+      timeRangeFrom: Yup.string().test(
+        "from-required-if-to",
+        VALIDATION_MESSAGES.required,
+        function (value) {
+          const { timeRangeTo } = this.parent;
+          if (timeRangeTo && !value) {
+            return false;
+          }
+          return true;
+        }
+      ),
+
+      timeRangeTo: Yup.string().test(
+        "to-required-if-from",
+        VALIDATION_MESSAGES.required,
+        function (value) {
+          const { timeRangeFrom } = this.parent;
+          if (timeRangeFrom && !value) {
+            return false;
+          }
+          return true;
+        }
+      ),
 
 
-  // ticketDescription: Yup.string()
-  //   .trim()
-  //   .nullable()
-  //   .required(VALIDATION_MESSAGES.required),
 
+      ticketDescription: Yup.string()
+        .trim()
+        .nullable(),
+      // .required(VALIDATION_MESSAGES.required),
 
-});
+    }
+    );
+};
 
 export function FormEditForm({
   saveForm,
@@ -91,6 +135,7 @@ export function FormEditForm({
   loading, setId, setReadMode, receiveMode, setReceiveMode
 }) {
   const dispatch = useDispatch();
+
   const { dashboard } = useSelector((state) => state);
   const inputFile = useRef(null);
   useEffect(() => {
@@ -98,7 +143,7 @@ export function FormEditForm({
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
       dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
-      dispatch(FetchAllFacilitatorEmployee(formData.ticketStatus));
+      dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
     }
   }, [dispatch, formData.Id]);
 
@@ -154,6 +199,20 @@ export function FormEditForm({
     return totalHours > 0 ? totalHours : 0;
   };
 
+  const setAssignTo = (setFieldValue) => {
+    console.log("setFieldValue111112222", facilitatorEmployeeList[0].value)
+
+   
+
+  }
+
+  // useEffect(()=>{
+
+  //    if (facilitatorEmployeeList?.length == 1) {
+  //     setFieldValue("assignTo", facilitatorEmployeeList[0].value);
+  //   }
+
+  // },[facilitatorEmployeeList])
 
   return (
     <Formik
@@ -162,14 +221,25 @@ export function FormEditForm({
         ...formData,
         remarks: !isUserForRead ? "" : formData.remarks || "",
         file: !isUserForRead ? "" : formData.file || "",
-        ticketStatus: !isUserForRead ? 1 : formData.ticketStatus || 1,
+        ticketStatus: !formData?.ticketStatus
+          ? 1
+          : formData?.isUserForRead
+            ? formData.ticketStatus
+            : formData?.initiator
+              ? formData.ticketStatus
+              : 2,
+        // ticketStatus: !isUserForRead ? 1 : formData.ticketStatus || 1,
+        // ticketStatus:!formData?.initiator && (formData?.ticketStatus === 1 || formData?.ticketStatus === 3)? 2: formData?.ticketStatus ?? 1,
         initiator: formData?.initiator ?? true,
 
 
       }}
-      validationSchema={facilitator_ticket_creationEditSchema}
+      // validationSchema={facilitator_ticket_creationEditSchema}
+      validationSchema={facilitator_ticket_creationEditSchema(formData)}
       onSubmit={(values, { resetForm }) => {
         enableLoading();
+
+
         const clearForm = () => {
 
           resetForm();
@@ -177,6 +247,7 @@ export function FormEditForm({
             inputFile.current.value = "";
           }
         };
+
         saveForm(values, clearForm);
       }}
     >
@@ -208,6 +279,11 @@ export function FormEditForm({
                       onChange={(e) => {
                         setFieldValue("ticketTypeId", e.value || null);
                         dispatch(FetchAllFacilitatorEmployee(e.value));
+                        // setAssignTo(setFieldValue)
+                        // if (facilitatorEmployeeList?.length === 1) {
+                        //   console.log("Auto-assigning:", facilitatorEmployeeList[0].value);
+                        //   setFieldValue("assignTo", facilitatorEmployeeList[0].value);
+                        // }
                       }}
                       value={
                         dashboard.allTicketTypeList.find(
@@ -246,7 +322,7 @@ export function FormEditForm({
                   </div>
 
 
-                  <div className="">
+                  {/* <div className="">
                     <SearchSelect
                       name="assignTo"
                       label={
@@ -254,7 +330,7 @@ export function FormEditForm({
                           Assign To<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      isDisabled={isUserForRead || !values.initiator}
+                      isDisabled={isUserForRead || !values.initiator || facilitatorEmployeeList?.length == 1}
                       onChange={(e) => {
                         setFieldValue("assignTo", e.value || null);
                       }}
@@ -265,7 +341,37 @@ export function FormEditForm({
                       error={errors.assignTo}
                       touched={touched.assignTo}
                     />
-                  </div>
+                  </div> */}
+
+                  <div className="">
+  <SearchSelect
+    name="assignTo"
+    label={
+      <span>
+        Assign To<span style={{ color: "red" }}>*</span>
+      </span>
+    }
+    // Disable if read mode, no initiator, or auto-assigned
+    isDisabled={
+      isUserForRead || 
+      !values.initiator || 
+      facilitatorEmployeeList?.length === 1
+    }
+    onChange={(e) => {
+      setFieldValue("assignTo", e.value || null);
+    }}
+    // Auto-assign if only 1 record
+    value={
+      facilitatorEmployeeList?.length === 1
+        ? facilitatorEmployeeList[0]
+        : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
+    }
+    options={facilitatorEmployeeList}
+    error={errors.assignTo}
+    touched={touched.assignTo}
+  />
+</div>
+
 
                   <div className="">
                     <label>
@@ -326,8 +432,8 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       <span>
-                        Time Range From
-                        <span style={{ color: "red" }}>*</span>
+                        From Time
+
                       </span>
                     </label>
                     <TimePickerField
@@ -356,8 +462,8 @@ export function FormEditForm({
                   <div className="">
                     <label>
                       <span>
-                        Time Range To
-                        <span style={{ color: "red" }}>*</span>
+                        To Time
+
                       </span>
                     </label>
                     <TimePickerField
@@ -399,8 +505,8 @@ export function FormEditForm({
                       component={Input}
                       placeholder="Enter no of hours"
                       type="number"
-                      readOnly
-                      disabled={true}
+
+                      disabled={values.timeRangeFrom || values.timeRangeTo}
                     />
 
                   </div>
@@ -467,7 +573,7 @@ export function FormEditForm({
                         <span>
                           {" "}
                           Ticket Description
-                          <span style={{ color: "red" }}>*</span>
+                          {/* <span style={{ color: "red" }}>*</span> */}
                         </span>
                       }
                       autoComplete="off"
@@ -571,13 +677,13 @@ export function FormEditForm({
 
                 </div>
                 {values.receiver && (
-                    <>
-                   <hr/>
-                  <h6 className="font-bold mb-0 text-primary my-2">
-                    Sender Response
-                  </h6>
+                  <>
+                    <hr />
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      Sender Response
+                    </h6>
 
-                 </>   )
+                  </>)
                 }
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
@@ -739,10 +845,18 @@ export function FormEditForm({
 
 
                 </div>
-               <hr/>
-                <h6 className="font-bold mb-0 text-primary my-2">
-                  My Response
-                </h6>
+                <hr />
+
+                {(values?.receiver || isUserForRead) && (
+                  <>
+
+
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      My Response
+                    </h6>
+
+                  </>
+                )}
 
                 <div className="grid grid-cols-8 gap-x-3 gap-y-1">
 
@@ -907,9 +1021,14 @@ export function FormEditForm({
               <button
                 type="button"
                 onClick={() => {
+                   console.log("values1111111",values)
+          if ( facilitatorEmployeeList?.length === 1) {
+    values.assignTo = facilitatorEmployeeList[0].value;
+  }
                   handleSubmit();
                   // setId("");
                   // handleReset();
+
 
                   if (inputFile?.current) {
                     inputFile.current.value = "";

@@ -57,11 +57,11 @@ export function DetailTable() {
   useEffect(() => {
     formUIProps.setId([]);
 
-    dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+    dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
   }, [formUIProps.queryParams, dispatch, detailTotalCount]);
 
 
-  // ReadEmployeeDocr,CreateEmployeeDocr
+ 
   // Table columns
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -214,7 +214,7 @@ export function DetailTable() {
 
     {
       dataField: "timeRangeFrom",
-      text: "Time From",
+      text: "From Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
@@ -233,7 +233,7 @@ export function DetailTable() {
 
     {
       dataField: "timeRangeTo",
-      text: "Time To",
+      text: "To Time",
       sort: false,
       sortCaret: sortCaret,
       headerSortingClasses,
