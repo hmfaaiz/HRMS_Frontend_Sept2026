@@ -96,7 +96,7 @@ export const AdminPortal = () => {
      Set appraisalPeriodId & appraisalCategoryId before fetching alerts
   ================================ */
   useEffect(() => {
-    if (activeTab !== "appraisal") return;
+    if (activeTab != "6") return;
 
     setSummaryFilter((prev) => ({
       ...prev,

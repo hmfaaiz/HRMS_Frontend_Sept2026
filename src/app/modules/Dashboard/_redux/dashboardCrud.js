@@ -243,3 +243,7 @@ export function updateDefaultSubsidiary(body) {
 export function getModuleRights() {
   return axios.get(`${USERS_URL}/settings/read-all-modules-right`);
 }
+
+export function getUsersByCompanyId(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-user-by-companyId` , body);
+}

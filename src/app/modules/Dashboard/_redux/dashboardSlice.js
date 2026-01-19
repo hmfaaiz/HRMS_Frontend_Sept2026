@@ -101,6 +101,7 @@ const initialDashboardState = {
   allowRequestBySenior : false,
   currentDateTime : null,
   moduleRights : [],
+  allUsers : [],
 };
 
 export const callTypes = {
@@ -424,6 +425,9 @@ export const dashboardSlice = createSlice({
     },
     ModuleRightFetched: (state, action) => {
       state.moduleRights = action.payload;
+    },
+    UsersByCompanyFetched: (state, action) => {
+      state.allUsers = action.payload;
     },
 
   },

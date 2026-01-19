@@ -171,7 +171,6 @@ const MultiSelect = ({
         }}
         {...props}
       />
-
       {error && touched ? (
         <div className="invalid-feedback">{error}</div>
       ) : null}

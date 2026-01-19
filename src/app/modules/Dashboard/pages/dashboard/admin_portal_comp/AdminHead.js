@@ -123,7 +123,7 @@ const AdminHead = ({
                 </div>
               </div>
               {/* Announcements - moves on top for mobile */}
-              {activeTab !== "appraisal" && (
+              {activeTab != "6" && (
                 <div className="px-2 py-1 bg-tlight w-full col-span-3 rounded-md flex items-center gap-1">
                   <Megaphone className="text-black w-4 h-4 lg:mr-1 stroke-3" />
                   <h6 className="font-bold max-lg:hidden mb-0 text-primary">
@@ -149,7 +149,7 @@ const AdminHead = ({
                 </div>
               )}
               {/* appraisal period dropdown once appraisal area is active  */}
-              {activeTab === "appraisal" && (
+              {activeTab == "6" && (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                   <label class="whitespace-nowrap">Appraisal Period : </label>
                   <div className="w-full">
@@ -180,7 +180,7 @@ const AdminHead = ({
                 </div>
               )}
               {/* appraisal category id */}
-              {activeTab === "appraisal" && (
+              {activeTab == "6" && (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                   <label class="whitespace-nowrap">Appraisal Category : </label>
                   <div className="w-full">

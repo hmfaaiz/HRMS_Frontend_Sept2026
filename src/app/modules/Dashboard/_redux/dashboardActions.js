@@ -717,3 +717,15 @@ export const fetchModuleRights = () => async (dispatch) => {
       dispatch(actions.ModuleRightFetched([]));
     });
 };
+
+export const fetchUsersByCompanyId = (Id) => async (dispatch) => {
+  return await requestFromServer
+    .getUsersByCompanyId({Id})
+    .then((response) => {
+      let data = response?.data?.data || [];
+      dispatch(actions.UsersByCompanyFetched(data));
+    })
+    .catch(() => {
+      dispatch(actions.UsersByCompanyFetched([]));
+    });
+};
