@@ -52,6 +52,7 @@ export const AdminPortal = () => {
     holidayList,
     appraisalPeriodBySubList,
     allAppraisalCategory,
+    moduleRights,
   } = dashboard;
 
   const [bigTableModalData, setBigTableModalData] = useState(null);
@@ -68,6 +69,7 @@ export const AdminPortal = () => {
     dispatch(fetchAllFormsMenu(158, "allDesignations"));
     dispatch(fetchAllFormsMenu(89, "allLocationChildMenus"));
     dispatch(fetchAllFormsMenu(541, "allAppraisalCategory"));
+    dispatch(actions.fetchModuleRights())
     dispatch(actions.fetchHolidayDetail());
   }, [dispatch]);
   /* ===============================
@@ -135,6 +137,7 @@ export const AdminPortal = () => {
      TAB CHANGE HANDLER
   ================================ */
   const handleTabChange = (e) => {
+    console.log(e)
     setActiveTab(e.value);
     setSummaryFilter((prev) => ({
       ...prev,
@@ -155,6 +158,7 @@ export const AdminPortal = () => {
       {" "}
       <AdminHead
         announcement={announcement}
+        moduleRights={moduleRights}
         handleChange={handleTabChange}
         activeTab={activeTab}
         allSubsidiaryList={allSubsidiaryList}
@@ -177,7 +181,7 @@ export const AdminPortal = () => {
           setSummaryModalHeading={setSummaryModalHeading}
           holidayList={holidayList}
         />
-      ) : activeTab === "employee" ? (
+      ) : activeTab == "1" ? (
         <EmployeeArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
@@ -192,7 +196,7 @@ export const AdminPortal = () => {
           setSummaryModalHeading={setSummaryModalHeading}
           holidayList={holidayList}
         />
-      ) : activeTab === "leave" ? (
+      ) : activeTab == "2" ? (
         <LeaveArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
@@ -207,7 +211,7 @@ export const AdminPortal = () => {
           setSummaryModalHeading={setSummaryModalHeading}
           holidayList={holidayList}
         />
-      ) : activeTab === "attendance" ? (
+      ) : activeTab == "3" ? (
         <AttendanceArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
@@ -218,7 +222,7 @@ export const AdminPortal = () => {
           allDashboardAlerts={allDashboardAlerts}
           summaryData={summaryData}
         />
-      ) : activeTab === "recruitment" ? (
+      ) : activeTab == "5" ? (
         <RecuritmentArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
@@ -234,7 +238,7 @@ export const AdminPortal = () => {
           setSummaryModalHeading={setSummaryModalHeading}
           holidayList={holidayList}
         />
-      ) : activeTab === "payroll" ? (
+      ) : activeTab == "4" ? (
         <PayrollArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
@@ -249,7 +253,7 @@ export const AdminPortal = () => {
           setSummaryModalHeading={setSummaryModalHeading}
           holidayList={holidayList}
         />
-      ) : activeTab === "separation" ? (
+      ) : activeTab == "separation" ? (
         <SeparationArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}
@@ -264,7 +268,7 @@ export const AdminPortal = () => {
           setSummaryModalHeading={setSummaryModalHeading}
           holidayList={holidayList}
         />
-      ) : activeTab === "appraisal" ? (
+      ) : activeTab == "6" ? (
         <AppraisalArea
           allSubsidiaryList={allSubsidiaryList}
           allLocationChildMenus={allLocationChildMenus}

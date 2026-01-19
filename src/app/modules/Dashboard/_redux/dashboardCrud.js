@@ -239,3 +239,7 @@ export function uploadFiles(body) {
 export function updateDefaultSubsidiary(body) {
   return axios.post(`${USERS_URL}/settings/update-default-subsidiary`, body);
 }
+
+export function getModuleRights() {
+  return axios.get(`${USERS_URL}/settings/read-all-modules-right`);
+}

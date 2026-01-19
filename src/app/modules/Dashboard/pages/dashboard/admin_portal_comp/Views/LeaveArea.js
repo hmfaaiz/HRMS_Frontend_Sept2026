@@ -127,7 +127,7 @@ const LeaveArea = ({
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.tab_key === "leave") {
+              if (e?.dashlet_type === "chart" && e?.tab_key == "2") {
                 return <ChartData key={`chart-${alertIdx}`} data={e} />;
               }
               return null;
@@ -137,7 +137,7 @@ const LeaveArea = ({
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.tab_key === "leave" && e?.dashlet_type === "big_table") {
+              if (e?.tab_key == "2" && e?.dashlet_type === "big_table") {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -153,7 +153,7 @@ const LeaveArea = ({
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
-            if (e?.dashlet_type === "small_table" && e?.tab_key === "leave") {
+            if (e?.dashlet_type === "small_table" && e?.tab_key == "2") {
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}

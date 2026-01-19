@@ -16,41 +16,6 @@ import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as Yup from "yup";
 
-const options = [
-  {
-    title: "Default View",
-    key: "default",
-  },
-  {
-    title: "Employee",
-    key: "employee",
-  },
-  {
-    title: "Leave",
-    key: "leave",
-  },
-  {
-    title: "Attendance",
-    key: "attendance",
-  },
-  {
-    title: "Payroll",
-    key: "payroll",
-  },
-  {
-    title: "Recruitment",
-    key: "recruitment",
-  },
-  {
-    title: "Separation",
-    key: "separation",
-  },
-  {
-    title: "Appraisal",
-    key: "appraisal",
-  },
-];
-
 const validationSchema = Yup.array().of(
   Yup.object().shape({
     isPeriodType: Yup.boolean().default(false),
@@ -72,7 +37,7 @@ const validationSchema = Yup.array().of(
   })
 );
 
-const MasterEditForm = ({ initialValues, loading, dispatch }) => {
+const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
   return (
     <Formik
       enableReinitialize={true}
@@ -130,160 +95,171 @@ const MasterEditForm = ({ initialValues, loading, dispatch }) => {
                   </thead>
                   <tbody>
                     {values?.length > 0 &&
-                      values?.map((row, index) => (
-                        <tr key={index}>
-                          <td>{row?.dashlet_name || ""}</td>
-                          <td>
-                            {options?.find((el) => el?.key == row?.tab_key)
-                              ?.title || ""}
-                          </td>
-                          <td>{dashletType[row?.dashlet_type] || ""}</td>
-                          <td>
-                            {row?.dashlet_type == "chart" ? (
-                              <Field
-                                name={`[${index}].graph_type`}
-                                component={SearchSelect}
-                                className={"form-control"}
-                                onChange={(e) => {
-                                  setFieldValue(
-                                    `[${index}].graph_type`,
-                                    e.value
-                                  );
-                                }}
-                                isDisabled={row?.dashlet_type !== "chart"}
-                                value={
-                                  chartTypes?.find(
-                                    (item) => item?.value === row?.graph_type
-                                  ) || ""
-                                }
-                                options={chartTypes || []}
-                              />
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                          <td>
-                            {row?.dashlet_type == "small_table" ? (
-                              <Field
-                                name={`[${index}].theme_class`}
-                                component={SearchSelect}
-                                className={"form-control"}
-                                onChange={(e) => {
-                                  setFieldValue(
-                                    `[${index}].theme_class`,
-                                    e.value
-                                  );
-                                }}
-                                isDisabled={row?.dashlet_type !== "small_table"}
-                                value={
-                                  smallTableTheme?.find(
-                                    (item) => item?.value === row?.theme_class
-                                  ) || ""
-                                }
-                                options={smallTableTheme || []}
-                              />
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                          <td>
-                            {row?.isPeriodType ? (
-                              <Field
-                                name={`[${index}].PeriodType`}
-                                component={SearchSelect}
-                                className={"form-control"}
-                                onChange={(e) => {
-                                  setFieldValue(
-                                    `[${index}].PeriodType`,
-                                    e.value
-                                  );
-                                  if (e?.value === 0) {
-                                    setFieldValue(`[${index}].days`, 1);
-                                  } else {
-                                    setFieldValue(`[${index}].days`, "");
-                                  }
-                                }}
-                                isDisabled={row?.dashlet_type === "chart"}
-                                value={
-                                  PeriodType?.find(
-                                    (item) => item?.value === row?.PeriodType
-                                  ) || ""
-                                }
-                                options={PeriodType || []}
-                              />
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                          <td className="w-36">
-                            {row?.isPeriodType ? (
-                              <>
+                      values
+                        ?.filter((row) =>
+                          moduleRights?.some((el) => el?.value == row?.tab_key)
+                        )
+                        ?.map((row, index) => (
+                          <tr key={index}>
+                            <td>{row?.dashlet_name || ""}</td>
+                            <td>
+                              {moduleRights
+                                ?.find((el) => el?.value == row?.tab_key)
+                                ?.label?.charAt(0)
+                                .toUpperCase() +
+                                moduleRights
+                                  ?.find((el) => el?.value == row?.tab_key)
+                                  ?.label.slice(1) || ""}
+                            </td>
+                            <td>{dashletType[row?.dashlet_type] || ""}</td>
+                            <td>
+                              {row?.dashlet_type == "chart" ? (
                                 <Field
-                                  name={`[${index}].days`}
-                                  disabled={values[index]?.PeriodType !== 0}
-                                  component={Input}
-                                  type="number"
-                                  min={1}
-                                  max={90}
-                                  autoComplete="off"
-                                  validate={(value) => {
-                                    const periodEnabled =
-                                      values[index]?.isPeriodType &&
-                                      Number(values[index]?.PeriodType) === 0;
-                                    if (!periodEnabled) return undefined;
-                                    if (
-                                      value === "" ||
-                                      value === null ||
-                                      value === undefined
-                                    ) {
-                                      return "Day is required";
-                                    }
-                                    const num = Number(value);
-                                    if (Number.isNaN(num))
-                                      return "Day is required";
-                                    if (num < 1)
-                                      return "Day must be at least 1";
-                                    if (num > 90)
-                                      return "Day must be at most 90";
-                                    return undefined;
+                                  name={`[${index}].graph_type`}
+                                  component={SearchSelect}
+                                  className={"form-control"}
+                                  onChange={(e) => {
+                                    setFieldValue(
+                                      `[${index}].graph_type`,
+                                      e.value
+                                    );
                                   }}
+                                  isDisabled={row?.dashlet_type !== "chart"}
+                                  value={
+                                    chartTypes?.find(
+                                      (item) => item?.value === row?.graph_type
+                                    ) || ""
+                                  }
+                                  options={chartTypes || []}
                                 />
-                                <ErrorMessage
-                                  name={`[${index}].days`}
-                                  component="div"
-                                  className="invalid-feedback d-block"
+                              ) : (
+                                "-"
+                              )}
+                            </td>
+                            <td>
+                              {row?.dashlet_type == "small_table" ? (
+                                <Field
+                                  name={`[${index}].theme_class`}
+                                  component={SearchSelect}
+                                  className={"form-control"}
+                                  onChange={(e) => {
+                                    setFieldValue(
+                                      `[${index}].theme_class`,
+                                      e.value
+                                    );
+                                  }}
+                                  isDisabled={
+                                    row?.dashlet_type !== "small_table"
+                                  }
+                                  value={
+                                    smallTableTheme?.find(
+                                      (item) => item?.value === row?.theme_class
+                                    ) || ""
+                                  }
+                                  options={smallTableTheme || []}
                                 />
-                              </>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
+                              ) : (
+                                "-"
+                              )}
+                            </td>
+                            <td>
+                              {row?.isPeriodType ? (
+                                <Field
+                                  name={`[${index}].PeriodType`}
+                                  component={SearchSelect}
+                                  className={"form-control"}
+                                  onChange={(e) => {
+                                    setFieldValue(
+                                      `[${index}].PeriodType`,
+                                      e.value
+                                    );
+                                    if (e?.value === 0) {
+                                      setFieldValue(`[${index}].days`, 1);
+                                    } else {
+                                      setFieldValue(`[${index}].days`, "");
+                                    }
+                                  }}
+                                  isDisabled={row?.dashlet_type === "chart"}
+                                  value={
+                                    PeriodType?.find(
+                                      (item) => item?.value === row?.PeriodType
+                                    ) || ""
+                                  }
+                                  options={PeriodType || []}
+                                />
+                              ) : (
+                                "-"
+                              )}
+                            </td>
+                            <td className="w-36">
+                              {row?.isPeriodType ? (
+                                <>
+                                  <Field
+                                    name={`[${index}].days`}
+                                    disabled={values[index]?.PeriodType !== 0}
+                                    component={Input}
+                                    type="number"
+                                    min={1}
+                                    max={90}
+                                    autoComplete="off"
+                                    validate={(value) => {
+                                      const periodEnabled =
+                                        values[index]?.isPeriodType &&
+                                        Number(values[index]?.PeriodType) === 0;
+                                      if (!periodEnabled) return undefined;
+                                      if (
+                                        value === "" ||
+                                        value === null ||
+                                        value === undefined
+                                      ) {
+                                        return "Day is required";
+                                      }
+                                      const num = Number(value);
+                                      if (Number.isNaN(num))
+                                        return "Day is required";
+                                      if (num < 1)
+                                        return "Day must be at least 1";
+                                      if (num > 90)
+                                        return "Day must be at most 90";
+                                      return undefined;
+                                    }}
+                                  />
+                                  <ErrorMessage
+                                    name={`[${index}].days`}
+                                    component="div"
+                                    className="invalid-feedback d-block"
+                                  />
+                                </>
+                              ) : (
+                                "-"
+                              )}
+                            </td>
 
-                          <td>
-                            <Checkbox
-                              isSelected={values[index]?.is_fav} // or === true depending on backend
-                              disabled={row?.tab_key === "appraisal"}
-                              onChange={(e) => {
-                                setFieldValue(
-                                  `[${index}].is_fav`,
-                                  e?.target?.checked ? 1 : 0
-                                );
-                              }}
-                            />
-                          </td>
-                          <td>
-                            <Checkbox
-                              isSelected={values[index]?.isActive}
-                              onChange={(e) => {
-                                setFieldValue(
-                                  `[${index}].isActive`,
-                                  e?.target?.checked ? 1 : 0
-                                );
-                              }}
-                            />
-                          </td>
-                        </tr>
-                      ))}
+                            <td>
+                              <Checkbox
+                                isSelected={values[index]?.is_fav} // or === true depending on backend
+                                disabled={row?.tab_key === "appraisal"}
+                                onChange={(e) => {
+                                  setFieldValue(
+                                    `[${index}].is_fav`,
+                                    e?.target?.checked ? 1 : 0
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <Checkbox
+                                isSelected={values[index]?.isActive}
+                                onChange={(e) => {
+                                  setFieldValue(
+                                    `[${index}].isActive`,
+                                    e?.target?.checked ? 1 : 0
+                                  );
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        ))}
                   </tbody>
                 </table>
               </div>

@@ -15,40 +15,13 @@ import {
 
 const options = [
   {
-    title: "Default View",
-    key: "default",
-  },
-  {
-    title: "Employee",
-    key: "employee",
-  },
-  {
-    title: "Leave",
-    key: "leave",
-  },
-  {
-    title: "Attendance",
-    key: "attendance",
-  },
-  {
-    title: "Payroll",
-    key: "payroll",
-  },
-  {
-    title: "Recruitment",
-    key: "recruitment",
-  },
-  {
-    title: "Separation",
-    key: "separation",
-  },
-  {
-    title: "Appraisal",
-    key: "appraisal",
+    label: "Default View",
+    value: "default",
   },
 ];
 
 const AdminHead = ({
+  moduleRights,
   activeTab,
   handleChange,
   announcement,
@@ -76,15 +49,29 @@ const AdminHead = ({
                 <label class="whitespace-nowrap">Dashboard View : </label>
                 <div className="w-full">
                   <SearchSelect
-                    options={options.map((el) => ({
-                      value: el?.key,
-                      label: el?.title,
-                    }))}
-                    value={
-                      options
-                        ?.map((el) => ({ value: el?.key, label: el?.title }))
-                        ?.find((opt) => opt.value === activeTab) || ""
-                    }
+                    options={[
+                      ...options,
+                      ...moduleRights?.map((e) => ({
+                        ...e,
+                        label:
+                          e?.label.charAt(0).toUpperCase() + e?.label.slice(1),
+                      })),
+                    ]}
+                    value={(() => {
+                      const selected = [...options, ...moduleRights]?.find(
+                        (opt) => opt.value === activeTab
+                      );
+
+                      return selected
+                        ? {
+                            ...selected,
+                            label: selected.label
+                              ? selected.label.charAt(0).toUpperCase() +
+                                selected.label.slice(1)
+                              : "",
+                          }
+                        : "";
+                    })()}
                     onChange={(e) => handleChange(e)}
                     className="w-full"
                   />
