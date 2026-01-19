@@ -130,6 +130,23 @@ export function DetailTimeLogsTable() {
       headerSortingClasses,
       style: { minWidth: "70px" },
     },
+
+    {
+      dataField: "isBillable",
+      text: "Billable",
+      sort: false,
+      sortCaret: sortCaret,
+      headerSortingClasses,
+      style: {
+        minWidth: "70px",
+      },
+      formatter: (cell) => {
+        // Handle 0/1 values
+        if (cell == true) return "Yes";
+        if (cell == false) return "No";
+        return ""; // fallback if null/undefined
+      },
+    },
     {
       dataField: "action",
       text: "Action",

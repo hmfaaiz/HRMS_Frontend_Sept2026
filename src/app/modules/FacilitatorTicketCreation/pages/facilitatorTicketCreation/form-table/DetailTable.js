@@ -298,6 +298,8 @@ export function DetailTable() {
 
 
 
+
+
   ];
 
   //Table pagination properties
