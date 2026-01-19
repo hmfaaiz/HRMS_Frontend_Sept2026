@@ -127,7 +127,7 @@ export function TimeLogForm({ onHide }) {
     }, [timeLogForEdit]);
 
 
-    console.log("TimeLogFetchedForEdit5555555555",timeLogForEdit,currentState)
+    console.log("TimeLogFetchedForEdit5555555555", timeLogForEdit, currentState)
     const ticketStatusOptions = [
 
         { value: 1, label: "Open" },
@@ -137,38 +137,62 @@ export function TimeLogForm({ onHide }) {
     ];
 
 
+    // const calculateHours = (fromTime, toTime) => {
+    //     if (!fromTime || !toTime) return 0;
+
+    //     // Convert string like "12:49 PM" to Date objects
+    //     const parseTime = (timeStr) => {
+    //         const [time, modifier] = timeStr.split(" "); // ["12:49", "PM"]
+    //         let [hours, minutes] = time.split(":").map(Number);
+
+    //         if (modifier === "PM" && hours < 12) hours += 12;
+    //         if (modifier === "AM" && hours === 12) hours = 0;
+
+    //         return { hours, minutes };
+    //     };
+
+    //     const from = parseTime(fromTime);
+    //     const to = parseTime(toTime);
+
+    //     // Total hours difference
+    //     let diffHours = to.hours - from.hours;
+    //     let diffMinutes = to.minutes - from.minutes;
+
+    //     if (diffMinutes < 0) {
+    //         diffMinutes += 60;
+    //         diffHours -= 1;
+    //     }
+
+    //     const totalHours = diffHours + diffMinutes / 60;
+
+    //     // Prevent negative hours
+    //     console.log("totalHours1111", totalHours)
+    //     return totalHours > 0 ? totalHours : 0;
+    // };
+
     const calculateHours = (fromTime, toTime) => {
         if (!fromTime || !toTime) return 0;
 
-        // Convert string like "12:49 PM" to Date objects
+        // "13:45" → total minutes
         const parseTime = (timeStr) => {
-            const [time, modifier] = timeStr.split(" "); // ["12:49", "PM"]
-            let [hours, minutes] = time.split(":").map(Number);
-
-            if (modifier === "PM" && hours < 12) hours += 12;
-            if (modifier === "AM" && hours === 12) hours = 0;
-
-            return { hours, minutes };
+            const [hours, minutes] = timeStr.split(":").map(Number);
+            return hours * 60 + minutes;
         };
 
-        const from = parseTime(fromTime);
-        const to = parseTime(toTime);
+        const fromMinutes = parseTime(fromTime);
+        const toMinutes = parseTime(toTime);
 
-        // Total hours difference
-        let diffHours = to.hours - from.hours;
-        let diffMinutes = to.minutes - from.minutes;
+        let diffMinutes = toMinutes - fromMinutes;
 
-        if (diffMinutes < 0) {
-            diffMinutes += 60;
-            diffHours -= 1;
+        //  JIRA concept: next day consider
+        if (diffMinutes <= 0) {
+            diffMinutes += 24 * 60;
         }
 
-        const totalHours = diffHours + diffMinutes / 60;
-
-        // Prevent negative hours
-        console.log("totalHours1111", totalHours)
-        return totalHours > 0 ? totalHours : 0;
+        return diffMinutes / 60;
     };
+
+
     const disbaleLoading = () => {
         setLoading(false);
     };
@@ -180,20 +204,21 @@ export function TimeLogForm({ onHide }) {
     const saveForm = async (timeLogData, clearForm, onHide) => {
 
         timeLogData.noOfHours = parseFloat(timeLogData.noOfHours)
-        timeLogData.detailId = formUIProps?.detailId ||  timeLogData.detailId
+        timeLogData.detailId = formUIProps?.detailId || timeLogData.detailId
 
 
 
         // if (!timeLogData.Id) {
 
         
-            dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
-            dispatch(actions.fetchAllFacilitatorTimeLogDetail(timeLogData.detailId));
+        
+       await dispatch(actions.createTimeLog(timeLogData, disbaleLoading, clearForm, onHide));
+       await dispatch(actions.fetchAllFacilitatorTimeLogDetail(timeLogData.detailId));
 
 
 
         // } 
-        
+
         // else {
 
 
@@ -286,7 +311,7 @@ export function TimeLogForm({ onHide }) {
                                         )}
                                     </div>
 
-
+                                    {/* 
                                     <div className="">
                                         <label>
                                             <span>
@@ -345,7 +370,52 @@ export function TimeLogForm({ onHide }) {
                                             touched={touched.timeRangeTo}
                                             errors={errors.timeRangeTo}
                                         />
+                                    </div> */}
+
+
+                                    <div>
+                                        <label>
+                                            <span>From Time</span>
+                                        </label>
+
+                                        <input
+                                            type="time"
+                                            className="form-control"
+                                            // disabled={!values.initiator}
+                                            name="timeRangeFrom"
+                                            step="60"   //  minutes only (no seconds)
+                                            value={values.timeRangeFrom || ""}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setFieldValue("timeRangeFrom", val);
+
+                                                const hours = calculateHours(val, values.timeRangeTo);
+                                                setFieldValue("noOfHours", hours.toFixed(2));
+                                            }}
+                                        />
                                     </div>
+                                    <div>
+                                        <label>
+                                            <span>To Time</span>
+                                        </label>
+
+                                        <input
+                                            type="time"
+                                            className="form-control"
+                                            // disabled={!values.initiator}
+                                            name="timeRangeTo"
+                                            step="60"
+                                            value={values.timeRangeTo || ""}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setFieldValue("timeRangeTo", val);
+
+                                                const hours = calculateHours(values.timeRangeFrom, val);
+                                                setFieldValue("noOfHours", hours.toFixed(2));
+                                            }}
+                                        />
+                                    </div>
+
 
 
                                     <div className="">
