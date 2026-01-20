@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -23,6 +23,29 @@ const MultiSelect = ({
   loading = false,
   ...props
 }) => {
+  const wrapperRef = useRef(null);
+  const selectRef = useRef(null);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // CLOSE on outside click (works in modal too)
+  useEffect(() => {
+    const handler = (e) => {
+      if (!wrapperRef.current) return;
+
+      // if click is outside wrapper => close
+      if (!wrapperRef.current.contains(e.target)) {
+        setMenuOpen(false);
+
+        // also blur select (extra safety)
+        if (selectRef.current?.blur) selectRef.current.blur();
+      }
+    };
+
+    document.addEventListener("mousedown", handler, true);
+    return () => document.removeEventListener("mousedown", handler, true);
+  }, []);
+
   const classes = useStyles();
 
   const allOption = { label: "All", value: "" };
@@ -148,10 +171,11 @@ const MultiSelect = ({
   };
 
   return (
-    <div className={classes.container}>
+    <div ref={wrapperRef} className={classes.container}>
       {label && <label className={classes.label}>{label}</label>}
 
       <Select
+        ref={selectRef}
         isMulti
         options={optionsWithAll}
         value={value}
@@ -164,6 +188,11 @@ const MultiSelect = ({
         hideSelectedOptions={false}
         isClearable={true}
         isSearchable={true}
+        menuIsOpen={menuOpen}
+        onMenuOpen={() => setMenuOpen(true)}
+        onMenuClose={() => setMenuOpen(false)}
+        onFocus={() => setMenuOpen(true)}
+        onBlur={() => setMenuOpen(false)}
         components={{
           MultiValue,
           ValueContainer,

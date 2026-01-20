@@ -86,35 +86,36 @@ const AdminHead = ({
                     name="subsidiaryId"
                     isDisabled={!allSubsidiaryList}
                     onChange={(e) => {
+                      let v = e?.value == "all" ? "" : e?.value
                       setSummaryFilter({
                         ...summaryFilter,
                         subsidiaryId: e.value,
                         departmentId: "",
                         appraisalPeriodId: "",
                       });
-                      dispatch(fetchAllParentDept(e?.value));
-                      dispatch(
-                        getActiveFiscalYear("activeFiscalYear", e?.value)
-                      );
-                      dispatch(
-                        fetchAllAppraisalPeriodDataBySubsidiaryId(e?.value)
-                      );
-                      dispatch(updateDefaultSubsidiary(e?.value || null)).then(
+                      dispatch(updateDefaultSubsidiary(v || null)).then(
                         () => {
                           dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
                         }
                       );
+                      dispatch(fetchAllParentDept(v));
+                      dispatch(
+                        getActiveFiscalYear("activeFiscalYear", v)
+                      );
+                      dispatch(
+                        fetchAllAppraisalPeriodDataBySubsidiaryId(v)
+                      );
                     }}
                     value={
-                      summaryFilter?.subsidiaryId === ""
-                        ? { value: "", label: "All" }
+                      summaryFilter?.subsidiaryId === "all"
+                        ? { value: "all", label: "All" }
                         : allSubsidiaryList?.find(
                             (option) =>
                               option.value === summaryFilter?.subsidiaryId
                           ) || null
                     }
                     options={[
-                      { value: "", label: "All" },
+                      { value: "all", label: "All" },
                       ...(Array.isArray(allSubsidiaryList)
                         ? allSubsidiaryList
                         : []),
