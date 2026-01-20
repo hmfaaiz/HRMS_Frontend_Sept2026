@@ -735,3 +735,17 @@ export const fetchAllAccountsByType = (
     });
 };
 
+export const fetchAllSpecialLeaveTypes = (
+  key,
+  employeeId = null
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllSpecialLeaveTypes({ employeeId })
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllChildMenusFetch({ entities, key }));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
