@@ -15,40 +15,13 @@ import {
 
 const options = [
   {
-    title: "Default View",
-    key: "default",
-  },
-  {
-    title: "Employee",
-    key: "employee",
-  },
-  {
-    title: "Leave",
-    key: "leave",
-  },
-  {
-    title: "Attendance",
-    key: "attendance",
-  },
-  {
-    title: "Payroll",
-    key: "payroll",
-  },
-  {
-    title: "Recruitment",
-    key: "recruitment",
-  },
-  {
-    title: "Separation",
-    key: "separation",
-  },
-  {
-    title: "Appraisal",
-    key: "appraisal",
+    label: "Default View",
+    value: "default",
   },
 ];
 
 const AdminHead = ({
+  moduleRights,
   activeTab,
   handleChange,
   announcement,
@@ -76,15 +49,29 @@ const AdminHead = ({
                 <label class="whitespace-nowrap">Dashboard View : </label>
                 <div className="w-full">
                   <SearchSelect
-                    options={options.map((el) => ({
-                      value: el?.key,
-                      label: el?.title,
-                    }))}
-                    value={
-                      options
-                        ?.map((el) => ({ value: el?.key, label: el?.title }))
-                        ?.find((opt) => opt.value === activeTab) || ""
-                    }
+                    options={[
+                      ...options,
+                      ...moduleRights?.map((e) => ({
+                        ...e,
+                        label:
+                          e?.label.charAt(0).toUpperCase() + e?.label.slice(1),
+                      })),
+                    ]}
+                    value={(() => {
+                      const selected = [...options, ...moduleRights]?.find(
+                        (opt) => opt.value === activeTab
+                      );
+
+                      return selected
+                        ? {
+                            ...selected,
+                            label: selected.label
+                              ? selected.label.charAt(0).toUpperCase() +
+                                selected.label.slice(1)
+                              : "",
+                          }
+                        : "";
+                    })()}
                     onChange={(e) => handleChange(e)}
                     className="w-full"
                   />
@@ -99,35 +86,36 @@ const AdminHead = ({
                     name="subsidiaryId"
                     isDisabled={!allSubsidiaryList}
                     onChange={(e) => {
+                      let v = e?.value == "all" ? "" : e?.value
                       setSummaryFilter({
                         ...summaryFilter,
                         subsidiaryId: e.value,
                         departmentId: "",
                         appraisalPeriodId: "",
                       });
-                      dispatch(fetchAllParentDept(e?.value));
-                      dispatch(
-                        getActiveFiscalYear("activeFiscalYear", e?.value)
-                      );
-                      dispatch(
-                        fetchAllAppraisalPeriodDataBySubsidiaryId(e?.value)
-                      );
-                      dispatch(updateDefaultSubsidiary(e?.value || null)).then(
+                      dispatch(updateDefaultSubsidiary(v || null)).then(
                         () => {
                           dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
                         }
                       );
+                      dispatch(fetchAllParentDept(v));
+                      dispatch(
+                        getActiveFiscalYear("activeFiscalYear", v)
+                      );
+                      dispatch(
+                        fetchAllAppraisalPeriodDataBySubsidiaryId(v)
+                      );
                     }}
                     value={
-                      summaryFilter?.subsidiaryId === ""
-                        ? { value: "", label: "All" }
+                      summaryFilter?.subsidiaryId === "all"
+                        ? { value: "all", label: "All" }
                         : allSubsidiaryList?.find(
                             (option) =>
                               option.value === summaryFilter?.subsidiaryId
                           ) || null
                     }
                     options={[
-                      { value: "", label: "All" },
+                      { value: "all", label: "All" },
                       ...(Array.isArray(allSubsidiaryList)
                         ? allSubsidiaryList
                         : []),
@@ -136,7 +124,7 @@ const AdminHead = ({
                 </div>
               </div>
               {/* Announcements - moves on top for mobile */}
-              {activeTab !== "appraisal" && (
+              {activeTab != "6" && (
                 <div className="px-2 py-1 bg-tlight w-full col-span-3 rounded-md flex items-center gap-1">
                   <Megaphone className="text-black w-4 h-4 lg:mr-1 stroke-3" />
                   <h6 className="font-bold max-lg:hidden mb-0 text-primary">
@@ -162,7 +150,7 @@ const AdminHead = ({
                 </div>
               )}
               {/* appraisal period dropdown once appraisal area is active  */}
-              {activeTab === "appraisal" && (
+              {activeTab == "6" && (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                   <label class="whitespace-nowrap">Appraisal Period : </label>
                   <div className="w-full">
@@ -193,7 +181,7 @@ const AdminHead = ({
                 </div>
               )}
               {/* appraisal category id */}
-              {activeTab === "appraisal" && (
+              {activeTab == "6" && (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
                   <label class="whitespace-nowrap">Appraisal Category : </label>
                   <div className="w-full">

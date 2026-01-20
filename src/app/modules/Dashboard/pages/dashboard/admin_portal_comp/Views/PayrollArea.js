@@ -161,7 +161,7 @@ const PayrollArea = ({
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.tab_key === "payroll") {
+              if (e?.dashlet_type === "chart" && e?.tab_key == "4") {
                 return <ChartData key={`chart-${alertIdx}`} data={e} />;
               }
               return null;
@@ -171,7 +171,7 @@ const PayrollArea = ({
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.tab_key === "payroll" && e?.dashlet_type === "big_table") {
+              if (e?.tab_key == "4" && e?.dashlet_type === "big_table") {
                 return (
                   <BigTable
                     setBigTableModalData={setBigTableModalData}
@@ -187,7 +187,7 @@ const PayrollArea = ({
       <div className="col-span-4 lg:col-span-1 grid-cols-3 lg:grid-cols-1 space-y-2">
         {allDashboardAlerts?.length > 0 &&
           allDashboardAlerts?.map((e, alertIdx) => {
-            if (e?.dashlet_type === "small_table" && e?.tab_key === "payroll") {
+            if (e?.dashlet_type === "small_table" && e?.tab_key == "4") {
               return (
                 <SmallTable
                   setSmallTableModalData={setSmallTableModalData}

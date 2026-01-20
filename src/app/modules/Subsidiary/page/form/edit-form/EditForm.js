@@ -5,11 +5,16 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { Modal } from "react-bootstrap";
 import {
   Input,
-  TextArea, Select,
-  Checkbox
+  TextArea,
+  Select,
+  Checkbox,
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { amountLimitDynamic, getFileName, getUploadUrl } from "../../../../../utils/common";
+import {
+  amountLimitDynamic,
+  getFileName,
+  getUploadUrl,
+} from "../../../../../utils/common";
 import {
   fetchAllComapnyData,
   fetchAllFormsMenu,
@@ -18,10 +23,12 @@ import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect"
 import {
   fetchAllCity,
   fetchAllCountry,
+  fetchUsersByCompanyId,
   uploadFile,
 } from "../../../../Dashboard/_redux/dashboardActions";
 import Axios from "axios";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
+import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const USERS_URL = process.env.REACT_APP_API_URL;
 const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
@@ -34,22 +41,24 @@ const formSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   phone: Yup.string()
-    .nullable().required(VALIDATION_MESSAGES.required)
+    .nullable()
+    .required(VALIDATION_MESSAGES.required)
     .test(
       "phone-validation",
       "Invalid Number",
-      (value) => !value || phoneRegExp.test(value)
+      (value) => !value || phoneRegExp.test(value),
     ),
   fax: Yup.string()
     .nullable()
     .test(
       "phone-validation",
       "Invalid Number",
-      (value) => !value || phoneRegExp.test(value)
+      (value) => !value || phoneRegExp.test(value),
     ),
   email: Yup.string()
     .nullable()
-    .email(VALIDATION_MESSAGES.invalidEmail).required(VALIDATION_MESSAGES.required)
+    .email(VALIDATION_MESSAGES.invalidEmail)
+    .required(VALIDATION_MESSAGES.required)
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols"),
   web: Yup.string()
@@ -76,9 +85,7 @@ const formSchema = Yup.object().shape({
   isSubordinateRequest: Yup.boolean()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
-
-
-
+  users: Yup.array().optional(),
 });
 
 export const EditForm = ({
@@ -89,10 +96,11 @@ export const EditForm = ({
   loading,
   handleSubmit,
   enableLoading,
+  id,
 }) => {
   const [subsidiaryLogo, setSubsidiaryLogo] = useState("");
   const [file, setFile] = useState("");
- const inputFile = useRef(null);
+  const inputFile = useRef(null);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllFormsMenu(126, "allCurrency"));
@@ -103,17 +111,19 @@ export const EditForm = ({
   useEffect(() => {
     if (data?.Id && data?.Logo) {
       setSubsidiaryLogo(data?.Logo);
+      // dispatch(fetchUsersByCompanyId(data?.companyId));
     }
   }, [data?.Id]);
-  const { allCurrency, allCity, allCountry, allCompanyList } = useSelector(
+  const { allCurrency, allCity, allCountry, allCompanyList , allUsers } = useSelector(
     (state) => ({
       allCurrency: state?.dashboard?.allCurrency,
       allCountry: state?.dashboard?.allCountry,
       allCompanyList: state?.dashboard?.allCompanyList,
       allCity: state?.dashboard?.allCity,
+      allUsers : state?.dashboard?.allUsers || [],
     }),
 
-    shallowEqual
+    shallowEqual,
   );
   const onImageChange = async (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -138,13 +148,11 @@ export const EditForm = ({
   const incomeTaxOptions = [
     { value: 1, label: "Current Month Salary" },
     { value: 2, label: "Year to Date Salary + Remaining Month estimations" },
-
   ];
 
   const subordinateRequestOptions = [
     { value: true, label: "Yes" },
     { value: false, label: "No" },
-
   ];
 
   return (
@@ -166,15 +174,12 @@ export const EditForm = ({
           // });
 
           try {
-
             const uploadRes = await uploadFile(file);
             setSubsidiaryLogo(uploadRes.data.filename);
             handleSubmit({ ...values, Logo: uploadRes.data.filename });
           } catch (err) {
             console.error("File upload failed:", err);
-
           }
-
         } else {
           handleSubmit(values);
         }
@@ -214,10 +219,13 @@ export const EditForm = ({
                         }
                         onChange={(e) => {
                           setFieldValue("companyId", e.value || null);
+                          if (e.value) {
+                            dispatch(fetchUsersByCompanyId(e.value));
+                          }
                         }}
                         value={
                           allCompanyList?.find(
-                            (e) => e?.value === values?.companyId
+                            (e) => e?.value === values?.companyId,
                           ) || null
                         }
                         options={allCompanyList}
@@ -260,7 +268,7 @@ export const EditForm = ({
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(
                           e.target.value,
-                          100
+                          100,
                         );
                       }}
                     />
@@ -275,7 +283,7 @@ export const EditForm = ({
                       }}
                       value={
                         allCurrency?.find(
-                          (e) => e?.value === values?.currencyId
+                          (e) => e?.value === values?.currencyId,
                         ) || null
                       }
                       options={allCurrency}
@@ -295,7 +303,7 @@ export const EditForm = ({
                       }}
                       value={
                         allCountry?.find(
-                          (e) => e?.value === values?.countryId
+                          (e) => e?.value === values?.countryId,
                         ) || null
                       }
                       options={allCountry}
@@ -320,7 +328,11 @@ export const EditForm = ({
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
-                      label={<span>Phone<span style={{ color: "red" }}>*</span></span>}
+                      label={
+                        <span>
+                          Phone<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 15);
                       }}
@@ -345,7 +357,11 @@ export const EditForm = ({
                       name="email"
                       component={Input}
                       placeholder="Enter Email"
-                      label={<span>Email<span style={{ color: "red" }}>*</span></span>}
+                      label={
+                        <span>
+                          Email<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 50);
                       }}
@@ -365,13 +381,15 @@ export const EditForm = ({
 
                   <div className="col-span-1">
                     <label>
-                      Creating request on behalf of Subordinate <span style={{ color: "red" }}>*</span>
+                      Creating request on behalf of Subordinate{" "}
+                      <span style={{ color: "red" }}>*</span>
                     </label>
                     <Select
-
                       name="isSubordinateRequest"
                       value={String(values.isSubordinateRequest)} // convert to string
-                      onChange={(e) => setFieldValue("isSubordinateRequest", e.target.value)}
+                      onChange={(e) =>
+                        setFieldValue("isSubordinateRequest", e.target.value)
+                      }
                       error={errors.isSubordinateRequest}
                       touched={touched.isSubordinateRequest}
                       onBlur={handleBlur}
@@ -385,28 +403,26 @@ export const EditForm = ({
                       ))}
                     </Select>
 
-                    {errors.isSubordinateRequest && touched.isSubordinateRequest && (
-                      <ErrorMessage
-                        className="invalid-feedback"
-                        name="isSubordinateRequest"
-                        component="div"
-                      />
-
-
-                    )}
+                    {errors.isSubordinateRequest &&
+                      touched.isSubordinateRequest && (
+                        <ErrorMessage
+                          className="invalid-feedback"
+                          name="isSubordinateRequest"
+                          component="div"
+                        />
+                      )}
                   </div>
-
 
                   <div className="col-span-1">
                     <Select
                       label={
                         <span>
                           {" "}
-                          Policy for calculating Income Tax based on <span style={{ color: "red" }}>*</span>
+                          Policy for calculating Income Tax based on{" "}
+                          <span style={{ color: "red" }}>*</span>
                         </span>
                       }
                       name="incomeTaxTypeId"
-
                       value={values.incomeTaxTypeId}
                       onChange={(e) => {
                         setFieldValue("incomeTaxTypeId", e.target.value);
@@ -414,7 +430,6 @@ export const EditForm = ({
                       error={errors.incomeTaxTypeId}
                       touched={touched.incomeTaxTypeId}
                       onBlur={handleBlur}
-
                       autoComplete="off"
                     >
                       <option value="">Select </option>
@@ -422,8 +437,6 @@ export const EditForm = ({
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
-
-
                       ))}
                     </Select>
                     {errors.incomeTaxTypeId && touched.incomeTaxTypeId && (
@@ -432,11 +445,8 @@ export const EditForm = ({
                         name="incomeTaxTypeId"
                         component="div"
                       />
-
-
                     )}
                   </div>
-
 
                   <div className="col-span-1">
                     <Select
@@ -447,7 +457,6 @@ export const EditForm = ({
                         </span>
                       }
                       name="localizationId"
-
                       value={values.localizationId}
                       onChange={(e) => {
                         setFieldValue("localizationId", e.target.value);
@@ -455,7 +464,6 @@ export const EditForm = ({
                       error={errors.localizationId}
                       touched={touched.localizationId}
                       onBlur={handleBlur}
-
                       autoComplete="off"
                     >
                       <option value="">Select </option>
@@ -463,8 +471,6 @@ export const EditForm = ({
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
-
-
                       ))}
                     </Select>
                     {errors.localizationId && touched.localizationId && (
@@ -473,13 +479,47 @@ export const EditForm = ({
                         name="localizationId"
                         component="div"
                       />
-
-
                     )}
                   </div>
                   <div className="mt-6">
-                    <Checkbox isSelected={values?.isAttendanceLocation} onChange={(e) => setFieldValue("isAttendanceLocation", e?.target?.checked)} children={'Location required for Attendance Marking'} />
+                    <Checkbox
+                      isSelected={values?.isAttendanceLocation}
+                      onChange={(e) =>
+                        setFieldValue(
+                          "isAttendanceLocation",
+                          e?.target?.checked,
+                        )
+                      }
+                      children={"Location required for Attendance Marking"}
+                    />
                   </div>
+                   {!id && (
+                    <div>
+                      <MultiSelect
+                        label={<span>User Access</span>}
+                        options={allUsers}
+                        value={
+                          allUsers?.filter((el) =>
+                            values?.users?.includes(String(el.value)),
+                          ) || []
+                        }
+                        onChange={(e) => {
+                          setFieldTouched("users", true);
+                          if (e && Array.isArray(e)) {
+                            setFieldValue(
+                              "users",
+                              e.map((el) => String(el?.value)),
+                            );
+                          } else {
+                            setFieldValue("users", []);
+                          }
+                        }}
+                        error={errors.users}
+                        touched={touched.users}
+                        disabled={!values.companyId || isUserForRead}
+                      />
+                    </div>
+                  )}
                   <div className="col-span-2 md:col-span-3 grid  grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-1">
                     {
                       <div className="col-span-2 md:col-span-3">
@@ -491,7 +531,7 @@ export const EditForm = ({
                           onInput={(e) => {
                             e.target.value = amountLimitDynamic(
                               e.target.value,
-                              300
+                              300,
                             );
                           }}
                         />
@@ -567,15 +607,9 @@ export const EditForm = ({
                       {subsidiaryLogo ? subsidiaryLogo : "Upload"}
                     </label> */}
 
-
                     <div className="col-span-1">
-
                       <FileUpload
-                        label={
-                          <>
-                            Subsidiary Logo
-                          </>
-                        }
+                        label={<>Subsidiary Logo</>}
                         id="file_input"
                         name="file_input"
                         type="file"
@@ -583,15 +617,10 @@ export const EditForm = ({
                         ref={inputFile}
                         className="hidden"
                         onChange={onImageChange}
-
-
                       />
                       {errors.Logo && touched.Logo && (
                         <div className="invalid-feedback">{errors.Logo}</div>
                       )}
-
-
-
 
                       {(data?.Logo || values?.Logo) && (
                         <div className="mt-2">
@@ -601,7 +630,9 @@ export const EditForm = ({
                             href={
                               typeof (values?.Logo || data?.Logo) === "string"
                                 ? getUploadUrl(values?.Logo || data?.Logo)
-                                : URL.createObjectURL(values?.Logo || data?.Logo)
+                                : URL.createObjectURL(
+                                    values?.Logo || data?.Logo,
+                                  )
                             }
                             target="_blank"
                             rel="noopener noreferrer"
@@ -609,11 +640,10 @@ export const EditForm = ({
                           >
                             {typeof (values?.Logo || data?.Logo) === "string"
                               ? getFileName(values?.Logo || data?.Logo)
-                              : (values?.Logo)?.name || data?.Logo}
+                              : values?.Logo?.name || data?.Logo}
                           </a>
                         </div>
                       )}
-
                     </div>
 
                     {/* Show existing file if any */}
@@ -630,6 +660,7 @@ export const EditForm = ({
                       </div>
                     )} */}
                   </div>
+                 
                 </div>
               </fieldset>
             </Form>
