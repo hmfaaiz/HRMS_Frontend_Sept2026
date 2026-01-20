@@ -888,7 +888,7 @@ export function MasterEditForm({
                             // label="Additional Remarks"
                             label={
                               <span className="font-bold">
-                                Additional Remarks
+                                HR Remarks
                               </span>
                             }
                             disabled={values?.isFinalize || isUserForRead}
