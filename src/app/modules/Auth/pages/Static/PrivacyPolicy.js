@@ -18,10 +18,10 @@ const PrivacyPolicyPage = () => {
       <HeaderStatic />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6 text-center">
-          Privacy Policy & Disclaimer
+          Privacy Policy
         </h1>
-        <p className="text-xs text-center mb-2">Effective Date: 07th July, 2025</p>
-        <p className="text-xs text-center mb-6">Last Updated: 07th July, 2025</p>
+        <p className="text-xs text-center mb-2">Effective Date: 7th July 2025</p>
+        <p className="text-xs text-center mb-6">Last Updated: 7th July 2025</p>
         <section className="mb-6">
           <p className="text-sm">
             At the HRMS, your privacy is important to us. We are committed to handling your data responsibly by Pakistan’s data protection laws, including the SECP's guidelines for digital platforms.
@@ -65,7 +65,7 @@ const PrivacyPolicyPage = () => {
           </ul>
         </section>
         <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">6. Data Retention</h2>
+          <h2 className="text-lg font-semibold mb-2">4. Data Retention</h2>
           <p className="text-sm mb-2">
             We retain personal data only as long as necessary for recruitment purposes or as required under:
           </p>
@@ -77,14 +77,14 @@ const PrivacyPolicyPage = () => {
           </p>
         </section>
         <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">7. Your Rights</h2>
+          <h2 className="text-lg font-semibold mb-2">5. Your Rights</h2>
           <ul className="list-disc pl-5 text-sm mb-2">
             <li>Access, update, or delete your personal data.</li>
             <li>Withdraw consent at any time (subject to service limitations).</li>
           </ul>
         </section>
         <section className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">8. Use of Cookies</h2>
+          <h2 className="text-lg font-semibold mb-2">6. Use of Cookies</h2>
           <p className="text-sm mb-2">
             This HRMS may use cookies to enhance the user experience. Users may choose to set their web browser to refuse cookies or alert when cookies are being sent.
           </p>

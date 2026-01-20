@@ -193,7 +193,7 @@ const RecuritmentArea = ({
         <div className="grid grid-cols-1 xl:grid-cols-2  gap-x-2 gap-y-2">
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
-              if (e?.dashlet_type === "chart" && e?.tab_key === "recruitment") {
+              if (e?.dashlet_type === "chart" && e?.tab_key == "5") {
                 return <ChartData key={`chart-${alertIdx}`} data={e} />;
               }
               return null;
@@ -204,7 +204,7 @@ const RecuritmentArea = ({
           {allDashboardAlerts?.length > 0 &&
             allDashboardAlerts?.map((e, alertIdx) => {
               if (
-                e?.tab_key === "recruitment" &&
+                e?.tab_key == "5" &&
                 e?.dashlet_type === "big_table"
               ) {
                 return (
@@ -224,7 +224,7 @@ const RecuritmentArea = ({
           allDashboardAlerts?.map((e, alertIdx) => {
             if (
               e?.dashlet_type === "small_table" &&
-              e?.tab_key === "recruitment"
+              e?.tab_key == "5"
             ) {
               return (
                 <SmallTable

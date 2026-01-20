@@ -100,6 +100,8 @@ const initialDashboardState = {
   allTaxYearSetupList : [],
   allowRequestBySenior : false,
   currentDateTime : null,
+  moduleRights : [],
+  allUsers : [],
 };
 
 export const callTypes = {
@@ -421,7 +423,12 @@ export const dashboardSlice = createSlice({
       state.allowRequestBySenior  = action.payload;
    
     },
-
+    ModuleRightFetched: (state, action) => {
+      state.moduleRights = action.payload;
+    },
+    UsersByCompanyFetched: (state, action) => {
+      state.allUsers = action.payload;
+    },
 
   },
 });

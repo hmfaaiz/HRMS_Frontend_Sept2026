@@ -100,7 +100,7 @@ const formSchema = Yup.object()
         (values?.HRRating || 0);
 
       return sum === 100; //  only passes if exactly 100
-    }
+    },
   );
 
 export function FormEditForm({
@@ -209,7 +209,7 @@ export function FormEditForm({
                         }}
                         value={
                           appraisalTypes?.find(
-                            (el) => el?.value === values?.appraisalType
+                            (el) => el?.value === values?.appraisalType,
                           ) || null
                         }
                         error={errors?.appraisalType}
@@ -227,7 +227,7 @@ export function FormEditForm({
                         }
                         options={roles || []}
                         value={roles?.filter((el) =>
-                          values?.approvers?.includes(String(el.value))
+                          values?.approvers?.includes(String(el.value)),
                         )}
                         onChange={(e) => {
                           setFieldTouched("approvers", true);
@@ -253,7 +253,7 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "generalEvaluationRating",
-                            e?.target?.value
+                            e?.target?.value,
                           );
                           calculateTotalConfigPerc({
                             ...values,
@@ -339,12 +339,13 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "appraisalFacilitatorId",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.appraisalFacilitatorId
+                            (el) =>
+                              el?.value === values?.appraisalFacilitatorId,
                           ) || null
                         }
                         error={errors?.appraisalFacilitatorId}
@@ -366,7 +367,7 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "appraisalFeedbackPeriod",
-                            e?.target?.value
+                            e?.target?.value,
                           );
                         }}
                       />
@@ -379,7 +380,7 @@ export function FormEditForm({
                           onChange={(e) => {
                             setFieldValue(
                               "empRattingToSuperVisor",
-                              e?.target?.checked
+                              e?.target?.checked,
                             );
                           }}
                         />
@@ -391,7 +392,7 @@ export function FormEditForm({
                           onChange={(e) => {
                             setFieldValue(
                               "ratingScaleSelection",
-                              e?.target?.checked
+                              e?.target?.checked,
                             );
                           }}
                         />
@@ -411,12 +412,12 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "signIncrementEmailId",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.signIncrementEmailId
+                            (el) => el?.value === values?.signIncrementEmailId,
                           ) || null
                         }
                         error={errors?.signIncrementEmailId}
@@ -427,43 +428,53 @@ export function FormEditForm({
                     <div>
                       <SearchSelect
                         name={"signIncrementLetter1Id"}
-                        label={<span>Letter 1</span>}
+                        label={<span>Letter 1 Signature</span>}
                         isDisabled={!values?.subsidiaryId}
                         onChange={(e) => {
                           setFieldValue(
                             "signIncrementLetter1Id",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.signIncrementLetter1Id
+                            (el) =>
+                              el?.value === values?.signIncrementLetter1Id,
                           ) || null
                         }
                         error={errors?.signIncrementLetter1Id}
                         touched={touched?.signIncrementLetter1Id}
-                        options={dashboard?.allEmployees}
+                        options={dashboard?.allEmployees?.map((e) => ({
+                          ...e,
+                          isDisabled:
+                            e?.value == values?.signIncrementLetter2Id,
+                        }))}
                       />
                     </div>
                     <div>
                       <SearchSelect
                         name={"signIncrementLetter2Id"}
-                        label={<span>Letter 2</span>}
+                        label={<span>Letter 2 Signature</span>}
                         isDisabled={!values?.subsidiaryId}
                         onChange={(e) => {
                           setFieldValue(
                             "signIncrementLetter2Id",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.signIncrementLetter2Id
+                            (el) =>
+                              el?.value === values?.signIncrementLetter2Id,
                           ) || null
                         }
                         error={errors?.signIncrementLetter2Id}
                         touched={touched?.signIncrementLetter2Id}
-                        options={dashboard?.allEmployees}
+                        options={dashboard?.allEmployees?.map((e) => ({
+                          ...e,
+                          isDisabled:
+                            e?.value == values?.signIncrementLetter1Id,
+                        }))}
                       />
                     </div>
                   </div>

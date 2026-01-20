@@ -12,7 +12,18 @@ const StatsCard = ({
   const dispatch = useDispatch();
   // Handle card click event
   const handleCardClick = () => {
-    dispatch(fetchSummaryDetail(summaryFilter, keyName));
+    dispatch(
+      fetchSummaryDetail(
+        {
+          ...summaryFilter,
+          subsidiaryId:
+            summaryFilter?.subsidiaryId === "all"
+              ? ""
+              : summaryFilter?.subsidiaryId,
+        },
+        keyName,
+      ),
+    );
     setSummaryModalHeading(name);
   };
   return (
@@ -23,24 +34,20 @@ const StatsCard = ({
       <p className="m-0 text-tprimary font-bold text-lg">{value || 0}</p>
       <p className="m-0 text-tprimary font-bold text-sm">{name}</p>
 
-      {
-        value > 0 ?
-          <div
-            className={
-              `text-black cursor-pointer w-fit font-medium underline text-xs hover:text-tprimary`
-            }
-            onClick={handleCardClick}
-          >
-            View All
-          </div> :
-          <div
-            className={
-              `text-gray-500 cursor-not-allowed w-fit font-medium text-xs`
-            }
-          >
-            View All
-          </div>
-      }
+      {value > 0 ? (
+        <div
+          className={`text-black cursor-pointer w-fit font-medium underline text-xs hover:text-tprimary`}
+          onClick={handleCardClick}
+        >
+          View All
+        </div>
+      ) : (
+        <div
+          className={`text-gray-500 cursor-not-allowed w-fit font-medium text-xs`}
+        >
+          View All
+        </div>
+      )}
     </div>
   );
 };

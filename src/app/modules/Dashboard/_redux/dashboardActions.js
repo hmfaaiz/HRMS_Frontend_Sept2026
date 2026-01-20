@@ -692,3 +692,40 @@ export const updateDefaultSubsidiary = (Id) => async (dispatch) => {
       );
     });
 };
+
+export const fetchModuleRights = () => async (dispatch) => {
+  return await requestFromServer
+    .getModuleRights()
+    .then((response) => {
+      let data = response?.data?.data || [];
+    // agar employee ka right then set seperation after employee pass employee value 1 as per guideline
+      if (Array.isArray(data) && data.length > 0) {
+        const index = data.findIndex((item) => item?.value === 1);
+
+        if (index !== -1) {
+          data.splice(index + 1, 0, {
+            value: "separation",
+            label: "Separation",
+            allow: true,
+          });
+        }
+      }
+
+      dispatch(actions.ModuleRightFetched(data));
+    })
+    .catch(() => {
+      dispatch(actions.ModuleRightFetched([]));
+    });
+};
+
+export const fetchUsersByCompanyId = (Id) => async (dispatch) => {
+  return await requestFromServer
+    .getUsersByCompanyId({Id})
+    .then((response) => {
+      let data = response?.data?.data || [];
+      dispatch(actions.UsersByCompanyFetched(data));
+    })
+    .catch(() => {
+      dispatch(actions.UsersByCompanyFetched([]));
+    });
+};

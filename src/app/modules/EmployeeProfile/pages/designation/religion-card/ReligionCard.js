@@ -108,7 +108,7 @@ useEffect(() => {
 
   // 1️ URL has highest priority
   if (subsidiaryFromUrl) {
-    finalSubsidiaryId = parseInt(subsidiaryFromUrl, 10);
+    // finalSubsidiaryId = parseInt(subsidiaryFromUrl, 10);
 
     // remove param safely
     searchParams.delete("subsidiary");
@@ -117,12 +117,12 @@ useEffect(() => {
       (searchParams.toString() ? `?${searchParams.toString()}` : "");
     history.replace(newUrl);
   } 
-  // 2️ fallback → default subsidiary
-  else {
+  // // 2️ fallback → default subsidiary
+  // else {
     finalSubsidiaryId = dashboard?.allSubsidiaryList?.find(
       (e) => e?.isDefault
     )?.value;
-  }
+  // }
 
   // 3️ nothing found → stop
   if (!finalSubsidiaryId) return;
