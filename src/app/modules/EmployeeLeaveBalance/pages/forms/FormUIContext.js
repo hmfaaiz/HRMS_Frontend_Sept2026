@@ -13,6 +13,8 @@ export function FormUIProvider({ children }) {
     employeeId: '',
     leaveType: '',
     yearId: '',
+    subsidiaryId: '',
+    departmentId: '',
   };
   const [filters, setfilters] = useState(initFilters)
 

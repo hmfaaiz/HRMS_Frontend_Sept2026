@@ -33,3 +33,10 @@ export async function getAllEmployeeLeaveBalanceSetup(body) {
 export function getEmployeeLeaveBalanceSetupByFilters(body) {
   return axios.post(`${USERS_URL}/employee_leave_balance/read-employee-leave-balance`, body);
 }
+
+export async function getAllLeaveBalances(body) {
+  return axios.post(
+    `${USERS_URL}/employee_leave_balance/read-all-employee-leave-balance`,
+    body
+  );
+}

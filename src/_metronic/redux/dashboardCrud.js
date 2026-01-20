@@ -303,3 +303,6 @@ export const getAllChartOfAccounts = async (Id, accountType=null) => {
   });
 };
 
+export const getAllSpecialLeaveTypes = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-special-leave-types`,body);
+};
