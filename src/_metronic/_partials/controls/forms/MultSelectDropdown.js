@@ -81,6 +81,7 @@ const MultiSelect = ({
         {selectedValues.length > 0 ? (
           <div
             title={selectedValues?.map((v) => v?.label)?.join(", ")}
+            onClick={(e)=> setMenuOpen(!menuOpen)}
             className="text-[10.4px] text-gray-700 truncate whitespace-nowrap overflow-hidden mr-8"
           >
             {selectedValues?.map((v) => v?.label)?.join(", ")}
