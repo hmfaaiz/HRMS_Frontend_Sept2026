@@ -66,7 +66,7 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
       dispatch(actions.AllCityFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -78,7 +78,7 @@ export const fetchStandByVehicles = (body) => async (dispatch) => {
       dispatch(actions.AllVehiclesByCenterAndSubCenterId(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong.");
+      // toast.error("Something went wrong.");
     });
 };
 
@@ -90,7 +90,7 @@ export const fetchDashboardVehicles = (body) => async (dispatch) => {
       dispatch(actions.dashboardVehicles(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -101,7 +101,7 @@ export const updateVehicelStatus = (body) => async (dispatch) => {
       toast.success("Successfully Updated");
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -112,7 +112,7 @@ export const getLastTrips = (body) => async (dispatch) => {
       dispatch(actions.lastTripsVehicles(response?.data?.data));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -499,7 +499,7 @@ export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (
       dispatch(actions.AllFiscalYearBySubListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -513,7 +513,7 @@ export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (
       dispatch(actions.AllDepartmentBysSubIdsListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -525,7 +525,7 @@ export const fetchAllAppraisalPeriod = (employeeId) => async (dispatch) => {
       dispatch(actions.AllAppraisalPeriodListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 export const fetchAllAppraisalPeriodDataBySubsidiaryId = (
@@ -538,7 +538,7 @@ export const fetchAllAppraisalPeriodDataBySubsidiaryId = (
       dispatch(actions.AllAppraisalPeriodBySubListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -550,7 +550,7 @@ export const fetchAllApprovedResignedEmp = () => async (dispatch) => {
       dispatch(actions.AllApprovedResignedEmpListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -591,7 +591,7 @@ export const fetchAllEarning = () => async (dispatch) => {
       dispatch(actions.AllEarningFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -602,7 +602,7 @@ export const fetchSeparatedEmployeeById = (Id) => async (dispatch) => {
       dispatch(actions.SeparatedEmployeeFetch(response.data));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -613,7 +613,7 @@ export const FetchAllSalaryRoundingByFilters = () => async (dispatch) => {
       dispatch(actions.SalaryRoundingFetch(response?.data?.data));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -624,7 +624,7 @@ export const FetchProfileDetailInfo = (id) => async (dispatch) => {
       dispatch(actions.ProfileDetailInfoFetch(response?.data?.data));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -635,7 +635,7 @@ export const FetchAllApprovedFSEmp = (body) => async (dispatch) => {
       dispatch(actions.FSApprovedEmpFetch(response?.data?.data));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -646,7 +646,7 @@ export const FetchAllTaxYearSetup = (subsidiaryId) => async (dispatch) => {
       dispatch(actions.TaxYearSetupFetch(response?.data?.data));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
