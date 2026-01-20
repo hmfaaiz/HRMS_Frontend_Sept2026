@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Select, { components } from "react-select";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   container: {},
