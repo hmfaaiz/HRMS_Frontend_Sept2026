@@ -147,12 +147,13 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees, facilitatorEmployeeList } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList,currentUser } = useSelector((state) => {
     return {
       currentState: state.facilitator_ticket_creation,
       userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
       allEmployees: state.dashboard.allEmployees,
-      facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList
+      facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList,
+      currentUser: state.auth.user,
     };
   }, shallowEqual);
 
@@ -205,7 +206,7 @@ export function FormEditForm({
    
 
   }
-
+console.log("currentUser11111",currentUser)
   // useEffect(()=>{
 
   //    if (facilitatorEmployeeList?.length == 1) {
@@ -348,7 +349,7 @@ export function FormEditForm({
     name="assignTo"
     label={
       <span>
-        Assign To<span style={{ color: "red" }}>*</span>
+        Assign To{ currentUser.employeeIdMapping}<span style={{ color: "red" }}>*</span>
       </span>
     }
     // Disable if read mode, no initiator, or auto-assigned
@@ -366,7 +367,15 @@ export function FormEditForm({
         ? facilitatorEmployeeList[0]
         : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
     }
-    options={facilitatorEmployeeList}
+    // options={facilitatorEmployeeList.map((op)=>{
+    //   op.value==currentUser.employeeIdMapping
+    // })}
+  options={facilitatorEmployeeList.map(op => ({
+  label: op.label,
+  value: op.value,
+  isDisabled: String(op.value) == String(currentUser.employeeIdMapping)
+}))}
+
     error={errors.assignTo}
     touched={touched.assignTo}
   />
