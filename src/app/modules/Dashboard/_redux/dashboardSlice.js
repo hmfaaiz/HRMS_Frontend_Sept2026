@@ -103,6 +103,7 @@ const initialDashboardState = {
   allTicketTypeList: [],
   priorityLevelList: [],
   facilitatorEmployeeList: [],
+  allFacilitatorTicketType : [],
 };
 
 export const callTypes = {
@@ -429,6 +430,12 @@ export const dashboardSlice = createSlice({
    
     }, 
     
+    },
+        AllFacilitatorTicketTypeFetch: (state, action) => {
+      state.allFacilitatorTicketType  = action.payload;
+   
+    },
 
-  },
+
+  
 });
