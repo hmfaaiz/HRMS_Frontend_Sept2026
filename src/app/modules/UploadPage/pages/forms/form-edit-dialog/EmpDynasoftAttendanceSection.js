@@ -91,6 +91,7 @@ export function EmployeeDynasoftAttendanceSection({
                   label={"Upload"}
                   name="file"
                   id={"dynasoft_employee_attendance"}
+                  isEdit={loading}
                   onChange={(event) => {
                     // Update Formik's value
                     const file = event.currentTarget.files[0];
@@ -105,11 +106,11 @@ export function EmployeeDynasoftAttendanceSection({
 
               <button
                 type="submit"
-                disabled={false}
+                disabled={loading}
                 className="btn btn-primary btn-elevate"
               >
                 Save
-                {false && (
+                {loading && (
                   <span className="ml-3 mr-3 spinner spinner-white"></span>
                 )}
               </button>

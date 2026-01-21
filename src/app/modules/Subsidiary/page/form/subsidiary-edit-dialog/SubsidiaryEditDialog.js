@@ -76,6 +76,7 @@ export const SubsidiaryEditDialog = ({ show, onHide, isUserForRead }) => {
         onHide={onHide}
         isUserForRead={isUserForRead}
         handleSubmit={handleSubmit}
+        id={id}
       />
     </Modal>
   );

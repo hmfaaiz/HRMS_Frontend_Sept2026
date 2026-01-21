@@ -16,7 +16,10 @@ import { CirclePlus, Eye, Trash2, XCircle } from "lucide-react";
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import * as actions from "../../../_redux/formActions";
 import { useFromUIContext } from "../FormUIContext";
-import { TextArea } from "../../../../../../_metronic/_partials/controls";
+import {
+  Checkbox,
+  TextArea,
+} from "../../../../../../_metronic/_partials/controls";
 import { decodeHtml } from "../../../../../utils/common";
 
 const formValidation = (minPoint, maxPoint) =>
@@ -784,7 +787,8 @@ export function MasterEditForm({
                         <div className="mt-4">
                           <div className="flex justify-between items-center mb-3">
                             <h6 className="font-bold mb-0 text-primary">
-                              Recommendation
+                              Manager's Recommendation (After Rating
+                              Finalization)
                             </h6>
                           </div>
                           <div className="w-full overflow-x-auto">
@@ -831,6 +835,26 @@ export function MasterEditForm({
 
                     {values?.employeeId && (
                       <>
+                        <div className="w-3/12 my-1">
+                          <Checkbox
+                            name="promotionRecommendedByManager"
+                            isSelected={values?.promotionRecommendedByManager}
+                            onChange={(e) => {
+                              setFieldValue(
+                                "promotionRecommendedByManager",
+                                e.target.checked
+                              );
+                            }}
+                            children={
+                              <label>
+                                <span className="font-bold">
+                                  Prmotion Recommended by Manager
+                                </span>
+                              </label>
+                            }
+                            disabled={values?.isFinalize || isUserForRead}
+                          />
+                        </div>
                         <div className="w-3/12">
                           <Field
                             name="incrementPercentageRecommendedByManager"
@@ -864,7 +888,7 @@ export function MasterEditForm({
                             // label="Additional Remarks"
                             label={
                               <span className="font-bold">
-                                Additional Remarks
+                                HR Remarks
                               </span>
                             }
                             disabled={values?.isFinalize || isUserForRead}

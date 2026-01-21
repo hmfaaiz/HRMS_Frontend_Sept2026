@@ -142,11 +142,20 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
   };
 
   useEffect(() => {
-    if (allSubsidiaryList && allSubsidiaryList.length > 0) {
-      dispatch(fetchAllActiveEmployeesBySubsidiary(allSubsidiaryList[0].value));
-      dispatch(fetchAllDept(allSubsidiaryList[0].value));
+    if (!allSubsidiaryList?.length) return;
 
-    }
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+
+    if (!findDefaultSubs) return;
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
+    dispatch(fetchAllDept(findDefaultSubs?.value));
+    dispatch(
+      fetchAllPayrollMonthYearList(
+        { subsidiaryId: findDefaultSubs?.value, employeeId: null },
+        "allPayrollMonthYearList"
+      )
+    );
+    dispatch(FetchAllTaxYearSetup(findDefaultSubs?.value));
   }, [allSubsidiaryList]);
 
   const employeeTypeOptions = [
@@ -168,6 +177,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
+                    subsidiaryId:
+                        initialFilter.filter?.subsidiaryId ||
+                          allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+                           "", 
 
         }}
         validationSchema={formValidation}
@@ -191,7 +204,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
 
                       <div className="col-span-1">
 
-                        <SubsidiarySelect
+                        <SearchSelect
                           name="subsidiaryId"
                           label={<span> Subsidiary<span style={{ color: "red" }}>*</span></span>}
                           // isDisabled={isUserForRead && true}
@@ -215,25 +228,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf, monththPdf }) {
                           }}
                           // error={errors?.subsidiaryId}
                           // touched={touched?.subsidiaryId}
-                          currentValue={values?.subsidiaryId}
-                          initializeSubsidiary={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("subsidiaryId", value);
-
-                            setFieldValue("departmentId", "");
-                            setFieldValue("employeeId", "");
-                            dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                            dispatch(fetchAllDept(value));
-                          
-                            dispatch(
-                              fetchAllPayrollMonthYearList(
-                                { subsidiaryId: value, employeeId: null },
-                                "allPayrollMonthYearList"
-                              )
-                            );
-                              dispatch(FetchAllTaxYearSetup(value));
-                          }}
+                           value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                      options={allSubsidiaryList}
                         />
                       </div>
 

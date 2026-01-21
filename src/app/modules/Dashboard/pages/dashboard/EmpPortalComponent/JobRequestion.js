@@ -20,11 +20,11 @@ export const JobRequestion = () => {
         {requisition_job_vacancy?.length > 0 ? (
           <div className="font-size-xs text-black font-bold">
             <p className="m-0 underline">
-              <Link
-                to={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}
+              <a
+                href={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}
               >
                 Request Job Vacancy{" "}
-              </Link>
+              </a>
             </p>
           </div>
         ) : (

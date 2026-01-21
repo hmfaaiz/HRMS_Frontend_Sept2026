@@ -11,11 +11,14 @@ import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 import {
   fetchAllActiveEmployees,
+  fetchAllHumanResourceRole,
   fetchAllParentDept,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
+import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
+import { fetchRoles } from "../../../../UserMangement/_redux/usersActions";
 
 const appraisalTypes = [
   {
@@ -83,6 +86,9 @@ const formSchema = Yup.object()
     ratingScaleSelection: Yup.boolean()
       .required(VALIDATION_MESSAGES.required)
       .oneOf([true, false], VALIDATION_MESSAGES.required),
+    approvers: Yup.array()
+      .min(1, VALIDATION_MESSAGES.required)
+      .required(VALIDATION_MESSAGES.required),
   })
   .test(
     "sum-must-be-100",
@@ -94,7 +100,7 @@ const formSchema = Yup.object()
         (values?.HRRating || 0);
 
       return sum === 100; //  only passes if exactly 100
-    }
+    },
   );
 
 export function FormEditForm({
@@ -108,15 +114,13 @@ export function FormEditForm({
   const [totalConfigPercentage, seTotalConfigPercentage] = useState(0);
 
   const dispatch = useDispatch();
-  const { actionsLoading, dashboard, designationList } = useSelector(
-    (state) => {
-      return {
-        actionsLoading: state.appraisal_config?.actionsLoading,
-        designationList: state.appraisal_config?.designationList,
-        dashboard: state?.dashboard,
-      };
-    }
-  );
+  const { actionsLoading, dashboard, roles } = useSelector((state) => {
+    return {
+      actionsLoading: state.appraisal_config?.actionsLoading,
+      dashboard: state?.dashboard,
+      roles: state.users?.roles?.allRoles || [],
+    };
+  });
 
   // Calculate total %
   const calculateTotalConfigPerc = (value) => {
@@ -131,6 +135,7 @@ export function FormEditForm({
   useEffect(() => {
     calculateTotalConfigPerc(user);
     dispatch(fetchAllActiveEmployees());
+    dispatch(fetchRoles());
     if (user?.departmentId) {
       dispatch(actions.getDesignationByDeptId(user?.departmentId));
     }
@@ -156,8 +161,7 @@ export function FormEditForm({
         errors,
         touched,
         values,
-        resetForm,
-        handleChange,
+        setFieldTouched,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -205,12 +209,37 @@ export function FormEditForm({
                         }}
                         value={
                           appraisalTypes?.find(
-                            (el) => el?.value === values?.appraisalType
+                            (el) => el?.value === values?.appraisalType,
                           ) || null
                         }
                         error={errors?.appraisalType}
                         touched={touched?.appraisalType}
                         options={appraisalTypes}
+                      />
+                    </div>
+                    <div>
+                      <MultiSelect
+                        label={
+                          <span>
+                            Appraisal Finalization Role
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        options={roles || []}
+                        value={roles?.filter((el) =>
+                          values?.approvers?.includes(String(el.value)),
+                        )}
+                        onChange={(e) => {
+                          setFieldTouched("approvers", true);
+                          if (Array?.isArray(e)) {
+                            setFieldValue("approvers", [
+                              ...e?.map((el) => String(el?.value)),
+                            ]);
+                          }
+                        }}
+                        error={errors?.approvers}
+                        touched={touched?.approvers}
+                        disabled={isUserForRead || !values?.subsidiaryId}
                       />
                     </div>
                   </div>
@@ -224,7 +253,7 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "generalEvaluationRating",
-                            e?.target?.value
+                            e?.target?.value,
                           );
                           calculateTotalConfigPerc({
                             ...values,
@@ -310,12 +339,13 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "appraisalFacilitatorId",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.appraisalFacilitatorId
+                            (el) =>
+                              el?.value === values?.appraisalFacilitatorId,
                           ) || null
                         }
                         error={errors?.appraisalFacilitatorId}
@@ -337,7 +367,7 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "appraisalFeedbackPeriod",
-                            e?.target?.value
+                            e?.target?.value,
                           );
                         }}
                       />
@@ -350,7 +380,7 @@ export function FormEditForm({
                           onChange={(e) => {
                             setFieldValue(
                               "empRattingToSuperVisor",
-                              e?.target?.checked
+                              e?.target?.checked,
                             );
                           }}
                         />
@@ -362,7 +392,7 @@ export function FormEditForm({
                           onChange={(e) => {
                             setFieldValue(
                               "ratingScaleSelection",
-                              e?.target?.checked
+                              e?.target?.checked,
                             );
                           }}
                         />
@@ -382,12 +412,12 @@ export function FormEditForm({
                         onChange={(e) => {
                           setFieldValue(
                             "signIncrementEmailId",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.signIncrementEmailId
+                            (el) => el?.value === values?.signIncrementEmailId,
                           ) || null
                         }
                         error={errors?.signIncrementEmailId}
@@ -398,43 +428,53 @@ export function FormEditForm({
                     <div>
                       <SearchSelect
                         name={"signIncrementLetter1Id"}
-                        label={<span>Letter 1</span>}
+                        label={<span>Letter 1 Signature</span>}
                         isDisabled={!values?.subsidiaryId}
                         onChange={(e) => {
                           setFieldValue(
                             "signIncrementLetter1Id",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.signIncrementLetter1Id
+                            (el) =>
+                              el?.value === values?.signIncrementLetter1Id,
                           ) || null
                         }
                         error={errors?.signIncrementLetter1Id}
                         touched={touched?.signIncrementLetter1Id}
-                        options={dashboard?.allEmployees}
+                        options={dashboard?.allEmployees?.map((e) => ({
+                          ...e,
+                          isDisabled:
+                            e?.value == values?.signIncrementLetter2Id,
+                        }))}
                       />
                     </div>
                     <div>
                       <SearchSelect
                         name={"signIncrementLetter2Id"}
-                        label={<span>Letter 2</span>}
+                        label={<span>Letter 2 Signature</span>}
                         isDisabled={!values?.subsidiaryId}
                         onChange={(e) => {
                           setFieldValue(
                             "signIncrementLetter2Id",
-                            e?.value || null
+                            e?.value || null,
                           );
                         }}
                         value={
                           dashboard?.allEmployees?.find(
-                            (el) => el?.value === values?.signIncrementLetter2Id
+                            (el) =>
+                              el?.value === values?.signIncrementLetter2Id,
                           ) || null
                         }
                         error={errors?.signIncrementLetter2Id}
                         touched={touched?.signIncrementLetter2Id}
-                        options={dashboard?.allEmployees}
+                        options={dashboard?.allEmployees?.map((e) => ({
+                          ...e,
+                          isDisabled:
+                            e?.value == values?.signIncrementLetter1Id,
+                        }))}
                       />
                     </div>
                   </div>

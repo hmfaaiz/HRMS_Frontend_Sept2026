@@ -74,26 +74,27 @@ export function FormFilter() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (
-      dashboard?.allSubsidiaryList?.length > 0 &&
-      auth?.user?.EmployeeMapping?.subsidiaryId
-    ) {
-      let subsid = dashboard?.allSubsidiaryList?.find(
-        (e) => e.value === auth?.user?.EmployeeMapping?.subsidiaryId
-      );
-      const updatedQueryParams = {
-        ...formUIProps.queryParams,
-        filter: {
-          ...formUIProps.queryParams?.filter,
-          subsidiaryId: subsid?.value,
-          monthId: subsid?.payrollMonth?.Id || "",
-        },
-        pageNumber: 1,
-      };
-      formUIProps.setSubsidiaryId(subsid?.value);
-      formUIProps.setQueryParams(updatedQueryParams);
-    }
-  }, [dashboard.allSubsidiaryList, auth?.user?.EmployeeMapping?.subsidiaryId]);
+    if (!dashboard?.allSubsidiaryList?.length) return;
+
+    const findDefaultSub = dashboard?.allSubsidiaryList?.find(
+      (e) => e.isDefault
+    );
+
+    if (!findDefaultSub) return;
+
+    const updatedQueryParams = {
+      ...formUIProps.queryParams,
+      filter: {
+        ...formUIProps.queryParams?.filter,
+        subsidiaryId: findDefaultSub?.value,
+        monthId: findDefaultSub?.payrollMonth?.Id || "",
+      },
+      pageNumber: 1,
+    };
+    
+    formUIProps.setSubsidiaryId(findDefaultSub?.value);
+    formUIProps.setQueryParams(updatedQueryParams);
+  }, [dashboard.allSubsidiaryList]);
   return (
     <>
       <Formik
@@ -109,12 +110,9 @@ export function FormFilter() {
         }}
       >
         {({ values, handleSubmit, handleBlur, setFieldValue }) => (
-          <form
-            onSubmit={handleSubmit}
-            className="grid md:grid-cols-7 gap-3 px-3"
-          >
+          <form onSubmit={handleSubmit} className="grid md:grid-cols-5 gap-3">
             {values?.subsidiaryId && dashboard?.allSubsidiaryList?.length > 0 && (
-              <div className="col-start-4 flex flex-col justify-end items-end">
+              <div className="col-start-2 flex flex-col justify-end items-end">
                 <span className="text-sm text-black font-bold">
                   Active Appraisal Period
                 </span>
@@ -127,7 +125,7 @@ export function FormFilter() {
                 </span>
               </div>
             )}
-            <div className="col-start-5">
+            <div className="col-start-3">
               <SearchSelect
                 name="subsidiaryId"
                 label={<span> Subsidiary</span>}
@@ -150,7 +148,7 @@ export function FormFilter() {
                 options={dashboard?.allSubsidiaryList}
               />
             </div>
-            <div className="col-start-6">
+            <div className="col-start-4">
               <SearchSelect
                 name="appraisalCategoryId"
                 label={<span> Appraisal Category</span>}
@@ -177,7 +175,7 @@ export function FormFilter() {
               />
             </div>
 
-            <div className="col-start-7">
+            <div className="col-start-5">
               <label>
                 <span> Search</span>
               </label>

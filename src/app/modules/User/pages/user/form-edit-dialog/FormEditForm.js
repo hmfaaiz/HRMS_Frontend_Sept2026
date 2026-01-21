@@ -16,6 +16,7 @@ import {
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { getDateDiffInDays } from "../../../../../utils/common";
+import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const userEditSchema = Yup.object().shape({
   subsidiaryId: Yup.string()
@@ -138,6 +139,7 @@ export function FormEditForm({
         values,
         setFieldValue,
         handleChange,
+        setFieldTouched,
       }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
@@ -273,7 +275,7 @@ export function FormEditForm({
                     />
                   </div>
 
-                  <div className="text-black mt-1">
+                  {/* <div className="text-black mt-1">
                     <label>
                       Subsidiary
                       <span style={{ color: "red" }}>*</span>
@@ -325,6 +327,46 @@ export function FormEditForm({
                         </div>
                       </div>
                     </div>
+                  </div> */}
+                  <div>
+                    <MultiSelect
+                      label={
+                        <span>
+                          Subsidiary
+                          <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
+                      options={
+                        values?.companyId
+                          ? dashboard?.allSubsidiaryList?.filter(
+                              (option) => option.companyId == values.companyId,
+                            ) || []
+                          : []
+                      }
+                      value={
+                        values?.companyId && values?.subsidiaryId
+                          ? dashboard?.allSubsidiaryList
+                              ?.filter((option) => option.companyId == values.companyId)
+                              ?.filter((el) =>
+                                values?.subsidiaryId?.includes(String(el.value)),
+                              ) || []
+                          : []
+                      }
+                      onChange={(e) => {
+                        setFieldTouched("subsidiaryId", true);
+                        if (e && Array.isArray(e)) {
+                          setFieldValue(
+                            "subsidiaryId",
+                            e.map((el) => String(el?.value)),
+                          );
+                        } else {
+                          setFieldValue("subsidiaryId", []);
+                        }
+                      }}
+                      error={errors.subsidiaryId}
+                      touched={touched.subsidiaryId}
+                      disabled={!values.companyId || isUserForRead}
+                    />
                   </div>
 
                   <div>

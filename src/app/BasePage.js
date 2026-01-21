@@ -393,9 +393,14 @@ import("./modules/CompanyDocumentPortal/pages/index"));
 const AppraisalReview = lazy(()=>
 import("./modules/Appraisal_Review/pages/index"))
 
+const EmpAppraisalReview = lazy(()=>
+import("./modules/Appraisal_Review_Portal/pages/index"))
+
 const AppraisalFinalization = lazy(()=>
 import("./modules/Appraisal_Finalization/pages/index"))
 
+const AppraisalStatus = lazy(()=>
+import("./modules/Appraisal_Status_Employee_Wise/pages/index"))
 const AttendanceCorrection = lazy(()=>
 import("./modules/AttendanceCorrection/pages/index"))
 
@@ -559,8 +564,10 @@ const ROUTES = {
   company_doc_portal : CompanyDocumentPortal,
   employee_doc : EmployeeDocument,
   appraisal_review : AppraisalReview,
+  emp_appraisal : EmpAppraisalReview,
   attendance_correction : AttendanceCorrection,
   appraisal_finalization : AppraisalFinalization,
+  appraisal_status : AppraisalStatus,
   bank_advice : BankAdvice,
   facilitator_ticket_creation : FacilitatorTicketCreation,
   

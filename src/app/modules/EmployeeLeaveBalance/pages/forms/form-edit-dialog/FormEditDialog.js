@@ -36,12 +36,14 @@ export function FormEditDialog() {
   //List data from states
   const {
     userForEdit,
-    dashboard
+    dashboard,leaveBalances
   } = useSelector((state) => ({
     userForEdit: state.employee_leave_balance.userForEdit,
     dashboard: state.dashboard,
+     leaveBalances: state.employee_leave_balance.leaveBalances,
   }
   ));
+
 
   //Fetch Dropdowns data on load
   useEffect(() => {
@@ -53,13 +55,35 @@ export function FormEditDialog() {
 
   //Fetch record to edit on filters change
   useEffect(() => {
-    dispatch(actions.fetchEditRecord(formUIProps.filters));
+      const { subsidiaryId, departmentId, ...cleanFilters } =
+    formUIProps.filters;
+    dispatch(actions.fetchEditRecord(cleanFilters));
   }, [formUIProps.filters]);
 
   //Create record according to values from dialog
+  // const submitForm = (values) => {
+  //   delete values.subsidiaryId
+  //   delete values.departmentid
+  //   const { subsidiaryId, departmentId, ...cleanFilters } =
+  //   formUIProps.filters;
+  //   dispatch(actions.saveRecord({ cleanFilters, allocatedCount: values.allocatedCount }, disbaleLoading))
+  // }
+
+
   const submitForm = (values) => {
-    dispatch(actions.saveRecord({...formUIProps.filters, allocatedCount: values.allocatedCount}, disbaleLoading))
-  }
+  const { subsidiaryId, departmentId, ...cleanFilters } =
+    formUIProps.filters;
+
+  dispatch(
+    actions.saveRecord(
+      {
+        ...cleanFilters,         
+        allocatedCount: values.allocatedCount,
+      },
+      disbaleLoading
+    )
+  );
+};
 
   return (
     <>
@@ -80,6 +104,29 @@ export function FormEditDialog() {
         loading={loading}
         isUserForRead={Boolean(!(formUIProps.filters?.employeeId && formUIProps.filters?.leaveType && formUIProps.filters?.yearId) || userForEdit?.Id)}
       />
+
+      <div className="px-3 py-2 w-full mt-2 bg-white rounded-lg ">
+        <div className="w-full text-xs flex flex-col justify-between h-full">
+          <h6 className="font-bold mb-0 text-primary my-2">Leave Balances</h6>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8  w-full md:w-7/12">
+            {leaveBalances?.length > 0 &&
+              leaveBalances?.map((el, i) => {
+                return (
+                  <div
+                    className="grid grid-cols-2 gap-4 items-center text-sm"
+                    key={el?.leaveTypeName || i}
+                  >
+                    <p className="text-black m-0 p-0">{el?.leaveTypeName}</p>
+                    <p className="text-primary font-extrabold m-0">
+                      {el?.remainingCount || 0}
+                    </p>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      </div>
       <ToastContainer
         position="top-right"
         autoClose={5000}

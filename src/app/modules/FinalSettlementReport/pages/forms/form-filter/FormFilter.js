@@ -147,7 +147,15 @@ export function FormFilter({
 
 
 
+  useEffect(() => {
+    if (!allSubsidiaryList?.length) return;
 
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+
+    if (!findDefaultSubs) return;
+
+    dispatch(fetchAllDepartmentBySubsidiaryIds([findDefaultSubs?.value]));
+  }, [allSubsidiaryList]);
 
 
 
@@ -158,6 +166,10 @@ export function FormFilter({
 
         initialValues={{
           ...initialFilter.filter,
+          subsidiaryId:
+                        initialFilter.filter?.subsidiaryId ||
+                        allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+                        "",
 
         }}
         validationSchema={formValidation}
@@ -183,7 +195,7 @@ export function FormFilter({
                     {/* Subsidiary Field Start */}
                     <div className="">
 
-                      <SubsidiarySelect
+                      <SearchSelect
                         name="subsidiaryId"
                         onBlur={handleBlur}
                         onChange={(e) => {
@@ -206,17 +218,12 @@ export function FormFilter({
                         }
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
-                        currentValue={values?.subsidiaryId}
-                        initializeSubsidiary={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-
-                          dispatch(fetchAllDepartmentBySubsidiaryIds([value]));
-                          dispatch(FetchAllApprovedFSEmp({ subsidiaryId: value, departmentId: values?.departmentId }));
-                          setFieldValue("employeeId", "");
-
-                        }}
+                        value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                      options={allSubsidiaryList}
                       />
                     </div>
 

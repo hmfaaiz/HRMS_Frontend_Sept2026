@@ -320,3 +320,6 @@ export function fetchAllTicketTypes(parentId) {
 }
 
 
+export const getAllSpecialLeaveTypes = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-special-leave-types`,body);
+};

@@ -239,3 +239,14 @@ export function uploadFiles(body) {
 export const getAllFacilitatorEmployee = async (Id) => {
   return await axios.get(`${USERS_URL}/settings/read-all-facilitator-employee/${Id}`);
 };
+export function updateDefaultSubsidiary(body) {
+  return axios.post(`${USERS_URL}/settings/update-default-subsidiary`, body);
+}
+
+export function getModuleRights() {
+  return axios.get(`${USERS_URL}/settings/read-all-modules-right`);
+}
+
+export function getUsersByCompanyId(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-user-by-companyId` , body);
+}

@@ -33,6 +33,7 @@ export function FormCard() {
     <TCard name={CurrentModuleName()}>
       <SelectSub
         setFetchSubsidiaryId={FormUIProps?.setFetchSubsidiaryId}
+        fetchSubsidiaryId={FormUIProps?.fetchSubsidiaryId}
       />
       <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
         <div className="flex items-center gap-2">

@@ -60,28 +60,38 @@ export const fiscalMonthList = [
 
 export const moduleList = [
   {
-    label: "Employee Module",
-    key : "employeeModule",
+    label: "Employee",
+    key: "employee",
     value: false,
   },
   {
-    label: "Leave Module",
-    key : "leaveModule",
+    label: "Leave",
+    key: "leave",
     value: false,
   },
   {
-    label: "Attendance Module",
-    key : "attendanceModule",
+    label: "Attendance",
+    key: "attendance",
     value: false,
   },
   {
-    label: "Payroll Module",
-    key : "payrollModule",
+    label: "Payroll",
+    key: "payroll",
     value: false,
   },
   {
-    label: "Recruitment Module",
-    key : "recruitmentModule",
+    label: "Recruitment",
+    key: "recruitment",
+    value: false,
+  },
+  {
+    label: "Appraisal",
+    key: "appraisal",
+    value: false,
+  },
+  {
+    label: "Task",
+    key: "task",
     value: false,
   },
 ];

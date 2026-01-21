@@ -53,6 +53,28 @@ const dispatch = useDispatch();
       dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
     }, [dispatch]);
   
+    useEffect(()=>{
+        if(!dashboard?.allSubsidiaryList?.length) {
+          return
+        }
+        const findDefaultSubs = dashboard?.allSubsidiaryList?.find((el)=> el?.isDefault)
+        if(!findDefaultSubs) {
+          return
+        }
+    
+        const updatedQueryParams = {
+            ...formUIProps.queryParams,
+            subsidiaryId: findDefaultSubs.value,
+            subsidiaryLabel: findDefaultSubs.value !== "" ?  findDefaultSubs.label:"",
+            pageNumber: 1,
+            };
+            
+         formUIProps.setQueryParams(updatedQueryParams);
+         dispatch(fetchExitTypeExitReason(updatedQueryParams));    
+         dispatch(fetchAllDept(findDefaultSubs.value));
+        },[dashboard?.allSubsidiaryList])
+    
+
     const empTypeOptions = [
       { label: "All", value: "" },
       ...(dashboard?.allEmpTypeDynamicChildMenus || []),

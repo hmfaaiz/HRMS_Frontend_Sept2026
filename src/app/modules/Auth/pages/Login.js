@@ -211,7 +211,7 @@ function Login(props) {
               className=" pb-2"
               style={{ color: "#000000", fontWeight: 400 }}
             >
-              Email address
+              Email Address
             </label>
             <input
               placeholder="Email"
@@ -308,7 +308,7 @@ function Login(props) {
               className="w-full bg-tprimary text-white text-base font-bold h-[7vh] cursor-pointer rounded border-none hover:bg-black"
             >
               <span>
-                Log in{" "}
+                Log In{" "}
                 <CircleArrowRight
                   strokeWidth={3}
                   className="w-5 h-5 cursor-pointer"

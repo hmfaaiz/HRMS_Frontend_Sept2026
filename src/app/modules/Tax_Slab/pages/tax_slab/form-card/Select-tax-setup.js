@@ -11,7 +11,7 @@ import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
 export function SelectTaxSetup({
   actionsLoading,
   setFetchSubsidiaryId,
-
+   fetchSubsidiaryId,
   setFetchTaxSetupId,
 }) {
   const dispatch = useDispatch();
@@ -31,11 +31,20 @@ export function SelectTaxSetup({
 
   const { taxYearSetup } = currentState;
 
+  useEffect(()=> {
+    if(!dashboard?.allSubsidiaryList?.length) return
+    const defaultSubs = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)
+    if(!defaultSubs) return
+
+    setFetchSubsidiaryId(defaultSubs.value);
+    setFetchTaxSetupId(null);
+  },[dashboard?.allSubsidiaryList])
+
   return (
     <>
       {/* Formik Starts */}
 
-      <Formik enableReinitialize={true} initialValues={{}}>
+      <Formik enableReinitialize={true} initialValues={{subsidiaryId: fetchSubsidiaryId ,  taxSetupId : null}}>
         {({ errors, touched, values, handleBlur, setFieldValue }) => (
           <>
             {actionsLoading && (
@@ -66,7 +75,7 @@ export function SelectTaxSetup({
                       error={errors.subsidiaryId}
                       touched={touched.subsidiaryId}
                     /> */}
-                    <SubsidiarySelect
+                    <SearchSelect
                       name="subsidiaryId"
                       label={
                         <span>
@@ -82,12 +91,9 @@ export function SelectTaxSetup({
                       error={errors?.subsidiaryId}
                       touched={touched?.subsidiaryId}
                       currentValue={values?.subsidiaryId}
-                      initializeSubsidiary={(e) => {
-                        setFieldValue("subsidiaryId", e.value || null);
-                        setFetchSubsidiaryId(e.value);
-                        setFetchTaxSetupId(null);
-                        setFieldValue("taxSetupId", null);
-                      }}
+                      value={dashboard?.allSubsidiaryList?.find((e)=> e.value === values?.subsidiaryId) || null}
+                      options={dashboard?.allSubsidiaryList}
+                      
                     />
                   </div>
 
