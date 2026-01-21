@@ -15,7 +15,7 @@ export function ActionsColumnFormatter(
   }
 ) {
   const isUserRead = false;
-  
+  console.log("row11111",row)
   return (
     <div className="space-x-2">
       {/* VIEW */}
