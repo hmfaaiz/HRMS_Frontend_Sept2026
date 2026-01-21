@@ -160,6 +160,11 @@ import { AttendanceCorrectionSlice } from "../app/modules/AttendanceCorrection/_
 import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
 import { appraisalStatusSlice } from "../app/modules/Appraisal_Status_Employee_Wise/_redux/fromSlice";
 import { BankPaymentAdviceSlice } from "../app/modules/BankPaymentAdvice/_redux/formSlice";
+import { FacilitatorTicketCreationSlice } from "../app/modules/FacilitatorTicketCreation/_redux/redux-Slice";
+
+
+import { facilitatorSetupSlice } from "../app/modules/Facilitator_Setup/_redux/facilitatorSetupSlice";
+
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -316,6 +321,9 @@ export const rootReducer = combineReducers({
   appraisal_finalization : appraisalFinalizationSlice.reducer,
   appraisal_status : appraisalStatusSlice.reducer,
   bank_advice : BankPaymentAdviceSlice.reducer,
+  facilitator_ticket_creation : FacilitatorTicketCreationSlice.reducer,
+
+  facilitator_setup: facilitatorSetupSlice.reducer,
   emp_appraisal : empAppraisalReviewSlice.reducer,
 
 });

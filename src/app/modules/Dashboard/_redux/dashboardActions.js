@@ -679,6 +679,16 @@ export const uploadFile = async (file) => {
       });
     });
 };
+export const FetchAllFacilitatorEmployee= (ticketTypeId) => async (dispatch) => {
+  return await requestFromServer
+    .getAllFacilitatorEmployee(ticketTypeId)
+    .then((response) => {
+      dispatch(actions.FacilitatorEmployeeFetch(response?.data?.data));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};
 
 export const updateDefaultSubsidiary = (Id) => async (dispatch) => {
   return await requestFromServer

@@ -236,6 +236,9 @@ export function uploadFiles(body) {
   return axios.post(`${USERS_URL}/file-upload`, body);
 }
 
+export const getAllFacilitatorEmployee = async (Id) => {
+  return await axios.get(`${USERS_URL}/settings/read-all-facilitator-employee/${Id}`);
+};
 export function updateDefaultSubsidiary(body) {
   return axios.post(`${USERS_URL}/settings/update-default-subsidiary`, body);
 }

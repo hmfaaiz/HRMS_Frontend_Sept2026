@@ -100,6 +100,9 @@ const initialDashboardState = {
   allTaxYearSetupList : [],
   allowRequestBySenior : false,
   currentDateTime : null,
+  allTicketTypeList: [],
+  priorityLevelList: [],
+  facilitatorEmployeeList: [],
   moduleRights : [],
   allUsers : [],
 };
@@ -422,6 +425,12 @@ export const dashboardSlice = createSlice({
         requestRaisedBySenior: (state, action) => {
       state.allowRequestBySenior  = action.payload;
    
+    }, 
+     FacilitatorEmployeeFetch: (state, action) => {
+      state.facilitatorEmployeeList  = action.payload;
+   
+    }, 
+    
     },
     ModuleRightFetched: (state, action) => {
       state.moduleRights = action.payload;
@@ -430,5 +439,5 @@ export const dashboardSlice = createSlice({
       state.allUsers = action.payload;
     },
 
-  },
+
 });
