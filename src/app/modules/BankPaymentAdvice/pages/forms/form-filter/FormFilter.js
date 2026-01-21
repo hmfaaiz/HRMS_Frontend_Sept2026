@@ -190,17 +190,26 @@ export function FormFilter({
 
   useEffect(() => {
     // Extract subsidiaryId logic
-    const subsidiaryId =
-      allSubsidiaryList && allSubsidiaryList.length > 0
-        ? allSubsidiaryList[0].value
-        : null;
+    if (!allSubsidiaryList?.length) return;
 
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+
+    if (!findDefaultSubs) return;
     // Dispatch actions
     dispatch(
-      fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList")
+      fetchAllPayrollMonthYearList(
+        { subsidiaryId: findDefaultSubs?.value },
+        "allPayrollMonthYearList"
+      )
     );
-    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
-    checkPermission(subsidiaryId);
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
+    checkPermission(findDefaultSubs?.value);
+    dispatch(
+      fetchAllPayrollMonthYearList(
+        { subsidiaryId: findDefaultSubs?.value },
+        "allPayrollMonthYearList"
+      )
+    );
   }, [allSubsidiaryList]);
 
 
@@ -212,11 +221,14 @@ export function FormFilter({
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
-          // subsidiaryId:
-          //   initialFilter.filter?.subsidiaryId ||
-          //   (allSubsidiaryList && allSubsidiaryList.length > 0
-          //     ? allSubsidiaryList[0].value
-          //     : ""), // Set default subsidiaryId if it's not provided
+          subsidiaryId:
+              initialFilter.filter?.subsidiaryId ||
+              allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+              "",
+          monthId:
+              initialFilter.filter?.subsidiaryId ||
+              allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
+              "",
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -276,7 +288,7 @@ export function FormFilter({
                         autoComplete="off"
                         options={allSubsidiaryList}
                       /> */}
-                      <SubsidiarySelect
+                      <SearchSelect
                         name="subsidiaryId"
                         onBlur={handleBlur}
                         onChange={(e) => {
@@ -306,25 +318,12 @@ export function FormFilter({
                         }
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
-                        currentValue={values?.subsidiaryId}
-                        initializeSubsidiary={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-                           if(e?.payrollMonth){
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
-                          dispatch(
-                            fetchAllPayrollMonthYearList(
-                              { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
-                          );
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          setFieldValue("employeeId", "");
-                          // setFieldValue("monthId", "");
-                          checkPermission(value);
-                        }}
+                         value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                      options={allSubsidiaryList}
                       />
                     </div>
 

@@ -7,8 +7,8 @@ import { useFormUIContext } from "../FormUIContext";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../../utils/common-modules/TCard";
-import { EmployeeSelect } from "../form-edit-dialog/employeeSelect";
-import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
+
+
 import { FormEditDialog } from "../form-edit-dialog/FormEditDialog";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
 import { ResponseTable } from "../form-table/ResponseTable";
@@ -43,7 +43,7 @@ export function FormCard() {
   );
 
   const accessUser = userAccess.find(
-    (item) => item.componentName === "CreateEmployeeDoc"
+    (item) => item.componentName === "CreateTicketCreation"
   );
 
   const { currentState } = useSelector((state) => {

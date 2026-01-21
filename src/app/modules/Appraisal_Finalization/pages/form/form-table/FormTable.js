@@ -1,10 +1,13 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../_redux/formActions";
 import * as uiHelpers from "../FormUIHelpers";
 import { useFromUIContext } from "../FormUIContext";
 import { ErrorMessage, Field, FieldArray, Formik } from "formik";
-import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllDesignationByGradeId,
+  fetchAllFormsMenu,
+} from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Calendar1, LayoutList } from "lucide-react";
@@ -34,6 +37,7 @@ const FormValidation = Yup.object().shape({
           otherwise: Yup.number().notRequired(),
         }),
       finalRemarks: Yup.string().optional(),
+      finalRecommendations: Yup.string().optional(),
       revisedSalary: Yup.number()
         .nullable()
         .when(["isSelected", "revisedBeforeSalary"], {
@@ -94,6 +98,7 @@ const FormValidation = Yup.object().shape({
 
 export function FormTable() {
   //Users UI Context
+  const [designationsByGrade, setDesignationsByGrade] = useState({});
   const formUIContext = useFromUIContext();
   const formUIProps = useMemo(() => {
     return {
@@ -110,6 +115,7 @@ export function FormTable() {
     listLoading,
     actionsLoading,
     userAccess,
+    user,
   } = useSelector((state) => {
     return {
       currentState: state.appraisal_finalization,
@@ -117,9 +123,9 @@ export function FormTable() {
       actionsLoading: state.appraisal_finalization?.actionsLoading,
       dashboard: state?.dashboard,
       userAccess: state?.auth?.userAccess["appraisal_finalization"],
+      user: state?.auth?.user,
     };
   }, shallowEqual);
-
   const isAccessForSave = userAccess?.find(
     (item) => item.componentName === "SaveAppraisalFinalization"
   );
@@ -226,14 +232,23 @@ export function FormTable() {
     setSubmitting(false);
   };
 
-  //Table pagination properties
-  const paginationOptions = {
-    custom: true,
-    totalSize: totalCount,
-    sizePerPageList: uiHelpers.sizePerPageList,
-    sizePerPage: formUIProps.queryParams.pageSize,
-    page: formUIProps.queryParams.pageNumber,
-  };
+  useEffect(() => {
+    if (!entities?.length) return;
+    const designationListthroughGrade = async () => {
+      entities?.forEach(async (e, i) => {
+        if (!designationsByGrade[e?.revisedGradeId]) {
+          const designation = await dispatch(
+            fetchAllDesignationByGradeId(e?.revisedGradeId)
+          );
+          setDesignationsByGrade({
+            ...designationsByGrade,
+            [e?.revisedGradeId]: designation,
+          });
+        }
+      });
+    };
+    designationListthroughGrade();
+  }, [entities]);
 
   return (
     <Formik
@@ -290,9 +305,11 @@ export function FormTable() {
                                 <th className="w-44">Name</th>
                                 <th className="w-48">Designation</th>
                                 <th className="w-28">Increment %</th>
-                                <th className="w-28">Manager Rec.</th>
+                                <th title="Salary Recmmended By Manager" className="w-28">Manager Rec.</th>
+                                <th title="Promotion Recmmended By Manager" className="w-32">Promotion Rec.</th>
                                 <th className="w-40">Final Increment %</th>
-                                <th className="w-80">Final Remarks</th>
+                                <th title="Management Remarks" className="w-80">Mgmt. Remarks</th>
+                                <th title="Management Recommendations" className="w-80">Mgmt. Recommendations</th>
                                 {/* <th className="w-44">
                                   Actucal{" "}
                                   {salaryPolicy == "Basic to Gross"
@@ -301,18 +318,16 @@ export function FormTable() {
                                   Salary
                                 </th> */}
                                 <th className="w-52">
-                                  Before Revised{" "}
                                   {salaryPolicy == "Basic to Gross"
                                     ? "Basic"
                                     : "Gross"}{" "}
-                                  Salary
+                                  Salary (Before)
                                 </th>
                                 <th className="w-44">
-                                  Revised{" "}
                                   {salaryPolicy == "Basic to Gross"
                                     ? "Basic"
                                     : "Gross"}{" "}
-                                  Salary
+                                  Salary (after Revision)
                                 </th>
                                 <th className="w-52">Revised Grade</th>
                                 <th className="w-60">Revised Designation</th>
@@ -362,6 +377,11 @@ export function FormTable() {
                                         {e?.AppraisalReview
                                           ?.incrementPercentageRecommendedByManager ||
                                           ""}
+                                      </td>
+                                      <td>
+                                        {e?.promotionRecommendedByManager
+                                          ? "Yes"
+                                          : "No"}
                                       </td>
                                       <td>
                                         <Field
@@ -438,6 +458,34 @@ export function FormTable() {
                                           className="invalid-feedback d-block"
                                         />
                                       </td>
+                                      <td>
+                                        <Field
+                                          name={`entities.${i}.finalRecommendations`}
+                                        >
+                                          {({ field, form }) => (
+                                            <input
+                                              {...field}
+                                              disabled={
+                                                !e?.isSelected || e?.isCompleted
+                                              }
+                                              type="text"
+                                              className={`form-control ${
+                                                form.errors?.entities?.[i]
+                                                  ?.finalRecommendations &&
+                                                form.touched?.entities?.[i]
+                                                  ?.finalRecommendations
+                                                  ? "is-invalid"
+                                                  : ""
+                                              }`}
+                                            />
+                                          )}
+                                        </Field>
+                                        <ErrorMessage
+                                          name={`entities.${i}.finalRecommendations`}
+                                          component="div"
+                                          className="invalid-feedback d-block"
+                                        />
+                                      </td>
                                       {/* <td>{e?.salary || ""}</td> */}
                                       <td>
                                         {amountFormat(
@@ -501,6 +549,23 @@ export function FormTable() {
                                               `entities.${i}.revisedGradeId`,
                                               e?.value || null
                                             );
+                                            if (
+                                              !designationsByGrade[e?.value]
+                                            ) {
+                                              let designation = dispatch(
+                                                fetchAllDesignationByGradeId(
+                                                  e?.value
+                                                )
+                                              );
+                                              setDesignationsByGrade({
+                                                ...designationsByGrade,
+                                                [e?.value]: designation,
+                                              });
+                                            }
+                                            setFieldValue(
+                                              `entities.${i}.revisedDesignationId`,
+                                              null
+                                            );
                                           }}
                                           value={
                                             dashboard?.allEmployeegradeList?.find(
@@ -531,13 +596,23 @@ export function FormTable() {
                                             );
                                           }}
                                           value={
-                                            dashboard?.allDesignations?.find(
-                                              (el) =>
-                                                el?.value ===
-                                                e?.revisedDesignationId
-                                            ) || null
+                                            (designationsByGrade?.[
+                                              e?.revisedGradeId
+                                            ]?.length > 0 &&
+                                              designationsByGrade?.[
+                                                e?.revisedGradeId
+                                              ]?.find(
+                                                (el) =>
+                                                  el?.value ===
+                                                  e?.revisedDesignationId
+                                              )) ||
+                                            null
                                           }
-                                          options={dashboard?.allDesignations}
+                                          options={
+                                            designationsByGrade?.[
+                                              e?.revisedGradeId
+                                            ] || []
+                                          }
                                           isDisabled={
                                             !e?.isSelected || e?.isCompleted
                                           }
@@ -776,35 +851,39 @@ export function FormTable() {
                     )}
                   </button>
                 )}
-                {isAccessForAppraisal && (
-                  <button
-                    type="button"
-                    disabled={
-                      listLoading ||
-                      actionsLoading ||
-                      !isValid ||
-                      !hasSelectedRowsIsNotCompleted ||
-                      isSubmitting
-                    }
-                    className="btn btn-primary"
-                    onClick={() =>
-                      handleSubmit(
-                        values.entities,
-                        {
-                          setSubmitting: (val) => {
-                            /* handle */
+                {isAccessForAppraisal &&
+                  values.entities?.length > 0 &&
+                  values.entities?.[0]?.approvers?.includes(
+                    String(user?.roleId)
+                  ) && (
+                    <button
+                      type="button"
+                      disabled={
+                        listLoading ||
+                        actionsLoading ||
+                        !isValid ||
+                        !hasSelectedRowsIsNotCompleted ||
+                        isSubmitting
+                      }
+                      className="btn btn-primary"
+                      onClick={() =>
+                        handleSubmit(
+                          values.entities,
+                          {
+                            setSubmitting: (val) => {
+                              /* handle */
+                            },
                           },
-                        },
-                        "appraisal"
-                      )
-                    }
-                  >
-                    Finalized Selected Appraisal
-                    {(listLoading || actionsLoading || isSubmitting) && (
-                      <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )}
-                  </button>
-                )}
+                          "appraisal"
+                        )
+                      }
+                    >
+                      Finalized Selected Appraisal
+                      {(listLoading || actionsLoading || isSubmitting) && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
+                    </button>
+                  )}
                 {isAccessForEmail && (
                   <button
                     type="button"

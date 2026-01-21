@@ -36,7 +36,7 @@ export function Header({ toggleMenuVisibility, company, isEmployeePortal }) {
         className={`${layoutProps.headerContainerClasses} flex items-center justify-between py-1`}
       >
         {/*begin::Logo Section*/}
-        <Link to="/dashboard" className="flex items-center">
+        <div className="flex items-center">
           {isEmployeePortal === "1" && (
             <button
               className="xl:hidden p-1 rounded bg-transparent border-none"
@@ -56,7 +56,7 @@ export function Header({ toggleMenuVisibility, company, isEmployeePortal }) {
           <div className="text-white text-xl ml-2 font-bold">
             {company?.name || ""}
           </div>
-        </Link>
+        </div>
         {/*end::Logo Section*/}
 
         {/*begin::Header Content Section*/}

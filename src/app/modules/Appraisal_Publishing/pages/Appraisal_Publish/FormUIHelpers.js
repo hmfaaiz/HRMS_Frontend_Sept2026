@@ -36,7 +36,7 @@ export const initialFilter = {
     departmentId: "",
     gradeId: "",
     designationId: "",
-    statusId: 1,
+    statusId: 3,
     appraisalCategoryId: "",
     employeeId: "",
   },

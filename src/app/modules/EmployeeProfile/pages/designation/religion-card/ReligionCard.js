@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import {
   Card,
@@ -26,7 +26,7 @@ export function ReligionCard({ onHide }) {
   const dispatch = useDispatch();
    const location = useLocation();
   const history = useHistory();
-
+const hasResolvedSubsidiary = useRef(false);
   const DesignationUIProps = useMemo(() => {
     return {
       newAcademicButtonClick: designationUIContext.newAcademicButtonClick,
@@ -95,32 +95,55 @@ export function ReligionCard({ onHide }) {
     dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
   }, [dispatch]);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const subsidiaryId = searchParams.get("subsidiary");
+useEffect(() => {
+  // already resolved → do nothing
+  if (hasResolvedSubsidiary.current) return;
 
-    if (subsidiaryId) {
-      //  Update queryParams
-      const updatedQueryParams = {
-        ...usersUIProps.queryParams,
-        subsidiaryId: parseInt(subsidiaryId, 10),
-        pageNumber: 1,
-      };
+  if (!dashboard?.allSubsidiaryList?.length) return;
 
-      usersUIProps.setQueryParams(updatedQueryParams);
+  const searchParams = new URLSearchParams(location.search);
+  const subsidiaryFromUrl = searchParams.get("subsidiary");
 
-      //  Fetch users and departments based on subsidiary
-      dispatch(actions.fetchUsers(updatedQueryParams));
-      dispatch(fetchAllDept(subsidiaryId));
+  let finalSubsidiaryId = null;
 
-      //  Remove the query param from the URL without reload
-      searchParams.delete("subsidiary");
-      const newUrl =
-        location.pathname +
-        (searchParams.toString() ? `?${searchParams.toString()}` : "");
-      history.replace(newUrl);
-    }
-  }, [location.search]);
+  // 1️ URL has highest priority
+  if (subsidiaryFromUrl) {
+    // finalSubsidiaryId = parseInt(subsidiaryFromUrl, 10);
+
+    // remove param safely
+    searchParams.delete("subsidiary");
+    const newUrl =
+      location.pathname +
+      (searchParams.toString() ? `?${searchParams.toString()}` : "");
+    history.replace(newUrl);
+  } 
+  // // 2️ fallback → default subsidiary
+  // else {
+    finalSubsidiaryId = dashboard?.allSubsidiaryList?.find(
+      (e) => e?.isDefault
+    )?.value;
+  // }
+
+  // 3️ nothing found → stop
+  if (!finalSubsidiaryId) return;
+
+  hasResolvedSubsidiary.current = true; //  LOCK IT
+
+  const updatedQueryParams = {
+    ...usersUIProps.queryParams,
+    subsidiaryId: finalSubsidiaryId,
+    pageNumber: 1,
+  };
+
+  usersUIProps.setQueryParams(updatedQueryParams);
+
+  dispatch(actions.fetchUsers(updatedQueryParams));
+  dispatch(fetchAllDept(finalSubsidiaryId));
+
+}, [
+  location.search,
+  dashboard?.allSubsidiaryList
+]);
 
 
   return (

@@ -69,6 +69,30 @@ export function FormFIlter({ listLoading, user }) {
 
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!dashboard?.allSubsidiaryList?.length) {
+      return;
+    }
+    const findDefaultSubs = dashboard?.allSubsidiaryList?.find(
+      (el) => el?.isDefault
+    );
+    if (!findDefaultSubs) {
+      return;
+    }
+
+    const updatedQueryParams = {
+      ...formUIProps.queryParams,
+      subsidiaryId: findDefaultSubs.value,
+      pageNumber: 1,
+    };
+
+    formUIProps.setQueryParams(updatedQueryParams);
+
+    dispatch(fetchApplicantProfile(formUIProps.queryParams));
+
+    dispatch(fetchAllDept(findDefaultSubs.value));
+  }, [dashboard?.allSubsidiaryList]);
+
   const filteredCities = (countryId) => {
 
     return dashboard?.allCity?.filter((city) => city.code == countryId) || [];

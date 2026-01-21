@@ -14,12 +14,12 @@ import { CompanyDocument } from "./CompanyDocument";
 const formatDate = (date, fmt) => (date ? format(new Date(date), fmt) : "N/A");
 
 const renderInfoGrid = (data, fields) => (
-  <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 text-sm text-black gap-y-2 mt-2">
+  <div className="grid grid-cols-2 text-sm text-black gap-y-2 mt-2">
     {fields.map(([label, value], idx) => (
-      <React.Fragment key={idx}>
+      <div key={idx} className="contents">
         <div className="font-medium">{label}</div>
-        <div>{value || "N/A"}</div>
-      </React.Fragment>
+        <div className="break-words">{value || "N/A"}</div>
+      </div>
     ))}
   </div>
 );
@@ -199,19 +199,6 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
 
       {/* Skills */}
       {isOpen && (
-        // <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-        //   <h6 className="font-bold mb-0 text-primary my-2">Skills</h6>
-        //   {skillsInfo?.length > 0 ? (
-        //     skillsInfo.map((item, index) => (
-        //       <div key={index} className="grid grid-cols-12 gap-1 text-black">
-        //         <p className="text-sm mb-0 col-span-3">{item.skill}</p>
-        //         <p className="col-span-3">{renderStars(item?.ratingScale)}</p>
-        //       </div>
-        //     ))
-        //   ) : (
-        //     <p className="text-sm mb-0">No Skills Found</p>
-        //   )}
-        // </div>
         <>
           {" "}
           <ResignationRequest />
@@ -220,27 +207,6 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
           <CompanyDocument />
         </>
       )}
-
-      {/* Requisition */}
-      {/* {isOpen && requisition_job_vacancy?.length > 0 && (
-  <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">
-    <h6 className="font-bold mb-0 text-primary my-2">
-      Job Requisition Form
-    </h6>
-
-    {requisition_job_vacancy?.length > 0 ? (
-        <div className="font-size-xs text-black font-bold">
-       <p className="m-0 underline">
-       <Link to={"/requisition_job_vacancy/read-all-requisition-job-vacancy"}>
-                        Request Job Vacancy{" "}
-        </Link>
-     </p>
-     </div>
-    ) : (
-      <p className="text-sm mb-0">No Request for Job Vacancy Found</p>
-    )}
-  </div>
-)} */}
     </>
   );
 };

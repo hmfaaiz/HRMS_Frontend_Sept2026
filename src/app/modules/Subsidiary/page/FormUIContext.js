@@ -42,6 +42,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
     isAttendanceLocation : false,
     incomeTaxTypeId :null,
     isSubordinateRequest :false,
+    users : [],
   };
 
   const value = {

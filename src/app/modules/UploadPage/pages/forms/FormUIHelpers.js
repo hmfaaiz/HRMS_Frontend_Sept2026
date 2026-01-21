@@ -98,10 +98,11 @@ export const uploadInfo = [
     description:
       "To upload Employee Tax Opening Balance data in the HRMS, download the Income Tax import Excel template. Enter required details such as Employee Code, Allowances,Allowance Amount,  and Tax Deducted, ensuring all mandatory fields are filled and formats are correct. Do not modify column headers, add columns, or use merged cells. Once the sheet is ready and saved then browse the file, and upload it. The system will validate each record and generate an error report if issues exist; correct any highlighted errors and re-upload. After a successful import, verify a few employees' Income Tax balance on Income Tax reports to ensure the data has been uploaded accurately.",
   },
-  {
-    name: "loan_balance",
-    title: "Employee Loan Opening Balance",
-    description:
-      "To upload Employee Loan Opening Balance data in the HRMS, download the loan import Excel template. Enter required details such as Employee Code, Loan Type, Opening Balance, Installment Amount, Application Date, and Installment Start Date, ensuring all mandatory fields are filled and formats are correct. Do not modify column headers, add columns, or use merged cells. Once the sheet is ready and saved then browse the file, and upload it. The system will validate each record and generate an error report if issues exist; correct any highlighted errors and re-upload. After a successful import, verify a few employees' loan balance on Employee Loan Application form to ensure the data has been uploaded accurately.",
-  },
+{
+  name: "employee_goal_setup",
+  title: "Employee Goal Setup",
+  description:
+    "To upload Employee Goal Setup data in the HRMS, download the goal setup import Excel template. Enter required details such as Employee Code, Competency Name, Goal Name, Goal Description, Weightage, Targeted End Date, and Comments (Yes / No), ensuring all mandatory fields are filled and formats are correct. Do not modify column headers, add or remove columns, or use merged cells. Once the sheet is completed and saved, browse and upload the file. The system will validate each record and generate an error report if any issues are found; correct the highlighted errors and re-upload the file. After a successful import, verify a few employees’ goals in the Employee Goal Setup screen to ensure the data has been uploaded accurately.",
+}
+
 ];

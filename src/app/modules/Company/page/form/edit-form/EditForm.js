@@ -9,7 +9,11 @@ import {
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { amountLimitDynamic, getFileName, getUploadUrl } from "../../../../../utils/common";
+import {
+  amountLimitDynamic,
+  getFileName,
+  getUploadUrl,
+} from "../../../../../utils/common";
 import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import {
@@ -22,9 +26,6 @@ import Axios from "axios";
 import { toast } from "react-toastify";
 import FileUpload from "../../../../../../_metronic/_partials/controls/forms/FileUpload";
 
-
-
-
 const USERS_URL = process.env.REACT_APP_API_URL;
 const phoneRegExp = /^((\+92)|(0092))?-?\d{3}-?\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
 const formSchema = Yup.object().shape({
@@ -36,7 +37,8 @@ const formSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required),
   companyCode: Yup.string().required(VALIDATION_MESSAGES.required),
   phone: Yup.string()
-    .nullable().required(VALIDATION_MESSAGES.required)
+    .nullable()
+    .required(VALIDATION_MESSAGES.required)
     .test(
       "phone-validation",
       "Invalid Number",
@@ -51,7 +53,8 @@ const formSchema = Yup.object().shape({
     ),
   email: Yup.string()
     .nullable()
-    .email(VALIDATION_MESSAGES.invalidEmail).required(VALIDATION_MESSAGES.required)
+    .email(VALIDATION_MESSAGES.invalidEmail)
+    .required(VALIDATION_MESSAGES.required)
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols"),
   web: Yup.string()
@@ -110,16 +113,13 @@ export const EditForm = ({
     }
   }, [data?.countryId, dispatch]);
 
-
   const namePolicytOptions = [
     { value: 1, label: "Company Name" },
     { value: 2, label: "Subsidiary Name " },
-
   ];
   const workingHRSPolicytOptions = [
     { value: 1, label: "Based on First In & Last Out Policy " },
     { value: 2, label: "Multiple Ins & Multiple Outs policy" },
-
   ];
 
   return (
@@ -129,16 +129,22 @@ export const EditForm = ({
       validationSchema={formSchema}
       onSubmit={async (values) => {
         const {
-          employeeModule,
-          leaveModule,
-          attendanceModule,
-          payrollModule,
+          employee,
+          leave,
+          attendance,
+          payroll,
+          recruitment,
+          appraisal,
+          task,
         } = values;
         if (
-          !employeeModule &&
-          !leaveModule &&
-          !attendanceModule &&
-          !payrollModule
+          !employee &&
+          !leave &&
+          !attendance &&
+          !payroll &&
+          !recruitment &&
+          !appraisal &&
+          !task
         ) {
           return toast.error("At least one module is required");
         }
@@ -153,10 +159,7 @@ export const EditForm = ({
           //   }
           // );
 
-
-
           try {
-
             const uploadRes = await uploadFile(file);
             setCompanyLogo(uploadRes.data.filename);
             handleSubmit({ ...values, Logo: uploadRes.data.filename });
@@ -164,8 +167,6 @@ export const EditForm = ({
             console.error("File upload failed:", err);
             // Optionally return here or set a default file value
           }
-
-
         } else {
           handleSubmit(values);
         }
@@ -236,7 +237,12 @@ export const EditForm = ({
                       MaxLength={40}
                       component={Input}
                       placeholder="Legal Name"
-                      label={<span> Legal Name <span style={{ color: "red" }}>*</span></span>}
+                      label={
+                        <span>
+                          {" "}
+                          Legal Name <span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(
                           e.target.value,
@@ -316,7 +322,11 @@ export const EditForm = ({
                     <Field
                       MaxLength={15}
                       placeholder="Phone"
-                      label={<span>Phone<span style={{ color: "red" }}>*</span></span>}
+                      label={
+                        <span>
+                          Phone<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 15);
                       }}
@@ -336,7 +346,6 @@ export const EditForm = ({
                       component={Input}
                     />
                   </div>
-
                   <div className="col-span-2 md:col-span-3">
                     <Field
                       name="address"
@@ -351,13 +360,16 @@ export const EditForm = ({
                       }}
                     />
                   </div>
-
                   <div>
                     <Field
                       name="email"
                       component={Input}
                       placeholder="Enter Email"
-                      label={<span>Email<span style={{ color: "red" }}>*</span></span>}
+                      label={
+                        <span>
+                          Email<span style={{ color: "red" }}>*</span>
+                        </span>
+                      }
                       onInput={(e) => {
                         e.target.value = amountLimitDynamic(e.target.value, 50);
                       }}
@@ -446,16 +458,9 @@ export const EditForm = ({
              
                   </div> */}
 
-
-
                   <div className="col-span-1">
-
                     <FileUpload
-                      label={
-                        <>
-                          Company Logo
-                        </>
-                      }
+                      label={<>Company Logo</>}
                       id="file_input"
                       name="file_input"
                       type="file"
@@ -463,15 +468,10 @@ export const EditForm = ({
                       ref={inputFile}
                       className="hidden"
                       onChange={onImageChange}
-
-
                     />
                     {errors.Logo && touched.Logo && (
                       <div className="invalid-feedback">{errors.Logo}</div>
                     )}
-
-
-
 
                     {(data?.Logo || values?.Logo) && (
                       <div className="mt-2">
@@ -489,19 +489,22 @@ export const EditForm = ({
                         >
                           {typeof (values?.Logo || data?.Logo) === "string"
                             ? getFileName(values?.Logo || data?.Logo)
-                            : (values?.Logo)?.name || data?.Logo}
+                            : values?.Logo?.name || data?.Logo}
                         </a>
                       </div>
                     )}
-
                   </div>
-
                   <div className="col-span-1">
                     <Select
                       label="Policy to show name on report"
                       name="policyToShowNameOnReport"
                       value={String(values.policyToShowNameOnReport)} // convert to string
-                      onChange={(e) => setFieldValue("policyToShowNameOnReport", e.target.value)}
+                      onChange={(e) =>
+                        setFieldValue(
+                          "policyToShowNameOnReport",
+                          e.target.value
+                        )
+                      }
                       error={errors.policyToShowNameOnReport}
                       touched={touched.policyToShowNameOnReport}
                       onBlur={handleBlur}
@@ -515,24 +518,26 @@ export const EditForm = ({
                       ))}
                     </Select>
 
-                    {errors.policyToShowNameOnReport && touched.policyToShowNameOnReport && (
-                      <ErrorMessage
-                        className="invalid-feedback"
-                        name="policyToShowNameOnReport"
-                        component="div"
-                      />
-
-
-                    )}
+                    {errors.policyToShowNameOnReport &&
+                      touched.policyToShowNameOnReport && (
+                        <ErrorMessage
+                          className="invalid-feedback"
+                          name="policyToShowNameOnReport"
+                          component="div"
+                        />
+                      )}
                   </div>
-
-
                   <div className="col-span-1">
                     <Select
                       label="Policy for calculating working hours"
                       name="policyForCalWorkingHours"
                       value={String(values.policyForCalWorkingHours)} // convert to string
-                      onChange={(e) => setFieldValue("policyForCalWorkingHours", e.target.value)}
+                      onChange={(e) =>
+                        setFieldValue(
+                          "policyForCalWorkingHours",
+                          e.target.value
+                        )
+                      }
                       error={errors.policyForCalWorkingHours}
                       touched={touched.policyForCalWorkingHours}
                       onBlur={handleBlur}
@@ -546,26 +551,24 @@ export const EditForm = ({
                       ))}
                     </Select>
 
-                    {errors.policyForCalWorkingHours && touched.policyForCalWorkingHours && (
-                      <ErrorMessage
-                        className="invalid-feedback"
-                        name="policyForCalWorkingHours"
-                        component="div"
-                      />
-
-
-                    )}
+                    {errors.policyForCalWorkingHours &&
+                      touched.policyForCalWorkingHours && (
+                        <ErrorMessage
+                          className="invalid-feedback"
+                          name="policyForCalWorkingHours"
+                          component="div"
+                        />
+                      )}
                   </div>
-
-                  <div className="text-black mt-1">
-                    <label>
+                  <div className="text-black mt-1 col-span-2 md:col-span-3">
+                    <h6 className="font-bold mb-0 text-primary my-2">
                       Module Access allowed
                       <span style={{ color: "red" }}>*</span>
-                    </label>
+                    </h6>
                     <div className="overflow-auto min-h-16 overflow-y-auto">
                       <div className="multi-select">
                         <div
-                          className="p-0 m-0 "
+                          className="p-0 m-0 grid grid-cols-4 gap-1"
                           style={{
                             fontSize: "10.2px",
                             // fontWeight: "bold",

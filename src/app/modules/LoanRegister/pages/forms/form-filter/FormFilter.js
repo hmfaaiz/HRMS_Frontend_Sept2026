@@ -120,20 +120,21 @@ export function FormFilter({
 
   useEffect(() => {
     // Extract subsidiaryId logic
-    const subsidiaryId =
-      allSubsidiaryList && allSubsidiaryList.length > 0
-        ? allSubsidiaryList[0].value
-        : null;
+    if (!allSubsidiaryList?.length) return;
 
-    dispatch(fetchAllActiveEmployeesBySubsidiary(subsidiaryId));
+    const findDefaultSubs = allSubsidiaryList?.find((e) => e?.isDefault);
+
+    if (!findDefaultSubs) return;
+
+    dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs?.value));
     dispatch(
-      fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList")
+      fetchAllPayrollMonthYearList({ subsidiaryId : findDefaultSubs?.value }, "allPayrollMonthYearList")
     );
-    dispatch(fetchAllDept(subsidiaryId));
+    dispatch(fetchAllDept(findDefaultSubs?.value));
     dispatch(
-      fetchAllPayrollMonthYearList({ subsidiaryId }, "allPayrollMonthYearList")
+      fetchAllPayrollMonthYearList({ subsidiaryId : findDefaultSubs?.value }, "allPayrollMonthYearList")
     );
-    dispatch(getAllLoanType({ subsidiaryId }));
+    dispatch(getAllLoanType({ subsidiaryId : findDefaultSubs?.value }));
   }, [allSubsidiaryList]);
 
   const loan_status = [
@@ -170,11 +171,29 @@ export function FormFilter({
         // initialValues={initialFilter.filter}
         initialValues={{
           ...initialFilter.filter,
-          // subsidiaryId:
-          //   initialFilter.filter?.subsidiaryId ||
-          //   (allSubsidiaryList && allSubsidiaryList.length > 0
-          //     ? allSubsidiaryList[0].value
-          //     : ""), // Set default subsidiaryId if it's not provided
+         subsidiaryId:
+            initialFilter.filter?.subsidiaryId ||
+            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+            "", // Set default subsidiaryId if it's not provided
+          from: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+            ?.startDate
+            ? new Date(
+                allSubsidiaryList?.find(
+                  (el) => el?.isDefault
+                )?.payrollMonth?.startDate
+              )
+            : "",
+          to: allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth
+            ?.endDate
+            ? new Date(
+                allSubsidiaryList?.find(
+                  (el) => el?.isDefault
+                )?.payrollMonth?.endDate
+              )
+            : "",
+          monthId:
+            allSubsidiaryList?.find((el) => el?.isDefault)?.payrollMonth?.Id ||
+            "",
         }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -235,7 +254,7 @@ export function FormFilter({
                         error={errors.subsidiaryId}
                         touched={touched.subsidiaryId}
                       /> */}
-                      <SubsidiarySelect
+                      <SearchSelect
                         name="subsidiaryId"
                         label={
                           <span>
@@ -275,38 +294,12 @@ export function FormFilter({
                         }}
                         error={errors?.subsidiaryId}
                         touched={touched?.subsidiaryId}
-                        currentValue={values?.subsidiaryId}
-                        initializeSubsidiary={(e) => {
-                          const value =
-                            e.value == "--Select--" ? "" : Number(e.value);
-                          setFieldValue("subsidiaryId", value);
-                          if(e?.payrollMonth){
-                            // setFieldValue("from" , new Date(e?.payrollMonth?.startDate))
-                            // setFieldValue("to" , new Date(e?.payrollMonth?.endDate))
-                             let formattedFromDate = formatDates(
-                                                            e?.payrollMonth?.startDate,
-                                                            "yyyy-MM-dd"
-                                                          );
-                                                          let formattedToDate = formatDates(
-                                                            e?.payrollMonth?.endDate,
-                                                            "yyyy-MM-dd"
-                                                          );
-                                                          setFieldValue("from", formattedFromDate);
-                                                          setFieldValue("to", formattedToDate); 
-                            setFieldValue("monthId" , Number(e?.payrollMonth?.Id))
-                        }
-                          dispatch(fetchAllActiveEmployeesBySubsidiary(value));
-                          dispatch(fetchAllDept(value));
-                          dispatch(
-                            fetchAllPayrollMonthYearList(
-                              { subsidiaryId: value },
-                              "allPayrollMonthYearList"
-                            )
-                          );
-                          dispatch(getAllLoanType({ subsidiaryId: value }));
-                          setFieldValue("employeeId", "");
-                          setFieldValue("departmentId", "");
-                        }}
+                        value={
+                            allSubsidiaryList?.find(
+                              (el) => el?.value === values?.subsidiaryId
+                            ) || null
+                          }
+                      options={allSubsidiaryList}
                       />
                     </div>
 

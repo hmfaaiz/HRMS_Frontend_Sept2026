@@ -155,8 +155,10 @@ import { CompanyDocumentSlice } from "../app/modules/CompanyDocument/_redux/redu
 import { CompanyDocumentPortalSlice } from "../app/modules/CompanyDocumentPortal/_redux/redux-Slice"
 import { EmployeeDocumentSlice } from "../app/modules/EmployeeDocument/_redux/redux-Slice"
 import { appraisalReviewSlice } from "../app/modules/Appraisal_Review/_redux/fromSlice";
+import { empAppraisalReviewSlice } from "../app/modules/Appraisal_Review_Portal/_redux/fromSlice";
 import { AttendanceCorrectionSlice } from "../app/modules/AttendanceCorrection/_redux/AttendanceSlice";
 import { appraisalFinalizationSlice } from "../app/modules/Appraisal_Finalization/_redux/fromSlice";
+import { appraisalStatusSlice } from "../app/modules/Appraisal_Status_Employee_Wise/_redux/fromSlice";
 import { BankPaymentAdviceSlice } from "../app/modules/BankPaymentAdvice/_redux/formSlice";
 import { FacilitatorTicketCreationSlice } from "../app/modules/FacilitatorTicketCreation/_redux/redux-Slice";
 
@@ -319,10 +321,12 @@ export const rootReducer = combineReducers({
   appraisal_review : appraisalReviewSlice.reducer,
   attendance_correction : AttendanceCorrectionSlice.reducer,
   appraisal_finalization : appraisalFinalizationSlice.reducer,
+  appraisal_status : appraisalStatusSlice.reducer,
   bank_advice : BankPaymentAdviceSlice.reducer,
   facilitator_ticket_creation : FacilitatorTicketCreationSlice.reducer,
 
   facilitator_setup: facilitatorSetupSlice.reducer,
+  emp_appraisal : empAppraisalReviewSlice.reducer,
 
   facilitator_ownership: FacilitatorOwnershipSlice.reducer,
 

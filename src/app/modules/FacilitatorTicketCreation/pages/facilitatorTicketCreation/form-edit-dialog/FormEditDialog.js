@@ -71,7 +71,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
   useEffect(() => {
-    dispatch(actions.fetchEmployeeDoc(id));
+    dispatch(actions.fetchTicketCreation(id));
   }, [id, dispatch, show]);
 
 
@@ -97,8 +97,8 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
 
 
-      dispatch(actions.createEmployeeDoc(formData, disbaleLoading, clearForm));
-      dispatch(actions.fetchEmployeeDocs(formUIProps.queryParams));
+      dispatch(actions.createTicketCreation(formData, disbaleLoading, clearForm));
+      dispatch(actions.fetchTicketCreations(formUIProps.queryParams));
       dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
 
 
@@ -149,9 +149,9 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         formUpdatedFields.file = formData.file;
       }
 
-      await dispatch(actions.updateEmployeeDoc(formUpdatedFields, disbaleLoading, clearForm));
+      await dispatch(actions.updateTicketCreation(formUpdatedFields, disbaleLoading, clearForm));
 
-      await dispatch(actions.fetchEmployeeDocs(usersUIProps.queryParams));
+      await dispatch(actions.fetchTicketCreations(usersUIProps.queryParams));
       await  dispatch(actions.fetchReceiveTickets(formUIProps.queryParams));
     }
 

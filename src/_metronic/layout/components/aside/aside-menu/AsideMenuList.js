@@ -124,13 +124,13 @@ const closeSubMenu = (parentKey, childHeading) => {
               >
                 <ul className="flex flex-col items-start lg:items-end lg:flex-row lg:space-x-6 list-none mb-1">
                   <li className="relative group">
-                    <Link
+                    <a
                       className="px-3 py-2 font-bold bg-tprimarydark flex justify-center items-center text-white text-sm rounded-xl"
-                      to="/dashboard"
+                      href="/dashboard"
                     >
                       <LayoutDashboard className="w-4 h-4 stroke-2 rounded-md inline-block text-white" />
                       <span className="ml-2">Dashboard</span>
-                    </Link>
+                    </a>
                   </li>
                 </ul>
                 {/* <ul className="flex flex-col justify-start items-start lg:items-end lg:justify-end w-full text-sm lg:flex-row lg:space-x-6 list-none mb-1">

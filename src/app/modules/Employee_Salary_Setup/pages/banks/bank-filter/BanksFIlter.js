@@ -77,6 +77,24 @@ export function BanksFilter({
     dispatch(fetchAllFormsMenu(377, "allEmpTypeDynamicChildMenus"));
     dispatch(fetchAllFormsMenu(88, "allEmpTypeChildMenus"));
   }, [dispatch]);
+
+  useEffect(()=>{
+
+    if(!dashboard?.allSubsidiaryList?.length) return
+
+    const defaultSubsId = dashboard?.allSubsidiaryList?.find((e)=> e?.isDefault)?.value
+    if(!defaultSubsId) return
+
+      const updatedQueryParams = {
+      ...banksUIProps.queryParams,
+      subsidiaryId: defaultSubsId,
+      pageNumber: 1,
+      };
+      banksUIProps.setQueryParams(updatedQueryParams);
+      dispatch(fetchUsers(banksUIProps.queryParams));
+      dispatch(fetchAllDept(defaultSubsId));
+
+  },[dashboard?.allSubsidiaryList])
   return (
     <>
       <Formik

@@ -11,6 +11,7 @@ const initialState = {
     userForEdit: undefined,
     lastError: null,
     userForRead: false,
+    leaveBalances:[],
 };
 
 export const callTypes = {
@@ -57,6 +58,13 @@ export const EmployeeLeaveBalanceSlice = createSlice({
             state.actionsLoading = false;
             state.error = null;
             state.userForEdit = entities;
-        }
+        },
+        LeaveBalancesFetched: (state, action) => {
+            const leaveBalances = action.payload.data?.data;
+         
+            state.listLoading = false;
+            state.error = null;
+            state.leaveBalances = leaveBalances;
+        },
     },
 });

@@ -9,6 +9,7 @@ const initialFacilitatorTicketCreationState = {
     centers: null,
     userStatusTypes: null,
     userForEdit: undefined,
+    timeLogForEdit: undefined,
     lastError: null,
     userForRead: false,
     receiveEntities: null,
@@ -17,6 +18,8 @@ const initialFacilitatorTicketCreationState = {
     detailData: undefined,
     detailEntities: null,
     detailTotalCount: 0,
+    timeLogsTotalCount: 0,
+    timelogsEntities: null,
 };
 
 
@@ -38,7 +41,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
             }
         },
 
-        employeeDocFetched: (state, action) => {
+        ticketCreationFetched: (state, action) => {
 
 
             // const entities = action.payload.data?.data.rows;
@@ -59,9 +62,9 @@ export const FacilitatorTicketCreationSlice = createSlice({
                 (parent.Details || []).map(detail => ({
                     ...detail,
 
-             
+
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
-                  ticketCode: parent.ticketCode,
+                    ticketCode: parent.ticketCode,
                 }))
             );
             state.listLoading = false;
@@ -98,7 +101,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
 
                     desc: parent.ticketDescription, // ya parent.remarks jo bhi chahiye
-                  ticketCode: parent.ticketCode,
+                    ticketCode: parent.ticketCode,
                 })));
 
             state.listLoading = false;
@@ -110,7 +113,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
         },
 
         //get User By ID
-        EmployeeDocFetchedForEdit: (state, action) => {
+        TicketCreationFetchedForEdit: (state, action) => {
 
 
             state.actionsLoading = false;
@@ -124,7 +127,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
             // Backend se data aa raha hai (single object OR array)
             const data = action.payload;
-console.log("data1111",data)
+
             // Defensive: hamesha array bana lo
             const parents = Array.isArray(data) ? data : data ? [data] : [];
 
@@ -133,11 +136,11 @@ console.log("data1111",data)
                 (parent.Details || []).map(detail => ({
                     ...detail,
 
-                    // 🔹 parent se fields
+
                     desc: parent.ticketDescription, // ya parent.remarks
                     parentId: parent.Id,
                     parentDueDate: parent.dueDate,
-                  
+
                 }))
             );
 
@@ -145,7 +148,21 @@ console.log("data1111",data)
             state.detailTotalCount = allDetails.length;
         },
 
-        EmployeeDocDeleted: (state, action) => {
+        FacilitatorTimeLogDetailFetched: (state, action) => {
+            state.listLoading = false;
+            state.error = null;
+
+            // Backend se data aa raha hai (single object OR array)
+            const data = action.payload;
+            console.log("data111311", data)
+
+            state.listLoading = false;
+            state.error = null;
+            state.timelogsEntities = data || [];
+            state.timeLogsTotalCount = data.length; // total number of details
+        },
+
+        TicketCreationDeleted: (state, action) => {
 
             state.error = null;
             state.actionsLoading = false;
@@ -156,11 +173,20 @@ console.log("data1111",data)
             );
         },
 
+        TimeLogFetchedForEdit: (state, action) => {
+           
+   
+            state.actionsLoading = false;
+            state.timeLogForEdit = action.payload.timeLogForEdit;
+            state.error = null;
+        },
 
 
 
 
-        // employeeDocCreated: (state, action) => {
+
+
+        // ticketCreationCreated: (state, action) => {
 
         //     state.actionsLoading = false;
         //     state.error = null;
@@ -168,7 +194,7 @@ console.log("data1111",data)
         // },
 
 
-        employeeDocCreated: (state, action) => {
+        ticketCreationCreated: (state, action) => {
             state.actionsLoading = false;
             state.error = null;
 
@@ -192,7 +218,7 @@ console.log("data1111",data)
 
 
 
-        employeeDocUpdated: (state, action) => {
+        ticketCreationUpdated: (state, action) => {
             state.error = null;
             state.actionsLoading = false;
             // state.entities.push(action.payload)
@@ -203,9 +229,9 @@ console.log("data1111",data)
                 //const payload = { ...action.payload };
                 let payload = JSON.stringify(action.payload)
                 let payloadObj = JSON.parse(payload);
-                let finalObj = JSON.parse(payloadObj.updatedEmployeeDoc);
+                let finalObj = JSON.parse(payloadObj.updatedTicketCreation);
                 if (entity.Id === finalObj.Id) {
-                    return finalObj; //action.payload.updatedEmployeeDoc;
+                    return finalObj; //action.payload.updatedTicketCreation;
                 }
                 return entity;
             });

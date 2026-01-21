@@ -143,7 +143,7 @@ export function FormEditForm({
       dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
       dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
       dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
-      dispatch(FetchAllFacilitatorEmployee(formData.ticketStatus));
+      dispatch(FetchAllFacilitatorEmployee(formData?.ticketStatus));
     }
   }, [dispatch, formData.Id]);
 

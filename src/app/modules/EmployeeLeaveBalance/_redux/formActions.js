@@ -88,3 +88,22 @@ export const saveRecord = (data, disableLoading) => (dispatch) => {
         });
       });
 };
+
+
+export const fetchLeaveBalances = (employeeId) => async (dispatch) => {
+ 
+  dispatch(actions.startCall({ callType: callTypes.list }));
+  if (employeeId) {
+    return requestFromServer
+      .getAllLeaveBalances({ employeeId })
+      .then((response) => {
+        dispatch(actions.LeaveBalancesFetched(response));
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't find Leave Balances";
+        dispatch(actions.catchError({ error, callType: callTypes.list }));
+      });
+  } else {
+    dispatch(actions.LeaveBalancesFetched([]));
+  }
+};

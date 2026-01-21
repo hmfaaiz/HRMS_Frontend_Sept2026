@@ -15,7 +15,7 @@ export const fetchAllCountry = () => async (dispatch) => {
       dispatch(actions.AllCountryFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -28,7 +28,7 @@ export const fetchAllActiveEmployees = (data = {}) => async (dispatch) => {
       dispatch(actions.AllActiveEmployeeFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -43,7 +43,7 @@ export const fetchAllActiveEmployeesBySubsidiary = (subsidiaryId) => async (
       dispatch(actions.AllActiveEmployeeFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -152,7 +152,7 @@ export const fetchAllDept = (id) => async (dispatch) => {
       dispatch(actions.AllDeptFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -182,7 +182,7 @@ export const fetchAllFormsMenu = (
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -310,7 +310,7 @@ export const getActiveFiscalYear = (key, subsidiaryId) => (dispatch) => {
       dispatch(actions.AllChildMenusFetch({ entities: fiscalData, key }));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -329,7 +329,7 @@ export const fetchAllSubsidiaryData = (key) => async (dispatch) => {
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -408,7 +408,7 @@ export const fetchAllCity = (cityId) => async (dispatch) => {
       dispatch(actions.AllCityFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -420,7 +420,7 @@ export const fetchStandByVehicles = (body) => async (dispatch) => {
       dispatch(actions.AllVehiclesByCenterAndSubCenterId(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong.");
+      // toast.error("Something went wrong.");
     });
 };
 
@@ -432,7 +432,7 @@ export const fetchDashboardVehicles = (body) => async (dispatch) => {
       dispatch(actions.dashboardVehicles(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -443,7 +443,7 @@ export const updateVehicelStatus = (body) => async (dispatch) => {
       toast.success("Successfully Updated");
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -487,7 +487,7 @@ export const fetchAllHumanResourceRole = (key) => async (dispatch) => {
       dispatch(actions.AllHumanResourceRoleListFetch({ entities, key }));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -513,7 +513,7 @@ export const fetchAllPayrollMonthYearList = (body, key) => async (dispatch) => {
       dispatch(actions.AllPayrollMonthYearListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -525,7 +525,7 @@ export const fetchAllComapnyData = (key) => async (dispatch) => {
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -539,7 +539,7 @@ export const fetchAllEmployeesWithNoPermissionData = (key) => async (
       dispatch(actions.AllEmployeesWithNoPermissionFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -596,7 +596,7 @@ export const fetchPayrollConfigApproverPermission = (key) => async (
       );
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -639,7 +639,7 @@ export const getAllJobVacancy = (body) => async (dispatch) => {
       dispatch(actions.AllJobVacancyFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -651,7 +651,7 @@ export const getAllPostedJobVacancy = (body) => async (dispatch) => {
       dispatch(actions.AllPostedJobVacancyFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -664,7 +664,7 @@ export const fetchAllParentDept = (id) => async (dispatch) => {
       dispatch(actions.AllParentDeptFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -698,7 +698,7 @@ dispatch(actions.AllPayrollAccountListFetch(entities));
       dispatch(actions.AllPayrollAccountListFetch(entities));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -715,7 +715,7 @@ export const fetchAllDesignationByGradeId = (
       return entities
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -731,7 +731,7 @@ export const fetchAllAccountsByType = (
       dispatch(actions.AllChildMenusFetch({ entities, key }));
     })
     .catch((error) => {
-      toast.error("Something went wrong");
+      // toast.error("Something went wrong");
     });
 };
 
@@ -746,3 +746,26 @@ export const fetchAllAccountsByType = (
 //     toast.error("Something went wrong while fetching ticket types");
 //   }
 // };
+export const fetchAllTicketTypes = (parentId) => async (dispatch) => {
+  try {
+    const response = await requestFromServer.getAllFormMenus(parentId);
+    const ticketTypes = response.data?.data || [];
+    dispatch(actions.ticketTypesFetched({ ticketTypes }));
+  } catch (error) {
+    toast.error("Something went wrong while fetching ticket types");
+  }
+};
+export const fetchAllSpecialLeaveTypes = (
+  key,
+  employeeId = null
+) => async (dispatch) => {
+  return await requestFromServer
+    .getAllSpecialLeaveTypes({ employeeId })
+    .then((response) => {
+      const entities = [...response.data?.data];
+      dispatch(actions.AllChildMenusFetch({ entities, key }));
+    })
+    .catch((error) => {
+      toast.error("Something went wrong");
+    });
+};

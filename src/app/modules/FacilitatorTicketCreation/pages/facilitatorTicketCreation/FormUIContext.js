@@ -14,6 +14,7 @@ export function FormUIProvider({ FormUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
   const [ids, setId] = useState([]);
   const [masterId, setMasterId] = useState();
+  const [detailId, setDetailId] = useState();
    const [employeeId, setemployeeId] = useState('');
   const [isFileReq, setIsFileReq] = useState(false)
   const [readMode, setReadMode] = useState(false)
@@ -50,7 +51,19 @@ export function FormUIProvider({ FormUIEvents, children }) {
 
   };
 
+  const initTimeLog = {
+    Id: "",
+    loggedByEmpId:"",
+    workDescription: "",
+    loggedDate: "",
+    timeRangeFrom: "",
+    timeRangeTo: "",
+    noOfHours: "",
+    isBillable:false,
+  
+  
 
+  };
 
   const value = {
     queryParams,
@@ -61,9 +74,9 @@ export function FormUIProvider({ FormUIEvents, children }) {
     initUser,
     setemployeeId,
     employeeId,
-    panelMode,
+    panelMode,initTimeLog,
     setPanelMode, setReadMode, readMode,setReceiveMode,receiveMode,
-    masterId, setMasterId,
+    masterId, setMasterId,setDetailId,detailId,
     newFormButtonClick: FormUIEvents.newFormButtonClick,
     openEditFormDialog: FormUIEvents.openEditFormDialog,
     openDeleteFormDialog: FormUIEvents.openDeleteFormDialog,
@@ -71,6 +84,8 @@ export function FormUIProvider({ FormUIEvents, children }) {
     openReadFormDialog: FormUIEvents.openReadFormDialog,
     openReceiveFormDialog: FormUIEvents.openReceiveFormDialog,
     openDetailGridData: FormUIEvents.openDetailGridData,
+    openTicketTimeLog: FormUIEvents.openTicketTimeLog,
+    openDetailTimeLog: FormUIEvents.openDetailTimeLog,
   };
   return (
     <FormUIContext.Provider value={value}>{children}</FormUIContext.Provider>

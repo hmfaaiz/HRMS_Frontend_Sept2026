@@ -242,3 +242,15 @@ export const getAllFacilitatorEmployee = async (Id) => {
 export const getAllFacilitatorTicketType = async () => {
   return await axios.get(`${USERS_URL}/settings/read-all-facilitator-ticket-type`, );
 };
+
+export function updateDefaultSubsidiary(body) {
+  return axios.post(`${USERS_URL}/settings/update-default-subsidiary`, body);
+}
+
+export function getModuleRights() {
+  return axios.get(`${USERS_URL}/settings/read-all-modules-right`);
+}
+
+export function getUsersByCompanyId(body) {
+  return axios.post(`${USERS_URL}/settings/read-all-user-by-companyId` , body);
+}
