@@ -684,6 +684,14 @@ export const FetchAllFacilitatorEmployee= (ticketTypeId) => async (dispatch) => 
     .getAllFacilitatorEmployee(ticketTypeId)
     .then((response) => {
       dispatch(actions.FacilitatorEmployeeFetch(response?.data?.data));
+    }
+  )};
+
+export const FetchAllFacilitatorTicketType = () => async (dispatch) => {
+  return await requestFromServer
+    .getAllFacilitatorTicketType()
+    .then((response) => {
+      dispatch(actions.AllFacilitatorTicketTypeFetch(response?.data?.data));
     })
     .catch((error) => {
       toast.error("Something went wrong");

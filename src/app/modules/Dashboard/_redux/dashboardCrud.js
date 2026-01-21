@@ -238,7 +238,11 @@ export function uploadFiles(body) {
 
 export const getAllFacilitatorEmployee = async (Id) => {
   return await axios.get(`${USERS_URL}/settings/read-all-facilitator-employee/${Id}`);
+}
+export const getAllFacilitatorTicketType = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-facilitator-ticket-type`, );
 };
+
 export function updateDefaultSubsidiary(body) {
   return axios.post(`${USERS_URL}/settings/update-default-subsidiary`, body);
 }

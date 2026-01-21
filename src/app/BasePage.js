@@ -415,6 +415,9 @@ import("./modules/FacilitatorTicketCreation/pages/index"))
 const Facilitator_Setup = lazy(()=>
 import("./modules/Facilitator_Setup/pages/index"))
 
+const Failitator_Ownership = lazy(()=>
+import ("./modules/Facilitator_Ownership/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -573,6 +576,9 @@ const ROUTES = {
   
 
   facilitator_setup : Facilitator_Setup,
+
+  facilitator_ownership : Failitator_Ownership,
+  
 };
 
 export default function BasePage() {

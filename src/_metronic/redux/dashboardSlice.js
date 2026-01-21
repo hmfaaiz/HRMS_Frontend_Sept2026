@@ -80,7 +80,7 @@ const initialDashboardState = {
   allAppraisalCompetencySetupList: [],
 
 
-  allTicketTypes: [],
+  // allTicketTypes: [],
 
   
 };
@@ -279,12 +279,12 @@ export const dashboardSlice = createSlice({
 
 
 
-    ticketTypesFetched: (state, action) => {
-      const { ticketTypes } = action.payload;
-      state.listLoading = false;
-      state.allTicketTypes = ticketTypes;
-      state.lastError = null;
-    },
+    // ticketTypesFetched: (state, action) => {
+    //   const { ticketTypes } = action.payload;
+    //   state.listLoading = false;
+    //   state.allTicketTypes = ticketTypes;
+    //   state.lastError = null;
+    // },
     
   },
 });
