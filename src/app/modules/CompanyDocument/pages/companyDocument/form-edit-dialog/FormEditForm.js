@@ -176,7 +176,7 @@ export function FormEditForm({
                     <FileUpload
                       label={
                         <>
-                          Companyr Attachment<span style={{ color: "red" }}>*</span>
+                          Company Attachment<span style={{ color: "red" }}>*</span>
                         </>
                       }
                       id="file"
