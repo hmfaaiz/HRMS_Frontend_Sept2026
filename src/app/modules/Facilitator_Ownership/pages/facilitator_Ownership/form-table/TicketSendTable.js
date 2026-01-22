@@ -70,8 +70,8 @@ export function TicketSendTable({
         text: "Select",
         sort: false,
         headerSortingClasses,
-        style: { minWidth: "80px", textAlign: "center" },
-        headerStyle: { textAlign: "center" },
+        style: { minWidth: "80px", textAlign: "left" },
+        headerStyle: { textAlign: "left" },
         formatter: (cell, row) => {
           const isChecked = transferSelection.some(
             (item) => item.rowId === row.Id,
@@ -79,7 +79,7 @@ export function TicketSendTable({
           return (
             <div
               onClick={(e) => e.stopPropagation()}
-              style={{ display: "flex", justifyContent: "center" }}
+              style={{ display: "flex", justifyContent: "left" }}
             >
               <input
                 type="checkbox"
