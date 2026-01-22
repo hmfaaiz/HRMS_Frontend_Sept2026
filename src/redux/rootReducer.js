@@ -165,6 +165,8 @@ import { FacilitatorTicketCreationSlice } from "../app/modules/FacilitatorTicket
 
 import { facilitatorSetupSlice } from "../app/modules/Facilitator_Setup/_redux/facilitatorSetupSlice";
 
+import { FacilitatorOwnershipSlice } from "../app/modules/Facilitator_Ownership/_redux/redux-Slice";
+
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -325,6 +327,10 @@ export const rootReducer = combineReducers({
 
   facilitator_setup: facilitatorSetupSlice.reducer,
   emp_appraisal : empAppraisalReviewSlice.reducer,
+
+  facilitator_ownership: FacilitatorOwnershipSlice.reducer,
+
+
 
 });
 

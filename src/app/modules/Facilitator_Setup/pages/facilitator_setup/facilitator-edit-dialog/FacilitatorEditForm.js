@@ -7,6 +7,8 @@ import * as dashboardActions from "../../../../../../_metronic/redux/dashboardAc
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { CirclePlus, Trash2 } from "lucide-react";
 
+import { FetchAllFacilitatorTicketType } from "../../../../Dashboard/_redux/dashboardActions";
+
 // Validation schema
 const facilitatorValidation = Yup.object().shape({
   ticketTypeId: Yup.mixed().required(VALIDATION_MESSAGES.required),
@@ -48,7 +50,7 @@ export function FacilitatorEditForm({
     dispatch(dashboardActions.fetchAllSubsidiaryData("allSubsidiaryData"));
     dispatch(dashboardActions.fetchAllDept());
     dispatch(dashboardActions.fetchAllActiveEmployees("allEmployees"));
-    dispatch(dashboardActions.fetchAllFormsMenu(545, "allTicketTypes"));
+    dispatch(FetchAllFacilitatorTicketType());
     dispatch(dashboardActions.fetchAllFormsMenu(89, "allLocationChildMenus"));
   }, [dispatch]);
 
@@ -65,9 +67,9 @@ export function FacilitatorEditForm({
       ]);
     }
 
-    if (dashboard?.allTicketTypes?.length) {
+    if (dashboard?.allFacilitatorTicketType?.length) {
       setTicketTypes(
-        dashboard.allTicketTypes.map((tt) => ({
+        dashboard.allFacilitatorTicketType.map((tt) => ({
           value: tt.id || tt.value,
           label: tt.name || tt.label,
         }))
@@ -105,7 +107,7 @@ export function FacilitatorEditForm({
   }, [
     dashboard.allSubsidiaryData,
     dashboard.allLocationChildMenus,
-    dashboard.allTicketTypes,
+    dashboard.allFacilitatorTicketType,
     dashboard.allEmployees,
     dashboard.allDept,
     data.employeeId,
@@ -149,6 +151,34 @@ export function FacilitatorEditForm({
     }
   };
 
+
+
+  const isDepartmentUsedWithAllLocation = (
+    departmentId,
+    departmentLocations,
+    currentIndex
+  ) => {
+    return departmentLocations.some(
+      (row, rowIndex) =>
+        rowIndex !== currentIndex &&
+        row.departmentId === departmentId &&
+        row.locationId === -1
+    );
+  };
+
+ 
+
+  const hasAllDepartmentWithSpecificLocation = (departmentLocations = []) => {
+    return departmentLocations.some(
+      (row) =>
+        row.departmentId === -1 &&
+        row.locationId !== null &&
+        row.locationId !== -1
+    );
+  };
+  
+
+  
   // ------------------ FORM ------------------
   return (
     <Formik
@@ -201,7 +231,7 @@ export function FacilitatorEditForm({
       {({ handleSubmit, values, setFieldValue, errors, touched }) => (
         <Form className="form form-label-right">
           <fieldset disabled={isUserForRead}>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
               {/* Subsidiary */}
               <div>
                 <SearchSelect
@@ -224,11 +254,13 @@ export function FacilitatorEditForm({
                   }
                   isDisabled={isUserForRead}
                   onChange={(e) => {
-                    setFieldValue("subsidiaryId", e?.value || null)
-                    dispatch(dashboardActions.fetchAllActiveEmployeesBySubsidiary(e?.value));
-                  }
-
-                  }
+                    setFieldValue("subsidiaryId", e?.value || null);
+                    dispatch(
+                      dashboardActions.fetchAllActiveEmployeesBySubsidiary(
+                        e?.value
+                      )
+                    );
+                  }}
                   error={errors.subsidiaryId}
                   touched={touched.subsidiaryId}
                 />
@@ -244,11 +276,11 @@ export function FacilitatorEditForm({
                     </span>
                   }
                   value={
-                    ticketTypes.find(
+                    dashboard.allFacilitatorTicketType.find(
                       (opt) => opt.value === values.ticketTypeId
                     ) || null
                   }
-                  options={ticketTypes || []}
+                  options={dashboard.allFacilitatorTicketType || []}
                   isDisabled={isUserForRead}
                   onChange={(e) =>
                     setFieldValue("ticketTypeId", e?.value || null)
@@ -269,7 +301,7 @@ export function FacilitatorEditForm({
                       (d) => d.value === values?.departmentId
                     ) || null
                   }
-                  options={allDepartments.filter(d => d.value !== -1)}
+                  options={allDepartments.filter((d) => d.value !== -1)}
                   isDisabled={isUserForRead || !values?.ticketTypeId}
                   onChange={(e) => {
                     setFieldValue("departmentId", e?.value);
@@ -319,7 +351,12 @@ export function FacilitatorEditForm({
                 className="btn btn-primary"
                 onClick={() => addRowInfo(values, setFieldValue)}
                 disabled={
-                  isUserForRead || !values?.employeeId || !values?.ticketTypeId
+                  isUserForRead ||
+                  !values?.employeeId ||
+                  !values?.ticketTypeId ||
+                  values.departmentLocations.some(
+                    (row) => row.departmentId === -1 && row.locationId === -1
+                  )
                 }
               >
                 <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
@@ -358,7 +395,31 @@ export function FacilitatorEditForm({
                                 (d) => d.value === obj.departmentId
                               ) || null
                             }
-                            options={allDepartments || []}
+                            options={allDepartments.map((dept) => {
+                              const disableAllDept =
+                                dept.value === -1 &&
+                                values.departmentLocations.some(
+                                  (row, rowIndex) =>
+                                    rowIndex !== index &&
+                                    row.departmentId !== null &&
+                                    row.departmentId !== -1
+                                );
+
+                              const disableSameDeptWhenAllLocationUsed =
+                                dept.value !== -1 &&
+                                isDepartmentUsedWithAllLocation(
+                                  dept.value,
+                                  values.departmentLocations,
+                                  index
+                                );
+
+                              return {
+                                ...dept,
+                                isDisabled:
+                                  disableAllDept ||
+                                  disableSameDeptWhenAllLocationUsed,
+                              };
+                            })}
                             isDisabled={
                               isUserForRead ||
                               !values?.employeeId ||
@@ -367,6 +428,10 @@ export function FacilitatorEditForm({
                             onChange={(e) => {
                               const list = [...values.departmentLocations];
                               list[index].departmentId = e?.value || null;
+
+                              // Reset location when department changes
+                              list[index].locationId = null;
+
                               setFieldValue("departmentLocations", list);
                             }}
                             error={
@@ -385,14 +450,37 @@ export function FacilitatorEditForm({
                                 (l) => l.value === obj.locationId
                               ) || null
                             }
-                            options={locations?.map((e, i) => ({
-                              ...e,
-                              isDisabled: values?.departmentLocations?.find(
-                                (el) =>
-                                  el?.departmentId == obj.departmentId &&
-                                  e?.value == el?.locationId
-                              ),
-                            }))}
+                            options={locations.map((loc) => {
+                              const isUsedInSameDept = values.departmentLocations.some(
+                                (row, rowIndex) =>
+                                  rowIndex !== index &&
+                                  row.departmentId === obj.departmentId &&
+                                  row.locationId === loc.value
+                              );
+
+                              const isUsedInAllDept = values.departmentLocations.some(
+                                (row, rowIndex) =>
+                                  rowIndex !== index &&
+                                  row.departmentId === -1 &&
+                                  row.locationId === loc.value
+                              );
+
+                      
+                              const disableAllLocationBecauseAllDeptSelected =
+                                loc.value === -1 &&
+                                obj.departmentId !== -1 &&
+                                hasAllDepartmentWithSpecificLocation(
+                                  values.departmentLocations
+                                );
+
+                              return {
+                                ...loc,
+                                isDisabled:
+                                  isUsedInSameDept ||
+                                  isUsedInAllDept ||
+                                  disableAllLocationBecauseAllDeptSelected,
+                              };
+                            })}
                             isDisabled={
                               isUserForRead ||
                               !values?.employeeId ||
@@ -403,12 +491,6 @@ export function FacilitatorEditForm({
                               list[index].locationId = e?.value || null;
                               setFieldValue("departmentLocations", list);
                             }}
-                            error={
-                              errors.departmentLocations?.[index]?.locationId
-                            }
-                            touched={
-                              touched.departmentLocations?.[index]?.locationId
-                            }
                           />
                         </td>
 

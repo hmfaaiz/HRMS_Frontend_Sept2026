@@ -94,17 +94,18 @@ const initialDashboardState = {
   allEarningList: [],
   separatedEmployee: null,
   salaryRoundingPolicy: [],
-  geoLocation : [],
-  profileDetailInfo : [],
-  allFSApprovedEmp : [],
-  allTaxYearSetupList : [],
-  allowRequestBySenior : false,
-  currentDateTime : null,
+  geoLocation: [],
+  profileDetailInfo: [],
+  allFSApprovedEmp: [],
+  allTaxYearSetupList: [],
+  allowRequestBySenior: false,
+  currentDateTime: null,
   allTicketTypeList: [],
   priorityLevelList: [],
   facilitatorEmployeeList: [],
-  moduleRights : [],
-  allUsers : [],
+  allFacilitatorTicketType: [],
+  moduleRights: [],
+  allUsers: [],
 };
 
 export const callTypes = {
@@ -389,11 +390,11 @@ export const dashboardSlice = createSlice({
 
     AllApprovedResignedEmpListFetch: (state, action) => {
       state.approvedResignedEmpList = action.payload;
-    }, 
+    },
     AllGeoLocationFetchedFetch: (state, action) => {
       state.geoLocation = action.payload;
-    }, 
-    
+    },
+
 
     AllEarningFetch: (state, action) => {
       state.allEarningList = action.payload;
@@ -405,33 +406,39 @@ export const dashboardSlice = createSlice({
 
     SalaryRoundingFetch: (state, action) => {
       state.salaryRoundingPolicy = action.payload;
-   
+
     },
 
     ProfileDetailInfoFetch: (state, action) => {
       state.profileDetailInfo = action.payload;
-   
+
     },
 
     FSApprovedEmpFetch: (state, action) => {
-      state.allFSApprovedEmp  = action.payload;
-   
+      state.allFSApprovedEmp = action.payload;
+
     },
 
     TaxYearSetupFetch: (state, action) => {
-      state.allTaxYearSetupList  = action.payload;
-   
+      state.allTaxYearSetupList = action.payload;
+
     },
-        requestRaisedBySenior: (state, action) => {
-      state.allowRequestBySenior  = action.payload;
-   
-    }, 
-     FacilitatorEmployeeFetch: (state, action) => {
-      state.facilitatorEmployeeList  = action.payload;
-   
-    }, 
+    requestRaisedBySenior: (state, action) => {
+      state.allowRequestBySenior = action.payload;
+
+    },
+    FacilitatorEmployeeFetch: (state, action) => {
+      state.facilitatorEmployeeList = action.payload;
+
+    },
+
+
+    AllFacilitatorTicketTypeFetch: (state, action) => {
     
+      state.allFacilitatorTicketType = action.payload;
+
     },
+
     ModuleRightFetched: (state, action) => {
       state.moduleRights = action.payload;
     },
@@ -439,5 +446,5 @@ export const dashboardSlice = createSlice({
       state.allUsers = action.payload;
     },
 
-
+  }
 });
