@@ -349,7 +349,7 @@ console.log("currentUser11111",currentUser)
     name="assignTo"
     label={
       <span>
-        Assign To{ currentUser.employeeIdMapping}<span style={{ color: "red" }}>*</span>
+        Assign To<span style={{ color: "red" }}>*</span>
       </span>
     }
     // Disable if read mode, no initiator, or auto-assigned
