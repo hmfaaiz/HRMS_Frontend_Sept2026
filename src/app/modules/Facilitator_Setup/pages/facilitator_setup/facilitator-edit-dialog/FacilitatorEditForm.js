@@ -457,6 +457,7 @@ export function FacilitatorEditForm({
                                   row.departmentId === obj.departmentId &&
                                   row.locationId === loc.value
                               );
+  
 
                               const isUsedInAllDept = values.departmentLocations.some(
                                 (row, rowIndex) =>

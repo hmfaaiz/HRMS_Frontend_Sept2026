@@ -67,8 +67,8 @@ export function TicketReceivedTable({
         text: "Select",
         sort: false,
         headerSortingClasses,
-        style: { minWidth: "80px", textAlign: "center" },
-        headerStyle: { textAlign: "center" },
+        style: { minWidth: "80px", textAlign: "left" },
+        headerStyle: { textAlign: "left" },
         formatter: (cell, row) => {
           const isChecked = transferSelection.some(
             (item) => item.rowId === row.Id,
@@ -78,8 +78,8 @@ export function TicketReceivedTable({
               onClick={(e) => e.stopPropagation()}
               style={{
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                justifyContent: "left",
+                alignItems: "left",
               }}
             >
               <input
@@ -102,6 +102,8 @@ export function TicketReceivedTable({
         formatExtraData: transferSelection,
       },
 
+      
+
       {
         dataField: "priorityLevel",
         text: "",
@@ -123,6 +125,24 @@ export function TicketReceivedTable({
           ) : null;
         },
       },
+
+      {
+  dataField: "ticketCode",
+  text: "Ticket Code",
+  sort: false,
+  sortCaret,
+  headerSortingClasses,
+  style: { minWidth: "30px" },
+  formatter: (cell) => {
+    if (!cell) return "";
+    return cell.length > 30 ? (
+      <span title={cell}>{cell.substring(0, 70) + "..."}</span>
+    ) : (
+      cell
+    );
+  },
+},
+
       {
         dataField: "ticketType.formName",
         text: "Ticket Type",
