@@ -71,6 +71,7 @@ export function TicketReceivedTable({
         headerStyle: { textAlign: "left" },
         formatter: (cell, row) => {
        
+
           const isChecked = transferSelection.some(
             (item) => item.rowId === row.Id,
           );
@@ -85,9 +86,12 @@ export function TicketReceivedTable({
             >
               <input
                 type="checkbox"
+
                 disabled={
                   filterData?.toEmployee == row.assignTo ||
+                  
                   filterData?.toEmployee == row.assignBy
+               
                 }
               
                 checked={isChecked}
