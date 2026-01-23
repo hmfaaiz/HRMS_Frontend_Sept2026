@@ -84,6 +84,12 @@ export function TicketSendTable({
               <input
                 type="checkbox"
                 checked={isChecked}
+                 disabled={
+                  filterData?.toEmployee == row.assignTo ||
+                  
+                  filterData?.toEmployee == row.assignBy
+               
+                }
                 onChange={(e) => {
                   e.stopPropagation();
                   handleCheckboxChange(row.Id, e.target.checked);
