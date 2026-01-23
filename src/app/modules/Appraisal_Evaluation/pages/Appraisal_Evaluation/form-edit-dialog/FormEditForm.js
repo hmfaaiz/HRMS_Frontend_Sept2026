@@ -220,7 +220,7 @@ export function FormEditForm({
       }}
       validationSchema={formSchema}
     >
-      {({ setFieldValue, validateForm, setTouched, errors, values }) => (
+      {({ setFieldValue, validateForm, setTouched, errors, values , touched }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && !currentQues && (
@@ -294,7 +294,7 @@ export function FormEditForm({
                             );
                           })}
                         </div>
-                        {errors?.ratingValue && (
+                        {errors?.ratingValue && touched?.ratingValue && (
                           <div className="invalid-feedback">
                             {errors?.ratingValue}
                           </div>

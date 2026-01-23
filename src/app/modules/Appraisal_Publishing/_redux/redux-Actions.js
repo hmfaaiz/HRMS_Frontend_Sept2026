@@ -44,7 +44,11 @@ export const publishAppraisal = (body) => (dispatch) => {
   return requestFromServer
     .publishAppraisal(body)
     .then((response) => {
-      dispatch(actions.AppraisalPublishUpdated());
+      if (response?.data?.data?.isBulk) {
+        dispatch(actions.AppraisalPublishBulkUpdated(response?.data?.data));
+      } else {
+        dispatch(actions.AppraisalPublishUpdated());
+      }
       toast.success(SERVER_MESSAGES.updatedSuccess, {
         position: "top-right",
         autoClose: 5000,
@@ -68,7 +72,7 @@ export const publishAppraisal = (body) => (dispatch) => {
           draggable: true,
           progress: undefined,
           style: { whiteSpace: "pre-line" },
-        }
+        },
       );
     });
 };
@@ -101,7 +105,7 @@ export const holdAppraisalPublish = (body) => (dispatch) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        }
+        },
       );
     });
 };
@@ -116,4 +120,8 @@ export const viewAppraisalDetail = (body) => (dispatch) => {
     .catch((error) => {
       dispatch(actions.catchError({ error, callType: callTypes.action }));
     });
+};
+
+export const clearBulkPublishResult = (body) => (dispatch) => {
+  dispatch(actions.clearErrorState());
 };
