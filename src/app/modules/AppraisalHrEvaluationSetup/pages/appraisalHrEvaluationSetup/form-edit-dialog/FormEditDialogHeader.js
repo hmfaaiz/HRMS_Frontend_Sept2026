@@ -17,9 +17,9 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
   );
 
   useEffect(() => {
-    let _title = id ? "" : "Add Hr Evaluation Setup";
+    let _title = id ? "" : "Add HR Evaluation Setup";
     if (id) {
-      _title = `Edit Hr Evaluation Setup`;
+      _title = `Edit HR Evaluation Setup`;
     } 
   
     setTitle(_title);
@@ -30,7 +30,7 @@ export function FormEditDialogHeader({ id, isUserForRead }) {
       {actionsLoading && <ModalProgressBar />}
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">
-          {!isUserForRead ? title : "View Hr Evaluation Setup"}
+          {!isUserForRead ? title : "View HR Evaluation Setup"}
         </Modal.Title>
       </Modal.Header>
     </>

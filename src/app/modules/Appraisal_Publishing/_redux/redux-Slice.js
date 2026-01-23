@@ -7,6 +7,7 @@ const initialState = {
   entities: null,
   lastError: null,
   appraisal_detail: null,
+  errorState: null,
 };
 
 export const callTypes = {
@@ -49,6 +50,13 @@ export const appraisalPublishSlice = createSlice({
     AppraisalPublishUpdated: (state, action) => {
       state.error = null;
       state.actionsLoading = false;
+    },
+    AppraisalPublishBulkUpdated: (state, action) => {
+      state.errorState = action.payload;
+      state.actionsLoading = false;
+    },
+    clearErrorState: (state, action) => {
+      state.errorState = null;
     },
     AppraisalDetailFetched: (state, action) => {
       state.error = null;

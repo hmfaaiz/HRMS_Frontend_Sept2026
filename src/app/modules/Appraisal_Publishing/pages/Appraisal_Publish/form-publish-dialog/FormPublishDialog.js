@@ -23,7 +23,7 @@ export function FormPublishDialog({ id, show, onHide }) {
   const dispatch = useDispatch();
   const { isLoading } = useSelector(
     (state) => ({ isLoading: state.appraisal_publish.actionsLoading }),
-    shallowEqual
+    shallowEqual,
   );
 
   const enableLoading = () => {
@@ -50,7 +50,8 @@ export function FormPublishDialog({ id, show, onHide }) {
         Id: id,
         yearId: usersUIProps.yearId,
         appraisalCategoryId: usersUIProps?.appraisalCategoryId,
-      })
+        isBulk: false,
+      }),
     ).then(() => {
       onHide();
       // refresh list after deletion
