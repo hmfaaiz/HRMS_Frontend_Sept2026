@@ -73,7 +73,7 @@ export function DetailTimeLogsTable() {
   };
 
     useEffect(() => {
-      console.log("editTimeLogId11111",editTimeLogId)
+     
       dispatch(actions.fetchTimeLog(editTimeLogId));
     }, [editTimeLogId, dispatch]);
 

@@ -51,7 +51,7 @@ export function DetailTable() {
   const { detailTotalCount, detailEntities, listLoading } = currentState;
 
   //totalCount = 10
-  console.log("detailEntities11111", detailEntities)
+
   const dispatch = useDispatch();
 
   useEffect(() => {

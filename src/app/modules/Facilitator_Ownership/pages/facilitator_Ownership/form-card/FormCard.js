@@ -18,9 +18,11 @@ export function FormCard() {
   const [resetHeader, setResetHeader] = useState(false);
 
   const handleFilter = (data) => {
+
     if (data.fromEmployee) {
       setFilterData({ fromEmployee: data.fromEmployee, toEmployee: data.toEmployee });
-      setShowTables(true);
+     
+       setShowTables(true);
       setSendSelection([]);
       setReceiveSelection([]);
     }
@@ -53,8 +55,8 @@ export function FormCard() {
       );
     }
 
-    dispatch(actions.fetchFacilitatorOwnershipSent({ employeeId: filterData.fromEmployee }));
-    dispatch(actions.fetchFacilitatorOwnershipReceived({ employeeId: filterData.fromEmployee }));
+    // dispatch(actions.fetchFacilitatorOwnershipSent({ employeeId: filterData.fromEmployee }));
+    // dispatch(actions.fetchFacilitatorOwnershipReceived({ employeeId: filterData.fromEmployee }));
 
     setSendSelection([]);
     setReceiveSelection([]);
@@ -75,7 +77,7 @@ export function FormCard() {
 
   return (
     <TCard name={CurrentModuleName()}>
-      <OwnershipTransferHeader onFilter={handleFilter} reset={resetHeader} />
+      <OwnershipTransferHeader onFilter={handleFilter} setShowTables={setShowTables} reset={resetHeader}  />
 
       {showTables && (
         <>

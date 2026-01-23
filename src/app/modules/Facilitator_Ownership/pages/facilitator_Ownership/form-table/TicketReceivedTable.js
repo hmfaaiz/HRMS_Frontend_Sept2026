@@ -34,8 +34,9 @@ export function TicketReceivedTable({
     if (!employeeId) return;
 
     setTransferSelection([]);
+  
     dispatch(actions.fetchFacilitatorOwnershipReceived({ employeeId }));
-  }, [filterData?.fromEmployee, dispatch, setTransferSelection]);
+  }, [filterData?.fromEmployee,filterData?.toEmployee, dispatch, setTransferSelection]);
 
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -67,9 +68,11 @@ export function TicketReceivedTable({
         text: "Select",
         sort: false,
         headerSortingClasses,
-        style: { minWidth: "80px", textAlign: "center" },
-        headerStyle: { textAlign: "center" },
+        style: { minWidth: "80px", textAlign: "left" },
+        headerStyle: { textAlign: "left" },
         formatter: (cell, row) => {
+       
+
           const isChecked = transferSelection.some(
             (item) => item.rowId === row.Id,
           );
@@ -78,12 +81,20 @@ export function TicketReceivedTable({
               onClick={(e) => e.stopPropagation()}
               style={{
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                justifyContent: "left",
+                alignItems: "left",
               }}
             >
               <input
                 type="checkbox"
+
+                disabled={
+                  filterData?.toEmployee == row.assignTo ||
+
+                  filterData?.toEmployee == row.assignBy
+               
+                }
+              
                 checked={isChecked}
                 onChange={(e) => {
                   e.stopPropagation();
@@ -101,6 +112,8 @@ export function TicketReceivedTable({
         },
         formatExtraData: transferSelection,
       },
+
+
 
       {
         dataField: "priorityLevel",
@@ -123,6 +136,24 @@ export function TicketReceivedTable({
           ) : null;
         },
       },
+
+      {
+        dataField: "ticketCode",
+        text: "Ticket Code",
+        sort: false,
+        sortCaret,
+        headerSortingClasses,
+        style: { minWidth: "30px" },
+        formatter: (cell) => {
+          if (!cell) return "";
+          return cell.length > 30 ? (
+            <span title={cell}>{cell.substring(0, 70) + "..."}</span>
+          ) : (
+            cell
+          );
+        },
+      },
+
       {
         dataField: "ticketType.formName",
         text: "Ticket Type",
@@ -264,7 +295,7 @@ export function TicketReceivedTable({
         data={entities}
         columns={columns}
         defaultSorted={uiHelpers.defaultSorted}
-        onTableChange={getHandlerTableChange(() => {})}
+        onTableChange={getHandlerTableChange(() => { })}
       >
         <PleaseWaitMessage entities={entities} />
         <NoRecordsFoundMessage entities={entities} />

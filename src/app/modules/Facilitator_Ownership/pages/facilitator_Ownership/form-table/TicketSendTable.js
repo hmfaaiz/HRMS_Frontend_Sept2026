@@ -38,7 +38,7 @@ export function TicketSendTable({
 
     // Fetch tickets for the selected employee
     dispatch(actions.fetchFacilitatorOwnershipSent({ employeeId }));
-  }, [filterData?.fromEmployee, dispatch, setTransferSelection]);
+  }, [filterData?.fromEmployee,filterData?.toEmployee, dispatch, setTransferSelection]);
 
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -70,8 +70,8 @@ export function TicketSendTable({
         text: "Select",
         sort: false,
         headerSortingClasses,
-        style: { minWidth: "80px", textAlign: "center" },
-        headerStyle: { textAlign: "center" },
+        style: { minWidth: "80px", textAlign: "left" },
+        headerStyle: { textAlign: "left" },
         formatter: (cell, row) => {
           const isChecked = transferSelection.some(
             (item) => item.rowId === row.Id,
@@ -79,11 +79,17 @@ export function TicketSendTable({
           return (
             <div
               onClick={(e) => e.stopPropagation()}
-              style={{ display: "flex", justifyContent: "center" }}
+              style={{ display: "flex", justifyContent: "left" }}
             >
               <input
                 type="checkbox"
                 checked={isChecked}
+                 disabled={
+                  filterData?.toEmployee == row.assignTo ||
+                  
+                  filterData?.toEmployee == row.assignBy
+               
+                }
                 onChange={(e) => {
                   e.stopPropagation();
                   handleCheckboxChange(row.Id, e.target.checked);
