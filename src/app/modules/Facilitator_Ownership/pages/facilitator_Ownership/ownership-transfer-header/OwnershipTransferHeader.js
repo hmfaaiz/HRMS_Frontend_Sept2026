@@ -3,7 +3,7 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import * as dashboardActions from "../../../../../../_metronic/redux/dashboardActions";
 
-export default function OwnershipTransferHeader({ onFilter,reset }) {
+export default function OwnershipTransferHeader({ onFilter,setShowTables,reset }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector(
     (state) => ({ dashboard: state.dashboard }),
@@ -136,6 +136,7 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
               setFromSubsidiary(e?.value || null);
               setFromDepartment(null);
               setFromEmployee(null);
+              setShowTables(false);
             }}
           />
         </div>
@@ -150,6 +151,7 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
             onChange={(e) => {
               setFromDepartment(e?.value || null);
               setFromEmployee(null);
+              setShowTables(false);
             }}
             isDisabled={!fromSubsidiary}
           />
@@ -160,7 +162,10 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
             label="From Employee"
             options={fromEmployees}
             value={fromEmployees.find((e) => e.value === fromEmployee) || null}
-            onChange={(e) => setFromEmployee(e?.value || null)}
+            onChange={(e) => {
+              setFromEmployee(e?.value || null)
+              setShowTables(false);
+            }}
             isDisabled={!fromDepartment}
           />
         </div>
@@ -179,6 +184,7 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
               setToSubsidiary(e?.value || null);
               setToDepartment(null);
               setToEmployee(null);
+              setShowTables(false);
             }}
           />
         </div>
@@ -191,6 +197,7 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
             onChange={(e) => {
               setToDepartment(e?.value || null);
               setToEmployee(null);
+              setShowTables(false);
             }}
             isDisabled={!toSubsidiary}
           />
@@ -201,7 +208,9 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
             label="To Employee"
             options={toEmployees}
             value={toEmployees.find((e) => e.value === toEmployee) || null}
-            onChange={(e) => setToEmployee(e?.value || null)}
+            onChange={(e) =>{ 
+              setShowTables(false);
+              setToEmployee(e?.value || null)}}
             isDisabled={!toDepartment}
           />
         </div>
@@ -210,9 +219,11 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
       {/* BUTTON */}
       <div className="flex justify-end">
         <button
+        disabled={!fromEmployee || !toEmployee}
           className="btn btn-primary mt-6"
-          onClick={() =>
-            onFilter({
+          onClick={() =>{
+        
+                 onFilter({
               fromSubsidiary,
               fromDepartment,
               fromEmployee,
@@ -220,6 +231,10 @@ export default function OwnershipTransferHeader({ onFilter,reset }) {
               toDepartment,
               toEmployee,
             })
+
+          }
+          
+       
           }
         >
           Filter
