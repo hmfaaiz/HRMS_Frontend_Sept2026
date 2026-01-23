@@ -71,6 +71,7 @@ export function TicketReceivedTable({
         headerStyle: { textAlign: "left" },
         formatter: (cell, row) => {
        
+          
           const isChecked = transferSelection.some(
             (item) => item.rowId === row.Id,
           );
