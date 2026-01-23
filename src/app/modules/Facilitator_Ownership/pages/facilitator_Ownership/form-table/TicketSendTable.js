@@ -38,7 +38,7 @@ export function TicketSendTable({
 
     // Fetch tickets for the selected employee
     dispatch(actions.fetchFacilitatorOwnershipSent({ employeeId }));
-  }, [filterData?.fromEmployee, dispatch, setTransferSelection]);
+  }, [filterData?.fromEmployee,filterData?.toEmployee, dispatch, setTransferSelection]);
 
   const ticketStatusOptions = [
     { value: 1, label: "Open" },

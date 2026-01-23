@@ -107,7 +107,7 @@ export function ReceiveFIlter({ listLoading, user }) {
   // Extract assignBy values and remove duplicates
   const assignByIds = [...new Set(receiveEntities?.map(item => item.assignBy))];
 
-  console.log("assignByIds1111111", assignByIds, allEmployees);
+
 
   const ticketStatusOptions = [
 

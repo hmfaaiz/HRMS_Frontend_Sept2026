@@ -30,7 +30,7 @@ export const FacilitatorOwnershipSlice = createSlice({
 
    
     ownershipSentFetched: (state, action) => {
-      console.log("Sent payload:", action.payload);
+      
       const rows = action.payload?.data?.data?.rows || [];
       state.entitiesSent = rows;
       state.totalSent = action.payload?.data?.data?.totalResults || rows.length;
@@ -40,7 +40,7 @@ export const FacilitatorOwnershipSlice = createSlice({
 
    
     ownershipReceivedFetched: (state, action) => {
-      console.log("Received payload:", action.payload);
+     
       const rows = action.payload?.data?.data?.rows || [];
       state.entitiesReceived = rows;
       state.totalReceived = action.payload?.data?.data?.totalResults || rows.length;

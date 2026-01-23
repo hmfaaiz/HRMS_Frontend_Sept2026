@@ -27,7 +27,7 @@ export function FormPage({ history }) {
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/edit`);
     },
     openDeleteFormDialog: (id, status) => {
-      console.log("deleet111111111")
+  
       history.push(`/facilitator_ticket_creation/read-all-facilitator-ticket-creation/${id}/${status}/delete`);
     },
     openActiveFormDialog: (id) => {

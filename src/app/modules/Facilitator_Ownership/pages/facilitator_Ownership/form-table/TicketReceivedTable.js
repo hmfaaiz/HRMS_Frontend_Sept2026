@@ -34,8 +34,9 @@ export function TicketReceivedTable({
     if (!employeeId) return;
 
     setTransferSelection([]);
+  
     dispatch(actions.fetchFacilitatorOwnershipReceived({ employeeId }));
-  }, [filterData?.fromEmployee, dispatch, setTransferSelection]);
+  }, [filterData?.fromEmployee,filterData?.toEmployee, dispatch, setTransferSelection]);
 
   const ticketStatusOptions = [
     { value: 1, label: "Open" },
@@ -89,7 +90,7 @@ export function TicketReceivedTable({
 
                 disabled={
                   filterData?.toEmployee == row.assignTo ||
-                  
+
                   filterData?.toEmployee == row.assignBy
                
                 }

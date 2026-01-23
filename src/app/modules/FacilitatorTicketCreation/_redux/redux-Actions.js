@@ -205,7 +205,7 @@ export const fetchAllFacilitatorDetail = (Id) => (dispatch) => {
     .getAllFacilitatorDetail(Id)
     .then((response) => {
       const entities = response.data.data;
-      console.log("response1111", response.data.data)
+     
 
       dispatch(actions.FacilitatorDetailFetched(entities));
     })

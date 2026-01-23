@@ -166,7 +166,7 @@ export function FormEditForm({
     { value: 2, label: "Send for Review" },
   ];
 
-  console.log(" !formData111111", formData, !formData)
+
   const calculateHours = (fromTime, toTime) => {
     if (!fromTime || !toTime) return 0;
 
@@ -196,7 +196,7 @@ export function FormEditForm({
     const totalHours = diffHours + diffMinutes / 60;
 
     // Prevent negative hours
-    console.log("totalHours1111", totalHours)
+   
     return totalHours > 0 ? totalHours : 0;
   };
 
@@ -206,7 +206,7 @@ export function FormEditForm({
    
 
   }
-console.log("currentUser11111",currentUser)
+
   // useEffect(()=>{
 
   //    if (facilitatorEmployeeList?.length == 1) {
@@ -254,7 +254,7 @@ console.log("currentUser11111",currentUser)
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
         <>
-          {console.log("aaaaaaaa", errors)}
+     
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -1007,6 +1007,7 @@ console.log("currentUser11111",currentUser)
                 setId("");
                 handleReset();
                 setReadMode(false)
+                setReceiveMode(false)
 
                 if (inputFile?.current) {
                   inputFile.current.value = "";
@@ -1030,7 +1031,7 @@ console.log("currentUser11111",currentUser)
               <button
                 type="button"
                 onClick={() => {
-                   console.log("values1111111",values)
+                  
           if ( facilitatorEmployeeList?.length === 1) {
     values.assignTo = facilitatorEmployeeList[0].value;
   }
