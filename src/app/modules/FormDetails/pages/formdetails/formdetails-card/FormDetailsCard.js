@@ -118,7 +118,7 @@ export function FormCard() {
 
             
 
-               {/* <button
+               <button
               type="button"
               className={`btn mr-2 rounded-xl ${
                 FormUIProps.queryParams.moduleType === 3
@@ -128,7 +128,7 @@ export function FormCard() {
               onClick={() => switchModule(3)}
             >
               Appraisal
-            </button> */}
+            </button>
 
 
 
