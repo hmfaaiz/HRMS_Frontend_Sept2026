@@ -34,7 +34,7 @@ const formValidation = (minPoint, maxPoint) =>
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
-      })
+      }),
     ),
 
     goalSetup: Yup.array().of(
@@ -45,7 +45,7 @@ const formValidation = (minPoint, maxPoint) =>
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
-      })
+      }),
     ),
 
     generalSetup: Yup.array().of(
@@ -56,7 +56,7 @@ const formValidation = (minPoint, maxPoint) =>
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
-      })
+      }),
     ),
     incrementPercentageRecommendedByManager: Yup.number()
       .required(VALIDATION_MESSAGES.required)
@@ -77,7 +77,7 @@ function calculateWeightedScore(setupArray = [], weight = 0) {
 
   const totalRating = setupArray.reduce(
     (sum, item) => sum + Number(item.finalizedRating || 0),
-    0
+    0,
   );
 
   const avg = totalRating / setupArray.length;
@@ -145,7 +145,6 @@ export function MasterEditForm({
       dispatch(fetchAllActiveEmployees());
     }
   }, [dispatch, user?.Id]);
-
   return (
     <>
       <Formik
@@ -155,7 +154,7 @@ export function MasterEditForm({
         }}
         validationSchema={formValidation(
           user?.minPoint || 0,
-          user?.maxPoint || 1
+          user?.maxPoint || 1,
         )}
       >
         {({ handleSubmit, values, setFieldValue, isValid }) => {
@@ -192,12 +191,13 @@ export function MasterEditForm({
                                   appraisalCategoryId:
                                     formUIProps?.appraisalCategoryId,
                                   subsidiaryId: formUIProps.subsidiaryId,
-                                })
+                                }),
                               );
                             }}
                             value={
                               (id ? dashboard.allEmployees : employee)?.find(
-                                (item) => item?.value == formUIProps?.employeeId
+                                (item) =>
+                                  item?.value == formUIProps?.employeeId,
                               ) || null
                             }
                             options={id ? dashboard.allEmployees : employee}
@@ -211,7 +211,7 @@ export function MasterEditForm({
                               className="btn btn-light btn-elevate d-flex align-items-center gap-2"
                               onClick={() => {
                                 formUIProps.setPanelMode(
-                                  !formUIProps?.panelMode
+                                  !formUIProps?.panelMode,
                                 );
                               }}
                             >
@@ -224,7 +224,7 @@ export function MasterEditForm({
                               className="btn btn-primary d-flex align-items-center gap-2"
                               onClick={() =>
                                 formUIProps.setPanelMode(
-                                  !formUIProps?.panelMode
+                                  !formUIProps?.panelMode,
                                 )
                               }
                             >
@@ -280,7 +280,7 @@ export function MasterEditForm({
                                               >
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  140
+                                                  140,
                                                 )}
                                               </td>
                                               <td>{e?.rating || 0}</td>
@@ -395,21 +395,21 @@ export function MasterEditForm({
                                               >
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>
@@ -521,21 +521,21 @@ export function MasterEditForm({
                                               >
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>
@@ -739,10 +739,10 @@ export function MasterEditForm({
                                           (Number(values?.goalFinalizeWeight) ||
                                             0) +
                                             (Number(
-                                              values?.generalFinalizeWeight
+                                              values?.generalFinalizeWeight,
                                             ) || 0) +
                                             (Number(values?.hrFinalizeWeight) ||
-                                              0)
+                                              0),
                                         ).toFixed(2)}{" "}
                                       </td>
                                     </tr>
@@ -763,7 +763,7 @@ export function MasterEditForm({
                             [...values.ratingList]
                               .sort(
                                 (a, b) =>
-                                  parseFloat(a.points) - parseFloat(b.points)
+                                  parseFloat(a.points) - parseFloat(b.points),
                               )
                               .reduce((acc, curr) => {
                                 const total =
@@ -820,7 +820,7 @@ export function MasterEditForm({
                                     <td
                                       dangerouslySetInnerHTML={{
                                         __html: decodeHtml(
-                                          values?.managerRecommendation
+                                          values?.managerRecommendation,
                                         ),
                                       }}
                                     ></td>
@@ -842,13 +842,13 @@ export function MasterEditForm({
                             onChange={(e) => {
                               setFieldValue(
                                 "promotionRecommendedByManager",
-                                e.target.checked
+                                e.target.checked,
                               );
                             }}
                             children={
                               <label>
                                 <span className="font-bold">
-                                  Prmotion Recommended by Manager
+                                  Promotion Recommended by Manager
                                 </span>
                               </label>
                             }
@@ -887,9 +887,7 @@ export function MasterEditForm({
                             component={TextArea}
                             // label="Additional Remarks"
                             label={
-                              <span className="font-bold">
-                                HR Remarks
-                              </span>
+                              <span className="font-bold">HR Remarks</span>
                             }
                             disabled={values?.isFinalize || isUserForRead}
                           />
@@ -961,7 +959,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
     if (values.goalSetup?.length > 0 && values.goalWeight) {
       const { avg, weighted } = calculateWeightedScore(
         values.goalSetup,
-        values.goalWeight
+        values.goalWeight,
       );
       setFieldValue("goalFinalize", avg);
       setFieldValue("goalFinalizeWeight", weighted);
@@ -971,7 +969,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
     if (values.generalSetup?.length > 0 && values.generalWeight) {
       const { avg, weighted } = calculateWeightedScore(
         values.generalSetup,
-        values.generalWeight
+        values.generalWeight,
       );
       setFieldValue("generalFinalize", avg);
       setFieldValue("generalFinalizeWeight", weighted);
@@ -981,7 +979,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
     if (values.hrSetup?.length > 0 && values.hrWeight) {
       const { avg, weighted } = calculateWeightedScore(
         values.hrSetup,
-        values.hrWeight
+        values.hrWeight,
       );
       setFieldValue("hrFinalize", avg);
       setFieldValue("hrFinalizeWeight", weighted);
@@ -995,7 +993,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
         parseFloat(values.hrFinalizeWeight || 0);
 
       const ratingListSorted = [...values.ratingList].sort(
-        (a, b) => parseFloat(a.points) - parseFloat(b.points)
+        (a, b) => parseFloat(a.points) - parseFloat(b.points),
       );
 
       const matchedRating = ratingListSorted.reduce((acc, curr) => {
@@ -1008,7 +1006,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
       setFieldValue("recommendedPoint", finalPoint.toFixed(2));
       setFieldValue(
         "recommendedIncrement",
-        matchedRating?.increment_percentage || 0
+        matchedRating?.increment_percentage || 0,
       );
     }
   }, [

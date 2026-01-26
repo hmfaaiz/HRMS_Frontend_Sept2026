@@ -217,7 +217,7 @@ export function FormEditForm({
                   </div>
                   <hr></hr>
                   <h6 className="font-bold mb-0 text-primary my-2">
-                    HrEvaluation Rating eligibility
+                    HR Evaluation Rating eligibility
  
                   </h6>
                   <div className="col-span-3 grid grid-cols-3 gap-x-3 gap-y-1">

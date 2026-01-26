@@ -400,14 +400,15 @@ export function FormFilter({
                       autoComplete="off"
                       options={Array.isArray(allPayrollMonthYearList) ? allPayrollMonthYearList : []}
                     />
+                     {(!values.payroll_monthId ) && (
+                  <div className="invalid-feedback">Payroll Month is required.</div>
+                )}
 
                   </div>
 
 
                 </div>
-                {(!values.payroll_monthId ) && (
-                  <div className="invalid-feedback">Payroll Month is required.</div>
-                )}
+               
               </fieldset>
             </Form>
 

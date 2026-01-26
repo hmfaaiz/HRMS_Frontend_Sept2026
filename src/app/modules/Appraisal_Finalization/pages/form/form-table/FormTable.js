@@ -33,7 +33,7 @@ const FormValidation = Yup.object().shape({
           then: Yup.number()
             .required(VALIDATION_MESSAGES.required)
             .min(0, VALIDATION_MESSAGES.minZeroValue)
-            .max(100, VALIDATION_MESSAGES.maxHundredValue),
+            .max(500, VALIDATION_MESSAGES.maxHundredValue),
           otherwise: Yup.number().notRequired(),
         }),
       finalRemarks: Yup.string().optional(),
@@ -46,7 +46,7 @@ const FormValidation = Yup.object().shape({
             .required(VALIDATION_MESSAGES.required)
             .min(
               Yup.ref("revisedBeforeSalary"),
-              "Cannot be less than current salary"
+              "Cannot be less than current salary",
             )
             .max(9999999, "Max value is 9999999"),
           otherwise: Yup.number().notRequired(),
@@ -92,12 +92,13 @@ const FormValidation = Yup.object().shape({
             .required("Effective Date is required"),
           otherwise: Yup.date().nullable(),
         }),
-    })
+    }),
   ),
 });
 
 export function FormTable() {
   //Users UI Context
+  const [actionName, setActionName] = useState("");
   const [designationsByGrade, setDesignationsByGrade] = useState({});
   const formUIContext = useFromUIContext();
   const formUIProps = useMemo(() => {
@@ -127,15 +128,15 @@ export function FormTable() {
     };
   }, shallowEqual);
   const isAccessForSave = userAccess?.find(
-    (item) => item.componentName === "SaveAppraisalFinalization"
+    (item) => item.componentName === "SaveAppraisalFinalization",
   );
 
   const isAccessForAppraisal = userAccess?.find(
-    (item) => item.componentName === "FinalizedAppraisal"
+    (item) => item.componentName === "FinalizedAppraisal",
   );
 
   const isAccessForEmail = userAccess?.find(
-    (item) => item.componentName === "FinalizedAppraisalEmail"
+    (item) => item.componentName === "FinalizedAppraisalEmail",
   );
 
   const { totalCount, entities, salaryPolicy } = currentState;
@@ -174,6 +175,7 @@ export function FormTable() {
     switch (actionType) {
       case "save":
         // Filter only selected rows data
+        setActionName("save");
         const saveData = values
           .filter((v) => v.isSelected && !v?.isCompleted)
           .map((row) => ({
@@ -182,12 +184,13 @@ export function FormTable() {
         // Call save API
         dispatch(actions.saveAppraisalFinalization(saveData)).then((el) => {
           dispatch(
-            actions.fetchAllAppraisalFinalization(formUIProps.queryParams)
+            actions.fetchAllAppraisalFinalization(formUIProps.queryParams),
           );
         });
         break;
       case "appraisal":
         // Filter only selected rows data
+        setActionName("appraisal");
         const appraisalData = values
           .filter((v) => v.isSelected && !v?.isCompleted)
           .map((row) => ({
@@ -196,11 +199,12 @@ export function FormTable() {
         // Call finalize appraisal API
         dispatch(actions.finalizedAppraisal(appraisalData)).then(() => {
           dispatch(
-            actions.fetchAllAppraisalFinalization(formUIProps.queryParams)
+            actions.fetchAllAppraisalFinalization(formUIProps.queryParams),
           );
         });
         break;
       case "email":
+        setActionName("email");
         const emailData = values
           .filter((v) => v.isSelected && v?.isCompleted)
           .map((row) => ({
@@ -209,11 +213,12 @@ export function FormTable() {
         // Call generate email API
         dispatch(actions.generateAppraisalEmail(emailData)).then(() => {
           dispatch(
-            actions.fetchAllAppraisalFinalization(formUIProps.queryParams)
+            actions.fetchAllAppraisalFinalization(formUIProps.queryParams),
           );
         });
         break;
       case "download":
+        setActionName("download");
         const downloadData = values
           .filter((v) => v.isSelected && v?.isCompleted)
           .map((row) => ({
@@ -222,7 +227,7 @@ export function FormTable() {
         // Call download increment letter API
         dispatch(actions.downloadIncrementLetter(downloadData)).then(() => {
           dispatch(
-            actions.fetchAllAppraisalFinalization(formUIProps.queryParams)
+            actions.fetchAllAppraisalFinalization(formUIProps.queryParams),
           );
         });
         break;
@@ -238,7 +243,7 @@ export function FormTable() {
       entities?.forEach(async (e, i) => {
         if (!designationsByGrade[e?.revisedGradeId]) {
           const designation = await dispatch(
-            fetchAllDesignationByGradeId(e?.revisedGradeId)
+            fetchAllDesignationByGradeId(e?.revisedGradeId),
           );
           setDesignationsByGrade({
             ...designationsByGrade,
@@ -249,7 +254,6 @@ export function FormTable() {
     };
     designationListthroughGrade();
   }, [entities]);
-
   return (
     <Formik
       enableReinitialize={true}
@@ -259,10 +263,10 @@ export function FormTable() {
       {({ values, setFieldValue, isValid, errors, touched, isSubmitting }) => {
         // Check if any rows are con
         const hasSelectedRowsIsCompleted = values.entities?.some(
-          (v) => v.isSelected && v?.isCompleted
+          (v) => v.isSelected && v?.isCompleted,
         );
         const hasSelectedRowsIsNotCompleted = values.entities?.some(
-          (v) => v.isSelected && !v?.isCompleted
+          (v) => v.isSelected && !v?.isCompleted,
         );
 
         return (
@@ -287,7 +291,7 @@ export function FormTable() {
                                       values.entities?.length > 0 &&
                                       values.entities?.length ===
                                         values.entities?.filter(
-                                          (row) => row?.isSelected
+                                          (row) => row?.isSelected,
                                         )?.length
                                     }
                                     onChange={(e) => {
@@ -295,7 +299,7 @@ export function FormTable() {
                                       values.entities.forEach((_, index) => {
                                         setFieldValue(
                                           `entities.${index}.isSelected`,
-                                          checked
+                                          checked,
                                         );
                                       });
                                     }}
@@ -305,11 +309,28 @@ export function FormTable() {
                                 <th className="w-44">Name</th>
                                 <th className="w-48">Designation</th>
                                 <th className="w-28">Increment %</th>
-                                <th title="Salary Recmmended By Manager" className="w-28">Manager Rec.</th>
-                                <th title="Promotion Recmmended By Manager" className="w-32">Promotion Rec.</th>
+                                <th
+                                  title="Salary Recmmended By Manager"
+                                  className="w-28"
+                                >
+                                  Manager Rec.
+                                </th>
+                                <th
+                                  title="Promotion Recmmended By Manager"
+                                  className="w-32"
+                                >
+                                  Promotion Rec.
+                                </th>
                                 <th className="w-40">Final Increment %</th>
-                                <th title="Management Remarks" className="w-80">Mgmt. Remarks</th>
-                                <th title="Management Recommendations" className="w-80">Mgmt. Recommendations</th>
+                                <th title="Management Remarks" className="w-80">
+                                  Mgmt. Remarks
+                                </th>
+                                <th
+                                  title="Management Recommendations"
+                                  className="w-80"
+                                >
+                                  Mgmt. Recommendations
+                                </th>
                                 {/* <th className="w-44">
                                   Actucal{" "}
                                   {salaryPolicy == "Basic to Gross"
@@ -353,7 +374,7 @@ export function FormTable() {
                                           onChange={(e) =>
                                             setFieldValue(
                                               `entities.${i}.isSelected`,
-                                              e.target.checked
+                                              e.target.checked,
                                             )
                                           }
                                           isSelected={e?.isSelected}
@@ -389,7 +410,7 @@ export function FormTable() {
                                         >
                                           {({ field, form }) => {
                                             const salary = Number(
-                                              values.entities[i]?.salary || 0
+                                              values.entities[i]?.salary || 0,
                                             );
                                             return (
                                               <NumericFormat
@@ -403,21 +424,22 @@ export function FormTable() {
                                                 onValueChange={({ value }) => {
                                                   setFieldValue(
                                                     `entities.${i}.finalIncrement`,
-                                                    value
+                                                    value,
                                                   );
                                                 }}
                                                 onBlur={() => {
                                                   const increment = Number(
                                                     values.entities[i]
-                                                      .finalIncrement || 0
+                                                      .finalIncrement || 0,
                                                   );
                                                   const newSalary = Number(
                                                     salary +
-                                                      (salary * increment) / 100
+                                                      (salary * increment) /
+                                                        100,
                                                   ).toFixed(2);
                                                   setFieldValue(
                                                     `entities.${i}.revisedSalary`,
-                                                    newSalary
+                                                    newSalary,
                                                   );
                                                 }}
                                               />
@@ -490,7 +512,7 @@ export function FormTable() {
                                       <td>
                                         {amountFormat(
                                           e?.revisedBeforeSalary,
-                                          true
+                                          true,
                                         ) || ""}
                                       </td>
                                       <td>
@@ -499,7 +521,7 @@ export function FormTable() {
                                         >
                                           {({ field, form }) => {
                                             const salary = Number(
-                                              values.entities[i]?.salary || 0
+                                              values.entities[i]?.salary || 0,
                                             );
                                             return (
                                               <NumericFormat
@@ -513,13 +535,13 @@ export function FormTable() {
                                                 onValueChange={({ value }) => {
                                                   setFieldValue(
                                                     `entities.${i}.revisedSalary`,
-                                                    value
+                                                    value,
                                                   );
                                                 }}
                                                 onBlur={() => {
                                                   const revisedSalary = Number(
                                                     values.entities[i]
-                                                      .revisedSalary || 0
+                                                      .revisedSalary || 0,
                                                   );
                                                   const increment = (
                                                     ((revisedSalary - salary) /
@@ -528,7 +550,7 @@ export function FormTable() {
                                                   ).toFixed(2);
                                                   setFieldValue(
                                                     `entities.${i}.finalIncrement`,
-                                                    increment
+                                                    increment,
                                                   );
                                                 }}
                                               />
@@ -547,15 +569,15 @@ export function FormTable() {
                                           onChange={(e) => {
                                             setFieldValue(
                                               `entities.${i}.revisedGradeId`,
-                                              e?.value || null
+                                              e?.value || null,
                                             );
                                             if (
                                               !designationsByGrade[e?.value]
                                             ) {
                                               let designation = dispatch(
                                                 fetchAllDesignationByGradeId(
-                                                  e?.value
-                                                )
+                                                  e?.value,
+                                                ),
                                               );
                                               setDesignationsByGrade({
                                                 ...designationsByGrade,
@@ -564,13 +586,13 @@ export function FormTable() {
                                             }
                                             setFieldValue(
                                               `entities.${i}.revisedDesignationId`,
-                                              null
+                                              null,
                                             );
                                           }}
                                           value={
                                             dashboard?.allEmployeegradeList?.find(
                                               (el) =>
-                                                el?.value === e?.revisedGradeId
+                                                el?.value === e?.revisedGradeId,
                                             ) || null
                                           }
                                           options={
@@ -592,7 +614,7 @@ export function FormTable() {
                                           onChange={(e) => {
                                             setFieldValue(
                                               `entities.${i}.revisedDesignationId`,
-                                              e?.value || null
+                                              e?.value || null,
                                             );
                                           }}
                                           value={
@@ -604,7 +626,7 @@ export function FormTable() {
                                               ]?.find(
                                                 (el) =>
                                                   el?.value ===
-                                                  e?.revisedDesignationId
+                                                  e?.revisedDesignationId,
                                               )) ||
                                             null
                                           }
@@ -629,7 +651,7 @@ export function FormTable() {
                                           onChange={(e) => {
                                             setFieldValue(
                                               `entities.${i}.revisedEmployeeTypeId`,
-                                              e?.value || null
+                                              e?.value || null,
                                             );
                                           }}
                                           value={
@@ -639,7 +661,7 @@ export function FormTable() {
                                             ]?.find(
                                               (el) =>
                                                 el?.value ===
-                                                e?.revisedEmployeeTypeId
+                                                e?.revisedEmployeeTypeId,
                                             ) || null
                                           }
                                           options={[
@@ -662,14 +684,14 @@ export function FormTable() {
                                           onChange={(e) => {
                                             setFieldValue(
                                               `entities.${i}.revisedEmployeeStatusId`,
-                                              e?.value || null
+                                              e?.value || null,
                                             );
                                           }}
                                           value={
                                             dashboard?.allEmployeeStatus?.find(
                                               (el) =>
                                                 el?.value ===
-                                                e?.revisedEmployeeStatusId
+                                                e?.revisedEmployeeStatusId,
                                             ) || null
                                           }
                                           options={dashboard?.allEmployeeStatus}
@@ -687,6 +709,14 @@ export function FormTable() {
                                         <Field
                                           name={`entities.${i}.effectiveDate`}
                                           component={DatePickerField}
+                                          minDate={
+                                            new Date(
+                                              dashboard?.allSubsidiaryList?.find(
+                                                (el) =>
+                                                  el?.value == e.subsidiaryId,
+                                              )?.fiscalYear?.startDate,
+                                            )
+                                          }
                                           withPortal
                                           type="date"
                                           popperProps={{
@@ -708,7 +738,7 @@ export function FormTable() {
                                           onChange={(e) => {
                                             setFieldValue(
                                               `entities.${i}.effectiveDate`,
-                                              e
+                                              e,
                                             );
                                           }}
                                         />
@@ -785,7 +815,7 @@ export function FormTable() {
                                             className="mx-1"
                                             onClick={() =>
                                               formUIProps.openReadDialog(
-                                                e?.AppraisalReview?.Id
+                                                e?.AppraisalReview?.Id,
                                               )
                                             }
                                           >
@@ -802,7 +832,7 @@ export function FormTable() {
                                           <a
                                             onClick={() =>
                                               formUIProps.openReadFiscalPeriodDialog(
-                                                e?.AppraisalReview?.Id
+                                                e?.AppraisalReview?.Id,
                                               )
                                             }
                                           >
@@ -841,20 +871,21 @@ export function FormTable() {
                             /* handle */
                           },
                         },
-                        "save"
+                        "save",
                       )
                     }
                   >
                     Save Selected Appraisal
-                    {(listLoading || actionsLoading || isSubmitting) && (
-                      <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )}
+                    {(listLoading || actionsLoading || isSubmitting) &&
+                      actionName == "save" && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
                   </button>
                 )}
                 {isAccessForAppraisal &&
                   values.entities?.length > 0 &&
                   values.entities?.[0]?.approvers?.includes(
-                    String(user?.roleId)
+                    String(user?.roleId),
                   ) && (
                     <button
                       type="button"
@@ -874,14 +905,15 @@ export function FormTable() {
                               /* handle */
                             },
                           },
-                          "appraisal"
+                          "appraisal",
                         )
                       }
                     >
                       Finalized Selected Appraisal
-                      {(listLoading || actionsLoading || isSubmitting) && (
-                        <span className="ml-3 mr-3 spinner spinner-white"></span>
-                      )}
+                      {(listLoading || actionsLoading || isSubmitting) &&
+                        actionName == "appraisal" && (
+                          <span className="ml-3 mr-3 spinner spinner-white"></span>
+                        )}
                     </button>
                   )}
                 {isAccessForEmail && (
@@ -903,14 +935,15 @@ export function FormTable() {
                             /* handle */
                           },
                         },
-                        "email"
+                        "email",
                       )
                     }
                   >
                     Generate Email for Selected Employees
-                    {(listLoading || actionsLoading || isSubmitting) && (
-                      <span className="ml-3 mr-3 spinner spinner-white"></span>
-                    )}
+                    {(listLoading || actionsLoading || isSubmitting) &&
+                      actionName == "email" && (
+                        <span className="ml-3 mr-3 spinner spinner-white"></span>
+                      )}
                   </button>
                 )}
                 <button
@@ -931,14 +964,15 @@ export function FormTable() {
                           /* handle */
                         },
                       },
-                      "download"
+                      "download",
                     )
                   }
                 >
                   Download Increment Letter
-                  {(listLoading || actionsLoading || isSubmitting) && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
+                  {(listLoading || actionsLoading || isSubmitting) &&
+                    actionName == "download" && (
+                      <span className="ml-3 mr-3 spinner spinner-white"></span>
+                    )}
                 </button>
               </div>
             </Form>

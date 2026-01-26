@@ -4,7 +4,7 @@ import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./facilitator_Ownership/FormPage";
 
 export default function EmployeeDocManagement() {
-console.log("LayoutSplashScreen1112")
+
   return (
     <Suspense fallback={<LayoutSplashScreen />}>
     

@@ -147,12 +147,13 @@ export function FormEditForm({
     }
   }, [dispatch, formData.Id]);
 
-  const { currentState, userAccess, allEmployees, facilitatorEmployeeList } = useSelector((state) => {
+  const { currentState, userAccess, allEmployees, facilitatorEmployeeList,currentUser } = useSelector((state) => {
     return {
       currentState: state.facilitator_ticket_creation,
       userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
       allEmployees: state.dashboard.allEmployees,
-      facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList
+      facilitatorEmployeeList: state.dashboard.facilitatorEmployeeList,
+      currentUser: state.auth.user,
     };
   }, shallowEqual);
 
@@ -165,7 +166,7 @@ export function FormEditForm({
     { value: 2, label: "Send for Review" },
   ];
 
-  console.log(" !formData111111", formData, !formData)
+
   const calculateHours = (fromTime, toTime) => {
     if (!fromTime || !toTime) return 0;
 
@@ -195,7 +196,7 @@ export function FormEditForm({
     const totalHours = diffHours + diffMinutes / 60;
 
     // Prevent negative hours
-    console.log("totalHours1111", totalHours)
+   
     return totalHours > 0 ? totalHours : 0;
   };
 
@@ -253,7 +254,7 @@ export function FormEditForm({
     >
       {({ handleSubmit, errors, touched, values, setFieldValue, handleChange, handleReset }) => (
         <>
-          {console.log("aaaaaaaa", errors)}
+     
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
@@ -366,7 +367,15 @@ export function FormEditForm({
         ? facilitatorEmployeeList[0]
         : facilitatorEmployeeList?.find(option => option.value === values.assignTo) || null
     }
-    options={facilitatorEmployeeList}
+    // options={facilitatorEmployeeList.map((op)=>{
+    //   op.value==currentUser.employeeIdMapping
+    // })}
+  options={facilitatorEmployeeList.map(op => ({
+  label: op.label,
+  value: op.value,
+  isDisabled: String(op.value) == String(currentUser.employeeIdMapping)
+}))}
+
     error={errors.assignTo}
     touched={touched.assignTo}
   />
@@ -998,6 +1007,7 @@ export function FormEditForm({
                 setId("");
                 handleReset();
                 setReadMode(false)
+                setReceiveMode(false)
 
                 if (inputFile?.current) {
                   inputFile.current.value = "";
@@ -1021,7 +1031,7 @@ export function FormEditForm({
               <button
                 type="button"
                 onClick={() => {
-                   console.log("values1111111",values)
+                  
           if ( facilitatorEmployeeList?.length === 1) {
     values.assignTo = facilitatorEmployeeList[0].value;
   }

@@ -154,7 +154,7 @@ export const FacilitatorTicketCreationSlice = createSlice({
 
             // Backend se data aa raha hai (single object OR array)
             const data = action.payload;
-            console.log("data111311", data)
+          
 
             state.listLoading = false;
             state.error = null;

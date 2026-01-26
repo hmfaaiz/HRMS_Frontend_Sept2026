@@ -106,7 +106,7 @@ const AppraisalArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"No. of Survey Published"}
+              name={"No. of Appraisal Published"}
               value={summaryData?.surveyPublish || 0}
               keyName={"surveyPublish"}
               icon={<ListChecks className="w-5 h-5 text-white" />}
@@ -114,7 +114,7 @@ const AppraisalArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"No. of Surveys' Submitted"}
+              name={"No. of Appraisal Submitted"}
               value={summaryData?.surveySubmitted || 0}
               keyName={"surveySubmitted"}
               icon={<ListCheck className="w-5 h-5 text-white" />}
@@ -124,7 +124,7 @@ const AppraisalArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"No. of Surveys' Pending"}
+              name={"No. of Appraisal Pending"}
               value={summaryData?.surveyPending || 0}
               keyName={"surveyPending"}
               icon={<Hourglass className="w-5 h-5 text-white" />}
@@ -132,7 +132,7 @@ const AppraisalArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Survey Rating Finalized"}
+              name={"Appraisal Rating Finalized"}
               value={summaryData?.surveyRatingFinalized || 0}
               keyName={"surveyRatingFinalized"}
               icon={<Hourglass className="w-5 h-5 text-white" />}
@@ -142,7 +142,7 @@ const AppraisalArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"Survey Finalized"}
+              name={"Appraisal Finalized"}
               value={summaryData?.surveyFinalized || 0}
               keyName={"surveyFinalized"}
               icon={<Hourglass className="w-5 h-5 text-white" />}
