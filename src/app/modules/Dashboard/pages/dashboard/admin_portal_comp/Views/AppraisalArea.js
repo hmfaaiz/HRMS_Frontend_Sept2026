@@ -106,7 +106,7 @@ const AppraisalArea = ({
             <StatsCard
               summaryFilter={summaryFilter}
               setSummaryModalHeading={setSummaryModalHeading}
-              name={"No. of Survey Published"}
+              name={"No. of Appraisal Published"}
               value={summaryData?.surveyPublish || 0}
               keyName={"surveyPublish"}
               icon={<ListChecks className="w-5 h-5 text-white" />}
