@@ -418,6 +418,9 @@ import("./modules/Facilitator_Setup/pages/index"))
 const Failitator_Ownership = lazy(()=>
 import ("./modules/Facilitator_Ownership/pages/index"))
 
+const Customer_Setup  = lazy(() =>
+import ("./modules/Customer_Setup/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -579,6 +582,7 @@ const ROUTES = {
 
   facilitator_ownership : Failitator_Ownership,
   
+  customer_setup : Customer_Setup,
 };
 
 export default function BasePage() {
