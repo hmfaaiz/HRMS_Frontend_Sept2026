@@ -37,8 +37,8 @@ const formSchema = Yup.object().shape({
     .nullable()
     .required(VALIDATION_MESSAGES.required),
   accessEmpIds: Yup.array()
-    .min(1, VALIDATION_MESSAGES.required)
-    .required(VALIDATION_MESSAGES.required),
+    .nullable()
+    .optional(),
   customerId: Yup.string()
     .nullable()
     .optional(),
@@ -60,6 +60,7 @@ export function FormEditForm({
   const { dashboard } = useSelector((state) => state);
 
   const [defCode, setDefCode] = useState(null);
+  const [viewDetail, setViewDetail] = useState(false);
 
   /* -------- FETCH MASTER DATA -------- */
 
@@ -204,12 +205,7 @@ export function FormEditForm({
                   {/* Project Access to Emp */}
                   <div>
                     <MultiSelect
-                      label={
-                        <span>
-                          Project Access to Employees
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
+                      label={<span>Project Access to Employees</span>}
                       options={
                         dashboard?.allEmployees?.map((e) => ({
                           ...e,
@@ -265,6 +261,22 @@ export function FormEditForm({
                   </div>
                 </div>
               </fieldset>
+              <div className="d-flex justify-end mt-2">
+                <button
+                  type="button"
+                  disabled={false}
+                  onClick={() => setViewDetail(!viewDetail)}
+                  className="btn bg-tsecondary"
+                >
+                  View Employees Access
+                </button>
+              </div>
+              <AccessEmpTable
+                accessEmpIds={values?.accessEmpIds}
+                projectOwnerEmpId={values?.projectOwnerEmpId}
+                viewDetail={viewDetail}
+                allEmployees={dashboard?.allEmployees}
+              />
             </Form>
           </Modal.Body>
 
@@ -291,3 +303,82 @@ export function FormEditForm({
     </Formik>
   );
 }
+
+const AccessEmpTable = ({
+  accessEmpIds,
+  projectOwnerEmpId,
+  allEmployees,
+  viewDetail,
+}) => {
+  return (
+    <>
+      {(accessEmpIds?.length || projectOwnerEmpId) &&
+        allEmployees?.length > 0 &&
+        viewDetail && (
+          <div className="w-full overflow-x-auto">
+            <div className="react-bootstrap-table table-responsive">
+              <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                <thead>
+                  <tr className="custom-table-header">
+                    <td>Employee</td>
+                    <td>Department</td>
+                    <td>Designation</td>
+                    <td>Role</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projectOwnerEmpId && (
+                    <tr>
+                      <td>
+                        {
+                          allEmployees?.find(
+                            (el) => el?.value == projectOwnerEmpId,
+                          )?.label
+                        }
+                      </td>
+                      <td>
+                        {
+                          allEmployees?.find(
+                            (el) => el?.value == projectOwnerEmpId,
+                          )?.department
+                        }
+                      </td>
+                      <td>
+                        {
+                          allEmployees?.find(
+                            (el) => el?.value == projectOwnerEmpId,
+                          )?.designation
+                        }
+                      </td>
+                      <td>Owner</td>
+                    </tr>
+                  )}
+                  {accessEmpIds?.length > 0 &&
+                    accessEmpIds?.map((row, index) => (
+                      <tr key={index}>
+                        <td>
+                          {allEmployees?.find((el) => el?.value == row)?.label}
+                        </td>
+                        <td>
+                          {
+                            allEmployees?.find((el) => el?.value == row)
+                              ?.department
+                          }
+                        </td>
+                        <td>
+                          {
+                            allEmployees?.find((el) => el?.value == row)
+                              ?.designation
+                          }
+                        </td>
+                        <td>Member</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+    </>
+  );
+};
