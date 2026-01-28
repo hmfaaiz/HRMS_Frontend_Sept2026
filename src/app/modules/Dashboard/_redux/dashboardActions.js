@@ -747,3 +747,15 @@ export const fetchUsersByCompanyId = (Id) => async (dispatch) => {
       dispatch(actions.UsersByCompanyFetched([]));
     });
 };
+
+export const fetchAllActiveCustomers = () => async (dispatch) => {
+  return await requestFromServer
+    .getAllActiveCustomers()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllActiveCustomerFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.AllActiveCustomerFetch([]));
+    });
+};

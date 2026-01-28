@@ -324,7 +324,7 @@ export function FormEditForm({
                   <hr className="col-span-2 lg:col-span-3" />
                   <div className="grid grid-cols-2 lg:grid-cols-3 col-span-2 lg:col-span-3 gap-x-3">
                     <p className="text-tprimary text-sm col-span-2 font-semibold lg:col-span-3 mb-0">
-                      Survey Publish Policy
+                      Appraisal Publish Policy
                     </p>
                     <div>
                       <SearchSelect
