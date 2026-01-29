@@ -171,6 +171,7 @@ import {customerSetupSlice} from "../app/modules/Customer_Setup/_redux/redux-Sli
 
 import {SubsidiaryWiseOnboardingChecklistSlice } from "../app/modules/Subsidiary_Wise_Onboarding_Checklist/_redux/redux-Slice";
 
+import { projectSetupSlice } from "../app/modules/Project_Setup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -338,6 +339,7 @@ export const rootReducer = combineReducers({
 
   onboarding_checklist: SubsidiaryWiseOnboardingChecklistSlice.reducer,
 
+  project_setup : projectSetupSlice.reducer,
 
 });
 

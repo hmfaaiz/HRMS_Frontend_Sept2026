@@ -41,6 +41,7 @@ const generateColumns = (sampleRow, action, onHide) => {
         return {
           dataField: key,
           text: "Picture",
+          sort: false,
           formatter: (cell) => (
             <img
               src={cell || DEFAULT_IMAGE}
@@ -59,6 +60,7 @@ const generateColumns = (sampleRow, action, onHide) => {
 
       return {
         dataField: key,
+        sort: true,
         text: key.replace(/_/g, " "),
         formatter: (cell) => formatCell(cell, key, sampleRow[key]),
       };
@@ -70,7 +72,7 @@ const generateColumns = (sampleRow, action, onHide) => {
       text: "Action",
       sort: false,
       style: { minWidth: "50px" },
-      formatter: (row , cell) => {
+      formatter: (row, cell) => {
         let toLink = cell?.subsidiaryId
           ? `${action.url?.replace(":Id", row)}?subsidiary=${
               cell?.subsidiaryId
@@ -92,7 +94,7 @@ const StatsCardModal = ({ onHide, show, data, heading }) => {
   const sampleRow = data?.result?.[0];
   const columns = useMemo(
     () => generateColumns(sampleRow, data?.action, onHide),
-    [sampleRow, data?.action]
+    [sampleRow, data?.action],
   );
 
   return (

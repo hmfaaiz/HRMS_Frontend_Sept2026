@@ -106,6 +106,7 @@ const initialDashboardState = {
   allFacilitatorTicketType: [],
   moduleRights: [],
   allUsers: [],
+  allCustomers : [],
 };
 
 export const callTypes = {
@@ -426,6 +427,9 @@ export const dashboardSlice = createSlice({
     requestRaisedBySenior: (state, action) => {
       state.allowRequestBySenior = action.payload;
 
+    },
+        AllActiveCustomerFetch: (state, action) => {
+      state.allCustomers = action.payload;
     },
     FacilitatorEmployeeFetch: (state, action) => {
       state.facilitatorEmployeeList = action.payload;

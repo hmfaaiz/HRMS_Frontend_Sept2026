@@ -423,6 +423,8 @@ import ("./modules/Customer_Setup/pages/index"))
 
 const Onboarding_Checklist =  lazy(() =>
 import ("./modules/Subsidiary_Wise_Onboarding_Checklist/pages/index"))
+const project_setup  = lazy(() =>
+import ("./modules/Project_Setup/pages/index"))
 
 
 const ROUTES = {
@@ -587,6 +589,7 @@ const ROUTES = {
   
   customer_setup : Customer_Setup,
   onboarding_checklist : Onboarding_Checklist,
+  project_setup : project_setup,
 };
 
 export default function BasePage() {

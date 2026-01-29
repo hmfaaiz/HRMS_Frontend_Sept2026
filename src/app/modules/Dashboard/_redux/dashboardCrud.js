@@ -254,3 +254,7 @@ export function getModuleRights() {
 export function getUsersByCompanyId(body) {
   return axios.post(`${USERS_URL}/settings/read-all-user-by-companyId` , body);
 }
+
+export const getAllActiveCustomers = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-customers`);
+};
