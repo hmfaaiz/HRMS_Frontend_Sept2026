@@ -168,6 +168,9 @@ import { facilitatorSetupSlice } from "../app/modules/Facilitator_Setup/_redux/f
 import { FacilitatorOwnershipSlice } from "../app/modules/Facilitator_Ownership/_redux/redux-Slice";
 
 import {customerSetupSlice} from "../app/modules/Customer_Setup/_redux/redux-Slice"
+
+import {SubsidiaryWiseOnboardingChecklistSlice } from "../app/modules/Subsidiary_Wise_Onboarding_Checklist/_redux/redux-Slice";
+
 import { projectSetupSlice } from "../app/modules/Project_Setup/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
@@ -333,6 +336,9 @@ export const rootReducer = combineReducers({
   facilitator_ownership: FacilitatorOwnershipSlice.reducer,
 
   customer_setup: customerSetupSlice.reducer,
+
+  onboarding_checklist: SubsidiaryWiseOnboardingChecklistSlice.reducer,
+
   project_setup : projectSetupSlice.reducer,
 
 });

@@ -421,6 +421,8 @@ import ("./modules/Facilitator_Ownership/pages/index"))
 const Customer_Setup  = lazy(() =>
 import ("./modules/Customer_Setup/pages/index"))
 
+const Onboarding_Checklist =  lazy(() =>
+import ("./modules/Subsidiary_Wise_Onboarding_Checklist/pages/index"))
 const project_setup  = lazy(() =>
 import ("./modules/Project_Setup/pages/index"))
 
@@ -586,6 +588,7 @@ const ROUTES = {
   facilitator_ownership : Failitator_Ownership,
   
   customer_setup : Customer_Setup,
+  onboarding_checklist : Onboarding_Checklist,
   project_setup : project_setup,
 };
 
