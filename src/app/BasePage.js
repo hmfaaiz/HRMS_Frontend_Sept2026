@@ -428,6 +428,8 @@ import ("./modules/Project_Setup/pages/index"))
 
 const ticket_status= lazy(() =>
 import ("./modules/Ticket_Status/pages/index"))
+const ticket_setup  = lazy(() =>
+import ("./modules/Ticket_Setup/pages/index"))
 
 
 const ROUTES = {
@@ -594,6 +596,7 @@ const ROUTES = {
   onboarding_checklist : Onboarding_Checklist,
   project_setup : project_setup,
   ticket_status : ticket_status,
+  ticket_setup : ticket_setup,
 };
 
 export default function BasePage() {

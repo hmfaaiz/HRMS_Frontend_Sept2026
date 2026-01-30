@@ -258,3 +258,15 @@ export function getUsersByCompanyId(body) {
 export const getAllActiveCustomers = async () => {
   return await axios.get(`${USERS_URL}/settings/read-all-customers`);
 };
+
+export const getAllProjects = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-project`, body);
+};
+
+export const getAllTicketStatus = async () => {
+  return await axios.get(`${USERS_URL}/settings/read-all-ticket-status`);
+};
+
+export const getAllTicket = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-all-ticket`, body);
+};
