@@ -31,7 +31,7 @@ export function TicketStatusUIProvider({ TicketStatusUIEvents, children }) {
   const initTicketStatus = {
     statusCode: "",
     statusName: "",
-    statusType: "", // Can be '1' | '2' | '3' if using IDs or string if text
+    statusTypeId: "", // Can be '1' | '2' | '3' if using IDs or string if text
     isActive: true,
   };
 

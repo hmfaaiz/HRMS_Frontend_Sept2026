@@ -39,7 +39,7 @@ export function TicketStatusEditDialog({ id, show, onHide, userForRead }) {
     const payload = {
       statusCode: ticketStatus.statusCode,
       statusName: ticketStatus.statusName,
-      statusType: ticketStatus.statusType,
+      statusTypeId: ticketStatus.statusTypeId,
       ...(id ? { Id: id } : {}),
     };
 

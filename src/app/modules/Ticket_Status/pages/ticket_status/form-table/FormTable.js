@@ -76,25 +76,13 @@ export function TicketStatusTable() {
       style: { minWidth: "180px" },
     },
     {
-      dataField: "statusType",
+      dataField: "StatusType.formName",
       text: "Status Type",
       sort: false,
       sortCaret,
       headerSortingClasses,
       style: { minWidth: "120px" },
-      formatter: (cell) => {
-        // Map numeric IDs to text if needed
-        switch (cell) {
-          case 1:
-            return "To Do";
-          case 2:
-            return "In Progress";
-          case 3:
-            return "Done";
-          default:
-            return "-";
-        }
-      },
+     
     },
    
     {

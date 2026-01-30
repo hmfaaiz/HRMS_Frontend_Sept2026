@@ -1,3 +1,4 @@
+import { fetchAllTicketStatus } from "../../Dashboard/_redux/dashboardActions";
 import * as requestFromServer from "./redux-Crud";
 import { ticketStatusSlice, callTypes } from "./redux-Slice";
 import { toast } from "react-toastify";
@@ -60,8 +61,14 @@ export const updateTicketStatus = (ticketStatusData, disableLoading, onHide) => 
   dispatch(actions.startCall({ callType: callTypes.action }));
   try {
     const res = await requestFromServer.updateTicketStatus(ticketStatusData);
-    const updatedTicketStatus = res.data?.data;
-    dispatch(actions.ticketStatusUpdated({ updatedTicketStatus }));
+   const updatedTicketStatus = res.data?.data;
+
+// Merge updated record into Redux state
+dispatch(actions.ticketStatusUpdated({ updatedTicketStatus }));
+
+// Optional: refresh list to be fully consistent
+dispatch(fetchAllTicketStatus());
+
     disableLoading?.();
     onHide?.();
     toast.success("Ticket status successfully updated");

@@ -4,15 +4,15 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Input } from "../../../../../../_metronic/_partials/controls";  // Remove Select from here
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";  // Add this import
-import { useDispatch } from "react-redux";
-import { getLatestTableId } from "../../../../../../_metronic/redux/dashboardActions";
+import { useDispatch, useSelector} from "react-redux";
+import { fetchAllFormsMenu, getLatestTableId } from "../../../../../../_metronic/redux/dashboardActions";
 
 /* ---------------- VALIDATION ---------------- */
 const ticketStatusSchema = Yup.object().shape({
   statusName: Yup.string()
     .required("Status Name is required")
     .matches(/^[A-Za-z\s]+$/, "Only letters and spaces are allowed"),
-  statusType: Yup.number()
+  statusTypeId: Yup.number()
     .required("Status Type is required")
     .nullable()
     .typeError("Status Type is required"),
@@ -46,14 +46,22 @@ export function TicketStatusEditForm({
         )
       );
     }
+    dispatch(fetchAllFormsMenu(548,"allStatusType"))
   }, [dispatch, isAddMode]);
 
+
+  const { dashboard, } = useSelector(
+      (state) => ({
+        dashboard: state.dashboard,
+      }),
+    );
+
   // Hardcoded dropdown options
-  const statusTypeOptions = [
-    { value: 1, label: "To Do" },
-    { value: 2, label: "In Progress" },
-    { value: 3, label: "Done" },
-  ];
+  // const statusTypeOptions = [
+  //   { value: 1, label: "To Do" },
+  //   { value: 2, label: "In Progress" },
+  //   { value: 3, label: "Done" },
+  // ];
 
   if (isAddMode && defStatusCode === null) {
     return (
@@ -69,7 +77,7 @@ export function TicketStatusEditForm({
       initialValues={{
         ...ticketStatus,
         statusCode: ticketStatus?.statusCode || defStatusCode || "",
-        statusType: ticketStatus?.statusType || null,
+        statusTypeId: ticketStatus?.statusTypeId || null,
       }}
       validationSchema={ticketStatusSchema}
       onSubmit={(values) => {
@@ -120,20 +128,20 @@ export function TicketStatusEditForm({
                   {/* STATUS TYPE - Switched to SearchSelect */}
                   <div className="col-md-4 mt-1">
                     <SearchSelect
-                      name="statusType"
+                      name="statusTypeId"
                       label={
                         <span>
                           Status Type <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={statusTypeOptions.find(
-                        (opt) => opt.value === values.statusType
+                      value={dashboard?.allStatusType?.find(
+                        (opt) => opt.value == values.statusTypeId
                       )}  // Finds the matching object
-                      options={statusTypeOptions}
-                      error={errors.statusType}
-                      touched={touched.statusType}
+                      options={dashboard?.allStatusType}
+                      error={errors.statusTypeId}
+                      touched={touched.statusTypeId}
                       onChange={(e) => {
-                        setFieldValue("statusType", e.value);  // Sets the numeric value
+                        setFieldValue("statusTypeId", e.value);  // Sets the numeric value
                       }}
                       placeholder="Select Status Type"
                       // isDisabled={isUserForRead}
