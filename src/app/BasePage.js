@@ -424,6 +424,9 @@ import ("./modules/Customer_Setup/pages/index"))
 const project_setup  = lazy(() =>
 import ("./modules/Project_Setup/pages/index"))
 
+const ticket_setup  = lazy(() =>
+import ("./modules/Ticket_Setup/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -587,6 +590,7 @@ const ROUTES = {
   
   customer_setup : Customer_Setup,
   project_setup : project_setup,
+  ticket_setup : ticket_setup,
 };
 
 export default function BasePage() {

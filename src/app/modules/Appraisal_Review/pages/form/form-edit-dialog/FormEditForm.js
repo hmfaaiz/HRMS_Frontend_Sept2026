@@ -374,7 +374,7 @@ export function MasterEditForm({
                                             Self Comments
                                           </th>
                                           <th className="w-1/12">
-                                            Avg. Manager Rating
+                                             Manager Rating
                                           </th>
                                           <th className="w-2/12">
                                             Manager Comments
@@ -500,7 +500,7 @@ export function MasterEditForm({
                                             Self Comments
                                           </th>
                                           <th className="w-1/12">
-                                            Avg. Manager Rating
+                                             Manager Rating
                                           </th>
                                           <th className="w-2/12">
                                             Manager Comments

@@ -31,7 +31,7 @@ const formValidation = (minPoint, maxPoint) =>
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
-      })
+      }),
     ),
 
     goalSetup: Yup.array().of(
@@ -42,7 +42,7 @@ const formValidation = (minPoint, maxPoint) =>
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
-      })
+      }),
     ),
 
     generalSetup: Yup.array().of(
@@ -53,7 +53,7 @@ const formValidation = (minPoint, maxPoint) =>
           .max(maxPoint, `Rating cannot exceed ${maxPoint}`),
         // finalizedComments: Yup.string().required(VALIDATION_MESSAGES.required),
         finalizedComments: Yup.string().optional(),
-      })
+      }),
     ),
     incrementPercentageRecommendedByManager: Yup.number()
       .required(VALIDATION_MESSAGES.required)
@@ -74,7 +74,7 @@ function calculateWeightedScore(setupArray = [], weight = 0) {
 
   const totalRating = setupArray.reduce(
     (sum, item) => sum + Number(item.finalizedRating || 0),
-    0
+    0,
   );
 
   const avg = totalRating / setupArray.length;
@@ -152,7 +152,7 @@ export function MasterEditForm({
         }}
         validationSchema={formValidation(
           user?.minPoint || 0,
-          user?.maxPoint || 1
+          user?.maxPoint || 1,
         )}
       >
         {({ handleSubmit, values, setFieldValue, isValid }) => {
@@ -189,12 +189,13 @@ export function MasterEditForm({
                                   appraisalCategoryId:
                                     formUIProps?.appraisalCategoryId,
                                   subsidiaryId: formUIProps.subsidiaryId,
-                                })
+                                }),
                               );
                             }}
                             value={
                               (id ? dashboard.allEmployees : employee)?.find(
-                                (item) => item?.value == formUIProps?.employeeId
+                                (item) =>
+                                  item?.value == formUIProps?.employeeId,
                               ) || null
                             }
                             options={id ? dashboard.allEmployees : employee}
@@ -208,7 +209,7 @@ export function MasterEditForm({
                               className="btn btn-light btn-elevate d-flex align-items-center gap-2"
                               onClick={() => {
                                 formUIProps.setPanelMode(
-                                  !formUIProps?.panelMode
+                                  !formUIProps?.panelMode,
                                 );
                               }}
                             >
@@ -221,7 +222,7 @@ export function MasterEditForm({
                               className="btn btn-primary d-flex align-items-center gap-2"
                               onClick={() =>
                                 formUIProps.setPanelMode(
-                                  !formUIProps?.panelMode
+                                  !formUIProps?.panelMode,
                                 )
                               }
                             >
@@ -277,7 +278,7 @@ export function MasterEditForm({
                                               >
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  140
+                                                  140,
                                                 )}
                                               </td>
                                               <td>{e?.rating || 0}</td>
@@ -371,7 +372,7 @@ export function MasterEditForm({
                                             Self Comments
                                           </th>
                                           <th className="w-1/12">
-                                            Avg. Manager Rating
+                                            Manager Rating
                                           </th>
                                           <th className="w-2/12">
                                             Manager Comments
@@ -392,21 +393,21 @@ export function MasterEditForm({
                                               >
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>
@@ -497,7 +498,7 @@ export function MasterEditForm({
                                             Self Comments
                                           </th>
                                           <th className="w-1/12">
-                                            Avg. Manager Rating
+                                            Manager Rating
                                           </th>
                                           <th className="w-2/12">
                                             Manager Comments
@@ -518,21 +519,21 @@ export function MasterEditForm({
                                               >
                                                 {truncateText(
                                                   e?.questionDescription,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.selfRating || 0}</td>
                                               <td title={e?.selfComments}>
                                                 {truncateText(
                                                   e?.selfComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>{e?.managerRating || 0}</td>
                                               <td title={e?.managerComments}>
                                                 {truncateText(
                                                   e?.managerComments,
-                                                  80
+                                                  80,
                                                 )}
                                               </td>
                                               <td>
@@ -595,161 +596,158 @@ export function MasterEditForm({
                       </>
                     )}
 
-                    {/* Manager's Overall Assessment */}
-                    {values?.hrWeight &&
-                      values.generalWeight &&
-                      values.goalWeight && (
-                        <>
-                          <hr />
-                          <div className="mt-4">
-                            <div className="flex justify-between items-center mb-3">
-                              <h6 className="font-bold mb-0 text-primary">
-                                Manager's Overall Assessment
-                              </h6>
-                            </div>
-                            <div className="w-full overflow-x-auto">
-                              <div className="react-bootstrap-table table-responsive">
-                                <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
-                                  <thead>
-                                    <tr className="custom-table-header text-center">
-                                      <th className="text-left">Criteria</th>
-                                      <th className="text-left">Weightage</th>
-                                      <th>
-                                        <div className="flex flex-col">
-                                          Self Score
-                                          <span className="text-sm font-normal">
-                                            Rating | W.R
-                                          </span>
-                                        </div>
-                                      </th>
-                                      <th>
-                                        <div className="flex flex-col">
-                                          Manager Score
-                                          <span className="text-sm font-normal">
-                                            Rating | W.R
-                                          </span>
-                                        </div>
-                                      </th>
-                                      <th>
-                                        <div className="flex flex-col">
-                                          HR Score
-                                          <span className="text-sm font-normal">
-                                            Rating | W.R
-                                          </span>
-                                        </div>
-                                      </th>
-                                      <th>
-                                        <div className="flex flex-col">
-                                          Finalized Score
-                                          <span className="text-sm font-normal">
-                                            Rating | W.R
-                                          </span>
-                                        </div>
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td>
-                                        <strong style={{ fontWeight: 700 }}>
-                                          HR Evaluation
-                                        </strong>
-                                      </td>
-                                      <td>{values?.hrWeight}%</td>
-                                      <td className="text-center">
-                                        {values?.hrSelfRating} |{" "}
-                                        {values?.hrSelfWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.hrManagerRating} |{" "}
-                                        {values?.hrManagerWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.hrHRRating} |{" "}
-                                        {values?.hrHRWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.hrFinalize} |{" "}
-                                        {values?.hrFinalizeWeight}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        <strong style={{ fontWeight: 700 }}>
-                                          General Evaluation
-                                        </strong>
-                                      </td>
-                                      <td>{values?.generalWeight}%</td>
-                                      <td className="text-center">
-                                        {values?.generalSelfRating} |{" "}
-                                        {values?.generalSelfWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.generalManagerRating} |{" "}
-                                        {values?.generalManagerWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.generalHRRating} |{" "}
-                                        {values?.generalHRWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.generalFinalize} |{" "}
-                                        {values?.generalFinalizeWeight}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        <strong style={{ fontWeight: 700 }}>
-                                          Goals & Objective
-                                        </strong>
-                                      </td>
-                                      <td>{values?.goalWeight}%</td>
-                                      <td className="text-center">
-                                        {values?.goalSelfRating} |{" "}
-                                        {values?.goalSelfWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.goalManagerRating} |{" "}
-                                        {values?.goalManagerWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.goalHRRating} |{" "}
-                                        {values?.goalHRWeight}
-                                      </td>
-                                      <td className="text-center">
-                                        {values?.goalFinalize} |{" "}
-                                        {values?.goalFinalizeWeight}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td className="text-tprimary">
-                                        <strong style={{ fontWeight: 700 }}>
-                                          Final Rating
-                                        </strong>
-                                      </td>
-                                      <td></td>
-                                      <td className="text-center"></td>
-                                      <td className="text-center"></td>
-                                      <td className="text-center"></td>
-                                      <td className="text-center font-semibold text-tprimary">
-                                        {Number(
-                                          (Number(values?.goalFinalizeWeight) ||
-                                            0) +
-                                            (Number(
-                                              values?.generalFinalizeWeight
-                                            ) || 0) +
-                                            (Number(values?.hrFinalizeWeight) ||
-                                              0)
-                                        ).toFixed(2)}{" "}
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
+                    {values?.employeeId && (
+                      <>
+                        <hr />
+                        <div className="mt-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <h6 className="font-bold mb-0 text-primary">
+                              Manager's Overall Assessment
+                            </h6>
+                          </div>
+                          <div className="w-full overflow-x-auto">
+                            <div className="react-bootstrap-table table-responsive">
+                              <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
+                                <thead>
+                                  <tr className="custom-table-header text-center">
+                                    <th className="text-left">Criteria</th>
+                                    <th className="text-left">Weightage</th>
+                                    <th>
+                                      <div className="flex flex-col">
+                                        Self Score
+                                        <span className="text-sm font-normal">
+                                          Rating | W.R
+                                        </span>
+                                      </div>
+                                    </th>
+                                    <th>
+                                      <div className="flex flex-col">
+                                        Manager Score
+                                        <span className="text-sm font-normal">
+                                          Rating | W.R
+                                        </span>
+                                      </div>
+                                    </th>
+                                    <th>
+                                      <div className="flex flex-col">
+                                        HR Score
+                                        <span className="text-sm font-normal">
+                                          Rating | W.R
+                                        </span>
+                                      </div>
+                                    </th>
+                                    <th>
+                                      <div className="flex flex-col">
+                                        Finalized Score
+                                        <span className="text-sm font-normal">
+                                          Rating | W.R
+                                        </span>
+                                      </div>
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <strong style={{ fontWeight: 700 }}>
+                                        HR Evaluation
+                                      </strong>
+                                    </td>
+                                    <td>{values?.hrWeight}%</td>
+                                    <td className="text-center">
+                                      {values?.hrSelfRating} |{" "}
+                                      {values?.hrSelfWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.hrManagerRating} |{" "}
+                                      {values?.hrManagerWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.hrHRRating} |{" "}
+                                      {values?.hrHRWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.hrFinalize} |{" "}
+                                      {values?.hrFinalizeWeight}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong style={{ fontWeight: 700 }}>
+                                        General Evaluation
+                                      </strong>
+                                    </td>
+                                    <td>{values?.generalWeight}%</td>
+                                    <td className="text-center">
+                                      {values?.generalSelfRating} |{" "}
+                                      {values?.generalSelfWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.generalManagerRating} |{" "}
+                                      {values?.generalManagerWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.generalHRRating} |{" "}
+                                      {values?.generalHRWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.generalFinalize} |{" "}
+                                      {values?.generalFinalizeWeight}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong style={{ fontWeight: 700 }}>
+                                        Goals & Objective
+                                      </strong>
+                                    </td>
+                                    <td>{values?.goalWeight}%</td>
+                                    <td className="text-center">
+                                      {values?.goalSelfRating} |{" "}
+                                      {values?.goalSelfWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.goalManagerRating} |{" "}
+                                      {values?.goalManagerWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.goalHRRating} |{" "}
+                                      {values?.goalHRWeight}
+                                    </td>
+                                    <td className="text-center">
+                                      {values?.goalFinalize} |{" "}
+                                      {values?.goalFinalizeWeight}
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="text-tprimary">
+                                      <strong style={{ fontWeight: 700 }}>
+                                        Final Rating
+                                      </strong>
+                                    </td>
+                                    <td></td>
+                                    <td className="text-center"></td>
+                                    <td className="text-center"></td>
+                                    <td className="text-center"></td>
+                                    <td className="text-center font-semibold text-tprimary">
+                                      {Number(
+                                        (Number(values?.goalFinalizeWeight) ||
+                                          0) +
+                                          (Number(
+                                            values?.generalFinalizeWeight,
+                                          ) || 0) +
+                                          (Number(values?.hrFinalizeWeight) ||
+                                            0),
+                                      ).toFixed(2)}{" "}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
                           </div>
-                        </>
-                      )}
+                        </div>
+                      </>
+                    )}
 
                     {/* {Recommendation of increment && ( */}
                     {values?.employeeId && (
@@ -760,7 +758,7 @@ export function MasterEditForm({
                             [...values.ratingList]
                               .sort(
                                 (a, b) =>
-                                  parseFloat(a.points) - parseFloat(b.points)
+                                  parseFloat(a.points) - parseFloat(b.points),
                               )
                               .reduce((acc, curr) => {
                                 const total =
@@ -784,7 +782,8 @@ export function MasterEditForm({
                         <div className="mt-4">
                           <div className="flex justify-between items-center mb-3">
                             <h6 className="font-bold mb-0 text-primary">
-                              Manager's Recommendation (After Rating Finalization)
+                              Manager's Recommendation (After Rating
+                              Finalization)
                             </h6>
                           </div>
                           <div className="w-full overflow-x-auto">
@@ -816,7 +815,7 @@ export function MasterEditForm({
                                     <td
                                       dangerouslySetInnerHTML={{
                                         __html: decodeHtml(
-                                          values?.managerRecommendation
+                                          values?.managerRecommendation,
                                         ),
                                       }}
                                     ></td>
@@ -863,9 +862,7 @@ export function MasterEditForm({
                             component={TextArea}
                             // label="Additional Remarks"
                             label={
-                              <span className="font-bold">
-                                HR Remarks
-                              </span>
+                              <span className="font-bold">HR Remarks</span>
                             }
                             disabled={values?.isFinalize || isUserForRead}
                           />
@@ -937,7 +934,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
     if (values.goalSetup?.length > 0 && values.goalWeight) {
       const { avg, weighted } = calculateWeightedScore(
         values.goalSetup,
-        values.goalWeight
+        values.goalWeight,
       );
       setFieldValue("goalFinalize", avg);
       setFieldValue("goalFinalizeWeight", weighted);
@@ -947,7 +944,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
     if (values.generalSetup?.length > 0 && values.generalWeight) {
       const { avg, weighted } = calculateWeightedScore(
         values.generalSetup,
-        values.generalWeight
+        values.generalWeight,
       );
       setFieldValue("generalFinalize", avg);
       setFieldValue("generalFinalizeWeight", weighted);
@@ -957,7 +954,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
     if (values.hrSetup?.length > 0 && values.hrWeight) {
       const { avg, weighted } = calculateWeightedScore(
         values.hrSetup,
-        values.hrWeight
+        values.hrWeight,
       );
       setFieldValue("hrFinalize", avg);
       setFieldValue("hrFinalizeWeight", weighted);
@@ -971,7 +968,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
         parseFloat(values.hrFinalizeWeight || 0);
 
       const ratingListSorted = [...values.ratingList].sort(
-        (a, b) => parseFloat(a.points) - parseFloat(b.points)
+        (a, b) => parseFloat(a.points) - parseFloat(b.points),
       );
 
       const matchedRating = ratingListSorted.reduce((acc, curr) => {
@@ -984,7 +981,7 @@ function useCalculateAndUpdateScores(values, setFieldValue) {
       setFieldValue("recommendedPoint", finalPoint.toFixed(2));
       setFieldValue(
         "recommendedIncrement",
-        matchedRating?.increment_percentage || 0
+        matchedRating?.increment_percentage || 0,
       );
     }
   }, [

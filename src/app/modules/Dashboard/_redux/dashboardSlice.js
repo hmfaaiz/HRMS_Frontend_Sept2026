@@ -107,6 +107,9 @@ const initialDashboardState = {
   moduleRights: [],
   allUsers: [],
   allCustomers : [],
+  allProjects : [],
+  allTicketStatus : [],
+  allTicket : [],
 };
 
 export const callTypes = {
@@ -430,6 +433,15 @@ export const dashboardSlice = createSlice({
     },
         AllActiveCustomerFetch: (state, action) => {
       state.allCustomers = action.payload;
+    },
+      AllProjectFetch: (state, action) => {
+      state.allProjects = action.payload;
+    },
+     AllTicketStatusFetch: (state, action) => {
+      state.allTicketStatus = action.payload;
+    },
+    AllTicketFetch: (state, action) => {
+      state.allTicket = action.payload;
     },
     FacilitatorEmployeeFetch: (state, action) => {
       state.facilitatorEmployeeList = action.payload;
