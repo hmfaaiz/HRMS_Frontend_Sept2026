@@ -33,6 +33,7 @@ export function FormEditForm({
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
+  const { auth } = useSelector((state) => state);
 
   const [defCode, setDefCode] = useState(null);
 
@@ -119,12 +120,12 @@ export function FormEditForm({
   }, [dispatch]);
 
   /* ---------------- FORM ---------------- */
-
   return (
     <Formik
       enableReinitialize
       initialValues={{
         ...dataForEdit,
+        reportToEmpId: !id ? auth?.user?.employeeIdMapping : "",
       }}
       validationSchema={formSchema}
       onSubmit={(values) => {
@@ -153,6 +154,21 @@ export function FormEditForm({
             <Form className="form form-label-right">
               <fieldset disabled={isUserForRead}>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-2">
+                  {/* Ticket CODE */}
+                  {id && (
+                    <div>
+                      <Field
+                        name="ticketCode"
+                        component={Input}
+                        disabled
+                        label={
+                          <span>
+                            Ticket Code <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                      />
+                    </div>
+                  )}
                   {/* Project */}
                   <div>
                     <SearchSelect
@@ -176,7 +192,6 @@ export function FormEditForm({
                             actions.getLatestTicketNumBaseOnProjectId(e?.value),
                           );
                           setDefCode(res);
-                          setFieldValue("ticketCode", res.code);
                           setFieldValue("ticketTypeId", "");
                           setFieldValue("parentEpicId", null);
                           setFieldValue("parentTaskId", null);
@@ -184,19 +199,7 @@ export function FormEditForm({
                       }}
                     />
                   </div>
-                  {/* Ticket CODE */}
-                  <div>
-                    <Field
-                      name="ticketCode"
-                      component={Input}
-                      disabled
-                      label={
-                        <span>
-                          Ticket Code <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    />
-                  </div>
+
                   {/* Ticket Description */}
                   <div>
                     <Field
@@ -255,8 +258,10 @@ export function FormEditForm({
                         label={
                           <span>
                             Start Date
-                            {defCode?.policy && ( // Show * only when policy is true
+                            {defCode?.policy ? ( // Show * only when policy is true
                               <span style={{ color: "red" }}>*</span>
+                            ) : (
+                              ""
                             )}
                           </span>
                         }
@@ -274,8 +279,10 @@ export function FormEditForm({
                         label={
                           <span>
                             Due Date
-                            {defCode?.policy && ( // Show * only when policy is true
+                            {defCode?.policy ? ( // Show * only when policy is true
                               <span style={{ color: "red" }}>*</span>
+                            ) : (
+                              ""
                             )}
                           </span>
                         }
@@ -394,7 +401,10 @@ export function FormEditForm({
                         name="parentTaskId"
                         label={
                           <span>
-                            Parent Task <span style={{ color: "red" }}>*</span>
+                            {values?.ticketTypeId == 4
+                              ? "Linked Task"
+                              : "Parent Task"}
+                            <span style={{ color: "red" }}>*</span>
                           </span>
                         }
                         disabled={

@@ -21,6 +21,7 @@ export function Input({
   withFeedbackLabel = true,
   customFeedbackLabel,
   type = "text",
+  maxLength = 50,
   ...props
 }) {
   return (
@@ -29,7 +30,7 @@ export function Input({
       <input
         type={type}
         onWheel={type === "number" ? (e) => e.target.blur() : undefined}
-        maxLength={50}
+        maxLength={maxLength}
         className={getFieldCSSClasses(touched[field.name], errors[field.name])}
         {...field}
         {...props}
