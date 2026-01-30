@@ -174,6 +174,8 @@ import {SubsidiaryWiseOnboardingChecklistSlice } from "../app/modules/Subsidiary
 import { projectSetupSlice } from "../app/modules/Project_Setup/_redux/redux-Slice";
 import { ticketSetupSlice } from "../app/modules/Ticket_Setup/_redux/redux-Slice";
 
+import {ticketStatusSlice} from "../app/modules/Ticket_Status/_redux/redux-Slice";
+
 export const rootReducer = combineReducers({
   auth: auth.reducer,
   dashboard: dashboardSlice.reducer,
@@ -342,6 +344,8 @@ export const rootReducer = combineReducers({
 
   project_setup : projectSetupSlice.reducer,
   ticket_setup : ticketSetupSlice.reducer,
+
+  ticket_status : ticketStatusSlice.reducer,
 
 });
 
