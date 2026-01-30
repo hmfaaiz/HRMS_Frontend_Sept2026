@@ -45,6 +45,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
       <FormEditForm
         dataForEdit={id ? dataForEdit : initVal}
         saveForm={saveForm}
+        id={id}
         actionsLoading={actionsLoading}
         onHide={onHide}
         isUserForRead={userForRead} // disables fields in view mode

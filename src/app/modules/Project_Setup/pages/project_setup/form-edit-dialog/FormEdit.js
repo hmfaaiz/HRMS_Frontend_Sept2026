@@ -29,7 +29,7 @@ const formSchema = Yup.object().shape({
     .required(VALIDATION_MESSAGES.required)
     .matches(/^[A-Za-z\s.-]+$/, "Name must only contain letters.")
     .min(1, VALIDATION_MESSAGES.minOneValue)
-    .max(5, "Should not be greater than 5"),
+    .max(3, "Should not be greater than 3"),
   projectTypeId: Yup.string()
     .nullable()
     .required(VALIDATION_MESSAGES.required),
@@ -247,7 +247,7 @@ export function FormEditForm({
                   </div>
 
                   {/* Start & Due Date are Mandatory for Ticket Creation */}
-                  <div>
+                  <div className="col-span-2 mt-3">
                     <Checkbox
                       children={
                         "Start & Due Date are Mandatory for Ticket Creation"
@@ -266,7 +266,7 @@ export function FormEditForm({
                   type="button"
                   disabled={false}
                   onClick={() => setViewDetail(!viewDetail)}
-                  className="btn bg-tsecondary"
+                  className="btn bg-tprimary text-white"
                 >
                   View Employees Access
                 </button>

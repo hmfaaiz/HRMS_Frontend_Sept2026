@@ -759,3 +759,40 @@ export const fetchAllActiveCustomers = () => async (dispatch) => {
       dispatch(actions.AllActiveCustomerFetch([]));
     });
 };
+
+
+export const fetchAllProjects = (employeeId = null) => async (dispatch) => {
+  return await requestFromServer
+    .getAllProjects({employeeId})
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllProjectFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.AllProjectFetch([]));
+    });
+};
+
+export const fetchAllTicketStatus = () => async (dispatch) => {
+  return await requestFromServer
+    .getAllTicketStatus()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllTicketStatusFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.AllTicketStatusFetch([]));
+    });
+};
+
+export const fetchAllTicket = (employeeId = null) => async (dispatch) => {
+  return await requestFromServer
+    .getAllTicket({employeeId})
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllTicketFetch(entities));
+    })
+    .catch((error) => {
+      dispatch(actions.AllTicketFetch([]));
+    });
+};

@@ -52,11 +52,11 @@ export function FormTable() {
   }, [formUIProps.queryParams, dispatch, totalCount]);
 
   const isAccessForEdit = userAccess?.find(
-    (item) => item.componentName === "UpdateAppraisalEvaluationQuestion"
+    (item) => item.componentName === "UpdateAppraisalEvaluationQuestion",
   );
 
   const isAccessForRead = userAccess?.find(
-    (item) => item.componentName === "ReadAppraisalEvaluationQuestion"
+    (item) => item.componentName === "ReadAppraisalEvaluationQuestion",
   );
 
   // Table columns
@@ -142,11 +142,11 @@ export function FormTable() {
         minWidth: "70px",
       },
       formatter: (cell, row) => {
-        return row?.fromEmp == row?.toEmp
-          ? "Self"
-          : row?.isHREvaluation
+        return row?.isHREvaluation
           ? "HR Evaluation"
-          : "Supervisor";
+          : row?.isSupervisor
+          ? "Supervisor"
+          : "Self";
       },
     },
     {
@@ -234,7 +234,7 @@ export function FormTable() {
                 columns={columns}
                 defaultSorted={uiHelpers.defaultSorted}
                 onTableChange={getHandlerTableChange(
-                  formUIProps.setQueryParams
+                  formUIProps.setQueryParams,
                 )}
                 // selectRow={getSelectRow({
                 //   entities,
