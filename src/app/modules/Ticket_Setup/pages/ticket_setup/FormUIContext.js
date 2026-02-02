@@ -39,6 +39,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     reportToEmpId: null,
     parentEpicId: null,
     parentTaskId: null,
+    noOfHours: 0,
   };
 
   const value = {

@@ -16,6 +16,7 @@ import * as uiHelpers from "../FormUIHelpers";
 import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 import { Pagination } from "../../../../../../_metronic/_partials/controls";
 import { useFormUIContext } from "../FormUIContext";
+import { PriorityType, TicketType } from "../../../../../utils/common";
 
 export function FormTable() {
   // Customer UI Context
@@ -92,7 +93,7 @@ export function FormTable() {
       headerSortingClasses,
       style: { minWidth: "60px" },
       formatter: (cell) =>
-        cell ? uiHelpers.TicketType?.find((e) => e.value == cell)?.label : "",
+        cell ? TicketType?.find((e) => e.value == cell)?.label : "",
     },
     {
       dataField: "priority",
@@ -102,7 +103,7 @@ export function FormTable() {
       headerSortingClasses,
       style: { minWidth: "60px" },
       formatter: (cell) =>
-        cell ? uiHelpers.PriorityType?.find((e) => e.value == cell)?.label : "",
+        cell ? PriorityType?.find((e) => e.value == cell)?.label : "",
     },
 
     {

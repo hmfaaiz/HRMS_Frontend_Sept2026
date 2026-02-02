@@ -16,8 +16,11 @@ import {
   fetchAllTicketStatus,
 } from "../../../../Dashboard/_redux/dashboardActions";
 import * as actions from "../../../_redux/redux-Actions";
-import { PriorityType, TicketType } from "../FormUIHelpers";
-import { formatDates } from "../../../../../utils/common";
+import {
+  formatDates,
+  PriorityType,
+  TicketType,
+} from "../../../../../utils/common";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
 
 /* ---------------- COMPONENT ---------------- */
@@ -40,6 +43,7 @@ export function FormEditForm({
   /* -------- FETCH MASTER DATA -------- */
 
   // Dynamic validation schema using useMemo
+  // Dynamic validation schema using useMemo
   const formSchema = useMemo(() => {
     return Yup.object().shape({
       projectId: Yup.string()
@@ -58,24 +62,36 @@ export function FormEditForm({
       ticketTypeId: Yup.string()
         .nullable()
         .required(VALIDATION_MESSAGES.required),
-      // Conditional validation for startDate
+
+      // Start Date - Conditional based on ticketTypeId
       startDate: Yup.date()
         .nullable()
-        .required(VALIDATION_MESSAGES.required)
-        .typeError(VALIDATION_MESSAGES.required),
+        .typeError("Invalid date")
+        .when("ticketTypeId", {
+          is: (ticketTypeId) => ticketTypeId !== "1",
+          then: (schema) => schema.required(VALIDATION_MESSAGES.required),
+          otherwise: (schema) => schema.optional(),
+        }),
 
+      // Due Date - Conditional based on ticketTypeId and defCode.policy
       dueDate: Yup.date()
         .nullable()
         .typeError("Invalid date")
-        .when([], {
-          is: () => defCode?.policy == 1,
-          then: (s) => s.required(VALIDATION_MESSAGES.required),
-          otherwise: (s) => s.notRequired(),
-        })
-        .min(
-          Yup.ref("startDate"),
-          VALIDATION_MESSAGES.endDateMustBeAfterStartDate,
-        ),
+        .when("ticketTypeId", {
+          is: (ticketTypeId) => ticketTypeId !== "1",
+          then: (schema) =>
+            schema
+              .when([], {
+                is: () => defCode?.policy == 1,
+                then: (s) => s.required(VALIDATION_MESSAGES.required),
+                otherwise: (s) => s.optional(),
+              })
+              .min(
+                Yup.ref("startDate"),
+                VALIDATION_MESSAGES.endDateMustBeAfterStartDate,
+              ),
+          otherwise: (schema) => schema.optional(),
+        }),
 
       priority: Yup.string()
         .nullable()
@@ -109,6 +125,10 @@ export function FormEditForm({
           then: (sch) => sch.required(VALIDATION_MESSAGES.required),
           otherwise: (sch) => sch.optional(),
         }),
+
+      noOfHours: Yup.number()
+        .nullable()
+        .required(VALIDATION_MESSAGES.required),
     });
   }, [defCode]); // Recreate schema when defCode changes
 
@@ -201,10 +221,11 @@ export function FormEditForm({
                   </div>
 
                   {/* Ticket Description */}
-                  <div>
+                  <div className="col-span-2 sm:col-span-3">
                     <Field
                       name="ticketDescription"
                       component={Input}
+                      maxLength={200}
                       label={
                         <span>
                           Ticket Description{" "}
@@ -258,7 +279,7 @@ export function FormEditForm({
                         label={
                           <span>
                             Start Date
-                            {defCode?.policy ? ( // Show * only when policy is true
+                            {defCode?.policy && values.ticketTypeId != 1 ? ( // Show * only when policy is true
                               <span style={{ color: "red" }}>*</span>
                             ) : (
                               ""
@@ -279,7 +300,7 @@ export function FormEditForm({
                         label={
                           <span>
                             Due Date
-                            {defCode?.policy ? ( // Show * only when policy is true
+                            {defCode?.policy && values.ticketTypeId != 1 ? ( // Show * only when policy is true
                               <span style={{ color: "red" }}>*</span>
                             ) : (
                               ""
@@ -289,24 +310,40 @@ export function FormEditForm({
                       />
                     </div>
                   </div>
-                  <div>
-                    <SearchSelect
-                      name="priority"
-                      label={
-                        <span>
-                          Priority <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                      value={PriorityType?.find(
-                        (el) => el?.value == values?.priority,
-                      )}
-                      options={PriorityType || []}
-                      error={errors.priority}
-                      touched={touched.priority}
-                      onChange={(e) => {
-                        setFieldValue("priority", e.value);
-                      }}
-                    />
+                  <div className="grid grid-cols-2 gap-x-3">
+                    <div>
+                      <Field
+                        label={
+                          <span>
+                            No.of Hours
+                            <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        name="noOfHours"
+                        component={Input}
+                        placeholder="Enter no of hours"
+                        type="number"
+                      />
+                    </div>
+                    <div>
+                      <SearchSelect
+                        name="priority"
+                        label={
+                          <span>
+                            Priority <span style={{ color: "red" }}>*</span>
+                          </span>
+                        }
+                        value={PriorityType?.find(
+                          (el) => el?.value == values?.priority,
+                        )}
+                        options={PriorityType || []}
+                        error={errors.priority}
+                        touched={touched.priority}
+                        onChange={(e) => {
+                          setFieldValue("priority", e.value);
+                        }}
+                      />
+                    </div>
                   </div>
                   {/* Ticket Status */}
                   <div>
@@ -333,10 +370,16 @@ export function FormEditForm({
                     <SearchSelect
                       name="assignToEmpId"
                       label={<span>Assign To</span>}
-                      value={dashboard?.allEmployees?.find(
-                        (el) => el?.value === values?.assignToEmpId,
-                      )}
-                      options={dashboard.allEmployees || []}
+                      value={[
+                        { label: "Select", value: null },
+                        ...dashboard?.allEmployees,
+                      ]?.find((el) => el?.value === values?.assignToEmpId)}
+                      options={
+                        [
+                          { label: "Select", value: null },
+                          ...dashboard?.allEmployees,
+                        ] || []
+                      }
                       error={errors.assignToEmpId}
                       touched={touched.assignToEmpId}
                       onChange={(e) => {
@@ -353,10 +396,10 @@ export function FormEditForm({
                           Report To <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={dashboard?.allEmployees?.find(
+                      value={[, ...dashboard?.allEmployees]?.find(
                         (el) => el?.value === values?.reportToEmpId,
                       )}
-                      options={dashboard.allEmployees || []}
+                      options={[, ...dashboard?.allEmployees] || []}
                       error={errors.reportToEmpId}
                       touched={touched.reportToEmpId}
                       onChange={(e) => {

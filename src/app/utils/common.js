@@ -234,3 +234,42 @@ export const decodeHtml = (html) => {
   txt.innerHTML = html;
   return txt.value;
 };
+
+
+export const TicketType = [
+  {
+    label: "EPIC (MILESTONE)",
+    value: 1,
+  },
+  {
+    label: "USER STORY",
+    value: 2,
+  },
+  {
+    label: "TASK",
+    value: 3,
+  },
+  {
+    label: "BUG",
+    value: 4,
+  },
+  {
+    label: "SUB-TASK",
+    value: 5,
+  },
+];
+
+export const PriorityType = [
+  {
+    label: "Low",
+    value: 1,
+  },
+  {
+    label: "Medium",
+    value: 2,
+  },
+  {
+    label: "High",
+    value: 3,
+  },
+];
