@@ -152,10 +152,10 @@ export function FormEditForm({
         enableLoading();
         const payload = {
           ...values,
-          to: values.startDate
+          startDate: values.startDate
             ? formatDates(values.startDate, "dd-MMM-yyyy")
             : null,
-          from: values.dueDate
+          dueDate: values.dueDate
             ? formatDates(values.dueDate, "dd-MMM-yyyy")
             : null,
         };
