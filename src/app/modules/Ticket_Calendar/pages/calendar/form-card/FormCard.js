@@ -7,6 +7,7 @@ import {
   CardBody,
   DatePickerField,
   CardHeader,
+  Input,
 } from "../../../../../../_metronic/_partials/controls";
 import * as actions from "../../../_redux/redux-Actions";
 import { FormTable } from "../form-table/FormTable";
@@ -17,13 +18,16 @@ import {
   fetchAllActiveEmployees,
   fetchAllActiveEmployeesBySubsidiary,
   fetchAllDept,
+  fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
-import { formatDates } from "../../../../../utils/common";
+import { formatDates, TicketType } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
+import { fetchAllProjects, fetchAllTicketStatus } from "../../../../Dashboard/_redux/dashboardActions";
+import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const formValidation = Yup.object().shape({
   subsidiaryId: Yup.number().required(VALIDATION_MESSAGES.required),
@@ -63,10 +67,13 @@ export function FormCard() {
 
   useEffect(() => {
     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllProjects());
+    dispatch(fetchAllTicketStatus());
+    dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
   }, [dispatch]);
 
   const { leaveCalendar } = currentState;
-console.log("leaveCalendar11111",leaveCalendar)
+
   const setInitialValues = (firstSubsidiary) => {
     setBodyValues({
       from_date: firstSubsidiary?.payrollMonth?.startDate || "",
@@ -78,11 +85,11 @@ console.log("leaveCalendar11111",leaveCalendar)
   };
 
   useEffect(() => {
-    if(!dashboard?.allSubsidiaryList?.length) return
-    const findDefaultSubs = dashboard.allSubsidiaryList?.find((e)=> e?.isDefault)
-    if(!findDefaultSubs?.value) return
-      dispatch(fetchAllDept(findDefaultSubs?.value));
-      setInitialValues(findDefaultSubs);
+    if (!dashboard?.allSubsidiaryList?.length) return
+    const findDefaultSubs = dashboard.allSubsidiaryList?.find((e) => e?.isDefault)
+    if (!findDefaultSubs?.value) return
+    dispatch(fetchAllDept(findDefaultSubs?.value));
+    setInitialValues(findDefaultSubs);
   }, [dashboard.allSubsidiaryList]);
 
   useEffect(() => {
@@ -91,6 +98,24 @@ console.log("leaveCalendar11111",leaveCalendar)
       customSubmit(bodyValues);
     }
   }, [isDataLoaded, bodyValues]);
+
+
+
+  const clearFields = (values = [], setFieldValue) => {
+    values.forEach((field) => {
+      console.log("field111111", field)
+      setFieldValue(field, ""); // Set each field to an empty value
+    });
+  };
+
+  const ticketStatusOptions = [
+
+    { value: 1, label: "Open" },
+    { value: 0, label: "Completed" },
+    { value: 3, label: "Re-opened" },
+    { value: 2, label: "Send for Review" },
+  ];
+
 
   return (
     <>
@@ -101,20 +126,28 @@ console.log("leaveCalendar11111",leaveCalendar)
             initialValues={{
               from_date: bodyValues?.from_date || null,
               to_date: bodyValues?.to_date || null,
-              subsidiaryId: bodyValues?.subsidiaryId || null,
-              employeeId: null, // Default null for employeeId
+
+
+              isEnable_via_task_project: true,
+              isEnable_via_task_assignment: false,
+              ticketTypeIds: [],
+              ticketStatusIds: [],
+              taskTicketTypeIds: [],
+              taskTicketStatusIds: [],
+              projectTicketDescription: "",
+              taskTicketDescription: "",
             }}
             validationSchema={formValidation}
-            // onSubmit={(values) => {
+          // onSubmit={(values) => {
 
-            //   customSubmit(values);
-            // }}
+          //   customSubmit(values);
+          // }}
           >
             {({
               handleSubmit,
               handleBlur,
               setFieldValue,
-              handleReset,
+              handleReset, handleChange,
               values,
               touched,
               errors,
@@ -142,217 +175,284 @@ console.log("leaveCalendar11111",leaveCalendar)
                   <Modal.Body className="overlay overlay-block cursor-default">
                     <Form className="form form-label-right">
                       <fieldset>
-                        <div className="grid grid-cols-5 gap-x-3 gap-y-1">
-                          {/* Subsidiary Selector */}
-                          <div>
-                            <SearchSelect
-                              name="subsidiaryId"
-                              label={
-                                <label>
-                                  Subsidiary
-                                  <span style={{ color: "red" }}>*</span>
-                                </label>
-                              }
-                              onChange={handleSubsidiaryChange} // Call the dynamic reset handler
-                              value={
-                                dashboard?.allSubsidiaryList?.find(
-                                  (option) =>
-                                    option?.value === values?.subsidiaryId
-                                ) || null
-                              }
-                              
-                              options={dashboard?.allSubsidiaryList}
-                              error={errors.subsidiaryId}
-                              touched={touched.subsidiaryId}
-                            />
-                            {/* <SubsidiarySelect
-                              name="subsidiaryId"
-                              label={
-                                <label>
-                                  Subsidiary
-                                  <span style={{ color: "red" }}>*</span>
-                                </label>
-                              }
-                              onChange={handleSubsidiaryChange}
-                              error={errors?.subsidiaryId}
-                              touched={touched?.subsidiaryId}
-                              currentValue={values?.subsidiaryId}
-                              initializeSubsidiary={handleSubsidiaryChange}
-                            /> */}
-                          </div>
+                        <div className="col-span-3">
+                          <input
+                            name="isEnable_via_task_project"
+                            type="checkbox"
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              clearFields(["taskTicketDescription"], setFieldValue);
+                              setFieldValue("taskTicketStatusIds", [])
+                              setFieldValue("taskTicketTypeIds", [])
+                              setFieldValue("isEnable_via_task_assignment", false);
+                              handleChange(e); // Trigger the form change handler
+                              // if (!e.target.checked) {
+                              //   clearFields(
+                              //     ["shiftId", "offDay_1", "offDay_2"],
+                              //     setFieldValue
+                              //   );
+                              // }
+                            }}
+                            onBlur={handleBlur}
+                            value={values.isEnable_via_task_project}
+                            checked={values.isEnable_via_task_project}
+
+                          />
+                          <label>
+                            &nbsp;<span>Search Via Task Project</span>
+                          </label>
+                        </div>
+                        <div className="grid grid-cols-4 gap-x-3 gap-y-1">
 
                           <div>
-                            <Field
-                              name="departmentId"
-                              component={SearchSelect}
-                              onBlur={handleBlur}
+                            <SearchSelect
+                              name="projectId"
+                              disabled={values.isEnable_via_task_assignment}
+                              label={
+                                <label>
+                                  Project
+
+                                </label>
+                              }
                               onChange={(e) => {
                                 const value =
                                   e.value == "Select" ? "" : Number(e.value);
-                                setFieldValue("departmentId", value);
+                                setFieldValue("projectId", value);
                                 setFieldValue("employeeId", null);
                               }}
-                              label={<span> Department</span>}
                               value={
-                                dashboard?.allDept?.find(
+                                dashboard?.allProjects?.find(
                                   (option) =>
-                                    option?.value === values?.departmentId
+                                    option?.value === values?.projectId
                                 ) || null
                               }
-                              // options={dashboard?.allDept}
-                              options={[
-                                { label: "Select", value: "" },
-                                ...(Array.isArray(dashboard?.allDept)
-                                  ? dashboard?.allDept
-                                  : []),
-                              ]}
-                              error={errors.departmentId}
-                              touched={touched.departmentId}
+
+                              options={dashboard?.allProjects}
+                              error={errors.projectId}
+                              touched={touched.projectId}
                             />
+
                           </div>
 
-                          <div>
-                            <SearchSelect
-                              name="employeeId"
-                              label={<span>Employee</span>}
-                              onChange={(e) => {
-                                setFieldValue("employeeId", e.value || null);
-                              }}
-                              value={
-                                dashboard?.allEmployees?.find(
-                                  (option) =>
-                                    option?.value === values?.employeeId
-                                ) || null
-                              }
-                              // options={dashboard?.allEmployees}
-                              // options={
-                              //   values?.departmentId
-                              //     ? dashboard?.allEmployees?.filter(
-                              //         (emp) => emp?.departmentId === values.departmentId
-                              //       )
-                              //     : dashboard?.allEmployees
-                              // }
 
-                              options={[
-                                { label: "Select", value: "" },
-                                ...(Array.isArray(
-                                  values?.departmentId
-                                    ? dashboard?.allEmployees?.filter(
-                                        (emp) =>
-                                          emp?.departmentId ===
-                                          values.departmentId
-                                      )
-                                    : dashboard?.allEmployees
+
+                          <div className="">
+                            <MultiSelect
+                              disabled={values.isEnable_via_task_assignment}
+                              name="ticketTypeIds"
+                              label="Ticket Type"
+                              value={TicketType.filter(t =>
+                                values.ticketTypeIds?.includes(t.value)
+                              )}
+                              options={TicketType}
+                              onChange={(items = []) =>
+                                setFieldValue(
+                                  "ticketTypeIds",
+                                  items.map((i) => i.value)
                                 )
-                                  ? values?.departmentId
-                                    ? dashboard?.allEmployees?.filter(
-                                        (emp) =>
-                                          emp?.departmentId ===
-                                          values.departmentId
-                                      )
-                                    : dashboard?.allEmployees
-                                  : []),
-                              ]}
-                              error={errors.employeeId}
-                              touched={touched.employeeId}
+                              }
                             />
                           </div>
-
-                          {/*                      
-                          <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="from_date"
-                              component={DatePickerField}
-                              dateFormat="dd/MM/yyyy"
-                              className="form-control"
-                              label={<span>Date From<span style={{ color: "red" }}>*</span></span>}
-                              onChange={(date) => {
-                                setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
-                              }}
-                              autoComplete="off"
-                            />
-                          </div>
-
-                     
-                          <div className="col-12 col-md-4 mt-3">
-                            <Field
-                              name="to_date"
-                              component={DatePickerField}
-                              onBlur={handleBlur}
-                              className="form-control"
-                              dateFormat="dd/MM/yyyy"
-                              label={<span>Date To<span style={{ color: "red" }}>*</span></span>}
-                              onChange={(date) => {
-                                setFieldValue("to_date", date);
-                              }}
-                              autoComplete="off"
-                            />
-                          </div> */}
 
                           <div>
-                            <label>
-                              From<span style={{ color: "red" }}>*</span>
-                            </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="From "
-                              selected={
-                                values?.from_date
-                                  ? new Date(values.from_date)
-                                  : null
+                            <Field
+                              name="projectTicketDescription"
+                              component={Input}
+                              maxLength={200}
+                              disabled={values.isEnable_via_task_assignment}
+                              label={
+                                <span>
+                                  Ticket Description{" "}
+
+                                </span>
                               }
-                              onChange={(date) => {
-                                setFieldValue("from_date", date);
-                                setFieldValue("to_date", date); // Sync from_date and to_date
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="from_date"
-                              autoComplete="off"
                             />
                           </div>
 
-                          {/* Date To Selector */}
-                          <div>
-                            <label>
-                              Date To<span style={{ color: "red" }}>*</span>
-                            </label>
-                            <DatePicker
-                              className="form-control"
-                              placeholder="To "
-                              selected={
-                                values?.to_date
-                                  ? new Date(values.to_date)
-                                  : null
+                          <div className="">
+                            <MultiSelect
+                             disabled={values.isEnable_via_task_assignment}
+                              name="ticketStatusIds"
+                              label="Ticket Status"
+                              value={dashboard.allTicketStatus.filter(t =>
+                                values.ticketStatusIds?.includes(t.value)
+                              )}
+                              options={dashboard.allTicketStatus}
+                              onChange={(items = []) =>
+                                setFieldValue(
+                                  "ticketStatusIds",
+                                  items.map((i) => i.value)
+                                )
                               }
-                              onChange={(date) => {
-                                setFieldValue("to_date", date);
-                              }}
-                              timeInputLabel="Time:"
-                              dateFormat="dd-MMM-yyyy"
-                              // showTimeInput
-                              name="to_date"
-                              autoComplete="off"
                             />
                           </div>
                         </div>
+
+
+                        <div className="col-span-3 mt-3">
+                          <input
+                            name="isEnable_via_task_assignment"
+                            type="checkbox"
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              clearFields(["projectId", "projectTicketDescription",], setFieldValue);
+                              setFieldValue("isEnable_via_task_project", false);
+                              setFieldValue('ticketStatusIds', [])
+                              setFieldValue('ticketTypeIds', [])
+                              handleChange(e); // Trigger the form change handler
+                              // if (!e.target.checked) {
+                              //   clearFields(
+                              //     ["shiftId", "offDay_1", "offDay_2"],
+                              //     setFieldValue
+                              //   );
+                              // }
+                            }}
+                            onBlur={handleBlur}
+                            value={values.isEnable_via_task_assignment}
+                            checked={values.isEnable_via_task_assignment}
+
+                          />
+                          <label>
+                            &nbsp;<span>Search Via Task Assignment</span>
+                          </label>
+                        </div>
+
+
+                        <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+
+                          <div className="">
+                            <MultiSelect
+                              name="taskTicketTypeIds"
+                              label="Ticket Type"
+                              disabled={values.isEnable_via_task_project}
+                              value={dashboard.allTicketTypeList.filter(t =>
+                                values.taskTicketTypeIds?.includes(t.value)
+                              )}
+                              options={dashboard.allTicketTypeList}
+                              onChange={(items = []) =>
+                                setFieldValue(
+                                  "taskTicketTypeIds",
+                                  items.map((i) => i.value)
+                                )
+                              }
+                            />
+                          </div>
+
+                          <div>
+                            <Field
+                              name="taskTicketDescription"
+                              disabled={values.isEnable_via_task_project}
+                              component={Input}
+                              maxLength={200}
+                              label={
+                                <span>
+                                  Ticket Description{" "}
+
+                                </span>
+                              }
+                            />
+                          </div>
+
+                          <div className="">
+                            <MultiSelect
+                              name="taskTicketStatusIds"
+                              label="Ticket Status"
+                              disabled={values.isEnable_via_task_project}
+                              value={ticketStatusOptions.filter(t =>
+                                values.taskTicketStatusIds?.includes(t.value)
+                              )}
+                              options={ticketStatusOptions}
+                              onChange={(items = []) =>
+                                setFieldValue(
+                                  "taskTicketStatusIds",
+                                  items.map((i) => i.value)
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+
+
+
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-1 ">
+
+                          <div className="">
+
+                            <div className="grid grid-cols-2 gap-x-3 gap-y-1 ">
+
+
+                              <div>
+                                <label>
+                                  From<span style={{ color: "red" }}>*</span>
+                                </label>
+                                <DatePicker
+                                  className="form-control"
+                                  placeholder="From "
+                                  selected={
+                                    values?.from_date
+                                      ? new Date(values.from_date)
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    setFieldValue("from_date", date);
+                                    setFieldValue("to_date", date); // Sync from_date and to_date
+                                  }}
+                                  timeInputLabel="Time:"
+                                  dateFormat="dd-MMM-yyyy"
+                                  // showTimeInput
+                                  name="from_date"
+                                  autoComplete="off"
+                                />
+                              </div>
+
+                              {/* Date To Selector */}
+                              <div>
+                                <label>
+                                  To<span style={{ color: "red" }}>*</span>
+                                </label>
+                                <DatePicker
+                                  className="form-control"
+                                  placeholder="To "
+                                  selected={
+                                    values?.to_date
+                                      ? new Date(values.to_date)
+                                      : null
+                                  }
+                                  onChange={(date) => {
+                                    setFieldValue("to_date", date);
+                                  }}
+                                  timeInputLabel="Time:"
+                                  dateFormat="dd-MMM-yyyy"
+                                  // showTimeInput
+                                  name="to_date"
+                                  autoComplete="off"
+                                />
+                              </div>
+
+                            </div>
+                          </div>
+
+
+
+                        </div>
                       </fieldset>
                     </Form>
-                  </Modal.Body>
+                  </Modal.Body >
 
-                                    <Modal.Footer className="relative">
-                                      <div className="text-xs absolute left-0 d-flex justify-content-center ">
-                                        <div className="d-flex align-items-center m-3">
-                                          <span className="dot bg_custom_color_1 me-2"></span>{" "}
-                                          Assigned
-                                        </div>
-                                        <div className="d-flex align-items-center m-3">
-                                          <span className="dot bg_custom_color_16 me-2"></span>{" "}
-                                          Log Time
-                                        </div>
-                                      </div>
+                  <Modal.Footer className="relative">
+                    <div className="text-xs absolute left-0 d-flex justify-content-center ">
+                      <div className="d-flex align-items-center m-3">
+                        <span className="dot bg_custom_color_1 me-2"></span>{" "}
+                        Assigned
+                      </div>
+                      <div className="d-flex align-items-center m-3">
+                        <span className="dot bg_custom_color_16 me-2"></span>{" "}
+                        Log Time
+                      </div>
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -369,7 +469,7 @@ console.log("leaveCalendar11111",leaveCalendar)
                         // customSubmit({ ...values, from_date: formattedFromDate, to_date: formattedToDate });
                         customSubmit(values);
                       }}
-                      disabled={!values.from_date || !values.to_date}
+                      disabled={!values.from_date || !values.to_date || (!values.isEnable_via_task_assignment && !values.isEnable_via_task_project)}
                       className="btn btn-primary btn-elevate"
                     >
                       Filter
@@ -381,7 +481,7 @@ console.log("leaveCalendar11111",leaveCalendar)
           </Formik>
         </div>
         {leaveCalendar && leaveCalendar.length > 0 && <FormTable />}
-      </TCard>
+      </TCard >
     </>
   );
 }
