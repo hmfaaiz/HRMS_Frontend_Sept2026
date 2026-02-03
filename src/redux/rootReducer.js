@@ -175,6 +175,7 @@ import { projectSetupSlice } from "../app/modules/Project_Setup/_redux/redux-Sli
 import { ticketSetupSlice } from "../app/modules/Ticket_Setup/_redux/redux-Slice";
 
 import {ticketStatusSlice} from "../app/modules/Ticket_Status/_redux/redux-Slice";
+import {projectTimelineSlice} from "../app/modules/Project_Timeline/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -346,6 +347,7 @@ export const rootReducer = combineReducers({
   ticket_setup : ticketSetupSlice.reducer,
 
   ticket_status : ticketStatusSlice.reducer,
+  project_timeline : projectTimelineSlice.reducer,
 
 });
 
