@@ -346,11 +346,11 @@ console.log("leaveCalendar11111",leaveCalendar)
                                       <div className="text-xs absolute left-0 d-flex justify-content-center ">
                                         <div className="d-flex align-items-center m-3">
                                           <span className="dot bg_custom_color_1 me-2"></span>{" "}
-                                          Approved
+                                          Assigned
                                         </div>
                                         <div className="d-flex align-items-center m-3">
-                                          <span className="dot bg_custom_color_26 me-2"></span>{" "}
-                                          Pending
+                                          <span className="dot bg_custom_color_16 me-2"></span>{" "}
+                                          Log Time
                                         </div>
                                       </div>
                     <button

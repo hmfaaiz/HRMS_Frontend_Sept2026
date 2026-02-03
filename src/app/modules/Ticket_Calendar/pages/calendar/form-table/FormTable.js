@@ -72,9 +72,32 @@ export function FormTable() {
 
         start: moment(data.from, "DD-MMM-YYYY").toDate(),
         end: moment(data.to, "DD-MMM-YYYY").endOf("day").toDate(),
-        description: data?.workDescription,
+        description: data.sourceType === "FACILITATOR"
+          ? data?.ticketDescription
+          : data.sourceType === "TICKET"
+            ? data?.ticketSummary
+            : data.sourceType === "TIMELOG"
+              ? data?.workDescription
+              : "",
         sourceType: data.sourceType,
-        timeRange: `${data?.timeRangeFrom} - ${data?.timeRangeTo}`
+        timeRange: `${data?.timeRangeFrom} - ${data?.timeRangeTo}`,
+        dateRange: `${data?.from} - ${data?.to}`,
+        noOfHours: `${data?.noOfHours}`,
+ 
+        ticket:
+          data.sourceType === "TIMELOG"
+            ? data?.MasterDetailTimeLog
+              ? <>
+                {data.MasterDetailTimeLog.ticketCode} <br />
+                {data.MasterDetailTimeLog.ticketDescription} - {data.noOfHours}
+              </>
+              : "No Ticket Linked"
+            : <>
+              {data?.ticketCode} <br />
+              {data?.ticketDescription}
+            </>
+
+
       });
 
 
@@ -114,7 +137,11 @@ export function FormTable() {
 
           date={currentDate}                    // Controlled date
           onNavigate={(date) => setCurrentDate(date)}
-          tooltipAccessor={(event) => `${event.description || ''} ${event.sourceType === "TIMELOG" ? event.timeRange : ""}`}
+          tooltipAccessor={(event) =>
+            `${event.description || ''}\n${event.sourceType === "TIMELOG"
+              ? `${event.timeRange} - ${event.noOfHours || ''} hrs`
+              : `${event.dateRange} - ${event.noOfHours || ''} hrs`}`
+          }
 
 
           startAccessor="start"
@@ -151,7 +178,7 @@ export function FormTable() {
             let backgroundColor = "#0093DD"; // default
 
             if (event.sourceType == "TIMELOG") {
-              backgroundColor = "gray";
+              backgroundColor = "#DD8941";
             }
 
             return {
@@ -173,11 +200,15 @@ export function FormTable() {
                   {event.title}
                 </div>
                 <div style={{ fontSize: "12px" }}>
-                  {event.description}
+                  {event.ticket}
+                  {event.sourceType === "TIMELOG" && event.noOfHours
+                    ? ` - ${event.noOfHours} hrs`
+                    : ""}
                 </div>
-                <div style={{ fontSize: "12px" }}>
-                  {event.sourceType === "TIMELOG" ? event.timeRange : ""}
-                </div>
+
+
+
+
               </>
             ),
 
