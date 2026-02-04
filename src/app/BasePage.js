@@ -431,6 +431,15 @@ import ("./modules/Ticket_Status/pages/index"))
 const ticket_setup  = lazy(() =>
 import ("./modules/Ticket_Setup/pages/index"))
 
+const project_timeline = lazy(() =>
+import ("./modules/Project_Timeline/pages/index"))
+
+const task_assignment_timeline = lazy(() =>
+import ("./modules/Task_Assignment_Timeline/pages/index"))
+
+const ticket_calendar  = lazy(() =>
+import ("./modules/Ticket_Calendar/pages/index"))
+
 const time_logging = lazy(()=>
  import("./modules/Project_TimeLog/pages/index"))
 
@@ -599,6 +608,9 @@ const ROUTES = {
   project_setup : project_setup,
   ticket_status : ticket_status,
   ticket_setup : ticket_setup,
+  project_timeline : project_timeline,
+  task_assignment_timeline : task_assignment_timeline,
+  ticket_calendar : ticket_calendar,
   time_logging : time_logging,
 };
 

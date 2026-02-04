@@ -175,6 +175,9 @@ import { projectSetupSlice } from "../app/modules/Project_Setup/_redux/redux-Sli
 import { ticketSetupSlice } from "../app/modules/Ticket_Setup/_redux/redux-Slice";
 
 import {ticketStatusSlice} from "../app/modules/Ticket_Status/_redux/redux-Slice";
+import {projectTimelineSlice} from "../app/modules/Project_Timeline/_redux/redux-Slice";
+import {taskAssignmentTimelineSlice} from "../app/modules/Task_Assignment_Timeline/_redux/redux-Slice"
+import {TicketCalendarSlice} from "../app/modules/Ticket_Calendar/_redux/redux-Slice";
 import { projectTimeLogSetupSlice } from "../app/modules/Project_TimeLog/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
@@ -345,8 +348,11 @@ export const rootReducer = combineReducers({
 
   project_setup : projectSetupSlice.reducer,
   ticket_setup : ticketSetupSlice.reducer,
-
   ticket_status : ticketStatusSlice.reducer,
+  project_timeline : projectTimelineSlice.reducer,
+  task_assignment_timeline  : taskAssignmentTimelineSlice.reducer,
+  ticket_calendar : TicketCalendarSlice.reducer,
+
   project_timelog : projectTimeLogSetupSlice.reducer,
 });
 
