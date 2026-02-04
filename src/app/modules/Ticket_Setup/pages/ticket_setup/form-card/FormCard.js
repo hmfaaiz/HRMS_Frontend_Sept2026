@@ -33,7 +33,9 @@ export function FormCard() {
     <TCard name={CurrentModuleName()}>
       <FormFilter
         accessUser={accessUser}
-        newButtonClick={formUIProps.newButtonClick}
+        newButtonClick={() => {
+          formUIProps.newButtonClick();
+        }}
       />
       <FormTable />
     </TCard>

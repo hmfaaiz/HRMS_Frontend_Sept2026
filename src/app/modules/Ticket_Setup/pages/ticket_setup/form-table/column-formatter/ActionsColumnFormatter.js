@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, FolderClock, Pencil, Trash2 } from "lucide-react";
+import { CirclePlus, Eye, FolderClock, Pencil, Trash2 } from "lucide-react";
 
 export function ActionsColumnFormatter(
   cellContent,
@@ -13,10 +13,38 @@ export function ActionsColumnFormatter(
     openReadDialog,
     isAccessForEdit,
     isAccessForDelete,
+    newButtonClick,
+    isAccessForAdd,
   },
 ) {
   return (
     <div className="space-x-2">
+      {isAccessForAdd &&
+        row?.isActive &&
+        (row?.ticketTypeId == 1 || row?.ticketTypeId == 3) && (
+          <OverlayTrigger
+            overlay={
+              <Tooltip id={`edit-${row.Id}`}>
+                {row?.ticketTypeId == 1 ? "Add Task" : "Add Sub Task"}
+              </Tooltip>
+            }
+          >
+            <a
+              className="cursor-pointer"
+              onClick={() =>
+                newButtonClick(
+                  `?projectId=${row?.projectId}&ticketTypeId=${
+                    row?.ticketTypeId == 1 ? "3" : "5"
+                  }&parentEpicId=${
+                    row?.ticketTypeId == 1 ? row?.Id : row?.parentEpicId
+                  }${row?.ticketTypeId == 3 ? `&parentTaskId=${row?.Id}` : ""}`,
+                )
+              }
+            >
+              <CirclePlus className="w-4 h-4 text-black" />
+            </a>
+          </OverlayTrigger>
+        )}
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail Time Log</Tooltip>}
       >

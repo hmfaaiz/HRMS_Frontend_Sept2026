@@ -31,6 +31,7 @@ export function FormTable() {
       openEditDialog: formUIContext.openEditDialog,
       openDeleteDialog: formUIContext.openDeleteDialog,
       openReadDialog: formUIContext.openReadDialog,
+      newButtonClick: formUIContext.newButtonClick,
       openDetailTimeLog: formUIContext.openDetailTimeLog,
     };
   }, [formUIContext]);
@@ -60,6 +61,9 @@ export function FormTable() {
     (item) => item.componentName === "DeleteTicketSetup",
   );
 
+  const isAccessForAdd = userAccess?.find(
+    (item) => item.componentName === "CreateTicketSetup",
+  );
   // Table columns
   const columns = [
     {
@@ -141,7 +145,9 @@ export function FormTable() {
         openDeleteDialog: formUIProps.openDeleteDialog,
         openReadDialog: formUIProps.openReadDialog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
+        newButtonClick: formUIProps.newButtonClick,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForAdd: isAccessForAdd ? isAccessForAdd.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
           : false,
