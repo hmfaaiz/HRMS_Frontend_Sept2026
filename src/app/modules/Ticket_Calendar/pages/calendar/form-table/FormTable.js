@@ -60,10 +60,11 @@ export function FormTable() {
     const calendarEvents = [];
 
     (leaveCalendar || []).forEach((data) => {
-      console.log("data11111", data)
+   
       calendarEvents.push({
         title: data.sourceType === "FACILITATOR"
-          ? `${data?.EmployeeProfile?.employeeCode} - ${data?.EmployeeProfile?.fullName}`
+           ? `${data?.EmployeeProfileReceive?.employeeCode || data?.EmployeeProfile?.employeeCode || ""} - ${data?.EmployeeProfileReceive?.fullNameReceive || data?.EmployeeProfile?.fullName || ""}`
+
           : data.sourceType === "TICKET"
             ? `${data?.AssignToEmp?.employeeCode} - ${data?.AssignToEmp?.fullName}`
             : data.sourceType === "TIMELOG"
@@ -88,10 +89,18 @@ export function FormTable() {
           data.sourceType === "TIMELOG"
             ? data?.MasterDetailTimeLog
               ? <>
-                {data.MasterDetailTimeLog.ticketCode} <br />
+            {data.MasterDetailTimeLog.ticketCode} <br />
                 {data.MasterDetailTimeLog.ticketDescription} - {data.noOfHours}
               </>
-              : "No Ticket Linked"
+              :
+              data?.Ticket
+              ? <>
+                 {data.Ticket.ticketCode} <br />
+                {data.Ticket.ticketDescription} - {data.noOfHours}
+              </>
+              :
+              
+              "No Ticket Linked"
             : <>
               {data?.ticketCode} <br />
               {data?.ticketDescription}
@@ -108,7 +117,7 @@ export function FormTable() {
 
 
     });
-    console.log("leaveCalendar1111222", calendarEvents)
+    
 
     setEvents(calendarEvents);
 
@@ -125,7 +134,7 @@ export function FormTable() {
 
 
   return (
-    <div style={{ height: '900px' }}>
+    <div style={{ height: '1500px' }}>
 
       {/* Render the calendar */}
       {defaultCalendarDate && (
