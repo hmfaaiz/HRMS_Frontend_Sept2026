@@ -1,0 +1,47 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  listLoading: false,
+  totalCount: 0,
+  entities: [],
+  lastError: null,
+};
+
+export const callTypes = {
+  list: "list", 
+};
+
+export const taskAssignmentTimelineSlice = createSlice({
+  name: "task_assignment_timeline",
+  initialState,
+  reducers: {
+    startCall: (state, action) => {
+      state.lastError = null;
+      if (action.payload.callType === callTypes.list) {
+        state.listLoading = true;
+      } else if (action.payload.callType === callTypes.update) {
+        state.listLoading = true; 
+      }
+    },
+    catchError: (state, action) => {
+      state.lastError = action.payload.error;
+      if (action.payload.callType === callTypes.list || action.payload.callType === callTypes.update) {
+        state.listLoading = false;
+      }
+    },
+    timelineFetched: (state, action) => {
+      state.listLoading = false;
+      state.entities = action.payload?.rows || [];
+      state.totalCount = action.payload?.totalResults || 0;
+      state.lastError = null;
+    },
+    timelineCleared: (state) => {
+      state.entities = [];
+      state.totalCount = 0;
+      state.listLoading = false;
+      state.lastError = null;
+    },
+  },
+});
+
+export const { actions } = taskAssignmentTimelineSlice;
