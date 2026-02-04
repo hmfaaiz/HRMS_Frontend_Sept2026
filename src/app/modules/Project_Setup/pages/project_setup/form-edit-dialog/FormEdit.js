@@ -315,7 +315,7 @@ const AccessEmpTable = ({
       {(accessEmpIds?.length || projectOwnerEmpId) &&
         allEmployees?.length > 0 &&
         viewDetail && (
-          <div className="w-full overflow-x-auto">
+          <div className="w-full overflow-x-auto h-56 scrollbar-fancy">
             <div className="react-bootstrap-table table-responsive">
               <table className="table table-head-custom table-vertical-center overflow-hidden table-hover">
                 <thead>

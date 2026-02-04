@@ -31,21 +31,10 @@ export function FormCard() {
 
   return (
     <TCard name={CurrentModuleName()}>
-      <div className="flex justify-start sm:justify-end items-center flex-wrap gap-2">
-        <FormFilter />
-
-        {accessUser && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={formUIProps.newButtonClick}
-          >
-            <CirclePlus className="w-3 h-3 text-white cursor-pointer mb-1 stroke-3" />{" "}
-            Add
-          </button>
-        )}
-      </div>
-
+      <FormFilter
+        accessUser={accessUser}
+        newButtonClick={formUIProps.newButtonClick}
+      />
       <FormTable />
     </TCard>
   );
