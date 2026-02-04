@@ -434,6 +434,8 @@ import ("./modules/Ticket_Setup/pages/index"))
 const ticket_calendar  = lazy(() =>
 import ("./modules/Ticket_Calendar/pages/index"))
 
+const time_logging = lazy(()=>
+ import("./modules/Project_TimeLog/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -601,6 +603,7 @@ const ROUTES = {
   ticket_status : ticket_status,
   ticket_setup : ticket_setup,
   ticket_calendar : ticket_calendar,
+  time_logging : time_logging,
 };
 
 export default function BasePage() {

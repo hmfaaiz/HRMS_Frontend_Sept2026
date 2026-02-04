@@ -176,6 +176,7 @@ import { ticketSetupSlice } from "../app/modules/Ticket_Setup/_redux/redux-Slice
 
 import {ticketStatusSlice} from "../app/modules/Ticket_Status/_redux/redux-Slice";
 import {TicketCalendarSlice} from "../app/modules/Ticket_Calendar/_redux/redux-Slice";
+import { projectTimeLogSetupSlice } from "../app/modules/Project_TimeLog/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -348,6 +349,7 @@ export const rootReducer = combineReducers({
   ticket_status : ticketStatusSlice.reducer,
   ticket_calendar : TicketCalendarSlice.reducer,
 
+  project_timelog : projectTimeLogSetupSlice.reducer,
 });
 
 export function* rootSaga() {
