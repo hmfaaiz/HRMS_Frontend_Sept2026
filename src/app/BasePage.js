@@ -434,6 +434,9 @@ import ("./modules/Ticket_Setup/pages/index"))
 const project_timeline = lazy(() =>
 import ("./modules/Project_Timeline/pages/index"))
 
+const task_assignment_timeline = lazy(() =>
+import ("./modules/Task_Assignment_Timeline/pages/index"))
+
 
 const ROUTES = {
   settings: SettingsPage,
@@ -601,6 +604,7 @@ const ROUTES = {
   ticket_status : ticket_status,
   ticket_setup : ticket_setup,
   project_timeline : project_timeline,
+  task_assignment_timeline : task_assignment_timeline
 };
 
 export default function BasePage() {

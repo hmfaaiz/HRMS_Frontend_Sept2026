@@ -205,7 +205,7 @@ export function FormFilter({
               type="submit"
               onClick={handleSubmit}
               disabled={loading}
-              className="btn btn-success"
+              className="btn btn-primary "
             >
               Filter
               {loading && (
