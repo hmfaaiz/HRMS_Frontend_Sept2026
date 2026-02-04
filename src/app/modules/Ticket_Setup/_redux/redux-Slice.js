@@ -7,6 +7,7 @@ const initState = {
   entities: [],
   dataForEdit: undefined,
   lastError: null,
+  logDetail: {},
 };
 
 export const callTypes = {
@@ -55,6 +56,10 @@ export const ticketSetupSlice = createSlice({
     },
     ticketDeleted: (state, action) => {
       state.actionsLoading = false;
+    },
+    ticketTimeLogsFetched: (state, action) => {
+      state.actionsLoading = false;
+      state.logDetail = action.payload;
     },
   },
 });

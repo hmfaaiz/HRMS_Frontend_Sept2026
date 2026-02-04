@@ -158,7 +158,7 @@ export const getEmployeeHierarchy = (level) => (dispatch) => {
     .catch((error) => {
       console.error("Error fetching employee hierarchy:", error);
       dispatch(
-        actions.EmployeeHierarchyFetched({ levelList: [], employeeList: [] })
+        actions.EmployeeHierarchyFetched({ levelList: [], employeeList: [] }),
       );
       error.clientMessage = "Can't Get Employee Hierarchy";
     });
@@ -274,7 +274,7 @@ export const fetchReportingEmployee = (employeeId) => async (dispatch) => {
       .getReportingEmployee({ Id: employeeId })
       .then((response) => {
         dispatch(
-          actions.ReportingEmployeeFetched(response?.data?.data || null)
+          actions.ReportingEmployeeFetched(response?.data?.data || null),
         );
       })
       .catch((error) => {
@@ -460,7 +460,7 @@ export const createAttendance = (body, setLoading) => (dispatch) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        }
+        },
       );
       setLoading(false);
     });
@@ -490,7 +490,7 @@ export const fetchAllAuditTablesName = (userId) => async (dispatch) => {
 };
 
 export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (
-  dispatch
+  dispatch,
 ) => {
   return await requestFromServer
     .getAllFiscalYearBySubsidiaryId({ subsidiaryId })
@@ -504,7 +504,7 @@ export const fetchAllFiscalYearDataBySubsidiaryId = (subsidiaryId) => async (
 };
 
 export const fetchAllDepartmentBySubsidiaryIds = (subsidiaryIds) => async (
-  dispatch
+  dispatch,
 ) => {
   return await requestFromServer
     .getAllDepartmentBySubsidiaryIds({ subsidiaryIds })
@@ -529,7 +529,7 @@ export const fetchAllAppraisalPeriod = (employeeId) => async (dispatch) => {
     });
 };
 export const fetchAllAppraisalPeriodDataBySubsidiaryId = (
-  subsidiaryId
+  subsidiaryId,
 ) => async (dispatch) => {
   return await requestFromServer
     .getAllAppraisalPeriodBySubsidiaryId({ subsidiaryId })
@@ -555,7 +555,7 @@ export const fetchAllApprovedResignedEmp = () => async (dispatch) => {
 };
 
 export const fetchGeoLocationBySubsidiary = (subsidiaryId) => async (
-  dispatch
+  dispatch,
 ) => {
   return await requestFromServer
     .getAllGeoLocationBySubsidiary({ subsidiaryId })
@@ -679,13 +679,15 @@ export const uploadFile = async (file) => {
       });
     });
 };
-export const FetchAllFacilitatorEmployee= (ticketTypeId) => async (dispatch) => {
+export const FetchAllFacilitatorEmployee = (ticketTypeId) => async (
+  dispatch,
+) => {
   return await requestFromServer
     .getAllFacilitatorEmployee(ticketTypeId)
     .then((response) => {
       dispatch(actions.FacilitatorEmployeeFetch(response?.data?.data));
-    }
-  )};
+    });
+};
 
 export const FetchAllFacilitatorTicketType = () => async (dispatch) => {
   return await requestFromServer
@@ -706,7 +708,7 @@ export const updateDefaultSubsidiary = (Id) => async (dispatch) => {
     })
     .catch((error) => {
       toast.error(
-        error?.response?.data?.message || SERVER_MESSAGES.updatedFail
+        error?.response?.data?.message || SERVER_MESSAGES.updatedFail,
       );
     });
 };
@@ -716,7 +718,7 @@ export const fetchModuleRights = () => async (dispatch) => {
     .getModuleRights()
     .then((response) => {
       let data = response?.data?.data || [];
-    // agar employee ka right then set seperation after employee pass employee value 1 as per guideline
+      // agar employee ka right then set seperation after employee pass employee value 1 as per guideline
       if (Array.isArray(data) && data.length > 0) {
         const index = data.findIndex((item) => item?.value === 1);
 
@@ -738,7 +740,7 @@ export const fetchModuleRights = () => async (dispatch) => {
 
 export const fetchUsersByCompanyId = (Id) => async (dispatch) => {
   return await requestFromServer
-    .getUsersByCompanyId({Id})
+    .getUsersByCompanyId({ Id })
     .then((response) => {
       let data = response?.data?.data || [];
       dispatch(actions.UsersByCompanyFetched(data));
@@ -760,10 +762,9 @@ export const fetchAllActiveCustomers = () => async (dispatch) => {
     });
 };
 
-
 export const fetchAllProjects = (employeeId = null) => async (dispatch) => {
   return await requestFromServer
-    .getAllProjects({employeeId})
+    .getAllProjects({ employeeId })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllProjectFetch(entities));
@@ -785,9 +786,11 @@ export const fetchAllTicketStatus = () => async (dispatch) => {
     });
 };
 
-export const fetchAllTicket = (employeeId = null) => async (dispatch) => {
+export const fetchAllTicket = (employeeId = null, projectId = null) => async (
+  dispatch,
+) => {
   return await requestFromServer
-    .getAllTicket({employeeId})
+    .getAllTicket({ employeeId , projectId })
     .then((response) => {
       const entities = response.data?.data;
       dispatch(actions.AllTicketFetch(entities));

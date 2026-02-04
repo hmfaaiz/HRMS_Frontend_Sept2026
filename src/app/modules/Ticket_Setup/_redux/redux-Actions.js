@@ -95,3 +95,15 @@ export const getLatestTicketNumBaseOnProjectId = (Id) => async () => {
       toast.error(error?.response?.data?.message);
     });
 };
+
+export const fetchTimeLogDetail = (Id) => async (dispatch) => {
+  return await requestFromServer
+    .getTimeLogDetail({ Id })
+    .then((response) => {
+      // return response?.data?.data;
+      dispatch(actions.ticketTimeLogsFetched(response?.data?.data));
+    })
+    .catch((error) => {
+      toast.error(error?.response?.data?.message);
+    });
+};

@@ -52,6 +52,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     openEditDialog: formUIEvents.openEditDialog,
     openReadDialog: formUIEvents.openReadDialog,
     openDeleteDialog: formUIEvents.openDeleteDialog,
+    openDetailTimeLog: formUIEvents.openDetailTimeLog,
   };
 
   return (
