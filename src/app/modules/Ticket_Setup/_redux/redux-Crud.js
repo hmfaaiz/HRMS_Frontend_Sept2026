@@ -30,3 +30,7 @@ export function deleteTicket(body) {
 export function getLatestTicketNumBaseOnProjectId(body) {
   return axios.post(`${API_URL}/ticket_setup/get-ticket-number`, body);
 }
+
+export function getTimeLogDetail(body) {
+  return axios.post(`${API_URL}/ticket_setup/get-ticket-time-log`, body);
+}

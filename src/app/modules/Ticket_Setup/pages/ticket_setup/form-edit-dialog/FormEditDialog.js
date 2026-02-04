@@ -44,6 +44,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
 
       <FormEditForm
         dataForEdit={id ? dataForEdit : initVal}
+        id={id}
         saveForm={saveForm}
         actionsLoading={actionsLoading}
         onHide={onHide}

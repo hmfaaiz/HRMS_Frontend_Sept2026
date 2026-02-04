@@ -31,6 +31,7 @@ export function FormTable() {
       openEditDialog: formUIContext.openEditDialog,
       openDeleteDialog: formUIContext.openDeleteDialog,
       openReadDialog: formUIContext.openReadDialog,
+      openDetailTimeLog: formUIContext.openDetailTimeLog,
     };
   }, [formUIContext]);
 
@@ -139,6 +140,7 @@ export function FormTable() {
         openEditDialog: formUIProps.openEditDialog,
         openDeleteDialog: formUIProps.openDeleteDialog,
         openReadDialog: formUIProps.openReadDialog,
+        openDetailTimeLog: formUIProps.openDetailTimeLog,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess
