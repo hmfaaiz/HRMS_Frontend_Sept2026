@@ -11,8 +11,10 @@ import { FormTimeLogDialog } from "./form-time-log-dialog/FormTimeLogDialog";
 
 export function FormPage({ history }) {
   const formUIEvents = {
-    newButtonClick: () => {
-      history.push("/ticket_setup/read-all-ticket-setup/new");
+    newButtonClick: (query = null) => {
+      history.push(
+        `/ticket_setup/read-all-ticket-setup/new${query ? query : ""}`,
+      );
     },
     openEditDialog: (id) => {
       history.push(`/ticket_setup/read-all-ticket-setup/${id}/edit`);
@@ -32,12 +34,18 @@ export function FormPage({ history }) {
     <FormUIProvider formUIEvents={formUIEvents}>
       {/* New Ticket */}
       <Route exact path="/ticket_setup/read-all-ticket-setup/new">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
-          />
-        )}
+        {({ history, match, location }) => {
+          const queryParams = Object?.fromEntries(
+            new URLSearchParams(location?.search)?.entries(),
+          );
+          return (
+            <FormEditDialog
+              show={match != null}
+              query={queryParams}
+              onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
+            />
+          );
+        }}
       </Route>
 
       {/* Edit Ticket */}

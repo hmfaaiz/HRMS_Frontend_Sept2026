@@ -34,7 +34,7 @@ export function FormUIProvider({ formUIEvents, children }) {
     startDate: new Date(),
     dueDate: "",
     priority: 2,
-    ticketStatusId: 1,
+    ticketStatusId: null,
     assignToEmpId: null,
     reportToEmpId: null,
     parentEpicId: null,

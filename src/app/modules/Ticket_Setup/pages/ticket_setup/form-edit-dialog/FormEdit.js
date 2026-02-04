@@ -33,9 +33,11 @@ export function FormEditForm({
   enableLoading,
   loading,
   id,
+  query,
 }) {
   const dispatch = useDispatch();
   const { dashboard } = useSelector((state) => state);
+  const [formData, setFormData] = useState({});
   const { auth } = useSelector((state) => state);
 
   const [defCode, setDefCode] = useState(null);
@@ -139,13 +141,42 @@ export function FormEditForm({
     dispatch(fetchAllActiveEmployees());
   }, [dispatch]);
 
+  useEffect(() => {
+    updateData();
+  }, [id, query, dataForEdit]);
+
+  const updateData = async () => {
+    if (!id) {
+      if (query && Object?.keys(query)?.length) {
+        let res = await dispatch(
+          actions.getLatestTicketNumBaseOnProjectId(query?.projectId),
+        );
+        setDefCode(res);
+        setFormData({
+          ...dataForEdit,
+          ...query,
+        });
+      } else {
+        setFormData({
+          ...dataForEdit,
+        });
+      }
+    } else {
+      setFormData({
+        ...dataForEdit,
+      });
+    }
+  };
+
   /* ---------------- FORM ---------------- */
   return (
     <Formik
       enableReinitialize
       initialValues={{
-        ...dataForEdit,
-        reportToEmpId: !id ? auth?.user?.employeeIdMapping : "",
+        ...formData,
+        reportToEmpId: !id
+          ? auth?.user?.employeeIdMapping
+          : formData?.reportToEmpId,
       }}
       validationSchema={formSchema}
       onSubmit={(values) => {
@@ -423,7 +454,7 @@ export function FormEditForm({
                         disabled={values?.ticketTypeId != 1}
                         value={dashboard?.allTicket
                           ?.filter((el) => el?.ticketType == 1)
-                          ?.find((el) => el?.value === values?.parentEpicId)}
+                          ?.find((el) => el?.value == values?.parentEpicId)}
                         options={
                           dashboard?.allTicket?.filter(
                             (el) => el?.ticketType == 1,
@@ -459,7 +490,7 @@ export function FormEditForm({
                               el?.ticketType == 3 &&
                               el?.parentEpicId == values.parentEpicId,
                           )
-                          ?.find((el) => el?.value === values?.parentTaskId)}
+                          ?.find((el) => el?.value == values?.parentTaskId)}
                         options={
                           dashboard?.allTicket?.filter(
                             (el) =>

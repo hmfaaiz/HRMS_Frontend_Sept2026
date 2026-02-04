@@ -6,7 +6,7 @@ import { FormEditDialogHeader } from "./FormEditDialogHeader";
 import * as actions from "../../../_redux/redux-Actions";
 import { useFormUIContext } from "../FormUIContext";
 
-export function FormEditDialog({ id, show, onHide, userForRead }) {
+export function FormEditDialog({ id, show, onHide, userForRead, query }) {
   const dispatch = useDispatch();
   const formUIContext = useFormUIContext();
   const { queryParams, initVal } = formUIContext || {};
@@ -51,6 +51,7 @@ export function FormEditDialog({ id, show, onHide, userForRead }) {
         isUserForRead={userForRead} // disables fields in view mode
         enableLoading={enableLoading}
         loading={loading}
+        query={query}
       />
     </Modal>
   );
