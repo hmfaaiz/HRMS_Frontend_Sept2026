@@ -9,7 +9,15 @@ export function createProject(body) {
 
 // Get All Projects
 export function getAllProjects(body) {
-  return axios.post(`${API_URL}/project_setup/read-all-project-setup`, body);
+  const config = {
+    responseType: (body.pdf || body.excel || body.csv) ? "arraybuffer" : "json",
+  };
+
+  return axios.post(
+    `${API_URL}/project_setup/read-all-project-setup`,
+    body,
+    config
+  );
 }
 
 // Get Project by ID
