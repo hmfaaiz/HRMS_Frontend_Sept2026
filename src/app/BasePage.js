@@ -443,6 +443,9 @@ import ("./modules/Ticket_Calendar/pages/index"))
 const time_logging = lazy(()=>
  import("./modules/Project_TimeLog/pages/index"))
 
+const ticket_time_report = lazy(()=>
+ import("./modules/TicketReport/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -612,6 +615,7 @@ const ROUTES = {
   task_assignment_timeline : task_assignment_timeline,
   ticket_calendar : ticket_calendar,
   time_logging : time_logging,
+  ticket_time_report : ticket_time_report,
 };
 
 export default function BasePage() {
