@@ -3,9 +3,9 @@ import * as requestFromServer from "./formCrud";
 import { TicketTimeReportSlice, callTypes } from "./formSlice"
 const { actions } = TicketTimeReportSlice;
 
-export const fetchAllOvertimeReportForPdf = (filter, document, labels = {}) => async (dispatch) => {
+export const fetchAllTicketReportByFiltersForExcel = (filter, document, labels = {}) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.pdf }));
-  return requestFromServer.getAllOvertimeReportForPdf({ ...filter, labels })
+  return requestFromServer.getTicketReportByFilters({ ...filter, labels })
     .then((res) => {
          const pdfBlob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
          const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -24,7 +24,7 @@ export const fetchAllOvertimeReportForPdf = (filter, document, labels = {}) => a
          const decodedData = new TextDecoder().decode(error.response.data);
          const jsonData = JSON.parse(decodedData);
          dispatch(actions.catchError({ error, callType: callTypes.registerExcel }));
-         toast.error(error?.response?.status == 400 ? 'Please provide Subsidiary and Month' : jsonData.message, {
+         toast.error(error?.response?.status == 400 ? 'Please provide dates' : jsonData.message, {
            position: "top-right",
            autoClose: 5000,
            hideProgressBar: false,

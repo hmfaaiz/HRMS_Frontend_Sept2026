@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { FormFilter } from "./form-filter/FormFilter";
 import {
-  fetchAllDept,
+
   fetchAllFormsMenu,
   fetchAllSubsidiaryData,
 } from "../../../../../_metronic/redux/dashboardActions";
@@ -16,15 +16,14 @@ import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { fetchAllProjects, fetchAllTicketStatus } from "../../../Dashboard/_redux/dashboardActions";
 
-export function ContributionReportPage() {
+export function ReportPage() {
   const dispatch = useDispatch();
     const [activeKey, setActiveKey] = useState("0");
   const { dashboard, listLoading, pdfLoading,monththPdf,pdf } = useSelector((state) => ({
     dashboard: state.dashboard,
-    listLoading: state.overtime_report.listLoading,
-    pdfLoading: state.overtime_report.pdfLoading,
-    monththPdf: state.overtime_report.monththPdf,
-    pdf: state.overtime_report.pdf,
+    listLoading: state.ticket_time_report.listLoading,
+    pdfLoading: state.ticket_time_report.pdfLoading,
+
   }));
 
   //Get all Dropdown data from server on page load and set it in state
@@ -62,8 +61,7 @@ export function ContributionReportPage() {
           <FormFilter
             loading={listLoading}
             pdfLoading={pdfLoading}
-            pdf={pdf}
-            monththPdf={monththPdf}
+      
             dispatch={dispatch}
           />
               </>

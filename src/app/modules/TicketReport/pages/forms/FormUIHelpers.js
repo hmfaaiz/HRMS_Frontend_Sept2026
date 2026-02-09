@@ -12,14 +12,14 @@ export const sizePerPageList = [
 export const initialFilter = {
   filter: {
     subsidiaryId: "",
-    departmentId: "",
-
-    gradeId: "",
-    designationId: "",
-    locationId: "",
-    employeeType: 1,
     employeeId: "",
-    fiscalYearSetupId: "",
+    ticketTypeIds:[],
+    ticketStatusIds:[],
+
+    
+    
+
+
 
   },
   sortOrder: "asc",
