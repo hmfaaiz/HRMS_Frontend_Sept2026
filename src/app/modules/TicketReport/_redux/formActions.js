@@ -16,7 +16,7 @@ export const fetchAllTicketReportByFiltersForExcel = (filter, document, labels =
          link.setAttribute('download', 'TicketTimeReport.xlsx');
          document.body.appendChild(link);
          link.click();
-         dispatch(actions.registerExcelFetched({}));
+         dispatch(actions.pdfLoadingFetched({}));
          document.body.removeChild(link);
        })
        .catch((error) => {

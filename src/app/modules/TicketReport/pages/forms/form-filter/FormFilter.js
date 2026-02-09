@@ -114,7 +114,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
     if (!findDefaultSubs) return;
 
     dispatch(fetchAllActiveEmployeesBySubsidiary(findDefaultSubs.value));
-   
+
   }, [allSubsidiaryList]);
 
 
@@ -142,7 +142,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
           applyFilter(formattedValues);
         }}
       >
-        {({ values, setFieldValue, handleReset }) => (
+        {({ values, handleBlur, setFieldValue, handleReset }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
@@ -154,7 +154,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                       <div>
                         <SearchSelect
                           name="projectId"
-                          // isDisabled={!values.isEnable_via_task_project}
+
                           label={
                             <label>
                               Project
@@ -225,6 +225,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
 
                     </div>
+
 
 
                     <div className="grid grid-cols-1 gap-x-3 gap-y-1 ">
@@ -311,36 +312,112 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                         </div>
 
 
-                        <div className="flex items-center gap-2  p-1 rounded-sm justify-end">
-                          <button
-                            onClick={() => {
-                              if (!pdfLoading) {
 
-                                getTicketReportByFilters(values);
-                              }
-                            }}
-                            disabled={pdfLoading || !values.from_date || !values.to_date}
-                            className={`btn btn-primary btn-elevate mt-3 h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate mt-3 h-9 opacity-50 cursor-not-allowed" : ""
-                              }`}
-
-                            type="button"
-
-                          >
-                            Geenrate Report
-
-                            <Download className="w-4 h-4 ml-2" />
-                            {pdf && (
-                              <span className="ml-3 mr-3 spinner spinner-white"></span>
-                            )}
-                          </button>
-
-                        </div>
                       </div>
 
 
 
                     </div>
-                    {/* Date to Field End */}
+
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isProjectWise"
+                            type="checkbox"
+
+                            onChange={() => {
+                              setFieldValue("isProjectWise", !values?.isProjectWise)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProject", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isProjectWise}
+                            checked={values.isProjectWise}
+                          />
+                          <span>Project Wiset</span>
+                        </label>
+                      </div>
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmployeeWise"
+                            type="checkbox"
+
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", !values?.isEmployeeWise)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProject", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmployeeWise}
+                            checked={values.isEmployeeWise}
+                          />
+                          <span>Employee Wise</span>
+                        </label>
+                      </div>
+
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isProjectEmployee"
+                            type="checkbox"
+
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isProjectEmployee", !values?.isProjectEmployee)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isEmployeeProject", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isProjectEmployee}
+                            checked={values.isProjectEmployee}
+                          />
+                          <span>Project Wise, Employee Wise</span>
+                        </label>
+                      </div>
+
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmployeeProject"
+                            type="checkbox"
+
+                            onChange={() => {
+
+                              setFieldValue("isEmployeeProject", !values?.isEmployeeProject)
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmployeeProject}
+                            checked={values.isEmployeeProject}
+                          />
+                          <span>Employee Wise, Project Wise</span>
+                        </label>
+                      </div>
+                    </div>
+
+
                   </div>
                 </fieldset>
               </Form>
@@ -356,6 +433,31 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
               >
                 Cancel
               </button>
+
+              {/* <div className="flex items-center gap-2  p-1 rounded-sm justify-end"> */}
+                <button
+                  onClick={() => {
+                    if (!pdfLoading) {
+
+                      getTicketReportByFilters(values);
+                    }
+                  }}
+                  disabled={pdfLoading || !values.from_date || !values.to_date}
+                  className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
+                    }`}
+
+                  type="button"
+
+                >
+                  Geenrate Report
+
+                  <Download className="w-4 h-4 ml-2" />
+                  {pdf && (
+                    <span className="ml-3 mr-3 spinner spinner-white"></span>
+                  )}
+                </button>
+
+              {/* </div> */}
 
 
 

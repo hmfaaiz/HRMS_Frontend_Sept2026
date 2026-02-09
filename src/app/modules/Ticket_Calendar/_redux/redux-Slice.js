@@ -4,7 +4,7 @@ const initialTicketCalendarState = {
     listLoading: false,
     actionsLoading: null,
     totalCount: 0,
-    leaveCalendar: null,
+    ticketCalendar: null,
     lastError: null,
     dateRange:null,
 
@@ -30,11 +30,11 @@ export const TicketCalendarSlice = createSlice({
             }
         },
 
-        leaveFetched: (state, action) => {
+        ticketCalendarFetched: (state, action) => {
 
             state.listLoading = false;
             state.error = null;
-            state.leaveCalendar =  action.payload.data?.data?.rows;
+            state.ticketCalendar =  action.payload.data?.data?.rows;
             state.dateRange=action.payload.data?.data?.dateRange;
             state.totalCount = action.payload.data?.data?.count;
 
@@ -45,7 +45,7 @@ export const TicketCalendarSlice = createSlice({
             state.actionsLoading = null;
             state.lastError = null;
             state.totalCount = 0;
-            state.leaveCalendar = null;
+            state.ticketCalendar = null;
             state.dateRange=null;
           
             
