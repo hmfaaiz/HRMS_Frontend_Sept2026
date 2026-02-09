@@ -5,10 +5,16 @@ const initialState = {
   totalCount: 0,
   entities: [],
   lastError: null,
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
-  list: "list", 
+  list: "list",
+  pdf: "pdf",
+  csv: "csv",
+  xlsx: "xlsx",
 };
 
 export const taskAssignmentTimelineSlice = createSlice({
@@ -17,17 +23,17 @@ export const taskAssignmentTimelineSlice = createSlice({
   reducers: {
     startCall: (state, action) => {
       state.lastError = null;
-      if (action.payload.callType === callTypes.list) {
-        state.listLoading = true;
-      } else if (action.payload.callType === callTypes.update) {
-        state.listLoading = true; 
-      }
+      if (action.payload.callType === callTypes.list) state.listLoading = true;
+      else if (action.payload.callType === callTypes.pdf) state.pdfLoading = true;
+      else if (action.payload.callType === callTypes.csv) state.csvLoading = true;
+      else if (action.payload.callType === callTypes.xlsx) state.excelLoading = true;
     },
     catchError: (state, action) => {
       state.lastError = action.payload.error;
-      if (action.payload.callType === callTypes.list || action.payload.callType === callTypes.update) {
-        state.listLoading = false;
-      }
+      if (action.payload.callType === callTypes.list) state.listLoading = false;
+      else if (action.payload.callType === callTypes.pdf) state.pdfLoading = false;
+      else if (action.payload.callType === callTypes.csv) state.csvLoading = false;
+      else if (action.payload.callType === callTypes.xlsx) state.excelLoading = false;
     },
     timelineFetched: (state, action) => {
       state.listLoading = false;
@@ -39,8 +45,14 @@ export const taskAssignmentTimelineSlice = createSlice({
       state.entities = [];
       state.totalCount = 0;
       state.listLoading = false;
+      state.pdfLoading = false;
+      state.csvLoading = false;
+      state.excelLoading = false;
       state.lastError = null;
     },
+    pdfFetched: (state) => { state.pdfLoading = false; },
+    csvFetched: (state) => { state.csvLoading = false; },
+    excelFetched: (state) => { state.excelLoading = false; },
   },
 });
 

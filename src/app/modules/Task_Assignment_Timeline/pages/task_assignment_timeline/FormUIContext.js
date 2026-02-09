@@ -19,6 +19,7 @@ export function TaskAssignmentTimelineUIProvider({ children }) {
   const [ids, setIds] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
 
+  const [hasRecords, setHasRecords] = useState(false);
 
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
@@ -37,6 +38,8 @@ export function TaskAssignmentTimelineUIProvider({ children }) {
   setIds,
   showFilter,
   setShowFilter,
+  hasRecords,
+  setHasRecords
 };
 
 

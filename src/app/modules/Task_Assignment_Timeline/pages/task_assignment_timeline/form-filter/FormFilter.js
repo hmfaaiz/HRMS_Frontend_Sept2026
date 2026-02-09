@@ -4,6 +4,7 @@ import { DatePickerField } from "../../../../../../_metronic/_partials/controls"
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
+import { FileText, FileSpreadsheet, Sheet } from "lucide-react"; // Export icons
 
 export function FormFilter({
   employees = [],
@@ -11,9 +12,10 @@ export function FormFilter({
   ticketStatuses = [],
   priorityLevels = [],
   loading,
+  onPrint, 
 }) {
   const uiContext = useTaskAssignmentTimelineUIContext();
-
+  const { hasRecords, queryParams } = uiContext;
   const uiProps = useMemo(
     () => ({
       queryParams: uiContext.queryParams || {},
@@ -32,7 +34,6 @@ export function FormFilter({
   const applyFilter = (values) => {
     const cleanFilter = { ...values };
 
-    // Remove empty or null values except 0
     Object.keys(cleanFilter).forEach((k) => {
       if (
         cleanFilter[k] === null ||
@@ -43,7 +44,6 @@ export function FormFilter({
       }
     });
 
-    // Set queryParams for backend
     uiProps.setQueryParams({
       ...uiProps.queryParams,
       filter: {
@@ -53,10 +53,30 @@ export function FormFilter({
       },
       pageNumber: 1,
       isFiltered: true,
+      pdf: false,
+      csv: false,
+      excel: false,
     });
 
     uiContext.setShowFilter(true);
   };
+
+  
+
+  const handleExport = (type) => {
+    if (!queryParams.isFiltered) {
+      alert("Please apply filter before downloading.");
+      return;
+    }
+
+    if (!hasRecords) {
+      alert("No records available to download.");
+      return;
+    }
+
+    onPrint(type);
+  };
+
 
   return (
     <Formik
@@ -201,7 +221,7 @@ export function FormFilter({
             </fieldset>
           </Form>
 
-          {/* Buttons */}
+          {/* Buttons & Export Icons */}
           <div className="flex justify-end gap-2 mt-2">
             <button
               type="button"
@@ -231,6 +251,38 @@ export function FormFilter({
                 <span className="ml-3 mr-3 spinner spinner-white"></span>
               )}
             </button>
+
+            {/* Export Buttons */}
+            {onPrint && (
+              <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
+                <button
+                  type="button"
+                  className="border-none bg-transparent"
+                  onClick={() => handleExport("pdf")}
+                  disabled={loading || !queryParams.isFiltered || !hasRecords}
+                >
+                  <FileText className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  className="border-none bg-transparent"
+                  onClick={() => handleExport("csv")}
+                  disabled={loading || !queryParams.isFiltered || !hasRecords}
+                >
+                  <FileSpreadsheet className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  className="border-none bg-transparent"
+                  onClick={() => handleExport("excel")}
+                  disabled={loading || !queryParams.isFiltered || !hasRecords}
+                >
+                  <Sheet className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}

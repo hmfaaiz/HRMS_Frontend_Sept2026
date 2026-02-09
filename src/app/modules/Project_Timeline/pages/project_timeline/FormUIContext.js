@@ -12,7 +12,8 @@ export function ProjectTimelineUIProvider({ children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
 
   const [ids, setIds] = useState([]);
-
+  const [hasRecords, setHasRecords] = useState(false);
+  
   const setQueryParams = useCallback((nextQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -28,6 +29,8 @@ export function ProjectTimelineUIProvider({ children }) {
     setQueryParams,
     ids,
     setIds,
+    hasRecords,
+    setHasRecords
   };
 
   return (
