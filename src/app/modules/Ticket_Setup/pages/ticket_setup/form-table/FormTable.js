@@ -33,13 +33,15 @@ export function FormTable() {
       openReadDialog: formUIContext.openReadDialog,
       newButtonClick: formUIContext.newButtonClick,
       openDetailTimeLog: formUIContext.openDetailTimeLog,
+      openTicketActivity: formUIContext.openTicketActivity,
     };
   }, [formUIContext]);
 
-  const { currentState, userAccess } = useSelector(
+  const { currentState, userAccess, userAccessForTicketActiviy } = useSelector(
     (state) => ({
       currentState: state.ticket_setup,
       userAccess: state?.auth?.userAccess["ticket_setup"],
+      userAccessForTicketActiviy: state?.auth?.userAccess["Task"],
     }),
     shallowEqual,
   );
@@ -55,6 +57,10 @@ export function FormTable() {
 
   const isAccessForEdit = userAccess?.find(
     (item) => item.componentName === "UpdateTicketSetup",
+  );
+
+  const isAccessForTicketActivity = userAccessForTicketActiviy?.find(
+    (item) => item.componentName === "ReadTicketActivity",
   );
 
   const isAccessForDelete = userAccess?.find(
@@ -145,8 +151,12 @@ export function FormTable() {
         openDeleteDialog: formUIProps.openDeleteDialog,
         openReadDialog: formUIProps.openReadDialog,
         openDetailTimeLog: formUIProps.openDetailTimeLog,
+        openTicketActivity: formUIProps.openTicketActivity,
         newButtonClick: formUIProps.newButtonClick,
         isAccessForEdit: isAccessForEdit ? isAccessForEdit.isAccess : false,
+        isAccessForTicketActivity: isAccessForTicketActivity
+          ? isAccessForTicketActivity.isAccess
+          : false,
         isAccessForAdd: isAccessForAdd ? isAccessForAdd.isAccess : false,
         isAccessForDelete: isAccessForDelete
           ? isAccessForDelete.isAccess

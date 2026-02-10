@@ -7,6 +7,7 @@ import {
   Input,
   TextArea,
 } from "../../../../../../_metronic/_partials/controls";
+
 import { useDispatch, useSelector } from "react-redux";
 import { VALIDATION_MESSAGES } from "../../../../../utils/constants";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
@@ -70,7 +71,7 @@ export function FormEditForm({
         .nullable()
         .typeError("Invalid date")
         .when("ticketTypeId", {
-          is: (ticketTypeId) => ticketTypeId !== "1",
+          is: (ticketTypeId) => ticketTypeId != "1",
           then: (schema) => schema.required(VALIDATION_MESSAGES.required),
           otherwise: (schema) => schema.optional(),
         }),
@@ -80,7 +81,7 @@ export function FormEditForm({
         .nullable()
         .typeError("Invalid date")
         .when("ticketTypeId", {
-          is: (ticketTypeId) => ticketTypeId !== "1",
+          is: (ticketTypeId) => ticketTypeId != "1",
           then: (schema) =>
             schema
               .when([], {
@@ -193,8 +194,9 @@ export function FormEditForm({
         saveForm(payload);
       }}
     >
-      {({ handleSubmit, setFieldValue, values, errors, touched }) => (
+      {({ handleSubmit, setFieldValue, values, errors, touched  }) => (
         <>
+          {console.log(errors, "errors")}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">
