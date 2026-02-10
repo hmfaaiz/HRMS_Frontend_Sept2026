@@ -196,7 +196,6 @@ export function FormEditForm({
     >
       {({ handleSubmit, setFieldValue, values, errors, touched  }) => (
         <>
-          {console.log(errors, "errors")}
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
               <div className="overlay-layer bg-transparent">

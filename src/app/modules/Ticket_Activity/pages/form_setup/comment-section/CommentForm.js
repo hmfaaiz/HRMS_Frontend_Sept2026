@@ -38,7 +38,6 @@ export function CommentForm({ onSave }) {
   useEffect(() => {
     dispatch(fetchAllActiveEmployees());
   }, [dispatch]);
-  console.log("commentForm", commentForm);
   return (
     <Formik
       enableReinitialize
@@ -81,7 +80,6 @@ export function CommentForm({ onSave }) {
                   display: emp?.label,
                 }))}
                 onChangeComplete={(data) => {
-                  console.log("dataa", data);
                   if (!values?.Id) {
                     setFieldValue("comment", data?.plainText);
                     const ids = (data?.mentions || [])
