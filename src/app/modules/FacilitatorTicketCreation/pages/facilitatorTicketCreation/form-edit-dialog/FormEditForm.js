@@ -167,38 +167,38 @@ export function FormEditForm({
   ];
 
 
-  const calculateHours = (fromTime, toTime) => {
-    if (!fromTime || !toTime) return 0;
+  // const calculateHours = (fromTime, toTime) => {
+  //   if (!fromTime || !toTime) return 0;
 
-    // Convert string like "12:49 PM" to Date objects
-    const parseTime = (timeStr) => {
-      const [time, modifier] = timeStr.split(" "); // ["12:49", "PM"]
-      let [hours, minutes] = time.split(":").map(Number);
+  //   // Convert string like "12:49 PM" to Date objects
+  //   const parseTime = (timeStr) => {
+  //     const [time, modifier] = timeStr.split(" "); // ["12:49", "PM"]
+  //     let [hours, minutes] = time.split(":").map(Number);
 
-      if (modifier === "PM" && hours < 12) hours += 12;
-      if (modifier === "AM" && hours === 12) hours = 0;
+  //     if (modifier === "PM" && hours < 12) hours += 12;
+  //     if (modifier === "AM" && hours === 12) hours = 0;
 
-      return { hours, minutes };
-    };
+  //     return { hours, minutes };
+  //   };
 
-    const from = parseTime(fromTime);
-    const to = parseTime(toTime);
+  //   const from = parseTime(fromTime);
+  //   const to = parseTime(toTime);
 
-    // Total hours difference
-    let diffHours = to.hours - from.hours;
-    let diffMinutes = to.minutes - from.minutes;
+  //   // Total hours difference
+  //   let diffHours = to.hours - from.hours;
+  //   let diffMinutes = to.minutes - from.minutes;
 
-    if (diffMinutes < 0) {
-      diffMinutes += 60;
-      diffHours -= 1;
-    }
+  //   if (diffMinutes < 0) {
+  //     diffMinutes += 60;
+  //     diffHours -= 1;
+  //   }
 
-    const totalHours = diffHours + diffMinutes / 60;
+  //   const totalHours = diffHours + diffMinutes / 60;
 
-    // Prevent negative hours
+  //   // Prevent negative hours
    
-    return totalHours > 0 ? totalHours : 0;
-  };
+  //   return totalHours > 0 ? totalHours : 0;
+  // };
 
   const setAssignTo = (setFieldValue) => {
     console.log("setFieldValue111112222", facilitatorEmployeeList[0].value)
@@ -206,6 +206,29 @@ export function FormEditForm({
    
 
   }
+
+     const calculateHours = (fromTime, toTime) => {
+        if (!fromTime || !toTime) return 0;
+
+        // "13:45" → total minutes
+        const parseTime = (timeStr) => {
+            const [hours, minutes] = timeStr.split(":").map(Number);
+            return hours * 60 + minutes;
+        };
+
+        const fromMinutes = parseTime(fromTime);
+        const toMinutes = parseTime(toTime);
+
+        let diffMinutes = toMinutes - fromMinutes;
+
+        //  JIRA concept: next day consider
+        if (diffMinutes <= 0) {
+            diffMinutes += 24 * 60;
+        }
+
+        return diffMinutes / 60;
+    };
+
 
   // useEffect(()=>{
 
@@ -438,7 +461,7 @@ export function FormEditForm({
 
 
 
-                  <div className="">
+                  {/* <div className="">
                     <label>
                       <span>
                         From Time
@@ -465,10 +488,31 @@ export function FormEditForm({
                       touched={touched.timeRangeFrom}
                       errors={errors.timeRangeFrom}
                     />
-                  </div>
+                  </div> */}
 
+      <div>
+                                        <label>
+                                            <span>From Time</span>
+                                        </label>
 
-                  <div className="">
+                                        <input
+                                            type="time"
+                                            className="form-control"
+                                            // disabled={!values.initiator}
+                                            name="timeRangeFrom"
+                                            step="60"   //  minutes only (no seconds)
+                                            value={values.timeRangeFrom || ""}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setFieldValue("timeRangeFrom", val);
+
+                                                const hours = calculateHours(val, values.timeRangeTo);
+                                                setFieldValue("noOfHours", hours.toFixed(2));
+                                            }}
+                                        />
+                                    </div>
+
+                  {/* <div className="">
                     <label>
                       <span>
                         To Time
@@ -492,7 +536,28 @@ export function FormEditForm({
                       touched={touched.timeRangeTo}
                       errors={errors.timeRangeTo}
                     />
-                  </div>
+                  </div> */}
+ <div>
+                                        <label>
+                                            <span>To Time</span>
+                                        </label>
+
+                                        <input
+                                            type="time"
+                                            className="form-control"
+                                            // disabled={!values.initiator}
+                                            name="timeRangeTo"
+                                            step="60"
+                                            value={values.timeRangeTo || ""}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setFieldValue("timeRangeTo", val);
+
+                                                const hours = calculateHours(values.timeRangeFrom, val);
+                                                setFieldValue("noOfHours", hours.toFixed(2));
+                                            }}
+                                        />
+                                    </div>
 
 
                   <div className="">
