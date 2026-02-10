@@ -6,7 +6,7 @@ import { useFormUIContext } from "../FormUIContext";
 import { Form, Modal, } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { TicketType } from "../../../../../utils/common";
+import { formatDates, TicketType } from "../../../../../utils/common";
 
 import { initialFilter } from "../FormUIHelpers";
 import * as actions from "../../../_redux/formActions";
@@ -117,7 +117,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
   }, [allSubsidiaryList]);
 
-
+  
 
   return (
 
@@ -137,8 +137,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
         onSubmit={(values) => {
           const formattedValues = {
             ...values,
+            from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
+            to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
 
           };
+        
           applyFilter(formattedValues);
         }}
       >
@@ -278,11 +281,43 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               onChange={(date) => {
                                 setFieldValue("to_date", date);
                               }}
+
+
                               timeInputLabel="Time:"
                               dateFormat="dd-MMM-yyyy"
                               // showTimeInput
                               name="to_date"
                               autoComplete="off"
+                              minDate={values?.from_date ? new Date(values.from_date) : null}
+                              // maxDate={
+                              //   values?.from_date && values.isDays
+                              //     ? new Date(new Date(values.from_date).setDate(new Date(values.from_date).getDate() + 31))
+                              //     : null
+                              // }
+
+                              maxDate={
+                                values?.from_date
+                                  ? values.isDays
+                                    ? new Date(
+                                      new Date(values.from_date).setDate(
+                                        new Date(values.from_date).getDate() + 30
+                                      )
+                                    )
+                                    : values.isWeekDays
+                                      ? new Date(
+                                        new Date(values.from_date).setMonth(
+                                          new Date(values.from_date).getMonth() + 3
+                                        )
+                                      )
+                                      : values.isMonthDays
+                                        ? new Date(
+                                          new Date(values.from_date).setMonth(
+                                            new Date(values.from_date).getMonth() + 12
+                                          )
+                                        )
+                                        : null
+                                  : null
+                              }
                             />
                           </div>
 
@@ -339,7 +374,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                             value={values.isProjectWise}
                             checked={values.isProjectWise}
                           />
-                          <span>Project Wiset</span>
+                          <span>Project Wise</span>
                         </label>
                       </div>
 
@@ -418,6 +453,96 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                     </div>
 
 
+                    <hr />
+
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isDays"
+                            type="checkbox"
+
+                            onChange={() => {
+                              setFieldValue("isDays", !values?.isDays)
+                              setFieldValue("isWeekDays", false)
+                              setFieldValue("isMonthDays", false)
+                              setFieldValue("to_date", null)
+                              setFieldValue("from_date", null)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isDays}
+                            checked={values.isDays}
+                          />
+                          <span>Day Wise</span>
+                        </label>
+                      </div>
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isWeekDays"
+                            type="checkbox"
+
+                            onChange={() => {
+                              setFieldValue("isWeekDays", !values?.isWeekDays)
+                              setFieldValue("isMonthDays", false)
+                              setFieldValue("isDays", false)
+                              setFieldValue("to_date", null)
+                              setFieldValue("from_date", null)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isWeekDays}
+                            checked={values.isWeekDays}
+                          />
+                          <span>Week Wise</span>
+                        </label>
+                      </div>
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isMonthDays"
+                            type="checkbox"
+
+                            onChange={() => {
+
+                              setFieldValue("isMonthDays", !values?.isMonthDays)
+                              setFieldValue("isWeekDays", false)
+                              setFieldValue("isDays", false)
+                              setFieldValue("to_date", null)
+                              setFieldValue("from_date", null)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isMonthDays}
+                            checked={values.isMonthDays}
+                          />
+                          <span>Month Wise</span>
+                        </label>
+                      </div>
+
+
+
+
+
+
+
+                    </div>
+
+
+
                   </div>
                 </fieldset>
               </Form>
@@ -435,27 +560,33 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
               </button>
 
               {/* <div className="flex items-center gap-2  p-1 rounded-sm justify-end"> */}
-                <button
-                  onClick={() => {
-                    if (!pdfLoading) {
+              <button
+                onClick={() => {
+                  if (!pdfLoading) {
+                    const formattedValues = {
+                      ...values,
+                      from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
+                      to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
 
-                      getTicketReportByFilters(values);
-                    }
-                  }}
-                  disabled={pdfLoading || !values.from_date || !values.to_date}
-                  className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    };
 
-                  type="button"
+                    getTicketReportByFilters(formattedValues);
+                  }
+                }}
+                disabled={pdfLoading || !values.from_date || !values.to_date}
+                className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
+                  }`}
 
-                >
-                  Geenrate Report
+                type="button"
 
-                  <Download className="w-4 h-4 ml-2" />
-                  {pdf && (
-                    <span className="ml-3 mr-3 spinner spinner-white"></span>
-                  )}
-                </button>
+              >
+                Geenrate Report
+
+                <Download className="w-4 h-4 ml-2" />
+                {pdf && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>
 
               {/* </div> */}
 
