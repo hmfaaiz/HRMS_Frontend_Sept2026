@@ -270,3 +270,7 @@ export const getAllTicketStatus = async () => {
 export const getAllTicket = async (body) => {
   return await axios.post(`${USERS_URL}/settings/read-all-ticket`, body);
 };
+
+export const getTicketById = async (body) => {
+  return await axios.post(`${USERS_URL}/settings/read-ticket-byId`, body);
+};

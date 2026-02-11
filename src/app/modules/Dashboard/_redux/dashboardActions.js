@@ -799,3 +799,18 @@ export const fetchAllTicket = (employeeId = null, projectId = null) => async (
       dispatch(actions.AllTicketFetch([]));
     });
 };
+
+export const fetchTicketById = (Id) => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getTicketById({ Id})
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.TicketFetch(entities));
+      return entities
+    })
+    .catch((error) => {
+      dispatch(actions.TicketFetch({}));
+    });
+};
