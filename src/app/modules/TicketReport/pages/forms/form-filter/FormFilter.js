@@ -289,30 +289,25 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               name="to_date"
                               autoComplete="off"
                               minDate={values?.from_date ? new Date(values.from_date) : null}
-                              // maxDate={
-                              //   values?.from_date && values.isDays
-                              //     ? new Date(new Date(values.from_date).setDate(new Date(values.from_date).getDate() + 31))
-                              //     : null
-                              // }
-
+                             
                               maxDate={
                                 values?.from_date
                                   ? values.isDays
                                     ? new Date(
-                                      new Date(values.from_date).setDate(
-                                        new Date(values.from_date).getDate() + 30
-                                      )
-                                    )
-                                    : values.isWeekDays
-                                      ? new Date(
-                                        new Date(values.from_date).setMonth(
-                                          new Date(values.from_date).getMonth() + 3
+                                          new Date(values.from_date).setMonth(
+                                            new Date(values.from_date).getMonth() + 12
+                                          )
                                         )
-                                      )
+                                    : values.isWeekDays
+                                       ? new Date(
+                                          new Date(values.from_date).setMonth(
+                                            new Date(values.from_date).getMonth() + 12
+                                          )
+                                        )
                                       : values.isMonthDays
                                         ? new Date(
                                           new Date(values.from_date).setMonth(
-                                            new Date(values.from_date).getMonth() + 12
+                                            new Date(values.from_date).getMonth() + 36
                                           )
                                         )
                                         : null
