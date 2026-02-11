@@ -8,11 +8,19 @@ const initState = {
   dataForEdit: undefined,
   lastError: null,
   logDetail: {},
+  // ADD THESE THREE LINES:
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
   list: "list",
   action: "action",
+  // ADD THESE THREE LINES:
+  pdf: "pdf",
+  csv: "csv",
+  xlsx: "xlsx",
 };
 
 export const ticketSetupSlice = createSlice({
@@ -23,6 +31,12 @@ export const ticketSetupSlice = createSlice({
       state.lastError = null;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
+      } else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = true;
+      } else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = true;
+      } else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = true;
       } else {
         state.actionsLoading = true;
       }
@@ -31,6 +45,12 @@ export const ticketSetupSlice = createSlice({
       state.lastError = action.payload.error;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = false;
+      } else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = false;
+      } else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = false;
+      } else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = false;
       } else {
         state.actionsLoading = false;
       }
@@ -60,6 +80,15 @@ export const ticketSetupSlice = createSlice({
     ticketTimeLogsFetched: (state, action) => {
       state.actionsLoading = false;
       state.logDetail = action.payload;
+    },
+    pdfFetched: (state, action) => {
+      state.pdfLoading = false;
+    },
+    csvFetched: (state, action) => {
+      state.csvLoading = false;
+    },
+    excelFetched: (state, action) => {
+      state.excelLoading = false;
     },
   },
 });

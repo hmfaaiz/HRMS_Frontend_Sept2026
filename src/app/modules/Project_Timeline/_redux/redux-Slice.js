@@ -5,11 +5,17 @@ const initialState = {
   totalCount: 0,
   entities: [],
   lastError: null,
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
   list: "list",
-  update: "update",  
+  update: "update",
+  pdf: "pdf",
+  csv: "csv",
+  xlsx: "xlsx",
 };
 
 export const projectTimelineSlice = createSlice({
@@ -21,12 +27,15 @@ export const projectTimelineSlice = createSlice({
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
       } else if (action.payload.callType === callTypes.update) {
-        state.listLoading = true; 
+        state.listLoading = true;
       }
     },
     catchError: (state, action) => {
       state.lastError = action.payload.error;
-      if (action.payload.callType === callTypes.list || action.payload.callType === callTypes.update) {
+      if (
+        action.payload.callType === callTypes.list ||
+        action.payload.callType === callTypes.update
+      ) {
         state.listLoading = false;
       }
     },
@@ -45,6 +54,15 @@ export const projectTimelineSlice = createSlice({
     ticketStatusesUpdated: (state) => {
       state.listLoading = false;
       state.lastError = null;
+    },
+    pdfFetched: (state) => {
+      state.pdfLoading = false;
+    },
+    csvFetched: (state) => {
+      state.csvLoading = false;
+    },
+    excelFetched: (state) => {
+      state.excelLoading = false;
     },
   },
 });

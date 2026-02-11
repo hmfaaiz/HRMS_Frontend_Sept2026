@@ -6,6 +6,7 @@ import { FormTable } from "../form-table/FormTable";
 import { useTaskAssignmentTimelineUIContext } from "../FormUIContext";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import { fetchAllFormsMenu, fetchAllSubsidiaryData } from "../../../../../../_metronic/redux/dashboardActions";
+import { fetchTaskAssignmentTimeline } from "../../../_redux/redux-Actions";
 
 export function FormCard() {
   const uiContext = useTaskAssignmentTimelineUIContext();
@@ -16,7 +17,10 @@ export function FormCard() {
     ticketTypes, 
     ticketStatuses, 
     priorityLevels,
-    listLoading 
+    listLoading ,
+    pdfLoading,
+    csvLoading,
+    excelLoading
   } = useSelector(
     (state) => ({
       allEmployees: state.dashboard?.allEmployees || [],
@@ -24,9 +28,31 @@ export function FormCard() {
       ticketStatuses: state.dashboard?.allTicketStatus || [],
       priorityLevels: state.dashboard?.priorityLevelList || [],
       listLoading: state.task_assignment_timeline?.listLoading,
+       pdfLoading: state.task_assignment_timeline?.pdfLoading,
+      csvLoading: state.task_assignment_timeline?.csvLoading,
+      excelLoading: state.task_assignment_timeline?.excelLoading,
     }),
     shallowEqual
   );
+  const print = async (type) => {
+    let updatedQueryParams = {
+      ...uiContext.queryParams,
+      pdf: false,
+      csv: false,
+      excel: false,
+      [type]: true,
+    };
+    await dispatch(fetchTaskAssignmentTimeline(updatedQueryParams));
+
+    // reset flags
+    uiContext.setQueryParams({
+      ...uiContext.queryParams,
+      pdf: false,
+      csv: false,
+      excel: false,
+    });
+  };
+
 
   useEffect(() => {
     dispatch(actions.FetchAllFacilitatorEmployee());
@@ -35,14 +61,15 @@ export function FormCard() {
     dispatch(fetchAllFormsMenu(546, "priorityLevelList"));
   }, [dispatch]);
 
-  return (
+   return (
     <TCard name="Task Assignment Timeline">
       <FormFilter
-        loading={listLoading}
+        loading={listLoading || pdfLoading || csvLoading || excelLoading}
         employees={allEmployees}
         ticketTypes={ticketTypes.filter(option => option.label !== "Escalation Ticket")}
         ticketStatuses={ticketStatuses}
         priorityLevels={priorityLevels}
+        onPrint={print}
       />
       <FormTable 
         ticketStatuses={ticketStatuses} 

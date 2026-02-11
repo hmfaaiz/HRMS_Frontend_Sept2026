@@ -2,8 +2,10 @@ import axios from "axios";
 
 export const API_URL = process.env.REACT_APP_API_URL;
 
-// Get Task Assignment Tickets
+// Get Task Assignment Timeline Tickets
 export function getTaskAssignmentTimeline(body) {
-  return axios.post(`${API_URL}/task_assignment_timeline/read-all-task-assignment-timeline`, body);
+  const config = {
+    responseType: body.pdf || body.csv || body.excel ? "arraybuffer" : "json",
+  };
+  return axios.post(`${API_URL}/task_assignment_timeline/read-all-task-assignment-timeline`, body, config);
 }
-

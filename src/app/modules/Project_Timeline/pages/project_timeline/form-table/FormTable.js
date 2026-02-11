@@ -66,17 +66,25 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
   });
 
   // Reset all epics to collapsed whenever entities change ( after filter or cancel)
-useEffect(() => {
-  if (entities && entities.length) {
-    const newExpanded = {};
-    entities.forEach((ticket) => {
-      if (ticket.ticketTypeId === 1) {
-        newExpanded[ticket.Id] = false; // collapsed by default
-      }
-    });
-    setExpandedEpics(newExpanded);
-  }
-}, [entities]);
+  useEffect(() => {
+    if (entities && entities.length) {
+      const newExpanded = {};
+      entities.forEach((ticket) => {
+        if (ticket.ticketTypeId === 1) {
+          newExpanded[ticket.Id] = false; // collapsed by default
+        }
+      });
+      setExpandedEpics(newExpanded);
+    }
+  }, [entities]);
+
+  useEffect(() => {
+    uiContext.setHasRecords(
+      uiProps.queryParams.isFiltered &&
+        Array.isArray(entities) &&
+        entities.length > 0,
+    );
+  }, [entities, uiProps.queryParams.isFiltered]);
 
   const handleSave = (values) => {
     const ticketsArray = Object.values(values.tickets);
@@ -265,7 +273,13 @@ useEffect(() => {
         const isEpic = row.ticketTypeId === 1;
 
         return (
-          <div style={{ paddingLeft: `${indent * 20}px`, display: "flex", alignItems: "center" }}>
+          <div
+            style={{
+              paddingLeft: `${indent * 20}px`,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             {isEpic && (
               <button
                 type="button"
@@ -279,7 +293,7 @@ useEffect(() => {
                   flexShrink: 0,
                 }}
               >
-                {expandedEpics[row.Id] ? "▼" : "▶"}
+                {expandedEpics[row.Id] ? "▶" : "▶"}
               </button>
             )}
             {isEditableType(row) ? (
@@ -326,7 +340,7 @@ useEffect(() => {
       sortCaret,
       headerSortingClasses,
       headerStyle,
-      style: { width: "100px"},
+      style: { width: "100px" },
     },
     {
       dataField: "ticketSummary",
