@@ -3,7 +3,7 @@ import { Redirect, Switch } from "react-router-dom";
 import { LayoutSplashScreen, ContentRoute } from "../../../../_metronic/layout";
 import { FormPage } from "./calendar/FormPage";
 
-export default function LeaveCalendarManagement() {
+export default function TicketCalendarManagement() {
 
   return (
     <Suspense fallback={<LayoutSplashScreen />}>

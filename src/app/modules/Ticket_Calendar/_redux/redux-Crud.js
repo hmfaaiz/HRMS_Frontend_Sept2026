@@ -4,7 +4,7 @@ export const USERS_URL = process.env.REACT_APP_API_URL;
 
 
 // Read
-export function getAllLeave(body) {
+export function getAllTicketCalendar(body) {
 
   return axios.post(`${USERS_URL}/ticket_calendar/read-ticket-calendar`, body);
 }

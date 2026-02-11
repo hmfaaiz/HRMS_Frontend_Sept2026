@@ -26,7 +26,7 @@ export function FormTable() {
     }
   );
 
-  const { leaveCalendar, dateRange } = currentState;
+  const { ticketCalendar, dateRange } = currentState;
 
   // const getEarliestDate = (data) => {
   //   if (!data || data.length === 0) return new Date();
@@ -59,7 +59,7 @@ export function FormTable() {
   useEffect(() => {
     const calendarEvents = [];
 
-    (leaveCalendar || []).forEach((data) => {
+    (ticketCalendar || []).forEach((data) => {
    
       calendarEvents.push({
         title: data.sourceType === "FACILITATOR"
@@ -126,10 +126,10 @@ export function FormTable() {
       to: new Date(dateRange.formattedToDate),
     });
 
-    const earliestDate = getEarliestDate(leaveCalendar);
+    const earliestDate = getEarliestDate(ticketCalendar);
     setDefaultCalendarDate(earliestDate);
     setCurrentDate(earliestDate);
-  }, [leaveCalendar, dispatch]);
+  }, [ticketCalendar, dispatch]);
 
 
 
