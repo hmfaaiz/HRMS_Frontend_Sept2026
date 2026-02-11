@@ -117,7 +117,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
   }, [allSubsidiaryList]);
 
-  
+
 
   return (
 
@@ -141,7 +141,7 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
             to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
 
           };
-        
+
           applyFilter(formattedValues);
         }}
       >
@@ -368,6 +368,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeWise", false)
                               setFieldValue("isProjectEmployee", false)
                               setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
                             }
                             }
                             onBlur={handleBlur}
@@ -391,6 +393,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeWise", !values?.isEmployeeWise)
                               setFieldValue("isProjectEmployee", false)
                               setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
                             }
                             }
                             onBlur={handleBlur}
@@ -415,6 +419,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isProjectEmployee", !values?.isProjectEmployee)
                               setFieldValue("isEmployeeWise", false)
                               setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
                             }
                             }
                             onBlur={handleBlur}
@@ -440,6 +446,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isProjectWise", false)
                               setFieldValue("isEmployeeWise", false)
                               setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
 
                             }
                             }
@@ -448,6 +456,59 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                             checked={values.isEmployeeProject}
                           />
                           <span>Employee Wise, Project Wise</span>
+                        </label>
+                      </div>
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmployeeProjectTicket"
+                            type="checkbox"
+
+                            onChange={() => {
+
+                              setFieldValue("isEmployeeProjectTicket", !values?.isEmployeeProjectTicket)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isProjectTicket", false)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmployeeProjectTicket}
+                            checked={values.isEmployeeProjectTicket}
+                          />
+                          <span>Employee Wise, Project Wise, Ticket Wise</span>
+                        </label>
+                      </div>
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isProjectTicket"
+                            type="checkbox"
+
+                            onChange={() => {
+
+                              setFieldValue("isProjectTicket", !values?.isProjectTicket)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isProjectTicket}
+                            checked={values.isProjectTicket}
+                          />
+                          <span>Project Wise, Ticket Wise</span>
                         </label>
                       </div>
                     </div>
