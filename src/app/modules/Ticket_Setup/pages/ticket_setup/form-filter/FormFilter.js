@@ -25,7 +25,7 @@ const prepareFilter = (queryParams, values) => {
   return newQueryParams;
 };
 
-export function FormFilter({ accessUser, newButtonClick }) {
+export function FormFilter({ accessUser, newButtonClick, exportButtons }) {
   const dispatch = useDispatch();
   const formUIContext = useFormUIContext();
   const { dashboard } = useSelector((state) => state);
@@ -197,6 +197,7 @@ export function FormFilter({ accessUser, newButtonClick }) {
                     Add
                   </button>
                 )}
+                {exportButtons}
               </div>
             </div>
           </form>

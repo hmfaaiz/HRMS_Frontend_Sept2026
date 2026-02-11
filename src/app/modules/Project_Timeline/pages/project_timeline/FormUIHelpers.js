@@ -34,6 +34,9 @@ export const initialFilter = {
   sortOrder: "asc",
   pageSize: 10,
   pageNumber: 1,
+  pdf: false,
+  csv: false,
+  excel: false,
 };
 
 export const TicketType = [

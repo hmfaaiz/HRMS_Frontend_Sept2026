@@ -7,11 +7,17 @@ const initialCustomerState = {
   entities: [],
   customerForEdit: undefined,
   lastError: null,
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
   list: "list",
   action: "action",
+  pdf: "pdf",
+  csv: "csv",
+  xlsx: "xlsx",
 };
 
 export const customerSetupSlice = createSlice({
@@ -22,6 +28,12 @@ export const customerSetupSlice = createSlice({
       state.lastError = null;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
+      } else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = true;
+      } else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = true;
+      } else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = true;
       } else {
         state.actionsLoading = true;
       }
@@ -30,6 +42,12 @@ export const customerSetupSlice = createSlice({
       state.lastError = action.payload.error;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = false;
+      } else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = false;
+      } else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = false;
+      } else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = false;
       } else {
         state.actionsLoading = false;
       }
@@ -62,9 +80,20 @@ export const customerSetupSlice = createSlice({
     },
     customerDeleted: (state, action) => {
       state.actionsLoading = false;
-      state.entities = state.entities.filter((el) => el.Id !== action.payload.Id);
+      state.entities = state.entities.filter(
+        (el) => el.Id !== action.payload.Id
+      );
       state.totalCount -= 1;
       state.lastError = null;
+    },
+    pdfFetched: (state, action) => {
+      state.pdfLoading = false;
+    },
+    csvFetched: (state, action) => {
+      state.csvLoading = false;
+    },
+    excelFetched: (state, action) => {
+      state.excelLoading = false;
     },
   },
 });

@@ -7,9 +7,16 @@ export function createCustomer(body) {
   return axios.post(`${API_URL}/customer_setup/create-customer-setup`, body);
 }
 
-// Get All Customers
 export function getAllCustomers(body) {
-  return axios.post(`${API_URL}/customer_setup/read-all-customer-setup`, body);
+  const config = {
+    responseType: (body.pdf || body.excel || body.csv) ? "arraybuffer" : "json",
+  };
+
+  return axios.post(
+    `${API_URL}/customer_setup/read-all-customer-setup`,
+    body,
+    config
+  );
 }
 
 // Get Customer by ID

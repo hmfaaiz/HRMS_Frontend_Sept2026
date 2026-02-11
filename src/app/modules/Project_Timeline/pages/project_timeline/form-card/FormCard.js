@@ -6,6 +6,7 @@ import { FormTable } from "../form-table/FormTable";
 import { useProjectTimelineUIContext } from "../FormUIContext";
 import * as actions from "../../../../Dashboard/_redux/dashboardActions";
 import { TicketType } from "../FormUIHelpers"; 
+import {fetchProjectTimeline} from "../../../_redux/redux-Actions"
 
 
 export function FormCard() {
@@ -18,9 +19,33 @@ export function FormCard() {
       // ticketTypes: state.dashboard?.allTicket || [],
       ticketStatuses: state.dashboard?.allTicketStatus || [],
       listLoading: state.project_timeline?.listLoading,
+      pdfLoading: state.project_timeline?.pdfLoading,
+      csvLoading: state.project_timeline?.csvLoading,
+      excelLoading: state.project_timeline?.excelLoading,
     }),
     shallowEqual
   );
+
+  const print = async (type) => {
+  let updatedQueryParams = {
+    ...uiContext.queryParams,
+    csv: false,
+    excel: false,
+    pdf: false,
+    [type]: true,
+  };
+
+  await dispatch(fetchProjectTimeline(updatedQueryParams));
+
+  // reset flags
+  uiContext.setQueryParams({
+    ...uiContext.queryParams,
+    csv: false,
+    excel: false,
+    pdf: false,
+  });
+};
+
 
   useEffect(() => {
     dispatch(actions.fetchAllProjects());
@@ -28,7 +53,6 @@ export function FormCard() {
     dispatch(actions.fetchAllTicketStatus());
   }, [dispatch]);
 
-  // ... existing code ...
 return (
   <TCard name="Project Timeline">
     <FormFilter
@@ -36,6 +60,7 @@ return (
       projects={projects}
       ticketTypes={TicketType}
       ticketStatuses={ticketStatuses}
+      onPrint={print}
     />
     <FormTable ticketStatuses={ticketStatuses} ticketTypes={TicketType} />  {/* Pass ticketTypes */}
   </TCard>

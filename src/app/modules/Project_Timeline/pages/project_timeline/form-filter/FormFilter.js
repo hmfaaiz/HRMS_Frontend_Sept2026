@@ -5,22 +5,24 @@ import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/Mu
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { useProjectTimelineUIContext } from "../FormUIContext";
 import { formatDates } from "../../../../../utils/common";
-
+import { FileText, FileSpreadsheet, Sheet } from "lucide-react";
 
 export function FormFilter({
   projects = [],
   ticketTypes = [],
   ticketStatuses = [],
   loading,
+  onPrint,
 }) {
   const uiContext = useProjectTimelineUIContext();
+  const { hasRecords, queryParams } = uiContext;
 
   const uiProps = useMemo(
     () => ({
       queryParams: uiContext.queryParams || {},
       setQueryParams: uiContext.setQueryParams,
     }),
-    [uiContext]
+    [uiContext],
   );
 
   const applyFilter = (values) => {
@@ -28,9 +30,27 @@ export function FormFilter({
       ...uiProps.queryParams,
       filter: { ...values },
       pageNumber: 1,
-      isFiltered: true,  // Set to true when applying filter
+      isFiltered: true,
+      pdf: false,
+      csv: false,
+      excel: false,
     };
+
     uiProps.setQueryParams(newQueryParams);
+  };
+
+  const handleExport = (type) => {
+    if (!queryParams.isFiltered) {
+      alert("Please apply filter before downloading.");
+      return;
+    }
+
+    if (!hasRecords) {
+      alert("No records available to download.");
+      return;
+    }
+
+    onPrint(type);
   };
 
   return (
@@ -40,8 +60,7 @@ export function FormFilter({
         projectId: uiProps.queryParams?.filter?.projectId || null,
         ticketTypeIds: uiProps.queryParams?.filter?.ticketTypeIds || [],
         ticketStatusIds: uiProps.queryParams?.filter?.ticketStatusIds || [],
-        ticketDescription:
-          uiProps.queryParams?.filter?.ticketDescription || "",
+        ticketDescription: uiProps.queryParams?.filter?.ticketDescription || "",
         startFrom: uiProps.queryParams?.filter?.startFrom || null,
         startTo: uiProps.queryParams?.filter?.startTo || null,
         dueFrom: uiProps.queryParams?.filter?.dueFrom || null,
@@ -53,9 +72,7 @@ export function FormFilter({
         <>
           <Form className="form form-label-right">
             <fieldset>
-              <h6 className="font-bold mb-0 text-primary my-2">
-                Filters
-              </h6>
+              <h6 className="font-bold mb-0 text-primary my-2">Filters</h6>
 
               <div className="grid grid-cols-12 gap-4">
                 {/* Project */}
@@ -64,11 +81,12 @@ export function FormFilter({
                     name="projectId"
                     label="Project"
                     value={
-                      projects.find(
-                        (p) => p.value === values.projectId
-                      ) ||  { label: "All", value: null }
+                      projects.find((p) => p.value === values.projectId) || {
+                        label: "All",
+                        value: null,
+                      }
                     }
-                     options={[{ label: "All", value: null }, ...projects]}
+                    options={[{ label: "All", value: null }, ...projects]}
                     onChange={(e) =>
                       setFieldValue("projectId", e?.value || null)
                     }
@@ -81,13 +99,13 @@ export function FormFilter({
                     name="ticketTypeIds"
                     label="Ticket Type"
                     value={ticketTypes.filter((tt) =>
-                      values.ticketTypeIds.includes(tt.value)
+                      values.ticketTypeIds.includes(tt.value),
                     )}
                     options={ticketTypes}
                     onChange={(items = []) =>
                       setFieldValue(
                         "ticketTypeIds",
-                        items.map((i) => i.value)
+                        items.map((i) => i.value),
                       )
                     }
                   />
@@ -95,9 +113,7 @@ export function FormFilter({
 
                 {/* Ticket Description */}
                 <div className="col-span-6 sm:col-span-3">
-                  <label className="form-label">
-                    Ticket Description
-                  </label>
+                  <label className="form-label">Ticket Description</label>
                   <Field
                     name="ticketDescription"
                     type="text"
@@ -112,13 +128,13 @@ export function FormFilter({
                     name="ticketStatusIds"
                     label="Ticket Status"
                     value={ticketStatuses.filter((ts) =>
-                      values.ticketStatusIds.includes(ts.value)
+                      values.ticketStatusIds.includes(ts.value),
                     )}
                     options={ticketStatuses}
                     onChange={(items = []) =>
                       setFieldValue(
                         "ticketStatusIds",
-                        items.map((i) => i.value)
+                        items.map((i) => i.value),
                       )
                     }
                   />
@@ -135,18 +151,14 @@ export function FormFilter({
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="From"
-                      onChange={(d) =>
-                        setFieldValue("startFrom", d || null)
-                      }
+                      onChange={(d) => setFieldValue("startFrom", d || null)}
                     />
                     <Field
                       name="startTo"
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
-                      onChange={(d) =>
-                        setFieldValue("startTo", d || null)
-                      }
+                      onChange={(d) => setFieldValue("startTo", d || null)}
                     />
                   </div>
                 </div>
@@ -162,18 +174,14 @@ export function FormFilter({
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="From"
-                      onChange={(d) =>
-                        setFieldValue("dueFrom", d || null)
-                      }
+                      onChange={(d) => setFieldValue("dueFrom", d || null)}
                     />
                     <Field
                       name="dueTo"
                       component={DatePickerField}
                       dateFormat="dd-MMM-yyyy"
                       label="To"
-                      onChange={(d) =>
-                        setFieldValue("dueTo", d || null)
-                      }
+                      onChange={(d) => setFieldValue("dueTo", d || null)}
                     />
                   </div>
                 </div>
@@ -187,7 +195,6 @@ export function FormFilter({
               type="button"
               onClick={() => {
                 handleReset();
-                // Reset to empty filter and set isFiltered to false
                 const resetQueryParams = {
                   ...uiProps.queryParams,
                   filter: {},
@@ -212,6 +219,34 @@ export function FormFilter({
                 <span className="ml-3 mr-3 spinner spinner-white"></span>
               )}
             </button>
+            <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm ml-3">
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                onClick={() => handleExport("pdf")}
+                disabled={loading || !queryParams.isFiltered || !hasRecords}
+              >
+                <FileText className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                onClick={() => handleExport("csv")}
+                disabled={loading || !queryParams.isFiltered || !hasRecords}
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                className="border-none bg-transparent"
+                onClick={() => handleExport("excel")}
+                disabled={loading || !queryParams.isFiltered || !hasRecords}
+              >
+                <Sheet className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </>
       )}

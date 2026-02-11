@@ -1,27 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialCustomerState = {
+const initialProjectState = {
   listLoading: false,
   actionsLoading: false,
   totalCount: 0,
   entities: [],
   dataForEdit: undefined,
   lastError: null,
+  pdfLoading: false,
+  csvLoading: false,
+  excelLoading: false,
 };
 
 export const callTypes = {
   list: "list",
   action: "action",
+  pdf: "pdf",
+  csv: "csv",
+  xlsx: "xlsx",
 };
 
 export const projectSetupSlice = createSlice({
   name: "project_setup",
-  initialState: initialCustomerState,
+  initialState: initialProjectState,
   reducers: {
     startCall: (state, action) => {
       state.lastError = null;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = true;
+      } else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = true;
+      } else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = true;
+      } else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = true;
       } else {
         state.actionsLoading = true;
       }
@@ -30,6 +42,12 @@ export const projectSetupSlice = createSlice({
       state.lastError = action.payload.error;
       if (action.payload.callType === callTypes.list) {
         state.listLoading = false;
+      } else if (action.payload.callType === callTypes.pdf) {
+        state.pdfLoading = false;
+      } else if (action.payload.callType === callTypes.csv) {
+        state.csvLoading = false;
+      } else if (action.payload.callType === callTypes.xlsx) {
+        state.excelLoading = false;
       } else {
         state.actionsLoading = false;
       }
@@ -47,14 +65,35 @@ export const projectSetupSlice = createSlice({
     },
     projectCreated: (state, action) => {
       state.actionsLoading = false;
+      state.entities.unshift(action.payload);
+      state.totalCount += 1;
       state.lastError = null;
     },
     projectUpdated: (state, action) => {
       state.actionsLoading = false;
-      state.dataForEdit = null;
+      state.entities = state.entities.map((entity) =>
+        entity.Id === action.payload.updatedProject.Id
+          ? action.payload.updatedProject
+          : entity
+      );
+      state.lastError = null;
     },
     projectDeleted: (state, action) => {
       state.actionsLoading = false;
+      state.entities = state.entities.filter(
+        (el) => el.Id !== action.payload.Id
+      );
+      state.totalCount -= 1;
+      state.lastError = null;
+    },
+    pdfFetched: (state, action) => {
+      state.pdfLoading = false;
+    },
+    csvFetched: (state, action) => {
+      state.csvLoading = false;
+    },
+    excelFetched: (state, action) => {
+      state.excelLoading = false;
     },
   },
 });
