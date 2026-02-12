@@ -189,6 +189,21 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
                             setFieldValue('ticketStatusIds', [])
                             setFieldValue('ticketTypeIds', [])
+                            setFieldValue("istTcketTypeTicket", false)
+                            setFieldValue("isTicketTypeEmp", false)
+                            setFieldValue("isEmpTicketTypeTicket", false)
+
+
+                            setFieldValue("isProjectWise", false)
+                            setFieldValue("istTcketTypeTicket", false)
+                            setFieldValue("isEmpTicketTypeTicket", false)
+                            setFieldValue("isTicketTypeEmp", false)
+                            setFieldValue("isEmployeeWise", false)
+                            setFieldValue("isEmployeeProject", false)
+                            setFieldValue("isEmployeeProjectTicket", false)
+                            setFieldValue("isProjectEmployee", false)
+                            setFieldValue("isProjectTicket", false)
+
                             handleChange(e); // Trigger the form change handler
 
                           }}
@@ -295,6 +310,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeProject", false)
                               setFieldValue("isEmployeeProjectTicket", false)
                               setFieldValue("isProjectTicket", false)
+
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
                             }
                             }
                             onBlur={handleBlur}
@@ -320,6 +339,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeProject", false)
                               setFieldValue("isEmployeeProjectTicket", false)
                               setFieldValue("isProjectTicket", false)
+
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
                             }
                             }
                             onBlur={handleBlur}
@@ -346,6 +369,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeProject", false)
                               setFieldValue("isEmployeeProjectTicket", false)
                               setFieldValue("isProjectTicket", false)
+
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
+
+
                             }
                             }
                             onBlur={handleBlur}
@@ -374,6 +403,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeProjectTicket", false)
                               setFieldValue("isProjectTicket", false)
 
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
+
                             }
                             }
                             onBlur={handleBlur}
@@ -401,6 +434,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isProjectEmployee", false)
                               setFieldValue("isProjectTicket", false)
 
+
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
+
                             }
                             }
                             onBlur={handleBlur}
@@ -426,6 +464,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               setFieldValue("isEmployeeWise", false)
                               setFieldValue("isProjectEmployee", false)
                               setFieldValue("isEmployeeProjectTicket", false)
+
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
 
                             }
                             }
@@ -467,13 +509,19 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                           setFieldValue("taskTicketStatusIds", [])
                           setFieldValue("taskTicketTypeIds", [])
 
+
+                          setFieldValue("isProjectWise", false)
+                          setFieldValue("istTcketTypeTicket", false)
+                          setFieldValue("isEmpTicketTypeTicket", false)
+                          setFieldValue("isTicketTypeEmp", false)
+                          setFieldValue("isEmployeeWise", false)
+                          setFieldValue("isEmployeeProject", false)
+                          setFieldValue("isEmployeeProjectTicket", false)
+                          setFieldValue("isProjectEmployee", false)
+                          setFieldValue("isProjectTicket", false)
+
                           handleChange(e); // Trigger the form change handler
-                          // if (!e.target.checked) {
-                          //   clearFields(
-                          //     ["shiftId", "offDay_1", "offDay_2"],
-                          //     setFieldValue
-                          //   );
-                          // }
+
                         }}
                         onBlur={handleBlur}
                         value={values.isEnable_via_task_assignment}
@@ -530,6 +578,100 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                       </div>
 
                     </div>
+
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="istTcketTypeTicket"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_assignment}
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("istTcketTypeTicket", !values?.istTcketTypeTicket)
+                              setFieldValue("isEmpTicketTypeTicket", false)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectEmployee", false)
+
+
+                              setFieldValue("isProjectTicket", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.istTcketTypeTicket}
+                            checked={values.istTcketTypeTicket}
+                          />
+                          <span>Ticket Type Wise, Ticket Wise</span>
+                        </label>
+                      </div>
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmpTicketTypeTicket"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_assignment}
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmpTicketTypeTicket", !values?.isEmpTicketTypeTicket)
+                              setFieldValue("isTicketTypeEmp", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("istTcketTypeTicket", false)
+
+                              setFieldValue("isProjectTicket", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmpTicketTypeTicket}
+                            checked={values.isEmpTicketTypeTicket}
+                          />
+                          <span>Employee Wise, Ticket Type Wise, Ticket Wise </span>
+                        </label>
+                      </div>
+
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isTicketTypeEmp"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_assignment}
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isTicketTypeEmp", !values?.isTicketTypeEmp)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("istTcketTypeTicket", false)
+                              setFieldValue("isEmpTicketTypeTicket", false)
+                              setFieldValue("isProjectTicket", false)
+
+
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isTicketTypeEmp}
+                            checked={values.isTicketTypeEmp}
+                          />
+                          <span>Ticket Type, Employee Wise </span>
+                        </label>
+                      </div>
+                    </div>
+
 
                     <hr />
 
