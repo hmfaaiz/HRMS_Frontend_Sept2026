@@ -443,6 +443,8 @@ import ("./modules/Ticket_Calendar/pages/index"))
 const time_logging = lazy(()=>
  import("./modules/Project_TimeLog/pages/index"))
 
+const employee_onboarding_checklist = lazy(() =>
+import("./modules/Employee_Onboarding_Checklist/pages/index"))
 const ticket_time_report = lazy(()=>
  import("./modules/TicketReport/pages/index"))
 const ticket_activity = lazy(()=>
@@ -617,6 +619,7 @@ const ROUTES = {
   task_assignment_timeline : task_assignment_timeline,
   ticket_calendar : ticket_calendar,
   time_logging : time_logging,
+  employee_onboarding_checklist : employee_onboarding_checklist,
   ticket_time_report : ticket_time_report,
   ticket_activity : ticket_activity,
 };
