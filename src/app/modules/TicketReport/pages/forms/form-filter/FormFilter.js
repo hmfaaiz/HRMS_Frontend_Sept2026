@@ -544,10 +544,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                           name="taskTicketTypeIds"
                           label="Ticket Type"
                           disabled={!values.isEnable_via_task_assignment}
-                          value={dashboard.allTicketTypeList.filter(t =>
+                          value={dashboard.allMasterTicketType.filter(t =>
                             values.taskTicketTypeIds?.includes(t.value)
                           )}
-                          options={dashboard.allTicketTypeList}
+                          options={dashboard.allMasterTicketType}
                           onChange={(items = []) =>
                             setFieldValue(
                               "taskTicketTypeIds",
