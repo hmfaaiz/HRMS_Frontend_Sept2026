@@ -19,7 +19,7 @@ import { ReceiveFIlter } from "../form-filter/ReceiveFilter";
 export function FormCard() {
   const FormUIContext = useFormUIContext();
   const dispatch = useDispatch();
-   const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState(null);
   const FormUIProps = useMemo(() => {
     return {
       newFormButtonClick: FormUIContext.newFormButtonClick,
@@ -70,34 +70,78 @@ export function FormCard() {
         Ticket (Receive)
       </h6>
 
-                <div >
-          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
-            <Card>
-              <Card.Header className="d-flex justify-content-center">
-                <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
-                  <Accordion.Toggle
-                    as={Button}
-                    eventKey="0"
-                    className="flex justify-start text-bold"
-                  >
-                   
-                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
+      <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
 
-                  </Accordion.Toggle>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="0">
-                
-                  <>
-                    <ReceiveFIlter />
-                  </>
-              
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "red",
+              display: "inline-block",
+            }}
+          ></span>
+          <span>High</span>
         </div>
 
-    
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "orange",
+              display: "inline-block",
+            }}
+          ></span>
+          <span>Medium</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "green",
+              display: "inline-block",
+            }}
+          ></span>
+          <span>Low</span>
+        </div>
+
+      </div>
+
+
+      <div >
+        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
+          <Card>
+            <Card.Header className="d-flex justify-content-center">
+              <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                <Accordion.Toggle
+                  as={Button}
+                  eventKey="0"
+                  className="flex justify-start text-bold"
+                >
+
+                  {activeKey === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Filters</span>
+
+                </Accordion.Toggle>
+              </div>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+
+              <>
+                <ReceiveFIlter />
+              </>
+
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+      </div>
+
+
       <ResponseTable />
 
 
@@ -116,32 +160,76 @@ export function FormCard() {
         Ticket (Send)
       </h6>
 
-                 <div >
-          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
-            <Card>
-              <Card.Header className="d-flex justify-content-center">
-                <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
-                  <Accordion.Toggle
-                    as={Button}
-                    eventKey="0"
-                    className="flex justify-start text-bold"
-                  >
-                   
-                    {activeKey === "0" ? <CircleMinus  className="h-4 w-4 text-black mr-1"/> : <CirclePlus  className="h-4 w-4 text-black mr-1"/>}<span className="text-black">Filters</span>
+       <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
 
-                  </Accordion.Toggle>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="0">
-                
-                  <>
-                    <FormFIlter />
-                  </>
-              
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "red",
+              display: "inline-block",
+            }}
+          ></span>
+          <span>High</span>
         </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "orange",
+              display: "inline-block",
+            }}
+          ></span>
+          <span>Medium</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "green",
+              display: "inline-block",
+            }}
+          ></span>
+          <span>Low</span>
+        </div>
+
+      </div>
+
+
+      <div >
+        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
+          <Card>
+            <Card.Header className="d-flex justify-content-center">
+              <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                <Accordion.Toggle
+                  as={Button}
+                  eventKey="0"
+                  className="flex justify-start text-bold"
+                >
+
+                  {activeKey === "0" ? <CircleMinus className="h-4 w-4 text-black mr-1" /> : <CirclePlus className="h-4 w-4 text-black mr-1" />}<span className="text-black">Filters</span>
+
+                </Accordion.Toggle>
+              </div>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+
+              <>
+                <FormFIlter />
+              </>
+
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
+      </div>
       <FormTable />
     </TCard>
     // </>

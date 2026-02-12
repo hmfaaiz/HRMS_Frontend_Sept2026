@@ -54,7 +54,7 @@ export function FormCard() {
     let formattedToDate = formatDates(values?.to_date, "yyyy-MM-dd");
 
     dispatch(
-      actions.fetchLeaves(
+      actions.fetchCalendar(
         { ...values, from_date: formattedFromDate, to_date: formattedToDate },
         setLoading
       )
@@ -75,7 +75,7 @@ export function FormCard() {
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
   }, [dispatch]);
 
-  const { leaveCalendar } = currentState;
+  const { ticketCalendar } = currentState;
 
   const setInitialValues = (firstSubsidiary) => {
     setBodyValues({
@@ -569,7 +569,7 @@ export function FormCard() {
             }}
           </Formik>
         </div>
-        {leaveCalendar && leaveCalendar.length > 0 && <FormTable />}
+        {ticketCalendar && ticketCalendar.length > 0 && <FormTable />}
       </TCard >
     </>
   );

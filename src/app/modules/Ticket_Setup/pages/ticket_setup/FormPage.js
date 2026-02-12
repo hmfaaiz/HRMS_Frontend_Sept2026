@@ -28,6 +28,11 @@ export function FormPage({ history }) {
     openDetailTimeLog: (id) => {
       history.push(`/ticket_setup/read-all-ticket-setup/${id}/time-log`);
     },
+    openTicketActivity: (query = null) => {
+      history.push(
+        `/ticket_activity/read-ticket-activity${query ? query : ""}`,
+      );
+    },
   };
 
   return (

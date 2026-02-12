@@ -6,19 +6,19 @@ import { toast } from "react-toastify";
 const { actions } = TicketCalendarSlice;
 
 
-export const fetchLeaves = (body,setLoading) => async (dispatch) => {
+export const fetchCalendar = (body,setLoading) => async (dispatch) => {
  if (new Date(body?.from_date) > new Date (body?.to_date)) {
       toast.error(SERVER_MESSAGES.correctDateRange)
       dispatch(actions.clearEvents(null));
       return;
     }
 
-  return requestFromServer.getAllLeave(body)
+  return requestFromServer.getAllTicketCalendar(body)
    
     .then((response) => {
     
 
-      dispatch(actions.leaveFetched(response));
+      dispatch(actions.ticketCalendarFetched(response));
       setLoading(false)
     })
     .catch((error) => {

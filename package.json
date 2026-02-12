@@ -95,6 +95,7 @@
     "react-intl": "3.6.2",
     "react-is": "16.13.1",
     "react-lazy-load-image-component": "^1.6.0",
+    "react-mentions": "^4.4.10",
     "react-multi-date-picker": "^4.5.2",
     "react-number-format": "^5.4.4",
     "react-perfect-scrollbar": "1.5.8",
