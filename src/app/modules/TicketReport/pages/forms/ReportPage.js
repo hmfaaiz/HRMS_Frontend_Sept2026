@@ -32,6 +32,7 @@ export function ReportPage() {
      dispatch(fetchAllProjects());
      dispatch(fetchAllTicketStatus());
      dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+     
    }, [dispatch]);
 
   return (

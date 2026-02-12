@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import { isEqual } from "lodash";
 import { useFormUIContext } from "../FormUIContext";
@@ -20,6 +20,10 @@ import { Download, } from "lucide-react";
 
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 import DatePicker from "react-datepicker";
+import {
+
+  Input,
+} from "../../../../../../_metronic/_partials/controls";
 
 
 //Validation for date fields
@@ -117,8 +121,20 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
   }, [allSubsidiaryList]);
 
+  const ticketStatusOptions = [
 
+    { value: 1, label: "Open" },
+    { value: 0, label: "Completed" },
+    { value: 3, label: "Re-opened" },
+    { value: 2, label: "Send for Review" },
+  ];
 
+  const clearFields = (values = [], setFieldValue) => {
+    values.forEach((field) => {
+
+      setFieldValue(field, ""); // Set each field to an empty value
+    });
+  };
   return (
 
     <>
@@ -145,91 +161,377 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
           applyFilter(formattedValues);
         }}
       >
-        {({ values, handleBlur, setFieldValue, handleReset }) => (
+        {({ values, handleBlur, setFieldValue, handleReset, handleChange }) => (
           <>
             <Modal.Body className="overlay overlay-block cursor-default">
               <Form className="form form-label-right">
                 <fieldset>
                   <div className="">
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1">
+                    <div className="">
 
-                      <div>
-                        <SearchSelect
-                          name="projectId"
 
-                          label={
-                            <label>
-                              Project
+                      <h6 className="font-bold mb-0 text-primary my-2">
+                        Project
+                      </h6>
 
-                            </label>
-                          }
+                      <div className="col-span-3">
+                        <input
+                          name="isEnable_via_task_project"
+                          type="checkbox"
+                          // onChange={handleChange}
                           onChange={(e) => {
-                            const value =
-                              e.value == "Select" ? "" : Number(e.value);
-                            setFieldValue("projectId", value);
+                            clearFields(["taskTicketDescription"], setFieldValue);
+                            setFieldValue("taskTicketStatusIds", [])
+                            setFieldValue("taskTicketTypeIds", [])
+                            setFieldValue("isEnable_via_task_assignment", false);
+                            clearFields(["projectId", "projectTicketDescription",], setFieldValue);
+
+                            setFieldValue('ticketStatusIds', [])
+                            setFieldValue('ticketTypeIds', [])
+                            handleChange(e); // Trigger the form change handler
 
                           }}
-                          value={
-                            dashboard?.allProjects?.find(
-                              (option) =>
-                                option?.value === values?.projectId
-                            ) || null
-                          }
-
-                          options={dashboard?.allProjects}
-
+                          onBlur={handleBlur}
+                          value={values.isEnable_via_task_project}
+                          checked={values.isEnable_via_task_project}
 
                         />
-
+                        <label>
+                          &nbsp;<span>Search Via Project</span>
+                        </label>
                       </div>
 
+                      <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+                        <div>
+                          <SearchSelect
+                            name="projectId"
+                            isDisabled={!values.isEnable_via_task_project}
+                            label={
+                              <label>
+                                Project
 
-                      <div className="">
-                        <MultiSelect
+                              </label>
+                            }
+                            onChange={(e) => {
+                              const value =
+                                e.value == "Select" ? "" : Number(e.value);
+                              setFieldValue("projectId", value);
 
-                          name="ticketTypeIds"
-                          label="Ticket Type"
-                          value={TicketType.filter(t =>
-                            values.ticketTypeIds?.includes(t.value)
-                          )}
-                          options={TicketType}
-                          onChange={(items = []) =>
-                            setFieldValue(
-                              "ticketTypeIds",
-                              items.map((i) => i.value)
-                            )
-                          }
-                        />
+                            }}
+                            value={
+                              dashboard?.allProjects?.find(
+                                (option) =>
+                                  option?.value === values?.projectId
+                              ) || null
+                            }
+
+                            options={dashboard?.allProjects}
+
+
+                          />
+
+                        </div>
+
+
+                        <div className="">
+                          <MultiSelect
+                            isDisabled={!values.isEnable_via_task_project}
+                            name="ticketTypeIds"
+                            label="Ticket Type"
+                            value={TicketType.filter(t =>
+                              values.ticketTypeIds?.includes(t.value)
+                            )}
+                            options={TicketType}
+                            onChange={(items = []) =>
+                              setFieldValue(
+                                "ticketTypeIds",
+                                items.map((i) => i.value)
+                              )
+                            }
+                          />
+                        </div>
+
+
+                        <div className="">
+                          <MultiSelect
+                            isDisabled={!values.isEnable_via_task_project}
+                            name="ticketStatusIds"
+                            label="Ticket Status"
+                            value={dashboard.allTicketStatus.filter(t =>
+                              values.ticketStatusIds?.includes(t.value)
+                            )}
+                            options={dashboard.allTicketStatus}
+                            onChange={(items = []) =>
+                              setFieldValue(
+                                "ticketStatusIds",
+                                items.map((i) => i.value)
+                              )
+                            }
+                          />
+                        </div>
+
+
+
                       </div>
-
-
-                      <div className="">
-                        <MultiSelect
-
-                          name="ticketStatusIds"
-                          label="Ticket Status"
-                          value={dashboard.allTicketStatus.filter(t =>
-                            values.ticketStatusIds?.includes(t.value)
-                          )}
-                          options={dashboard.allTicketStatus}
-                          onChange={(items = []) =>
-                            setFieldValue(
-                              "ticketStatusIds",
-                              items.map((i) => i.value)
-                            )
-                          }
-                        />
-                      </div>
-
-
 
 
 
 
                     </div>
 
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isProjectWise"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_project}
+                            onChange={() => {
+                              setFieldValue("isProjectWise", !values?.isProjectWise)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isProjectWise}
+                            checked={values.isProjectWise}
+                          />
+                          <span>Project Wise</span>
+                        </label>
+                      </div>
 
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmployeeWise"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_project}
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", !values?.isEmployeeWise)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmployeeWise}
+                            checked={values.isEmployeeWise}
+                          />
+                          <span>Employee Wise</span>
+                        </label>
+                      </div>
+
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isProjectEmployee"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_project}
+                            onChange={() => {
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isProjectEmployee", !values?.isProjectEmployee)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isProjectEmployee}
+                            checked={values.isProjectEmployee}
+                          />
+                          <span>Project Wise, Employee Wise</span>
+                        </label>
+                      </div>
+
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmployeeProject"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_project}
+                            onChange={() => {
+
+                              setFieldValue("isEmployeeProject", !values?.isEmployeeProject)
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+                              setFieldValue("isProjectTicket", false)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmployeeProject}
+                            checked={values.isEmployeeProject}
+                          />
+                          <span>Employee Wise, Project Wise</span>
+                        </label>
+                      </div>
+
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isEmployeeProjectTicket"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_project}
+                            onChange={() => {
+
+                              setFieldValue("isEmployeeProjectTicket", !values?.isEmployeeProjectTicket)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isProjectTicket", false)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isEmployeeProjectTicket}
+                            checked={values.isEmployeeProjectTicket}
+                          />
+                          <span>Employee Wise, Project Wise, Ticket Wise</span>
+                        </label>
+                      </div>
+
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <input
+                            className="mr-1"
+                            name="isProjectTicket"
+                            type="checkbox"
+                            disabled={!values.isEnable_via_task_project}
+                            onChange={() => {
+
+                              setFieldValue("isProjectTicket", !values?.isProjectTicket)
+                              setFieldValue("isEmployeeProject", false)
+                              setFieldValue("isProjectWise", false)
+                              setFieldValue("isEmployeeWise", false)
+                              setFieldValue("isProjectEmployee", false)
+                              setFieldValue("isEmployeeProjectTicket", false)
+
+                            }
+                            }
+                            onBlur={handleBlur}
+                            value={values.isProjectTicket}
+                            checked={values.isProjectTicket}
+                          />
+                          <span>Project Wise, Ticket Wise</span>
+                        </label>
+                      </div>
+                    </div>
+
+
+
+
+
+
+                    <hr />
+
+
+
+
+
+                    <h6 className="font-bold mb-0 text-primary my-2">
+                      Task Assignment
+                    </h6>
+                    <div className="col-span-3 mt-3">
+                      <input
+                        name="isEnable_via_task_assignment"
+                        type="checkbox"
+                        // onChange={handleChange}
+                        onChange={(e) => {
+                          clearFields(["projectId", "projectTicketDescription",], setFieldValue);
+                          setFieldValue("isEnable_via_task_project", false);
+                          setFieldValue('ticketStatusIds', [])
+                          setFieldValue('ticketTypeIds', [])
+
+                          clearFields(["taskTicketDescription"], setFieldValue);
+                          setFieldValue("taskTicketStatusIds", [])
+                          setFieldValue("taskTicketTypeIds", [])
+
+                          handleChange(e); // Trigger the form change handler
+                          // if (!e.target.checked) {
+                          //   clearFields(
+                          //     ["shiftId", "offDay_1", "offDay_2"],
+                          //     setFieldValue
+                          //   );
+                          // }
+                        }}
+                        onBlur={handleBlur}
+                        value={values.isEnable_via_task_assignment}
+                        checked={values.isEnable_via_task_assignment}
+
+                      />
+                      <label>
+                        &nbsp;<span>Search Via Task Assignment</span>
+                      </label>
+                    </div>
+
+
+                    <div className="grid grid-cols-4 gap-x-3 gap-y-1">
+
+
+
+
+                      <div className="">
+                        <MultiSelect
+                          name="taskTicketTypeIds"
+                          label="Ticket Type"
+                          disabled={!values.isEnable_via_task_assignment}
+                          value={dashboard.allTicketTypeList.filter(t =>
+                            values.taskTicketTypeIds?.includes(t.value)
+                          )}
+                          options={dashboard.allTicketTypeList}
+                          onChange={(items = []) =>
+                            setFieldValue(
+                              "taskTicketTypeIds",
+                              items.map((i) => i.value)
+                            )
+                          }
+                        />
+                      </div>
+
+
+
+                      <div className="">
+                        <MultiSelect
+                          name="taskTicketStatusIds"
+                          label="Ticket Status"
+                          disabled={!values.isEnable_via_task_assignment}
+                          value={ticketStatusOptions.filter(t =>
+                            values.taskTicketStatusIds?.includes(t.value)
+                          )}
+                          options={ticketStatusOptions}
+                          onChange={(items = []) =>
+                            setFieldValue(
+                              "taskTicketStatusIds",
+                              items.map((i) => i.value)
+                            )
+                          }
+                        />
+                      </div>
+
+                    </div>
+
+                    <hr />
 
                     <div className="grid grid-cols-1 gap-x-3 gap-y-1 ">
 
@@ -289,21 +591,21 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                               name="to_date"
                               autoComplete="off"
                               minDate={values?.from_date ? new Date(values.from_date) : null}
-                             
+
                               maxDate={
                                 values?.from_date
                                   ? values.isDays
                                     ? new Date(
-                                          new Date(values.from_date).setMonth(
-                                            new Date(values.from_date).getMonth() + 12
-                                          )
-                                        )
+                                      new Date(values.from_date).setMonth(
+                                        new Date(values.from_date).getMonth() + 12
+                                      )
+                                    )
                                     : values.isWeekDays
-                                       ? new Date(
-                                          new Date(values.from_date).setMonth(
-                                            new Date(values.from_date).getMonth() + 12
-                                          )
+                                      ? new Date(
+                                        new Date(values.from_date).setMonth(
+                                          new Date(values.from_date).getMonth() + 12
                                         )
+                                      )
                                       : values.isMonthDays
                                         ? new Date(
                                           new Date(values.from_date).setMonth(
@@ -341,6 +643,91 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
                         </div>
 
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
+
+                          <div className="col-span-1">
+                            <label className="flex items-center">
+                              <input
+                                className="mr-1"
+                                name="isDays"
+                                type="checkbox"
+
+                                onChange={() => {
+                                  setFieldValue("isDays", !values?.isDays)
+                                  setFieldValue("isWeekDays", false)
+                                  setFieldValue("isMonthDays", false)
+                                  setFieldValue("to_date", null)
+                                  setFieldValue("from_date", null)
+
+                                }
+                                }
+                                onBlur={handleBlur}
+                                value={values.isDays}
+                                checked={values.isDays}
+                              />
+                              <span>Day Wise</span>
+                            </label>
+                          </div>
+
+
+                          <div className="col-span-1">
+                            <label className="flex items-center">
+                              <input
+                                className="mr-1"
+                                name="isWeekDays"
+                                type="checkbox"
+
+                                onChange={() => {
+                                  setFieldValue("isWeekDays", !values?.isWeekDays)
+                                  setFieldValue("isMonthDays", false)
+                                  setFieldValue("isDays", false)
+                                  setFieldValue("to_date", null)
+                                  setFieldValue("from_date", null)
+
+                                }
+                                }
+                                onBlur={handleBlur}
+                                value={values.isWeekDays}
+                                checked={values.isWeekDays}
+                              />
+                              <span>Week Wise</span>
+                            </label>
+                          </div>
+
+
+                          <div className="col-span-1">
+                            <label className="flex items-center">
+                              <input
+                                className="mr-1"
+                                name="isMonthDays"
+                                type="checkbox"
+
+                                onChange={() => {
+
+                                  setFieldValue("isMonthDays", !values?.isMonthDays)
+                                  setFieldValue("isWeekDays", false)
+                                  setFieldValue("isDays", false)
+                                  setFieldValue("to_date", null)
+                                  setFieldValue("from_date", null)
+
+                                }
+                                }
+                                onBlur={handleBlur}
+                                value={values.isMonthDays}
+                                checked={values.isMonthDays}
+                              />
+                              <span>Month Wise</span>
+                            </label>
+                          </div>
+
+
+
+
+
+
+
+                        </div>
+
 
 
                       </div>
@@ -348,256 +735,6 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
 
                     </div>
-
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isProjectWise"
-                            type="checkbox"
-
-                            onChange={() => {
-                              setFieldValue("isProjectWise", !values?.isProjectWise)
-                              setFieldValue("isEmployeeWise", false)
-                              setFieldValue("isProjectEmployee", false)
-                              setFieldValue("isEmployeeProject", false)
-                              setFieldValue("isEmployeeProjectTicket", false)
-                              setFieldValue("isProjectTicket", false)
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isProjectWise}
-                            checked={values.isProjectWise}
-                          />
-                          <span>Project Wise</span>
-                        </label>
-                      </div>
-
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isEmployeeWise"
-                            type="checkbox"
-
-                            onChange={() => {
-                              setFieldValue("isProjectWise", false)
-                              setFieldValue("isEmployeeWise", !values?.isEmployeeWise)
-                              setFieldValue("isProjectEmployee", false)
-                              setFieldValue("isEmployeeProject", false)
-                              setFieldValue("isEmployeeProjectTicket", false)
-                              setFieldValue("isProjectTicket", false)
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isEmployeeWise}
-                            checked={values.isEmployeeWise}
-                          />
-                          <span>Employee Wise</span>
-                        </label>
-                      </div>
-
-
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isProjectEmployee"
-                            type="checkbox"
-
-                            onChange={() => {
-                              setFieldValue("isProjectWise", false)
-                              setFieldValue("isProjectEmployee", !values?.isProjectEmployee)
-                              setFieldValue("isEmployeeWise", false)
-                              setFieldValue("isEmployeeProject", false)
-                              setFieldValue("isEmployeeProjectTicket", false)
-                              setFieldValue("isProjectTicket", false)
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isProjectEmployee}
-                            checked={values.isProjectEmployee}
-                          />
-                          <span>Project Wise, Employee Wise</span>
-                        </label>
-                      </div>
-
-
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isEmployeeProject"
-                            type="checkbox"
-
-                            onChange={() => {
-
-                              setFieldValue("isEmployeeProject", !values?.isEmployeeProject)
-                              setFieldValue("isProjectWise", false)
-                              setFieldValue("isEmployeeWise", false)
-                              setFieldValue("isProjectEmployee", false)
-                              setFieldValue("isEmployeeProjectTicket", false)
-                              setFieldValue("isProjectTicket", false)
-
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isEmployeeProject}
-                            checked={values.isEmployeeProject}
-                          />
-                          <span>Employee Wise, Project Wise</span>
-                        </label>
-                      </div>
-
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isEmployeeProjectTicket"
-                            type="checkbox"
-
-                            onChange={() => {
-
-                              setFieldValue("isEmployeeProjectTicket", !values?.isEmployeeProjectTicket)
-                              setFieldValue("isEmployeeProject", false)
-                              setFieldValue("isProjectWise", false)
-                              setFieldValue("isEmployeeWise", false)
-                              setFieldValue("isProjectEmployee", false)
-                              setFieldValue("isProjectTicket", false)
-
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isEmployeeProjectTicket}
-                            checked={values.isEmployeeProjectTicket}
-                          />
-                          <span>Employee Wise, Project Wise, Ticket Wise</span>
-                        </label>
-                      </div>
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isProjectTicket"
-                            type="checkbox"
-
-                            onChange={() => {
-
-                              setFieldValue("isProjectTicket", !values?.isProjectTicket)
-                              setFieldValue("isEmployeeProject", false)
-                              setFieldValue("isProjectWise", false)
-                              setFieldValue("isEmployeeWise", false)
-                              setFieldValue("isProjectEmployee", false)
-                              setFieldValue("isEmployeeProjectTicket", false)
-
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isProjectTicket}
-                            checked={values.isProjectTicket}
-                          />
-                          <span>Project Wise, Ticket Wise</span>
-                        </label>
-                      </div>
-                    </div>
-
-
-                    <hr />
-
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-3 gap-y-1 mt-3">
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isDays"
-                            type="checkbox"
-
-                            onChange={() => {
-                              setFieldValue("isDays", !values?.isDays)
-                              setFieldValue("isWeekDays", false)
-                              setFieldValue("isMonthDays", false)
-                              setFieldValue("to_date", null)
-                              setFieldValue("from_date", null)
-
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isDays}
-                            checked={values.isDays}
-                          />
-                          <span>Day Wise</span>
-                        </label>
-                      </div>
-
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isWeekDays"
-                            type="checkbox"
-
-                            onChange={() => {
-                              setFieldValue("isWeekDays", !values?.isWeekDays)
-                              setFieldValue("isMonthDays", false)
-                              setFieldValue("isDays", false)
-                              setFieldValue("to_date", null)
-                              setFieldValue("from_date", null)
-
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isWeekDays}
-                            checked={values.isWeekDays}
-                          />
-                          <span>Week Wise</span>
-                        </label>
-                      </div>
-
-
-                      <div className="col-span-1">
-                        <label className="flex items-center">
-                          <input
-                            className="mr-1"
-                            name="isMonthDays"
-                            type="checkbox"
-
-                            onChange={() => {
-
-                              setFieldValue("isMonthDays", !values?.isMonthDays)
-                              setFieldValue("isWeekDays", false)
-                              setFieldValue("isDays", false)
-                              setFieldValue("to_date", null)
-                              setFieldValue("from_date", null)
-
-                            }
-                            }
-                            onBlur={handleBlur}
-                            value={values.isMonthDays}
-                            checked={values.isMonthDays}
-                          />
-                          <span>Month Wise</span>
-                        </label>
-                      </div>
-
-
-
-
-
-
-
-                    </div>
-
-
 
                   </div>
                 </fieldset>
@@ -629,14 +766,14 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                     getTicketReportByFilters(formattedValues);
                   }
                 }}
-                disabled={pdfLoading || !values.from_date || !values.to_date}
+                disabled={pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
                 className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
                   }`}
 
                 type="button"
 
               >
-                Geenrate Report
+                Generate Report
 
                 <Download className="w-4 h-4 ml-2" />
                 {pdf && (
