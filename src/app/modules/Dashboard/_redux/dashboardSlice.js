@@ -106,11 +106,12 @@ const initialDashboardState = {
   allFacilitatorTicketType: [],
   moduleRights: [],
   allUsers: [],
-  allCustomers : [],
-  allProjects : [],
-  allTicketStatus : [],
-  allTicket : [],
-  ticket : {},
+  allCustomers: [],
+  allProjects: [],
+  allTicketStatus: [],
+  allTicket: [],
+  ticket: {},
+  allMasterTicketType: [],
 };
 
 export const callTypes = {
@@ -432,13 +433,13 @@ export const dashboardSlice = createSlice({
       state.allowRequestBySenior = action.payload;
 
     },
-        AllActiveCustomerFetch: (state, action) => {
+    AllActiveCustomerFetch: (state, action) => {
       state.allCustomers = action.payload;
     },
-      AllProjectFetch: (state, action) => {
+    AllProjectFetch: (state, action) => {
       state.allProjects = action.payload;
     },
-     AllTicketStatusFetch: (state, action) => {
+    AllTicketStatusFetch: (state, action) => {
       state.allTicketStatus = action.payload;
     },
     AllTicketFetch: (state, action) => {
@@ -454,7 +455,7 @@ export const dashboardSlice = createSlice({
 
 
     AllFacilitatorTicketTypeFetch: (state, action) => {
-    
+
       state.allFacilitatorTicketType = action.payload;
 
     },
@@ -464,6 +465,9 @@ export const dashboardSlice = createSlice({
     },
     UsersByCompanyFetched: (state, action) => {
       state.allUsers = action.payload;
+    },
+    AllMasterTicketTypeFetched: (state, action) => {
+      state.allMasterTicketType = action.payload;
     },
 
   }

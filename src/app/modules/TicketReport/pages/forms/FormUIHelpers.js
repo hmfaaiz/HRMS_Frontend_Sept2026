@@ -16,7 +16,7 @@ export const initialFilter = {
     ticketTypeIds:[],
     ticketStatusIds:[],
     isDays:true,
-    isProjectWise:true,
+    
 
     
     

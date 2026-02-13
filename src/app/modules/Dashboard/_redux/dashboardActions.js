@@ -814,3 +814,18 @@ export const fetchTicketById = (Id) => async (
       dispatch(actions.TicketFetch({}));
     });
 };
+
+export const fetchMasterTicketType = () => async (
+  dispatch,
+) => {
+  return await requestFromServer
+    .getAllMasterTicketType()
+    .then((response) => {
+      const entities = response.data?.data;
+      dispatch(actions.AllMasterTicketTypeFetched(entities));
+      return entities
+    })
+    .catch((error) => {
+      dispatch(actions.AllMasterTicketTypeFetched({}));
+    });
+};

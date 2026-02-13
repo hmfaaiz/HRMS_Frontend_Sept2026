@@ -29,7 +29,7 @@ import { formatDates, TicketType } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
-import { fetchAllProjects, fetchAllTicketStatus } from "../../../../Dashboard/_redux/dashboardActions";
+import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from "../../../../Dashboard/_redux/dashboardActions";
 import MultiSelect from "../../../../../../_metronic/_partials/controls/forms/MultSelectDropdown";
 
 const formValidation = Yup.object().shape({
@@ -73,6 +73,7 @@ export function FormCard() {
     dispatch(fetchAllProjects());
     dispatch(fetchAllTicketStatus());
     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+     dispatch(fetchMasterTicketType());
   }, [dispatch]);
 
   const { ticketCalendar } = currentState;
@@ -366,10 +367,10 @@ export function FormCard() {
                                         name="taskTicketTypeIds"
                                         label="Ticket Type"
                                         disabled={!values.isEnable_via_task_assignment}
-                                        value={dashboard.allTicketTypeList.filter(t =>
+                                        value={dashboard.allMasterTicketType.filter(t =>
                                           values.taskTicketTypeIds?.includes(t.value)
                                         )}
-                                        options={dashboard.allTicketTypeList}
+                                        options={dashboard.allMasterTicketType}
                                         onChange={(items = []) =>
                                           setFieldValue(
                                             "taskTicketTypeIds",

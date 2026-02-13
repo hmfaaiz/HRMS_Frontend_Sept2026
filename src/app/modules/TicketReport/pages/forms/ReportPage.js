@@ -14,7 +14,7 @@ import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
 import TCard from "../../../../utils/common-modules/TCard";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
-import { fetchAllProjects, fetchAllTicketStatus } from "../../../Dashboard/_redux/dashboardActions";
+import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from "../../../Dashboard/_redux/dashboardActions";
 
 export function ReportPage() {
   const dispatch = useDispatch();
@@ -32,6 +32,8 @@ export function ReportPage() {
      dispatch(fetchAllProjects());
      dispatch(fetchAllTicketStatus());
      dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+     dispatch(fetchMasterTicketType());
+     
    }, [dispatch]);
 
   return (
