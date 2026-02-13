@@ -24,6 +24,7 @@ import {
 
   Input,
 } from "../../../../../../_metronic/_partials/controls";
+import FormPreview from "../preview/FormPreview";
 
 
 //Validation for date fields
@@ -48,10 +49,11 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
   //Get All dropdown data from state
 
-  const { currentState, dashboard } = useSelector((state) => {
+  const { currentState, dashboard, previewData } = useSelector((state) => {
     return {
       currentState: state?.ticket_time_report,
       dashboard: state?.dashboard,
+      previewData: state?.ticket_time_report?.previewData,
     };
   });
   const {
@@ -106,6 +108,14 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
     const newQueryParams = prepareFilter(formUIProps.queryParams, values);
     const labels = getLabels(values);
     dispatch(actions.fetchAllTicketReportByFiltersForExcel(newQueryParams.filter, document, labels));
+  };
+
+
+
+  const getPreviewReportByFilters = (values) => {
+    const newQueryParams = prepareFilter(formUIProps.queryParams, values);
+    const labels = getLabels(values);
+    dispatch(actions.fetchPreviewData(newQueryParams.filter, document, labels));
   };
 
 
@@ -544,10 +554,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                           name="taskTicketTypeIds"
                           label="Ticket Type"
                           disabled={!values.isEnable_via_task_assignment}
-                          value={dashboard.allMasterTicketType.filter(t =>
-                            values.taskTicketTypeIds?.includes(t.value)
-                          )}
-                          options={dashboard.allMasterTicketType}
+                          value={
+                            (dashboard?.allMasterTicketType ?? []).filter(t =>
+                              (values?.taskTicketTypeIds ?? []).includes(t.value)
+                            )
+                          }
+                          options={dashboard?.allMasterTicketType}
                           onChange={(items = []) =>
                             setFieldValue(
                               "taskTicketTypeIds",
@@ -923,6 +935,34 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
                 )}
               </button>
 
+              <button
+                onClick={() => {
+                  if (!pdfLoading) {
+                    const formattedValues = {
+                      ...values,
+                      from_date: formatDates(values?.from_date, "yyyy-MM-dd"),
+                      to_date: formatDates(values?.to_date, "yyyy-MM-dd"),
+
+                    };
+
+                    getPreviewReportByFilters(formattedValues);
+                  }
+                }}
+                disabled={pdfLoading || !values.from_date || !values.to_date || (!values.isEnable_via_task_project && !values.isEnable_via_task_assignment)}
+                className={`btn btn-primary btn-elevate h-9  cursor-pointer ${pdfLoading ? "btn btn-primary btn-elevate h-9 opacity-50 cursor-not-allowed" : ""
+                  }`}
+
+                type="button"
+
+              >
+                Preview Report
+
+                <Download className="w-4 h-4 ml-2" />
+                {pdf && (
+                  <span className="ml-3 mr-3 spinner spinner-white"></span>
+                )}
+              </button>
+
               {/* </div> */}
 
 
@@ -932,6 +972,8 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
           </>
         )}
       </Formik>
+
+      <FormPreview data={previewData} />
     </>
   );
 }
