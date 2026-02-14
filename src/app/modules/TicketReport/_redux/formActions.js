@@ -48,13 +48,13 @@ export const fetchPreviewData = (body) => async (dispatch) => {
    
     .then((response) => {
     
-      console.log("response1111",response)
+
       dispatch(actions.previewDataFetched(response));
     
     })
     .catch((error) => {
 
-   
+      dispatch(actions.previewDataFetched(undefined));
       dispatch(actions.catchError({ error, callType: callTypes.list }));
       toast.error(error.response?.data?.message);
     });

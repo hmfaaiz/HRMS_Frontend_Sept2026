@@ -974,6 +974,10 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
       </Formik>
 
       <FormPreview data={previewData} />
+
+      <br/>
+      <br/>
+    
     </>
   );
 }
