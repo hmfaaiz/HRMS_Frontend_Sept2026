@@ -201,10 +201,10 @@ const EmployeeProfile = ({ isAttMarkShow }) => {
       {isOpen && (
         <>
           {" "}
-          <ResignationRequest />
+          {/* <ResignationRequest />
           <AppraisalEvaluation />
           <JobRequestion />
-          <CompanyDocument />
+          <CompanyDocument /> */}
         </>
       )}
     </>
