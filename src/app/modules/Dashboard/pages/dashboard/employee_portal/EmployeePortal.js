@@ -27,6 +27,7 @@ import { CompanyDocument } from "../EmpPortalComponent/CompanyDocument";
 import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
 import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { fetchResignationApprovalApplication } from "../../../../ResignationApproval/redux/formAction";
+import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -200,6 +201,7 @@ export const EmployeePortal = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <CompanyDocument />
+              <ProjectManagement />
             </div>
             {/* <div className="flex flex-col md:flex-row gap-4">
               <JobRequestion />
