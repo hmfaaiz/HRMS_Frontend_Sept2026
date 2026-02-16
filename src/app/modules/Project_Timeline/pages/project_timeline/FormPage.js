@@ -5,13 +5,25 @@ import "react-toastify/dist/ReactToastify.css";
 import { ProjectTimelineUIProvider } from "./FormUIContext";
 import { FormCard } from "./form-card/FormCard";
 
-export function FormPage() {
+export function FormPage({ history }) {
+  const projectTimelineUIEvents = {
+    newTicketButtonClick: (query = null) => {
+      const url = `/ticket_setup/read-all-ticket-setup/new${query ? query : ""}`;
+      window.open(url, '_blank');  // Opens in a new tab
+    },
+    // Navigate to ticket activity page 
+    openTicketActivity: (query = null) => {
+      
+        const url =`/ticket_activity/read-ticket-activity${query ? query : ""}`;
+        window.open(url, '_blank');
+      
+    },
+  };
+
   return (
-    <ProjectTimelineUIProvider>
-      {/* Project Timeline List / Card */}
+    <ProjectTimelineUIProvider projectTimelineUIEvents={projectTimelineUIEvents}>
       <FormCard />
 
-      {/* Optional Toast notifications */}
       <ToastContainer
         position="top-right"
         autoClose={5000}

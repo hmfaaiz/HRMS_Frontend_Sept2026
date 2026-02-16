@@ -39,21 +39,65 @@ export function FormEditDialog({ show, Id, onHide, dataForRead }) {
     }
   }, [Id, dispatch, show]);
 
+  // Upload attachments before saving
   const saveForm = async (data) => {
-    if (!Id) {
-      await dispatch(
-        actions.createEmployeeChecklist(data, disableLoading, onHide),
+    try {
+      enableLoading();
+
+      console.log('Data before upload:', data);
+
+      // Upload all file attachments first
+      const updatedList = await Promise.all(
+        (data.list || []).map(async (item) => {
+          let attachmentPath = item.attachmentPath;
+
+          // If there's a new file to upload
+          if (item.attachment && item.attachment instanceof File) {
+            try {
+              console.log(`Uploading file for task: ${item.taskName}`, item.attachment.name);
+              const res = await actions.uploadImage(item.attachment);
+              attachmentPath = res.data.filename;
+              console.log(`Upload successful:`, attachmentPath);
+            } catch (error) {
+              console.error(`Failed to upload file for ${item.taskName}:`, error);
+              // Keep existing attachmentPath if upload fails
+            }
+          }
+
+          // Remove the attachment field and return cleaned object
+          const { attachment, ...rest } = item;
+          return {
+            ...rest,
+            attachmentPath: attachmentPath || null,
+          };
+        })
       );
+
+      const finalData = {
+        ...data,
+        list: updatedList,
+      };
+
+      console.log('Final data being sent:', finalData);
+
+      // Save the data
+      if (!Id) {
+        await dispatch(
+          actions.createEmployeeChecklist(finalData, disableLoading, onHide),
+        );
+      } else {
+        await dispatch(
+          actions.updateEmployeeChecklist(finalData, disableLoading, onHide),
+        );
+      }
+
+      // Refresh the list
       await dispatch(
         actions.fetchEmployeeOnboardingChecklist(formUIProps.queryParams),
       );
-    } else {
-      await dispatch(
-        actions.updateEmployeeChecklist(data, disableLoading, onHide),
-      );
-      await dispatch(
-        actions.fetchEmployeeOnboardingChecklist(formUIProps.queryParams),
-      );
+    } catch (error) {
+      console.error("Save form failed:", error);
+      disableLoading();
     }
   };
 

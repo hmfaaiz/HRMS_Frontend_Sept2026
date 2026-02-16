@@ -58,10 +58,8 @@ function PatternListForm({
     (values.list || []).forEach((_, index) => {
       setFieldValue(`list[${index}].sno`, index + 1);
     });
-
-    
   }, [values.list, setFieldValue]);
-  
+
   return (
     <FieldArray name="list">
       {({ insert, remove, push }) => (
@@ -80,13 +78,13 @@ function PatternListForm({
                   attachment: null,
                   attachmentPath: null,
                   responsibleEmployeeId: "",
-                  taskStatus: "",
+                  taskStatus: "", // NO DEFAULT - EMPTY
                   completionDate: "",
                   remarks: "",
                   sno: "",
                   isEmailSend: false,
                   isFromMasterChecklist: false,
-                  originalTaskStatus: "", // Track original status for new rows
+                  originalTaskStatus: "",
                 })
               }
             >
@@ -102,9 +100,11 @@ function PatternListForm({
                   <tr className="custom-table-header">
                     <th style={{ width: columnWidths.sno }}>S.No.</th>
                     <th style={{ width: columnWidths.department }}>
-                      Department
+                      Department<span style={{ color: "red" }}>*</span>
                     </th>
-                    <th style={{ width: columnWidths.taskName }}>Task Name</th>
+                    <th style={{ width: columnWidths.taskName }}>
+                      Task Name<span style={{ color: "red" }}>*</span>
+                    </th>
                     <th style={{ width: columnWidths.taskDescription }}>
                       Task Description
                     </th>
@@ -112,7 +112,7 @@ function PatternListForm({
                       Attachment
                     </th>
                     <th style={{ width: columnWidths.responsibleEmployee }}>
-                      Assign to Employee
+                      Assign to Employee<span style={{ color: "red" }}>*</span>
                     </th>
                     <th style={{ width: columnWidths.taskStatus }}>
                       Task Status
@@ -140,7 +140,6 @@ function PatternListForm({
                             )
                           : taskStatusOptions;
 
-                          
                       return (
                         <tr key={index}>
                           <td style={{ width: columnWidths.sno }}>
@@ -176,18 +175,36 @@ function PatternListForm({
                               }}
                               placeholder="Select Department"
                             />
+                            {touched?.list?.[index]?.departmentId &&
+                              errors?.list?.[index]?.departmentId && (
+                                <div
+                                  className="text-danger"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  {errors.list[index].departmentId}
+                                </div>
+                              )}
                           </td>
 
                           <td style={{ width: columnWidths.taskName }}>
                             <Field
                               name={`list[${index}].taskName`}
-                              placeholder="Enter Task "
+                              placeholder="Enter Task"
                               value={row.taskName || ""}
                               disabled={
                                 isdataForRead || row.isFromMasterChecklist
                               }
                               className="form-control"
                             />
+                            {touched?.list?.[index]?.taskName &&
+                              errors?.list?.[index]?.taskName && (
+                                <div
+                                  className="text-danger"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  {errors.list[index].taskName}
+                                </div>
+                              )}
                           </td>
 
                           <td style={{ width: columnWidths.taskDescription }}>
@@ -203,12 +220,13 @@ function PatternListForm({
                           </td>
 
                           <td style={{ width: columnWidths.attachment }}>
-                            {/* Show upload button only if no file exists and row is editable */}
                             {!row.attachmentPath &&
                               !row.attachment &&
                               !isdataForRead &&
                               !row.isFromMasterChecklist && (
                                 <FileUpload
+                                  id={`file_input_employee_${index}`} // FIXED: Add unique ID
+                                  name={`list[${index}].attachment`} // FIXED: Add unique name
                                   type="file"
                                   className="form-control"
                                   disabled={
@@ -227,7 +245,6 @@ function PatternListForm({
                                 />
                               )}
 
-                            {/* Display file link if exists */}
                             {(row.attachmentPath || row.attachment) && (
                               <a
                                 href={
@@ -272,6 +289,15 @@ function PatternListForm({
                               }
                               placeholder="Select Employee"
                             />
+                            {touched?.list?.[index]?.responsibleEmployeeId &&
+                              errors?.list?.[index]?.responsibleEmployeeId && (
+                                <div
+                                  className="text-danger"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  {errors.list[index].responsibleEmployeeId}
+                                </div>
+                              )}
                           </td>
 
                           <td style={{ width: columnWidths.taskStatus }}>
@@ -298,6 +324,7 @@ function PatternListForm({
                                   );
                                 }
                               }}
+                              placeholder="Select Status"
                             />
                           </td>
 
@@ -321,6 +348,15 @@ function PatternListForm({
                               }
                               dateFormat="dd-MMM-yyyy"
                             />
+                            {touched?.list?.[index]?.completionDate &&
+                              errors?.list?.[index]?.completionDate && (
+                                <div
+                                  className="text-danger"
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  {errors.list[index].completionDate}
+                                </div>
+                              )}
                           </td>
 
                           <td style={{ width: columnWidths.remarks }}>
@@ -339,12 +375,10 @@ function PatternListForm({
                             />
                           </td>
 
-                          
                           <td
                             style={{ width: columnWidths.action }}
                             className="text-right"
                           >
-                            {/* Only show delete button for rows NOT from master checklist AND not in read mode */}
                             {!isdataForRead && !row.isFromMasterChecklist && (
                               <button
                                 type="button"
