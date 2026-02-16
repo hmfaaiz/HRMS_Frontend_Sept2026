@@ -180,6 +180,7 @@ import {taskAssignmentTimelineSlice} from "../app/modules/Task_Assignment_Timeli
 import {TicketCalendarSlice} from "../app/modules/Ticket_Calendar/_redux/redux-Slice";
 import { projectTimeLogSetupSlice } from "../app/modules/Project_TimeLog/_redux/redux-Slice";
 import { ticketActivitySlice } from "../app/modules/Ticket_Activity/_redux/redux-Slice";
+import { TaskDashboardSlice } from "../app/modules/Task_Dashboard/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -356,6 +357,7 @@ export const rootReducer = combineReducers({
 
   project_timelog : projectTimeLogSetupSlice.reducer,
   ticket_activity : ticketActivitySlice.reducer,
+  task_dashboard : TaskDashboardSlice.reducer,
 });
 
 export function* rootSaga() {

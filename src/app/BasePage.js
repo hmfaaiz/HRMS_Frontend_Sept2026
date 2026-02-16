@@ -446,6 +446,9 @@ const time_logging = lazy(()=>
 const ticket_activity = lazy(()=>
  import("./modules/Ticket_Activity/pages/index"))
 
+const task_dashboard = lazy(()=>
+ import("./modules/Task_Dashboard/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -616,6 +619,7 @@ const ROUTES = {
   ticket_calendar : ticket_calendar,
   time_logging : time_logging,
   ticket_activity : ticket_activity,
+  task_dashboard : task_dashboard,
 };
 
 export default function BasePage() {
