@@ -3,14 +3,12 @@ import BootstrapTable from "react-bootstrap-table-next";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { sizePerPageList } from "../../../pages/project_timeline/FormUIHelpers";
 
 import { useProjectTimelineUIContext } from "../FormUIContext";
 import * as actions from "../../../_redux/redux-Actions";
 import {
   PleaseWaitMessage,
   NoRecordsFoundMessage,
-  getHandlerTableChange,
   sortCaret,
   headerSortingClasses,
 } from "../../../../../../_metronic/_helpers";
@@ -19,6 +17,7 @@ import { TicketType, PriorityType } from "../../../../../utils/common";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import { DatePickerField } from "../../../../../../_metronic/_partials/controls";
 import { fetchAllActiveEmployees } from "../../../../../../_metronic/redux/dashboardActions";
+import { ActionsColumnFormatter } from "./column-formatter/ActionsColumnFormatter";
 
 export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
   const [expandedEpics, setExpandedEpics] = useState({});
@@ -28,12 +27,20 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     () => ({
       queryParams: uiContext.queryParams,
       setQueryParams: uiContext.setQueryParams,
+      newTicketButtonClick: uiContext.newTicketButtonClick,
+      openTicketActivity: uiContext.openTicketActivity,
     }),
     [uiContext],
   );
 
-  const { entities, totalCount, listLoading } = useSelector(
-    (state) => state.project_timeline,
+  const { entities, totalCount, listLoading, userAccess, userAccessForTicketActivity } = useSelector(
+    (state) => ({
+      entities: state.project_timeline.entities,
+      totalCount: state.project_timeline.totalCount,
+      listLoading: state.project_timeline.listLoading,
+      userAccess: state?.auth?.userAccess["ticket_setup"],
+      userAccessForTicketActivity: state?.auth?.userAccess["Task"] || state?.auth?.userAccess["ticket_activity"],
+    }),
     shallowEqual,
   );
 
@@ -65,13 +72,13 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     tickets: Yup.object(),
   });
 
-  // Reset all epics to collapsed whenever entities change ( after filter or cancel)
+  // Reset all epics to collapsed whenever entities change
   useEffect(() => {
     if (entities && entities.length) {
       const newExpanded = {};
       entities.forEach((ticket) => {
         if (ticket.ticketTypeId === 1) {
-          newExpanded[ticket.Id] = false; // collapsed by default
+          newExpanded[ticket.Id] = false;
         }
       });
       setExpandedEpics(newExpanded);
@@ -121,7 +128,7 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
         dueDate: row.dueDate,
       }));
 
-    dispatch(actions.updateTicketStatuses(updatedEntities));
+    dispatch(actions.updateTicketStatuses(updatedEntities, uiProps.queryParams));
   };
 
   const toggleEpic = (epicId) => {
@@ -132,9 +139,9 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
   };
 
   const getIndentation = (row) => {
-    if (row.ticketTypeId === 1) return 0; // EPIC
-    if (row.ticketTypeId === 5) return 2; // SUB-TASK
-    if ([2, 3, 4].includes(row.ticketTypeId)) return 1; // TASK/USER STORY/BUG
+    if (row.ticketTypeId === 1) return 0;
+    if (row.ticketTypeId === 5) return 2;
+    if ([2, 3, 4].includes(row.ticketTypeId)) return 1;
     return 0;
   };
 
@@ -145,7 +152,6 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     const taskMap = {};
     const subTaskMap = {};
 
-    // Categorize tickets
     tickets.forEach((t) => {
       if (t.ticketTypeId === 1) {
         epicMap[t.Id] = { ...t, children: [] };
@@ -156,28 +162,24 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
       }
     });
 
-    // Link tasks to epics
     Object.values(taskMap).forEach((task) => {
       if (task.parentEpicId && epicMap[task.parentEpicId]) {
         epicMap[task.parentEpicId].children.push(task);
       }
     });
 
-    // Sort children of each epic
     Object.values(epicMap).forEach((epic) => {
       epic.children.sort(
         (a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0),
       );
     });
 
-    // Link subtasks to tasks
     Object.values(subTaskMap).forEach((sub) => {
       if (sub.parentTaskId && taskMap[sub.parentTaskId]) {
         taskMap[sub.parentTaskId].children.push(sub);
       }
     });
 
-    // Sort children of each task
     Object.values(taskMap).forEach((task) => {
       if (task.children && task.children.length) {
         task.children.sort(
@@ -189,30 +191,126 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     return { epicMap, taskMap };
   };
 
-  const getFlattenedData = (tickets) => {
-    const { epicMap } = buildHierarchicalData(tickets);
-    const flattened = [];
+  // const getFlattenedData = (tickets) => {
+  //   const { epicMap } = buildHierarchicalData(tickets);
+  //   const flattened = [];
 
-    Object.values(epicMap)
-      .sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0))
-      .forEach((epic) => {
-        flattened.push(epic);
+  //   Object.values(epicMap)
+  //     .sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0))
+  //     .forEach((epic) => {
+  //       flattened.push(epic);
 
-        if (expandedEpics[epic.Id]) {
+  //       if (expandedEpics[epic.Id]) {
+  //         epic.children.forEach((child) => {
+  //           flattened.push(child);
+
+  //           if (child.children && child.children.length) {
+  //             child.children.forEach((subTask) => {
+  //               flattened.push(subTask);
+  //             });
+  //           }
+  //         });
+  //       }
+  //     });
+
+  //   return flattened;
+  // };
+
+  // const getFlattenedData = (tickets) => {
+  //   if (!tickets || !tickets.length) return [];
+
+  //   // Get the applied ticket type filter from query params
+  //   const appliedTicketTypeIds = uiProps.queryParams?.filter?.ticketTypeIds || [];
+  //   const hasTicketTypeFilter = appliedTicketTypeIds.length > 0;
+  //   const includesEpic = appliedTicketTypeIds.includes(1); // Assuming 1 is "Epic"
+
+  //   if (hasTicketTypeFilter && !includesEpic) {
+  //     // Filter: Exclude epics and only show matching child types (flattened, no hierarchy)
+  //     return tickets.filter((ticket) => appliedTicketTypeIds.includes(ticket.ticketTypeId));
+  //   } else {
+  //     // No filter or includes epic: Show full hierarchy as before
+  //     const { epicMap } = buildHierarchicalData(tickets);
+  //     const flattened = [];
+
+  //     Object.values(epicMap)
+  //       .sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0))
+  //       .forEach((epic) => {
+  //         flattened.push(epic);
+
+  //         if (expandedEpics[epic.Id]) {
+  //           epic.children.forEach((child) => {
+  //             flattened.push(child);
+
+  //             if (child.children && child.children.length) {
+  //               child.children.forEach((subTask) => {
+  //                 flattened.push(subTask);
+  //               });
+  //             }
+  //           });
+  //         }
+  //       });
+
+  //     return flattened;
+  //   }
+  // };
+
+
+   const getFlattenedData = (tickets) => {
+    if (!tickets || !tickets.length) return [];
+
+    // Get the applied ticket type filter from query params
+    const appliedTicketTypeIds = uiProps.queryParams?.filter?.ticketTypeIds || [];
+    const hasTicketTypeFilter = appliedTicketTypeIds.length > 0;
+    const includesEpic = appliedTicketTypeIds.includes(1); // Assuming 1 is "Epic"
+
+    if (hasTicketTypeFilter && includesEpic) {
+      // Filter includes Epic: Flatten all data (epics and children) without hierarchy
+      const { epicMap, taskMap } = buildHierarchicalData(tickets);
+      const flattened = [];
+
+      Object.values(epicMap)
+        .sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0))
+        .forEach((epic) => {
+          flattened.push(epic); // Add epic as a flat row
           epic.children.forEach((child) => {
-            flattened.push(child);
-
-            // Always show all subtasks when parent task is visible
+            flattened.push(child); // Add children as flat rows
             if (child.children && child.children.length) {
               child.children.forEach((subTask) => {
-                flattened.push(subTask);
+                flattened.push(subTask); // Add subtasks as flat rows
               });
             }
           });
-        }
-      });
+        });
 
-    return flattened;
+      return flattened;
+    } else if (hasTicketTypeFilter && !includesEpic) {
+      // Filter excludes Epic: Only show matching child types (flattened, no hierarchy)
+      return tickets.filter((ticket) => appliedTicketTypeIds.includes(ticket.ticketTypeId));
+    } else {
+      // No filter or "All": Show full hierarchy as before
+      const { epicMap } = buildHierarchicalData(tickets);
+      const flattened = [];
+
+      Object.values(epicMap)
+        .sort((a, b) => new Date(a.startDate || 0) - new Date(b.startDate || 0))
+        .forEach((epic) => {
+          flattened.push(epic);
+
+          if (expandedEpics[epic.Id]) {
+            epic.children.forEach((child) => {
+              flattened.push(child);
+
+              if (child.children && child.children.length) {
+                child.children.forEach((subTask) => {
+                  flattened.push(subTask);
+                });
+              }
+            });
+          }
+        });
+
+      return flattened;
+    }
   };
 
   const getTicketTypeLabel = (ticketTypeId) => {
@@ -251,6 +349,15 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     return { tickets: ticketsObj };
   }, [entities]);
 
+  // Check user access
+  const isAccessForAdd = userAccess?.find(
+    (item) => item.componentName === "CreateTicketSetup",
+  );
+
+  const isAccessForTicketActivity = userAccessForTicketActivity?.find(
+    (item) => item.componentName === "ReadTicketActivity",
+  );
+
   const headerStyle = {
     height: "30px",
     textAlign: "left",
@@ -259,6 +366,72 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     textOverflow: "ellipsis",
   };
 
+  // const columns = [
+  //   {
+  //     dataField: "ticketTypeId",
+  //     text: "Ticket Type",
+  //     sort: false,
+  //     headerSortingClasses,
+  //     headerStyle,
+  //     style: { minWidth: "110px" },
+  //     formatter: (cell, row) => {
+  //       const indent = getIndentation(row);
+  //       const typeLabel = getTicketTypeLabel(cell);
+  //       const isEpic = row.ticketTypeId === 1;
+
+  //       return (
+  //         <div
+  //           style={{
+  //             paddingLeft: `${indent * 20}px`,
+  //             display: "flex",
+  //             alignItems: "center",
+  //           }}
+  //         >
+  //           {isEpic && (
+  //             <button
+  //               type="button"
+  //               onClick={() => toggleEpic(row.Id)}
+  //               style={{
+  //                 border: "none",
+  //                 background: "none",
+  //                 cursor: "pointer",
+  //                 marginRight: "8px",
+  //                 fontSize: "16px",
+  //                 flexShrink: 0,
+  //               }}
+  //             >
+  //               {expandedEpics[row.Id] ? "▼" : "▶"}
+  //             </button>
+  //           )}
+  //           {isEditableType(row) ? (
+  //             <div style={{ minWidth: "50px", flex: 1 }}>
+  //               <Field
+  //                 name={`tickets.${row.Id}.ticketTypeId`}
+  //                 render={({ field, form }) => {
+  //                   const selectedOption = editableOptions.find(
+  //                     (t) => t.value === field.value,
+  //                   );
+  //                   return (
+  //                     <SearchSelect
+  //                       value={selectedOption || null}
+  //                       options={editableOptions}
+  //                       onChange={(selected) =>
+  //                         selected &&
+  //                         form.setFieldValue(field.name, selected.value)
+  //                       }
+  //                       placeholder="Select Type"
+  //                     />
+  //                   );
+  //                 }}
+  //               />
+  //             </div>
+  //           ) : (
+  //             <span className="font-weight-bold text-dark">{typeLabel}</span>
+  //           )}
+  //         </div>
+  //       );
+  //     },
+  //   },
   const columns = [
     {
       dataField: "ticketTypeId",
@@ -272,6 +445,12 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
         const typeLabel = getTicketTypeLabel(cell);
         const isEpic = row.ticketTypeId === 1;
 
+        // Check if hierarchy is active (no filter or "All" selected)
+        const appliedTicketTypeIds = uiProps.queryParams?.filter?.ticketTypeIds || [];
+        const hasTicketTypeFilter = appliedTicketTypeIds.length > 0;
+        const includesEpic = appliedTicketTypeIds.includes(1);
+        const isHierarchyActive = !hasTicketTypeFilter || !includesEpic; // Hierarchy active when no filter or epic not in filter
+
         return (
           <div
             style={{
@@ -280,7 +459,7 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
               alignItems: "center",
             }}
           >
-            {isEpic && (
+            {isEpic && isHierarchyActive && ( // Only show expand button when hierarchy is active
               <button
                 type="button"
                 onClick={() => toggleEpic(row.Id)}
@@ -345,20 +524,25 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     {
       dataField: "ticketSummary",
       text: "Task Summary",
+      style: { minWidth: "100px" },
       sort: false,
       sortCaret,
       headerSortingClasses,
       headerStyle,
     },
-    {
-      dataField: "parentTaskId",
-      text: "Linked Task",
-      sort: false,
-      headerSortingClasses,
-      headerStyle,
-      style: { minWidth: "100px" },
-      formatter: (cell, row) => {
-        if (row.ticketTypeId !== 4) return "";
+     {
+    dataField: "parentTaskId",
+    text: "Linked Task",  
+    sort: false,
+    headerSortingClasses,
+    headerStyle,
+    style: { minWidth: "100px" },
+    formatter: (cell, row) => {
+      if (row.ticketTypeId === 1) {
+        // For epics, show project name
+        return row.Project?.projectName || "";
+      } else if (row.ticketTypeId === 4) {
+        // For linked tasks, show the existing logic
         const linkedTask = entities.find(
           (t) =>
             t.ticketTypeId === 3 &&
@@ -368,8 +552,12 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
         return linkedTask
           ? `${linkedTask.ticketCode} ${linkedTask.ticketDescription}`
           : "";
-      },
+      } else {
+        return "";
+      }
     },
+  },
+
     {
       dataField: "priority",
       text: "Priority",
@@ -536,6 +724,23 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
         />
       ),
     },
+    {
+      dataField: "action",
+      text: "Actions",
+      isDummyField: true,
+      formatter: ActionsColumnFormatter,
+      formatExtraData: {
+        newTicketButtonClick: uiProps.newTicketButtonClick,
+        openTicketActivity: uiProps.openTicketActivity,
+        isAccessForAdd: isAccessForAdd ? isAccessForAdd.isAccess : false,
+        isAccessForTicketActivity: isAccessForTicketActivity
+          ? isAccessForTicketActivity.isAccess
+          : false,
+      },
+      classes: "text-right pr-0",
+      headerClasses: "text-right pr-3",
+      style: { minWidth: "50px" },
+    },
   ];
 
   return (
@@ -585,3 +790,4 @@ export function FormTable({ ticketStatuses = [], ticketTypes = TicketType }) {
     </Formik>
   );
 }
+
