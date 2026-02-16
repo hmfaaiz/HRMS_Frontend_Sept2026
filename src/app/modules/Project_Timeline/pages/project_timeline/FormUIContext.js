@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { isEqual, isFunction } from "lodash";
 import { initialFilter } from "./FormUIHelpers";
@@ -8,9 +9,8 @@ export function useProjectTimelineUIContext() {
   return useContext(ProjectTimelineUIContext);
 }
 
-export function ProjectTimelineUIProvider({ children }) {
+export function ProjectTimelineUIProvider({ projectTimelineUIEvents, children }) {
   const [queryParams, setQueryParamsBase] = useState(initialFilter);
-
   const [ids, setIds] = useState([]);
   const [hasRecords, setHasRecords] = useState(false);
   
@@ -30,7 +30,10 @@ export function ProjectTimelineUIProvider({ children }) {
     ids,
     setIds,
     hasRecords,
-    setHasRecords
+    setHasRecords,
+    // Navigation events
+    newTicketButtonClick: projectTimelineUIEvents?.newTicketButtonClick,
+    openTicketActivity: projectTimelineUIEvents?.openTicketActivity,
   };
 
   return (

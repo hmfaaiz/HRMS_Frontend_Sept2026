@@ -14,33 +14,32 @@ import {
 import EmployeeProfile from "../../../../../utils/common-modules/EmployeeProfile";
 import { Eye, XCircle } from "lucide-react";
 
+// VALIDATION SCHEMA - Only mandatory: Department, Task Name, Responsible Employee
 const employeeChecklistSchema = Yup.object().shape({
   employeeId: Yup.number().required(VALIDATION_MESSAGES.required),
-  isApproved: Yup.number().nullable(), // Added for approval status
+  isApproved: Yup.number().nullable(),
+
   list: Yup.array().of(
     Yup.object().shape({
-      departmentId: Yup.mixed().when("isNew", {
-        is: true,
-        then: Yup.mixed(),
-        otherwise: Yup.number().required(VALIDATION_MESSAGES.required),
-      }),
-      taskName: Yup.string().when("isNew", {
-        is: true,
-        then: Yup.string(),
-        otherwise: Yup.string().required(VALIDATION_MESSAGES.required),
-      }),
-      taskStatus: Yup.string().when("isNew", {
-        is: true,
-        then: Yup.string(),
-        otherwise: Yup.string().required(VALIDATION_MESSAGES.required),
-      }),
-      completionDate: Yup.string().when("taskStatus", {
-        is: "Completed",
-        then: Yup.string().required(
-          "Completion date is required when task status is Completed",
-        ),
+      departmentId: Yup.number().required(VALIDATION_MESSAGES.required),
+      taskName: Yup.string().required(VALIDATION_MESSAGES.required),
+      responsibleEmployeeId: Yup.mixed().required(
+        "Responsible employee is required",
+      ),
+
+      // Task status is NOT required
+      taskStatus: Yup.string().nullable(),
+
+      // Completion date only required when status is "Completed"
+      completionDate: Yup.string().when(["taskStatus", "$isApproved"], {
+        is: (taskStatus, isApproved) => {
+          // Required if task status is "Completed" OR if finalizing (isApproved = 1)
+          return taskStatus === "Completed" || isApproved === 1;
+        },
+        then: Yup.string().required(VALIDATION_MESSAGES.required),
         otherwise: Yup.string().nullable(),
       }),
+
       remarks: Yup.string().nullable(),
     }),
   ),
@@ -86,19 +85,27 @@ export function FormEditForm({
         ...data,
         list: (data?.list || []).map((item) => ({
           ...item,
-          isFromMasterChecklist: !!item.masterChecklistId, // Dynamically set based on masterChecklistId
-          originalTaskStatus: item.taskStatus || "", // Track original status
+          isFromMasterChecklist: !!item.masterChecklistId,
+          originalTaskStatus: item.taskStatus || "",
         })),
         isApproved: data?.isApproved || 0,
-        actionType: "SAVE", 
+        actionType: "SAVE",
       }}
       validationSchema={employeeChecklistSchema}
+      // FIXED: Pass validation context
+      context={{ isApproved: 0 }}
       onSubmit={(values) => {
-        enableLoading();
         saveForm(values);
       }}
     >
-      {({ handleSubmit, errors, touched, values, setFieldValue }) => (
+      {({
+        handleSubmit,
+        errors,
+        touched,
+        values,
+        setFieldValue,
+        validateForm,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -167,12 +174,12 @@ export function FormEditForm({
                             attachment: null,
                             responsibleEmployeeId:
                               empTask?.responsibleEmployeeId || "",
-                            taskStatus: empTask?.taskStatus || "",
+                            taskStatus: empTask?.taskStatus || "", // NO DEFAULT
                             completionDate: empTask?.completionDate || "",
                             remarks: empTask?.remarks || "",
                             sno: idx + 1,
                             isFromMasterChecklist: true,
-                            originalTaskStatus: empTask?.taskStatus || "", // Track original status
+                            originalTaskStatus: empTask?.taskStatus || "",
                           };
                         });
 
@@ -185,9 +192,10 @@ export function FormEditForm({
                           if (!exists) {
                             mergedList.push({
                               ...task,
+                              taskStatus: task.taskStatus || "", // NO DEFAULT
                               isFromMasterChecklist: false,
                               sno: mergedList.length + 1,
-                              originalTaskStatus: task.taskStatus || "", // Track original status
+                              originalTaskStatus: task.taskStatus || "",
                             });
                           }
                         });
@@ -237,7 +245,7 @@ export function FormEditForm({
                   errors={errors}
                   touched={touched}
                   isdataForRead={isdataForRead}
-                  isApproved={values.isApproved} // Pass approval status
+                  isApproved={values.isApproved}
                 />
               </fieldset>
             </Form>
@@ -254,12 +262,14 @@ export function FormEditForm({
                 onClick={handleSubmit}
                 className="btn btn-primary btn-elevate"
                 disabled={
+                  !values.employeeId ||
                   !values.list?.length ||
                   values.list.some(
                     (row) =>
                       !row.departmentId ||
                       !row.taskName ||
-                      !row.taskStatus ||
+                      !row.responsibleEmployeeId ||
+                      // Only require completionDate if status is "Completed"
                       (row.taskStatus === "Completed" && !row.completionDate),
                   )
                 }
@@ -277,13 +287,38 @@ export function FormEditForm({
                 className="btn btn-primary btn-elevate"
                 disabled={
                   isdataForRead ||
-                  values.list?.some(
-                    (item) => item?.taskStatus === "Not Completed",
-                  ) // Disable if any task is not completed
+                  loading ||
+                  !values.list?.length ||
+                  values.list?.some((item) => item?.taskStatus !== "Completed")
                 }
-                onClick={() => {
-                  setFieldValue("isApproved", 1); // Set approval
-                  handleSubmit(); // Submit form
+                onClick={async (e) => {
+                  e.preventDefault();
+
+                  // Set isApproved to 1 for validation context
+                  setFieldValue("isApproved", 1);
+
+                  // Trigger validation with updated context
+                  const errors = await validateForm({
+                    ...values,
+                    isApproved: 1,
+                  });
+
+                  // Mark all completion date fields as touched
+                  values.list.forEach((item, index) => {
+                    if (
+                      item.taskStatus === "Completed" &&
+                      !item.completionDate
+                    ) {
+                      setFieldValue(
+                        `list[${index}].completionDate`,
+                        item.completionDate || "",
+                        true,
+                      );
+                    }
+                  });
+
+                  // All validation passed, proceed with finalization
+                  handleSubmit();
                 }}
               >
                 Finalize

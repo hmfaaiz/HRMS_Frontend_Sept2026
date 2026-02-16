@@ -47,3 +47,8 @@ export function deleteEmployeeOnboardingChecklist(employeeId) {
     `${USERS_URL}/employee_onboarding_checklist/delete-employee-onboarding-checklist/${employeeId}`
   );
 }
+
+
+export function uploadImage(body) {
+  return axios.post(`${USERS_URL}/file-upload`, body);
+}

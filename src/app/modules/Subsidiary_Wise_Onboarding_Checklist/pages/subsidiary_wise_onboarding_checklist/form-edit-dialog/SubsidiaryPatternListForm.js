@@ -31,8 +31,12 @@ function SubsidiaryPatternListForm({
 
   // Handle file selection (single or multiple files)
   const handleFileChange = (e, index) => {
-    const files = Array.from(e.currentTarget.files); // Convert FileList to array
-    setFieldValue(`list.${index}.attachment`, files[0]);
+    const file = e.currentTarget.files?.[0];
+    if (!file) return;
+
+    // Set both fields using bracket notation
+    setFieldValue(`list[${index}].attachment`, file);
+    setFieldValue(`list[${index}].attachmentPath`, [file]);
   };
 
   const fileRefs = useRef({});
@@ -52,7 +56,8 @@ function SubsidiaryPatternListForm({
                   departmentId: "",
                   taskName: "",
                   taskDescription: "",
-                  attachmentPath: "",
+                  attachmentPath: [],
+                  attachment: null,
                 })
               }
             >
@@ -166,15 +171,16 @@ function SubsidiaryPatternListForm({
                       <td>
                         <div style={{ width: "100px" }}>
                           <FileUpload
+                            id={`file_input_${index}`} 
+                            name={`list[${index}].attachment`}  
                             label="Upload"
                             type="file"
-                            multiple
                             disabled={isDataForRead}
                             onChange={(e) => handleFileChange(e, index)}
                           />
                         </div>
                         {/* Display uploaded files */}
-                        {row.attachmentPath?.length > 0 && (
+                        {row.attachmentPath && row.attachmentPath.length > 0 && (
                           <ul className="list-none">
                             {row.attachmentPath.map((file, fIndex) => {
                               const name =
