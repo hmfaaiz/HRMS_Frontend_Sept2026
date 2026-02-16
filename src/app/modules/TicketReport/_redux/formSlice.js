@@ -7,7 +7,7 @@ const initialState = {
     lastError: null,
     pdfLoading: false,
     pdf: false,
-    monththPdf: false
+ 
 
 };
 
@@ -16,7 +16,7 @@ export const callTypes = {
     action: "action",
     pdf: "pdf",
     pdfLoading: "pdfLoading",
-    monththPdf: "monththPdf"
+
 };
 
 export const TicketTimeReportSlice = createSlice({
@@ -25,7 +25,7 @@ export const TicketTimeReportSlice = createSlice({
     reducers: {
         catchError: (state, action) => {
             state.error = `${action.type}: ${action.payload.error}`;
-            state.monththPdf = false;
+           
             state.pdf = false;
             state.pdfLoading = false;
       
@@ -37,28 +37,31 @@ export const TicketTimeReportSlice = createSlice({
             if (action.payload.callType === callTypes.pdf) {
                 state.pdfLoading = true;
                 state.pdf = true;
-                state.monththPdf = false;
+          
             }
 
-            else if (action.payload.callType === callTypes.monththPdf) {
+            else if (action.payload.callType === callTypes.pdfLoading) {
                 state.pdfLoading = true;
                 state.pdf = false;
-                state.monththPdf = true;
+            
             }
        
         },
-        pdfFetched: (state, action) => {
-            state.pdf = false;
-        },
 
-        monththPdfFetched: (state, action) => {
-            state.monththPdf = false;
-        },
+   
 
         pdfLoadingFetched: (state, action) => {
             state.pdfLoading = false;
         },
+        previewDataFetched: (state, action) => {
+            console.log("aaasassws1111",action.payload?.data?.data)
+            state.listLoading = false;
+            state.error = null;
+            state.previewData =  action.payload?.data?.data;
+            // state.dateRange=action.payload.data?.data?.dateRange;
+            // state.totalCount = action.payload.data?.data?.count;
 
+        },
 
     },
 });
