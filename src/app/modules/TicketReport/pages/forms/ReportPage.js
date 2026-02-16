@@ -19,11 +19,11 @@ import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from ".
 export function ReportPage() {
   const dispatch = useDispatch();
   const [activeKey, setActiveKey] = useState("0");
-  const { dashboard, listLoading, pdfLoading, pdf,previewData } = useSelector((state) => ({
+  const { dashboard, listLoading, pdfLoading, pdf, previewData } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.ticket_time_report.listLoading,
     pdfLoading: state.ticket_time_report.pdfLoading,
-   
+
 
   }));
 
@@ -41,7 +41,14 @@ export function ReportPage() {
     <FormUIProvider FormUIEvents={{}}>
 
       <TCard name={CurrentModuleName()}>
-        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+        <>
+          <FormFilter
+            loading={listLoading}
+            pdfLoading={pdfLoading}
+            dispatch={dispatch}
+          />
+        </>
+        {/* <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
           <Card>
             <Card.Header className="d-flex justify-content-center">
               <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
@@ -69,7 +76,7 @@ export function ReportPage() {
               </>
             </Accordion.Collapse>
           </Card>
-        </Accordion>
+        </Accordion> */}
 
       </TCard>
       <ToastContainer
