@@ -463,6 +463,9 @@ const portal_ticket_time_report = lazy(()=>
 const portal_ticket_calendar = lazy(()=>
  import("./modules/PortalTicket_Calendar/pages/index"))
 
+const portal_task_assignment_timeline = lazy(()=>
+ import("./modules/PortalTaskAssignmentTimeline/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -639,6 +642,7 @@ const ROUTES = {
   portal_ticket_creation : PortalTicketCreation,
   portal_ticket_time_report : portal_ticket_time_report,
   portal_ticket_calendar : portal_ticket_calendar,
+  portal_task_assignment_timeline : portal_task_assignment_timeline,
 };
 
 export default function BasePage() {

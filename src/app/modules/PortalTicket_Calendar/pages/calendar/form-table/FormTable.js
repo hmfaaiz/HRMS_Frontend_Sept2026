@@ -60,16 +60,18 @@ export function FormTable() {
     const calendarEvents = [];
 
     (ticketCalendar || []).forEach((data) => {
-   
+
       calendarEvents.push({
         title: data.sourceType === "FACILITATOR"
-           ? `${data?.EmployeeProfileReceive?.employeeCode || data?.EmployeeProfile?.employeeCode || ""} - ${data?.EmployeeProfileReceive?.fullNameReceive || data?.EmployeeProfile?.fullName || ""}`
+          ? `${data?.EmployeeProfileReceive?.employeeCode || data?.EmployeeProfile?.employeeCode || ""} - ${data?.EmployeeProfileReceive?.fullNameReceive || data?.EmployeeProfile?.fullName || ""}`
 
           : data.sourceType === "TICKET"
             ? `${data?.AssignToEmp?.employeeCode} - ${data?.AssignToEmp?.fullName}`
             : data.sourceType === "TIMELOG"
-              ? `${data?.Employee?.employeeCode} - ${data?.Employee?.fullName}`
+           
+              ? `${data.isFromTimeLogging ? data?.Employee?.employeeCode : data?.LoggedByProfile?.employeeCode} - ${data.isFromTimeLogging ? data?.Employee?.fullName : data?.LoggedByProfile?.fullName}`
               : "Unknown", // fallback if sourceType doesn't match
+
 
         start: moment(data.from, "DD-MMM-YYYY").toDate(),
         end: moment(data.to, "DD-MMM-YYYY").endOf("day").toDate(),
@@ -84,23 +86,23 @@ export function FormTable() {
         timeRange: `${data?.timeRangeFrom} - ${data?.timeRangeTo}`,
         dateRange: `${data?.from} - ${data?.to}`,
         noOfHours: `${data?.noOfHours}`,
- 
+
         ticket:
           data.sourceType === "TIMELOG"
             ? data?.MasterDetailTimeLog
               ? <>
-            {data.MasterDetailTimeLog.ticketCode} <br />
+                {data.MasterDetailTimeLog.ticketCode} <br />
                 {data.MasterDetailTimeLog.ticketDescription} - {data.noOfHours}
               </>
               :
               data?.Ticket
-              ? <>
-                 {data.Ticket.ticketCode} <br />
-                {data.Ticket.ticketDescription} - {data.noOfHours}
-              </>
-              :
-              
-              "No Ticket Linked"
+                ? <>
+                  {data.Ticket.ticketCode} <br />
+                  {data.Ticket.ticketDescription} - {data.noOfHours}
+                </>
+                :
+
+                "No Ticket Linked"
             : <>
               {data?.ticketCode} <br />
               {data?.ticketDescription}
@@ -117,7 +119,7 @@ export function FormTable() {
 
 
     });
-    
+
 
     setEvents(calendarEvents);
 
