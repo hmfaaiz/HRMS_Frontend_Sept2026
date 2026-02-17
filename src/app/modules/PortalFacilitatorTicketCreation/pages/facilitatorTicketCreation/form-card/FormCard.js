@@ -47,14 +47,15 @@ export function FormCard() {
     (item) => item.componentName === "CreateTicketCreation"
   );
 
-  const { currentState ,report,calendar} = useSelector((state) => {
+  const { currentState ,report,calendar,portal_task_assignment_timeline} = useSelector((state) => {
     return {
       currentState: state.portal_ticket_creation,
-      userAccess: state?.auth?.userAccess["facilitator_ticket_creation"],
+      portal_task_assignment_timeline: state?.auth?.userAccess["portal_task_assignment_timeline"],
       report: state?.auth?.userAccess["portal_ticket_time_report"],
       calendar: state?.auth?.userAccess["portal_ticket_calendar"],
     };
   }, shallowEqual);
+
 
   useEffect(() => {
     if (!dashboard.employee || !dashboard.employee.length)
@@ -88,6 +89,15 @@ export function FormCard() {
             isBackButton={true}
             isDashboardRedirect={true}
               menuOptions={[
+
+                     {
+                name: "Task Assignment Timeline",
+                link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+                isShow: portal_task_assignment_timeline?.find(
+                  (el) =>
+                    el?.componentName === "ReadTaskAssignmentTimeline"
+                ),
+              }, 
               {
                 name: "Report",
                 link: "/portal_ticket_time_report/read-all-project-report",
