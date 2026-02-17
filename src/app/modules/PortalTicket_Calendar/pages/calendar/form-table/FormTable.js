@@ -21,7 +21,7 @@ export function FormTable() {
     (state) => {
 
       return {
-        currentState: state?.ticket_calendar,
+        currentState: state?.portal_ticket_calendar,
       };
     }
   );

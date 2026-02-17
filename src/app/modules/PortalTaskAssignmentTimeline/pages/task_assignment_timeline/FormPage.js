@@ -7,8 +7,16 @@ import { FormCard } from "./form-card/FormCard";
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
-
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 export function FormPage() {
+
+    const { report,calendar} = useSelector((state) => {
+      return {
+  
+        report: state?.auth?.userAccess["portal_ticket_time_report"],
+        calendar: state?.auth?.userAccess["portal_ticket_calendar"],
+      };
+    }, shallowEqual);
   return (
     <TaskAssignmentTimelineUIProvider>
       {/* Task Assignment Timeline List / Card */}
@@ -21,9 +29,10 @@ export function FormPage() {
               name={CurrentModuleName()}
               isBackButton={true}
               isDashboardRedirect={true}
-              menuOptions={[
-
-              ]}
+               menuOptions={[
+       
+       
+            ]}
               isDashboardIcon={true}
             />
           </div>
@@ -35,9 +44,25 @@ export function FormPage() {
               name={CurrentModuleName()}
               isBackButton={true}
               isDashboardRedirect={true}
-              menuOptions={[
-               
-              ]}
+                    menuOptions={[
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAssignmentReport"
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) =>
+                    el?.componentName === "ReadTicketCalendar"
+                ),
+              },
+       
+            ]}
               isDashboardIcon={true}
             />
           </div>
