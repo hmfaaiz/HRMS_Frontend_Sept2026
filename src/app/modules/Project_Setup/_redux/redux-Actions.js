@@ -40,7 +40,7 @@ export const fetchProjects = (queryParams) => async (dispatch) => {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-          }
+          },
         );
       });
   }
@@ -87,7 +87,8 @@ export const fetchProjects = (queryParams) => async (dispatch) => {
       .getAllProjects(queryParams)
       .then((res) => {
         const excelBlob = new Blob([res.data], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
         const excelUrl = URL.createObjectURL(excelBlob);
 
@@ -174,8 +175,7 @@ export const updateProject = (projectData, disableLoading, onHide) => async (
   dispatch(actions.startCall({ callType: callTypes.action }));
   try {
     const res = await requestFromServer.updateProject(projectData);
-    const updatedProject = res.data?.data;
-    dispatch(actions.projectUpdated({ updatedProject }));
+    dispatch(actions.projectUpdated());
     disableLoading();
     onHide();
     toast.success(SERVER_MESSAGES.updatedSuccess);

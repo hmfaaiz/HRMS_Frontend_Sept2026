@@ -189,6 +189,7 @@ import { PortalTicketCalendarSlice } from "../app/modules/PortalTicket_Calendar/
 import { portalTaskAssignmentTimelineSlice } from "../app/modules/PortalTaskAssignmentTimeline/_redux/redux-Slice";
 
 
+import { ticketSetupPortalSlice } from "../app/modules/Ticket_Setup_Portal/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -372,6 +373,7 @@ export const rootReducer = combineReducers({
   portal_ticket_time_report : PortalTicketTimeReportSlice.reducer,
   portal_ticket_calendar : PortalTicketCalendarSlice.reducer,
   portal_task_assignment_timeline : portalTaskAssignmentTimelineSlice.reducer,
+  ticket_setup_portal : ticketSetupPortalSlice.reducer,
 });
 
 export function* rootSaga() {

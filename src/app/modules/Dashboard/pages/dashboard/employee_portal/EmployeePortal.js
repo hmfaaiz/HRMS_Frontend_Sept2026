@@ -28,6 +28,7 @@ import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
 import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { fetchResignationApprovalApplication } from "../../../../ResignationApproval/redux/formAction";
 import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
+import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -202,6 +203,7 @@ export const EmployeePortal = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <CompanyDocument />
                  <HelpDesk />
+              <ProjectManagement />
             </div>
       
 

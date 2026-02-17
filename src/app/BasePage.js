@@ -465,6 +465,8 @@ const portal_ticket_calendar = lazy(()=>
 
 const portal_task_assignment_timeline = lazy(()=>
  import("./modules/PortalTaskAssignmentTimeline/pages/index"))
+const ticket_setup_portal  = lazy(() =>
+import ("./modules/Ticket_Setup_Portal/pages/index"))
 
 const ROUTES = {
   settings: SettingsPage,
@@ -643,6 +645,7 @@ const ROUTES = {
   portal_ticket_time_report : portal_ticket_time_report,
   portal_ticket_calendar : portal_ticket_calendar,
   portal_task_assignment_timeline : portal_task_assignment_timeline,
+  ticket_setup_portal : ticket_setup_portal,
 };
 
 export default function BasePage() {
