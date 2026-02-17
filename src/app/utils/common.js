@@ -259,6 +259,9 @@ export const TicketType = [
   },
 ];
 
+
+
+
 export const PriorityType = [
   {
     label: "Low",
@@ -273,3 +276,16 @@ export const PriorityType = [
     value: 3,
   },
 ];
+
+export const getFirstDayOfCurrentMonth = () => {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth(), 1);
+};
+
+export const getLastDayOfCurrentMonth = () => {
+  const today = new Date();
+
+  return  new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+
+};

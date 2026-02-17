@@ -25,7 +25,7 @@ import {
   fetchAllSubsidiaryData,
 } from "../../../../../../_metronic/redux/dashboardActions";
 import { format } from "date-fns";
-import { formatDates, TicketType } from "../../../../../utils/common";
+import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth, TicketType } from "../../../../../utils/common";
 import DatePicker from "react-datepicker";
 import TCard from "../../../../../utils/common-modules/TCard";
 import { SubsidiarySelect } from "../../../../../../component/SubsidiarySelect";
@@ -128,8 +128,10 @@ export function FormCard() {
           <Formik
             enableReinitialize={true}
             initialValues={{
-              from_date: bodyValues?.from_date || null,
-              to_date: bodyValues?.to_date || null,
+              // from_date: bodyValues?.from_date || null,
+              // to_date: bodyValues?.to_date || null,
+               from_date: getFirstDayOfCurrentMonth(),
+                          to_date: getLastDayOfCurrentMonth(),
               employeeId: "",
 
 

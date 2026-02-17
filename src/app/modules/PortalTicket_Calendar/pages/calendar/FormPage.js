@@ -5,11 +5,22 @@ import { FormCard } from "./form-card/FormCard";
 import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalComponent/EmployeeProfile";
 import EmployeePortalMenu from "../../../../utils/common-modules/EmployeePortalMenu";
 import CurrentModuleName from "../../../../utils/common-modules/ModuleName";
+import { useSelector, useDispatch,shallowEqual  } from "react-redux";
 
 
 
 
 export function FormPage({ }) {
+
+      const { report,calendar,portal_ticket_creation,portal_task_assignment_timeline} = useSelector((state) => {
+      return {
+  
+        report: state?.auth?.userAccess["portal_ticket_time_report"],
+        portal_ticket_creation: state?.auth?.userAccess["portal_ticket_creation"],
+        portal_task_assignment_timeline: state?.auth?.userAccess["portal_task_assignment_timeline"],
+        
+      };
+    }, shallowEqual);
 
   return (
 
@@ -22,7 +33,32 @@ export function FormPage({ }) {
               name={CurrentModuleName()}
               isBackButton={true}
               isDashboardRedirect={true}
-              menuOptions={[
+                    menuOptions={[
+
+                       {
+                  name: "Task Assignment Timeline",
+                  link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+                  isShow: portal_task_assignment_timeline?.find(
+                    (el) =>
+                      el?.componentName === "ReadTaskAssignmentTimeline"
+                  ),
+                },
+                {
+                  name: "Task Assignment",
+                  link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+                  isShow: portal_ticket_creation?.find(
+                    (el) =>
+                      el?.componentName === "ReadFacilitatorTicketCreation"
+                  ),
+                },
+                  {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAssignmentReport"
+                ),
+              },
 
               ]}
               isDashboardIcon={true}
@@ -38,6 +74,31 @@ export function FormPage({ }) {
               isBackButton={true}
               isDashboardRedirect={true}
               menuOptions={[
+
+                       {
+                  name: "Task Assignment Timeline",
+                  link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+                  isShow: portal_task_assignment_timeline?.find(
+                    (el) =>
+                      el?.componentName === "ReadTaskAssignmentTimeline"
+                  ),
+                },
+                {
+                  name: "Task Assignment",
+                  link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+                  isShow: portal_ticket_creation?.find(
+                    (el) =>
+                      el?.componentName === "ReadFacilitatorTicketCreation"
+                  ),
+                },
+                  {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAssignmentReport"
+                ),
+              },
 
               ]}
               isDashboardIcon={true}

@@ -151,10 +151,10 @@ const PivotRow = ({ row, dateColumns, level = 0 }) => {
         }}
       >
         <td style={indent}>{getRowLabel(row)}</td>
-        <td style={{ textAlign: "center" }}>{row.logged || 0}</td>
+        <td style={{ textAlign: "center" }}>{row.logged || ""}</td>
         {dateColumns.map((d) => (
           <td key={d.key} style={{ textAlign: "center" }}>
-            {row.dates?.[d.key] ?? row[d.key] ?? 0}
+            {row.dates?.[d.key] ?? row[d.key] ?? ""}
           </td>
         ))}
       </tr>
