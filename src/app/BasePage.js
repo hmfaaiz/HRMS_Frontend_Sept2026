@@ -453,6 +453,18 @@ const ticket_activity = lazy(()=>
 const task_dashboard = lazy(()=>
  import("./modules/Task_Dashboard/pages/index"))
 
+
+const PortalTicketCreation = lazy(()=>
+import("./modules/PortalFacilitatorTicketCreation/pages/index"))
+
+const portal_ticket_time_report = lazy(()=>
+ import("./modules/PortalTicketReport/pages/index"))
+
+const portal_ticket_calendar = lazy(()=>
+ import("./modules/PortalTicket_Calendar/pages/index"))
+
+const portal_task_assignment_timeline = lazy(()=>
+ import("./modules/PortalTaskAssignmentTimeline/pages/index"))
 const ticket_setup_portal  = lazy(() =>
 import ("./modules/Ticket_Setup_Portal/pages/index"))
 
@@ -629,6 +641,10 @@ const ROUTES = {
   ticket_time_report : ticket_time_report,
   ticket_activity : ticket_activity,
   task_dashboard : task_dashboard,
+  portal_ticket_creation : PortalTicketCreation,
+  portal_ticket_time_report : portal_ticket_time_report,
+  portal_ticket_calendar : portal_ticket_calendar,
+  portal_task_assignment_timeline : portal_task_assignment_timeline,
   ticket_setup_portal : ticket_setup_portal,
 };
 

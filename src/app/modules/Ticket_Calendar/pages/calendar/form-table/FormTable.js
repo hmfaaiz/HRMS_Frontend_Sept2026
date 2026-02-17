@@ -68,7 +68,7 @@ export function FormTable() {
           : data.sourceType === "TICKET"
             ? `${data?.AssignToEmp?.employeeCode} - ${data?.AssignToEmp?.fullName}`
             : data.sourceType === "TIMELOG"
-              ? `${data?.Employee?.employeeCode} - ${data?.Employee?.fullName}`
+              ? `${data.isFromTimeLogging ? data?.Employee?.employeeCode : data?.LoggedByProfile?.employeeCode } - ${data.isFromTimeLogging ? data?.Employee?.fullName : data?.LoggedByProfile?.fullName}`
               : "Unknown", // fallback if sourceType doesn't match
 
         start: moment(data.from, "DD-MMM-YYYY").toDate(),
