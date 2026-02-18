@@ -6,7 +6,7 @@ import { useFormUIContext } from "../FormUIContext";
 import { Form, Modal, } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
-import { formatDates, TicketType } from "../../../../../utils/common";
+import { formatDates, getFirstDayOfCurrentMonth, getLastDayOfCurrentMonth, TicketType } from "../../../../../utils/common";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { CircleMinus, CirclePlus } from "lucide-react";
 import { initialFilter } from "../FormUIHelpers";
@@ -154,10 +154,12 @@ export function FormFilter({ loading, dispatch, pdfLoading, pdf }) {
 
         initialValues={{
           ...initialFilter.filter,
-          subsidiaryId:
-            initialFilter.filter?.subsidiaryId ||
-            allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
-            "",
+          from_date: getFirstDayOfCurrentMonth(),
+          to_date: getLastDayOfCurrentMonth(),
+          // subsidiaryId:
+          //   initialFilter.filter?.subsidiaryId ||
+          //   allSubsidiaryList?.find((el) => el?.isDefault)?.value ||
+          //   "",
 
         }}
         validationSchema={formValidation}
