@@ -10,7 +10,7 @@ export const CompanyDocument = () => {
     }),
     shallowEqual
   );
-console.log("company_doc_portal111",auth)
+
   return (
     <>
       <div className="w-full text-sm px-3 py-2 bg-white rounded-lg">

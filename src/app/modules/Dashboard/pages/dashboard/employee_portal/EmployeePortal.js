@@ -27,6 +27,7 @@ import { CompanyDocument } from "../EmpPortalComponent/CompanyDocument";
 import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
 import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { fetchResignationApprovalApplication } from "../../../../ResignationApproval/redux/formAction";
+import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
 import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
 
 export const EmployeePortal = () => {
@@ -201,19 +202,10 @@ export const EmployeePortal = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <CompanyDocument />
+                 <HelpDesk />
               <ProjectManagement />
             </div>
-            {/* <div className="flex flex-col md:flex-row gap-4">
-              <JobRequestion />
-              <ResignationRequest />
-              <AppraisalEvaluation />
-            </div>
-           
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex flex-col md:flex-row ">
-              <CompanyDocument />
-             </div>          
-            </div> */}
+      
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AttendanceBarChart data={attRecord} />
