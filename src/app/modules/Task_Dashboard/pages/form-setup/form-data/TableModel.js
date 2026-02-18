@@ -24,7 +24,7 @@ const formatCell = (cell, key, sampleValue) => {
   const isNumeric =
     typeof sampleValue === "number" || !isNaN(Number(sampleValue));
   if (isNumeric) {
-    return <div>{cell || "0"}</div>;
+    return <div>{cell || ""}</div>;
   }
 
   // Fallback: plain text
