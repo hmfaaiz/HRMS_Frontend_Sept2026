@@ -27,11 +27,13 @@ import { CompanyDocument } from "../EmpPortalComponent/CompanyDocument";
 import { ResignationRequest } from "../EmpPortalComponent/EmployeeSeparation";
 import { AppraisalEvaluation } from "../EmpPortalComponent/AppraisalEvaluation";
 import { fetchResignationApprovalApplication } from "../../../../ResignationApproval/redux/formAction";
- 
+import { HelpDesk } from "../EmpPortalComponent/HelpDesk";
+import { ProjectManagement } from "../EmpPortalComponent/ProjectManagement";
+
 export const EmployeePortal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
- 
+
   const {
     user,
     leaveBalances,
@@ -66,39 +68,39 @@ export const EmployeePortal = () => {
       attendanceSummary: state?.attendance_request?.attendanceSummary,
       attRecord: state?.attendance_request?.entities,
     }),
-    shallowEqual
+    shallowEqual,
   );
- 
+
   /// fetch pending request info
   useEffect(() => {
     if (user?.employeeIdMapping) {
       dispatch(
         fetchLeaveApprovalApplication(
           leaveApprovalFilter,
-          user?.employeeIdMapping
-        )
+          user?.employeeIdMapping,
+        ),
       );
       dispatch(
         fetchAttendanceApprovalApplication(
           attendanceApprovalFilter,
-          user?.employeeIdMapping
-        )
+          user?.employeeIdMapping,
+        ),
       );
       dispatch(
         fetchLoanApprovalApplication(
           loanApprovalFilter,
-          user?.employeeIdMapping
-        )
+          user?.employeeIdMapping,
+        ),
       );
       dispatch(
         fetchResignationApprovalApplication(
           loanApprovalFilter,
-          user?.employeeIdMapping
-        )
+          user?.employeeIdMapping,
+        ),
       );
     }
   }, [user?.employeeIdMapping]);
- 
+
   // First useEffect: Fetch basic data when selectedEmp changes
   useEffect(() => {
     dispatch(action.fetchLeaveBalances(user?.employeeIdMapping));
@@ -109,7 +111,7 @@ export const EmployeePortal = () => {
     dispatch(action.fetchLoanDetail(user?.employeeIdMapping));
     dispatch(action.fetchHolidayDetail(user?.employeeIdMapping));
   }, [user?.employeeIdMapping]);
- 
+
   // Second useEffect: Fetch leave & attendance when payrollData and selectedEmp are both available
   useEffect(() => {
     if (user?.employeeIdMapping && payrollData) {
@@ -118,7 +120,7 @@ export const EmployeePortal = () => {
           employeeId: user?.employeeIdMapping,
           from: payrollData.startDate,
           to: payrollData.endDate,
-        })
+        }),
       );
       dispatch(
         fetchAttendance({
@@ -130,16 +132,16 @@ export const EmployeePortal = () => {
             from: payrollData.startDate,
             to: payrollData.endDate,
           },
-        })
+        }),
       );
     }
     setIsLoading(false);
   }, [user?.employeeIdMapping, payrollData]);
- 
+
   useEffect(() => {
     dispatch(action.fetchAnnouncementData());
   }, []);
- 
+
   return (
     <>
       {!isLoading && (
@@ -173,7 +175,9 @@ export const EmployeePortal = () => {
                       attendanceApprovalCount?.length || 0
                     }
                     loanApprovalCount={loanApprovalCount?.length || 0}
-                    resignationApprovalCount={resignationApprovalCount?.length || 0}
+                    resignationApprovalCount={
+                      resignationApprovalCount?.length || 0
+                    }
                   />
                   <ReportingEmpTable
                     empAuthorityList={
@@ -191,18 +195,18 @@ export const EmployeePortal = () => {
                 entities={loanList?.length > 0 ? loanList : []}
               />
             </div>
-            {/* <div className="flex flex-col md:flex-row gap-4">
-              <JobRequestion />
+            <div className="flex flex-col md:flex-row gap-4">
               <ResignationRequest />
               <AppraisalEvaluation />
+              <JobRequestion />
             </div>
-           
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex flex-col md:flex-row ">
+            <div className="flex flex-col md:flex-row gap-4">
               <CompanyDocument />
-             </div>          
-            </div> */}
-           
+                 <HelpDesk />
+              <ProjectManagement />
+            </div>
+      
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <AttendanceBarChart data={attRecord} />
               <HolidayTable
@@ -220,5 +224,3 @@ export const EmployeePortal = () => {
     </>
   );
 };
- 
- 

@@ -65,26 +65,14 @@ export const projectSetupSlice = createSlice({
     },
     projectCreated: (state, action) => {
       state.actionsLoading = false;
-      state.entities.unshift(action.payload);
-      state.totalCount += 1;
       state.lastError = null;
     },
     projectUpdated: (state, action) => {
       state.actionsLoading = false;
-      state.entities = state.entities.map((entity) =>
-        entity.Id === action.payload.updatedProject.Id
-          ? action.payload.updatedProject
-          : entity
-      );
-      state.lastError = null;
+      state.dataForEdit = null;
     },
     projectDeleted: (state, action) => {
       state.actionsLoading = false;
-      state.entities = state.entities.filter(
-        (el) => el.Id !== action.payload.Id
-      );
-      state.totalCount -= 1;
-      state.lastError = null;
     },
     pdfFetched: (state, action) => {
       state.pdfLoading = false;

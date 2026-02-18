@@ -456,6 +456,29 @@ const task_dashboard = lazy(()=>
 const subsidiary_wise_payroll_checklist = lazy(() =>
 import("./modules/Subsidiary_Wise_Payroll_Checklist/pages/index"))
 
+const PortalTicketCreation = lazy(()=>
+import("./modules/PortalFacilitatorTicketCreation/pages/index"))
+
+const portal_ticket_time_report = lazy(()=>
+ import("./modules/PortalTicketReport/pages/index"))
+
+const portal_ticket_calendar = lazy(()=>
+ import("./modules/PortalTicket_Calendar/pages/index"))
+
+const portal_task_assignment_timeline = lazy(()=>
+ import("./modules/PortalTaskAssignmentTimeline/pages/index"))
+const ticket_setup_portal  = lazy(() =>
+import ("./modules/Ticket_Setup_Portal/pages/index"))
+
+const time_logging_portal  = lazy(() =>
+import ("./modules/Project_TimeLog_Portal/pages/index"))
+
+const ticket_activity_portal = lazy(()=>
+ import("./modules/Ticket_Activity_Portal/pages/index"))
+
+const project_timeline_portal = lazy(() =>
+import ("./modules/Project_Timeline_Portal/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -630,6 +653,15 @@ const ROUTES = {
   ticket_activity : ticket_activity,
   task_dashboard : task_dashboard,
   subsidiary_wise_payroll_checklist : subsidiary_wise_payroll_checklist,
+  portal_ticket_creation : PortalTicketCreation,
+  portal_ticket_time_report : portal_ticket_time_report,
+  portal_ticket_calendar : portal_ticket_calendar,
+  portal_task_assignment_timeline : portal_task_assignment_timeline,
+  ticket_setup_portal : ticket_setup_portal,
+  time_logging_portal : time_logging_portal,
+  ticket_activity_portal : ticket_activity_portal,
+    project_timeline_portal : project_timeline_portal,
+
 };
 
 export default function BasePage() {

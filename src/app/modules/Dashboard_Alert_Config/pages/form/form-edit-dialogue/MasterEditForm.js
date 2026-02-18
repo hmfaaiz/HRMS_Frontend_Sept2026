@@ -238,7 +238,7 @@ const MasterEditForm = ({ initialValues, loading, dispatch, moduleRights }) => {
                             <td>
                               <Checkbox
                                 isSelected={values[index]?.is_fav} // or === true depending on backend
-                                disabled={row?.tab_key === "appraisal"}
+                                disabled={row?.tab_key == "6"}
                                 onChange={(e) => {
                                   setFieldValue(
                                     `[${index}].is_fav`,

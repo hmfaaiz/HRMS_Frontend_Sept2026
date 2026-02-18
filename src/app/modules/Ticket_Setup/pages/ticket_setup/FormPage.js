@@ -116,8 +116,6 @@
 //   );
 // }
 
-
-
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -149,8 +147,9 @@ export function FormPage({ history }) {
       history.push(`/ticket_setup/read-all-ticket-setup/${id}/time-log`);
     },
     openTicketActivity: (query = null) => {
-      history.push(
+      window.open(
         `/ticket_activity/read-ticket-activity${query ? query : ""}`,
+        "_blank",
       );
     },
   };
@@ -162,7 +161,7 @@ export function FormPage({ history }) {
         <Route exact path="/ticket_setup/read-all-ticket-setup/new">
           {({ history, match, location }) => {
             const queryParams = Object.fromEntries(
-              new URLSearchParams(location.search).entries()
+              new URLSearchParams(location.search).entries(),
             );
             return (
               <>
@@ -170,7 +169,9 @@ export function FormPage({ history }) {
                 <FormEditDialog
                   show={match != null}
                   query={queryParams}
-                  onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
+                  onHide={() =>
+                    history.push("/ticket_setup/read-all-ticket-setup")
+                  }
                 />
               </>
             );
@@ -185,7 +186,9 @@ export function FormPage({ history }) {
               <FormEditDialog
                 show={match != null}
                 id={match && match.params.id}
-                onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
+                onHide={() =>
+                  history.push("/ticket_setup/read-all-ticket-setup")
+                }
               />
             </>
           )}
@@ -200,7 +203,9 @@ export function FormPage({ history }) {
                 show={match != null}
                 id={match && match.params.id}
                 userForRead={true}
-                onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
+                onHide={() =>
+                  history.push("/ticket_setup/read-all-ticket-setup")
+                }
               />
             </>
           )}
@@ -214,7 +219,9 @@ export function FormPage({ history }) {
               <FormDeleteDialog
                 show={match != null}
                 id={match && match.params.id}
-                onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
+                onHide={() =>
+                  history.push("/ticket_setup/read-all-ticket-setup")
+                }
               />
             </>
           )}
@@ -228,7 +235,9 @@ export function FormPage({ history }) {
               <FormTimeLogDialog
                 show={match != null}
                 id={match && match.params.id}
-                onHide={() => history.push("/ticket_setup/read-all-ticket-setup")}
+                onHide={() =>
+                  history.push("/ticket_setup/read-all-ticket-setup")
+                }
               />
             </>
           )}

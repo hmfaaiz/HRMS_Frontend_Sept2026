@@ -265,7 +265,7 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                             ticket_Code: el?.ticketCode,
                             ticket_Description: el?.ticketDescription,
                             Employee: el?.EmployeeProfile?.name,
-                            start_Date: el?.priorityLevel?.formName || "-",
+                            priority: el?.priorityLevel?.formName || "-",
                           })) || [],
                       });
                     }}
@@ -282,7 +282,8 @@ export default FormData = ({ data, isProject, actionsLoading, isTask }) => {
                             ticket_Code: el?.ticketCode,
                             ticket_Description: el?.ticketDescription,
                             Employee: el?.EmployeeProfile?.name,
-                            start_Date: el?.priorityLevel?.formName || "-",
+                            priority: el?.priorityLevel?.formName || "-",
+                            due_Date: el?.dueDate || "-",
                           })) || [],
                       });
                     }}

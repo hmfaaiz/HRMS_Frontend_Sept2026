@@ -10,8 +10,8 @@ export async function getTicketReportByFilters(body) {
 }
 
 
-export async function getAllOvertimeReportByMonthForPdf(body) {
-  return axios.post(`${USERS_URL}/overtime_report/read-all-overtime-report-by-month`, body,{
-    responseType:'arraybuffer'
-  });
+
+export function getAllPreviewData(body) {
+
+  return axios.post(`${USERS_URL}/ticket_time_report/read-all-preview-report`, body);
 }

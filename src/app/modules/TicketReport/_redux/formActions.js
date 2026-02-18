@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import * as requestFromServer from "./formCrud";
 import { TicketTimeReportSlice, callTypes } from "./formSlice"
+import { SERVER_MESSAGES } from "../../../utils/constants";
 const { actions } = TicketTimeReportSlice;
 
 export const fetchAllTicketReportByFiltersForExcel = (filter, document, labels = {}) => async (dispatch) => {
@@ -36,34 +37,26 @@ export const fetchAllTicketReportByFiltersForExcel = (filter, document, labels =
        });
 };
 
-export const fetchAllOvertimeReportByMonthForPdf = (filter, document, labels = {}) => async (dispatch) => {
-  dispatch(actions.startCall({ callType: callTypes.monththPdf }));
-  return requestFromServer.getAllOvertimeReportByMonthForPdf({ ...filter, labels })
-    .then((res) => {
-      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
 
-      // Trigger file download
-      const link = document.createElement('a');
-      link.href = pdfUrl;
-      link.setAttribute('download', 'Overtime_Detail_Report.pdf');
-      document.body.appendChild(link);
-      link.click();
-      dispatch(actions.monththPdfFetched({}));
-      dispatch(actions.pdfLoadingFetched({}));
-      document.body.removeChild(link);
+export const fetchPreviewData = (body) => async (dispatch) => {
+ if (new Date(body?.from_date) > new Date (body?.to_date)) {
+      toast.error(SERVER_MESSAGES.correctDateRange)
+    
+      return;
+    }
+
+  return requestFromServer.getAllPreviewData(body)
+   
+    .then((response) => {
+    
+
+      dispatch(actions.previewDataFetched(response));
+    
     })
     .catch((error) => {
-      error.clientMessage = "No data found to generate PDF";
-      dispatch(actions.catchError({ error, callType: callTypes.monththPdf }));
-      toast.error(error?.response?.status == 400 ? 'Please select filter to generate PDF' : error.clientMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+
+      dispatch(actions.previewDataFetched(undefined));
+      dispatch(actions.catchError({ error, callType: callTypes.list }));
+      toast.error(error.response?.data?.message);
     });
 };

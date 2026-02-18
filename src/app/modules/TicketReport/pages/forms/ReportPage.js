@@ -18,58 +18,65 @@ import { fetchAllProjects, fetchAllTicketStatus, fetchMasterTicketType } from ".
 
 export function ReportPage() {
   const dispatch = useDispatch();
-    const [activeKey, setActiveKey] = useState("0");
-  const { dashboard, listLoading, pdfLoading,monththPdf,pdf } = useSelector((state) => ({
+  const [activeKey, setActiveKey] = useState("0");
+  const { dashboard, listLoading, pdfLoading, pdf, previewData } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.ticket_time_report.listLoading,
     pdfLoading: state.ticket_time_report.pdfLoading,
 
+
   }));
 
   //Get all Dropdown data from server on page load and set it in state
-   useEffect(() => {
-     dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
-     dispatch(fetchAllProjects());
-     dispatch(fetchAllTicketStatus());
-     dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
-     dispatch(fetchMasterTicketType());
-     
-   }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchAllSubsidiaryData("allSubsidiaryList"));
+    dispatch(fetchAllProjects());
+    dispatch(fetchAllTicketStatus());
+    dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+    dispatch(fetchMasterTicketType());
+
+  }, [dispatch]);
 
   return (
     <FormUIProvider FormUIEvents={{}}>
-     
+
       <TCard name={CurrentModuleName()}>
-          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
-                  <Card>
-                    <Card.Header className="d-flex justify-content-center">
-                      <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
-                        <Accordion.Toggle
-                          as={Button}
-                          eventKey="0"
-                          className="flex justify-start text-bold"
-                        >
-                          {activeKey === "0" ? (
-                            <CircleMinus className="h-4 w-4 text-black mr-1" />
-                          ) : (
-                            <CirclePlus className="h-4 w-4 text-black mr-1" />
-                          )}
-                          <span className="text-black">Filters</span>
-                        </Accordion.Toggle>
-                      </div>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey="0">
-                      <>
+        <>
           <FormFilter
             loading={listLoading}
             pdfLoading={pdfLoading}
-      
             dispatch={dispatch}
           />
+        </>
+        {/* <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key)}>
+          <Card>
+            <Card.Header className="d-flex justify-content-center">
+              <div className="accordion-header-btn w-100  d-flex bg-tsecondary">
+                <Accordion.Toggle
+                  as={Button}
+                  eventKey="0"
+                  className="flex justify-start text-bold"
+                >
+                  {activeKey === "0" ? (
+                    <CircleMinus className="h-4 w-4 text-black mr-1" />
+                  ) : (
+                    <CirclePlus className="h-4 w-4 text-black mr-1" />
+                  )}
+                  <span className="text-black">Filters</span>
+                </Accordion.Toggle>
+              </div>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <>
+                <FormFilter
+                  loading={listLoading}
+                  pdfLoading={pdfLoading}
+                  dispatch={dispatch}
+                />
               </>
             </Accordion.Collapse>
           </Card>
-        </Accordion>
+        </Accordion> */}
 
       </TCard>
       <ToastContainer

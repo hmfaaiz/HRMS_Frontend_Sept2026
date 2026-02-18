@@ -26,10 +26,10 @@ export function FormEditDialog({ id, show, onHide, userForRead, query }) {
   }, [id, dispatch]);
 
   // Save customer (create or update)
-  const saveForm = async (payload) => {
+  const saveForm = async (payload, addMore , setValues) => {
     enableLoading();
     if (!id) {
-      await dispatch(actions.createTicket(payload, disableLoading, onHide));
+      await dispatch(actions.createTicket(payload, disableLoading, onHide , addMore , setValues));
       if(queryParams) await dispatch(actions.fetchTickets(queryParams));
     } else {
       await dispatch(actions.updateTicket(payload, disableLoading, onHide));

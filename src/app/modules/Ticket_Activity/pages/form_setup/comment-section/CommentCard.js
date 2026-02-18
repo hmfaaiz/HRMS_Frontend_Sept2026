@@ -13,7 +13,7 @@ export default function CommentCard({
   const employee = data?.Employee;
 
   const employeeName = employee
-    ? `${employee?.title ? employee.title + " " : ""}${employee?.firstName ||
+    ? `${employee?.firstName ||
         ""}${employee?.middleName ? " " + employee.middleName : ""}${
         employee?.lastName ? " " + employee.lastName : ""
       }`.trim()

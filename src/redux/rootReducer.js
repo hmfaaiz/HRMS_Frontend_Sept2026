@@ -184,6 +184,16 @@ import { TicketTimeReportSlice } from "../app/modules/TicketReport/_redux/formSl
 import { ticketActivitySlice } from "../app/modules/Ticket_Activity/_redux/redux-Slice";
 import { TaskDashboardSlice } from "../app/modules/Task_Dashboard/_redux/redux-Slice";
 import { SubsidiaryWisePayrollChecklistSlice } from "../app/modules/Subsidiary_Wise_Payroll_Checklist/_redux/redux-Slice";
+import { PortalFacilitatorTicketCreationSlice } from "../app/modules/PortalFacilitatorTicketCreation/_redux/redux-Slice";
+import { PortalTicketTimeReportSlice } from "../app/modules/PortalTicketReport/_redux/formSlice";
+import { PortalTicketCalendarSlice } from "../app/modules/PortalTicket_Calendar/_redux/redux-Slice";
+import { portalTaskAssignmentTimelineSlice } from "../app/modules/PortalTaskAssignmentTimeline/_redux/redux-Slice";
+
+
+import { ticketSetupPortalSlice } from "../app/modules/Ticket_Setup_Portal/_redux/redux-Slice";
+import { projectTimeLogPortalSlice } from "../app/modules/Project_TimeLog_Portal/_redux/redux-Slice";
+import { ticketActivityPortalSlice } from "../app/modules/Ticket_Activity_Portal/_redux/redux-Slice";
+import { projectTimelinePortalSlice } from "../app/modules/Project_Timeline_Portal/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -365,6 +375,14 @@ export const rootReducer = combineReducers({
   task_dashboard : TaskDashboardSlice.reducer,
 
   subsidiary_wise_payroll_checklist : SubsidiaryWisePayrollChecklistSlice.reducer,
+  portal_ticket_creation : PortalFacilitatorTicketCreationSlice.reducer,
+  portal_ticket_time_report : PortalTicketTimeReportSlice.reducer,
+  portal_ticket_calendar : PortalTicketCalendarSlice.reducer,
+  portal_task_assignment_timeline : portalTaskAssignmentTimelineSlice.reducer,
+  ticket_setup_portal : ticketSetupPortalSlice.reducer,
+  project_timelog_portal : projectTimeLogPortalSlice.reducer,
+  project_timeline_portal : projectTimelinePortalSlice.reducer,
+  ticket_activity_portal : ticketActivityPortalSlice.reducer,
 });
 
 export function* rootSaga() {

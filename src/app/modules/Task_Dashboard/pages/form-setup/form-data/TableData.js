@@ -66,7 +66,7 @@ export function TableData({ data, name, handleClick }) {
           if (isAmount) {
             return (
               <div title={cell}>
-                {cell || "0"}
+                {cell || ""}
                 {/* {Number(cell).toLocaleString("en-US", {
                   minimumFractionDigits: 1,
                   maximumFractionDigits: 1,

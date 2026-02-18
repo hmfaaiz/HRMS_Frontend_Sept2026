@@ -10,6 +10,39 @@ const colorPalette = [
   "#d9534f",
   "#5bc0de",
   "#5cb85c",
+  "#428bca",
+  "#ff7f50",
+  "#9b59b6",
+  "#e67e22",
+  "#1abc9c",
+  "#2ecc71",
+  "#3498db",
+  "#9b59b6",
+  "#34495e",
+  "#16a085",
+  "#27ae60",
+  "#2980b9",
+  "#8e44ad",
+  "#2c3e50",
+  "#f39c12",
+  "#d35400",
+  "#c0392b",
+  "#7f8c8d",
+  "#95a5a6",
+  "#bdc3c7",
+  "#7f8c8d",
+  "#95a5a6",
+  "#bdc3c7",
+  "#1abc9c",
+  "#2ecc71",
+  "#3498db",
+  "#9b59b6",
+  "#34495e",
+  "#16a085",
+  "#27ae60",
+  "#2980b9",
+  "#8e44ad",
+  "#2c3e50",
 ];
 
 const hashToIndex = (str, mod) => {
@@ -39,10 +72,9 @@ const MultiRowProgressChart = ({ data = [], heading = "" }) => {
       const label = String(it?.label ?? "");
       const value = Number(it?.value || 0);
       const percent = total ? (value / total) * 100 : 0;
-      const color = colorPalette[i];
-      //  label
-      //   ? colorPalette[hashToIndex(label, colorPalette.length)]
-      //   : colorPalette[0];
+      const color = label
+        ? colorPalette[hashToIndex(label, colorPalette.length)]
+        : colorPalette[0];
 
       return { ...it, label, value, percent, color };
     });
@@ -82,7 +114,10 @@ const MultiRowProgressChart = ({ data = [], heading = "" }) => {
 
   return (
     // ✅ IMPORTANT: position relative so tooltip stays inside component
-    <div className="bg-white rounded-lg px-3 py-2 relative" ref={wrapRef}>
+    <div
+      className="bg-white rounded-lg px-3 py-2 relative max-h-80 scrollbar-fancy overflow-auto"
+      ref={wrapRef}
+    >
       {heading ? (
         <div className="flex justify-between items-start">
           <h6 className="font-bold mb-0 text-primary">{heading}</h6>
