@@ -60,7 +60,8 @@ export function FormTable() {
   );
 
   const isAccessForTicketActivity = userAccessForTicketActiviy?.find(
-    (item) => item.componentName === "ReadTicketActivity",
+    (item) =>
+      item.componentName === "ReadTicketActivity" && item?.portalType == 2,
   );
 
   const isAccessForDelete = userAccess?.find(

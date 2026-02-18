@@ -82,7 +82,7 @@ const MultiRowProgressChart = ({ data = [], heading = "" }) => {
 
   return (
     // ✅ IMPORTANT: position relative so tooltip stays inside component
-    <div className="bg-white rounded-lg px-3 py-2 relative" ref={wrapRef}>
+    <div className="bg-white rounded-lg px-3 py-2 relative min-h-72 scrollbar-fancy overflow-auto" ref={wrapRef}>
       {heading ? (
         <div className="flex justify-between items-start">
           <h6 className="font-bold mb-0 text-primary">{heading}</h6>

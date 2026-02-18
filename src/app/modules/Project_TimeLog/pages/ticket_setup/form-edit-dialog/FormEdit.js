@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -87,6 +87,12 @@ export function FormEditForm({
 
     return diffMinutes / 60;
   };
+
+  useEffect(() => {
+    if (!dataForEdit?.projectId) return;
+
+    dispatch(fetchAllTicket(null, dataForEdit?.projectId));
+  }, [dataForEdit]);
 
   /* ---------------- FORM ---------------- */
   return (

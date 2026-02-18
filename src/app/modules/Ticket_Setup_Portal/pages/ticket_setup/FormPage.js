@@ -1,5 +1,5 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -29,86 +29,107 @@ export function FormPage({ history }) {
       history.push(`/ticket_setup_portal/read-all-ticket-setup/${id}/time-log`);
     },
     openTicketActivity: (query = null) => {
-      history.push(
-        `/ticket_activity/read-ticket-activity${query ? query : ""}`,
+      window.open(
+        `/ticket_activity_portal/read-ticket-activity${query ? query : ""}`,
+        "_blank",
       );
     },
   };
 
   return (
     <FormUIProvider formUIEvents={formUIEvents}>
-      {/* New Ticket */}
-      <Route exact path="/ticket_setup_portal/read-all-ticket-setup/new">
-        {({ history, match, location }) => {
-          const queryParams = Object?.fromEntries(
-            new URLSearchParams(location?.search)?.entries(),
-          );
-          return (
-            <FormEditDialog
-              show={match != null}
-              query={queryParams}
-              onHide={() =>
-                history.push("/ticket_setup_portal/read-all-ticket-setup")
-              }
-            />
-          );
-        }}
-      </Route>
+      <Switch>
+        {/* New Ticket - MUST BE FIRST */}
+        <Route exact path="/ticket_setup_portal/read-all-ticket-setup/new">
+          {({ history, match, location }) => {
+            const queryParams = Object.fromEntries(
+              new URLSearchParams(location.search).entries(),
+            );
+            return (
+              <>
+                <FormCard />
+                <FormEditDialog
+                  show={match != null}
+                  query={queryParams}
+                  onHide={() =>
+                    history.push("/ticket_setup_portal/read-all-ticket-setup")
+                  }
+                />
+              </>
+            );
+          }}
+        </Route>
 
-      {/* Edit Ticket */}
-      <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/edit">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() =>
-              history.push("/ticket_setup_portal/read-all-ticket-setup")
-            }
-          />
-        )}
-      </Route>
+        {/* Edit Ticket */}
+        <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/edit">
+          {({ history, match }) => (
+            <>
+              <FormCard />
+              <FormEditDialog
+                show={match != null}
+                id={match && match.params.id}
+                onHide={() =>
+                  history.push("/ticket_setup_portal/read-all-ticket-setup")
+                }
+              />
+            </>
+          )}
+        </Route>
 
-      {/* Read/View Ticket */}
-      <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/read">
-        {({ history, match }) => (
-          <FormEditDialog
-            show={match != null}
-            id={match && match.params.id}
-            userForRead={true}
-            onHide={() =>
-              history.push("/ticket_setup_portal/read-all-ticket-setup")
-            }
-          />
-        )}
-      </Route>
+        {/* Read/View Ticket */}
+        <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/read">
+          {({ history, match }) => (
+            <>
+              <FormCard />
+              <FormEditDialog
+                show={match != null}
+                id={match && match.params.id}
+                userForRead={true}
+                onHide={() =>
+                  history.push("/ticket_setup_portal/read-all-ticket-setup")
+                }
+              />
+            </>
+          )}
+        </Route>
 
-      {/* Delete Ticket */}
-      <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/delete">
-        {({ history, match }) => (
-          <FormDeleteDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() =>
-              history.push("/ticket_setup_portal/read-all-ticket-setup")
-            }
-          />
-        )}
-      </Route>
-      {/* Time Log Detail  */}
-      <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/time-log">
-        {({ history, match }) => (
-          <FormTimeLogDialog
-            show={match != null}
-            id={match && match.params.id}
-            onHide={() =>
-              history.push("/ticket_setup_portal/read-all-ticket-setup")
-            }
-          />
-        )}
-      </Route>
+        {/* Delete Ticket */}
+        <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/delete">
+          {({ history, match }) => (
+            <>
+              <FormCard />
+              <FormDeleteDialog
+                show={match != null}
+                id={match && match.params.id}
+                onHide={() =>
+                  history.push("/ticket_setup_portal/read-all-ticket-setup")
+                }
+              />
+            </>
+          )}
+        </Route>
 
-      {/* Ticket List/Card */}
-      <FormCard />
+        {/* Time Log Detail */}
+        <Route path="/ticket_setup_portal/read-all-ticket-setup/:id/time-log">
+          {({ history, match }) => (
+            <>
+              <FormCard />
+              <FormTimeLogDialog
+                show={match != null}
+                id={match && match.params.id}
+                onHide={() =>
+                  history.push("/ticket_setup_portal/read-all-ticket-setup")
+                }
+              />
+            </>
+          )}
+        </Route>
+
+        {/* Default: Ticket List */}
+        <Route path="/ticket_setup_portal/read-all-ticket-setup">
+          <FormCard />
+        </Route>
+      </Switch>
 
       {/* Toast notifications */}
       <ToastContainer

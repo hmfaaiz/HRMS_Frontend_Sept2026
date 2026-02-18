@@ -116,20 +116,28 @@ const TicketDetail = ({ ticketId, panelMode }) => {
                 {data?.TicketStatus?.statusName || "N/A"}
               </div>
 
-              <div className="text-black col-span-1">Parent Epic</div>
-              <div className="font-medium text-black col-span-3">
-                {data?.ParentEpic?.ticketSummary
-                  ? `${data?.ParentEpic?.ticketCode} - ${data?.ParentEpic?.ticketSummary}`
-                  : "N/A"}
-              </div>
+              {data?.ParentEpic?.ticketSummary && (
+                <>
+                  {" "}
+                  <div className="text-black col-span-1">Parent Epic</div>
+                  <div className="font-medium text-black col-span-3">
+                    {data?.ParentEpic?.ticketSummary
+                      ? `${data?.ParentEpic?.ticketCode} - ${data?.ParentEpic?.ticketSummary}`
+                      : "N/A"}
+                  </div>
+                </>
+              )}
 
-              <div className="text-black col-span-1">Parent Task</div>
-              <div className="font-medium text-black col-span-3">
-                {data?.ParentTask?.ticketSummary
-                  ? `${data?.ParentTask?.ticketCode} - ${data?.ParentTask?.ticketSummary}`
-                  : "N/A"}
-              </div>
-
+              {data?.ParentTask?.ticketSummary && (
+                <>
+                  <div className="text-black col-span-1">Parent Task</div>
+                  <div className="font-medium text-black col-span-3">
+                    {data?.ParentTask?.ticketSummary
+                      ? `${data?.ParentTask?.ticketCode} - ${data?.ParentTask?.ticketSummary}`
+                      : "N/A"}
+                  </div>{" "}
+                </>
+              )}
             </div>
           </div>
         </div>

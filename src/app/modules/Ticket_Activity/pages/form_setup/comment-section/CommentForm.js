@@ -77,7 +77,7 @@ export function CommentForm({ onSave }) {
                 autoResize
                 mentionData={(dashboard?.allEmployees || []).map((emp) => ({
                   id: emp?.value,
-                  display: emp?.label,
+                  display: emp?.newLabel,
                 }))}
                 onChangeComplete={(data) => {
                   if (!values?.Id) {
@@ -111,7 +111,7 @@ export function CommentForm({ onSave }) {
                       let mentionsList = dashboard?.allEmployees;
                       let updatedIds = mentionsList
                         ?.map((el) => {
-                          if (data?.plainText?.includes(el?.label)) {
+                          if (data?.plainText?.includes(el?.newLabel)) {
                             return el?.value;
                           }
                         })

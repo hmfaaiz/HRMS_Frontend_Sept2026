@@ -8,113 +8,114 @@ const { actions } = ticketSetupPortalSlice;
 // Fetch all tickets
 export const fetchTickets = (queryParams) => async (dispatch) => {
   // PDF Export
- // PDF Export
-if (queryParams.pdf) {
-  dispatch(actions.startCall({ callType: callTypes.pdf }));
-  return requestFromServer
-    .getAllTickets(queryParams)
-    .then((res) => {
-      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
+  // PDF Export
+  if (queryParams.pdf) {
+    dispatch(actions.startCall({ callType: callTypes.pdf }));
+    return requestFromServer
+      .getAllTickets(queryParams)
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
 
-      // Trigger file download
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.setAttribute("download", "ticket_setup.pdf");  // Updated filename
-      document.body.appendChild(link);
-      link.click();
-      dispatch(actions.pdfFetched({}));
-      document.body.removeChild(link);
-    })
-    .catch((error) => {
-      error.clientMessage = "Can't Generate PDF";
-      dispatch(actions.catchError({ error, callType: callTypes.pdf }));
-      toast.error(
-        error?.response?.status == 400
-          ? "Please select filter to generate PDF"
-          : error.clientMessage,
-        {
+        // Trigger file download
+        const link = document.createElement("a");
+        link.href = pdfUrl;
+        link.setAttribute("download", "ticket_setup.pdf"); // Updated filename
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.pdfFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't Generate PDF";
+        dispatch(actions.catchError({ error, callType: callTypes.pdf }));
+        toast.error(
+          error?.response?.status == 400
+            ? "Please select filter to generate PDF"
+            : error.clientMessage,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined, // Fixed typo
+          },
+        );
+      });
+  }
+
+  // CSV Export
+  else if (queryParams.csv) {
+    dispatch(actions.startCall({ callType: callTypes.csv }));
+    return requestFromServer
+      .getAllTickets(queryParams)
+      .then((res) => {
+        const csvBlob = new Blob([res.data], {
+          type: "text/csv",
+        });
+        const csvUrl = URL.createObjectURL(csvBlob);
+
+        // Trigger file download
+        const link = document.createElement("a");
+        link.href = csvUrl;
+        link.setAttribute("download", "ticket_setup.csv"); // Updated filename
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.csvFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't Generate CSV";
+        dispatch(actions.catchError({ error, callType: callTypes.csv }));
+        toast.error(error?.clientMessage, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,  // Fixed typo
-        }
-      );
-    });
-}
-
-// CSV Export
-else if (queryParams.csv) {
-  dispatch(actions.startCall({ callType: callTypes.csv }));
-  return requestFromServer
-    .getAllTickets(queryParams)
-    .then((res) => {
-      const csvBlob = new Blob([res.data], {
-        type: "text/csv",
+          progress: undefined,
+        });
       });
-      const csvUrl = URL.createObjectURL(csvBlob);
+  }
 
-      // Trigger file download
-      const link = document.createElement("a");
-      link.href = csvUrl;
-      link.setAttribute("download", "ticket_setup.csv");  // Updated filename
-      document.body.appendChild(link);
-      link.click();
-      dispatch(actions.csvFetched({}));
-      document.body.removeChild(link);
-    })
-    .catch((error) => {
-      error.clientMessage = "Can't Generate CSV";
-      dispatch(actions.catchError({ error, callType: callTypes.csv }));
-      toast.error(error?.clientMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
-}
+  // Excel Export
+  else if (queryParams.excel) {
+    dispatch(actions.startCall({ callType: callTypes.xlsx }));
+    return requestFromServer
+      .getAllTickets(queryParams)
+      .then((res) => {
+        const excelBlob = new Blob([res.data], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const excelUrl = URL.createObjectURL(excelBlob);
 
-// Excel Export
-else if (queryParams.excel) {
-  dispatch(actions.startCall({ callType: callTypes.xlsx }));
-  return requestFromServer
-    .getAllTickets(queryParams)
-    .then((res) => {
-      const excelBlob = new Blob([res.data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        // Trigger file download
+        const link = document.createElement("a");
+        link.href = excelUrl;
+        link.setAttribute("download", "ticket_setup.xlsx"); // Updated filename
+        document.body.appendChild(link);
+        link.click();
+        dispatch(actions.excelFetched({}));
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        error.clientMessage = "Can't Generate Excel";
+        dispatch(actions.catchError({ error, callType: callTypes.xlsx }));
+        toast.error(error?.clientMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
-      const excelUrl = URL.createObjectURL(excelBlob);
-
-      // Trigger file download
-      const link = document.createElement("a");
-      link.href = excelUrl;
-      link.setAttribute("download", "ticket_setup.xlsx");  // Updated filename
-      document.body.appendChild(link);
-      link.click();
-      dispatch(actions.excelFetched({}));
-      document.body.removeChild(link);
-    })
-    .catch((error) => {
-      error.clientMessage = "Can't Generate Excel";
-      dispatch(actions.catchError({ error, callType: callTypes.xlsx }));
-      toast.error(error?.clientMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
-}
+  }
   // Normal Fetch
   else {
     dispatch(actions.startCall({ callType: callTypes.list }));
@@ -149,16 +150,32 @@ export const fetchTicket = (id) => async (dispatch) => {
 };
 
 // Create ticket
-export const createTicket = (ticketData, disableLoading, onHide) => async (
-  dispatch,
-) => {
+export const createTicket = (
+  ticketData,
+  disableLoading,
+  onHide,
+  addMore,
+  setValues,
+) => async (dispatch) => {
   dispatch(actions.startCall({ callType: callTypes.action }));
   try {
     const res = await requestFromServer.createTicket(ticketData);
     const ticket = res.data?.data;
     dispatch(actions.ticketCreated(ticket));
     disableLoading();
-    onHide();
+    if (addMore) {
+      setValues({
+        ...ticketData,
+        ticketSummary: "",
+        ticketDescription: "",
+        dueDate: "",
+        noOfHours: "",
+        assignToEmpId: null,
+        ticketStatusId: null,
+      });
+    } else {
+      onHide();
+    }
     toast.success(SERVER_MESSAGES.insertedSuccess);
   } catch (error) {
     dispatch(actions.catchError({ error, callType: callTypes.action }));
