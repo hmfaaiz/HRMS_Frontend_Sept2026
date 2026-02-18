@@ -73,8 +73,33 @@ export function FormCard() {
             name={CurrentModuleName()}
             isBackButton={true}
             isDashboardRedirect={true}
-            menuOptions={[
+                 menuOptions={[
 
+                     {
+                name: "Task Assignment Timeline",
+                link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+                isShow: portal_task_assignment_timeline?.find(
+                  (el) =>
+                    el?.componentName === "ReadTaskAssignmentTimeline"
+                ),
+              }, 
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAssignmentReport"
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) =>
+                    el?.componentName === "ReadTicketCalendar"
+                ),
+              },
+       
             ]}
             isDashboardIcon={true}
           />

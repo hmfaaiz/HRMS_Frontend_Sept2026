@@ -13,7 +13,7 @@ export function FormTable() {
   const [selectedRange, setSelectedRange] = useState();
   const [defaultCalendarDate, setDefaultCalendarDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(null);
-
+  const [currentView, setCurrentView] = useState("month");
 
 
 
@@ -55,6 +55,15 @@ export function FormTable() {
 
 
 
+  const truncate = (text, max = 9) => {
+    if (!text) return "";
+    if (currentView === "month") {
+      return text.length > max ? text.slice(0, max) + ".." : text;
+    }
+    return text; // day/week view me full text
+  };
+
+
 
   useEffect(() => {
     const calendarEvents = [];
@@ -62,50 +71,53 @@ export function FormTable() {
     (ticketCalendar || []).forEach((data) => {
 
       calendarEvents.push({
-        title: data.sourceType === "FACILITATOR"
+        name: data.sourceType === "FACILITATOR"
           ? `${data?.EmployeeProfileReceive?.employeeCode || data?.EmployeeProfile?.employeeCode || ""} - ${data?.EmployeeProfileReceive?.fullNameReceive || data?.EmployeeProfile?.fullName || ""}`
 
           : data.sourceType === "TICKET"
             ? `${data?.AssignToEmp?.employeeCode} - ${data?.AssignToEmp?.fullName}`
             : data.sourceType === "TIMELOG"
-           
               ? `${data.isFromTimeLogging ? data?.Employee?.employeeCode : data?.LoggedByProfile?.employeeCode} - ${data.isFromTimeLogging ? data?.Employee?.fullName : data?.LoggedByProfile?.fullName}`
               : "Unknown", // fallback if sourceType doesn't match
 
-
         start: moment(data.from, "DD-MMM-YYYY").toDate(),
         end: moment(data.to, "DD-MMM-YYYY").endOf("day").toDate(),
-        description: data.sourceType === "FACILITATOR"
-          ? data?.ticketDescription
-          : data.sourceType === "TICKET"
-            ? data?.ticketSummary
-            : data.sourceType === "TIMELOG"
-              ? data?.workDescription
-              : "",
+        // description: data.sourceType === "FACILITATOR"
+        //   ? data?.ticketDescription
+        //   : data.sourceType === "TICKET"
+        //     ? data?.ticketSummary
+        //     : data.sourceType === "TIMELOG"
+        //       ? data?.workDescription
+        //       : "",
         sourceType: data.sourceType,
         timeRange: `${data?.timeRangeFrom} - ${data?.timeRangeTo}`,
         dateRange: `${data?.from} - ${data?.to}`,
         noOfHours: `${data?.noOfHours}`,
+        profileImage: data.sourceType === "FACILITATOR"
+          ? `${data?.EmployeeProfileReceive?.profile_image || data?.EmployeeProfile?.profile_image || ""} `
 
-        ticket:
+          : data.sourceType === "TICKET"
+            ? `${data?.AssignToEmp?.profile_image}`
+            : data.sourceType === "TIMELOG"
+              ? `${data.isFromTimeLogging ? data?.Employee?.profile_image : data?.LoggedByProfile?.profile_image}`
+              : "Unknown", // fallback if sourceType doesn't match
+        title:
           data.sourceType === "TIMELOG"
             ? data?.MasterDetailTimeLog
               ? <>
-                {data.MasterDetailTimeLog.ticketCode} <br />
-                {data.MasterDetailTimeLog.ticketDescription} - {data.noOfHours}
+                {data?.MasterDetailTimeLog?.ticketCode} {data?.MasterDetailTimeLog?.ticketDescription ? "-" : ""} {truncate(data?.MasterDetailTimeLog?.ticketDescription)}
               </>
               :
               data?.Ticket
                 ? <>
-                  {data.Ticket.ticketCode} <br />
-                  {data.Ticket.ticketDescription} - {data.noOfHours}
+                  {data?.Ticket?.ticketCode} {data?.Ticket?.ticketDescription ? "-" : ""} {truncate(data?.Ticket?.ticketDescription)}
+
                 </>
                 :
 
                 "No Ticket Linked"
             : <>
-              {data?.ticketCode} <br />
-              {data?.ticketDescription}
+              {data?.ticketCode} {data?.ticketDescription ? "-" : ""} {truncate(data?.ticketDescription)}
             </>
 
 
@@ -131,27 +143,28 @@ export function FormTable() {
     const earliestDate = getEarliestDate(ticketCalendar);
     setDefaultCalendarDate(earliestDate);
     setCurrentDate(earliestDate);
-  }, [ticketCalendar, dispatch]);
+  }, [ticketCalendar, dispatch, currentView]);
 
 
 
   return (
-    <div style={{ height: '1500px' }}>
+    <div style={{ height: '1000px' }}>
 
       {/* Render the calendar */}
       {defaultCalendarDate && (
         <Calendar
+
           localizer={localizer}
           events={events}
           views={['month', 'week', 'day']}
           defaultView="month"
-
+          onView={(view) => setCurrentView(view)}
           date={currentDate}                    // Controlled date
           onNavigate={(date) => setCurrentDate(date)}
           tooltipAccessor={(event) =>
             `${event.description || ''}\n${event.sourceType === "TIMELOG"
-              ? `${event.timeRange} - ${event.noOfHours || ''} hrs`
-              : `${event.dateRange} - ${event.noOfHours || ''} hrs`}`
+              ? `${event.name} : ${event.timeRange} - ${event.noOfHours || ''} hrs`
+              : `${event.name} ${event.dateRange} - ${event.noOfHours || ''} hrs`}`
           }
 
 
@@ -180,6 +193,8 @@ export function FormTable() {
                 style: {
                   backgroundColor: "#ffffff",
                   border: "2px solid #0093dd",
+                  padding: "2px",
+
                 },
               };
             }
@@ -198,6 +213,7 @@ export function FormTable() {
                 color: "white",
                 borderRadius: "6px",
                 padding: "2px",
+                height: "60%",
               },
             };
           }}
@@ -208,14 +224,25 @@ export function FormTable() {
               <>
 
                 <div className="custom-tooltip" >
-                  {event.title}
+                  {event.title}  {event.profileImage && (
+                    <img
+                      src={event.profileImage}
+                      alt="Profile"
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
                 </div>
-                <div style={{ fontSize: "12px" }}>
+                {/* <div style={{ fontSize: "12px" }}>
                   {event.ticket}
                   {event.sourceType === "TIMELOG" && event.noOfHours
                     ? ` - ${event.noOfHours} hrs`
                     : ""}
-                </div>
+                </div> */}
 
 
 

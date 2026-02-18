@@ -16,10 +16,11 @@ export function FormPage() {
         report: state?.auth?.userAccess["portal_ticket_time_report"],
         calendar: state?.auth?.userAccess["portal_ticket_calendar"],
         portal_ticket_creation: state?.auth?.userAccess["portal_ticket_creation"],
+        
       };
     }, shallowEqual);
 
-    console.log("portal_ticket_creation11111",portal_ticket_creation)
+   
   return (
     <TaskAssignmentTimelineUIProvider>
       {/* Task Assignment Timeline List / Card */}
@@ -32,8 +33,32 @@ export function FormPage() {
               name={CurrentModuleName()}
               isBackButton={true}
               isDashboardRedirect={true}
-               menuOptions={[
-       
+                   menuOptions={[
+              {
+                name: "Task Assignment",
+                link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+                isShow: portal_ticket_creation?.find(
+                  (el) =>
+                    el?.componentName === "ReadFacilitatorTicketCreation"
+                ),
+              }, 
+              
+              {
+                name: "Report",
+                link: "/portal_ticket_time_report/read-all-project-report",
+                isShow: report?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllAssignmentReport"
+                ),
+              },
+              {
+                name: "Calendar",
+                link: "/portal_ticket_calendar/read-ticket-calendar",
+                isShow: calendar?.find(
+                  (el) =>
+                    el?.componentName === "ReadTicketCalendar"
+                ),
+              },
        
             ]}
               isDashboardIcon={true}

@@ -21,10 +21,14 @@ import EmployeeProfile from "../../../Dashboard/pages/dashboard/EmpPortalCompone
 export function ReportPage() {
   const dispatch = useDispatch();
   const [activeKey, setActiveKey] = useState("0");
-  const { dashboard, listLoading, pdfLoading, pdf, previewData } = useSelector((state) => ({
+  const { dashboard, listLoading, pdfLoading, pdf, previewData, portal_task_assignment_timeline, portal_ticket_creation, calendar } = useSelector((state) => ({
     dashboard: state.dashboard,
     listLoading: state.portal_ticket_time_report.listLoading,
     pdfLoading: state.portal_ticket_time_report.pdfLoading,
+
+    portal_task_assignment_timeline: state?.auth?.userAccess["portal_task_assignment_timeline"],
+    portal_ticket_creation: state?.auth?.userAccess["portal_ticket_creation"],
+    calendar: state?.auth?.userAccess["portal_ticket_calendar"],
 
 
   }));
@@ -49,7 +53,32 @@ export function ReportPage() {
               name={CurrentModuleName()}
               isBackButton={true}
               isDashboardRedirect={true}
-              menuOptions={[
+                    menuOptions={[
+
+                {
+                  name: "Task Assignment Timeline",
+                  link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+                  isShow: portal_task_assignment_timeline?.find(
+                    (el) =>
+                      el?.componentName === "ReadTaskAssignmentTimeline"
+                  ),
+                },
+                {
+                  name: "Task Assignment",
+                  link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+                  isShow: portal_ticket_creation?.find(
+                    (el) =>
+                      el?.componentName === "ReadFacilitatorTicketCreation"
+                  ),
+                },
+                {
+                  name: "Calendar",
+                  link: "/portal_ticket_calendar/read-ticket-calendar",
+                  isShow: calendar?.find(
+                    (el) =>
+                      el?.componentName === "ReadTicketCalendar"
+                  ),
+                },
 
               ]}
               isDashboardIcon={true}
@@ -65,23 +94,32 @@ export function ReportPage() {
               isBackButton={true}
               isDashboardRedirect={true}
               menuOptions={[
-                // {
-                //   name: "Report",
-                //   link: "/portal_ticket_time_report/read-all-project-report",
-                //   isShow: report?.find(
-                //     (el) =>
-                //       el?.componentName === "ReadAllAssignmentReport"
-                //   ),
-                // },
-                // {
-                //   name: "Approval",
-                //   link: "/resignation_approval/read-all-resignation-approval",
-                //   isShow: report?.find(
-                //     (el) =>
-                //       el?.componentName === "ReadAllAssignmentReport" &&
-                //       el?.isResourceShow
-                //   ),
-                // },
+
+                {
+                  name: "Task Assignment Timeline",
+                  link: "/portal_task_assignment_timeline/read-all-task-assignment-timeline",
+                  isShow: portal_task_assignment_timeline?.find(
+                    (el) =>
+                      el?.componentName === "ReadTaskAssignmentTimeline"
+                  ),
+                },
+                {
+                  name: "Task Assignment",
+                  link: "/portal_ticket_creation/read-all-facilitator-ticket-creation",
+                  isShow: portal_ticket_creation?.find(
+                    (el) =>
+                      el?.componentName === "ReadFacilitatorTicketCreation"
+                  ),
+                },
+                {
+                  name: "Calendar",
+                  link: "/portal_ticket_calendar/read-ticket-calendar",
+                  isShow: calendar?.find(
+                    (el) =>
+                      el?.componentName === "ReadTicketCalendar"
+                  ),
+                },
+
               ]}
               isDashboardIcon={true}
             />
