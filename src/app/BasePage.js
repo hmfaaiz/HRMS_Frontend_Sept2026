@@ -456,6 +456,15 @@ const task_dashboard = lazy(()=>
 const ticket_setup_portal  = lazy(() =>
 import ("./modules/Ticket_Setup_Portal/pages/index"))
 
+const time_logging_portal  = lazy(() =>
+import ("./modules/Project_TimeLog_Portal/pages/index"))
+
+const ticket_activity_portal = lazy(()=>
+ import("./modules/Ticket_Activity_Portal/pages/index"))
+
+const project_timeline_portal = lazy(() =>
+import ("./modules/Project_Timeline_Portal/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -630,6 +639,10 @@ const ROUTES = {
   ticket_activity : ticket_activity,
   task_dashboard : task_dashboard,
   ticket_setup_portal : ticket_setup_portal,
+  time_logging_portal : time_logging_portal,
+  ticket_activity_portal : ticket_activity_portal,
+    project_timeline_portal : project_timeline_portal,
+
 };
 
 export default function BasePage() {

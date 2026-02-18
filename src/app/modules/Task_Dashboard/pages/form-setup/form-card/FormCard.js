@@ -7,8 +7,10 @@ import { Accordion, Button, Card, Form, Modal } from "react-bootstrap";
 import CurrentModuleName from "../../../../../utils/common-modules/ModuleName";
 import { SearchSelect } from "../../../../../../_metronic/_helpers/SearchSelect";
 import TCard from "../../../../../utils/common-modules/TCard";
-import { fetchAllProjects } from "../../../../Dashboard/_redux/dashboardActions";
-import { fetchAllFormsMenu } from "../../../../../../_metronic/redux/dashboardActions";
+import {
+  fetchAllProjects,
+  fetchMasterTicketType,
+} from "../../../../Dashboard/_redux/dashboardActions";
 import {
   Checkbox,
   DatePickerField,
@@ -105,7 +107,7 @@ export function FormCard() {
 
   useEffect(() => {
     dispatch(fetchAllProjects());
-    dispatch(fetchAllFormsMenu(545, "allTicketTypeList"));
+    dispatch(fetchMasterTicketType());
   }, [dispatch]);
 
   useEffect(() => {
@@ -297,7 +299,7 @@ export function FormCard() {
                                     isDisabled={
                                       !values.isEnable_via_task_assignment
                                     }
-                                    options={dashboard.allTicketTypeList}
+                                    options={dashboard.allMasterTicketType}
                                     onChange={(e) => {
                                       const value =
                                         e.value == "Select"
@@ -314,7 +316,7 @@ export function FormCard() {
                                       });
                                     }}
                                     value={
-                                      dashboard?.allTicketTypeList?.find(
+                                      dashboard?.allMasterTicketType?.find(
                                         (option) =>
                                           option?.value === values?.taskId,
                                       ) || null

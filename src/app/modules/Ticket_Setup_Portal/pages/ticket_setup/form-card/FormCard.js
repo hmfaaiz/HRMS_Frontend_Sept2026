@@ -25,9 +25,16 @@ export function FormCard() {
     };
   }, [formUIContext]);
 
-  const { userAccess, pdfLoading, csvLoading, excelLoading } = useSelector(
+  const {
+    ticket_setup_portal,
+    pdfLoading,
+    csvLoading,
+    excelLoading,
+    userAccess,
+  } = useSelector(
     (state) => ({
-      userAccess: state.auth.userAccess.ticket_setup_portal,
+      ticket_setup_portal: state.auth.userAccess.ticket_setup_portal,
+      userAccess: state.auth.userAccess,
       pdfLoading: state?.ticket_setup_portal?.pdfLoading,
       csvLoading: state?.ticket_setup_portal?.csvLoading,
       excelLoading: state?.ticket_setup_portal?.excelLoading,
@@ -35,7 +42,7 @@ export function FormCard() {
     shallowEqual,
   );
 
-  const accessUser = userAccess?.find(
+  const accessUser = ticket_setup_portal?.find(
     (item) => item.componentName === "CreateTicketSetup",
   );
 
@@ -63,75 +70,39 @@ export function FormCard() {
   };
 
   return (
-    // <TCard name={CurrentModuleName()}>
-    //   <div className="mb-3">
-    //     <FormFilter
-    //       accessUser={accessUser}
-    //       newButtonClick={() => {
-    //         formUIProps.newButtonClick();
-    //       }}
-    //       exportButtons={
-    //         <div className="flex items-center gap-2 bg-tsecondary p-1 rounded-sm">
-    //           <OverlayTrigger
-    //             overlay={<Tooltip id="tickets-pdf-tooltip">Export PDF</Tooltip>}
-    //           >
-    //             <button
-    //               type="button"
-    //               className="border-none bg-transparent"
-    //               disabled={pdfLoading}
-    //               onClick={() => {
-    //                 print("pdf");
-    //               }}
-    //             >
-    //               <FileText className="w-4 h-4 text-black cursor-pointer" />
-    //             </button>
-    //           </OverlayTrigger>
-
-    //           <OverlayTrigger
-    //             overlay={<Tooltip id="tickets-csv-tooltip">Export CSV</Tooltip>}
-    //           >
-    //             <button
-    //               type="button"
-    //               className="border-none bg-transparent"
-    //               disabled={csvLoading}
-    //               onClick={() => {
-    //                 print("csv");
-    //               }}
-    //             >
-    //               <FileSpreadsheet className="w-4 h-4 text-black cursor-pointer" />
-    //             </button>
-    //           </OverlayTrigger>
-
-    //           <OverlayTrigger
-    //             overlay={
-    //               <Tooltip id="tickets-excel-tooltip">Export Excel</Tooltip>
-    //             }
-    //           >
-    //             <button
-    //               type="button"
-    //               className="border-none bg-transparent"
-    //               disabled={excelLoading}
-    //               onClick={() => {
-    //                 print("excel");
-    //               }}
-    //             >
-    //               <Sheet className="w-4 h-4 text-black cursor-pointer" />
-    //             </button>
-    //           </OverlayTrigger>
-    //         </div>
-    //       }
-    //     />
-    //   </div>
-
-    //   <FormTable />
-    // </TCard>
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
       <div className="px-1 md:mb-0 md:col-span-1 xl:col-span-3 flex flex-col gap-4">
         <div className="xl:hidden block">
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[]}
+            menuOptions={[
+              {
+                name: "Time Logging",
+                link: "/time_logging_portal/read-all-time-log",
+                isShow: userAccess?.["time_logging_portal"]?.find(
+                  (el) => el?.componentName === "ReadTimeLog" && el?.isAccess,
+                ),
+              },
+              {
+                name: "Ticket Activity",
+                link: "/ticket_activity_portal/read-ticket-activity",
+                isShow: userAccess?.["ticket_activity_portal"]?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllTicketComments" &&
+                    el?.isAccess,
+                ),
+              },
+              {
+                name: "Project Timeline",
+                link: "/project_timeline_portal/read-all-project-timeline",
+                isShow: userAccess?.["project_timeline_portal"]?.find(
+                  (el) =>
+                    el?.componentName === "UpdateProjectTimeline" &&
+                    el?.isAccess,
+                ),
+              },
+            ]}
             isDashboardIcon={true}
           />
         </div>
@@ -142,7 +113,33 @@ export function FormCard() {
           <EmployeePortalMenu
             name={CurrentModuleName()}
             isBackButton={true}
-            menuOptions={[]}
+            menuOptions={[
+              {
+                name: "Time Logging",
+                link: "/time_logging_portal/read-all-time-log",
+                isShow: userAccess?.["time_logging_portal"]?.find(
+                  (el) => el?.componentName === "ReadTimeLog" && el?.isAccess,
+                ),
+              },
+              {
+                name: "Ticket Activity",
+                link: "/ticket_activity_portal/read-ticket-activity",
+                isShow: userAccess?.["ticket_activity_portal"]?.find(
+                  (el) =>
+                    el?.componentName === "ReadAllTicketComments" &&
+                    el?.isAccess,
+                ),
+              },
+              {
+                name: "Project Timeline",
+                link: "/project_timeline_portal/read-all-project-timeline",
+                isShow: userAccess?.["project_timeline_portal"]?.find(
+                  (el) =>
+                    el?.componentName === "UpdateProjectTimeline" &&
+                    el?.isAccess,
+                ),
+              },
+            ]}
             isDashboardIcon={true}
           />
         </div>

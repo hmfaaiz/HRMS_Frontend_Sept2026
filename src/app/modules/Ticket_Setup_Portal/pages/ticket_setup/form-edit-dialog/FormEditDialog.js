@@ -26,17 +26,24 @@ export function FormEditDialog({ id, show, onHide, userForRead, query }) {
   }, [id, dispatch]);
 
   // Save customer (create or update)
-  const saveForm = async (payload) => {
+  const saveForm = async (payload, addMore, setValues) => {
     enableLoading();
     if (!id) {
-      await dispatch(actions.createTicket(payload, disableLoading, onHide));
-      if(queryParams) await dispatch(actions.fetchTickets(queryParams));
+      await dispatch(
+        actions.createTicket(
+          payload,
+          disableLoading,
+          onHide,
+          addMore,
+          setValues,
+        ),
+      );
+      if (queryParams) await dispatch(actions.fetchTickets(queryParams));
     } else {
       await dispatch(actions.updateTicket(payload, disableLoading, onHide));
-      if(queryParams) await dispatch(actions.fetchTickets(queryParams));
+      if (queryParams) await dispatch(actions.fetchTickets(queryParams));
     }
   };
-
   return (
     <Modal size="lg" show={show} onHide={onHide}>
       <FormEditDialogHeader id={id} isUserForRead={userForRead} />

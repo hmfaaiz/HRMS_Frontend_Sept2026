@@ -89,9 +89,21 @@ export function FormEditForm({
                 then: (s) => s.required(VALIDATION_MESSAGES.required),
                 otherwise: (s) => s.optional(),
               })
-              .min(
-                Yup.ref("startDate"),
+              .test(
+                "dueDate-not-before-startDate",
                 VALIDATION_MESSAGES.endDateMustBeAfterStartDate,
+                function(dueDate) {
+                  const { startDate } = this.parent;
+                  if (!dueDate || !startDate) return true;
+
+                  // compare date-only (ignore time)
+                  const d = new Date(dueDate);
+                  const s = new Date(startDate);
+                  d.setHours(0, 0, 0, 0);
+                  s.setHours(0, 0, 0, 0);
+
+                  return d >= s; //  18 >= 18 allowed, 17 < 18 => error
+                },
               ),
           otherwise: (schema) => schema.optional(),
         }),
@@ -198,7 +210,16 @@ export function FormEditForm({
         saveForm(payload);
       }}
     >
-      {({ handleSubmit, setFieldValue, values, errors, touched }) => (
+      {({
+        handleSubmit,
+        setFieldValue,
+        values,
+        errors,
+        touched,
+        validateForm,
+        setTouched,
+        setValues,
+      }) => (
         <>
           <Modal.Body className="overlay overlay-block cursor-default">
             {actionsLoading && (
@@ -390,9 +411,11 @@ export function FormEditForm({
                           Ticket Status<span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={dashboard?.allTicketStatus?.find(
-                        (el) => el?.value == values?.ticketStatusId,
-                      )}
+                      value={
+                        dashboard?.allTicketStatus?.find(
+                          (el) => el?.value == values?.ticketStatusId,
+                        ) || null
+                      }
                       options={dashboard.allTicketStatus || []}
                       error={errors.ticketStatusId}
                       touched={touched.ticketStatusId}
@@ -406,10 +429,13 @@ export function FormEditForm({
                     <SearchSelect
                       name="assignToEmpId"
                       label={<span>Assign To</span>}
-                      value={[
-                        { label: "Select", value: null },
-                        ...dashboard?.allEmployees,
-                      ]?.find((el) => el?.value === values?.assignToEmpId)}
+                      value={
+                        [
+                          { label: "Select", value: null },
+                          ...dashboard?.allEmployees,
+                        ]?.find((el) => el?.value === values?.assignToEmpId) ||
+                        null
+                      }
                       options={
                         [
                           { label: "Select", value: null },
@@ -432,9 +458,11 @@ export function FormEditForm({
                           Report To <span style={{ color: "red" }}>*</span>
                         </span>
                       }
-                      value={[, ...dashboard?.allEmployees]?.find(
-                        (el) => el?.value === values?.reportToEmpId,
-                      )}
+                      value={
+                        [, ...dashboard?.allEmployees]?.find(
+                          (el) => el?.value === values?.reportToEmpId,
+                        ) || null
+                      }
                       options={[, ...dashboard?.allEmployees] || []}
                       error={errors.reportToEmpId}
                       touched={touched.reportToEmpId}
@@ -457,12 +485,21 @@ export function FormEditForm({
                           </span>
                         }
                         disabled={values?.ticketTypeId != 1}
-                        value={dashboard?.allTicket
-                          ?.filter((el) => el?.ticketType == 1)
-                          ?.find((el) => el?.value == values?.parentEpicId)}
+                        value={
+                          dashboard?.allTicket
+                            ?.filter(
+                              (el) =>
+                                el?.ticketType == 1 &&
+                                el?.projectId == values?.projectId,
+                            )
+                            ?.find((el) => el?.value == values?.parentEpicId) ||
+                          null
+                        }
                         options={
                           dashboard?.allTicket?.filter(
-                            (el) => el?.ticketType == 1,
+                            (el) =>
+                              el?.ticketType == 1 &&
+                              el?.projectId == values?.projectId,
                           ) || []
                         }
                         error={errors.parentEpicId}
@@ -489,13 +526,16 @@ export function FormEditForm({
                         disabled={
                           values?.ticketTypeId != 4 || values?.ticketTypeId != 5
                         }
-                        value={dashboard?.allTicket
-                          ?.filter(
-                            (el) =>
-                              el?.ticketType == 3 &&
-                              el?.parentEpicId == values.parentEpicId,
-                          )
-                          ?.find((el) => el?.value == values?.parentTaskId)}
+                        value={
+                          dashboard?.allTicket
+                            ?.filter(
+                              (el) =>
+                                el?.ticketType == 3 &&
+                                el?.parentEpicId == values.parentEpicId,
+                            )
+                            ?.find((el) => el?.value == values?.parentTaskId) ||
+                          null
+                        }
                         options={
                           dashboard?.allTicket?.filter(
                             (el) =>
@@ -528,6 +568,41 @@ export function FormEditForm({
                 className="btn btn-primary"
               >
                 Save
+                {loading && (
+                  <span className="ml-3 spinner spinner-white"></span>
+                )}
+              </button>
+            )}
+            {!isUserForRead && !id && (
+              <button
+                type="button"
+                onClick={() => {
+                  validateForm().then((errors) => {
+                    if (Object.keys(errors).length === 0) {
+                      enableLoading();
+                      const payload = {
+                        ...values,
+                        startDate: values.startDate
+                          ? formatDates(values.startDate, "dd-MMM-yyyy")
+                          : null,
+                        dueDate: values.dueDate
+                          ? formatDates(values.dueDate, "dd-MMM-yyyy")
+                          : null,
+                      };
+                      saveForm(payload, true, setValues);
+                    } else {
+                      setTouched(
+                        Object.keys(errors).reduce(
+                          (acc, key) => ({ ...acc, [key]: true }),
+                          {},
+                        ),
+                      );
+                    }
+                  });
+                }}
+                className="btn btn-primary"
+              >
+                Save & Add More
                 {loading && (
                   <span className="ml-3 spinner spinner-white"></span>
                 )}

@@ -18,7 +18,7 @@ export function FormDeleteDialog({ id, show, onHide }) {
 
   const { isLoading } = useSelector(
     (state) => ({
-      isLoading: state.ticket_setup?.actionsLoading,
+      isLoading: state.project_timelog?.actionsLoading,
     }),
     shallowEqual,
   );

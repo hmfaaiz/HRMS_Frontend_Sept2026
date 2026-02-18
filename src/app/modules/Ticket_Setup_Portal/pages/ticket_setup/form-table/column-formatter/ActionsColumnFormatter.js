@@ -54,7 +54,7 @@ export function ActionsColumnFormatter(
             </a>
           </OverlayTrigger>
         )}
-      {/* {isAccessForTicketActivity && (
+      {isAccessForTicketActivity && (
         <OverlayTrigger
           overlay={
             <Tooltip id="products-edit-tooltip">Ticket Activity</Tooltip>
@@ -72,7 +72,7 @@ export function ActionsColumnFormatter(
             <MessageSquareText className="w-4 h-4 text-black cursor-pointer" />
           </button>
         </OverlayTrigger>
-      )} */}
+      )}
       <OverlayTrigger
         overlay={<Tooltip id="products-edit-tooltip">Detail Time Log</Tooltip>}
       >
