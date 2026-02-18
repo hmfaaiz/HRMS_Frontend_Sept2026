@@ -183,6 +183,7 @@ import {EmployeeOnboardingChecklistSlice} from "../app/modules/Employee_Onboardi
 import { TicketTimeReportSlice } from "../app/modules/TicketReport/_redux/formSlice";
 import { ticketActivitySlice } from "../app/modules/Ticket_Activity/_redux/redux-Slice";
 import { TaskDashboardSlice } from "../app/modules/Task_Dashboard/_redux/redux-Slice";
+import { SubsidiaryWisePayrollChecklistSlice } from "../app/modules/Subsidiary_Wise_Payroll_Checklist/_redux/redux-Slice";
 
 export const rootReducer = combineReducers({
   auth: auth.reducer,
@@ -362,6 +363,8 @@ export const rootReducer = combineReducers({
   ticket_time_report : TicketTimeReportSlice.reducer,
   ticket_activity : ticketActivitySlice.reducer,
   task_dashboard : TaskDashboardSlice.reducer,
+
+  subsidiary_wise_payroll_checklist : SubsidiaryWisePayrollChecklistSlice.reducer,
 });
 
 export function* rootSaga() {

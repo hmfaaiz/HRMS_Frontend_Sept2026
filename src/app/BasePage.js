@@ -453,6 +453,9 @@ const ticket_activity = lazy(()=>
 const task_dashboard = lazy(()=>
  import("./modules/Task_Dashboard/pages/index"))
 
+const subsidiary_wise_payroll_checklist = lazy(() =>
+import("./modules/Subsidiary_Wise_Payroll_Checklist/pages/index"))
+
 const ROUTES = {
   settings: SettingsPage,
   users: UserManagment,
@@ -626,6 +629,7 @@ const ROUTES = {
   ticket_time_report : ticket_time_report,
   ticket_activity : ticket_activity,
   task_dashboard : task_dashboard,
+  subsidiary_wise_payroll_checklist : subsidiary_wise_payroll_checklist,
 };
 
 export default function BasePage() {
